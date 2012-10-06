@@ -1,0 +1,53 @@
+{
+    "name": "THEME-NAME",
+    "display_name": "Theme Name",
+    "author": "YOUR NAME",
+    "contact_email": "EMAIL ADDRESS",
+    "created_date": "CREATED DATE",
+    "modified_date": " MODIFIED DATE",
+    "description": "DESCRIPTION OF YOUR THEME",
+    "css": "themes/THEME_NAME.theme/css/theme.css",
+    "base_url": "themes/THEME_NAME.theme/",
+    "thumb": "themes/common/images/colors.png",
+    "screenshots": [],
+    
+    "contrast": "standard",
+    "owf_font_size": 12
+
+}
+
+/***
+--EXAMPLE---------------------------------------------------------------
+{
+    "name": "owf",
+    "display_name": "OWF",
+    "author": "OWF Community Support Team",
+    "contact_email": "ozone-developers@googlegroups.com",
+    "created_date": "8/23/11",
+    "modified_date": "8/23/11",
+    "description": "This is a classic OWF blue theme.",
+    "css": "themes/owf.theme/css/owf.css",
+    "base_url": "themes/owf.theme/",
+    "thumb": "themes/owf.theme/images/preview/screenshot.png",
+    "screenshots": [
+        {
+            "url": "themes/owf.theme/images/preview/launch_menu.png",
+            "description": "Launch Menu"
+        },
+        {
+            "url": "themes/owf.theme/images/preview/manage_dash.png",
+            "description": "Manage Dashboards screen"
+        },
+        {
+            "url": "themes/owf.theme/images/preview/customize_dash.png",
+            "description": "Customize Dashboards Screen"
+        }
+    ]
+    
+    //values for contrast are standard, black-on-white, white-on-black
+    "contrast": "standard",
+    //size in px
+    "owf_font_size": 12,
+    
+}
+*/

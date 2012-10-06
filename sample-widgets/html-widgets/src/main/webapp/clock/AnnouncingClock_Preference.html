@@ -1,0 +1,150 @@
+<html>
+   <head>
+   <link href="../css/widgetContents.css" type="text/css" rel="stylesheet">
+   <link href="../css/dragAndDrop.css" rel="stylesheet" type="text/css">
+
+   <script type="text/javascript" src="../js/owf-widget-debug.js"></script>
+
+   <script type="text/javascript">
+      //The location is assumed to be at /<context>/js/eventing/rpc_relay.uncompressed.html if it is not set
+      //OWF.relayFile = '/owf-sample-html/js/eventing/rpc_relay.uncompressed.html';
+
+      // initialize dojo windowname
+	  owfdojo.config.dojoBlankHtmlUrl = '../js/dojo-1.5.0-windowname-only/dojo/resources/blank.html';
+
+      var logger = OWF.Log.getDefaultLogger();
+      var appender = logger.getEffectiveAppenders()[0];
+   
+      // Enable logging 
+      appender.setThreshold(log4javascript.Level.DEBUG);
+      OWF.Log.setEnabled(false);
+
+      var militaryTime = false;
+
+      function updateClock() {
+         var currentTime = new Date ( );
+         
+         var currentHours = currentTime.getHours ( );
+         var currentMinutes = currentTime.getMinutes ( );
+         var currentSeconds = currentTime.getSeconds ( );
+         var timeOfDay = '';
+         
+         // Pad the minutes and seconds with leading zeros, if required
+         currentMinutes = ( currentMinutes < 10 ? "0" : "" ) + currentMinutes;
+         currentSeconds = ( currentSeconds < 10 ? "0" : "" ) + currentSeconds;
+
+         // Convert the hours component to 12-hour format if needed
+         if (!this.militaryTime) {
+            // Choose either "AM" or "PM" as appropriate
+            var timeOfDay = ( currentHours < 12 ) ? "AM" : "PM";
+         
+            // Convert the hours component to 12-hour format if needed
+            currentHours = ( currentHours > 12 ) ? currentHours - 12 : currentHours;
+         
+            // Convert an hours component of "0" to "12"
+            currentHours = ( currentHours == 0 ) ? 12 : currentHours;
+         }
+         
+         // Compose the string for display
+         var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
+         
+         // Update the time display
+         document.getElementById("clock").firstChild.nodeValue = currentTimeString;
+
+         OWF.Eventing.publish("ClockChannel", currentTimeString);
+
+         // Log a message 
+         if (currentSeconds % 10 == 0) {
+            logger.debug(currentTimeString);
+         }
+
+      }
+
+
+      function militaryTimeCheckboxChanged(checkedState) {
+        this.militaryTime = checkedState;
+        OWF.Preferences.setUserPreference
+           ({namespace:'com.mycompany.AnnouncingClock', 
+            name:'militaryTime',
+            value:checkedState,
+            onSuccess:function(){},
+            onFailure:onSetFailure});
+      }
+      function onSetFailure(error,status){
+         OWF.Util.ErrorDlg.show("Got an error updating preferences! Status Code: " + status + " . Error message: " + error);
+      };
+
+      function initPrefs() {
+          OWF.Preferences.getUserPreference(
+                  {namespace:'com.mycompany.AnnouncingClock', 
+                   name:'militaryTime', 
+                   onSuccess:onGetMilitaryTimeSuccess, 
+                   onFailure:onGetFailure});
+      }
+      function onGetMilitaryTimeSuccess(pref){
+        if (pref.value == 'true') {
+          militaryTime = true;
+          document.getElementById('checkboxMilitaryTime').checked  = true;
+        }
+        else {
+          militaryTime = false;
+          document.getElementById('checkboxMilitaryTime').checked  = false;
+        }
+      }
+      function onGetFailure(error,status) {
+          if (status != 404) {
+              OWF.Util.ErrorDlg.show("Got an error getting preferences! Status Code: " + status + " . Error message: " + error);
+          }
+      }
+
+      function initPage() { 
+         initPrefs();
+         updateClock();
+
+         OWF.Util = OWF.Util || {};
+
+         msg = 'Running in OWF: ' + (OWF.Util.isRunningInOWF()?"Yes":"No");
+
+         document.getElementById("message-panel").innerHTML = msg;
+         document.getElementById("message-panel").style.display = 'block';
+         document.getElementById("button-panel").style.display = 'block';
+
+
+         setInterval('updateClock()', 1000 )
+      }
+      
+      owfdojo.addOnLoad(function() {
+        OWF.ready(initPage);
+      });
+      </script>
+   </head>
+   <body>
+    <div class="widgetContents">
+
+          <div class="panel-header">
+              Announcing Clock
+          </div>
+
+          <div id="error-panel" class="error-panel">
+          </div>
+
+          <div class="panel-body">
+              <div class="clock-frame">
+                 <span id="clock">&nbsp;</span>
+              </div>
+          </div>
+
+          <div id="button-panel" class="button-panel">
+              Military Time:<input id="checkboxMilitaryTime" 
+                                   type="checkBox" 
+                                   onClick="militaryTimeCheckboxChanged(this.checked);"/>
+          </div>
+
+          <div id="message-panel" class="message-panel">
+          </div>
+
+       </div>
+
+   </body>
+
+</html>

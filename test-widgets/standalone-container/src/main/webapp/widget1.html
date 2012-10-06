@@ -1,0 +1,53 @@
+<html>
+<head>
+    <script type='text/javascript' src='js-min/owf-lite-client-with-dojo-debug.js'></script>
+    <script type='text/javascript'>
+
+        function hello() {
+            return "Hello world from Widget 1";
+        }
+
+        function askWidget2ToAdd() {
+            Ozone.eventing.getAllWidgets(function(widgetList) {
+                if (widgetList != null) {
+                    var widget2Id = null;
+
+                    //find widget2
+                    for (var i = 0; i < widgetList.length; i++) {
+                        if (widgetList[i].id != null && widgetList[i].name.match(/^.*widget2.*$/) != null) {
+                            widget2Id = widgetList[i].id;
+                            break;
+                        }
+                    }
+
+                    if (widget2Id != null) {
+//                        setTimeout(function(){
+                            owfdojo.byId('message').innerHTML = 'Asking Widget2 to add 2+3<br>';
+                            Ozone.eventing.importWidget(widget2Id, function(widget) {
+                                //call add function on widget2
+                                widget.add(2, 3, function(result) {
+                                    owfdojo.byId('message').innerHTML += 'Widget 2 responds:' + result;
+                                });
+                            });
+//                        },1000);
+                    }
+
+                }
+            });
+        }
+
+        owfdojo.addOnLoad(function() {
+            Ozone.eventing.clientInitialize({
+                name: 'hello',
+                fn: hello
+            });
+        });
+    </script>
+
+</head>
+<body>
+Widget 1
+<br><button type="button" onclick="askWidget2ToAdd()">Ask Widget 2 to Add</button>
+<div id="message">No Message</div>
+</body>
+</html>

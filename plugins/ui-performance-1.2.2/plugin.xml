@@ -1,0 +1,17 @@
+<plugin name='ui-performance' version='1.2.2' grailsVersion='1.0 &gt; *'>
+  <author>Burt Beckwith</author>
+  <authorEmail>burt@burtbeckwith.com</authorEmail>
+  <title>Grails UI Performance Plugin</title>
+  <description>Taglibs and Filter to implement some of the Yahoo performance team's 14 rules</description>
+  <documentation>http://grails.org/plugin/ui-performance</documentation>
+  <resources>
+    <resource>com.studentsonly.grails.plugins.uiperformance.taglib.CssTagLib</resource>
+    <resource>com.studentsonly.grails.plugins.uiperformance.taglib.DependantJavascriptTagLib</resource>
+    <resource>com.studentsonly.grails.plugins.uiperformance.taglib.ImageTagLib</resource>
+    <resource>com.studentsonly.grails.plugins.uiperformance.taglib.AbstractTaglib</resource>
+    <resource>com.studentsonly.grails.plugins.uiperformance.taglib.JavascriptTagLib</resource>
+    <resource>com.studentsonly.grails.plugins.uiperformance.taglib.SpriteTagLib</resource>
+    <resource>BuildConfig</resource>
+  </resources>
+  <dependencies />
+</plugin>

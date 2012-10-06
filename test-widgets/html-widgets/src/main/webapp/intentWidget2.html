@@ -1,0 +1,36 @@
+<html>
+<head>
+    <link href="css/dragAndDrop.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="js-min/owf-widget-debug.js"></script>
+    <script type='text/javascript'>
+
+        //The location is assumed to be at /<context>/js/eventing/rpc_relay.uncompressed.html if it is not set
+        //OWF.relayFile = Ozone.util.contextPath() + '/js/eventing/rpc_relay.uncompressed.html';
+
+        owfdojo.config.dojoBlankHtmlUrl = 'js-lib/dojo-1.5.0-windowname-only/dojo/resources/blank.html';
+
+        owfdojo.addOnLoad(function () {
+            OWF.ready(function () {
+                owfdojo.byId('status').innerHTML = 'InstanceId: '+OWF.getInstanceId()+'<br>';
+                OWF.Intents.receive(
+                        {
+                            action:'Plot',
+                            dataType:'LatLon'
+                        },
+                        function (sender, intent, data) {
+                            owfdojo.byId('message').innerHTML = 'Widget2 received '+intent.action+' '+owfdojo.toJson(data)+'<br>';
+                        }
+                );
+                OWF.notifyWidgetReady();
+            });
+        });
+    </script>
+
+</head>
+<body>
+Widget 2
+<div id="status"></div>
+<hr>
+<div id="message">No Message</div>
+</body>
+</html>

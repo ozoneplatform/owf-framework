@@ -1,0 +1,71 @@
+.widget {
+    $default-thumb-size: 50px;
+
+    background: $selectable-item-background-color;
+    border: 1px solid $selectable-item-border-color;
+    float: left;
+    margin: 0px 5px 0px 5px;
+    padding-top: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-bottom: 5px;
+    position: relative;
+    text-align: center;
+    @include border-radius(5px);
+
+    .thumb-wrap {
+        text-align: center;
+        white-space:nowrap;
+        margin-left:auto;
+        margin-right:auto;
+        margin-top: 8px; //so the singleton icon doesn't stick ot of the top
+        position: relative; //to make the singleton icons position be relative to this
+        width: $default-thumb-size;
+        height: $default-thumb-size;
+        
+        .thumb {
+            width: 100%;
+        }
+        .singleton-thumb {
+            position: absolute;
+            width: 20px;
+            top: -11px;
+            right: -8px;
+        }
+    }
+    .thumb-text {
+        color: $selectable-item-text-color;
+        font: ceil($owf-font-size * .85) $owf-font-family;
+        height: 2.5em;
+        width: 6em;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+.widget-selected {
+    border-color: $selectable-item-selected-border-color;
+    background: $selectable-item-selected-background-color;
+    .thumb-text {
+        color: $selectable-item-selected-text-color;
+    }
+}
+.widget-over {
+    border-color: $selectable-item-over-border-color;
+    background: $selectable-item-over-background-color;
+    .thumb-text {
+        color: $selectable-item-over-text-color;
+    }
+}
+
+//IE7 requires manual width management
+.x-ie7 .widget {
+    $default-thumb-size: 50px;
+
+    //allows width to be easily computed 
+    //based on contents, not surroundings
+    box-layout: content-box;
+
+
+    width: $default-thumb-size; 
+    min-width: 6em;
+}

@@ -1,0 +1,52 @@
+<html>
+<head>
+    <script type='text/javascript' src='/test/web-app/js-min/owf-lite-client-with-dojo-debug.js'></script>
+    <script type='text/javascript'>
+
+        function hello() {
+            return "Hello world from Widget 1";
+        }
+
+        owfdojo.addOnLoad(function() {
+            Ozone.eventing.clientInitialize({
+                name: 'hello',
+                fn: hello
+            });
+
+            Ozone.eventing.getAllWidgets(function(widgetList) {
+                var widget2Id = null;
+                if (widgetList != null) {
+
+                    //find widget2
+                    for (var i = 0; i < widgetList.length; i++) {
+                        if (widgetList[i].name != null && widgetList[i].name.match(/^.*widget2.*$/) != null) {
+                            widget2Id = widgetList[i].id;
+                            break;
+                        }
+                    }
+
+                    //import widget2
+                    if (widget2Id != null) {
+//                        setTimeout(function(){
+                            gadgets.rpc.call('..', '_rpc_test', null, 'Widget1 Asking Widget2 to add 2+3',true);
+                            owfdojo.byId('message').innerHTML = 'Widget1 Asking Widget2 to add 2+3<br>';
+                            Ozone.eventing.importWidget(widget2Id, function(widget) {
+                                //call add function on widget2
+                                widget.add(2, 3, function(result) {
+                                    gadgets.rpc.call('..', '_rpc_test', null, 'Widget 2 responds:' + result, result == 5);
+                                    owfdojo.byId('message').innerHTML += 'Widget 2 responds:' + result;
+                                });
+                            });
+//                        },1000);
+                    }
+                }
+            });
+        });
+    </script>
+
+</head>
+<body>
+Widget 1
+<div id="message">No Message</div>
+</body>
+</html>

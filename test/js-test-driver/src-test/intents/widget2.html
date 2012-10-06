@@ -1,0 +1,42 @@
+<html>
+<head>
+    <script type="text/javascript" src="/test/web-app/js-min/owf-widget-debug.js"></script>
+    <script type='text/javascript'>
+
+        OWF.relayFile = '/test/web-app/js/eventing/rpc_relay.uncompressed.html';
+
+        owfdojo.addOnLoad(function () {
+            OWF.ready(function () {
+                OWF.Intents.receive(
+                        {
+                            action:'Plot',
+                            dataType:'latlon'
+                        },
+                        function (sender, intent, data) {
+                            gadgets.rpc.call('..', '_intents_test', null, 'Widget2 received '+intent.action+' '+owfdojo.toJson(data),
+                                    (intent.action == 'Plot' && data.lat == 0 && data.lon == 0));
+                            owfdojo.byId('message').innerHTML += 'Widget2 received '+intent.action+' '+owfdojo.toJson(data)+'<br>';
+                        }
+                );
+                OWF.Intents.receive(
+                        {
+                            action:'Graph',
+                            dataType:'xy'
+                        },
+                        function (sender, intent, data) {
+                            gadgets.rpc.call('..', '_intents_test', null, 'Widget2 received '+intent.action+' '+owfdojo.toJson(data),
+                                    (intent.action == 'Graph' && data.x == 0 && data.y == 0));
+                            owfdojo.byId('message').innerHTML += 'Widget2 received '+intent.action+' '+owfdojo.toJson(data)+'<br>';
+                        }
+                );
+                OWF.notifyWidgetReady();
+            });
+        });
+    </script>
+
+</head>
+<body>
+Widget 2
+<div id="message"></div>
+</body>
+</html>

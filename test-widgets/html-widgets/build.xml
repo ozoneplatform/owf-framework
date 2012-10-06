@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="html-widgets" default="war" basedir=".">
+	<property environment="env"/>
+	
+	<property name="build.dir" value="${basedir}/target" />
+	<property name="web.dir" value="${basedir}/src/main/webapp" />
+
+	<target name="clean" description="Cleans out the build directory.">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+
+        <delete includeemptydirs="true">
+            <fileset dir="${basedir}/src/main/webapp">
+                <include name="css/**/*" />
+                <include name="images/dragAndDrop/**/*" />
+                <include name="js/**/*" />
+                <include name="js-lib/**/*" />
+                <include name="js-min/**/*" />
+            </fileset>
+        </delete>
+
+	</target>
+	
+	<target name="war" depends="clean" description="Creates the WAR file.">
+
+        <copy todir="${basedir}/src/main/webapp/js-min">
+            <fileset dir="../../web-app/js-min">
+                <include name="owf-widget-debug.js" />
+                <include name="owf-widget-min.js" />
+            </fileset>
+        </copy>
+        <copy todir="${basedir}/src/main/webapp/js-lib/dojo-1.5.0-windowname-only">
+            <fileset dir="../../web-app/js-lib/dojo-1.5.0-windowname-only" />
+        </copy>
+        <copy todir="${basedir}/src/main/webapp/js/eventing" flatten="true">
+            <fileset dir="../../web-app/js/eventing">
+                <include name="rpc_relay.uncompressed.html" />
+            </fileset>
+        </copy>
+        <copy todir="${basedir}/src/main/webapp/css">
+            <fileset dir="../../web-app/css">
+                <include name="dragAndDrop.css" />
+            </fileset>
+        </copy>
+
+        <mkdir dir="${basedir}/src/main/webapp/images/dragAndDrop" />
+        <copy todir="${basedir}/src/main/webapp/images/dragAndDrop">
+            <fileset dir="../../web-app/themes/common/images/dragAndDrop">
+                <include name="dndMove.png" />
+                <include name="dndNoMove.png" />
+            </fileset>
+        </copy>
+
+		<war warfile="${build.dir}/html-widgets.war" webxml="${web.dir}/WEB-INF/web.xml" duplicate="preserve">
+			<fileset dir="${web.dir}">
+				<exclude name="WEB-INF/web.xml" />
+			</fileset>
+		</war>		
+	</target>
+</project>

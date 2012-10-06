@@ -1,0 +1,241 @@
+<html>
+   <head>
+   <link href="../css/widgetContents.css" type="text/css" rel="stylesheet">
+   <link href="../css/dragAndDrop.css" rel="stylesheet" type="text/css">
+
+      <script type="text/javascript" src="../js/owf-widget-debug.js"></script>
+
+
+   <script type="text/javascript">
+      //The location is assumed to be at /<context>/js/eventing/rpc_relay.uncompressed.html if it is not set
+      OWF.relayFile = '/owf-sample-html/js/eventing/rpc_relay.uncompressed.html';
+
+      var logger;
+      var appender;
+      var militaryTime = false;
+
+      var CHANNEL_NAME = "owf.sampleWidget.announcingClock.launcher.timestamp";
+      var WIDGET_TO_LAUNCH = "Second Tracker";
+
+      function updateClock() {
+         var currentTime = new Date ( );
+         
+         var currentHours = currentTime.getHours ( );
+         var currentMinutes = currentTime.getMinutes ( );
+         var currentSeconds = currentTime.getSeconds ( );
+         var timeOfDay = '';
+         
+         // Pad the minutes and seconds with leading zeros, if required
+         currentMinutes = ( currentMinutes < 10 ? "0" : "" ) + currentMinutes;
+         currentSeconds = ( currentSeconds < 10 ? "0" : "" ) + currentSeconds;
+
+         // Convert the hours component to 12-hour format if needed
+         if (!this.militaryTime) {
+            // Choose either "AM" or "PM" as appropriate
+            var timeOfDay = ( currentHours < 12 ) ? "AM" : "PM";
+         
+            // Convert the hours component to 12-hour format if needed
+            currentHours = ( currentHours > 12 ) ? currentHours - 12 : currentHours;
+         
+            // Convert an hours component of "0" to "12"
+            currentHours = ( currentHours == 0 ) ? 12 : currentHours;
+         }
+         
+         // Compose the string for display
+         var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
+         
+         // Update the time display
+         document.getElementById("clock").firstChild.nodeValue = currentTimeString;
+
+         OWF.Eventing.publish(CHANNEL_NAME, currentTimeString);
+
+         // Log a message 
+         if (currentSeconds % 10 == 0) {
+            logger.debug(currentTimeString);
+         }
+
+      }
+
+     /**
+      *  Look up the launched widget in OWF, for the purpose of acquiring its GUID
+      */
+      function lookupSecondTracker() {
+         var searchConfig = {
+            searchParams:  { widgetName: WIDGET_TO_LAUNCH }, 
+            onSuccess: launchSecondTracker, 
+            onFailure: failWidgetLookupError
+         };
+         logger.debug('Looking up:'+searchConfig.searchParams.widgetName);
+         
+         OWF.Preferences.findWidgets(searchConfig);
+      }
+         
+
+     /**
+      * Launch the SecondTracker; called as a callback from findWidgets() on success
+      */
+      function launchSecondTracker (findResultsResponseJSON) {
+
+         logger.debug('Search result:'+ findResultsResponseJSON);
+         if(findResultsResponseJSON.length == 0) {
+            // Did not find Widget
+            failWidgetLookupError("Widget was not found in user profile.  User may not have access.");
+         }
+         else {
+            var guidOfWidgetToLaunch = findResultsResponseJSON[0].path;
+            logger.debug('Search result [GUID]:'+ guidOfWidgetToLaunch);
+            
+            var data = {
+               channel: CHANNEL_NAME
+            };            
+            var dataString = OWF.Util.toString(data);
+            
+            OWF.Launcher.launch(
+               {
+                  guid: guidOfWidgetToLaunch,  // The retrieved GUID of the widget to launch
+                  launchOnlyIfClosed: true, // If true will only launch the widget if it is not already opened.
+                  data: dataString  // Initial launch config data to be passed to 
+                                    //   a widget only if the widget is opened.  This must be a string!
+               }, 
+               callbackOnLaunch
+            );
+         }
+      }
+
+     /**
+      * Display an error when a widget cannot be located
+      */
+      function failWidgetLookupError(widgetLookupErrorMessage) {
+         document.getElementById("error-panel").innerHTML= 
+               "Launch Failure: [" + WIDGET_TO_LAUNCH +"]: " +
+               widgetLookupErrorMessage;
+         document.getElementById("error-panel").style.display = 'block';
+      }
+
+     /**
+      *  Widget Launching callback function indicating success or failure
+      */
+      function callbackOnLaunch (resultJson) {
+         var launchResultsMessage = "";
+
+         if(resultJson.error) {
+            // if there was an error, print that out on the launching widget
+            launchResultsMessage += ("Launch Error:" + resultJson.message);
+         }
+            
+         if(resultJson.newWidgetLaunched) {
+            // if the new widget was launched, say so
+            launchResultsMessage += ("Widget Launched; new unique id: " + resultJson.uniqueId);
+         }
+         else {
+            // if the new widget was not launched, say so and explain why not
+            launchResultsMessage += ("Launch Error: " + resultJson.message  + 
+                                  " Widget exists already with id: " + resultJson.uniqueId);               
+         }
+         document.getElementById("launchResults").innerHTML = launchResultsMessage;
+      }
+
+      function logInit() {
+
+         //logger = OWF.Log.getLogger('DynamicLauncher');
+         logger = OWF.Log.getDefaultLogger();
+         OWF.Log.setEnabled(true);
+
+         appender = logger.getEffectiveAppenders()[0];
+         appender.setThreshold(log4javascript.Level.DEBUG);
+      }
+
+
+      function militaryTimeCheckboxChanged(checkedState) {
+        this.militaryTime = checkedState;
+        OWF.Preferences.setUserPreference
+           ({namespace:'com.mycompany.AnnouncingClock', 
+            name:'militaryTime',
+            value:checkedState,
+            onSuccess:function(){},
+            onFailure:onSetFailure});
+      }
+      function onSetFailure(error,status){
+         OWF.Util.ErrorDlg.show("Got an error updating preferences! Status Code: " + status + " . Error message: " + error);
+      };
+
+      function initPrefs() {
+          OWF.Preferences.getUserPreference(
+                  {namespace:'com.mycompany.AnnouncingClock', 
+                   name:'militaryTime', 
+                   onSuccess:onGetMilitaryTimeSuccess, 
+                   onFailure:onGetFailure});
+      }
+      function onGetMilitaryTimeSuccess(pref){
+        if (pref.value == 'true') {
+          militaryTime = true;
+          document.getElementById('checkboxMilitaryTime').checked  = true;
+        }
+        else {
+          militaryTime = false;
+          document.getElementById('checkboxMilitaryTime').checked  = false;
+        }
+      }
+      function onGetFailure(error,status) {
+          if (status != 404) {
+              OWF.Util.ErrorDlg.show("Got an error getting preferences! Status Code: " + status + " . Error message: " + error);
+          }
+      }
+      
+      function initPage() { 
+         logInit();
+         initPrefs();
+         updateClock();
+
+         msg = 'Running in OWF: ' + (OWF.Util.isRunningInOWF()?"Yes":"No");
+
+         document.getElementById("isRunning").innerHTML = msg;
+         document.getElementById("message-panel").style.display = 'block';
+         document.getElementById("button-panel").style.display = 'block';
+         document.getElementById("error-panel").style.display = 'none';
+
+
+         setInterval('updateClock()', 1000);
+      }
+
+      owfdojo.addOnLoad(function() {
+        OWF.ready(initPage);
+      });
+
+      </script>
+   </head>
+   <body>
+    <div class="widgetContents">
+
+          <div class="panel-header">
+              Announcing Clock
+          </div>
+
+          <div id="error-panel" class="error-panel">
+          </div>
+
+          <div class="panel-body">
+              <div class="clock-frame">
+                 <span id="clock">&nbsp;</span>
+              </div>
+          </div>
+
+          <div id="button-panel" class="button-panel">
+              Military Time:<input id="checkboxMilitaryTime" 
+                                   type="checkBox" 
+                                   onClick="militaryTimeCheckboxChanged(this.checked);"/>
+
+              <p/>
+              <input type="button" onclick="lookupSecondTracker()" value="Launch Tracker"/>
+          </div>
+
+          <div id="message-panel" class="message-panel">
+              <span id="isRunning"></span><br/>
+              <span id="launchResults"></span>
+          </div>
+
+       </div>
+
+   </body>
+
+</html>

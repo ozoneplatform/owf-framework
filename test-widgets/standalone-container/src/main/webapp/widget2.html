@@ -1,0 +1,24 @@
+<html>
+<head>
+    <script type='text/javascript' src='js-min/owf-lite-client-with-dojo-debug.js'></script>
+    <script type='text/javascript'>
+
+        function add(a, b) {
+            owfdojo.byId('message').innerHTML = 'Adding:' + a + '+' + b + '=' + (a + b) + '<br>';
+            return a + b;
+        }
+
+        owfdojo.addOnLoad(function() {
+            Ozone.eventing.clientInitialize({
+                name: 'add',
+                fn: add
+            });
+        });
+    </script>
+
+</head>
+<body>
+Widget 2
+<div id="message">No Message</div>
+</body>
+</html>

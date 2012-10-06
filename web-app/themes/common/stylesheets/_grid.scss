@@ -1,0 +1,53 @@
+// grid
+.x-grid-body {
+    .x-grid-row {
+        //ext does not provide customizable variables for the style of
+        //the first "special" column, so we need to override it here
+        .x-grid-cell-special {
+            background: $owf-grid-row-cell-background;
+        }
+        .x-grid-cell {
+            border-color: $owf-grid-body-border-color;
+            border-style: $panel-body-border-style;
+            border-width: 0 1px 0 0;
+        }
+    }
+    .x-grid-row-alt {
+        .x-grid-cell-special {
+            background: $owf-grid-row-cell-alt-background;
+        }
+    }
+    .x-grid-row-selected {
+        .x-grid-cell-special {
+            background: $owf-grid-row-cell-selected-background-color;
+        }
+    }
+    .x-grid-row-over {
+        .x-grid-cell-special {
+            background: $owf-grid-row-cell-over-background-color;
+        }
+
+        /*.x-grid-cell-inner {*/
+            /*font-weight: bold;*/
+        /*}*/
+
+    }
+}
+.x-grid-header-ct {
+    border: none
+}
+
+.x-grid-view-focus {
+    .x-grid-table .x-grid-row.x-grid-row-selected {
+        .x-grid-cell {
+            background-color: $owf-grid-row-cell-focus-background-color !important;
+            .x-grid-cell-inner {
+                color: $owf-grid-row-cell-focus-color;
+            }
+        }
+    }
+}
+
+.x-grid-row-focused .x-grid-cell {
+    font-weight: bold;
+}

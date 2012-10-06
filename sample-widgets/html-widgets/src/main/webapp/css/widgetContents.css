@@ -1,0 +1,86 @@
+/* ----------------------------------------------------------------------------------------- 
+ *  Standard Widget page styles 
+ * ----------------------------------------------------------------------------------------- */
+body {
+	background-color:#87AEC5;
+    font-family: verdana, arial;
+    font-size: 80%;
+    text-align: center;
+}
+
+.widgetContents {
+    margin: 5% auto auto;
+	background-color: #D2E7F4;
+    border: 2px solid black;
+    max-width: 75%;
+    min-width: 205px;
+    min-height: 180px;
+}
+
+
+.widgetContents .panel-header{
+	overflow:hidden;
+	text-decoration:none;
+	color:#4f4f4f;
+    font-size: large;
+	padding:5px;
+	line-height:15px;
+}
+
+.widgetContents .panel-body{
+	border:0px;
+	overflow:hidden;
+	position:relative;
+    min-height: 95px;
+}
+
+.clock-frame {
+    border: 1px solid black;
+	background-color:#eeeeee;
+    margin: 10% auto auto;
+    padding: 5px;
+    width: 25%;
+    min-width: 180px;
+}
+
+.widgetContents .error-panel{
+	background-color:#eacaca;
+    color:red;
+    font-weight: bold;
+    border: 1px solid #7a7a7a;
+    margin: 10px auto auto;
+    padding: 5px;
+    width: 75%;
+    display: none;
+}
+
+.widgetContents .message-panel{
+    color:green;
+    margin: 10px 0 0 0;
+    padding: 5px;
+    width: 60%;
+    height: 60px;
+    text-align: left;
+    display: none;
+}
+
+.widgetContents .button-panel{
+	/*background-color:#939193;*/
+    margin: 10px 0 0 0;
+    padding: 5px;
+    width: 40%;
+    float: right;
+    height: 60px;
+    display: none;
+    text-align: left;
+}
+
+.clock-frame #clock{
+    font-size: 200%;
+}
+
+.message-panel #channelName {
+    color: black;
+}
+
+

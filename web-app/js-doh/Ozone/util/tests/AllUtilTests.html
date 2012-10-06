@@ -1,0 +1,53 @@
+<html>
+<head>
+    <title>ApproveWidgetsPanelTest</title>
+    <link rel='stylesheet' type='text/css' href='../../../../js-lib/ext-4.0.6/resources/css/ext-all.css'/>
+
+    <link rel='stylesheet' type='text/css' href='../../../../css/blueExt.css'/>
+    <link rel='stylesheet' type='text/css' href='../../../../css/ApproveWidgetsPanel.css'/>
+
+	<script type="text/javascript" src="../../../../js-lib/ext-4.0.6/ext-all-debug.js"></script>
+    <script type="text/javascript" src="../../../../js/config/config.js"></script>
+    <script type="text/javascript" src="../../../../js-min/owf-widget-debug.js"></script>
+    <script type="text/javascript" src="../../../../js/util/authentication.js"></script>
+	<script type="text/javascript" src="../../../../js/util/error.js"></script>
+	<script type="text/javascript" src="../../../../js/util/guid.js"></script>
+	<script type="text/javascript" src="../../../../js/util/log.js"></script>
+	<script type="text/javascript" src="../../../../js/util/output.js"></script>
+	<script type="text/javascript" src="../../../../js/util/pageload.js"></script>
+	<script type="text/javascript" src="../../../../js/util/transport.js"></script>
+	<script type="text/javascript" src="../../../../js/util/util.js"></script>
+	<script type="text/javascript" src="../../../../js/util/version.js"></script>
+	<script type="text/javascript" src="../../../../js/util/widget_utils.js"></script>
+
+	<script type="text/javascript" src="../../../../js-lib/dojo-release-1.5.0/dojo/dojo.js"></script>
+	<script type="text/javascript">
+		owfdojo.config.dojoBlankHtmlUrl = '../../../../js-lib/dojo-1.5.0-windowname-only/dojo/resources/blank.html';
+
+        dojo.registerModulePath("Ozone", "../../../js-doh/Ozone");
+        dojo.provide("Ozone.util.tests.AllUtilTestsHTML");
+        dojo.require("dojo.parser");
+        dojo.require("doh.runner");
+        dojo.require("dojox.io.windowName");
+        dojo.require("dojox.secure.capability");
+
+        dojo.addOnLoad(function() {
+
+            //register tests
+            doh.register("Ozone.util.tests.AllUtilTests",[
+			{
+				name:"assertTrueTest",
+				timeout:3000,
+				runTest: function (){
+					doh.assertTrue(true);
+				}
+			}
+			]);
+			doh.run();
+		});
+	</script>
+</head>
+<body>
+
+</body>
+</html>

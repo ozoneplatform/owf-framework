@@ -1,0 +1,69 @@
+<html>
+<head>
+    <script type="text/javascript" src="/test/web-app/js-min/owf-widget-debug.js"></script>
+    <script type='text/javascript'>
+
+        OWF.relayFile = '/test/web-app/js/eventing/rpc_relay.uncompressed.html';
+
+        owfdojo.addOnLoad(function () {
+            OWF.ready(function () {
+
+                function sendIntents() {
+                    owfdojo.byId('message').innerHTML = 'Telling Widget2 to Graph 0,0<br>';
+                    OWF.Intents.startActivity(
+                            {
+                                action:'Graph',
+                                dataType:'xy'
+                            },
+                            {
+                                x:0,
+                                y:0
+                            },
+                            function (dest) {
+                                //dest is an array of destination widget proxies
+                                gadgets.rpc.call('..', '_intents_test', null, 'Widget1 callback: Graph Intent was routed to Widget2', true);
+                                if (dest != null && dest.length > 0) {
+                                    //only one widget
+                                    dest[0].onReady(function() {
+                                        gadgets.rpc.call('..', '_intents_test', null, 'Widget1 Graph Intent callback: Widget2 is ready', true);
+                                    },this)
+
+                                }
+                            }
+                    );
+                    owfdojo.byId('message').innerHTML += 'Telling Widget2 to Plot 0,0<br>';
+                    OWF.Intents.startActivity(
+                            {
+                                action:'Plot',
+                                dataType:'latlon'
+                            },
+                            {
+                                lat:0,
+                                lon:0
+                            },
+                            function (dest) {
+                                //dest is an array of destination widget proxies
+                                gadgets.rpc.call('..', '_intents_test', null, 'Widget1 callback: Plot Intent was routed to Widget2', true);
+                                if (dest != null && dest.length > 0) {
+                                    //only one widget
+                                    dest[0].onReady(function() {
+                                        gadgets.rpc.call('..', '_intents_test', null, 'Widget1 Plot callback: Widget2 is ready', true);
+                                    },this)
+
+                                }
+                            }
+                    );
+                }
+                OWF.notifyWidgetReady();
+                sendIntents();
+            });
+        });
+    </script>
+
+</head>
+<body>
+Widget 1
+<!--<br><button type="button" onclick="sendIntents()">Ask Widget 2 to Plot</button>-->
+<div id="message"></div>
+</body>
+</html>

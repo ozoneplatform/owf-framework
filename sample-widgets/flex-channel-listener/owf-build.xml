@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="flex-channel-listener" default="zip" basedir=".">
+		
+	<target name="zip">
+        <delete file="flex-channel-listener.zip" failonerror="false" />
+        <copy todir="html-template/js">
+                <fileset dir="../../web-app/js-min">
+                    <include name="owf-widget-debug.js" />
+                    <include name="owf-widget-min.js" />
+                </fileset>
+        </copy>
+		<zip destfile="flex-channel-listener.zip" basedir="${basedir}"
+		excludes="pom.xml,zip-assembly.xml,**/target/**,owf-build.xml,*.zip" />
+	</target>
+	
+</project>

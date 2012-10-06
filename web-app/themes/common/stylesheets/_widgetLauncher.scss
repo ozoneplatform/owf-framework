@@ -1,0 +1,651 @@
+@include extjs-window-ui(
+    'widget-launcher',
+    
+    $ui-padding: null,
+    $ui-border-radius: $widget-launcher-body-radius,
+    $ui-border-color: null,
+    $ui-inner-border-color: null,
+    
+    $ui-header-color: null,
+    $ui-header-font-size: $window-header-font-size,
+    $ui-header-font-weight: $window-header-font-weight,
+    
+    $ui-body-border-color: $widget-launcher-background-color,
+    $ui-body-background-color: $widget-launcher-background-color,
+    $ui-body-color: $widget-launcher-background-color,
+    
+    $ui-background-color: $widget-launcher-background-color
+);
+
+.widget-tip{
+    background-color: #243135;
+    border-color: #234552;
+    .x-tip-anchor-right {
+        border-left-color: #234552;
+    }
+    .x-tip-anchor-top {
+        border-bottom-color: #234552;
+    }
+}
+
+#widget-launcher {
+    
+    padding: 0px;
+//    border-color: $widget-launcher-border-color;
+    border-style: none;
+
+    background-color: $widget-launcher-background-color;
+
+    .x-toolbar-default {
+      filter:none;
+    }
+    .x-splitter {
+      filter:none;
+    }
+
+    &-body {
+        //@include border-bottom-radius($widget-launcher-body-radius);
+		border:none;
+    }
+    .search-panel{
+        background: $search-panel-background-color;
+        border-color: $widget-launcher-border-color;
+        position: absolute;
+        padding: 7px;
+
+
+        .x-panel-body {
+            background: $search-panel-background-color;
+            border: none; 
+        }
+
+        .x-container {
+            background: $search-panel-background-color;
+            color: $widget-launcher-grid-row-cell-color;
+        }
+
+        .x-splitter {
+            @include background-gradient($search-panel-slider-background-color, $search-panel-slider-background-gradient);
+            background-color: $search-panel-slider-background-color;
+        }
+
+        .x-toolbar {
+            background-image: none;
+            background-color: $widget-launcher-toolbar-background-color;
+            border-color: $widget-launcher-toolbar-border-color;
+
+            /*.resetBtn {
+                background-image: none;
+                background-color: red; 
+
+            }*/
+        }
+
+        .tag-grid,
+        .term-grid,
+        .group-grid{
+            .x-panel-header {
+                background-image: none;
+                border: none;
+                background-color: $search-panel-background-color;
+                box-shadow: none;
+                //margin-top: 10px;
+                //margin-bottom: 5px;
+            }
+            .x-panel-header-text-container {
+                left: 20px;
+            }
+            .x-panel-header-text{
+                color: $search-panel-header-text-color;
+                //font-size: 20px;
+                //font-weight: normal;
+            }
+            .x-tool {
+                left: 0 ;
+                .x-tool-collapse-top {
+                    background-image: theme-image($theme-name, 'launch-menu/launch_arrow_down-up.png') ;
+                    background-position: 0 0;
+                }
+                .x-tool-expand-bottom {
+                    background-image: theme-image($theme-name, 'launch-menu/launch_arrow_right-up.png') ;
+                    background-position: 0 0;
+                }
+            }
+            .x-tool-over {
+                .x-tool-collapse-top {
+                    background-image: theme-image($theme-name, 'launch-menu/launch_arrow_down-over.png') ;
+                    background-position: 0 0;
+                }
+                .x-tool-expand-bottom {
+                    background-image: theme-image($theme-name, 'launch-menu/launch_arrow_right-over.png') ;
+                    background-position: 0 0;
+                }
+            }
+        }
+
+        .tagCloud {
+            padding-left: 10px;
+
+          .tag-over {
+              span{
+                  color: $widget-launcher-special-color;
+              }
+          }
+
+          .tag-selected {
+            span{
+                color: $widget-launcher-special-color;
+            }
+          }
+
+        }
+
+      .tag {
+          float: left;
+          //position: relative;
+          //overflow: hidden;
+          cursor: pointer;
+          //display: table;
+          //height: 40px;
+          padding: 2px;
+
+          span {
+              //display: table-cell;
+              vertical-align: bottom;
+              color: $widget-launcher-widget-text-color;
+          }
+      }
+
+    }
+
+    .search {
+        border-color: $widget-launcher-search-border-color;
+        background: $widget-launcher-search-background-color;
+
+        input{
+            color: $widget-launcher-widget-text-color;
+        }
+    }
+
+    .toolbar-panel {
+        width: 200px;
+    }
+
+    .viewSwitch {
+        opacity: 0.75;
+    }
+
+    .viewSwitch,
+    .searchBar{
+        background: transparent;
+        filter: none;
+        border-style: none;
+        padding: 0px ;
+        .x-box-inner{
+            background: transparent;
+            filter: none;
+            border-style: none;
+        }
+    }
+	
+	.x-window-header {
+		@include border-top-radius($widget-launcher-body-radius);
+		height: 20px;
+		background-image: none;
+		background-color: $widget-launcher-background-color;
+		padding:9px;
+	}
+    
+    span, .thumb-text {
+        //color: #ccc;
+    }
+
+    span {
+        //font-size: 1em;
+        //padding-left: 10px;
+    }
+    .widget-launcher-header-icon {
+		background-image: theme-image($theme-name,'launch-menu/header-icon.png');
+		background-repeat: no-repeat;
+		background-size: 20px 20px;
+		background-position: center center;
+	}
+
+    .widgetLauncherView {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .widgetviewcontainer {
+      .title {
+        font-weight: normal;
+        font-size: $widget-launcher-view-title-font-size;
+        color: $widget-launcher-widget-title-color;
+        padding: 10px;
+
+      }
+    }
+
+    .info-panel {
+        background: transparent;
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-top: 5px;
+        
+
+        .launchMenuTitle {
+          font-weight: bold;
+          font-size: 1.5em;
+          line-height: 1em;
+          margin-bottom: .5em;
+          color: $widget-launcher-widget-title-color;
+
+        }
+
+        .x-panel-body {
+            background: transparent;
+            color: $widget-launcher-info-panel-color;
+            border-style: none;
+        }
+
+        .image-panel {
+            min-width: 96px;
+            max-width: 6em;
+        }
+    
+        .widget-icon {
+            display: block;
+            background: transparent !important;
+            height: 96px;
+            width: 96px;
+        }
+
+        .launch-btn {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 3px;
+            text-align: center;
+        }
+
+        .infoCenter {
+            margin-left: 18px;
+            padding-right: 10px;
+            padding-top: 5px;
+            
+        }
+
+        .gridViewBtn,
+        .iconViewBtn {
+            background: none;
+            filter: none;
+            border: none;
+            float: right;
+            margin: 0px;
+
+        }
+
+        .gridViewBtn {
+            .gridViewBtnIcon-up {
+                background-image: theme-image($theme-name, 'launch-menu/launch_list-up.png') ;
+            }
+            .gridViewBtnIcon-down {
+                background-image: theme-image($theme-name, 'launch-menu/launch_list-down.png') ;
+            }
+            &.x-btn-over {
+                border: none;
+                .gridViewBtnIcon-up {
+                    background-image: theme-image($theme-name, 'launch-menu/launch_list-over.png') ;
+                }
+            }
+        }
+
+        .iconViewBtn {
+            .iconViewBtnIcon-up {
+                background-image: theme-image($theme-name, 'launch-menu/launch_tile-up.png') ;
+            }
+            .iconViewBtnIcon-down {
+                background-image: theme-image($theme-name, 'launch-menu/launch_tile-down.png') ;
+            }
+            &.x-btn-over {
+                border: none;
+                .iconViewBtnIcon-up {
+                    background-image: theme-image($theme-name, 'launch-menu/launch_tile-over.png') ;
+                }
+            }
+        }
+    }
+    .carousel {
+        background-color: $carousel-background-color;
+        border: none;
+
+        .x-panel-body {
+            background-color: $carousel-background-color;
+            border: none;
+
+        }
+
+        .x-resizable-handle{
+            @include background-gradient($carousel-resizer-background-color, $carousel-resizer-background-gradient);
+            background-color: $carousel-resizer-background-color;
+        }
+
+        .leftCarouselBtn,
+        .rightCarouselBtn {
+            border: none;
+            width: 15px;
+            height: 100%;
+
+            .x-btn-icon {
+                height: 100%;
+
+            }
+
+            background-color: $carousel-button-background-color;
+            background-image: none;
+            filter: none;
+            &.x-btn-over, &.x-btn-pressed {
+                background-color: $carousel-button-over-background-color;
+            }
+        }
+
+        //.leftCarouselBtn {
+        //    @include border-bottom-left-radius($widget-launcher-body-radius - 2);
+        //    @include border-bottom-right-radius(0px);
+        //}
+        //.rightCarouselBtn {
+        //    @include border-bottom-right-radius($widget-launcher-body-radius - 2);
+        //    @include border-bottom-left-radius(0px);
+        //}
+
+        .rightCarouselBtnIcon {
+            background-image: theme-image($theme-name, 'launch-menu/launch_scoll_right-up.png');
+        }
+        .leftCarouselBtnIcon {
+            background-image: theme-image($theme-name, 'launch-menu/launch_scoll_left-up.png');
+        }
+
+        .x-btn-over {
+            .rightCarouselBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_scoll_right-over.png');
+            }
+            .leftCarouselBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_scoll_left-over.png');
+            }
+        }
+        .x-btn-pressed {
+            .rightCarouselBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_scoll_right-down.png');
+            }   
+            .leftCarouselBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_scoll_left-down.png');
+            }   
+        }
+
+    }
+
+    .carousel-view {
+        //extra 6px on top to make room for
+        //resizer bar
+        padding: 11px 5px 5px 5px;
+    }
+
+    .widget {
+
+        background-color: $widget-launcher-background-color;
+        border-color: $widget-launcher-background-color;
+        float: left;
+        cursor: pointer;
+        
+
+        .thumb-text {
+            color: $widget-launcher-widget-text-color;
+        }
+    }
+    .widget-selected {
+        background-color: $widget-launcher-widget-selected-background-color;
+        border-color: $widget-launcher-widget-selected-border-color;
+        .thumb-text {
+            color: $widget-launcher-widget-selected-text-color;
+        }
+    }
+    .widget-over {
+        background-color: $widget-launcher-widget-over-background-color;
+        border-color: $widget-launcher-widget-over-border-color;
+
+        .thumb-text {
+            color: $widget-launcher-widget-over-text-color;
+        }
+    }
+    .widget-disabled {
+        /*-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";*/
+        /*filter: alpha(opacity=40);*/
+        /*opacity: 0.4;  */
+        @include opacity(.4);
+    }
+    .carousel-widget {
+        background-color: $carousel-background-color;
+        border: 1px solid $carousel-background-color;
+        margin-right: 5px;
+        height: 100%;
+        overflow: hidden;
+        cursor: pointer;
+        //border-radius: 10px;
+        padding: 4px;
+        display: block;
+        float: left;
+    }
+    .carousel-widget-selected {
+        background-color: $carousel-widget-selected-background-color;
+        border-color: $carousel-widget-selected-border-color;
+    }
+    .carousel-widget-over {
+        background-color: $carousel-widget-over-background-color;
+        border-color: $carousel-widget-over-border-color;
+    }
+    .drag-cls {
+        background-color: #cbc;
+    }
+    .x-view-drop-indicator-left {
+        background-color: none;
+        background-image: theme-image($theme-name, 'launch-menu/drop-indicator-left.PNG');
+        background-repeat: no-repeat;
+        background-position: left center;
+    }
+    .x-view-drop-indicator-right {
+        background-color: none;
+        background-image: theme-image($theme-name, 'launch-menu/drop-indicator-right.PNG');
+        background-repeat: no-repeat;
+        background-position: right center;
+    }
+
+    .x-btn {
+        @include owf-background-gradient($widget-launcher-button-background-gradient);
+        border-color: $widget-launcher-button-border-color;
+        padding: 0px;
+        .x-btn-inner {
+            color: $widget-launcher-button-color !important;
+        }
+    }
+
+    .x-btn-over {
+        @include owf-background-gradient($widget-launcher-button-over-background-gradient);
+        border-color: $widget-launcher-button-over-border-color;
+    }
+
+    .x-btn-pressed {
+        @include owf-background-gradient($widget-launcher-button-pressed-background-gradient);
+        border-color: $widget-launcher-button-pressed-border-color;
+    }
+
+     .advSearchBtnToolbar {
+       background: $widget-launcher-advanced-search-toolbar-color;
+       border-left-color: $widget-launcher-advanced-search-toolbar-border-left-color;
+       border-right-color: $widget-launcher-border-color;
+       border-width:0px 1px 0px 1px !important;
+
+       .x-btn-over {
+           @include owf-background-gradient($widget-launcher-button-over-background-gradient);
+           border-color: $widget-launcher-button-over-border-color;
+       }
+     }  
+
+    //this section needs to be below the .x-btn section above
+    .advSearchBtn {
+        //background: none ;
+        //border: none;
+        //width: 32px !important;
+        //margin-top: 5px;
+
+        .advSearchBtnIcon {
+            background-image: theme-image($theme-name, 'launch-menu/launch_expand-up.png') ;
+        }
+        .x-btn-over {
+            .advSearchBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_expand-over.png') ;
+            }
+        }
+        .x-btn-pressed {
+            .advSearchBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_expand-down.png') ;
+            }
+        }
+    }
+    .advSearchBtn-clicked {
+        //background: none ;
+        //border: none;
+        //width: 32px ;
+        //margin-top: 5px;
+
+        .advSearchBtnIcon {
+            background-image: theme-image($theme-name, 'launch-menu/launch_collapse-up.png') ;
+        }
+        .x-btn-over {
+            .advSearchBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_collapse-over.png') ;
+            }
+        }
+        .x-btn-pressed {
+            .advSearchBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_collapse-down.png') ;
+            }   
+        }
+    }   
+
+    //used for all grids in the launch menu
+    .x-panel{
+        .x-grid-body {
+            background: $widget-launcher-grid-background;
+            border-color: $widget-launcher-grid-body-border-color ;
+            .x-grid-row {
+                //ext does not provide customizable variables for the style of
+                //the first "special" column, so we need to override it here
+                .x-grid-cell-special {
+                    background: $widget-launcher-grid-row-cell-background;
+                }
+                .x-grid-cell {
+                    background: $widget-launcher-grid-row-cell-background;
+                    color: $widget-launcher-grid-row-cell-color;
+                    border-color: $widget-launcher-grid-body-border-color;
+                    border-style: $panel-body-border-style;
+                    border-width: 0 1px 0 0;
+
+                    vertical-align: middle;
+
+                    .x-grid-cell-inner {
+                        padding: 3px;
+                        //padding-left: 10px;
+                    }
+                }
+            }
+            .x-grid-row-alt {
+                .x-grid-cell-special {
+                    background: $widget-launcher-grid-row-cell-alt-background;
+                }
+                .x-grid-cell {
+                    background: $widget-launcher-grid-row-cell-alt-background;
+                }
+            }
+            .x-grid-row-selected {
+                .x-grid-cell-special {
+                    background: $widget-launcher-grid-row-cell-selected-background-color;
+                    
+                }
+
+                .x-grid-cell {
+                    background: $widget-launcher-grid-row-cell-selected-background-color;
+                }
+
+            }
+            .x-grid-row-over {
+                .x-grid-cell-special {
+                    background: $widget-launcher-grid-row-cell-over-background-color;
+                    
+                }
+
+                .x-grid-cell {
+                    background: $widget-launcher-grid-row-cell-over-background-color;
+                }
+            }
+        }
+        .x-grid-header-ct {
+            border: none;
+            background: $widget-launcher-grid-header-background-color;
+            @include background-gradient($widget-launcher-grid-header-background-color,$widget-launcher-grid-header-background-gradient);
+            .x-column-header {
+                @include background-gradient($widget-launcher-grid-header-background-color,$widget-launcher-grid-header-background-gradient);
+                border-color: $widget-launcher-grid-body-border-color;
+                color: $widget-launcher-grid-header-color;
+            }
+
+            .x-column-header-over, .x-column-header-sort-asc, .x-column-header-sort-desc {
+                @include background-gradient($widget-launcher-grid-header-over-background-color,$widget-launcher-grid-header-over-background-gradient);
+            }
+        }
+
+        .x-grid-row-focused .x-grid-cell {
+            font-weight: bold;
+            background-color: $widget-launcher-grid-row-cell-focus-background-color ;
+            .x-grid-cell-inner {
+                color: $widget-launcher-grid-row-cell-focus-color;
+            }
+        }
+    }
+
+    //override ext tree
+  .#{$prefix}tree-panel .#{$prefix}grid-row .#{$prefix}grid-cell-inner {
+
+      //this makes the tree panel line height scale with text size
+      height: auto;
+      line-height:normal;
+  }
+
+.x-tree-panel {
+    
+
+    .x-grid-body .x-grid-row .x-grid-cell {
+        /*border: 1px solid pink;*/
+    }
+
+    .x-grid-body .x-grid-row-over .x-grid-cell {
+        /*border: 1px solid blue;*/
+
+    }
+
+    .x-tree-elbow, .x-tree-elbow-end, .x-tree-elbow-plus, .x-tree-elbow-end-plus, .x-tree-elbow-empty, .x-tree-elbow-line {
+        /*border: 1px solid green;*/
+        width: .6em;
+        height: 1px;
+    }
+}
+
+  //remove the pointer on header names
+  .x-window-header-text, .x-panel-header-text {
+    cursor: default !important;
+  }
+
+}
+
+#widget-launcher-body .x-box-inner > :last-child {
+    @include border-bottom-radius($widget-launcher-body-radius);
+}

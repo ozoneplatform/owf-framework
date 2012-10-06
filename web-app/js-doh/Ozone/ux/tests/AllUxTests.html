@@ -1,0 +1,62 @@
+<html>
+<head>
+    <title>ApproveWidgetsPanelTest</title>
+    <link rel='stylesheet' type='text/css' href='../../../../js-lib/ext-4.0.6/resources/css/ext-all.css'/>
+
+    <link rel='stylesheet' type='text/css' href='../../../../css/blueExt.css'/>
+    <link rel='stylesheet' type='text/css' href='../../../../css/ApproveWidgetsPanel.css'/>
+
+	<script type="text/javascript" src="../../../../js-lib/ext-4.0.6/ext-all-debug.js"></script>
+    <script type="text/javascript" src="../../../../js/config/config.js"></script>
+    <script type="text/javascript" src="../../../../js-min/owf-widget-debug.js"></script>
+    <script type="text/javascript" src="../../../../js/ux/App.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/CheckboxCellSelectionModel.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/CheckColumn.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/ComboBox.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/CustomGridHdMenuView.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/DashboardManagerStateProvider.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/DashboardMgmt.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/DateRange.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/DDView.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/FileUploadField.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/ItemSelector.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/MessageBoxPlus.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/Module.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/MultiSelect.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/Portal.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/RadioColumn.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/RowExpander.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/StartMenu.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/tab_panel.js"></script>
+	<script type="text/javascript" src="../../../../js/ux/toggle_collapsible.js"></script>
+	<script type="text/javascript" src="../../../../js-lib/dojo-release-1.5.0/dojo/dojo.js"></script>
+	<script type="text/javascript">
+		owfdojo.config.dojoBlankHtmlUrl = '../../../../js-lib/dojo-1.5.0-windowname-only/dojo/resources/blank.html';
+
+        dojo.registerModulePath("Ozone", "../../../js-doh/Ozone");
+        dojo.provide("Ozone.ux.tests.AllUxTestsHTML");
+        dojo.require("dojo.parser");
+        dojo.require("doh.runner");
+        dojo.require("dojox.io.windowName");
+        dojo.require("dojox.secure.capability");
+
+        dojo.addOnLoad(function() {
+
+            //register tests
+            doh.register("Ozone.ux.tests.AllUxTests",[
+			{
+				name:"assertTrueTest",
+				timeout:3000,
+				runTest: function (){
+					doh.assertTrue(true);
+				}
+			}
+			]);
+			doh.run();
+		});
+	</script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,239 @@
+[Event "Dos Hermanas"]
+[Site "Dos Hermanas"]
+[Date "1999.04.06"]
+[Round "1"]
+[White "Polgar, Judit"]
+[Black "Anand, Viswanathan"]
+[Result "1-0"]
+[ECO "B81"]
+[WhiteElo "2677"]
+[BlackElo "2781"]
+[PlyCount "68"]
+[EventDate "1999.04.??"]
+
+1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. Be3 6... e6 {One of thre
+e main moves in this position. 6...e5 was seen on the next board with the same
+success (Adams-Svidler), Kasparov's favourite 6...Ng4 will definitely be given
+a test some rounds later. The text move is, in my opinion, the most demanding.
+Now, if White wants to fight for some opening advantage, he (sorry,she) has to
+be ready for certain risks.} 7. g4 {And she's ready! After Linares-99
+(Topalov-Kasparov and Anand-Kasparov) English Attack (7.Qd2 or 7.f3) needs
+certain repairing period. So the text move remains the only ambitious try as 7.
+Be2 Qc7 is just good version of Classical Scheveningen for Black.} 7... e5 {
+Practically forces White to sacrifice a piece (or even two). Kasparov's 7...h6
+8.f4 e5!? seems to be a reliable option but maybe Vishy didn't like 8.h4!?
+played in his presence  by Topalov a couple of weeks before.} (7... h6 8. f4 (
+8. h4 $5 8... e5 9. Nf5 g6 10. Nxh6 Bxh6 11. Bxh6 Bxg4 12. Qd2 $13 {
+Topalov-van Wely/Monaco act 1999}) 8... e5 $5 9. Nf5 9... h5 $1 {was in the
+tre of discussion in 1998. (Shirov-Kasparov/Linares 1998, Svidler-Topalov/
+Elista ol 1998)}) 8. Nf5 g6 9. g5 {Some "great annotator" gives the credit of
+inventing this sacrificial attempt to the game Hazai-Dvoirys (Sochi 1982).
+With all respect to Laszlo Hazai we have to mention the real author of this
+interesting idea - prematurely gone Hungarian sharp attacker IM Bela Perenyi
+who played it in 2 games already in 1978. Now Judit tries to revive "Hungarian
+Attack".} (9. Bg2 $5 9... d5 $5 (9... gxf5 10. exf5 h6 11. Qe2 Nc6 12. O-O-O
+Rg8 13. h3 Qa5 14. f4 Bd7 15. a3 O-O-O 16. Qf2 $1 $36 {
+Nikolenko,O-Vorobiov,E Moscow-ch op(07) 1995 1-0 28}) 10. Bg5 gxf5 11. Nxd5 Be7
+12. Bxf6 Bxf6 13. exf5 h5 14. h3 Bd7 15. Qe2 hxg4 16. hxg4 Rxh1+ 17. Bxh1 17...
+Bc6 $13 {Tolnai,T-Gavrikov,V Berlin 1989   19}) 9... gxf5 10. exf5 (10. gxf6 $6
+10... f4 11. Bc4 Be6 12. Bxe6 fxe6 13. Qh5+ Kd7 14. Qf7+ Kc6 15. Bd2 Qd7 16.
+Qh5 b5 17. a4 b4 18. Ne2 18... a5 $15 {
+Ljubojevic,L-Polugaevsky,L Roquebrune 1992}) 10... d5 11. Qf3 {Back to the
+roots! During the last years the main discussion was concerned around 12.gxf6
+d4 13.Bc4 (Judit played this line as well with both colours) but recent game
+Shirov-Anand (Monaco 1999) was probably more than enough. The text move seemed
+to be rather forgotten during the last years. Some tries to revive it (like
+Sokolov,A - Svidler/Russia ch 1998) had no success.} (11. gxf6 d4 12. Bc4 Qc7 (
+12... Qxf6 13. Nd5 Qc6 14. Bxd4 Bb4+ (14... Qxc4 $2 15. Nf6+ Ke7 16. Bxe5) (
+14... exd4 $2 15. Qxd4) 15. c3 Qxc4 16. Be3 $40 {
+Shirov,A-Gelfand,B/Wijk aan Zee 1996}) 13. Qd3 13... dxe3 $1 14. fxe3 $6 (14.
+O-O-O exf2 (14... Nc6 15. Nd5 Qa5 16. f4 Bh6 17. Kb1 b5 18. fxe5 e2 19. Qxe2
+Bb7 20. Bb3 $18 {1-0 Gallagher,J-Shneider,A/Bern op (09) ;EXP 46 1995 (26)})
+15. Bxf7+ $5 (15. Nd5 Qc5 16. b4 Qd6 17. Bb3 Bd7 18. Qc4 Bc6 19. Qh4 Nd7 20.
+Qxf2 20... Nxf6 $17 {1-0 Polgar,J-Svidler,P/Haifa act 1998 (34)}) 15... Kxf7
+16. Qd5+ Ke8 17. f7+ Ke7 18. Qf3 Bh6+ 19. Kb1 19... Kf8 $13 {
+Shirov,A-Polgar,J/Dortmund 1996/}) 14... b5 15. Bb3 (15. Bd5 Nc6 16. O-O-O Bb7
+17. Be6 17... Nb4 $17 {Hracek,Z-Kavalek,L/Ceska Trebova 1998/EXT 99/0-1 (59)})
+15... Bb7 16. Nd5 Qa5+ 17. c3 17... Nd7 $17 {
+0-1 Shirov,A-Anand,V/Monte Carlo MNC 1999 (24)}) 11... d4 12. O-O-O Nbd7 13.
+Bd2 {This seems to be the most reasonable attempt to continue the attack. Some
+incredible sacrifices like 13.Bxd4 and 13.Rxd4 were practically tested as well
+but happened to be too creative. The text move was played by another lady in
+the stem game Chiburdanidze-Cserna (Pristina,1983).} (13. Bc4 $2 {
+was played in the latest game in this line} 13... Qc7 14. Bb3 dxc3 15. g6 fxg6
+16. fxg6 hxg6 17. Qg2 17... Qc6 $19 {
+and Black was just two knights up/Sokolov,A-Svidler,P/Russia ch 1998}) 13...
+dxc3 {Here and later Black has a lot of possibilities to defend. If I would
+try to analyse them all extensively these comments will probably appear in the
+next millennium. So the lines I give here are mostly illustrative. The only
+conclusion I could make while analysing these crazy variations is that White
+has always some active play even when he (OK, she) remains two pieces down.} (
+13... Qc7 {Was recommended by IM Cserna} 14. gxf6 $5 {
+In my opinion, the only move to prove the correctness of White's idea.} (14.
+Bd3 Nc5 15. Bc4 dxc3 16. Bxc3 Nfe4 17. Rhe1 Nxc3 18. Qxc3 Bg7 19. f6 O-O 20.
+Rxe5 20... Be6 $17 {0-1 Wedberg,T-Novikov,I/Copenhagen 1991/}) 14... dxc3 (
+14... Qc6 15. Qxc6 bxc6 16. Ne4 $16) 15. Bxc3 15... Qc6 {For some misterious
+reason this position is assessed in "Chess Informant" N36 as winning for Black.
+Only two moves were examined there: 16.Bg2 (allowing queens exchange) and 16.
+Qe2 (16...Bh6!). However, White has one more move which leads to some messy
+positions where White's attacking chances are more than real.} (15... Nxf6 16.
+Re1 $13) 16. Rd5 $1 {As I wrote already the following lines are not to prove
+something - they just show the variety of ways White can prepare decisive
+attack. Of course, Black is not resourceless at all, so please play through
+these lines, find mistakes, have fun - this position is everything but boring
+one.} 16... Bh6+ $5 (16... Nxf6 17. Rxe5+ Kd7 (17... Kd8 18. Qxc6 bxc6 19. Re3
+Be7 20. Bg2 $18) 18. Qxc6+ bxc6 19. Re3 Bh6 20. Bxf6 $16) (16... Qxf6 17. Bc4
+Rg8 (17... Bh6+ 18. Kb1 Bg7 19. Re1 Qg5 20. Bd2 Qe7 21. Qg2 Kf8 22. f4 $44) (
+17... Bg7 18. Rg1 $44) 18. Re1 Bd6 19. Qd1 (19. Qh5 Be7 20. f4 Qh4) (19. Qd3
+Bc7 20. f4 b5 21. Bb3 Qe7 22. fxe5 (22. Bxe5 Nxe5 23. Rdxe5 Bxe5 24. Rxe5 Rg1+
+25. Kd2 Be6 26. fxe6 f6 27. Qe4 Rd8+ 28. Rd5 $13) 22... Nc5 23. Qf3 Nxb3+ 24.
+axb3 $13) 19... Bc7 (19... Qg5+ 20. Kb1 Bc7 21. Rd3 (21. Rxd7 Bxd7) 21... Rg7 (
+21... Qe7 22. f4 Nc5 23. Bxe5 $1 (23. Rd5 Bxf5 24. Bxe5 Ne6) 23... Nxd3 24.
+Bxd3 Kf8 25. Bg7+ Rxg7 26. Rxe7 Kxe7 27. Qe1+ Kd7 28. f6 Rg8 29. Qe7+ Kc6 30.
+Be4+ Kb6 31. b4 $18) 22. Rg3 Qf6 23. Rxg7 Qxg7 24. f4 $44) 20. f4 Qc6 (20... b5
+21. fxe5 Qh6+ 22. Bd2 Qxh2 23. Rh1 (23. e6 fxe6) 23... Qg2 (23... Qg3 24. e6
+fxe6 25. Qh5+ Kd8 26. fxe6 bxc4 27. Rg5 $18) 24. e6 bxc4 25. exd7+ Bxd7 26. Bb4
+Bf4+ 27. Kb1 Ra7 28. Bc5 Rb7 29. Rg1 $16) 21. Bb3 b5 (21... Nf6 22. Bxe5 $18) (
+21... Rg2 22. Qh5 Nb6 23. Rd2 Rxd2 24. Qxf7+ Kd8 25. Bxd2 $18) (21... h6 22.
+Qh5 Qf6 23. h4 $18) 22. Qh5 Rg7 (22... Qf6 23. h4 Qg7 24. fxe5 Qg4 25. e6 $1
+$18) 23. fxe5 $18) 17. Kb1 Bf4 (17... Nxf6 18. Rxe5+ $18) 18. Bg2 Nxf6 (18...
+Rg8 19. Re1 Bxh2 20. Qh3 Rxg2 21. Qxg2 Nxf6 22. Qxh2 $18) (18... Nb6 19. Qxf4
+$1 19... exf4 (19... Qxd5 20. Qb4 Qd8 21. Re1 Bxf5 22. Bxb7 $18) 20. Re5+ $18)
+19. Qxf4 (19. Bxe5 Nxd5 (19... Bxf5 20. Qxf4 $1 (20. Bxf4 20... Nxd5 $13) 20...
+Bxc2+ 21. Ka1 Nxd5 22. Qd4 Rg8 23. Bxd5 Qd7 24. Re1 $40) 20. Bxh8 Bxf5 21. Qxd5
+Qxd5 22. Bxd5 22... O-O-O $19) 19... exf4 20. Re5+ (20. Re1+ Be6 (20... Kf8 21.
+Rd8+ Kg7 22. Bxc6 Rxd8 23. Rg1+ Kh6 24. Bxf6 bxc6 25. Bg5+ Kh5 26. Bxd8 $16)
+21. Bxf6 Rg8 (21... O-O 22. Rg1 $18) 22. Bf3 Qb6 23. Rdd1 23... Rc8 $15) 20...
+Kd7 21. Bxc6+ Kxc6 22. Ree1 Bxf5 23. Bxf6 23... Rhe8 $11) (13... Bb4 14. Nb1
+Bxd2+ (14... Be7 15. gxf6 Nxf6 16. Bc4 $1 (16. Bg5 16... Qd5 $15) 16... Qc7 17.
+Qb3 $36) 15. Nxd2 Ng8 16. Ne4 $44) 14. Bxc3 14... Bg7 $146 (14... Qc7 15. gxf6
+{- 13...Qc7} (15. Bd3 Bd6 16. Rhe1 {Chiburdanidze-Cserna/Pristina 1983} 16...
+Ng8 $1 $17)) (14... Ng8 15. f6 (15. Qh5 Qc7 16. f4 Ne7) 15... Ngxf6 (15... Qc7
+16. Bh3 Bd6 17. Rhe1 $44) 16. Bxe5 Qb6 (16... Qa5 17. Bxf6 Nxf6 18. Qxf6 Rg8
+19. Bb5+ axb5 20. Rhe1+ $18) 17. Bc3 Bg7 18. Bc4 $44) 15. Rg1 O-O (15... Ng8
+16. Bc4 Qc7 17. Bd5 (17. Bxf7+ Kxf7 18. Qh5+ Kf8) (17. f6 Ndxf6) 17... h5 (
+17... Nc5 18. Rge1 $1 (18. f6 Nxf6 19. gxf6 Bh6+ 20. Kb1 Bf4 21. Bb4 Bf5 22.
+Bxc5 22... Qxc5 $13) 18... Na4 19. f6 Bxf6 20. Bxe5 Bxe5 21. Rxe5+ Kf8 22. Rde1
+$16) 18. f6 Ngxf6 19. gxf6 Bxf6 (19... Bh6+ 20. Kb1 Bf4 21. Bxf7+ $1 21... Kxf7
+22. Rg7+ Ke6 (22... Ke8 23. Bb4 Qb6 24. Re7+ Kd8 25. Qd5 $18) 23. Qh3+ Kxf6 24.
+Rdg1 Rh6 25. Bb4 $18) 20. Bxf7+ (20. Bxe5 Qxe5 (20... Bxe5 21. Qxf7+ Kd8 22.
+Rg8+ Rxg8 23. Qxg8+ Ke7) 21. Rde1 Kd8 22. Rxe5 $36) 20... Kxf7 21. Qd5+ Kf8 22.
+Bb4+ Be7 23. Bxe7+ Kxe7 24. Rg7+ Kd8 25. Qe6 Qc6 26. Rd6 Qb5 27. c4 Qa4 28. b3
+Qa3+ 29. Kb1 Qxd6 30. Qxd6 $16) 16. gxf6 (16. Qe3 Kh8 (16... Nh5 17. f6) 17.
+Bxe5 Ne8 18. f6 Nexf6 19. gxf6 Bxf6 20. Bd6 Re8 21. Qb3 Qb6) (16. Kb1 Kh8 (
+16... e4 17. Qh3) 17. Bc4 Ng8) (16. Bb4 Ne8 17. f6 (17. Bc4 Qc7) 17... Nexf6
+18. Bxf8 Kxf8) 16... Qxf6 17. Qe3 (17. Qg3 Kh8 18. Kb1 (18. f4 Bh6) (18. Bb4
+Rg8) 18... Nc5 (18... Rg8 19. f4 Qxf5 (19... exf4 20. Qxf4 Qb6 21. f6 $1 21...
+Qxg1 22. fxg7+ Rxg7 23. Qxf7 Qg6 24. Qe7 $18) 20. fxe5 Nf8 (20... Qg6 21. Qe3 (
+21. Bc4 Qxg3 22. Rxg3 Bxe5 23. Rxd7 Bxc3 24. Rxg8+ Kxg8 25. Rd8+ Kg7 26. bxc3
+$16)) 21. e6 Ng6 22. Bd3 $1 22... Qxe6 23. Bxg6 fxg6 24. Qc7 Qe8 25. Rd8 $1
+25... Bf5 26. Rxe8 Raxe8 27. Rg2 $16) 19. Re1 (19. Bb4 Ne4 (19... Bxf5 20. Bxc5
+Rfc8 21. Rd6 Rxc5 22. Rxf6 Bxc2+ 23. Ka1 Bxf6 24. Qf3 24... Rc6 $13) 20. Qg2
+Bxf5 21. Bd3 21... Nd6 $17) 19... Re8 20. f4 Qh6 21. Bh3 Na4 22. Bxe5 Bxe5 23.
+fxe5 Bd7) (17. Qg4 Kh8 18. f4 Qh6 19. Kb1 (19. Rd6 Nf6 20. Qxg7+ Qxg7 21. Rxg7
+Kxg7 22. Bxe5 Bxf5 23. Rxf6 (23. Bxf6+ Kg8) 23... Be4) 19... Nf6) 17... Kh8 (
+17... Re8 18. f4 $44) (17... Qxf5 18. Bh3 $18) 18. f4 Qb6 (18... Qh6 19. Bc4 f6
+(19... exf4 20. Rxg7 $1 (20. Bxg7+ Qxg7 21. Qe7 Qe5 22. Rxd7 Qxe7 23. Rxe7
+23... Bxf5 $13) 20... f6 (20... fxe3 21. Rg6+ f6 22. Rxh6 $18) 21. Rdg1 $1 (21.
+Rg4 fxe3 22. Rdg1 e2+ 23. Kb1 e1=Q+ 24. Bxe1 24... Qg5 $19) 21... Qxg7 22. Qe1
+Qxg1 23. Qxg1 b5 24. Bd5 Rb8 25. Bb4 $18) (19... Bf6 20. Rd6 Rg8 (20... b5 21.
+Rxf6 Qxf6 22. fxe5 Qh4 23. e6+ f6 24. exd7 Bxd7 25. Qe7 $18) 21. Bxf7 Rxg1+ 22.
+Qxg1 Qg7 23. Qxg7+ Kxg7 24. Be6 $13) (19... Nf6 20. Rxg7 $1 20... Qxg7 21. Bxe5
+Bxf5 22. Qd4 (22. Qb6 Kg8 23. Bxf6 Qh6 24. Rg1+ Bg6 25. Be5 25... Rae8 $16)
+22... Kg8 23. Bxf6 Qh6 24. Rg1+ Bg6 25. Kb1 $18) (19... b5 20. Bd5 Rb8 (20...
+b4 21. Bxb4 Rb8 (21... exf4 22. Bxf8 Nxf8 23. Qb3 $18) 22. Bxf8 Nxf8 23. Bxf7
+$16) 21. Rxg7 $1 21... Qxg7 22. Rg1 $18) 20. Rg4 (20. Rxg7 Qxg7 21. Rg1 Qh6)
+20... b5 21. Bd5 Rb8 22. Rdg1 Nb6 23. Bb3 Rb7 24. Qf2 Qh5 25. Qg2 Qh6 26. Be6)
+(18... b5 $2 19. Rxd7 Bxd7 20. Bxe5 $18) (18... Re8 19. Kb1 (19. Rxg7 Qxg7 20.
+fxe5 Nxe5 21. f6 Qg6 22. Bxe5 22... Bf5 $17) 19... Bh6 20. Rg4 (20. Rd4 20...
+Qd8 $1 $17) 20... Qxf5 21. Bh3 Nf6 (21... Qe6 22. Rh4 f5 23. Bxf5 Qxf5 24. Rxh6
+$44) 22. Rg5 Qe4 23. Bxe5 Rxe5 24. Rxe5 Qxe3 25. Rd8+ Kg7 26. Rxe3 26... Bxf4
+$13) 19. Qg3 19... Qh6 $2 (19... Rg8 20. Bc4 (20. Bd3 Qh6 21. Bc4 exf4 22. Qf3
+(22. Qe1 f3+ 23. Kb1 Bxc3 24. Qxc3+ Nf6 25. Rxg8+ Kxg8 26. Rd8+ Kg7 27. Qa3 Nd7
+28. Qe7 Qf6 29. Qe8 29... b5 $17) 22... Bxc3 23. Qxc3+ Nf6 24. Rxg8+ Kxg8)
+20... Nf6 21. Bxe5 (21. Bxf7 Ne4 22. Qg4 Nxc3 23. bxc3 (23. Bxg8 Qe3+ 24. Rd2
+Ne2+ 25. Qxe2 Qxg1+ 26. Rd1 26... Qb6 $19) 23... Qe3+ 24. Kb1 24... Qb6+ $11)
+21... Bxf5 22. Bxf7 Rac8 23. Rd2 Nh5 24. Qe1 Bg6 (24... Qa5 25. Bxg8 Rxg8 26.
+a3 Bg6 27. Rg5 $16) (24... Nxf4 25. Bxg8 Rxc2+ 26. Rxc2 Nd3+ 27. Kd1 Nxe5 28.
+Bb3 $1 $16 (28. Bxh7 Qd4+ 29. Rd2 Bg4+ 30. Kc1 30... Bh6 $13) 28... Bxc2+ 29.
+Kxc2 Qd4 30. Kb1) 25. Bxg8 Kxg8 26. Bxg7 26... Nxg7 $13) 20. Rd6 $1 20... f6 (
+20... Nf6 21. Bxe5 Bxf5 22. Qxg7+ Qxg7 23. Bxf6 Qxf6 24. Rxf6 Be6 25. f5 $16) (
+20... Bf6 21. Kb1 Qh4 (21... exf4 22. Rxf6 Nxf6 23. Qxf4 $1 23... Rd8 24. Bd3
+$18) 22. Rxf6 $1 22... Qxg3 (22... Qxf6 23. fxe5 Qh6 24. e6+ Nf6 (24... f6 25.
+Bd2 $18) 25. Qf4 $18) 23. Rxg3 Nxf6 24. Bxe5 h5 25. Bxf6+ Kh7 26. Rg5 $18) 21.
+Bd2 21... e4 {Sad necessity.} (21... Nc5 {Most probably this is what Vishy was
+aiming for when playing 18...Qb6. However, this move, which seems to be
+winning due to double threat 22...Ne4 and 22...Bxf5, finds fantastic
+refutation.} 22. fxe5 (22. Bg2 Bxf5 23. fxe5 Qg6 24. Qf2 24... Rac8 $17) 22...
+Ne4 23. exf6 $3 23... Nxg3 24. fxg7+ Qxg7 25. Rxg3 {Black has a queen for a
+bishop but the mating threats force him to liquidate into the lost ending.}
+25... Qxg3 (25... Qe5 26. Bc3 Qxc3 27. Rxc3 Bxf5 28. Bg2 $18) 26. hxg3 h5 (
+26... Rxf5 27. Bc4 h5 28. Rd8+ Kg7 29. Bc3+ Kg6 30. Bd3 $18) 27. Bb4 Bxf5 28.
+Rh6+ Kg7 29. Bxf8+ Rxf8 30. Rxh5 $16) 22. Bc4 {Nobody's perfect! As Gary
+Kasparov said even DEEP BLUE is not. Judit's energetic play in this game
+deserves highest praise but this is the moment where she could let her
+opponent with no chance would she play straightforward 22.Qg4! with rather
+primitive intention Rg1-g3-h3. As following variations show Black has no
+adequate defence.} (22. Be3 Nb8 23. Qg4 Nc6 24. Rxc6 bxc6 25. Rg3 25... Qg6 $1)
+(22. Qg4 $1 22... b5 (22... Nc5 23. Rg3 e3 24. Rxe3 Qxh2 25. Rh3 Qf2 26. Rxh7+
+Kxh7 27. Qh5+ Kg8 28. Bc4+ Be6 29. Rxe6 $18) (22... Rg8 23. Bc4 Re8 24. Rg3 Nf8
+25. Bc3 $1 25... Ng6 26. Rxf6 $18) (22... Ne5 23. fxe5 e3 24. Bc3 e2+ 25. Kb1
+exf1=Q+ 26. Rxf1 Qg5 27. Qxg5 fxg5 28. f6 Bh3 (28... Kg8 29. e6 $18) 29. fxg7+
+Kxg7 30. e6+ Kg8 31. Rg1 $18) (22... Re8 23. Rg3 Nf8 24. Bc3 $1 (24. Be2 24...
+Qg6 $1 (24... Ng6 25. Rh3 Nh4 26. Rd5 $1 $18) 25. fxg6 Bxg4 26. Bxg4 hxg6 27.
+f5 gxf5 28. Bxf5 Re5 29. Bh3 29... Rh5 $14) 24... Ng6 25. Rxf6 Bxf6 26. Bxf6+
+Kg8 27. Bc4+ Kf8 28. Rh3 Bxf5 29. Qxf5 Qxf4+ 30. Qxf4 Nxf4 31. Rxh7 Ne6 32. Bc3
+Rad8 33. Rxb7 Rc8 (33... e3 34. Bb4+ Kg8 35. Be7 $18) 34. Bb4+ Kg8 35. Bxa6 $18
+{and White pawns will decide the game}) 23. Rg3 Rg8 24. Be3 $1 24... Rb8 (24...
+Nb8 25. Qd1 $1 25... Bxf5 (25... Bf8 26. Rxg8+ Kxg8 27. Qd5+ Kg7 28. Rd8 Qh4
+29. Kd1 $18) 26. Qd5 Qxh2 27. Rxg7 $1 27... Kxg7 28. Qxf5 Qh4 (28... Rf8 29.
+Qxe4 Qg3 30. Kd2 $18) 29. Bf2 Qh6 30. Qxe4 Kh8 31. Qxa8 Qxf4+ 32. Rd2 Rd8 33.
+Bd3 $18) (24... Qxh2 25. Rd1 $1 25... Qh6 26. Bg2 $18) (24... Nf8 25. Bg2 Rb8
+26. Bxe4 b4 27. Qf3 $1 $18) 25. Bg2 $1 (25. Rc6 Ra8 (25... Nf8 26. Qe2 $1 26...
+Bxf5 27. Rc5 $16) (25... a5 $5) 26. Rc7 Rb8 27. Bg2 Rb7 28. Rxc8 28... Rxc8 $13
+) (25. Rd2 Nf8 (25... Nb6 26. Bxb6 Rxb6 27. Rdg2 Rc6 28. b4 $1 $16 (28. Rh3
+Bxf5 29. Qxf5 Rc5)) 26. Rdg2 (26. Qe2 Bxf5 27. Rd5 Be6) (26. Bg2) 26... Ng6 (
+26... Rb7 27. Rh3 Qg6 28. fxg6 Bxg4 29. Rxg4 f5 30. Rgh4 h6 31. Rh5 $18) 27.
+Rh3 Bxf5 28. Qxf5 28... Nh4 $13) 25... Rb7 26. Bxe4 Rc7 27. Rd4 $1 $18) 22...
+b5 (22... Nb8 23. Qg4 b5 24. Bd5 Ra7 25. Rg3 (25. Bxe4) 25... Qxh2 26. c3 (26.
+Rh3 Bxf5) 26... Bxf5) (22... Nc5 23. Qe3 (23. Qg4 e3 (23... b5 24. Bd5 Ra7 25.
+Bb4 (25. Be3 Rc7 26. Rc6 Rxc6 27. Bxc6 Nb7) 25... Na4 26. Rg3 Qxh2 27. Rh3 Bxf5
+28. Qxf5 Qg1+ 29. Kd2 Qf2+ 30. Kd1 30... Bh6 $17) 24. Bb4 Ne4 25. Rd4 Re8 (
+25... Nf2 26. Bxf8 $1 26... Nxg4 27. Bxg7+ Kxg7 28. Rxg4+ Kf8 29. Re4 Be6 30.
+Rxe6 Qxh2 31. Rxe3)) 23... Na4 24. Qxe4 Rb8 25. Bd5 Nc5 (25... b5 26. Be3 $18)
+26. Qe7) 23. Be6 23... Ra7 $2 {Black misses the last chance to move his
+unfortunate extra knight from d7. It was absolutely necessary because after
+the text move he'll be limited to some chaotic rooks and pawns moves till the
+end of the game.} (23... Nc5 $1 24. Bd5 (24. Rc6 Nxe6 25. fxe6 Qg6 (25... Rg8
+26. f5 Qh5 (26... Bb7 27. Rc7 Bd5 28. Kb1 $1 28... Qxd2 29. Rxg7 $18) (26...
+Qxd2+ 27. Kxd2 Bh6+ 28. Ke2 Rxg3 29. Rxg3 Bb7 (29... Bf4 30. e7 $18) 30. Rc7
+Bd5 31. Rh3 Bg7 32. b3 $18) 27. Rc7 Bxe6 28. Rxg7 Bf7 29. Bc3 29... Qxf5 $13)
+26. Qf2 Qf5 27. Rc7 Rg8 28. Qg3 Bxe6 29. Rxg7 29... Qh3 $11) (24. Be3 Nb7 25.
+Rc6 Bxe6 26. fxe6 Rg8) 24... Ra7 (24... Rb8 25. Rc6 Bxf5 (25... Nd7 26. Rc7 $18
+) 26. Rxc5 Rbc8 27. Rxc8 Rxc8 28. Be3 $16) (24... Bxf5 25. Bxa8 Rxa8 26. Rd5
+Ne6 27. Rxf5 Nd4 28. Qe3 Nxf5 29. Qxe4 Rd8 30. Qxf5 Qxh2 31. Be3 $16) 25. Bb4 (
+25. Rc6 Na4 26. Be3 (26. Qe3 Rd7 27. Be6 (27. Bb4 Re8 28. Be6) 27... Rdd8 28.
+b3 (28. Rc7 Bxe6 29. fxe6 Rg8) 28... Bxe6 29. fxe6 Rc8 30. Rxc8 Rxc8 31. Qa7
+Nc5 32. e7 f5) (26. Be6 Bxe6 27. fxe6 Rg8 28. b3 Qh5) 26... Re7) 25... Rc7 (
+25... Na4 26. Rxa6 Bxa6 27. Bxf8 $16) 26. Rc6 Rxc6 27. Bxc6 Bxf5 28. Bxc5 Rc8)
+(23... Nb8 {is hardly improving knight's position.} 24. Be3 a5 (24... Bxe6 25.
+fxe6 Qg6 26. Qh3 Qe8 27. f5 Rg8 28. Rd4 Bf8 29. Rxg8+ Kxg8 30. Rxe4 Nc6 31.
+Rg4+ Kh8 32. Qg2 Bd6 33. Bh6 $18) (24... Bb7 25. Rd2 $1 $18 25... Re8 26. Rdg2)
+25. Rgd1 $1 25... Bxe6 26. fxe6 Qg6 27. Qh3 $16) 24. Rc6 {In some unconventiona
+l way this game is a miniature. This position is already totally lost for
+Black. With the following nice manoeuvre White conquers 7-th rank for his rook
+and that's over.} 24... a5 25. Be3 Rb7 26. Bd5 Rb8 27. Rc7 $18 {This position
+is really picturesque - despite his extra piece Black can hardly move. White
+has plenty of winning plans - Bc6 & Ba7 or Qg4 & Rg1-g3-h3, for instance. The
+Tiger is caught.} (27. Re6 {with the idea} 27... Bb7 28. Re7 $1 28... Bxd5 29.
+Qxg7+ Qxg7 30. Rgxg7 Bg8 31. Rxd7 {looks like one more way to Rome but Judit's
+move is more stylish - the domination is complete.}) 27... b4 28. b3 {
+So smart! This waiting move shows perfectly how helpless Black is. After 28...
+a4 29.bxa4!? with the following a-pawn march is worth considering.} (28. Qg4 $5
+$18) 28... Rb5 {Resignation. Black gives his extra piece back but new massive
+losses are still to come.} 29. Bc6 Rxf5 30. Rxc8 $1 {The easiest way to win.}
+30... Rxc8 31. Bxd7 Rcc5 32. Bxf5 Rxf5 33. Rd1 Kg8 34. Qg2 34... Kf8 {
+Vishy didn't feel like getting mated in some moves after 35.Qxe4, so he
+resigned. Great victory by Judit.} 1-0
+
+

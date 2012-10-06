@@ -1,0 +1,93 @@
+﻿<UserControl xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"  xmlns:data="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"  xmlns:whistlerBlue="clr-namespace:System.Windows.Controls.Theming;assembly=System.Windows.Controls.Theming.WhistlerBlue"  xmlns:expressionDark="clr-namespace:System.Windows.Controls.Theming;assembly=System.Windows.Controls.Theming.ExpressionDark"  
+             xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"  
+             xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls" 
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+            xmlns:SilverlightContrib="clr-namespace:SilverlightContrib.Controls;assembly=SilverlightContrib.Controls"
+            xmlns:visualizationToolkit="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+            x:Class="OWFSilverlightDemo.Page"
+            Height="424" Width="600">
+    
+    <Grid x:Name="LayoutRoot" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="324"></RowDefinition>
+            <RowDefinition Height="100"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+
+        <StackPanel Grid.Row="0" Height="324">
+            <StackPanel x:Name="AddChanelStackPanel" Orientation="Horizontal" Height="24">
+                <TextBox Text="" x:Name="TextChannelName" Width="500" HorizontalAlignment="Left"/>
+                <Button x:Name="FooButton" Click="FooButton_Click" Content="Add Channel" HorizontalAlignment="Right"></Button>
+            </StackPanel>
+            <chartingToolkit:Chart Title="Channel Usage" x:Name="ChannelChartsPie" Height="300" Visibility="Collapsed">
+                <chartingToolkit:Chart.Series>
+                    <chartingToolkit:PieSeries
+                                      IndependentValueBinding="{Binding Name, Mode=TwoWay}"
+                                      DependentValueBinding="{Binding Value, Mode=TwoWay}">
+                    </chartingToolkit:PieSeries>
+                </chartingToolkit:Chart.Series>
+            </chartingToolkit:Chart>
+            <chartingToolkit:Chart Title="Channel Usage" x:Name="ChannelChartsBar" Height="300" Visibility="Collapsed">
+                <chartingToolkit:Chart.Series>
+                    <chartingToolkit:BarSeries
+                                      IndependentValueBinding="{Binding Name, Mode=TwoWay}"
+                                      DependentValueBinding="{Binding Value, Mode=TwoWay}"
+                                      >
+                    </chartingToolkit:BarSeries>
+                </chartingToolkit:Chart.Series>
+            </chartingToolkit:Chart>
+            <data:DataGrid x:Name="ChannelGrid" Height="300"></data:DataGrid>
+            <Grid x:Name="ChannelShouterGrid" Background="White" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="39"></RowDefinition>
+                    <RowDefinition Height="200"></RowDefinition>
+                    <RowDefinition Height="24"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <toolkit:Label Content="Channel:" Grid.Row="0" Grid.Column="0"/>
+                <TextBox Text="" x:Name="TextShoutChannelName" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5"/>
+                <toolkit:Label Content="Message:" Grid.Row="1" Grid.Column="0"/>
+                <TextBox Text="" x:Name="TextShoutMessage" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" AcceptsReturn="True" Height="190" Margin="5"/>
+                <Button x:Name="ShouterButton" Click="ShouterButton_Click" Content="Broadcast" HorizontalAlignment="Right" Grid.Row="2" Grid.Column="2"></Button>
+            </Grid>
+            <StackPanel x:Name="PrefsLayout" Background="White" Visibility="Collapsed">
+                <toolkit:Label Content="Chart Visualization:"></toolkit:Label>
+                <RadioButton GroupName="ChartingVisualizationRBG" x:Name="RBPieChart" Content="Pie Chart" Click="RBPieChart_Click"></RadioButton>
+                <RadioButton GroupName="ChartingVisualizationRBG" x:Name="RBBarChart" Content="Bar Chart" Click="RBBarChart_Click"></RadioButton>
+            </StackPanel>
+        </StackPanel>
+
+        <SilverlightContrib:CoolMenu Height="100" x:Name="ChannelMenu" Grid.Row="1">
+            <SilverlightContrib:CoolMenuItem x:Name="menu_shouter">
+                <SilverlightContrib:CoolMenuItem.Content>
+                    <Image Source="/images/channelShouter.png"></Image>
+                </SilverlightContrib:CoolMenuItem.Content>
+            </SilverlightContrib:CoolMenuItem>
+            <SilverlightContrib:CoolMenuItem x:Name="menu_listener">
+                <SilverlightContrib:CoolMenuItem.Content>
+                    <Image Source="/images/channelListener.png"></Image>
+                </SilverlightContrib:CoolMenuItem.Content>
+            </SilverlightContrib:CoolMenuItem>
+            <SilverlightContrib:CoolMenuItem x:Name="menu_stats">
+                <SilverlightContrib:CoolMenuItem.Content>
+                    <Image Source="/images/stats.png"></Image>
+                </SilverlightContrib:CoolMenuItem.Content>
+            </SilverlightContrib:CoolMenuItem>
+            <SilverlightContrib:CoolMenuItem x:Name="menu_prefs">
+                <SilverlightContrib:CoolMenuItem.Content>
+                    <Image Source="/images/prefs.png"></Image>
+                </SilverlightContrib:CoolMenuItem.Content>
+            </SilverlightContrib:CoolMenuItem>
+        </SilverlightContrib:CoolMenu>
+    </Grid>
+    
+    
+</UserControl>

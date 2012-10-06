@@ -1,0 +1,85 @@
+﻿@charset "UTF-8";
+/*
+This CSS is for specific style for the OWF UI.  This does not include the Admin UI.  This CSS is also for specifically
+overriding any default ExtJS 4.0.0 default theme css rules for OWF specific elements.  This does not include
+directly overriding the base ExtJS 4.0.0 rules.  
+ */
+.x-ie {
+    #mainPanel {
+        .usableCentralRegion {
+            .x-toolbar{
+                filter:none;
+            }
+        }
+    }
+}
+
+/* CSS Document */
+#mainPanel {
+    $toolbarHeight: 27px;
+
+    @if $owf-font-size == 15px or  $owf-font-size == 16px or $owf-font-size == 17px {
+        $toolbarHeight: 31px;
+    }
+    @if $owf-font-size == 18px or $owf-font-size == 19px {
+        $toolbarHeight: 35px;
+    }
+    @if $owf-font-size == 20px or  $owf-font-size == 21px or $owf-font-size == 22px or $owf-font-size == 23px{
+        $toolbarHeight: 38px;
+    }
+    @if $owf-font-size == 24px {
+        $toolbarHeight: 42px;
+    }
+
+    .usableCentralRegion {
+        .x-box-scroller-right{ 
+            width:14px; 
+            .x-toolbar-scroll-right, .x-widgettoolbar-scroll-right {
+                background: theme-image($theme-name, 'blue/taskbar/scroll-right.gif') no-repeat scroll 0 0 transparent;
+                z-index: 10;
+                top: 2px;
+                border:none;
+                width:14px;
+                cursor: pointer;
+            }
+            .x-toolbar-scroll-right-disabled, .x-widgettoolbar-scroll-right-disabled {
+                @include opacity(.5);
+            }
+        }
+        .x-box-scroller-left{ 
+            .x-toolbar-scroll-left, .x-widgettoolbar-scroll-left {
+                background: theme-image($theme-name, 'blue/taskbar/scroll-left.gif') no-repeat scroll  -21px 0 transparent;
+                z-index: 10;
+                top: 2px;
+                border:none;
+                width:14px;
+                cursor: pointer;
+            }
+            .x-toolbar-scroll-left-disabled, .x-widgettoolbar-scroll-left-disabled{
+                @include opacity(.5);
+            }
+        }
+
+        .x-toolbar {
+            height: $toolbarHeight;
+            overflow:visible;//Required to fix the "jumping taskbar issue"
+            background-color: transparent;
+            background-image: none;
+            border: none;
+            padding-bottom: 0px;
+
+            //reset paddings to ext defaults after we changed then for all other toolbars
+            padding-top: 2px;
+            padding-left: 2px;
+            padding-right: 0px;
+
+            .x-toolbar-item {
+                width: 230px;
+        }
+    }
+
+        .widget-tab-bar {
+            height: $toolbarHeight + 1px;
+        }
+    }
+}

@@ -1,0 +1,398 @@
+@charset "UTF-8";
+
+// OWF UTILITY FUNCTIONS
+@import 'functions/owf_functions';
+@import 'compass'; //pull in base functions and mixins provided by the compass framework
+
+$theme-name: 'accessibility-lt';
+
+$body-background-gradient-start: #e6e7e8;
+$body-background-gradient-end: #ffffff;
+$stripe-img-path: theme-image($theme-name, 'stripes_rpt.png');
+$watermark-img-path: theme-image($theme-name, 'bkg_owf.png');
+$owf-loadmask-background: #000;
+
+$widget-launcher-special-color: #adf7ff;
+$widget-launcher-search-border-color: #000000;
+$widget-launcher-search-background-color: #1a1a1a;
+$widget-launcher-grid-row-cell-over-background-color: #1c6972 !default;
+$widget-launcher-widget-title-color: #DDF891;
+$search-panel-header-text-color: #80B4Ba;
+
+
+/*****************************************************************
+ * Put yor theme customizations here.  If you hava many customizations,
+ * you may want to put them in a separate file which you import here. 
+ * The import statements in this file reference stylesheets from ext-js
+ * and from the themes/common folder. You can look at 
+ * themes/common/stylesheets/variables/-defaults in order to see what variables
+ * may be changed. 
+ */
+
+
+/* These styles will be applied to the body of both OWF itself and the
+ * admin widgets
+ */
+body {
+    background-color: $body-background-gradient-start;
+}
+
+/*
+ * These styles will only be applied to the OWf container, not the admin widgets
+ */
+#owf-body {
+    height: 100%;
+    outline: 0 none;
+    cursor: default; // for IE8
+    background-attachment:fixed;
+    background-position: center center;
+    background-repeat: repeat, no-repeat, no-repeat;
+}
+
+#owf-body.x-gecko { /* > ensures IE doesn't see this block */
+    background-image: $stripe-img-path, $watermark-img-path,
+        -moz-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
+}
+
+#owf-body.x-webkit {
+    background-image: $stripe-img-path, $watermark-img-path,
+        -webkit-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
+}
+
+/*
+ * linear background gradient for IE
+ */
+#owf-body.x-ie {
+    background: $body-background-gradient-end $watermark-img-path no-repeat center center;
+    background-attachment:fixed;
+    #mainPanel {
+        background: $stripe-img-path repeat center center;
+    }
+}
+
+//admin widget
+/*.managementpanel {*/
+    /*.x-panel-body-default {*/
+       /*border-color: #BABFC3;*/
+    /*}*/
+    /*.x-panel {*/
+        /*.x-panel-body-default {*/
+           /*border-color: #BABFC3;*/
+        /*}*/
+    /*}*/
+    /*.x-toolbar-default {*/
+        /*border-color: #BABFC3;*/
+    /*}*/
+/*}*/
+
+// ===============================
+// =============== Theme Variables 
+// ===============================
+
+$owf-base-color: #222;
+$owf-alt-base-color: #aaa;
+$owf-focus-color: #93E057;
+
+$owf-font-family: lucida grande, sans-serif;
+$owf-font-size: 24px;
+
+//forms
+$owf-form-field-height: 32px;
+$owf-form-toolbar-field-height: 30px;
+
+$owf-toolbar-base-color: #e6e7e8;
+$required-widgets-color: #454F55;
+
+$owf-tool-width: 17px;
+
+$dashboard-switcher-background-color: #414141;
+
+$active-widget-theme: (
+    #2A2A2A,    //base color
+    (#55656D, #2A2A2A),   //gradient start/end colors
+    getHighContrastColor($owf-base-color), //text color
+    getHighContrastColor($owf-base-color), //outer border color
+    getHighContrastColor($owf-base-color)  //body border color
+);
+
+$inactive-widget-theme: (
+    #9DA4A9,    //base color
+    (#CCCFD1, #9DA4A9),   //gradient start/end colors
+    getHighContrastColor($owf-base-color), //text color
+    getHighContrastColor($owf-base-color), //outer border color
+    getHighContrastColor($owf-base-color)  //body border color
+);
+
+$default_button_theme: (
+    (#BABFC3 0%, #F1F2F2 45%, #C9CBCE 50%),
+    #454F55,
+    #7A868C
+);
+
+$over_button_theme: (
+    (#BABFC3 0%, #F1F2F2  45%),
+    #25282B,
+    $owf-focus-color
+);
+
+$pressed_button_theme: (
+    (#BABFC3 0%, #F1F2F2 45%),
+    #25282B,
+    #5C6971
+);
+
+$disabled_button_theme: (
+    (#E6E7E9),
+    #ADB7BD,
+    #ADB7BD
+);
+
+$owf-tip-base-color: #2A2A2A;
+
+$selectable-item-selected-background-color: #bbb;
+$selectable-item-selected-border-color: #ccc;
+
+// -- panel -----------------------------------------------------------
+$owf-panel-body-border-color: #BABFC3;
+$panel-header-line-height: 30px;
+
+// -- grid -----------------------------------------------------------
+$owf-grid-header-color: #000;
+$owf-grid-header-background-color: $owf-toolbar-base-color !default;
+$owf-grid-header-background-gradient: 'matte' !default;
+$owf-grid-header-over-background-gradient: nth($default_button_theme, $BUTTON_GRADIENT_INDEX) !default;
+$owf-grid-header-over-background-color: getBaseFromGradient($owf-grid-header-over-background-gradient) !default;
+
+//grid rows
+$owf-grid-row-wrap-border-color: #bbb !default;
+
+$owf-grid-row-cell-color: #222;
+
+$owf-grid-row-cell-background: #FFFFFF;
+$owf-grid-row-cell-alt-background: #F2F2F2;
+$owf-grid-row-cell-over-background-color: #C7E5E0;
+$owf-grid-row-cell-selected-background-color: #BBFFF2;
+$owf-grid-row-cell-focus-background-color: $owf-focus-color;
+
+
+// -- dropdown---------------------------------------------------------
+$owf-boundlist-background-color: $owf-grid-row-cell-background;
+$owf-boundlist-item-over-background-color: $owf-grid-row-cell-over-background-color;
+$owf-boundlist-item-selected-background-color: $owf-grid-row-cell-selected-background-color;
+
+$owf-top-border-radius: 0px;
+$owf-bottom-border-radius: 10px;
+
+// -- forms---------------------------------------------------------
+$owf-form-field-border-color: #a0a9ad;
+
+// -- dashboard designer ---------------------------------------------
+$dashboard-designer-side-panel-item-background-color: #999;
+
+// -- toolbar---------------------------------------------------------
+$toolbar-separator-color: #a0a9ad;
+
+// -- LaunchMenu -------------
+$widget-launcher-title-font-size: 28px;
+$widget-launcher-view-title-font-size: 26px;
+
+//OWF-EXT VARIABLES
+@import 'variables/constants';
+@import 'variables/defaults';
+@import 'variables/ext_overrides';
+
+//EXT STYLESHEETS
+@import 'ext';
+
+//OWF-EXT MIXINS
+@import 'mixins/owf_mixins';
+
+/*
+ * These imports create the owf-specific stylesheets, based on the values of the 
+ * variables that are defined in variables/defaults (which can be overridden in this
+ * file).If extensive changes are required, you can delete some of these imports and
+ * reimplement them as necessary
+ */
+//OWF-EXT STYLESHEETS
+@import 'owf_all';
+
+// ===============================
+// ======================== Banner 
+// ===============================
+
+
+.x-gecko .banner, { 
+    //custom background to include stripe image in addition
+    //to gradient. This has to be after the imports so it doesn't
+    //get overridden
+    background-image: theme-image($theme-name, 'banner/banner_stripes.png'),
+        -moz-linear-gradient(#55656D, #2A2A2A);
+}
+
+.x-webkit .banner {
+    background-image: theme-image($theme-name, 'banner/banner_stripes.png'),
+        -webkit-linear-gradient(#55656D, #2A2A2A);
+}
+// ===============================
+// ======================== Button 
+// ===============================
+
+// box shadows
+.owfButton {
+    @include box-shadow(inset 0px 1px 1px #D7DADC, inset 0px -1px 1px #A0A3A7); 
+
+    &.x-btn-over {
+        @include box-shadow(inset 0px 1px 1px #868C91, inset 0px -1px 1px #DDDEE0); 
+    }
+    &.x-btn-pressed {
+        @include box-shadow(inset 0px 1px 1px #858B90, inset 0px -1px 1px #F6F7F7); 
+    }
+    &.x-btn-disabled {
+        @include box-shadow(inset 0px 1px 1px #ADB6BC, inset 0px -1px 1px #F9F9F9); 
+    }
+}
+
+
+// ===============================
+// =================== Widget Tool
+// ===============================
+$close-button-width: 19px;
+
+.x-tool .x-tool-close {
+    background-image: theme-image($theme-name, 'tools/close.png') !important;
+    width: 19px;
+}
+
+.x-tool-over .x-tool-close {
+    background-position: -$close-button-width*1 0;
+}
+
+.x-tool-pressed .x-tool-close {
+    background-position: -$close-button-width*2 0;
+}
+
+// overrides for inactive images
+.x-window-inactive, .x-tab-top-inactive {
+    .#{$prefix}tool {
+        height: $owf-tool-height;
+
+        img {
+            background-image: theme-background-image($theme-name, 'tools/inactive-tool-sprites.gif');
+        }
+    }
+    .x-tool .x-tool-close {
+        background-position: -$close-button-width*3 0;
+    }
+
+    .x-tool-over .x-tool-close {
+        background-position: -$close-button-width*1 0;
+    }
+}
+
+
+// ===============================
+// =========== Customize Dashboard
+// ===============================
+$customize-dashboard-left-width: 150px;
+
+.managecontainer .configcontainer label {
+    width: $customize-dashboard-left-width;
+}
+
+.managecontainer .configcontainer .x-panel .x-panel-header {
+    padding: 0 0 0 5px;
+}
+
+.manageContainer .configContainer .widgetArrangement .x-panel {
+    filter: none; /*In IE this panel was being colored blue by a filter, so this negates it*/
+}
+
+
+// ===============================
+// ============== Create Dashboard
+// ===============================
+.manageContainer .cvc-createNewDashboardContainer {
+
+    .createSelector {
+        padding-top: 0px;
+    }
+
+    .titleBox {
+        padding-left: 4px;
+        height: 32px !important;
+        
+        .x-form-item-body .x-form-field {
+            height: 32px !important;
+            width: 100%;
+        }
+    }
+}
+
+
+// ===============================
+// ========== Larger Button Images
+// ===============================
+.x-form-trigger {
+    background-image: url('../images/form/trigger-large.png');
+    width: 22px !important;
+}
+.x-form-trigger-over {
+    background-position: -23px 0;
+}
+.x-form-trigger-wrap-focus .x-form-trigger {
+    background-position: -46px;
+}
+.x-form-trigger-wrap-focus .x-form-trigger-over {
+    background-position: -69px;
+}
+
+.x-form-trigger-wrap .x-form-spinner-up, .x-form-trigger-wrap .x-form-spinner-down {
+    background-image: url('../images/form/spinner-large.png');
+    width: 25px !important;
+    height: 16px !important;
+}
+.x-form-trigger-wrap .x-form-spinner-up-over {
+    background-position: -25px 0;
+}
+.x-form-trigger-wrap .x-form-spinner-down {
+    background-position: 0 -18px;
+}
+.x-form-trigger-wrap .x-form-spinner-down-over {
+    background-position: -25px -18px;
+}
+.x-form-trigger-wrap-focus .x-form-spinner-up {
+    background-position: -50px 0;
+}
+.x-form-trigger-wrap-focus .x-form-spinner-up-over {
+    background-position: -75px 0;
+}
+
+
+// ===============================
+// ========== Widget Editor
+// ===============================
+.properties-body {
+    .descriptorUrlToolbar {
+	    .manualEntryLinkBtn {
+	    	.x-btn-inner {
+	    		line-height: 24px !important;
+	    	}
+	    }
+    }
+    
+    .descriptorUrlInfoIcon {
+		top: 15px;
+	}
+}
+
+.widgeteditintentstab {
+	.x-grid-group-hd-collapsed .x-grid-group-title {
+		background-image: url('../images/icons/arrow_right.png');
+	}
+	
+	.x-grid-group-title {
+		background-position-y: 8px;
+		padding: 0 0 0 20px;
+		background-image: url('../images/icons/arrow_down.png');
+	}
+}

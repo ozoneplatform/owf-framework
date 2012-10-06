@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   minWidth="400" minHeight="400">
+
+	<fx:Script>
+		<![CDATA[
+			
+			
+			protected function button1_mouseDownHandler(event:MouseEvent):void
+			{
+				if(channel_name.text == "")
+					return;
+				
+				event.preventDefault();
+				event.stopPropagation();
+				
+				ExternalInterface.call('startDrag', channel_name.text);
+			}
+
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				ExternalInterface.call('publish', channel_name.text, msg.text);
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:VGroup width="100%" paddingLeft="10" paddingTop="10" paddingRight="10" paddingBottom="10">
+		<s:HGroup>
+			<s:TextInput id="channel_name" />
+			<s:Button label="Drag" mouseDown="button1_mouseDownHandler(event)"/>
+		</s:HGroup>
+		<s:TextArea id="msg"  width="100%"/>
+		<s:Button label="Publish" click="button2_clickHandler(event)"/>
+	</s:VGroup>
+</s:Application>

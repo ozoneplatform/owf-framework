@@ -1,0 +1,4 @@
+$owf-progress-background-color: $owf-base-color !default;
+$owf-progress-border-color: getHighContrastColor($owf-progress-background-color) !default;
+$owf-progress-text-color-back: getHighContrastColor($owf-progress-background-color) !default;
+$owf-progress-bar-background-color: lighten($owf-progress-background-color, 30%) !default;

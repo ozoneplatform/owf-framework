@@ -1,0 +1,44 @@
+<ivy-module version="2.0">
+    <info organisation="${app.org}" module="${app.name}" revision="${app.version}"/>
+    <configurations defaultconfmapping="jsdoc->default;compressjs->default">
+        <conf name="build" />
+        <conf name="compressjs" />
+        <conf name="jsdoc" />
+        <conf name="zip" />
+        <conf name="bundle" />
+        <!--<conf name="jetty" />-->
+        <conf name="tomcat" />
+        <conf name="release" />
+        <conf name="cas.server" />
+    </configurations>
+    <publications>
+        <artifact name="${app.name}-bundle" conf="release" type="zip"
+                  ext="zip" />
+    </publications>
+    <dependencies>
+        <!--<dependency org="${jetty.custom.org}" name="${jetty.custom.module}" rev="${jetty.custom.rev}" conf="jetty->zip" transitive="false" >-->
+            <!--<artifact name="${jetty.custom.module}" type="zip" />-->
+        <!--</dependency>-->
+        <dependency org="${tomcat.custom.org}" name="${tomcat.custom.module}" rev="${tomcat.custom.rev}" conf="tomcat->zip" transitive="false" >
+            <artifact name="${tomcat.custom.module}" type="zip" />
+        </dependency>
+        <dependency org="${cas.server.org}" name="${cas.server.module}" rev="${cas.server.rev}" conf="cas.server->release,zip" changing="true"  transitive="false" />
+        <dependency org="${owf.security.org}" name="${owf.security.module}" rev="${owf.security.rev}" conf="bundle->zip" changing="true" transitive="false" />
+
+        <dependency org="owf.util" name="OWFAntTasks" rev="1.0.0" conf="compressjs" />
+        <dependency org="net.alchim31.3rd.com.yahoo.platform.yui" name="yuicompressor" rev="2.4.2" conf="compressjs" />
+
+        <dependency org="org.jsdoctoolkit" name="jsdoc-dist" rev="2.3.2" conf="jsdoc">
+            <artifact type="zip" name="jsdoc-dist"/>
+        </dependency>
+
+        <dependency org="org.jsdoctoolkit" name="jsdoctoolkit-ant-task" rev="1.0" conf="jsdoc" >
+            <exclude module="ant-contrib"/>
+            <exclude module="jsdoc" />
+        </dependency>
+
+<!--        <dependency org="net.sf.ehcache" name="ehcache-jgroupsreplication" rev="1.2" conf="*->master">-->
+<!--            <exclude module="commons-logging" />-->
+<!--        </dependency>-->
+    </dependencies>
+</ivy-module>

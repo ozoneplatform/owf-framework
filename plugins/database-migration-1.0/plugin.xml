@@ -1,0 +1,18 @@
+<plugin name='database-migration' version='1.0' grailsVersion='1.3.0 &gt; *'>
+  <author>Burt Beckwith</author>
+  <authorEmail>beckwithb@vmware.com</authorEmail>
+  <title>Grails Database Migration Plugin</title>
+  <description>Grails Database Migration Plugin</description>
+  <documentation>http://grails.org/plugin/database-migration</documentation>
+  <type>DatabaseMigrationGrailsPlugin</type>
+  <resources>
+    <resource>DbdocUrlMappings</resource>
+    <resource>spring.resources</resource>
+    <resource>grails.plugin.databasemigration.DbdocController</resource>
+    <resource>grails.plugin.databasemigration.test.Author</resource>
+    <resource>grails.plugin.databasemigration.test.Book</resource>
+    <resource>grails.plugin.databasemigration.test.Thing</resource>
+  </resources>
+  <dependencies />
+  <behavior />
+</plugin>

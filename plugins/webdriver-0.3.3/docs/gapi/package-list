@@ -1,0 +1,17 @@
+DefaultPackage
+grails-app.conf
+scripts
+src.groovy.org.codehaus.groovy.grails.plugins.webdriver
+test.projects.scaffoldtest.grails-app.conf
+test.projects.scaffoldtest.grails-app.conf.spring
+test.projects.scaffoldtest.grails-app.controllers
+test.projects.scaffoldtest.grails-app.domain
+test.projects.scaffoldtest.target.test-classes.spring
+test.projects.scaffoldtest.test.functional.pages.author
+test.projects.scaffoldtest.test.functional.pages.base
+test.projects.scaffoldtest.test.functional.pages.book
+test.projects.scaffoldtest.test.functional.tests
+test.unit.pages.google
+test.unit.pages.test
+test.unit.pages.twitter
+test.unit.tests

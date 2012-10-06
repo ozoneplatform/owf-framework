@@ -1,0 +1,45 @@
+<html><head>
+    <style type="text/css">
+        * {
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+    <script>
+        //This code polls for messages in child popup windows when using IE.
+        //IE8 and IE9 do not allow postMessage to child windows.  IE 6 and IE7
+        //don't support postMessage at all.  So in any version of IE this
+        //polling code is necessary, unfortunately.
+
+        //None of this code is used in other browsers.
+
+        var __msgId = 0;
+
+        function pollForContainerMessages() {
+            var nextMsgNum = window.opener._childWindowMessageId;
+            if (nextMsgNum && nextMsgNum >= __msgId) {
+                var msg = window.opener._getChildWindowMessage(__msgId);
+                if (msg) {
+                    var targetId = msg.target;
+                    if(document.getElementById(targetId)) {
+                        var d = document.createElement("div");
+                        d.innerHTML = "<iframe src=\"" + msg.src + "\"></iframe>";
+                        document.body.appendChild(d);
+                    }
+                }
+                __msgId++;
+            }
+        }
+
+        function isIE() {
+            return navigator.appName == 'Microsoft Internet Explorer';
+        }
+
+        if (isIE()) {
+            setInterval(pollForContainerMessages, 250);
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>

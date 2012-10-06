@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="flex-channel-listener" default="war" basedir=".">
+	<property environment="env" />
+
+	<property name="FLEX_HOME" value="${env.FLEX_HOME}" />
+
+	<property name="build.dir" value="${basedir}/target" />
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="web.dir" value="${basedir}/html-template" />
+
+	<mkdir dir="${basedir}/custom-template/templates/swfobject" />
+	<property name="template.dir" value="${basedir}/custom-template/templates/swfobject" />
+	<copy todir="${template.dir}">
+		<fileset dir="${web.dir}"/>
+	</copy>
+
+	<!-- The Flex Ant task does not let us specify a custom template, so we created one using express-installation. -->
+	<!-- This declaration overrides the existing one.                                                                                        -->
+	<path id="ant.classpath">
+		<dirset dir="${basedir}" includes="custom-template" />
+		<fileset dir="${FLEX_HOME}/ant/lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<taskdef resource="flexTasks.tasks" classpathref="ant.classpath" />
+
+	<target name="clean-build-dir" description="Cleans out the build directory.">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.dir}/flex" />
+	</target>
+
+	<target name="compile" depends="clean-build-dir" description="Builds Flex app">
+		<mxmlc file="${src.dir}/listener.mxml" 
+		       output="${build.dir}/flex/listener.swf"
+			   keep-generated-actionscript="false" >
+			<load-config filename="${FLEX_HOME}/frameworks/flex-config.xml" />
+			<source-path path-element="${FLEX_HOME}/frameworks" />
+		</mxmlc>
+	</target>
+
+	<target name="wrapper" depends="compile" description="Builds Flex app">
+		<html-wrapper title="Flex Channel Shouter"
+		              swf="listener"
+		              file="index.html"
+			          history="true" 
+			          express-install="true"
+			          version-detection="true"
+			          output="${build.dir}/flex" />
+
+		<copy todir="${build.dir}/flex/css">
+			<fileset dir="${template.dir}/css"/>
+		</copy>
+		<copy todir="${build.dir}/flex/js">
+			<fileset dir="${template.dir}/js"/>
+		</copy>
+		<copy todir="${build.dir}/flex/images">
+			<fileset dir="${template.dir}/images"/>
+		</copy>
+	</target>
+
+	<target name="war" depends="wrapper" description="Creates the WAR file.">
+		<war warfile="${build.dir}/flex-channel-listener.war" 
+				duplicate="preserve"
+				webxml="${web.dir}/WEB-INF/web.xml">
+			<fileset dir="${build.dir}/flex" />
+		</war>
+		<delete dir="${basedir}/custom-template"/>
+		<delete dir="${build.dir}/flex"/>
+	</target>
+
+	<target name="diagnostics" description="Displays Ant diagnostics.">
+		<diagnostics />
+	</target>
+
+</project>

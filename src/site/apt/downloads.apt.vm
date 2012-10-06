@@ -1,0 +1,40 @@
+ ------
+ Downloads
+ ------
+
+OWF Server
+
+  The following downloads are available:
+
+  <<PDF Documents>>
+
+    *  {{{downloads/OWF%20Quick%20Start%20Guide.pdf}OWF Quick Start Guide}}
+  
+    *  {{{downloads/OWF%20System%20Administrator%27s%20Guide.pdf}OWF System Administrator's Guide}}
+  
+    *  {{{downloads/OWF%20Widget%20Developer%27s%20Guide.pdf}OWF Widget Developer's Guide}}
+  
+    *  {{{downloads/OWF%20User%27s%20Guide.pdf}OWF User's Guide}}
+
+
+  <<Sample Widgets>>
+  
+    *  {{{downloads/html-widgets-${versionForSite}.zip}HTML Widgets}}
+  
+    *  {{{downloads/dotnet-widget-${versionForSite}.zip}.Net Widget}}
+  
+    *  {{{downloads/flex-widget-${versionForSite}.zip}Flex Widget}}
+  
+    *  {{{downloads/gwt-widget-${versionForSite}.zip}GWT Widget}}
+  
+    *  {{{downloads/java-applet-widget-${versionForSite}.zip}Java Applet Widget}}
+  
+    *  {{{downloads/silverlight-widget-${versionForSite}.zip}Silverlight Widget}}
+
+
+  <<Bundle>>
+
+  This bundle contains all of the above downloads, the OWF Server and CAS Server WAR files, 
+  plus a self-contained Jetty server that runs the framework.
+
+    *  {{{downloads/owf-all-in-one.zip}OWF "All In One" zip (v${versionForSite})}}

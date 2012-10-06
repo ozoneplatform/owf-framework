@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="dotnet-widget" default="zip" basedir=".">
+
+	<target name="zip">
+            <delete file="dotnet-widget.zip" failonerror="false" />
+		<zip destfile="dotnet-widget.zip" basedir="${basedir}" update="false"
+		excludes="pom.xml,zip-assembly.xml,**/target/**,owf-build.xml,*.zip" />
+	</target>
+
+
+</project>

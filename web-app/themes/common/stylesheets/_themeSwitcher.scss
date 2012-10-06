@@ -1,0 +1,189 @@
+@charset "UTF-8";
+
+/*
+Styles for Theme Switcher Window
+*/
+
+#themeSwitcher {
+
+    &-body{
+        background-color: $owf-toolbar-base-color;
+        padding: 4px;
+    }
+    
+    h1 {
+        font-size: 1.5em;
+    }
+
+    h6 {
+        line-height: 1.4;
+    }
+
+    .themeSwitcher-header-icon {
+//        height: 16px;
+//        width: 16px;
+        background-image: theme-image($theme-name, 'settings/ThemesIcon_small.png');
+    }
+}
+
+#theme-browser-view, #theme-info-panel {
+    font: $owf-font-size $owf-font-family;
+    border: 1px solid $theme-browser-infopanel-border-color;
+}
+
+$theme-browser-thumb-wrap-width: 225px;
+$theme-browser-thumb-wrap-padding: 8px;
+$theme-browser-thumb-wrap-border: 1px;
+$theme-browser-img-width: 200px;
+$theme-browser-img-border: 2px;
+
+
+// Theme browser panel
+#theme-browser-view {
+    .thumb-wrap {
+        background: $selectable-item-background-color;
+        border: $theme-browser-thumb-wrap-border solid $selectable-item-border-color;
+        float: left;
+        padding: $theme-browser-thumb-wrap-padding;
+        margin: 5px; 
+        
+        width: $theme-browser-thumb-wrap-width;
+        //height: 181px;
+
+        span {
+            display: block;
+            overflow: hidden;
+            text-align: center;
+            font-size: $owf-font-size;
+            color: $selectable-item-text-color;
+
+        }
+        
+        .thumb {
+            padding: 3px;
+            img{
+                border: $theme-browser-img-border solid $theme-switcher-window-image-border-color;
+                height: 122px;
+                width: $theme-browser-img-width;
+            }
+        }
+        &.x-view-over {
+            border-color: $selectable-item-over-border-color;
+            background: $selectable-item-over-background-color;
+            span {
+                color: $selectable-item-over-text-color;
+            }
+        }
+        &.x-item-selected {
+            border-color: $selectable-item-selected-border-color;
+            background: $selectable-item-selected-background-color;
+            span {
+                color: $selectable-item-selected-text-color;
+            }
+        }
+    }
+}
+
+//IE7 does not support border-box
+.x-ie7 #theme-browser-view .thumb-wrap {
+    width: $theme-browser-thumb-wrap-width - ($theme-browser-thumb-wrap-padding + $theme-browser-thumb-wrap-border) * 2;
+    img {
+        width: $theme-browser-img-width - $theme-browser-img-border * 2;
+    }
+}
+
+.x-ie9 #theme-browser-view {
+    @include box-sizing(content-box); //to fix IE9 bug
+}
+
+// Theme information panel
+#theme-info-panel {
+    &-body {
+        border: none;
+        padding: 10px;
+    }
+
+    #header {
+        margin-left: 10px;
+        #theme-info {
+            #theme-name, #author, #contact, #created, #modified {
+                display: block;
+                font: $owf-font-size $owf-font-family;
+            }
+            #theme-name {
+                font: bold 250% $owf-font-family;
+                color: $theme-name-text-color;
+            }
+            #author {
+                color: $theme-author-text-color;
+            }
+            #contact {
+                color: $theme-contact-text-color;
+                margin-bottom: 10px;
+            }
+            #created {
+                color: $theme-created-date-text-color;
+            }
+            #modified {
+                color: $theme-modified-date-text-color;
+                margin-bottom: 20px;
+            }
+            #description {
+                color: $theme-description-text-color;
+            }
+        }
+    }
+    
+    #screenshots {
+        margin: 10px;
+        margin-top: 20px;
+        text-align: left;
+
+        legend {
+            font-size: 1em;
+            font-weight: bold;
+            color: $theme-switcher-window-image-border-color;
+            margin-left: 10px;
+        }
+        .screenshot {
+            width: 220px;
+            float: left;
+            margin: 5px;
+            //background-color: $theme-switcher-window-preview-images-background-color;
+            position: relative;
+            padding-bottom: 4;
+            .screenshot-inner {
+                height: 140px;
+                overflow: hidden;
+                img {
+                    margin-left: 10px;
+                    margin-right: 10px;
+                    margin-top: 10px;
+                    @include border-radius(3px);
+                    border: 2px solid $theme-switcher-window-image-border-color;
+                    text-align: center;
+                    width: 200px;
+                }
+            }
+            .screenshot-desc {
+                height: 2.5em;
+                position: relative;
+                span {
+                    display: inline-block;
+                    width: 100%;
+                    text-align: center;
+                    position: absolute;
+                    bottom: 0px;
+                }
+            }
+        }
+
+        p {
+            padding: 4px;
+        }
+    }
+
+    fieldset {
+        border: 1px solid $theme-switcher-window-image-border-color*1.5;
+    }
+}

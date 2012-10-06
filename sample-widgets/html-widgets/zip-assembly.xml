@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- For now, this assembly builds a ZIP out of files from the owf-server project. -->
+<assembly>
+	<id>html-zip</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>${project.basedir}</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>build.xml</include>
+				<include>README.TXT</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}/src</directory>
+			<outputDirectory>/src</outputDirectory>
+		</fileSet>
+	</fileSets>
+</assembly>

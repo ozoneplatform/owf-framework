@@ -1,0 +1,26 @@
+<plugin name='build-test-data' version='1.1.0' grailsVersion='1.2.0 &gt; *'>
+  <author>Ted Naleid and Joe Hoover</author>
+  <authorEmail>contact@naleid.com</authorEmail>
+  <title>Build Test Data Plugin</title>
+  <description>\
+Enables the easy creation of test data by automatic inspection of constraints.  Any properties that are required have
+their constraints examined and a value is automatically provided for them.
+
+It is intended to be used in integration tests to enable the test creator to specify the values that are under test, but
+so that they can ignore the other values not under test and not need to worry about creating dummy data that is not
+pertinent.
+</description>
+  <documentation>http://bitbucket.org/tednaleid/grails-test-data/wiki/Home</documentation>
+  <resources>
+    <resource>Config</resource>
+    <resource>DataSource</resource>
+    <resource>TestDataConfigTemplate</resource>
+    <resource>grails.buildtestdata.BuildTestDataService</resource>
+  </resources>
+  <dependencies>
+    <resolvers>
+      <resolver type='grailsPlugins' name='grailsPlugins' />
+    </resolvers>
+  </dependencies>
+  <behavior />
+</plugin>

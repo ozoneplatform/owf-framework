@@ -1,0 +1,25 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" basedir="." name="sample-widgets" default="zip-widgets">
+    <dirname property="sample-widgets.basedir" file="${ant.file.sample-widgets}"/>
+    <property file="${sample-widgets.basedir}/ivy.properties"/>
+
+    <target name="war">
+        <ant dir="flex-widget" target="war"/>
+        <ant dir="flex-channel-listener" target="war"/>
+        <ant dir="flex-channel-shouter" target="war"/>
+        <ant dir="gwt-widget" target="war"/>
+        <ant dir="html-widgets" target="war"/>
+        <ant dir="java-applet-widget" target="war"/>
+    </target>
+
+    <target name="zip-widgets">
+        <ant antfile="owf-build.xml" dir="dotnet-widget"/>
+        <ant antfile="owf-build.xml" dir="flex-widget"/>
+        <ant antfile="owf-build.xml" dir="flex-channel-listener"/>
+        <ant antfile="owf-build.xml" dir="flex-channel-shouter"/>
+        <ant antfile="owf-build.xml" dir="gwt-widget"/>
+        <ant antfile="owf-build.xml" dir="html-widgets"/>
+        <ant antfile="owf-build.xml" dir="java-applet-widget"/>
+        <ant antfile="owf-build.xml" dir="silverlight-widget"/>
+    </target>
+
+</project>

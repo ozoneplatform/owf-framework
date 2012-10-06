@@ -1,0 +1,82 @@
+<html>
+<head>
+    <title>Preference Local Test</title>
+    <script type="text/javascript" src="../../../../js-lib/dojo-release-1.5.0/dojo/dojo.js"></script>
+    <script type='text/javascript' src='../../../../js/config/config.js'></script>
+    <script type="text/javascript">
+      Ozone = Ozone || {};
+      Ozone.disableWidgetInit = true;
+    </script>
+    <script type='text/javascript' src='../../../../js-min/owf-widget-debug.js'></script>
+    <script type="text/javascript">
+        owfdojo.config.dojoBlankHtmlUrl = '../../../../js-lib/dojo-1.5.0-windowname-only/dojo/resources/blank.html';
+
+        dojo.registerModulePath("Ozone", "../../../js-doh/Ozone");
+        dojo.provide("Ozone.pref.tests.prefLocalTestsHTML");
+        dojo.require("dojo.parser");
+        dojo.require("doh.runner");
+        dojo.require("dojox.io.windowName");
+        dojo.require("dojox.secure.capability");
+
+        dojo.addOnLoad(function() {
+
+            var namespace = 'Ozone.pref.tests.prefRemoteTests';
+            var name = 'test-preference';
+            var value = 'test-value';
+
+//            var altHostName = Ozone.config.alternateHostName ? Ozone.config.alternateHostName : '127.0.0.1';
+//            var port = window.location.port != '' ? ':'+window.location.port : '';
+//            var url = window.location.protocol + "//" + altHostName + port
+//                        + Ozone.util.contextPath()+'/prefs';
+//
+//            Ozone.pref.PrefServer.setUrl(url);
+
+            //register tests
+            doh.register("Ozone.pref.tests.prefRemoteTests", [
+                {
+                    name: "deleteUserPreferencePrefDoesntExist",
+                    setUp: function() {
+                        //Setup to do before runTest.
+                    },
+                    runTest: function() {
+                        var deferred = new doh.Deferred();
+
+                        Ozone.pref.PrefServer.deleteUserPreference({namespace:namespace,
+                            name:name,
+                            onSuccess:function(result) {
+                              if (result.value == undefined) {
+                                dojo.byId('pref').innerHTML+='deleteUserPreferencePrefDoesntExist: deleting pref value: <b>Not Found</b><br/>';
+                              }
+                              else {
+                                dojo.byId('pref').innerHTML+='deleteUserPreferencePrefDoesntExist: deleting pref value:  <b>deleted</b><br/>';
+                              }
+                              doh.assertEqual(result.value,undefined);
+                              deferred.callback(true);
+                            },
+                            onFailure:function(err) {
+                                deferred.errback(err);
+                            }});
+
+                        return deferred;
+                    },
+                    tearDown: function() {
+                        //cleanup to do after runTest.
+                    },
+                    timeout: 10000 //10 second timeout.
+                }
+            ]);
+
+            //Execute D.O.H. in this remote file.
+            doh.run();
+
+        });
+    </script>
+</head>
+<body>
+<h>Preference Remote Tests</h>
+<div style="border: 2px solid black;">
+    <h>Preference</h>
+    <div id="pref"></div>
+</div>
+</body>
+</html>

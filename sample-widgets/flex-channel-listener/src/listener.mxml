@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   minWidth="400" minHeight="400"
+			   applicationComplete="application1_applicationCompleteHandler(event)">
+
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.core.Application;
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			
+			import ozone.owf.dd.DragAndDropSupport.DragAndDropSupport;
+			
+			[Bindable]
+			public var activeChannels:ArrayCollection = new ArrayCollection();
+			
+			[Bindable]
+			public var channelsBG:String = "0xffffff";
+			
+			public var counter:int = 0;
+			
+			private function listenToChannel(channel:String):void
+			{
+				if(channel == '')
+					return;
+				
+				ExternalInterface.call('subscribe', channel);
+				
+				if(counter == 0) {
+					ExternalInterface.addCallback('messageReceived', messageReceived);
+					counter++;
+				}
+				
+				if(!activeChannels.contains(channel)) {
+					activeChannels.addItem(channel);
+				}
+			}
+			
+			protected function subscribe(event:MouseEvent):void
+			{	
+				listenToChannel(channel.text);
+			}
+
+			protected function unsubscribe(event:MouseEvent):void
+			{
+				activeChannels.removeItemAt(channels.selectedIndex);
+				ExternalInterface.call('unsubscribe', channel.text);
+			}
+			
+			public function messageReceived(sender:String, msg:String, channel:String):void
+			{
+				comm.text = 'Message: ' + msg + 'received on Channel: ' + channel + '\n' + comm.text;
+			}
+			
+			protected function application1_applicationCompleteHandler(event:FlexEvent):void
+			{
+				var dd:DragAndDropSupport = DragAndDropSupport.getInstance(stage);
+				ExternalInterface.addCallback('onDrop', onDropReceive);
+				ExternalInterface.addCallback('onDragStart', function():void {
+					channelsBG = "0x00adef";
+				});
+				
+				ExternalInterface.addCallback('onDragStop', function():void {
+					channelsBG = "0xffffff";
+				});
+			}
+			
+			public function onDropReceive(data:Object):void
+			{
+				listenToChannel(data as String);
+			}
+
+
+			protected function channels_mouseOverHandler(event:MouseEvent):void
+			{
+				ExternalInterface.call("OWF.DragAndDrop.setDropEnabled", true);
+			}
+
+
+			protected function channels_mouseOutHandler(event:MouseEvent):void
+			{
+				ExternalInterface.call("OWF.DragAndDrop.setDropEnabled", false);
+			}
+
+		]]>
+	</fx:Script>
+
+	
+	<s:VGroup width="100%" height="100%" paddingLeft="10" paddingTop="10" paddingRight="10" paddingBottom="10">
+		<s:HGroup width="100%">
+			<s:TextInput id="channel" text=""/>
+			<s:Button label="Add Channel" mouseDown="subscribe(event)"/>
+			<s:Button label="Remove Channel" mouseDown="unsubscribe(event)"/>
+		</s:HGroup>
+		<s:List id="channels" dataProvider="{activeChannels}"
+				width="100%"
+				contentBackgroundColor="{channelsBG}"
+				mouseOver="channels_mouseOverHandler(event)"
+				mouseOut="channels_mouseOutHandler(event)">
+		</s:List>
+		<s:Panel id="messages" title="Messages" width="100%">
+			<s:TextArea id="comm" text="" width="100%"/>
+		</s:Panel>
+	</s:VGroup>
+	
+</s:Application>

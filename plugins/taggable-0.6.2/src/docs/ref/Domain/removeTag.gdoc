@@ -1,0 +1,21 @@
+
+h1. removeTag
+
+h2. Purpose
+
+
+
+h2. Examples
+
+{code:java}
+foo.removeTag(string)
+{code}
+
+h2. Description
+
+
+
+Arguments:
+
+[* @string@
+]

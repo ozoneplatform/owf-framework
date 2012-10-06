@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd"
+	name="OWF Server">
+	<version position="right" />
+	<publishDate position="right" />
+	<skin>
+		<groupId>org.apache.maven.skins</groupId>
+		<artifactId>maven-stylus-skin</artifactId>
+		<version>1.0.1</version>
+	</skin>
+	<body>
+    	<breadcrumbs>
+      		<item name="OWF Server" href="index.html"/>
+    	</breadcrumbs>
+		<menu name="OWF Server">
+			<item name="Overview" href="index.html" />
+			<item name="JavaScript API" href="jsapi.html" />
+			<item name="OWF Security" href="owf-security/index.html" />
+			<item name="Downloads" href="downloads.html" />
+		</menu>
+		<menu ref="reports" />
+	</body>
+</project>

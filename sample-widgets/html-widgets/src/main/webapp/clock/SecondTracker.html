@@ -1,0 +1,97 @@
+<html>
+   <head>
+      <link href="../css/widgetContents.css" type="text/css" rel="stylesheet">
+      <link href="../css/dragAndDrop.css" rel="stylesheet" type="text/css">
+
+      <script type="text/javascript" src="../js/owf-widget-debug.js"></script>
+      
+      <script type="text/javascript">
+       //The location is assumed to be at /<context>/js/eventing/rpc_relay.uncompressed.html if it is not set
+       //OWF.relayFile = '/owf-sample-html/js/eventing/rpc_relay.uncompressed.html';
+
+      function trackerInit() {           
+         document.getElementById('currentTime').innerHTML = new Date();
+
+         var launchConfig = OWF.Launcher.getLaunchData();   
+
+         if(!launchConfig) {
+            // Not launched
+            document.getElementById("error").innerHTML = "Widget was launched manually";
+            document.getElementById("tracker-error-panel").style.display = 'block';
+
+             // Receive clock broadcast in a default manner
+             OWF.Eventing.subscribe("ClockChannel", this.update);
+         }
+         else {
+            // We are expecting the channel to listen on to be passed in dynamically.
+            // Update it on the page
+            var launchConfigJson = OWF.Util.parseJson(launchConfig);
+            var channelToUse = launchConfigJson.channel;
+
+            document.getElementById("channelName").innerHTML = channelToUse;   
+               
+            // intialize the time clock on the page.
+            document.getElementById('currentTime').innerHTML = new Date();
+
+            // Make sure we do not see the error panel
+            document.getElementById("tracker-error-panel").style.display = 'none';
+            
+            OWF.Eventing.subscribe(channelToUse, this.update);
+         }
+      }
+
+
+     /**
+      * The function called every time a message is received on the eventing channel
+      */
+      var update = function(sender, msg) {
+         var count = parseInt(document.getElementById('minutesOnline').innerHTML);
+         count = count +1;
+         document.getElementById('minutesOnline').innerHTML = count;
+         document.getElementById('currentTime').innerHTML = msg;
+      };
+      
+      owfdojo.addOnLoad(function() {
+        OWF.ready(trackerInit);
+      });
+      
+      </script>
+   </head>
+   <body>
+    <div class="widgetContents">
+
+
+          <div class="panel-header">
+              Second Tracker
+          </div>
+
+
+          <div class="panel-body">
+
+            <table class="messagePanel">
+              <tr>
+                  <td width="50%">Current Time:</td>
+                  <td> <span id="currentTime"></span><br/> </td>
+              </tr>
+              <tr>
+                  <td width="50%">Connection Uptime (s):</td>
+                  <td> <span id='minutesOnline'>0</span> </td>
+              </tr>
+              <tr>
+                  <td width="50%"> Received on channel: </td>
+                  <td> <span id="channelName"></span> </td>
+              </tr>
+            </table>
+
+          <div id="tracker-error-panel" class="error-panel">
+              <span id="error"></span>
+          </div>
+
+
+          </div>
+
+
+       </div>
+
+   </body>
+</html>

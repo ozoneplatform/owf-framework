@@ -1,0 +1,6 @@
+$owf-toolbar-base-color: lighten($owf-base-color, 5%) !default;
+
+$toolbar-theme: (
+    lighten($owf-toolbar-base-color, 5%),
+    $owf-toolbar-base-color
+) !default;

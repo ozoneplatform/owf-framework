@@ -1,0 +1,11 @@
+<plugin name='ozone-deploy' version='0.1' grailsVersion='1.1.1 &gt; *'>
+  <author></author>
+  <authorEmail></authorEmail>
+  <title>Ozone Deploy</title>
+  <description>\
+Plugin to configure ozone for deployment.
+</description>
+  <documentation>http://grails.org/OzoneDeploy+Plugin</documentation>
+  <resources />
+  <dependencies />
+</plugin>

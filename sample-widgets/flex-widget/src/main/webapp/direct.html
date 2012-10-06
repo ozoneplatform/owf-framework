@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <link href="css/dragAndDrop.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="https://localhost:8443/owf/js-min/owf-widget-debug.js"></script>
+        <script type="text/javascript">
+             //The location is assumed to be at /<context>/js/eventing/rpc_relay.uncompressed.html if it is not set
+            OWF.relayFile = 'owf-sample-flex/js/eventing/rpc_relay.uncompressed.html';
+            owfdojo.config.dojoBlankHtmlUrl = './js/dojo-1.5.0-windowname-only/dojo/resources/blank.html';
+            
+            function shoutInit(){
+                OWF.Eventing.subscribe('map.mouse',function(sender, msg) {
+                     var a = eval("(" + msg + ")");
+                    document.getElementById('xval').innerHTML = "Absolute: " + a.absX.toFixed(2) + "," + a.absY.toFixed(2) +
+                                                                "<br/> Relative: " + a.localX + "," + a.localY;
+                });
+            }
+            
+            function shout(msg){                
+                OWF.Eventing.publish('map.command', msg);
+            }
+            
+            function addMarker() {
+             	var x = document.getElementById('textbox1').value; 
+             	var y = document.getElementById('textbox2').value;
+             	var v = "{'x':"+x+", 'y':"+y+"}";
+             	OWF.Eventing.publish('map.marker', v);
+            }
+
+            owfdojo.addOnLoad(function() {
+                OWF.ready(shoutInit);
+            });
+
+        </script>
+    </head>
+    <body class="examplesBody">
+    	<table>
+    		<tr>
+    		<td><input type="submit" id='submitButtonZoomIn' value=" + " onClick="shout('zoomIn');"/></td>
+    		<td><input type="submit" id='submitButtonUp' value=" Up " onClick="shout('panUp');"/></td>
+    		<td><input type="submit" id='submitButtonZoomOut' value=" - " onClick="shout('zoomOut');"/></td>
+    		</tr>
+    		<tr><td><input type="submit" id='submitButtonLeft' value="Left" onClick="shout('panLeft');"/></td><td></td><td><input type="submit" id='submitButtonRight' value="Right" onClick="shout('panRight');"/></td></tr>
+    		<tr><td></td><td><input type="submit" id='submitButtonDown' value="Down" onClick="shout('panDown');"/></td><td></td></tr>
+    	</table>
+    	<div id="xval">Coordinates</div> 
+    	<table>
+    	  <tr><td>X:</td><td><input type="text" size=20 id="textbox1" value="20"></td></tr>
+    	  <tr><td>Y:</td><td><input type="text" size=20 id="textbox2" value="30"></td></tr>
+    	  <tr><td><input type="submit" id='submitButtonDown' value="Add Marker" onClick="addMarker();"/></td></tr>
+    	</table>
+    </body>
+</html>

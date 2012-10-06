@@ -1,0 +1,65 @@
+/*
+ * Styles for a searchbox with semi-circular sides
+ */
+
+//the actual visible component that makes up the overall box
+.search {
+    border: $owf-form-field-border-width solid $searchBox-border-color;
+    @include border-radius($owf-button-border-radius);
+    background-color: $owf-form-field-background-color;
+    padding-left: 4px;
+    padding-right: 4px;
+    overflow: hidden;
+	
+	height: 1em;
+
+    display: table-cell;
+
+    //invisible text box inside of search
+    input {
+        background: transparent;
+        border: none;
+        float: none;
+        line-height: $owf-font-size !important; // extjs adds line-height for webkit for some reason
+        margin-left: 2px;
+        color: $form-field-color;
+    }
+
+    //styles for images that go in the
+    //search box
+    .search-img {
+        width: 12px;
+
+        //vertical-align: text-bottom; 
+        display: inline-block;    
+    }
+
+    * {
+        height: 100%;
+        vertical-align: top;
+    }
+}
+
+.x-ie {
+    .search {
+        input {
+            //makes up for getting rid of the medium (3px) border that
+            //inputs have by default
+            font-size: $owf-font-size;
+            padding-top: 3px;
+        }
+    }
+}
+
+.magnifier-btn {
+    background: theme-image($theme-name, 'magnifier.png') no-repeat center center;
+}
+
+.clear-btn {
+    background: theme-image($theme-name, 'clear.png') no-repeat center center;
+    cursor: pointer;
+}
+
+.clear-btn-over {
+    @include opacity(.7);
+}

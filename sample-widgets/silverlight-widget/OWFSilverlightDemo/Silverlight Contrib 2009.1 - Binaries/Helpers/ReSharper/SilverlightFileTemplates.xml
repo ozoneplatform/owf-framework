@@ -1,0 +1,179 @@
+<TemplatesExport family="File Templates">
+  <Template uid="101ee506-faf2-43e9-8a9c-0a1252e72bbb" text="using System;&#xD;&#xA;using System.Windows;&#xD;&#xA;using System.Windows.Controls;&#xD;&#xA;&#xD;&#xA;namespace $NAMESPACE$&#xD;&#xA;{&#xD;&#xA;    /// &lt;summary&gt;&#xD;&#xA;    /// &#xD;&#xA;    /// &lt;/summary&gt;&#xD;&#xA;    public class $CLASSNAME$ : Control&#xD;&#xA;    {&#xD;&#xA;        public $CLASSNAME$()&#xD;&#xA;        {&#xD;&#xA;            DefaultStyleKey = typeof($CLASSNAME$);&#xD;&#xA;            $END$&#xD;&#xA;        }&#xD;&#xA;    }&#xD;&#xA;}" shortcut="" description="Silverlight Control" reformat="true" shortenQualifiedReferences="true">
+    <Context>
+      <ProjectLanguageContext language="CSharp" />
+    </Context>
+    <Categories>
+      <Category name="Silverlight File Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="NAMESPACE" expression="fileDefaultNamespace()" initialRange="0" />
+      <Variable name="CLASSNAME" expression="getFileNameWithoutExtension()" initialRange="0" />
+    </Variables>
+    <CustomProperties>
+      <Property key="FileName" value="Class" />
+      <Property key="Extension" value="cs" />
+      <Property key="ValidateFileName" value="False" />
+    </CustomProperties>
+  </Template>
+  <Template uid="ea67bcd9-1451-4c6a-9690-3206855c2e38" text="&lt;ResourceDictionary&#xD;&#xA;    xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;&#xD;&#xA;    xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;&#xD;&#xA;    xmlns:local=&quot;$NAMESPACE$&quot;&#xD;&#xA;    xmlns:vsm=&quot;clr-namespace:System.Windows;assembly=System.Windows&quot;&gt;&#xD;&#xA;&#xD;&#xA;    &lt;Style TargetType=&quot;local:$CLASSNAME$&quot;&gt;&#xD;&#xA;        &lt;Setter Property=&quot;MenuItemClickEffect&quot; Value=&quot;Bounce&quot; /&gt;&#xD;&#xA;        &lt;Setter Property=&quot;MaxItemHeight&quot; Value=&quot;110&quot; /&gt;&#xD;&#xA;        &lt;Setter Property=&quot;MaxItemWidth&quot; Value=&quot;110&quot; /&gt;&#xD;&#xA;        &lt;Setter Property=&quot;Template&quot;&gt;&#xD;&#xA;            &lt;Setter.Value&gt;&#xD;&#xA;                &lt;ControlTemplate TargetType=&quot;local:$CLASSNAME$&quot;&gt;&#xD;&#xA;					$END$&#xD;&#xA;                &lt;/ControlTemplate&gt;&#xD;&#xA;            &lt;/Setter.Value&gt;&#xD;&#xA;        &lt;/Setter&gt;&#xD;&#xA;    &lt;/Style&gt;&#xD;&#xA;&#xD;&#xA;&lt;/ResourceDictionary&gt;" shortcut="" description="generic.xaml" reformat="true" shortenQualifiedReferences="false">
+    <Categories>
+      <Category name="Silverlight File Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="NAMESPACE" expression="" initialRange="0" />
+      <Variable name="CLASSNAME" expression="" initialRange="0" />
+    </Variables>
+    <CustomProperties>
+      <Property key="FileName" value="generic" />
+      <Property key="Extension" value="xaml" />
+      <Property key="ValidateFileName" value="False" />
+    </CustomProperties>
+  </Template>
+  <Template uid="101ee506-faf2-43e9-8a9c-0a1252e72bbb" text="using System;&#xD;&#xA;using System.Windows;&#xD;&#xA;using System.Windows.Controls;&#xD;&#xA;&#xD;&#xA;namespace $NAMESPACE$&#xD;&#xA;{&#xD;&#xA;    /// &lt;summary&gt;&#xD;&#xA;    /// &#xD;&#xA;    /// &lt;/summary&gt;&#xD;&#xA;    public class $CLASSNAME$ : Control&#xD;&#xA;    {&#xD;&#xA;        public $CLASSNAME$()&#xD;&#xA;        {&#xD;&#xA;            DefaultStyleKey = typeof($CLASSNAME$);&#xD;&#xA;            $END$&#xD;&#xA;        }&#xD;&#xA;    }&#xD;&#xA;}" shortcut="" description="Silverlight Control" reformat="true" shortenQualifiedReferences="true">
+    <Context>
+      <ProjectLanguageContext language="CSharp" />
+    </Context>
+    <Categories>
+      <Category name="Silverlight File Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="NAMESPACE" expression="fileDefaultNamespace()" initialRange="0" />
+      <Variable name="CLASSNAME" expression="getFileNameWithoutExtension()" initialRange="0" />
+    </Variables>
+    <CustomProperties>
+      <Property key="FileName" value="Class" />
+      <Property key="Extension" value="cs" />
+      <Property key="ValidateFileName" value="False" />
+    </CustomProperties>
+  </Template>
+  <Template uid="0b950dc7-1118-4ffb-9e62-099d3c3daf30" text="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&#xD;&#xA;&lt;access-policy&gt;&#xD;&#xA;  &lt;cross-domain-access&gt;&#xD;&#xA;    &lt;policy&gt;&#xD;&#xA;      &lt;allow-from http-request-headers=&quot;*&quot;&gt;&#xD;&#xA;        &lt;domain uri=&quot;$DOMAINURI$&quot;/&gt;&#xD;&#xA;      &lt;/allow-from&gt;&#xD;&#xA;      &lt;grant-to&gt;&#xD;&#xA;        $END$&lt;resource path=&quot;$PATH$&quot; include-subpaths=&quot;$INCLUDESUBPATHS$&quot;/&gt;&#xD;&#xA;      &lt;/grant-to&gt;&#xD;&#xA;    &lt;/policy&gt;&#xD;&#xA;  &lt;/cross-domain-access&gt;&#xD;&#xA;&lt;/access-policy&gt;" shortcut="" description="clientaccesspolicy.xml" reformat="true" shortenQualifiedReferences="true">
+    <Categories>
+      <Category name="Silverlight File Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="DOMAINURI" expression="constant(&quot;*&quot;)" initialRange="0" />
+      <Variable name="PATH" expression="constant(&quot;/&quot;)" initialRange="0" />
+      <Variable name="INCLUDESUBPATHS" expression="constant(&quot;true&quot;)" initialRange="0" />
+    </Variables>
+    <CustomProperties>
+      <Property key="FileName" value="clientaccesspolicy" />
+      <Property key="Extension" value="xml" />
+      <Property key="ValidateFileName" value="False" />
+    </CustomProperties>
+  </Template>
+  <Template uid="097479e0-11da-4e5c-984a-aa2d8afda67f" text="&lt;?xml version=&quot;1.0&quot;?&gt;&#xD;&#xA;&lt;!DOCTYPE cross-domain-policy SYSTEM &quot;http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd&quot;&gt;&#xD;&#xA;&lt;cross-domain-policy&gt;&#xD;&#xA;  &lt;allow-http-request-headers-from domain=&quot;*&quot; headers=&quot;*&quot;/&gt;&#xD;&#xA;&lt;/cross-domain-policy&gt;" shortcut="" description="crossdomain.xml" reformat="true" shortenQualifiedReferences="true">
+    <Categories>
+      <Category name="Silverlight File Templates" />
+    </Categories>
+    <Variables />
+    <CustomProperties>
+      <Property key="FileName" value="crossdomain" />
+      <Property key="Extension" value="xml" />
+      <Property key="ValidateFileName" value="False" />
+    </CustomProperties>
+  </Template>
+  <Template uid="ea67bcd9-1451-4c6a-9690-3206855c2e38" text="&lt;ResourceDictionary&#xD;&#xA;    xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;&#xD;&#xA;    xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;&#xD;&#xA;    xmlns:local=&quot;$NAMESPACE$&quot;&#xD;&#xA;    xmlns:vsm=&quot;clr-namespace:System.Windows;assembly=System.Windows&quot;&gt;&#xD;&#xA;&#xD;&#xA;    &lt;Style TargetType=&quot;local:$CLASSNAME$&quot;&gt;&#xD;&#xA;        &lt;Setter Property=&quot;MenuItemClickEffect&quot; Value=&quot;Bounce&quot; /&gt;&#xD;&#xA;        &lt;Setter Property=&quot;MaxItemHeight&quot; Value=&quot;110&quot; /&gt;&#xD;&#xA;        &lt;Setter Property=&quot;MaxItemWidth&quot; Value=&quot;110&quot; /&gt;&#xD;&#xA;        &lt;Setter Property=&quot;Template&quot;&gt;&#xD;&#xA;            &lt;Setter.Value&gt;&#xD;&#xA;                &lt;ControlTemplate TargetType=&quot;local:$CLASSNAME$&quot;&gt;&#xD;&#xA;					$END$&#xD;&#xA;                &lt;/ControlTemplate&gt;&#xD;&#xA;            &lt;/Setter.Value&gt;&#xD;&#xA;        &lt;/Setter&gt;&#xD;&#xA;    &lt;/Style&gt;&#xD;&#xA;&#xD;&#xA;&lt;/ResourceDictionary&gt;" shortcut="" description="generic.xaml" reformat="true" shortenQualifiedReferences="false">
+    <Categories>
+      <Category name="Silverlight File Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="NAMESPACE" expression="" initialRange="0" />
+      <Variable name="CLASSNAME" expression="" initialRange="0" />
+    </Variables>
+    <CustomProperties>
+      <Property key="FileName" value="generic" />
+      <Property key="Extension" value="xaml" />
+      <Property key="ValidateFileName" value="False" />
+    </CustomProperties>
+  </Template>
+  <Template uid="24da23f2-2881-4427-828e-74cf22084460" text="using System;&#xD;&#xA;using System.Globalization;&#xD;&#xA;using System.Windows.Data;&#xD;&#xA;&#xD;&#xA;/// &lt;summary&gt;&#xD;&#xA;/// $CONVERTERNAME$&#xD;&#xA;/// &lt;/summary&gt;&#xD;&#xA;public class  $CONVERTERNAME$ : IValueConverter&#xD;&#xA;{&#xD;&#xA;    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)&#xD;&#xA;    {&#xD;&#xA;        try&#xD;&#xA;        {&#xD;&#xA;            $END$&#xD;&#xA;            return;&#xD;&#xA;        }&#xD;&#xA;        catch&#xD;&#xA;        {&#xD;&#xA;            return value;&#xD;&#xA;        }&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)&#xD;&#xA;    {&#xD;&#xA;        // Not implemented&#xD;&#xA;        return null;&#xD;&#xA;    }&#xD;&#xA;}&#xD;&#xA;" shortcut="" description="Silverilght Value Converter" reformat="true" shortenQualifiedReferences="true">
+    <Context>
+      <ProjectLanguageContext language="CSharp" />
+    </Context>
+    <Categories>
+      <Category name="Silverlight File Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="CONVERTERNAME" expression="getFileNameWithoutExtension()" initialRange="0" />
+    </Variables>
+    <CustomProperties>
+      <Property key="FileName" value="Converter" />
+      <Property key="Extension" value="cs" />
+      <Property key="ValidateFileName" value="False" />
+    </CustomProperties>
+  </Template>
+  <Template uid="101ee506-faf2-43e9-8a9c-0a1252e72bbb" text="using System;&#xD;&#xA;using System.Windows;&#xD;&#xA;using System.Windows.Controls;&#xD;&#xA;&#xD;&#xA;namespace $NAMESPACE$&#xD;&#xA;{&#xD;&#xA;    /// &lt;summary&gt;&#xD;&#xA;    /// &#xD;&#xA;    /// &lt;/summary&gt;&#xD;&#xA;    public class $CLASSNAME$ : Control&#xD;&#xA;    {&#xD;&#xA;        public $CLASSNAME$()&#xD;&#xA;        {&#xD;&#xA;            DefaultStyleKey = typeof($CLASSNAME$);&#xD;&#xA;            $END$&#xD;&#xA;        }&#xD;&#xA;    }&#xD;&#xA;}" shortcut="" description="Silverlight Control" reformat="true" shortenQualifiedReferences="true">
+    <Context>
+      <ProjectLanguageContext language="CSharp" />
+    </Context>
+    <Categories>
+      <Category name="Silverlight File Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="NAMESPACE" expression="fileDefaultNamespace()" initialRange="0" />
+      <Variable name="CLASSNAME" expression="getFileNameWithoutExtension()" initialRange="0" />
+    </Variables>
+    <CustomProperties>
+      <Property key="FileName" value="Class" />
+      <Property key="Extension" value="cs" />
+      <Property key="ValidateFileName" value="False" />
+    </CustomProperties>
+  </Template>
+  <Template uid="551a6067-32df-4c56-a166-3614523ee1b6" text="using System.Windows;&#xD;&#xA;using System.Windows.Controls;&#xD;&#xA;&#xD;&#xA;/// &lt;summary&gt;&#xD;&#xA;/// $PANELNAME$&#xD;&#xA;/// &lt;/summary&gt;&#xD;&#xA;public class $PANELNAME$ : Panel&#xD;&#xA;{&#xD;&#xA;    // The MeasureOverride method is your chance to ask&#xD;&#xA;    // all of your children how big they want to be&#xD;&#xA;&#xD;&#xA;    protected override Size MeasureOverride(Size availableSize)&#xD;&#xA;    {&#xD;&#xA;        Size YouCanBeAsBigAsYouWant = new Size(double.PositiveInfinity, double.PositiveInfinity);&#xD;&#xA;&#xD;&#xA;        foreach (UIElement element in this.Children)&#xD;&#xA;        {&#xD;&#xA;            element.Measure(YouCanBeAsBigAsYouWant);&#xD;&#xA;        }&#xD;&#xA;&#xD;&#xA;        return new Size();&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    // The ArrangeOverride method is your chance to place&#xD;&#xA;    // and size all of your children&#xD;&#xA;&#xD;&#xA;    protected override Size ArrangeOverride(Size finalSize)&#xD;&#xA;    {&#xD;&#xA;        double top = 0;&#xD;&#xA;        double left = 0;&#xD;&#xA;        double width = 0;&#xD;&#xA;        double height = 0;&#xD;&#xA;&#xD;&#xA;        foreach (UIElement element in this.Children)&#xD;&#xA;        {&#xD;&#xA;            // YOUR CODE HERE&#xD;&#xA;            // To change where the element get placed, just modify any of the values below.&#xD;&#xA;            $END$&#xD;&#xA;            &#xD;&#xA;            width = element.DesiredSize.Width;&#xD;&#xA;            height = element.DesiredSize.Height;&#xD;&#xA;&#xD;&#xA;            element.Arrange(new Rect(left, top, width, height));&#xD;&#xA;&#xD;&#xA;            top = top + 100;&#xD;&#xA;            left = left + 100;&#xD;&#xA;        }&#xD;&#xA;&#xD;&#xA;        return finalSize;&#xD;&#xA;    }&#xD;&#xA;}" shortcut="" description="Silverlight Panel" reformat="true" shortenQualifiedReferences="true">
+    <Context>
+      <ProjectLanguageContext language="CSharp" />
+    </Context>
+    <Categories>
+      <Category name="Silverlight File Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="PANELNAME" expression="getFileNameWithoutExtension()" initialRange="0" />
+    </Variables>
+    <CustomProperties>
+      <Property key="FileName" value="Panel" />
+      <Property key="Extension" value="cs" />
+      <Property key="ValidateFileName" value="False" />
+    </CustomProperties>
+  </Template>
+  <Template uid="0b950dc7-1118-4ffb-9e62-099d3c3daf30" text="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&#xD;&#xA;&lt;access-policy&gt;&#xD;&#xA;  &lt;cross-domain-access&gt;&#xD;&#xA;    &lt;policy&gt;&#xD;&#xA;      &lt;allow-from http-request-headers=&quot;*&quot;&gt;&#xD;&#xA;        &lt;domain uri=&quot;$DOMAINURI$&quot;/&gt;&#xD;&#xA;      &lt;/allow-from&gt;&#xD;&#xA;      &lt;grant-to&gt;&#xD;&#xA;        $END$&lt;resource path=&quot;$PATH$&quot; include-subpaths=&quot;$INCLUDESUBPATHS$&quot;/&gt;&#xD;&#xA;      &lt;/grant-to&gt;&#xD;&#xA;    &lt;/policy&gt;&#xD;&#xA;  &lt;/cross-domain-access&gt;&#xD;&#xA;&lt;/access-policy&gt;" shortcut="" description="clientaccesspolicy.xml" reformat="true" shortenQualifiedReferences="true">
+    <Categories>
+      <Category name="Silverlight File Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="DOMAINURI" expression="constant(&quot;*&quot;)" initialRange="0" />
+      <Variable name="PATH" expression="constant(&quot;/&quot;)" initialRange="0" />
+      <Variable name="INCLUDESUBPATHS" expression="constant(&quot;true&quot;)" initialRange="0" />
+    </Variables>
+    <CustomProperties>
+      <Property key="FileName" value="clientaccesspolicy" />
+      <Property key="Extension" value="xml" />
+      <Property key="ValidateFileName" value="False" />
+    </CustomProperties>
+  </Template>
+  <Template uid="097479e0-11da-4e5c-984a-aa2d8afda67f" text="&lt;?xml version=&quot;1.0&quot;?&gt;&#xD;&#xA;&lt;!DOCTYPE cross-domain-policy SYSTEM &quot;http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd&quot;&gt;&#xD;&#xA;&lt;cross-domain-policy&gt;&#xD;&#xA;  &lt;allow-http-request-headers-from domain=&quot;*&quot; headers=&quot;*&quot;/&gt;&#xD;&#xA;&lt;/cross-domain-policy&gt;" shortcut="" description="crossdomain.xml" reformat="true" shortenQualifiedReferences="true">
+    <Categories>
+      <Category name="Silverlight File Templates" />
+    </Categories>
+    <Variables />
+    <CustomProperties>
+      <Property key="FileName" value="crossdomain" />
+      <Property key="Extension" value="xml" />
+      <Property key="ValidateFileName" value="False" />
+    </CustomProperties>
+  </Template>
+  <Template uid="ea67bcd9-1451-4c6a-9690-3206855c2e38" text="&lt;ResourceDictionary&#xD;&#xA;    xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;&#xD;&#xA;    xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;&#xD;&#xA;    xmlns:local=&quot;$NAMESPACE$&quot;&#xD;&#xA;    xmlns:vsm=&quot;clr-namespace:System.Windows;assembly=System.Windows&quot;&gt;&#xD;&#xA;&#xD;&#xA;    &lt;Style TargetType=&quot;local:$CLASSNAME$&quot;&gt;&#xD;&#xA;        &lt;Setter Property=&quot;MenuItemClickEffect&quot; Value=&quot;Bounce&quot; /&gt;&#xD;&#xA;        &lt;Setter Property=&quot;MaxItemHeight&quot; Value=&quot;110&quot; /&gt;&#xD;&#xA;        &lt;Setter Property=&quot;MaxItemWidth&quot; Value=&quot;110&quot; /&gt;&#xD;&#xA;        &lt;Setter Property=&quot;Template&quot;&gt;&#xD;&#xA;            &lt;Setter.Value&gt;&#xD;&#xA;                &lt;ControlTemplate TargetType=&quot;local:$CLASSNAME$&quot;&gt;&#xD;&#xA;					$END$&#xD;&#xA;                &lt;/ControlTemplate&gt;&#xD;&#xA;            &lt;/Setter.Value&gt;&#xD;&#xA;        &lt;/Setter&gt;&#xD;&#xA;    &lt;/Style&gt;&#xD;&#xA;&#xD;&#xA;&lt;/ResourceDictionary&gt;" shortcut="" description="generic.xaml" reformat="true" shortenQualifiedReferences="false">
+    <Categories>
+      <Category name="Silverlight File Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="NAMESPACE" expression="" initialRange="0" />
+      <Variable name="CLASSNAME" expression="" initialRange="0" />
+    </Variables>
+    <CustomProperties>
+      <Property key="FileName" value="generic" />
+      <Property key="Extension" value="xaml" />
+      <Property key="ValidateFileName" value="False" />
+    </CustomProperties>
+  </Template>
+</TemplatesExport>

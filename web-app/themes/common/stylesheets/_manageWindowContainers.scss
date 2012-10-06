@@ -1,0 +1,449 @@
+﻿@charset "UTF-8";
+/*
+This CSS is for specific style for the OWF UI.  This does not include the Admin UI.  This CSS is also for specifically
+overriding any default ExtJS 4.0.1 default theme css rules for OWF specific elements.  This does not include
+directly overriding the base ExtJS 4.0.1 rules.  
+ */
+
+/* CSS Document */
+
+.x-nlg {
+    .manageContainer {
+        .cvc-createNewDashboardContainer,//Create Dashboard/Views Container
+        .mvc-manageDashboardsContainer,//Manage Dashboards/Views Container
+        .mwc-manageWidgetsContainer,//Manage Widgets Container
+        .configContainer//Customize Dashboard
+        {
+            .x-toolbar{
+                //@include owf-background-gradient($toolbar-theme); 
+                border: 0px;
+            }
+        }
+    }
+}
+
+.manageContainer {
+    @include owf-window($active-widget-theme, $owf_css_important);
+
+      .x-component {
+          .manageWidgetsContainer-header-icon {
+              height: 26px;
+              width: 26px;
+          }
+      }
+
+      .manageWidgetsContainer-header-icon {
+          background-image: theme-image($theme-name, 'settings/WidgetWhiteIcon.png');
+      }
+
+    //Create Dashboard/Views Container
+    .cvc-createNewDashboardContainer {
+        $label_width: 50%;
+
+        @extend .owf-manage-window; 
+
+        padding-top: 10px;
+        .titleBox {
+            padding-left: 4px;
+            height: 22px;
+            .x-form-item-label {
+                width: $label_width;
+            	padding-left: 0px;
+            }
+            .x-form-item-body {
+                width: 50%;
+                padding-right: 10px;
+                right: 0px;
+                position: absolute;
+                .x-form-field {
+                    width: 100%;
+                	height: 22px!important;
+                }
+            }
+        }
+        .description {
+            padding-left: 4px;
+            height: 80px;
+            .x-form-item-label {
+                width: $label_width;
+            	padding-left: 0px;
+            }
+            .x-form-item-body {
+                width: 50%;
+                padding-right: 10px;
+                right: 0px;
+                position: absolute;
+                .x-form-field {
+                    width: 100%;
+                    height: 80px!important;
+                }
+            }
+        }
+        .createSelector {
+            padding-top: 20px;
+        }
+        .viewSelect {
+            padding-left: 4px;
+            height: 155px!important;
+            .x-form-item-body {
+                .x-container {
+                    height: 155px!important;
+                }
+            }
+            .newViewRadio,
+            .existingViewRadio,
+            .importedViewRadio {
+                clear:both;
+                .x-form-cb-label {
+                }
+            }
+            .x-field {
+                float:left;
+                .x-form-cb-label {
+                    padding-left: 0;
+                }
+            }
+        }
+        
+        .set_as_default {
+            padding-left: 4px;
+            .x-form-item-label {
+                width: 90px!important;
+            }
+            .x-form-item-body {
+                width: 16px!important;
+            }
+        }
+
+        .viewSelectBoxes {
+            .x-form-item {
+                //padding-top: 17px;
+            }
+            padding-right: 10px;
+        }
+    }
+
+    //Manage Dashboards/Views Container
+    .mvc-manageDashboardsContainer {
+        @extend .owf-manage-window; 
+
+        .mvc-dashboardGridPanel {
+            @include owf-grid-panel($owf_css_important, $owf_frame_is_not_IE, false);
+
+            .x-toolbar {
+                .moveDownBtnIcon {
+                    background-image: theme-image($theme-name, 'blue/multiselect/down2.gif'); 
+                }
+                .moveUpBtnIcon {
+                    background-image: theme-image($theme-name, 'blue/multiselect/up2.gif'); 
+                }
+            }
+        }
+
+        .languages-combo {
+            padding-top: 5px;
+        }
+  }
+
+  //Manage Widgets Container
+  .mwc-manageWidgetsContainer {
+      @extend .owf-manage-window;
+
+      .mwc-widgetGridPanel {
+          @include owf-grid-panel($owf_css_important,$owf_frame_is_not_IE);
+          .x-grid-row-over {
+              .x-grid-column-over.manage-editable {
+                  div {
+                      background-image:theme-image($theme-name,'icons/penIcon.png');
+                      background-repeat:no-repeat; 
+                      background-position:right center;
+                  }
+              }
+          }
+      }
+  }
+
+  //Customize Dashboard
+  .configContainer {
+      @extend .owf-manage-window;
+
+      //make sure focused style shows on top of selected in all the grids
+      /*.x-grid-row-focused .x-grid-cell, .x-grid-row-focused .x-grid-rowwrap-div {*/
+        /*background-color: $owf-grid-row-cell-focus-background-color !important;*/
+      /*}*/
+
+      .x-panel-body {
+          overflow-y:auto;
+          .x-box-inner {
+              overflow-y:auto;
+          }
+      }
+      
+      label {
+          width: 168px;
+      }
+
+      .titleBox {
+          input, .x-form-item-body {
+              width: 250px;
+          }
+      }
+
+      .x-grid-cell-inner {
+        text-overflow: clip;
+      }
+
+      //Widget Arragement
+      .widgetArrangement{
+          border: none !important;
+          .x-panel-body {
+              overflow:hidden;
+              .x-box-inner {
+                  overflow:hidden;
+              }
+          }
+
+          .x-panel {
+              @include owf-grid-panel($owf_css_not_important,$owf_frame_is_not_IE, false);
+              border: 1px solid getHighContrastColor($owf-window-background-color);
+              .x-grid-body {
+
+                  border-width: 1px 0 0 0;
+                  border-style: solid;
+                  border-color: getHighContrastColor($owf-window-background-color);
+              }
+          }
+
+          //PORTAL
+          .x-panel.widgetArrangement_portal {
+              filter: none;
+              background: $panel-body-background-color;
+              .columncb {
+                  label {
+                      font-size: .8em;
+                      width: 100px !important;
+                  }
+                  input {
+                      font-size: .8em;
+                  }
+              }
+          }
+      }
+
+      //Available Widgets
+      .widgetSelectorPanel {
+          .x-panel-body {
+              overflow:hidden;
+              border-width: 1px 0 0 0;
+              border-style: solid;
+              border-color: getHighContrastColor($owf-window-background-color);
+              .x-box-inner {
+                  overflow:hidden;
+              }
+          }
+
+          .x-panel {
+              @include owf-grid-panel($owf_css_not_important,$owf_frame_is_not_IE, false);
+              border: 1px solid getHighContrastColor($owf-window-background-color);
+          }
+      }
+  }
+}
+
+.delete-widgets-window {
+    @extend .owf-window;
+
+    .x-panel-body {
+        color: getHighContrastColor($owf-window-background-color);
+        border-style: none;
+        font-weight: bold;
+    }
+
+    .x-grid {
+        border: 1px solid getHighContrastColor($owf-window-background-color);
+
+        img {
+            width: 24px;
+            height: 24px;
+        }
+    }
+    .x-grid-body {
+        background-color: $owf-window-background-color;
+        color: getHighContrastColor($owf-window-background-color);
+    }
+
+
+    #topdeletepanel-body {
+        padding: 6px;
+
+        .x-panel {
+            margin-bottom: 4px;
+        }
+
+        .delView {
+            margin-bottom: 15px;
+        }
+    }
+
+
+
+    .x-toolbar{
+        //@include owf-background-gradient($toolbar-theme);
+        border: none;
+    }
+}
+
+/***
+ * GRID CHECKBOX - START
+ */
+.x-grid-column-checkbox {
+    width: 13px;
+    height: 13px;
+}
+
+.x-ie .x-grid-column-checkbox {
+    font: 10px $owf-font-family; //hack to get IE to not enlarge the checkbox
+}
+
+.x-grid-column-checkbox-off {
+    background-position: 0 0;
+    background-repeat:no-repeat;
+    background-color:transparent;
+    background-image: theme-image($theme-name, 'blue/grid/checkbox.gif');
+}
+
+.x-column-header-over .x-grid-column-checkbox-off,
+.x-grid-column-over .x-grid-column-checkbox-off {
+    background-position: -13px 0!important;
+}
+
+.x-grid-column-checkbox-on {
+    background-position: 0 -13px;
+    background-repeat:no-repeat;
+    background-color:transparent;
+    background-image: theme-image($theme-name, 'blue/grid/checkbox.gif');
+}
+
+.x-column-header-over .x-grid-column-checkbox-on,
+.x-grid-column-over .x-grid-column-checkbox-on {
+    background-position: -13px -13px!important;
+}
+
+/***
+ * GRID CHECKBOX - END
+ */
+
+/***
+ * GRID RADIO - START
+ */
+
+.x-grid-column-radio {
+    width: 13px;
+    height: 13px;
+}
+
+.x-ie .x-grid-column-radio {
+    font: 10px $owf-font-family; //hack to get IE to not enlarge the checkbox
+}
+
+.x-grid-column-radio-off {
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-image: theme-image($theme-name, 'blue/grid/radio.gif');
+}
+
+.x-column-header-over .x-grid-column-radio-off,
+.x-grid-column-over .x-grid-column-radio-off {
+    background-position: -13px 0!important;
+}
+
+.x-grid-column-radio-on {
+    background-position: 0 -13px;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-image: theme-image($theme-name, 'blue/grid/radio.gif');
+}
+
+.x-column-header-over .x-grid-column-radio-on,
+.x-grid-column-over .x-grid-column-radio-on {
+    background-position: -13px -13px!important;
+}
+
+/***
+ * GRID RADIO - END
+ */
+
+/* MANAGE WIDGETS --------[START] */
+// .gridHdr {
+//     color: #4F4F4F !important;
+//     font-weight: bold !important;
+// }
+
+.gridHdrCheckbox {
+    // color: #4F4F4F !important;
+    // font-weight: bold !important;
+    padding-left: 15px;
+}
+
+/*
+ *  GRID COLUMN SHOW 
+ */
+
+
+.gridHdrShow {
+    left: 14px;
+    position: relative;
+    // color: #4F4F4F !important;
+    // font-weight: bold !important;
+}
+
+.gridHdrShow .x-grid-column-checkbox-off,
+.gridHdrShow .x-grid-column-checkbox-on {
+    font-size: 10px;
+    padding-left: 13px;
+    height: 13px;
+    position: relative;
+    right: 6px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.gridCellShowWidgets-chkbox .x-grid-column-checkbox-off, 
+.gridCellShowWidgets-chkbox .x-grid-column-checkbox-on {
+    height: 13px;
+    width: 13px;
+    position: relative;
+    left:8px;
+}
+
+/*
+ *  GRID COLUMN DELETE (REMOVE) 
+ */
+
+
+.gridHdrDelete {
+    left: 14px;
+    position: relative;
+    // color: #4F4F4F !important;
+    // font-weight: bold !important;
+}
+
+.gridHdrDelete .x-grid-column-checkbox-off,
+.gridHdrDelete .x-grid-column-checkbox-on {
+    padding-left: 13px;
+    height: 13px;
+    position: relative;
+    font-size: 10px; //to make the check box show up correctly (does not affect any actual letters)
+    right: 6px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.gridCellDeleteWidgets-chkbox .x-grid-column-checkbox-off,
+.gridCellDeleteWidgets-chkbox .x-grid-column-checkbox-on {
+    height: 13px;
+    width: 13px;
+    position: relative;
+    left:8px;
+}
