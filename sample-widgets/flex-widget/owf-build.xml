@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="flex-widget" default="zip" basedir=".">
+		
+	<target name="zip">
+            <delete file="flex-widget.zip" failonerror="false" />
+		<zip destfile="flex-widget.zip" basedir="${basedir}"
+		excludes="pom.xml,zip-assembly.xml,**/target/**,owf-build.xml,*.zip" />
+	</target>
+	
+</project>

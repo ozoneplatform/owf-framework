@@ -1,0 +1,22 @@
+<script type="text/javascript">
+var url = location.href,
+    hashParams = url.substr(url.indexOf('#') + 1).split('&'),
+    targetFrame, receive;
+
+try {
+    if(hashParams[0] === '..') {
+      if(parent.parent.opener) {
+        targetFrame = parent.parent.opener.parent;
+      } else {
+        targetFrame = parent.parent;
+      }
+    } else {
+      targetFrame = parent.frames[decodeURIComponent(hashParams[0])];
+    }
+    receive = targetFrame.gadgets.rpc.receive;
+} catch (e) {
+    alert('Error found in container relay: ' + e.message);
+}
+
+receive && receive(hashParams);
+</script>

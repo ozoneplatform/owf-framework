@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application 
+    xmlns:mx="http://www.adobe.com/2006/mxml" 
+    xmlns:ns1="com.adobe.wheelerstreet.fig.panzoom.*" 
+    layout="absolute"
+    viewSourceURL="srcview/index.html"
+    creationComplete="{handleCreationComplete()}"
+    applicationComplete="{handleApplicationComplete()}"
+    initialize="initApp()"
+    >
+    
+    <mx:Script>
+        <![CDATA[
+            import flash.net.navigateToURL;
+            
+            
+            [Bindable]
+            private var _imageURL:String = "images/earth-map_small.jpg";
+              
+              private var _contextMenu:ContextMenu;
+            private var _contextMenuItems:Array = ["Zoom In Image", "Zoom Out Image", "Show All Image", "Toggle Smooth Bitmap", "View Source"];            
+        
+            /**
+            * In its simplest form, the Pan|Zoom component offers a set of navigation 
+            * tools that allow for freedom of motion along the X, Y, and Z axes. 
+            * This style of navigation becomes necessary when dealing with massively 
+            * scalable content (such as maps, or large files in image editing applications), 
+            * and is the foundation of Zoomable User Interfaces (ZUI's).  
+            * <p>
+            * When used correctly, Pan|Zoom presents an intuitive and context-sensitive 
+            * way to view content that reinforces the user's natural spatial and 
+            * geographic ways of thinking.
+            * </p>
+            */
+
+            public function handleCreationComplete():void {
+                
+                // handle contenxt menu
+                
+                _contextMenu = new ContextMenu();
+                _contextMenu.hideBuiltInItems();
+               
+                for (var i:uint = 0; i<_contextMenuItems.length; i++) {
+                    
+                    var menuItem:ContextMenuItem = new ContextMenuItem(_contextMenuItems[i]);
+                    _contextMenu.customItems.push(menuItem);
+                    menuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, handleContextMenu);
+                }
+                
+                contextMenu = _contextMenu;
+                
+                
+            }
+            
+            public function handleApplicationComplete(): void { 
+            	imageViewer.stage.addEventListener(MouseEvent.MOUSE_MOVE, handleMouse);	            	
+            }
+            
+            private function zoomIn():void {
+            	imageViewer.zoomByOrigin("in");
+            }
+            private function zoomOut():void { 
+            	imageViewer.zoomByOrigin("out"); 
+            }
+            private function panRight():void { 
+            	imageViewer.pan(150, 0); 
+            }
+            private function panLeft():void { 
+            	imageViewer.pan(-150, 0); 
+            }
+            private function panDown():void { 
+            	imageViewer.pan(0, 150); 
+            }
+            private function panUp():void {
+            	imageViewer.pan(0, -150); 
+            	 
+            }
+            private function addMarker(x:Number, y:Number):void {
+            	imageViewer.draw2Rect(x,y); 
+            }
+                                
+            private function handleMouse(e:MouseEvent):void {
+            	if (ExternalInterface.available)
+       			{
+       			  var __tp:Point = imageViewer.invertPoint(e.localX, e.localY);
+       			  var obj:Object = new Object();
+       			  
+       			  obj.localX = e.localX; 
+       			  obj.localY = e.localY; 
+       			  
+       			  obj.absX = __tp.x; 
+       			  obj.absY = __tp.y; 
+       			  
+         		  ExternalInterface.call("mouseMove", 
+         		    "{ \"localX\": " +obj.localX + "," + 
+         		    "  \"localY\": " +obj.localY + "," + 
+         		    "  \"absX\": " + obj.absX + "," + 
+         		    "  \"absY\": " + obj.absY + "}"
+         		  );  
+         		}
+            	 
+            }
+            
+            public function initApp():void
+            {
+            	if (ExternalInterface.available)
+            	{
+            		ExternalInterface.addCallback("zoomIn", zoomIn); 
+            		ExternalInterface.addCallback("zoomOut", zoomOut);
+            		ExternalInterface.addCallback("panLeft", panLeft); 
+            		ExternalInterface.addCallback("panRight", panRight);
+            		ExternalInterface.addCallback("panUp", panUp); 
+            		ExternalInterface.addCallback("panDown", panDown);  
+            		ExternalInterface.addCallback("addMarker", addMarker); 
+            	}
+             
+            	
+            }
+            
+            private function handleContextMenu(e:ContextMenuEvent):void {
+
+                
+                switch(ContextMenuItem(e.currentTarget).caption)
+                {
+                    case "Zoom In Image":
+                    
+                        imageViewer.zoomByOrigin("in")
+                    
+                        break;
+
+                    case "Zoom Out Image":
+                    
+                        imageViewer.zoomByOrigin("out")
+                    
+                        break;
+                        
+                    case "Show All Image":
+                    
+                        imageViewer.centerView();
+
+                        break;     
+                                           
+                    case "Toggle Smooth Bitmap":
+
+                        if (imageViewer.smoothBitmap == true)
+                        {
+                            imageViewer.smoothBitmap = false;                    
+                        } else
+                        {
+                            imageViewer.smoothBitmap = true;                               
+                        }
+
+                        break;     
+
+                    case "View Source":
+
+                        var sourceURL:URLRequest = new URLRequest("srcview/index.html");
+                        navigateToURL(sourceURL, "_blank");
+                        
+                        break;    
+
+                }
+            }
+            
+        ]]>
+    </mx:Script>
+    
+    <mx:Style>
+        
+        Application {
+            backgroundGradientColors: #000000, #222222;
+        }        
+
+        Panel {
+            borderColor: #333333;
+              headerHeight: 0;    
+            borderThicknessLeft: 4;
+            borderThicknessRight: 4;
+            borderThicknessTop: 4;
+            borderThicknessBottom: 4;        
+            color: #999999;
+        }
+    
+        Button {        
+            color: #000000;
+            cornerRadius: 7;
+        }
+
+        .ZoomInButton {        
+            disabledSkin: Embed(source="icons/demoIcons.swf",symbol="MinusButton_Disabled");
+            downSkin: Embed(source="icons/demoIcons.swf",symbol="MinusButton_Down");
+            overSkin: Embed(source="icons/demoIcons.swf",symbol="MinusButton_Over");
+            upSkin: Embed(source="icons/demoIcons.swf",symbol="MinusButton_Up");        
+        }    
+
+        .ZoomOutButton {        
+            disabledSkin: Embed(source="icons/demoIcons.swf",symbol="PlusButton_Disabled");
+            downSkin: Embed(source="icons/demoIcons.swf",symbol="PlusButton_Down");
+            overSkin: Embed(source="icons/demoIcons.swf",symbol="PlusButton_Over");
+            upSkin: Embed(source="icons/demoIcons.swf",symbol="PlusButton_Up");
+        }    
+
+        Label {
+            color: #808080;
+        }
+        
+        CheckBox {
+            color: #808080;            
+        }
+        
+        VBox {
+            borderStyle: solid;
+            horizontalAlign: center; 
+            cornerRadius: 10; 
+            backgroundAlpha: 0.5; 
+            backgroundColor: #000000;
+            borderThickness: 0;         
+        }
+        
+        /*
+        TextInput {
+            borderStyle: solid;
+            borderThickness: .5;
+            cornerRadius: 7;
+            backgroundAlpha: 0.2;
+        }
+        */        
+                
+    </mx:Style>
+    
+
+    <mx:Canvas 
+
+
+         left="5" right="5" top="5" bottom="5">
+        
+        <!--ImageViewer -->
+        <ns1:ImageViewer
+            id="imageViewer"
+            imageURL="{ _imageURL }" 
+            bitmapScaleFactorMax="5"
+            bitmapScaleFactorMin=".05"
+            width="100%" height="100%"
+             x="0" y="0"/>        
+        
+        <!--Navigation controlls -->
+        <mx:VBox 
+            left="10" 
+            top="10" 
+            width="20"
+            >
+            
+            <mx:Spacer/>
+            
+            <mx:Button 
+                styleName="ZoomOutButton"
+                toolTip="Zoom In"
+                click="{imageViewer.zoom('in');}"
+                />
+                
+            <mx:HBox 
+                width="20"
+                >
+                
+                <mx:VSlider
+                    minimum="{ imageViewer.bitmapScaleFactorMin }" 
+                    maximum="{ imageViewer.bitmapScaleFactorMax }" 
+                    value  ="{ imageViewer.bitmapScaleFactor }"    
+                    change ="{ imageViewer.setZoom(VSlider(event.currentTarget).value) }"                 
+                    snapInterval=".001"
+                    liveDragging="true" 
+                    />    
+                                    
+            </mx:HBox>
+
+            <mx:Button 
+                styleName="ZoomInButton"
+                toolTip="Zoom Out"
+                click="{ imageViewer.zoom('out'); }"            
+                />    
+            
+            <mx:Spacer/>
+                                        
+        </mx:VBox>                    
+        
+    </mx:Canvas>
+    
+
+<!--  
+    When run locally (or as an AIR application) 
+    these controls let you load bitmaps from a URL.
+    This is a handy device for testing.  
+-->
+
+<!--        
+    <mx:ControlBar bottom="0" left="0" right="0">
+    
+        <mx:CheckBox
+            label="Smooth Bitmap" 
+            verticalCenter="317.5"
+            left="115" width="120"
+            change="{ imageViewer.smoothBitmap = CheckBox(event.currentTarget).selected }"
+            />
+
+        <mx:TextInput
+            text="http:\\"
+            id="inputURL"
+            width="100%"
+            />
+            
+        <mx:Button 
+            label="Go"
+            click="{imageViewer.imageURL = inputURL.text}"
+            enabled="{!imageViewer.loadingImage}"
+            /> 
+
+    </mx:ControlBar>
+-->
+
+
+</mx:Application>

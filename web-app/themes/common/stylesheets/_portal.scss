@@ -1,0 +1,45 @@
+    .x-panel-ghost {
+        z-index: 1;
+    }
+    /*.x-border-layout-ct {
+        background: #DFE8F6;
+    }*/
+    .x-portal-body {
+        padding: 0 0 0 8px;
+    }
+    .x-portal .x-portal-column {
+        /* columns must have vertical padding to avoid losing dimensions when empty */
+        padding: 8px 8px 0 0;
+    }
+    .x-portal .x-panel-dd-spacer {
+        border: 2px dashed #99bbe8;
+        background: #f6f6f6;
+        @include border-radius(4px);
+        margin-bottom: 10px;
+    }
+    .x-portlet {
+        //margin:10px;
+        //padding: 1px;
+    }
+    .x-portlet .x-panel-body {
+        background: #fff;
+    }
+    .portlet-content {
+        padding: 10px;
+        font-size: 11px;
+    }
+
+    /*#app-options .portlet-content {*/
+    /*padding: 5px;*/
+    /*font-size: 12px;*/
+	/*}*/
+	
+    .settings {
+        background-image: theme-image($theme-name, 'shared/icons/fam/folder_wrench.png');
+    }
+    .nav {
+        background-image: theme-image($theme-name, 'shared/icons/fam/folder_go.png');
+    }
+    .info {
+        background-image: theme-image($theme-name, 'shared/icons/fam/information.png');
+    }

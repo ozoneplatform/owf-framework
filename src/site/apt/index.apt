@@ -1,0 +1,13 @@
+ ------
+ Overview
+ ------
+
+OWF Server
+
+  The Ozone Widgeting Framework (OWF) is a set of tools used for organizing and displaying web applications 
+  (widgets) in a single browser window.  It consists of the OWF Server, the {{{owf-security/index.html}OWF Security}}
+  modules and an optional CAS Server.
+  
+  More detailed information can be found in the documents in the {{{downloads.html}Downloads}} section.  There
+  is also an "all in one" bundle available that provides a fully self-contained instance of the OWF, including
+  optional security modules and the CAS Server.

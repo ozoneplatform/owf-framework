@@ -1,0 +1,56 @@
+@include extjs-window-ui(
+    'widget-switcher',
+    
+    $ui-padding: null,
+    $ui-border-radius: null,
+    $ui-border-color: null,
+    $ui-inner-border-color: null,
+    
+    $ui-header-color: null,
+    $ui-header-font-size: $window-header-font-size,
+    $ui-header-font-weight: $window-header-font-weight,
+    
+    $ui-body-border-color: $widget-switcher-background-color,
+    $ui-body-background-color: $widget-switcher-background-color,
+    $ui-body-color: $widget-switcher-background-color,
+    
+    $ui-background-color: $widget-switcher-background-color
+);
+
+#widget-switcher {
+    @include opacity($widget-switcher-opacity);
+    
+    &, &-body {
+        @include border-radius($widget-switcher-body-radius);
+    }
+    
+    span, .thumb-text {
+        color: #ccc;
+    }
+
+    span {
+        font-size: 1.5em;
+        padding-left: 10px;
+    }
+    .widget {
+        background-color: $dashboard-switcher-dashboard-background-color;
+        border-color: $dashboard-switcher-dashboard-border-color;
+        .thumb-text {
+            color: $dashboard-switcher-dashboard-text-color;
+        }
+    }
+//    .widget-selected {
+//        background-color: $dashboard-switcher-dashboard-selected-background-color;
+//        border-color: $dashboard-switcher-dashboard-selected-border-color;
+//        .thumb-text {
+//            color: $dashboard-switcher-dashboard-selected-text-color;
+//        }
+//    }
+    .widget-over, .widget-selected {
+        background-color: $dashboard-switcher-dashboard-over-background-color;
+        border-color: $dashboard-switcher-dashboard-over-border-color;
+        .thumb-text {
+            color: $dashboard-switcher-dashboard-over-text-color;
+        }
+    }
+}

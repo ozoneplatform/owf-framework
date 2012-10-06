@@ -1,0 +1,70 @@
+<html>
+	<head>
+        <link href="../css/dragAndDrop.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="https://localhost:8443/owf/js-min/owf-widget-min.js"></script>
+
+		<script type="text/javascript">
+        //The location is assumed to be at /<context>/js/eventing/rpc_relay.uncompressed.html if it is not set
+        //OWF.relayFile = '/owf-sample-html/js/eventing/rpc_relay.uncompressed.html';
+
+        owfdojo.config.dojoBlankHtmlUrl = '../js/dojo-1.5.0-windowname-only/dojo/resources/blank.html';
+
+		/**
+		* The function called on widget onLoad event.
+		*/
+		function trackerInit()
+		{           
+
+			// this widget expects to be launched.  See what data was sent!
+			var launchConfig = OWF.Launcher.getLaunchData();	
+			
+			if(launchConfig == null)
+			{
+				document.getElementById("error").innerHTML = "<font color='red'>ERROR:  This widget must be launched from 'Announcing Clock Launcher' to work.  Close it and launch it from 'Announcing Clock Launcher.'</font><p/>";
+			}
+			else
+			{
+				var launchConfigJson = OWF.Util.parseJson(launchConfig);
+					
+				// we are expecting the channel to listen on to be passed in dynamically.
+				// update it on the page
+				var channelToUse = launchConfigJson.channel;
+				document.getElementById("channelName").innerHTML = channelToUse;	
+					
+				// intialize the time clock on the page.
+				document.getElementById('currentTime').innerHTML = new Date();
+				
+				// set up so that every time this widget receives a message on the dynamically passed in channel name, 
+				// it calls the update function.
+                OWF.Eventing.subscribe(channelToUse, update);
+
+			}
+		}
+
+		/**
+		* The function called every time a message is received on the eventing channel
+		*/
+		var update = function(sender, msg)
+		{
+			var count = parseInt(document.getElementById('minutesOnline').innerHTML);
+			count = count +1;
+			document.getElementById('minutesOnline').innerHTML = count;
+			document.getElementById('currentTime').innerHTML = msg;
+		};
+		
+        owfdojo.addOnLoad(function() {
+	        OWF.ready(trackerInit);
+		});
+
+        </script>
+     </head>
+     <body>
+
+		<span id="error">&nbsp;</span>
+		
+		As of <span id="currentTime">&nbsp</span>,&nbsp;you have been online for at least <span id='minutesOnline'>0</span> second(s).  
+		<p/>
+		This message was received on channel <span id="channelName">&nbsp;</span>.
+		
+	</body>
+</html>

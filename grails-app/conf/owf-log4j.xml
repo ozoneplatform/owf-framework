@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <!-- Be careful what gets logged to this appender. If stdout is directed
+         to a file, it will not have log rolling
+         -->
+	<appender name="ozone-stdout" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601}: %-5p [%c][%t] %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="ozone-syslog" class="org.apache.log4j.net.SyslogAppender">
+	  <param name="syslogHost" value="localhost:8014" />
+	  <param name="facility" value="USER" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601}{UTC} %-5p [%c] %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="ozone-rolling-log" class="org.apache.log4j.CompositeRollingAppender">
+		<param name="RollingStyle" value="3" />
+		<param name="StaticLogFileName" value="false" />
+		<param name="File" value="logs/ozone-widgeting-framework.log" />
+		<param name="CountDirection" value="1" />
+		<param name="MaxFileSize" value="100MB" />
+		<param name="MaxSizeRollBackups" value="5" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="Encoding" value="UTF-8" />
+		<!--
+			Uncomment these parameters to boost performance but entries won't get
+			written immediately
+			 
+		<param name="BufferedIO" value="false"/>
+		<param name="BufferSize" value="8192"/>
+		-->
+		<!--
+			Set to immediate flush so the results are saved before a system
+			crash, slows performance though
+		-->
+		<param name="ImmediateFlush" value="true" />
+		<param name="Threshold" value="all" />
+		<layout class="org.apache.log4j.EnhancedPatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601}{UTC} %-5p [%c] %m%n" />
+		</layout>
+
+		<filter class="org.apache.log4j.varia.StringMatchFilter">
+			<param name="StringToMatch" value="/css/" />
+			<param name="AcceptOnMatch" value="false" />
+		</filter>
+		<filter class="org.apache.log4j.varia.StringMatchFilter">
+			<param name="StringToMatch" value="/js/" />
+			<param name="AcceptOnMatch" value="false" />
+		</filter>
+		<filter class="org.apache.log4j.varia.StringMatchFilter">
+			<param name="StringToMatch" value="/js-lib/" />
+			<param name="AcceptOnMatch" value="false" />
+		</filter>
+	</appender>
+
+	<appender name="ozone-async" class="org.apache.log4j.AsyncAppender">
+		<appender-ref ref="ozone-rolling-log" />
+        <!-- <appender-ref ref="ozone-stdout" /> -->
+	</appender>
+	
+  	<appender name="ozone-audit-log" class="org.apache.log4j.CompositeRollingAppender">
+      <param name="RollingStyle" value="3" />
+      <param name="StaticLogFileName" value="false" />
+      <param name="File" value="logs/audit.log" />
+      <param name="CountDirection" value="1" />
+      <param name="MaxFileSize" value="100MB" />
+      <param name="MaxSizeRollBackups" value="-1" />
+      <param name="DatePattern" value="'.'yyyy-MM-dd" />
+      <param name="Encoding" value="UTF-8" />
+      <layout class="org.apache.log4j.PatternLayout">
+        <param name="ConversionPattern" value="%d{dd MMM yyyy HH:mm:ss,SSS z} %m%n" />
+      </layout>
+    </appender>
+  
+    <appender name="ozone-async-audit" class="org.apache.log4j.AsyncAppender">
+      <appender-ref ref="ozone-audit-log" />
+    </appender>
+
+	<logger name="AuditOWFWebRequestsLogger" additivity="false">
+		<level value="error" />
+		<appender-ref ref="ozone-async" />
+	</logger>
+
+    <!-- For security logging, set this log level to "info". -->
+    <logger name="ozone.securitysample.authentication.audit.SecurityAuditLogger" additivity="false">
+      <level value="info" />
+      <appender-ref ref="ozone-async-audit" />
+    </logger>
+    <!-- All other logs from Ozone secuity can be sent to the regular log
+		unless you are worried that the regular logs have too lax of read permissions. -->
+    <logger name="ozone.securitysample" additivity="false">
+      <level value="error" />
+      <appender-ref ref="ozone-async" />
+    </logger>
+  
+  <logger name="ozone.utils.Utils" additivity="false">
+    <level value="error" />
+    <appender-ref ref="ozone-async" />
+  </logger>
+  
+	<logger name="grails" additivity="false">
+		<level value="error" />
+		<appender-ref ref="ozone-async" />
+	</logger>
+
+  <logger name="org.codehaus.groovy.grails" additivity="false">
+		<level value="error" />
+		<appender-ref ref="ozone-async" />
+	</logger>
+	
+	<logger name="org.mortbay.log" additivity="false">
+		<level value="error" />
+		<appender-ref ref="ozone-async" />
+	</logger>
+
+	<logger name="org.springframework" additivity="false">
+		<level value="error" />
+		<appender-ref ref="ozone-async" />
+	</logger>
+
+	<logger name="org.hibernate" additivity="false">
+		<level value="error" />
+		<appender-ref ref="ozone-async" />
+	</logger>
+
+  <!-- To remove WARN issue: MARKETPLACE-1275, REF: https://issues.jasig.org/browse/CASC-105 -->
+  <logger name="org.jasig.cas.client.util.CommonUtils" additivity="false">
+    <level value="error" />
+    <appender-ref ref="ozone-async" />
+  </logger>
+
+  <!-- To remove WARN issue: MARKETPLACE-2894, REF: https://hibernate.onjira.com/browse/HHH-1367 -->
+  <logger name="org.hibernate.engine.StatefulPersistenceContext.ProxyWarnLog" additivity="false">
+      <level value="error" />
+      <appender-ref ref="ozone-async" />
+  </logger>
+  
+  <logger name="org.compass" additivity="false">
+		<level value="error" />
+		<appender-ref ref="ozone-async" />
+  </logger>
+
+  <root>
+    <level value="info" />
+    <appender-ref ref="ozone-async" />
+	</root>
+
+</log4j:configuration>

@@ -1,0 +1,144 @@
+.owf-row-expanded {
+    margin-left:25px !important;
+    padding-bottom: 5px;
+}
+.owf-row-expanded input {
+    font: 11px arial,tahoma,verdana,helvetica;
+    width: 65px;
+}
+.owf-group-indent {
+    padding-left: 25px;
+}
+.owf-user-row-expanded {
+    margin-left: 25px !important;
+    padding-bottom: 5px;
+}
+.owf-user-indent {
+    padding-left: 25px;
+}
+.owf-widget-row-expanded {
+    margin-left: 25px !important;
+    padding-bottom: 5px;
+}
+.owf-widget-indent {
+    padding-left: 25px;
+}
+.owf-widget-grid-icon {
+    height: 24px;
+    width: 24px;
+}
+#owf-mgmt-widget-new-form form {
+    padding: 5px;
+}
+.x-grid3-row-alt {
+    background-color: #EAEAEA;
+}
+
+.inactive-text .x-grid3-cell-inner {
+    color: #AAAAAA;
+}
+
+.add-icon {
+    background-image: theme-image($theme-name, 'admin/add.png') !important;
+}
+.remove-icon {
+    background-image: theme-image($theme-name, 'admin/delete.png') !important;
+}
+.user-icon {
+    background-image: theme-image($theme-name, 'admin/user_suit.png') !important;
+}
+.widget-icon {
+    background-image: theme-image($theme-name, 'admin/layout_content.png') !important;
+}
+.group-icon {
+    background-image: theme-image($theme-name, 'admin/layout_content.png') !important;
+}
+.disable-icon {
+    background-image: theme-image($theme-name, 'admin/stop.png') !important;
+}
+.copy-icon {
+    background-image: theme-image($theme-name, 'admin/page_white_stack.png') !important;
+}
+.detail-category-link {
+    font-size: 14px;
+    font-family: Arial;
+    color: #777777;
+}
+.owf-grid-word-wrap {
+    white-space: normal;
+}
+.owf-form-valid-field {
+	background-image: theme-image($theme-name, 'blue/icons/yes.png');
+	overflow: hidden;
+	position: absolute;
+	text-index: -9999px;
+	width: 16px;
+	height: 16px;
+}
+
+.owf-expanded-row-button {
+    display: inline;
+    margin: 5px 10px 5px 0px;
+}
+
+.owf-expanded-row-button button {
+    width: 65px;
+}
+.required-label{
+    text-align: right;
+}
+.required-indicator {
+    color:  $warning-color;
+}
+
+.dialogHeader, .dialogHeader .x-tip-body {
+    text-align:center;
+    font-weight:bold;
+    color: $warning-color;
+}
+
+.x-form-warning-icon {
+    width: 16px;
+    height: 18px;
+    overflow: hidden;
+    position: absolute;
+    background: transparent no-repeat 0 2px;
+    background-image: theme-image($theme-name, 'shared/warning.png');
+}
+
+.x-form-warning-tip .x-tip-tc {
+    background: repeat-x 0 -12px;
+    padding-top:6px;
+}
+
+.x-form-warning-tip .x-tip-bc {
+    background: repeat-x 0 -18px;
+    height:6px;
+}
+
+.x-form-warning-tip .x-tip-bl {
+    background: no-repeat 0 -6px;
+}
+
+.x-form-warning-tip .x-tip-br {
+    background: no-repeat right -6px;
+}
+
+.x-form-warning-tip .x-tip-body {
+    padding:2px;
+}
+
+.x-form-warning-tip .x-tip-body {
+    padding-left:24px;
+    background:transparent no-repeat 2px 2px;
+}
+
+.x-form-warning-tip .x-tip-tc, .x-form-warning-tip .x-tip-tl, .x-form-warning-tip .x-tip-tr, .x-form-warning-tip .x-tip-bc,
+.x-form-warning-tip .x-tip-bl, .x-form-warning-tip .x-tip-br, .x-form-warning-tip .x-tip-ml, .x-form-warning-tip .x-tip-mr
+{
+    background-image: theme-image($theme-name, 'shared/warning-tip-corners.gif');
+}
+
+.x-form-warning-tip .x-tip-body {
+    background-image: theme-image($theme-name, 'shared/warning.png');
+}

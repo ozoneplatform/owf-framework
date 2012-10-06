@@ -1,0 +1,101 @@
+$widget-launcher-body-radius: 0px !default;
+$widget-launcher-background-color: #414141 !default;
+$widget-launcher-opacity: 0.90 !default;
+$widget-launcher-border-color: #000 !default;
+
+$widget-launcher-widget-background-color: $widget-launcher-background-color !default;
+$widget-launcher-widget-over-background-color: #2c2c2c !default;
+$widget-launcher-widget-selected-background-color: darken($widget-launcher-widget-background-color, 15) !default;
+
+$widget-launcher-widget-border-color: $widget-launcher-background-color !default;
+$widget-launcher-widget-over-border-color: black !default;
+$widget-launcher-widget-selected-border-color: black !default;
+
+$widget-launcher-widget-text-color: getHighContrastColor($widget-launcher-widget-background-color) !default;
+$widget-launcher-widget-over-text-color: getHighContrastColor($widget-launcher-widget-over-background-color) !default;
+$widget-launcher-widget-selected-text-color: getHighContrastColor($widget-launcher-widget-selected-background-color) !default;
+
+// -- grid -----------------------------------------------------------
+$widget-launcher-grid-header-color: #DDF991 !default;
+$widget-launcher-grid-header-background-color: #484748 !default;
+$widget-launcher-grid-header-background-gradient: 'matte' !default;
+$widget-launcher-grid-header-over-background-gradient: (#424242 0%, #565656 45%, #2a2a2a 50%) !default;
+$widget-launcher-grid-header-over-background-color: getBaseFromGradient($widget-launcher-grid-header-over-background-gradient) !default;
+$widget-launcher-grid-header-over-border-color: #3a3a3a !default;
+
+
+//grid rows
+$widget-launcher-grid-color: #ffffff !default;
+$widget-launcher-grid-background: $widget-launcher-background-color !default;
+$widget-launcher-grid-row-wrap-border-color: #bbb !default;
+$widget-launcher-grid-body-border-color: $widget-launcher-background-color !default;
+
+$widget-launcher-grid-row-cell-color: #fff !default;
+$widget-launcher-grid-row-wrap-border-color: #101010 !default;
+
+$widget-launcher-grid-row-cell-background: $widget-launcher-background-color !default;
+
+//launch menu
+$widget-launcher-grid-row-cell-alt-background: #292929 !default;
+$widget-launcher-grid-row-cell-selected-background-color: #004258 !default;
+$widget-launcher-grid-row-cell-focus-background-color: #DDF991 !default;
+$widget-launcher-grid-row-cell-focus-color: #000 !default;
+
+//carousel
+$carousel-background-color: #1D343C !default;
+$carousel-arrow-active-background-color: #111F24 !default;
+$carousel-arrow-inactive-opacity: 0.50 !default;
+$carousel-arrow-border-color: #355A6B !default;
+
+$carousel-resizer-background-gradient: (#1a1a1a 0%, #3B6570 25%, #355a65 50%, #1d3436 100%) !default;
+$carousel-resizer-background-color: getBaseFromGradient($carousel-resizer-background-gradient) !default;
+
+$carousel-widget-over-border-color: #4E6E77 !default;
+$carousel-widget-over-background-color: #1C333B !default;
+$carousel-widget-selected-border-color: #4E6E77 !default;
+$carousel-widget-selected-background-color: #1C333B !default;
+$carousel-button-background-color: #111F24 !default;
+$carousel-button-over-background-color: #204755 !default;
+
+$search-panel-background-color: $widget-launcher-background-color !default;
+$search-panel-header-text-color: #80B4BA !default;
+$search-panel-slider-background-gradient: (#1a1a1a 0%, #666666 26%, #555555 50%, #1a1a1a 100%) !default;
+$search-panel-slider-background-color: getBaseFromGradient($search-panel-slider-background-gradient) !default;
+
+//buttons
+$widget-launcher-button-background-gradient: (#424242 0%, #565656 45%, #2a2a2a 50%) !default;
+$widget-launcher-button-background-color: getBaseFromGradient($widget-launcher-button-background-gradient) !default;
+$widget-launcher-button-border-color: #3a3a3a !default;
+
+$widget-launcher-button-over-background-gradient: (#565656 0%, #2a2a2a 45%) !default;
+$widget-launcher-button-over-background-color: getBaseFromGradient($widget-launcher-button-over-background-gradient) !default;
+$widget-launcher-button-over-border-color: black !default;
+
+$widget-launcher-button-pressed-background-gradient: (#2a2a2a 0%, #565656 45%) !default;
+$widget-launcher-button-pressed-background-color: getBaseFromGradient($widget-launcher-button-pressed-background-gradient) !default;
+$widget-launcher-button-pressed-border-color: #3a3a3a !default;
+
+$widget-launcher-button-color: white !default;
+
+$widget-launcher-toolbar-background-color: $widget-launcher-background-color !default;
+$widget-launcher-toolbar-border-color: $widget-launcher-background-color !default;
+
+//advanced search toolbar
+$widget-launcher-advanced-search-toolbar-color: #555555 !default;
+$widget-launcher-advanced-search-toolbar-border-left-color: #777 !default;
+
+$widget-launcher-info-panel-color: white !default;
+
+$widget-launcher-title-font-size: 24px !default;
+$widget-launcher-view-title-font-size: 16px !default;
+
+$widget-launcher-special-color: #adf7ff !default;
+$widget-launcher-search-border-color: #000000 !default;
+$widget-launcher-search-background-color: #1a1a1a !default;
+$widget-launcher-grid-row-cell-over-background-color: #1c6972 !default;
+$widget-launcher-widget-title-color: #DDF891 !default;
+$search-panel-header-text-color: #80B4Ba !default;
+
+
+
+

@@ -1,0 +1,5 @@
+DefaultPackage
+grails-app.conf
+grails-app.taglib.org.grails.prettytime
+src.groovy.org.grails.prettytime
+test.integration.org.grails.prettytime

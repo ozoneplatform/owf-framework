@@ -1,0 +1,10 @@
+This is bundled package with a standalone Ozone Widgeting Framework.
+
+Included in this zip is everything you need to run the project.
+
+Steps
+
+1)  Unzip ozone-bundle.zip.  There will be 2 directories, __MACOSX and jetty-6.1.11
+2)  Cd into the jetty-6.1.11 directory and run ./start.sh or ./start.bat
+3)  Import the jetty-6.1.11/certs/testUser1.p12 cert into your browswer.  The password is changeit
+

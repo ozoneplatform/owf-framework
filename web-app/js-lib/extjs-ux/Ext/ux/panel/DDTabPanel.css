@@ -1,0 +1,11 @@
+.dd-arrow-down {
+	background-image: url(/* your down arrow image */);
+	display: block;
+	visibility: visible;
+	z-index: 20000;
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	top: 0;
+	left: 0;
+}

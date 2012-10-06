@@ -1,0 +1,20 @@
+
+h1. getTags
+
+h2. Purpose
+
+
+
+h2. Examples
+
+{code:java}
+foo.getTags()
+{code}
+
+h2. Description
+
+
+
+Arguments:
+
+[]

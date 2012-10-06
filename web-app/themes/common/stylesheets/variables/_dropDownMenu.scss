@@ -1,0 +1,28 @@
+//background
+$owf-boundlist-background-color: lighten($owf-base-color, 50) !default;
+
+//borders
+$owf-boundlist-border-color: adjust-color($owf-base-color, $hue: 0.58deg, $saturation: 25.146%, $lightness: -6.471%) !default;
+$owf-boundlist-border-width: 1px !default;
+$owf-boundlist-border-style: solid !default;
+
+$owf-boundlist-item-padding: 2px !default;
+$owf-boundlist-item-border-width: 1px !default;
+$owf-boundlist-item-border-style: dotted !default;
+$owf-boundlist-item-border-color: $owf-boundlist-background-color !default;
+
+$owf-boundlist-item-over-border-color: adjust-color($owf-base-color, $hue: 6.952deg, $saturation: 5.848%, $lightness: -6.471%) !default;
+$owf-boundlist-item-selected-border-color: darken($owf-boundlist-item-over-border-color, 5) !default;
+
+$owf-boundlist-item-over-background-color: adjust-color($owf-base-color, $hue: 3.188deg, $saturation: 0.542%, $lightness: 7.843%) !default;
+$owf-boundlist-item-selected-background-color: darken($owf-boundlist-item-over-background-color, 5) !default;
+
+//custom properties, not supported by ExtJS
+$owf-boundlist-item-color: #000 !default;
+$owf-boundlist-item-over-color: $owf-boundlist-item-color !default;
+$owf-boundlist-item-selected-color: $owf-boundlist-item-color !default;
+
+
+//Two images used in the dashDropDownMenu in the banner.  TODO: replace this
+$owf_drop_down_menu_image: theme-image($theme-name, 'wallpapers/blue.jpg') !default; 
+$owf_menu_item_active_image: theme-image($theme-name, 'blue/icons/menu_item_active_arrow.png') !default;

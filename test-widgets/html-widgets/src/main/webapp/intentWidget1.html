@@ -1,0 +1,60 @@
+<html>
+<head>
+    <link href="css/dragAndDrop.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="js-min/owf-widget-debug.js"></script>
+    <script type='text/javascript'>
+
+        //The location is assumed to be at /<context>/js/eventing/rpc_relay.uncompressed.html if it is not set
+        //OWF.relayFile = Ozone.util.contextPath() + '/js/eventing/rpc_relay.uncompressed.html';
+
+        owfdojo.config.dojoBlankHtmlUrl = 'js-lib/dojo-1.5.0-windowname-only/dojo/resources/blank.html';
+
+        function plot() {
+            owfdojo.byId('message').innerHTML = 'Sending Intent: Plot {lat:0,lon:0}<br>';
+            OWF.Intents.startActivity(
+                    {
+                        action:'Plot',
+                        dataType:'LatLon'
+                    },
+                    {
+                        lat:0,
+                        lon:0
+                    },
+                    function (dest) {
+                        //dest is an array of destination widget proxies
+                        if (dest.length > 0) {
+                            owfdojo.byId('message').innerHTML += 'Intent was handled by ' + dest[0].id + '<br>';
+
+                            dest[0].onReady(
+                                    function () {
+                                        owfdojo.byId('message').innerHTML += dest[0].id + ' called notifyWidgetReady and is ready<br>';
+                                    },
+                                    this
+                            );
+                        }
+                        else {
+                            owfdojo.byId('message').innerHTML += 'Intent was canceled<br>';
+                        }
+                    }
+            );
+        }
+
+
+        owfdojo.addOnLoad(function () {
+            OWF.ready(function () {
+                owfdojo.byId('status').innerHTML = 'InstanceId: ' + OWF.getInstanceId() + '<br>';
+                //plot();
+                OWF.notifyWidgetReady();
+            });
+        });
+    </script>
+
+</head>
+<body>
+Widget 1
+<div id="status"></div>
+<hr>
+<button type="button" onclick="plot()">Ask Widget 2 to Plot</button>
+<div id="message">No Message</div>
+</body>
+</html>

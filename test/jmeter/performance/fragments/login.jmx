@@ -1,0 +1,901 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="2.2">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Login Test Fragment" enabled="true">
+      <stringProp name="TestPlan.comments">This is a fragment that should be implemented in all OWF JMeter performance scripts that require the login of a user to perform some action.
+
+To include it, use an Include Controller in another Test Plan and point it to this file.
+
+It will synchronize all users prior to beginning the login and then will handle how fast it sends login requests to ensure successful login of
+at least 500 users.</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <TestFragmentController guiclass="TestFragmentControllerGui" testclass="TestFragmentController" testname="Login Scripts" enabled="true">
+        <stringProp name="TestPlan.comments">Sends CAS Logins in varying speeds based on the thread number.
+
+This is necessary because CAS login slows down exponentially based on how many users are logged in when another user attempts
+to log in.
+
+Essentially, this script utilizes Constant Timer objects and sets the desired delay for a group of threads in that object. The max delay of all
+prior thread groups must be subtracted from this in order to have the thread groups start without delay when the prior group finishes, but to
+still maintain a different delay for the threads inside the group than the threads inside the previous group.
+
+For example, the first 100 users to log in may have a constant delay set to 100 ms, but as soon as user 100 finishes, 101 through 200 may
+begin and have a constant delay set to 200 ms to accommodate for the increased time CAS login will take with 100 users already logged in.</stringProp>
+      </TestFragmentController>
+      <hashTree>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Login Variables" enabled="false">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="firstDelay" elementType="Argument">
+              <stringProp name="Argument.name">firstDelay</stringProp>
+              <stringProp name="Argument.value">200</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">How long to delay the first group of users logging in. (ms)</stringProp>
+            </elementProp>
+            <elementProp name="secondDelay" elementType="Argument">
+              <stringProp name="Argument.name">secondDelay</stringProp>
+              <stringProp name="Argument.value">500</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">How long to delay the second group of users logging in. (ms)</stringProp>
+            </elementProp>
+            <elementProp name="thirdDelay" elementType="Argument">
+              <stringProp name="Argument.name">thirdDelay</stringProp>
+              <stringProp name="Argument.value">750</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">How long to delay the third group of users logging in. (ms)</stringProp>
+            </elementProp>
+            <elementProp name="fourthDelay" elementType="Argument">
+              <stringProp name="Argument.name">fourthDelay</stringProp>
+              <stringProp name="Argument.value">1500</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">How long to delay the fourth group of users logging in. (ms)</stringProp>
+            </elementProp>
+            <elementProp name="firstMax" elementType="Argument">
+              <stringProp name="Argument.name">firstMax</stringProp>
+              <stringProp name="Argument.value">100</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">Max thread number to include in the first group.</stringProp>
+            </elementProp>
+            <elementProp name="secondMax" elementType="Argument">
+              <stringProp name="Argument.name">secondMax</stringProp>
+              <stringProp name="Argument.value">250</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">Max thread number to include in the first group (total threads in second = secondMax - firstMax)..</stringProp>
+            </elementProp>
+            <elementProp name="thirdMax" elementType="Argument">
+              <stringProp name="Argument.name">thirdMax</stringProp>
+              <stringProp name="Argument.value">375</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">Max thread number to include in the first group (total threads in third = thirdMax - secondMax)..</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Login Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="firstDelay" elementType="Argument">
+              <stringProp name="Argument.name">firstDelay</stringProp>
+              <stringProp name="Argument.value">400</stringProp>
+              <stringProp name="Argument.desc">How long to delay the first group of users logging in. (ms)</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="secondDelay" elementType="Argument">
+              <stringProp name="Argument.name">secondDelay</stringProp>
+              <stringProp name="Argument.value">800</stringProp>
+              <stringProp name="Argument.desc">How long to delay the second group of users logging in. (ms)</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="thirdDelay" elementType="Argument">
+              <stringProp name="Argument.name">thirdDelay</stringProp>
+              <stringProp name="Argument.value">1000</stringProp>
+              <stringProp name="Argument.desc">How long to delay the third group of users logging in. (ms)</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="fourthDelay" elementType="Argument">
+              <stringProp name="Argument.name">fourthDelay</stringProp>
+              <stringProp name="Argument.value">5000</stringProp>
+              <stringProp name="Argument.desc">How long to delay the fourth group of users logging in. (ms)</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="firstMax" elementType="Argument">
+              <stringProp name="Argument.name">firstMax</stringProp>
+              <stringProp name="Argument.value">100</stringProp>
+              <stringProp name="Argument.desc">Max thread number to include in the first group.</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="secondMax" elementType="Argument">
+              <stringProp name="Argument.name">secondMax</stringProp>
+              <stringProp name="Argument.value">225</stringProp>
+              <stringProp name="Argument.desc">Max thread number to include in the first group (total threads in second = secondMax - firstMax)..</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="thirdMax" elementType="Argument">
+              <stringProp name="Argument.name">thirdMax</stringProp>
+              <stringProp name="Argument.value">350</stringProp>
+              <stringProp name="Argument.desc">Max thread number to include in the first group (total threads in third = thirdMax - secondMax)..</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If User 0 to ${firstMax}" enabled="true">
+          <stringProp name="IfController.condition">${__threadNum()} &lt;= ${firstMax}</stringProp>
+          <boolProp name="IfController.evaluateAll">false</boolProp>
+        </IfController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CAS Login Request" enabled="false">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="username" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">${userName}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">username</stringProp>
+                </elementProp>
+                <elementProp name="password" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">password</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">password</stringProp>
+                </elementProp>
+                <elementProp name="lt" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">${lt}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">lt</stringProp>
+                </elementProp>
+                <elementProp name="_eventId" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">submit</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">_eventId</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">https://${casHost}:${casPort}/cas/login?service=https%3A%2F%2F${hostName}%3A${hostPort}%2Fowf%2Fj_spring_cas_security_check%3Bjsessionid%3Dmg9flz7rizyf</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.implementation">Java</stringProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="Generate Username" enabled="true">
+              <collectionProp name="UserParameters.names">
+                <stringProp name="-266666762">userName</stringProp>
+              </collectionProp>
+              <collectionProp name="UserParameters.thread_values">
+                <collectionProp name="1304041690">
+                  <stringProp name="-1403066832">test${userRole}${__counter(FALSE,userNum)}</stringProp>
+                </collectionProp>
+              </collectionProp>
+              <boolProp name="UserParameters.per_iteration">false</boolProp>
+              <stringProp name="TestPlan.comments">This will log in as a new testAdminX or testUserX (depending on which the userRole parameter is set to), starting at 1 and incrementing each time.</stringProp>
+            </UserParameters>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="1277579303">Ozone Widget Framework</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">2</intProp>
+              <stringProp name="Scope.variable">loginSuccess</stringProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <BSFAssertion guiclass="TestBeanGUI" testclass="BSFAssertion" testname="Assert Login Success" enabled="true">
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">// Flag to identify that the log in failed so the If Login Failed controller can stop all tests
+var loginFailed = false;
+
+if(prev.getErrorCount() &gt; 0) {
+    loginFailed = true;
+}
+
+// Set loginFailed JMeter variable
+vars.put(&quot;loginFailed&quot;, loginFailed);
+
+if(loginFailed) {
+    AssertionResult.setFailureMessage(vars.get(&quot;userName&quot;) + &quot; failed to log in. Stopping test because this error will cause the results to be invalid due to the user not being authenticated./nEnsure you have the Ramp-Up period set high enough to allow all the users time to successfully log in and that this user exists in tomcat&apos;s users.properties file.&quot;);
+    AssertionResult.setFailure(true);
+} else {
+    AssertionResult.setFailure(false);
+}</stringProp>
+              <stringProp name="scriptLanguage">javascript</stringProp>
+              <stringProp name="TestPlan.comments">Sets the loginFailed flag variable for if there were errors in the CAS Login sample.
+
+If loginFailed is true, this will throw and error and warn the user the thread will be stopped and recommend that they check their Ramp-Up Period 
+to ensure the users have enough time to log in.</stringProp>
+            </BSFAssertion>
+            <hashTree/>
+            <ResultAction guiclass="ResultActionGui" testclass="ResultAction" testname="If Login Failed Stop Test" enabled="true">
+              <intProp name="OnError.action">3</intProp>
+            </ResultAction>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP-Basic Login Request" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/owf</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.implementation">Java</stringProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="Generate Username" enabled="true">
+              <collectionProp name="UserParameters.names">
+                <stringProp name="-266666762">userName</stringProp>
+              </collectionProp>
+              <collectionProp name="UserParameters.thread_values">
+                <collectionProp name="1304041690">
+                  <stringProp name="-1403066832">test${userRole}${__counter(FALSE,userNum)}</stringProp>
+                </collectionProp>
+              </collectionProp>
+              <boolProp name="UserParameters.per_iteration">false</boolProp>
+              <stringProp name="TestPlan.comments">This will log in as a new testAdminX or testUserX (depending on which the userRole parameter is set to), starting at 1 and incrementing each time.</stringProp>
+            </UserParameters>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="1277579303">Ozone Widget Framework</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">2</intProp>
+              <stringProp name="Scope.variable">loginSuccess</stringProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <BSFAssertion guiclass="TestBeanGUI" testclass="BSFAssertion" testname="Assert Login Success" enabled="true">
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">// Flag to identify that the log in failed so the If Login Failed controller can stop all tests
+var loginFailed = false;
+
+if(prev.getErrorCount() &gt; 0) {
+    loginFailed = true;
+}
+
+// Set loginFailed JMeter variable
+vars.put(&quot;loginFailed&quot;, loginFailed);
+
+if(loginFailed) {
+    AssertionResult.setFailureMessage(vars.get(&quot;userName&quot;) + &quot; failed to log in. Stopping test because this error will cause the results to be invalid due to the user not being authenticated./nEnsure you have the Ramp-Up period set high enough to allow all the users time to successfully log in and that this user exists in tomcat&apos;s users.properties file.&quot;);
+    AssertionResult.setFailure(true);
+} else {
+    AssertionResult.setFailure(false);
+}</stringProp>
+              <stringProp name="scriptLanguage">javascript</stringProp>
+              <stringProp name="TestPlan.comments">Sets the loginFailed flag variable for if there were errors in the CAS Login sample.
+
+If loginFailed is true, this will throw and error and warn the user the thread will be stopped and recommend that they check their Ramp-Up Period 
+to ensure the users have enough time to log in.</stringProp>
+            </BSFAssertion>
+            <hashTree/>
+            <ResultAction guiclass="ResultActionGui" testclass="ResultAction" testname="If Login Failed Stop Test" enabled="true">
+              <intProp name="OnError.action">3</intProp>
+            </ResultAction>
+            <hashTree/>
+          </hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="First Thread Group Delay Timer" enabled="true">
+            <stringProp name="TestPlan.comments">The formula for the Thread Delay is as follows:
+threadDelay = [threadNumber] * [firstGroupDelay]</stringProp>
+            <stringProp name="ConstantTimer.delay">${__jexl2(${__threadNum()} * ${firstDelay})}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If User &gt; ${firstMax} &amp;&amp; &lt; ${secondMax}" enabled="true">
+          <stringProp name="IfController.condition">${__threadNum()} &gt; ${firstMax} &amp;&amp; ${__threadNum()}  &lt;= ${secondMax}</stringProp>
+          <boolProp name="IfController.evaluateAll">false</boolProp>
+        </IfController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CAS Login Request" enabled="false">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="username" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">${userName}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">username</stringProp>
+                </elementProp>
+                <elementProp name="password" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">password</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">password</stringProp>
+                </elementProp>
+                <elementProp name="lt" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">${lt}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">lt</stringProp>
+                </elementProp>
+                <elementProp name="_eventId" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">submit</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">_eventId</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">https://${casHost}:${casPort}/cas/login?service=https%3A%2F%2F${hostName}%3A${hostPort}%2Fowf%2Fj_spring_cas_security_check%3Bjsessionid%3Dmg9flz7rizyf</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.implementation">Java</stringProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="Generate Username" enabled="true">
+              <collectionProp name="UserParameters.names">
+                <stringProp name="-266666762">userName</stringProp>
+              </collectionProp>
+              <collectionProp name="UserParameters.thread_values">
+                <collectionProp name="1304041690">
+                  <stringProp name="-1403066832">test${userRole}${__counter(FALSE,userNum)}</stringProp>
+                </collectionProp>
+              </collectionProp>
+              <boolProp name="UserParameters.per_iteration">false</boolProp>
+              <stringProp name="TestPlan.comments">This will log in as a new testAdminX or testUserX (depending on which the userRole parameter is set to), starting at 1 and incrementing each time.</stringProp>
+            </UserParameters>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="1277579303">Ozone Widget Framework</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">2</intProp>
+              <stringProp name="Scope.variable">loginSuccess</stringProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <BSFAssertion guiclass="TestBeanGUI" testclass="BSFAssertion" testname="Assert Login Success" enabled="true">
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">// Flag to identify that the log in failed so the If Login Failed controller can stop all tests
+var loginFailed = false;
+
+if(prev.getErrorCount() &gt; 0) {
+    loginFailed = true;
+}
+
+// Set loginFailed JMeter variable
+vars.put(&quot;loginFailed&quot;, loginFailed);
+
+if(loginFailed) {
+    AssertionResult.setFailureMessage(vars.get(&quot;userName&quot;) + &quot; failed to log in. Stopping test because this error will cause the results to be invalid due to the user not being authenticated./nEnsure you have the Ramp-Up period set high enough to allow all the users time to successfully log in and that this user exists in tomcat&apos;s users.properties file.&quot;);
+    AssertionResult.setFailure(true);
+} else {
+    AssertionResult.setFailure(false);
+}</stringProp>
+              <stringProp name="scriptLanguage">javascript</stringProp>
+              <stringProp name="TestPlan.comments">Sets the loginFailed flag variable for if there were errors in the CAS Login sample.
+
+If loginFailed is true, this will throw and error and warn the user the thread will be stopped and recommend that they check their Ramp-Up Period 
+to ensure the users have enough time to log in.</stringProp>
+            </BSFAssertion>
+            <hashTree/>
+            <ResultAction guiclass="ResultActionGui" testclass="ResultAction" testname="If Login Failed Stop Test" enabled="true">
+              <intProp name="OnError.action">3</intProp>
+            </ResultAction>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP-Basic Login Request" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/owf</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.implementation">Java</stringProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="Generate Username" enabled="true">
+              <collectionProp name="UserParameters.names">
+                <stringProp name="-266666762">userName</stringProp>
+              </collectionProp>
+              <collectionProp name="UserParameters.thread_values">
+                <collectionProp name="1304041690">
+                  <stringProp name="-1403066832">test${userRole}${__counter(FALSE,userNum)}</stringProp>
+                </collectionProp>
+              </collectionProp>
+              <boolProp name="UserParameters.per_iteration">false</boolProp>
+              <stringProp name="TestPlan.comments">This will log in as a new testAdminX or testUserX (depending on which the userRole parameter is set to), starting at 1 and incrementing each time.</stringProp>
+            </UserParameters>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="1277579303">Ozone Widget Framework</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">2</intProp>
+              <stringProp name="Scope.variable">loginSuccess</stringProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <BSFAssertion guiclass="TestBeanGUI" testclass="BSFAssertion" testname="Assert Login Success" enabled="true">
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">// Flag to identify that the log in failed so the If Login Failed controller can stop all tests
+var loginFailed = false;
+
+if(prev.getErrorCount() &gt; 0) {
+    loginFailed = true;
+}
+
+// Set loginFailed JMeter variable
+vars.put(&quot;loginFailed&quot;, loginFailed);
+
+if(loginFailed) {
+    AssertionResult.setFailureMessage(vars.get(&quot;userName&quot;) + &quot; failed to log in. Stopping test because this error will cause the results to be invalid due to the user not being authenticated./nEnsure you have the Ramp-Up period set high enough to allow all the users time to successfully log in and that this user exists in tomcat&apos;s users.properties file.&quot;);
+    AssertionResult.setFailure(true);
+} else {
+    AssertionResult.setFailure(false);
+}</stringProp>
+              <stringProp name="scriptLanguage">javascript</stringProp>
+              <stringProp name="TestPlan.comments">Sets the loginFailed flag variable for if there were errors in the CAS Login sample.
+
+If loginFailed is true, this will throw and error and warn the user the thread will be stopped and recommend that they check their Ramp-Up Period 
+to ensure the users have enough time to log in.</stringProp>
+            </BSFAssertion>
+            <hashTree/>
+            <ResultAction guiclass="ResultActionGui" testclass="ResultAction" testname="If Login Failed Stop Test" enabled="true">
+              <intProp name="OnError.action">3</intProp>
+            </ResultAction>
+            <hashTree/>
+          </hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Second Thread Group Delay Timer" enabled="true">
+            <stringProp name="TestPlan.comments">The formula for the Thread Delay is as follows:
+threadDelay = [threadNumber] * [secondGroupDelay] - [firstGroupMaxThread] * [secondGroupDelay] + [firstGroupMaxThread] * [firstGroupDelay]</stringProp>
+            <stringProp name="ConstantTimer.delay">${__jexl2(${__threadNum()} * ${secondDelay} - ${firstMax} * ${secondDelay} + ${firstMax} * ${firstDelay})}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If User &gt; ${secondMax} &amp;&amp; &lt; ${thirdMax}" enabled="true">
+          <stringProp name="IfController.condition">${__threadNum()} &gt; ${secondMax} &amp;&amp; ${__threadNum()}  &lt;= ${thirdMax}</stringProp>
+          <boolProp name="IfController.evaluateAll">false</boolProp>
+        </IfController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CAS Login Request" enabled="false">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="username" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">${userName}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">username</stringProp>
+                </elementProp>
+                <elementProp name="password" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">password</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">password</stringProp>
+                </elementProp>
+                <elementProp name="lt" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">${lt}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">lt</stringProp>
+                </elementProp>
+                <elementProp name="_eventId" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">submit</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">_eventId</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">https://${casHost}:${casPort}/cas/login?service=https%3A%2F%2F${hostName}%3A${hostPort}%2Fowf%2Fj_spring_cas_security_check%3Bjsessionid%3Dmg9flz7rizyf</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.implementation">Java</stringProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="Generate Username" enabled="true">
+              <collectionProp name="UserParameters.names">
+                <stringProp name="-266666762">userName</stringProp>
+              </collectionProp>
+              <collectionProp name="UserParameters.thread_values">
+                <collectionProp name="1304041690">
+                  <stringProp name="-1403066832">test${userRole}${__counter(FALSE,userNum)}</stringProp>
+                </collectionProp>
+              </collectionProp>
+              <boolProp name="UserParameters.per_iteration">false</boolProp>
+              <stringProp name="TestPlan.comments">This will log in as a new testAdminX or testUserX (depending on which the userRole parameter is set to), starting at 1 and incrementing each time.</stringProp>
+            </UserParameters>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="1277579303">Ozone Widget Framework</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">2</intProp>
+              <stringProp name="Scope.variable">loginSuccess</stringProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <BSFAssertion guiclass="TestBeanGUI" testclass="BSFAssertion" testname="Assert Login Success" enabled="true">
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">// Flag to identify that the log in failed so the If Login Failed controller can stop all tests
+var loginFailed = false;
+
+if(prev.getErrorCount() &gt; 0) {
+    loginFailed = true;
+}
+
+// Set loginFailed JMeter variable
+vars.put(&quot;loginFailed&quot;, loginFailed);
+
+if(loginFailed) {
+    AssertionResult.setFailureMessage(vars.get(&quot;userName&quot;) + &quot; failed to log in. Stopping test because this error will cause the results to be invalid due to the user not being authenticated./nEnsure you have the Ramp-Up period set high enough to allow all the users time to successfully log in and that this user exists in tomcat&apos;s users.properties file.&quot;);
+    AssertionResult.setFailure(true);
+} else {
+    AssertionResult.setFailure(false);
+}</stringProp>
+              <stringProp name="scriptLanguage">javascript</stringProp>
+              <stringProp name="TestPlan.comments">Sets the loginFailed flag variable for if there were errors in the CAS Login sample.
+
+If loginFailed is true, this will throw and error and warn the user the thread will be stopped and recommend that they check their Ramp-Up Period 
+to ensure the users have enough time to log in.</stringProp>
+            </BSFAssertion>
+            <hashTree/>
+            <ResultAction guiclass="ResultActionGui" testclass="ResultAction" testname="If Login Failed Stop Test" enabled="true">
+              <intProp name="OnError.action">3</intProp>
+            </ResultAction>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP-Basic Login Request" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/owf</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.implementation">Java</stringProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="Generate Username" enabled="true">
+              <collectionProp name="UserParameters.names">
+                <stringProp name="-266666762">userName</stringProp>
+              </collectionProp>
+              <collectionProp name="UserParameters.thread_values">
+                <collectionProp name="1304041690">
+                  <stringProp name="-1403066832">test${userRole}${__counter(FALSE,userNum)}</stringProp>
+                </collectionProp>
+              </collectionProp>
+              <boolProp name="UserParameters.per_iteration">false</boolProp>
+              <stringProp name="TestPlan.comments">This will log in as a new testAdminX or testUserX (depending on which the userRole parameter is set to), starting at 1 and incrementing each time.</stringProp>
+            </UserParameters>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="1277579303">Ozone Widget Framework</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">2</intProp>
+              <stringProp name="Scope.variable">loginSuccess</stringProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <BSFAssertion guiclass="TestBeanGUI" testclass="BSFAssertion" testname="Assert Login Success" enabled="true">
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">// Flag to identify that the log in failed so the If Login Failed controller can stop all tests
+var loginFailed = false;
+
+if(prev.getErrorCount() &gt; 0) {
+    loginFailed = true;
+}
+
+// Set loginFailed JMeter variable
+vars.put(&quot;loginFailed&quot;, loginFailed);
+
+if(loginFailed) {
+    AssertionResult.setFailureMessage(vars.get(&quot;userName&quot;) + &quot; failed to log in. Stopping test because this error will cause the results to be invalid due to the user not being authenticated./nEnsure you have the Ramp-Up period set high enough to allow all the users time to successfully log in and that this user exists in tomcat&apos;s users.properties file.&quot;);
+    AssertionResult.setFailure(true);
+} else {
+    AssertionResult.setFailure(false);
+}</stringProp>
+              <stringProp name="scriptLanguage">javascript</stringProp>
+              <stringProp name="TestPlan.comments">Sets the loginFailed flag variable for if there were errors in the CAS Login sample.
+
+If loginFailed is true, this will throw and error and warn the user the thread will be stopped and recommend that they check their Ramp-Up Period 
+to ensure the users have enough time to log in.</stringProp>
+            </BSFAssertion>
+            <hashTree/>
+            <ResultAction guiclass="ResultActionGui" testclass="ResultAction" testname="If Login Failed Stop Test" enabled="true">
+              <intProp name="OnError.action">3</intProp>
+            </ResultAction>
+            <hashTree/>
+          </hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Third Thread Group Delay Timer" enabled="true">
+            <stringProp name="TestPlan.comments">The formula for the Thread Delay is as follows:
+threadDelay = [threadNumber] * [thirdGroupDelay] - [firstGroupMaxThread] * [secondGroupDelay] + [firstGroupMaxThread] * [firstGroupDelay]
+	- [secondGroupMaxThread] * [thirdGroupDelay] + [secondGroupMaxThread] * [secondGroupDelay]</stringProp>
+            <stringProp name="ConstantTimer.delay">${__jexl2(${__threadNum()} * ${thirdDelay} - ${firstMax} * ${secondDelay} + ${firstMax} * ${firstDelay} - ${secondMax} * ${thirdDelay} + ${secondMax} * ${secondDelay})}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If User &gt; ${thirdMax}" enabled="true">
+          <stringProp name="IfController.condition">${__threadNum()} &gt; ${thirdMax}</stringProp>
+          <boolProp name="IfController.evaluateAll">false</boolProp>
+        </IfController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CAS Login Request" enabled="false">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="username" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">${userName}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">username</stringProp>
+                </elementProp>
+                <elementProp name="password" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">password</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">password</stringProp>
+                </elementProp>
+                <elementProp name="lt" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">${lt}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">lt</stringProp>
+                </elementProp>
+                <elementProp name="_eventId" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">submit</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">_eventId</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">https://${casHost}:${casPort}/cas/login?service=https%3A%2F%2F${hostName}%3A${hostPort}%2Fowf%2Fj_spring_cas_security_check%3Bjsessionid%3Dmg9flz7rizyf</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.implementation">Java</stringProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="Generate Username" enabled="true">
+              <collectionProp name="UserParameters.names">
+                <stringProp name="-266666762">userName</stringProp>
+              </collectionProp>
+              <collectionProp name="UserParameters.thread_values">
+                <collectionProp name="1304041690">
+                  <stringProp name="-1403066832">test${userRole}${__counter(FALSE,userNum)}</stringProp>
+                </collectionProp>
+              </collectionProp>
+              <boolProp name="UserParameters.per_iteration">false</boolProp>
+              <stringProp name="TestPlan.comments">This will log in as a new testAdminX or testUserX (depending on which the userRole parameter is set to), starting at 1 and incrementing each time.</stringProp>
+            </UserParameters>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="1277579303">Ozone Widget Framework</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">2</intProp>
+              <stringProp name="Scope.variable">loginSuccess</stringProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <BSFAssertion guiclass="TestBeanGUI" testclass="BSFAssertion" testname="Assert Login Success" enabled="true">
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">// Flag to identify that the log in failed so the If Login Failed controller can stop all tests
+var loginFailed = false;
+
+if(prev.getErrorCount() &gt; 0) {
+    loginFailed = true;
+}
+
+// Set loginFailed JMeter variable
+vars.put(&quot;loginFailed&quot;, loginFailed);
+
+if(loginFailed) {
+    AssertionResult.setFailureMessage(vars.get(&quot;userName&quot;) + &quot; failed to log in. Stopping test because this error will cause the results to be invalid due to the user not being authenticated./nEnsure you have the Ramp-Up period set high enough to allow all the users time to successfully log in and that this user exists in tomcat&apos;s users.properties file.&quot;);
+    AssertionResult.setFailure(true);
+} else {
+    AssertionResult.setFailure(false);
+}</stringProp>
+              <stringProp name="scriptLanguage">javascript</stringProp>
+              <stringProp name="TestPlan.comments">Sets the loginFailed flag variable for if there were errors in the CAS Login sample.
+
+If loginFailed is true, this will throw and error and warn the user the thread will be stopped and recommend that they check their Ramp-Up Period 
+to ensure the users have enough time to log in.</stringProp>
+            </BSFAssertion>
+            <hashTree/>
+            <ResultAction guiclass="ResultActionGui" testclass="ResultAction" testname="If Login Failed Stop Test" enabled="true">
+              <intProp name="OnError.action">3</intProp>
+            </ResultAction>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP-Basic Login Request" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/owf</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.implementation">Java</stringProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="Generate Username" enabled="true">
+              <collectionProp name="UserParameters.names">
+                <stringProp name="-266666762">userName</stringProp>
+              </collectionProp>
+              <collectionProp name="UserParameters.thread_values">
+                <collectionProp name="1304041690">
+                  <stringProp name="-1403066832">test${userRole}${__counter(FALSE,userNum)}</stringProp>
+                </collectionProp>
+              </collectionProp>
+              <boolProp name="UserParameters.per_iteration">false</boolProp>
+              <stringProp name="TestPlan.comments">This will log in as a new testAdminX or testUserX (depending on which the userRole parameter is set to), starting at 1 and incrementing each time.</stringProp>
+            </UserParameters>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="1277579303">Ozone Widget Framework</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">2</intProp>
+              <stringProp name="Scope.variable">loginSuccess</stringProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <BSFAssertion guiclass="TestBeanGUI" testclass="BSFAssertion" testname="Assert Login Success" enabled="true">
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">// Flag to identify that the log in failed so the If Login Failed controller can stop all tests
+var loginFailed = false;
+
+if(prev.getErrorCount() &gt; 0) {
+    loginFailed = true;
+}
+
+// Set loginFailed JMeter variable
+vars.put(&quot;loginFailed&quot;, loginFailed);
+
+if(loginFailed) {
+    AssertionResult.setFailureMessage(vars.get(&quot;userName&quot;) + &quot; failed to log in. Stopping test because this error will cause the results to be invalid due to the user not being authenticated./nEnsure you have the Ramp-Up period set high enough to allow all the users time to successfully log in and that this user exists in tomcat&apos;s users.properties file.&quot;);
+    AssertionResult.setFailure(true);
+} else {
+    AssertionResult.setFailure(false);
+}</stringProp>
+              <stringProp name="scriptLanguage">javascript</stringProp>
+              <stringProp name="TestPlan.comments">Sets the loginFailed flag variable for if there were errors in the CAS Login sample.
+
+If loginFailed is true, this will throw and error and warn the user the thread will be stopped and recommend that they check their Ramp-Up Period 
+to ensure the users have enough time to log in.</stringProp>
+            </BSFAssertion>
+            <hashTree/>
+            <ResultAction guiclass="ResultActionGui" testclass="ResultAction" testname="If Login Failed Stop Test" enabled="true">
+              <intProp name="OnError.action">3</intProp>
+            </ResultAction>
+            <hashTree/>
+          </hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Fourth Thread Group Delay Timer" enabled="true">
+            <stringProp name="TestPlan.comments">The formula for the Thread Delay is as follows:
+threadDelay = [threadNumber] * [fourthGroupDelay] - [firstGroupMaxThread] * [secondGroupDelay] + [firstGroupMaxThread] * [firstGroupDelay]
+	- [secondGroupMaxThread] * [thirdGroupDelay] + [secondGroupMaxThread] * [secondGroupDelay] - [thirdGroupMaxThread]
+	* [fourthGroupDelay] + [thirdGroupMaxThread] * [thirdGroupDelay]</stringProp>
+            <stringProp name="ConstantTimer.delay">${__jexl2(${__threadNum()} * ${fourthDelay} - ${firstMax} * ${secondDelay} + ${firstMax} * ${firstDelay} - ${secondMax} * ${thirdDelay} + ${secondMax} * ${secondDelay} - ${thirdMax} * ${fourthDelay} + ${thirdMax} * ${thirdDelay})}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer" enabled="true">
+          <stringProp name="groupSize">${__V(num${userRole}s)}</stringProp>
+        </SyncTimer>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

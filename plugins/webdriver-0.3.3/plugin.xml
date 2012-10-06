@@ -1,0 +1,23 @@
+<plugin name='webdriver' version='0.3.3' grailsVersion='1.3.0 &gt; *'>
+  <author>Rob Nielsen</author>
+  <authorEmail>rob@refactor.com.au</authorEmail>
+  <title>WebDriver Functional Testing Plugin</title>
+  <description>Integrates WebDriver with grails to allow functional testing in both HtmlUnit and real browsers.</description>
+  <documentation>https://bitbucket.org/refactor/grails-webdriver/wiki/Home</documentation>
+  <resources>
+    <resource>BuildConfig</resource>
+    <resource>DataSource</resource>
+    <resource>SecurityFilters</resource>
+    <resource>UrlMappings</resource>
+    <resource>webdriver.AjaxTestController</resource>
+    <resource>webdriver.AuthorController</resource>
+    <resource>webdriver.BookController</resource>
+    <resource>webdriver.HomeController</resource>
+    <resource>webdriver.LoginController</resource>
+    <resource>webdriver.Author</resource>
+    <resource>webdriver.Book</resource>
+    <resource>webdriver.BookType</resource>
+  </resources>
+  <dependencies />
+  <behavior />
+</plugin>

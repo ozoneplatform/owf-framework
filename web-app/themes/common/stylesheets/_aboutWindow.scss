@@ -1,0 +1,28 @@
+/**
+    Styles for OWF about window
+ */
+
+#about-window {
+
+    height: auto !important;
+
+    p {
+        margin-top: 20px;
+    }
+
+    img {
+        @extend .center;
+    }
+
+    #aboutInfo {
+        font-size: ceil($owf-font-size * .9);
+        font-weight: bold;
+    }
+    
+    .x-window-body {
+        @include border-top-radius($dashboard-switcher-body-radius);
+        padding: 20px 40px;
+        line-height: 1.75;
+        color: $dashboard-switcher-dashboard-text-color;
+    }
+}

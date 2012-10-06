@@ -1,0 +1,496 @@
+@charset "UTF-8";
+
+// OWF UTILITY FUNCTIONS
+@import 'functions/owf_functions';
+@import 'compass'; //pull in base functions and mixins provided by the compass framework
+
+$theme-name: 'accessibility-bow';
+
+//In order from darkest to lightest
+$owfblue7: #01687F;
+$owfblue6: #1C3035;
+$owfblue5: #004258;
+$owfblue4: #1c6972;
+$owfblue3: #70B0BA;
+$owfblue2: #adf7ff;
+$owfblue1: #e7f8fa;
+
+//In order from darkest to lightest
+$owfgreen6: #3A4547;
+$owfgreen5: #607745;
+$owfgreen4: #6E992B;
+$owfgreen3: #8DC63F;
+$owfgreen2: #B9E573;
+$owfgreen1: #DDF991;
+$owfgreen0: #edf3dc;
+
+//In order from darkest to lightest
+$owfgrey6: #151515;
+$owfgrey5: #2a2a2a;
+$owfgrey4: #323232;
+$owfgrey3: #3a3a3a;
+$owfgrey2: #424242;
+$owfgrey1: #565656;
+$owfgrey0: #efefef;
+
+$owfgrey10: #efefef;
+$owfgrey11: #ddd;
+$owfgrey12: #ccc;
+$owfgrey13: #bcbcbc;
+$owfgrey14: #a5a5a5;
+$owfgrey15: #8d8d8d;
+$owfgrey16: #777;
+$owfgrey17: #666;
+$owfgrey18: #fff;
+$owfgrey19: #fff;
+$owfgrey20: #fff;
+
+
+
+$body-background-gradient-start: $owfgrey4;
+$body-background-gradient-end: #488792;
+$stripe-img-path: theme-image($theme-name, 'stripes_rpt.png');
+$watermark-img-path: theme-image($theme-name, 'bkg_owf.png');
+$owf-loadmask-background: #000;
+
+$warning-color: #d40000;
+$orange: #ed9200;
+$test: #FF1DA9;
+$testlight: #FFC0EA;
+
+$user-menu-background-color: $owfgrey0;
+$user-menu-text-color: $owfgrey6;
+$user-menu-item-over-background-color: $owfgrey11;
+$owf-prev-login-text-color: #01687F;
+$banner-background: (#e0e0e0, #fff);
+$banner-button-background: #fff;
+$banner-button-over-background: #fff;
+$owf-logout-color: #ff7979;
+$user-menu-button-border-color: $owfgrey13; 
+
+
+
+
+
+
+/*****************************************************************
+ * Put yor theme customizations here.  If you have many customizations,
+ * you may want to put them in a separate file which you import here. 
+ * The import statements in this file reference stylesheets from ext-js
+ * and from the themes/common folder. You can look at 
+ * themes/common/stylesheets/variables/-defaults in order to see what variables
+ * may be changed. 
+ */
+
+
+/* These styles will be applied to the body of both OWF itself and the
+ * admin widgets
+ */
+body {
+    background-color: $owfgrey11;
+}
+
+/*
+ * These styles will only be applied to the OWf container, not the admin widgets
+ */
+#owf-body {
+    height: 100%;
+    outline: 0 none;
+    cursor: default; // for IE8
+
+    background-position: center center;
+    background-repeat: repeat, no-repeat, no-repeat;
+}
+
+#owf-body.x-gecko { /* > ensures IE doesn't see this block */
+    background-image: $stripe-img-path, $watermark-img-path,
+        -moz-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
+}
+
+#owf-body.x-webkit {
+    background-image: $stripe-img-path, $watermark-img-path,
+        -webkit-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
+}
+
+/*
+ * linear background gradient for IE
+ */
+#owf-body.x-ie {
+    background: $owfgrey3 $watermark-img-path no-repeat center center;
+
+    #mainPanel {
+        background: $stripe-img-path repeat center center;
+    }
+}
+
+//admin widget
+/*.managementpanel {*/
+    /*.x-panel-body-default {*/
+       /*border-color: #BABFC3;*/
+    /*}*/
+    /*.x-panel {*/
+        /*.x-panel-body-default {*/
+           /*border-color: #BABFC3;*/
+        /*}*/
+    /*}*/
+    /*.x-toolbar-default {*/
+        /*border-color: #BABFC3;*/
+    /*}*/
+/*}*/
+
+// ===============================
+// =============== Theme Variables 
+// ===============================
+
+
+$owf-base-color: $owfblue3;
+$owf-contrast-base: #ffffff; 
+$owf-alt-base-color: $owfblue2;
+$owf-focus-color: #ff6c00;
+
+
+$owf-font-size: 12px;
+$owf-toolbar-base-color: #e6e7e8;
+$required-widgets-color: #454F55;
+
+$owf-tool-width: 17px;
+
+// =================== Dashboard Switcher
+
+$dashboard-switcher-background-color: #fff; 
+$dashboard-switcher-dashboard-over-background-color: $owfgrey0;
+$dashboard-switcher-dashboard-over-border-color: 1px solid $owfgrey6;
+
+
+// =================== Active and Inactive Widgets
+
+$active-widget-theme: (
+    (#fff),    //base color
+    (#ddd, #FFF),   //gradient start/end colors
+    ($owfgrey6), //text color
+    ($owfblue3), //outer border color
+    ($owfblue2)  //body border color
+);
+
+$inactive-widget-theme: (
+    ($owfgrey14), //base color
+    ($owfgrey11, $owfgrey14),   //gradient start/end colors
+    ($owfgrey5), //text color
+    ($owfgrey5), //outer border color
+    ($owfgrey1)  //body border color
+);
+
+$default_button_theme: (
+    (#ddd 0%, #fff 45%, $owfgrey0 50%),
+    #000,
+    $owfgrey14
+);
+
+$over_button_theme: (
+    (#fff 0%, #efefef 45%),
+    #000,
+    $owf-focus-color
+);
+
+$pressed_button_theme: (
+    ($owfgrey14 0%, $owfgrey0 45%, #FFF 50%),
+    #000,
+    #5C6971
+);
+
+$disabled_button_theme: (
+    (#efefef),
+    #000,
+    #b5b5b5
+);
+
+$owf-tip-base-color: #2A2A2A;
+
+
+
+// -- panel -----------------------------------------------------------
+$owf-panel-body-border-color: #BABFC3;
+
+// -- grid -----------------------------------------------------------
+$owf-grid-header-color: #000;
+$owf-grid-header-background-color: $owf-toolbar-base-color !default;
+$owf-grid-header-background-gradient: 'matte' !default;
+$owf-grid-header-over-background-gradient: nth($default_button_theme, $BUTTON_GRADIENT_INDEX) !default;
+$owf-grid-header-over-background-color: getBaseFromGradient($owf-grid-header-over-background-gradient) !default;
+
+//grid rows
+$owf-grid-row-wrap-border-color: #bbb !default;
+
+$owf-grid-row-cell-color: #222;
+
+$owf-grid-row-cell-background: #FFFFFF;
+$owf-grid-row-cell-alt-background: #F2F2F2;
+$owf-grid-row-cell-over-background-color: #C7E5E0;
+$owf-grid-row-cell-selected-background-color: #BBFFF2;
+$owf-grid-row-cell-focus-background-color: #edffa3;
+
+
+$admin-widget-detail-title-color: $owfblue4;  //Title color for details panel for selected grid item
+
+// -- dropdown---------------------------------------------------------
+$owf-boundlist-background-color: $owf-grid-row-cell-background;
+$owf-boundlist-item-over-background-color: $owf-grid-row-cell-over-background-color;
+$owf-boundlist-item-selected-background-color: $owf-grid-row-cell-selected-background-color;
+
+$owf-top-border-radius: 0px;
+$owf-bottom-border-radius: 10px;
+
+// -- forms---------------------------------------------------------
+$owf-form-field-border-color: #a0a9ad;
+
+// -- toolbar---------------------------------------------------------
+$toolbar-separator-color: #a0a9ad;
+
+// =================== Launch Menu
+
+//$group-title-background-color: $owfgrey12;
+//$group-title-border-bottom-color: $owfblue3;
+//$group-title-color: $owfblue6;
+//
+//$selectable-item-over-background-color: $owfgrey10;
+//$selectable-item-over-border-color: $owfblue4;
+//
+//$selectable-item-selected-background-color: $owfgrey11;  // selected item halo in launch menu
+//$selectable-item-selected-border-color: $owfblue3;  // selected item halo border in launch menu
+
+
+
+/* Launch Menu */
+$widget-launcher-search-background-color: $owfblue1;
+$widget-launcher-search-border-color: $owfblue6;
+$widget-launcher-special-color: $owfblue3;
+$widget-launcher-grid-row-cell-over-background-color: $owfblue1;
+$widget-launcher-widget-title-color: $owfblue4;
+$search-panel-header-text-color: $owfblue4;
+
+$widget-launcher-button-background-gradient: (#ddd, #FFF);
+$widget-launcher-button-color: black;
+$widget-launcher-button-over-background-gradient: (#fff 0%, #efefef 45%);
+$widget-launcher-button-over-background-color: getBaseFromGradient($widget-launcher-button-over-background-gradient);
+$widget-launcher-button-over-border-color: $owf-focus-color;
+
+$search-panel-slider-background-gradient: (#ddd, #FFF);
+
+$widget-launcher-info-panel-color: black;
+$widget-launcher-title-color: $owfgreen4;
+
+$widget-launcher-button-border-color: #ababab;
+$widget-launcher-button-over-border-color: #ababab;
+
+$widget-launcher-background-color: #fff;
+$widget-launcher-advanced-search-toolbar-color: $owfgrey0;
+$widget-launcher-advanced-search-toolbar-border-left-color: $owfgrey1;
+
+$widget-launcher-grid-row-cell-color: black;
+$widget-launcher-grid-row-cell-alt-background: $owf-grid-row-cell-alt-background;
+
+
+$widget-launcher-widget-selected-background-color: $owfgrey18;
+$widget-launcher-widget-selected-border-color: $owfblue4;    ;
+$widget-launcher-widget-selected-text-color: $owfgrey6;
+
+$widget-launcher-widget-over-background-color: $owfgrey0;
+$widget-launcher-widget-over-border-color: $owfblue5;
+$widget-launcher-widget-over-text-color: $owfblue5;
+
+$carousel-background-color: $owfgrey0;  
+
+
+$carousel-widget-over-background-color: $owfgrey0;
+$carousel-widget-over-border-color: $owfgrey0;
+
+$carousel-resizer-background-gradient: ($owfgrey16 0%, $owfgrey17 25%, $owfgrey18 50%, $owfgrey19 100%);
+$carousel-resizer-background-color: getBaseFromGradient($carousel-resizer-background-gradient);
+
+$carousel-button-background-color: #c9c9c9;
+$carousel-button-over-background-color: #ffffff;
+$carousel-widget-selected-background-color: #c9c9c9;
+$carousel-widget-selected-border-color: #ffffff;
+
+$widget-launcher-button-pressed-background-gradient: (#efefef 0%, #ffffff 100%) ;
+
+
+/*$widget-launcher-toolbar-border-color: #444444;
+$widget-launcher-border-color: #444444;*/
+
+//OWF-EXT VARIABLES
+@import 'variables/constants';
+@import 'variables/defaults';
+@import 'variables/ext_overrides';
+
+//EXT STYLESHEETS
+@import 'ext';
+
+//OWF-EXT MIXINS
+@import 'mixins/owf_mixins';
+
+/*
+ * These imports create the owf-specific stylesheets, based on the values of the 
+ * variables that are defined in variables/defaults (which can be overridden in this
+ * file).If extensive changes are required, you can delete some of these imports and
+ * reimplement them as necessary
+ */
+//OWF-EXT STYLESHEETS
+@import 'owf_all';
+
+// ===============================
+// ======================== Banner 
+// ===============================
+
+.x-gecko .banner, { 
+    //custom background to include stripe image in addition
+    //to gradient. This has to be after the imports so it doesn't
+    //get overridden
+    background-image: theme-image($theme-name, 'banner/banner_stripes.png'),
+        -moz-linear-gradient(#e0e0e0, #fff, #e0e0e0);
+}
+
+.x-webkit .banner {
+    background-image: theme-image($theme-name, 'banner/banner_stripes.png'),
+        -webkit-linear-gradient(#e0e0e0, #fff, #e0e0e0);
+}
+
+
+
+// ===============================
+// ======================== Button 
+// ===============================
+
+// box shadows
+.owfButton {
+    @include box-shadow(inset 0px 1px 1px #D7DADC, inset 0px -1px 1px #A0A3A7); 
+
+    &.x-btn-over {
+        @include box-shadow(inset 0px 1px 1px #868C91, inset 0px -1px 1px #DDDEE0); 
+    }
+    &.x-btn-pressed {
+        @include box-shadow(inset 0px 1px 1px #858B90, inset 0px -1px 1px #F6F7F7); 
+    }
+    &.x-btn-disabled {
+        @include box-shadow(inset 0px 1px 1px #ADB6BC, inset 0px -1px 1px #F9F9F9); 
+    }
+}
+
+
+// ===============================
+// =================== Widget Tool
+// ===============================
+$close-button-width: 19px;
+
+.x-tool .x-tool-close {
+    background-image: theme-image($theme-name, 'tools/close.png') !important;
+    width: 19px;
+}
+
+.x-tool-over .x-tool-close {
+    background-position: -$close-button-width*1 0;
+}
+
+.x-tool-pressed .x-tool-close {
+    background-position: -$close-button-width*2 0;
+}
+
+// overrides for inactive images
+.x-window-inactive, .x-tab-top-inactive {
+    .#{$prefix}tool {
+        height: $owf-tool-height;
+
+        img {
+            background-image: theme-background-image($theme-name, 'tools/inactive-tool-sprites.gif');
+        }
+    }
+    .x-tool .x-tool-close {
+        background-position: -$close-button-width*3 0;
+    }
+
+    .x-tool-over .x-tool-close {
+        background-position: -$close-button-width*1 0;
+    }
+}
+
+
+// Begin Melissa's Overwrites
+
+
+/* line 621, ../../../js-lib/ext-4.0.7/resources/themes/stylesheets/ext4/default/widgets/_button.scss */
+.x-btn-default-toolbar-banner-large .x-btn-inner {
+  color: $owfblue6;
+  font-weight: bold;
+}
+
+//override dashboard modal bg color
+// Nish to come back to fix
+.x-mask {
+  background: $owfblue2;
+}
+
+//override that editor tab area
+
+.x-btn-default-toolbar-xlarge-menu-active,
+.x-btn-default-toolbar-xlarge-pressed {
+  border-color: $owfgrey10;
+  background-image: none;
+  background-color: $owfgrey10;
+}
+
+.x-toolbar-default {
+  background-color: $owfgrey12;
+}
+
+.x-form-focus,
+textarea.x-form-focus {
+  border-color: $owf-focus-color;
+}
+
+// overriding tooltip for this theme
+
+.x-tip {
+  background-color: $owfblue1;
+  border-color: $owfblue3;
+}
+
+.x-tip-header-text {
+  color: $owfblue5;
+}
+
+.x-tip-header,
+.x-tip-body,
+.x-form-invalid-tip-body {
+  color: $owfgrey6;
+}
+
+.x-tip-header a,
+.x-tip-body a,
+.x-form-invalid-tip-body a {
+  color: yellow;
+}
+
+.x-form-invalid-under {
+  color: $test;
+}
+
+.x-form-invalid-tip-default {
+  background-color: $owfblue1;
+  border-color: $owfblue3;
+}
+
+
+/* Widget Launcher Code */ 
+
+#widget-launcher {
+
+    .search-panel{
+        background: $search-panel-background-color;
+        border-color: $widget-launcher-border-color;
+        position: absolute;
+        padding: 7px;
+}
+
+}
+
+

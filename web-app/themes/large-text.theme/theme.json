@@ -1,0 +1,30 @@
+{
+    "name": "large-text",
+    "display_name": "Large Text",
+    "author": "OWF Community Support Team",
+    "contact_email": "ozone-developers@googlegroups.com",
+    "created_date": "August 12, 2011",
+    "modified_date": "August 12, 2011",
+    "description": "This is a large text theme. It includes 24px font size; the largest size supported by OWF.",
+    "css": "themes/large-text.theme/css/large-text.css",
+    "base_url": "themes/large-text.theme",
+
+    "contrast": "standard",
+    "owf_font_size": 24,
+
+    "thumb": "themes/large-text.theme/images/preview/lg-text-dashboard.png",
+    "screenshots": [
+        {
+            "url": "themes/large-text.theme/images/preview/lg-text-launch.png",
+            "description": "Launch Menu"
+        },
+        {
+            "url": "themes/large-text.theme/images/preview/lg-text-designer.png",
+            "description": "Dashboard Designer"
+        },
+        {
+            "url": "themes/large-text.theme/images/preview/lg-text-split-dash.png",
+            "description": "Split Dashboard"
+        }
+    ]
+}

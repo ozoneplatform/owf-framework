@@ -1,0 +1,31 @@
+{
+    "name": "accessibility-wob",
+    "display_name": "White on Black",
+    "type": "High Contrast white on black",
+    "author": "OWF Community Support Team",
+    "contact_email": "ozone-developers@googlegroups.com",
+    "created_date": "Marcb 21, 2012",
+    "modified_date": "March 21, 2012",
+    "description": "This is a high-contrast theme that features white text over a dark background for easier readability in dimly-lit environments.",
+    "css": "themes/accessibility-wob.theme/css/accessibility-wob.css",
+    "base_url": "themes/accessibility-wob.theme/",
+
+    "contrast": "white-on-black",
+    "owf_font_size": 12,
+
+    "thumb": "themes/accessibility-wob.theme/images/preview/wob-dashboard.png",
+    "screenshots": [
+        {
+            "url": "themes/accessibility-wob.theme/images/preview/wob-launch.png",
+            "description": "Launch Menu"
+        },
+        {
+            "url": "themes/accessibility-wob.theme/images/preview/wob-designer.png",
+            "description": "Dashboard Designer"
+        },
+        {
+            "url": "themes/accessibility-wob.theme/images/preview/wob-split-dash.png",
+            "description": "Split Dashboard"
+        }
+    ]
+}

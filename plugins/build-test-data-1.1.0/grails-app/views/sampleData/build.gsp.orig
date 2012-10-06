@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>Sample Data Creator</title>
+		<meta name="layout" content="main" />
+    </head>
+    <body>
+
+        <div class="nav">
+            <span class="menuButton"><a class="home" href="${resource(dir:'')}">Home</a></span> 
+            <span class="menuButton"><g:link class="list" action="buildAllObjects">Build One of Each</g:link></span> 
+        </div>
+        <div class="body">
+            <g:if test="${flash.message}">
+            <div class="message">${flash.message}</div>
+            </g:if> 
+
+
+            <h1>Build-Test-Data - Build Domain Object Instance(s) </h1>
+    <g:form action="build" method="post" >
+                <div class="dialog">
+                    <table>
+                        <tbody>
+
+
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="message">Domain Object To Build:</label>
+                                </td>
+                                <td valign="top" class="value ">
+													<g:select optionKey="fullName" optionValue="name" from="${grailsApplication.domainClasses.sort()}" name="domainObjectName" value="$domainObjectName" ></g:select>
+                                </td>
+                            </tr> 
+                           <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="message">How Many:</label>
+                                </td>
+                                <td valign="top" class="value ">
+                                    <input type="text" id="numberOfElements" name="numberOfElements" value="${numObjects}"/>
+                                </td>
+                            </tr> 
+                        
+                        </tbody>
+                    </table>
+                </div>
+                <div class="buttons">
+                    <span class="button"><input class="save" type="submit" value="Create" /></span>
+                </div>
+            </g:form>
+        </div>
+
+
+
+    </body>
+</html>
+
+
+
+
+
+
+    		
+

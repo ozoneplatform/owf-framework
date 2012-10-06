@@ -1,0 +1,96 @@
+<html>
+   <head>
+   <link href="../css/widgetContents.css" type="text/css" rel="stylesheet">
+   <link href="../css/dragAndDrop.css" rel="stylesheet" type="text/css">
+
+   <script type="text/javascript" src="../js/owf-widget-debug.js"></script>
+
+   <script type="text/javascript">
+      //The location is assumed to be at /<context>/js/eventing/rpc_relay.uncompressed.html if it is not set
+      //OWF.relayFile = '/owf-sample-html/js/eventing/rpc_relay.uncompressed.html';
+      
+	  
+	  /**
+	   * This function swaps out strings depending on the Ozone language preference
+	   */
+      function initStrings () {
+      
+		  // The default is english
+		  var AnnouncingClockStrings = {
+			 timeLabel: 'The time is'
+		  };
+
+		  // Apply i18n overrides
+
+		  if (OWF.Lang.getLanguage() == 'es') {
+			 AnnouncingClockStrings.timeLabel = 'El tiempo es';
+		  }
+
+
+		  document.getElementById("timeLabel").firstChild.nodeValue = AnnouncingClockStrings.timeLabel;
+      };
+
+      function updateClock() {
+         var currentTime = new Date ( );
+         
+         var currentHours = currentTime.getHours ( );
+         var currentMinutes = currentTime.getMinutes ( );
+         var currentSeconds = currentTime.getSeconds ( );
+         
+         // Pad the minutes and seconds with leading zeros, if required
+         currentMinutes = ( currentMinutes < 10 ? "0" : "" ) + currentMinutes;
+         currentSeconds = ( currentSeconds < 10 ? "0" : "" ) + currentSeconds;
+         
+         // Choose either "AM" or "PM" as appropriate
+         var timeOfDay = ( currentHours < 12 ) ? "AM" : "PM";
+         
+         // Convert the hours component to 12-hour format if needed
+         currentHours = ( currentHours > 12 ) ? currentHours - 12 : currentHours;
+         
+         // Convert an hours component of "0" to "12"
+         currentHours = ( currentHours == 0 ) ? 12 : currentHours;
+         
+         // Compose the string for display
+         var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
+         
+         // Update the time display
+         document.getElementById("clock").firstChild.nodeValue = currentTimeString;
+
+      }
+
+      function pageInit() {
+         initStrings();
+         updateClock(); 
+         setInterval('updateClock()', 1000);
+
+         document.getElementById("message-panel").style.display = 'block';
+      }
+
+      owfdojo.addOnLoad(pageInit);
+      </script>
+   </head>
+   <body>
+    <div class="widgetContents">
+
+
+          <div class="panel-header">
+              Announcing Clock
+          </div>
+
+          <div id="message-panel" class="message-panel" style="max-height:10px;font-weight:bold">
+            <span id='timeLabel'/>
+          </div>
+
+
+          <div class="panel-body">
+              <div class="clock-frame">
+                 <span id="clock">&nbsp;</span>
+              </div>
+          </div>
+
+
+       </div>
+
+   </body>
+
+</html>

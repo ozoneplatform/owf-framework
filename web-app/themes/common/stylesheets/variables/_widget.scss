@@ -1,0 +1,33 @@
+/*
+ * The theme applied to the header and borders of active, inactive and ghost widget/windows.
+ */
+$active-widget-theme: (
+    $owf-base-color,    //base color
+    (lighten($owf-base-color, 10%), $owf-base-color),   //gradient start/end colors
+    getHighContrastColor($owf-base-color), //text color
+    getHighContrastColor($owf-base-color), //outer border color
+    getHighContrastColor($owf-base-color)  //body border color
+) !default;
+
+/*
+ * The theme applied to the header and border of inactive widgets. 
+ * This is based on the alt base color by default
+ */
+$inactive-widget-theme: (
+    $owf-alt-base-color,    //base color
+    (lighten($owf-alt-base-color, 20%), $owf-alt-base-color),   //gradient start/end colors
+    getHighContrastColor($owf-alt-base-color),  //text color
+    getHighContrastColor($owf-alt-base-color),	//outer border color
+    getHighContrastColor($owf-alt-base-color)	//body border color
+) !default;
+
+/*
+ * The theme applied to window ghosts that are rendered when dragging
+ */
+$ghost-widget-theme: (
+    #fff,   //base color
+    (#fff,#fff),    //gradient start/end colors
+    getHighContrastColor(#fff), //text color
+    getHighContrastColor(#fff),	//outer border color
+    getHighContrastColor(#fff)	//body border color
+) !default;

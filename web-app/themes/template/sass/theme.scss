@@ -1,0 +1,72 @@
+@charset "UTF-8";
+
+// OWF UTILITY FUNCTIONS
+@import 'functions/owf_functions';
+@import 'compass'; //pull in base functions and mixins provided by the compass framework
+
+/*
+ * This variable is required.  It must be equal to the name property in the 
+ * theme.json file
+ */
+$theme-name: 'YOUR_THEME_NAME';
+
+/*****************************************************************
+ * Put yor theme customizations here.  If you hava many customizations,
+ * you may want to put them in a separate file which you import here. 
+ * The import statements in this file reference stylesheets from ext-js
+ * and from the themes/common folder. You can look at 
+ * themes/common/stylesheets/variables/_defaults in order to see what variables
+ * may be changed.
+
+ * For example customizations, reference themes/owf.theme/sass/owf.scss
+ */
+
+/*
+ * Note that you MUST define a background here, as the default is to have none.
+ * For examples of how to do this, look in the themes that already exist
+ */
+
+/* These styles will be applied to the body of both OWF itself and the admin widgets */
+body {
+}
+
+/*
+ * These styles will only be applied to the OWf container, not the admin widgets
+ */
+#owf-body {
+}
+
+// ===============================
+//  Theme Variables 
+// ===============================
+
+$owf-base-color: #222;
+$owf-alt-base-color: #aaa;
+$owf-focus-color: red;
+
+
+//OWF-EXT VARIABLES
+@import 'variables/constants';
+@import 'variables/defaults';
+@import 'variables/ext_overrides';
+
+//EXT STYLESHEETS
+@import 'ext';
+
+//OWF-EXT MIXINS
+@import 'mixins/owf_mixins';
+
+/*
+ * These imports create the owf-specific stylesheets, based on the values of the 
+ * variables that are defined in variables/defaults (which can be overridden in this
+ * file).If extensive changes are required, you can delete some of these imports and
+ * reimplement them as necessary
+ */
+//OWF-EXT STYLESHEETS
+@import 'owf_all';
+
+@import 'dragAndDrop';
+@import 'admin/admin';
+@import 'adminWidget';
+@import 'singletonOverlay';
+@import 'editWidget';

@@ -1,0 +1,31 @@
+{
+    "name": "a_default",
+    "display_name": "OWF",
+    "type": "standard",
+    "author": "OWF Community Support Team",
+    "contact_email": "ozone-developers@googlegroups.com",
+    "created_date": "January 1, 2012",
+    "modified_date": "January 1, 2012",
+    "description": "This is the default theme for OWF.",
+    "css": "themes/a_default.theme/css/a_default.css",
+    "base_url": "themes/a_default.theme/",
+
+    "contrast": "standard",
+    "owf_font_size": 12,
+
+    "thumb": "themes/a_default.theme/images/preview/OWF-dashboard.png",
+    "screenshots": [
+        {
+            "url": "themes/a_default.theme/images/preview/OWF-launch.png",
+            "description": "Launch Menu"
+        },
+        {
+            "url": "themes/a_default.theme/images/preview/OWF-designer.png",
+            "description": "Dashboard Designer"
+        },
+        {
+            "url": "themes/a_default.theme/images/preview/OWF-split-dash.png",
+            "description": "Split Dashboard"
+        }
+    ]
+}

@@ -1,0 +1,83 @@
+@charset "UTF-8";;
+
+.settings-window {
+    .x-component {
+        .settings-header-icon, .admin-tools-header-icon, .marketplace-header-icon, .metric-header-icon {
+            height: 26px;
+            width: 26px;
+        }
+    }
+
+    .settings-header-icon {
+        background-image: theme-image($theme-name, 'settings/settings_icon.png');
+    }
+	.admin-tools-header-icon {
+        background-image: theme-image($theme-name, 'adm-tools/AdminIcon24x24.png');
+    }
+    .marketplace-header-icon {
+        background-image: theme-image($theme-name, 'marketplace/marketplace_icon.png');
+    }
+    .metric-header-icon {
+        background-image: theme-image($theme-name, 'metric/24x24_metrics.png');
+    }
+
+    .tool {
+        $thumb-width: 64px;
+
+        //For these elements, it is more useful
+        //to compute content width not overall box 
+        //width, since we are setting width based on
+        //its contents
+        @include box-sizing(content-box);
+
+        @include border-radius($dashboard-switcher-body-radius);
+        background-color: $dashboard-switcher-dashboard-background-color;
+        border-color: $dashboard-switcher-dashboard-border-color;
+        align: center;
+        float: left;
+        margin: 0px 7px 0px 0px;
+        padding: 15px;
+        position: relative;
+        text-align: center;
+        min-width: $thumb-width;
+//        overflow: hidden;
+        max-width: 6em;
+        cursor: pointer;
+
+        .thumb-wrap {
+            text-align: center;
+            margin-left:auto;
+            margin-right:auto;
+            width: $thumb-width;
+
+            .thumb {
+                width: $thumb-width;
+                height: $thumb-width;
+                text-align:center;
+                margin-left:auto;
+                margin-right:auto;
+                display: block;
+            }
+        }
+        .thumb-text {
+            margin-top: 5px;
+            color: $dashboard-switcher-dashboard-text-color;
+            height: 2.5em;
+            width: 6em;
+
+            //doing this centers the element
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+    }
+
+    .setting-over {
+        background-color: $dashboard-switcher-dashboard-over-background-color;
+        border-color: $dashboard-switcher-dashboard-over-border-color;
+        .thumb-text {
+            color: $dashboard-switcher-dashboard-over-text-color;
+        }
+    }
+
+}

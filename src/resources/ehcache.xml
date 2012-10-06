@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="ehcache.xsd" 
+    name="owf-cache"
+    updateCheck="false">
+
+    <diskStore path="java.io.tmpdir"/>
+
+    <!-- Finds other peer caches -->
+    <cacheManagerPeerProviderFactory 
+        class="net.sf.ehcache.distribution.jgroups.JGroupsCacheManagerPeerProviderFactory"
+        properties="connect=UDP(mcast_addr=231.12.21.132;mcast_port=45566;):PING:
+        MERGE2:FD_SOCK:VERIFY_SUSPECT:pbcast.NAKACK:UNICAST:pbcast.STABLE:FRAG:pbcast.GMS" 
+        propertySeparator="::" />
+
+    <defaultCache
+        maxElementsInMemory="10000"
+        eternal="false"
+        timeToLiveSeconds="120"
+        overflowToDisk="true" >
+        <cacheEventListenerFactory
+            class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory" />
+
+    </defaultCache>
+
+</ehcache>

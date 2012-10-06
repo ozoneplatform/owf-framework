@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<project name="Test Database Conversion" basedir="." default="build">
+    <property environment="env"/>
+
+    <property name="src.dir" value="src"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="build.dir" value="bin"/>
+    <property name="dist.dir" value="target"/>    
+    <property name="file.name" value="dbvalidation"/>
+
+    <!-- The user set-able path to the groovy-all jar file.
+         Default to determining based on GROOVY_HOME -->
+    <property name="groovy_all" value="${env.GROOVY_HOME}/embeddable/groovy-all-*.jar" />
+    <dirname property="groovy_all_dir" file="${groovy_all}" />
+    <basename property="groovy_all_basename" file="${groovy_all}" />
+
+    <!-- Create a path object in order to expand the glob pattern -->
+    <path id="groovy_all_path">
+        <fileset dir="${groovy_all_dir}" includes="${groovy_all_basename}" />
+    </path>
+
+    <!-- Turn the path into a string -->
+    <property name="groovy_all_file" value="${toString:groovy_all_path}"/>
+
+    <path id="master-classpath">
+        <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+        <pathelement path="${build.dir}"/>
+    </path>
+    
+    <path id="dep.runtime">
+        <fileset dir="${dist.dir}/lib"></fileset>
+    </path>
+
+    <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">
+        <classpath refid="groovy_all_path"/>
+    </taskdef>
+
+    <delete dir="${dist.dir}" />
+    <mkdir dir="${dist.dir}"/>
+    
+    <copy todir="${dist.dir}/lib" file="${groovy_all_file}" />
+
+    <target name="copydbjars" description="Copy database driver files">
+        <copy todir="${dist.dir}/lib">
+            <fileset dir="${lib.dir}"/>
+        </copy>
+    </target>
+
+    <target name="compile" description="Compile main source files">
+        <mkdir dir="${build.dir}"/>
+        <groovyc destdir="${build.dir}" failonerror="true">
+            <src path="${src.dir}"/>
+        </groovyc>
+    </target>
+
+    <target name="build" depends="compile">
+
+        <!-- Build manifest for the jar file -->
+        <manifestclasspath property="manifest.classpath" jarfile="${dist.dir}/${file.name}.jar">
+            <classpath refid="dep.runtime" />
+        </manifestclasspath>
+
+        <echo message="Manifest Classpath: ${manifest.classpath}" />
+
+        <!-- Build the jar file -->
+        <jar basedir="${build.dir}" destfile="${dist.dir}/${file.name}.jar" >
+            <manifest>
+                <attribute name="Main-Class" value="TestConversion"/>
+                <attribute name="Class-Path" value="${manifest.classpath}"/>
+            </manifest>
+        </jar>
+
+        <delete dir="${build.dir}" />
+        
+    </target>
+
+</project>

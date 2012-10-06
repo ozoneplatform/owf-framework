@@ -1,0 +1,20 @@
+$owf-grid-header-background-color: adjust-color($neutral-color, $hue: 0deg, $saturation: 0%, $lightness: -16.078%) !default;
+$owf-grid-header-over-background-color: adjust-color(#C0D4ED, $hue: -0.175deg, $saturation: 25.296%, $lightness: -2.549%) !default;
+$owf-grid-header-background-gradient: 'matte' !default;
+$owf-grid-header-over-background-gradient: 'matte' !default;
+$owf-grid-header-color: getHighContrastColor($owf-grid-header-background-color) !default;
+$owf-grid-header-over-border-color: adjust-color(#c0d4ed, $hue: -0.175deg, $saturation: 25.296%, $lightness: -2.549%) !default;
+
+$owf-grid-body-border-color: #d3d3d3 !default;
+
+//grid rows
+$owf-grid-row-wrap-border-color: #ededed !default;
+
+$owf-grid-row-cell-background: lighten($owf-base-color, 50) !default;
+$owf-grid-row-cell-alt-background: darken($owf-grid-row-cell-background, 6) !default;
+$owf-grid-row-cell-over-background-color: adjust-color($owf-grid-row-cell-background, $hue: 0deg, $saturation: 0%, $lightness: 0.392%) !default;
+$owf-grid-row-cell-selected-background-color: adjust-color($owf-grid-row-cell-background, $hue: 3.188deg, $saturation: 0.542%, $lightness: 7.843%) !default;
+$owf-grid-row-cell-focus-background-color: adjust-color($owf-grid-row-cell-background, $hue: 0deg, $saturation: 0%, $lightness: 0.392%) !default;
+
+$owf-grid-row-cell-color: getHighContrastColor($owf-grid-row-cell-background) !default;
+$owf-grid-row-cell-focus-color: $owf-grid-row-cell-color !default;

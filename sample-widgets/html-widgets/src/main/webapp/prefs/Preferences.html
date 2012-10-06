@@ -1,0 +1,82 @@
+<html>
+    <head>
+        <link href="../../../css/desktop.css" rel="stylesheet" type="text/css">
+        <link href="../../../css/blueExt.css" rel="stylesheet" type="text/css">
+        <link href="../../../css/widgetContents.css" rel="stylesheet" type="text/css">
+
+        <!--  Eventing  -->
+        <script type="text/javascript" src="https://localhost:8443/owf/js-min/owf-widget-min.js"></script>
+
+        <script type="text/javascript">
+             //The location is assumed to be at /<context>/js/eventing/rpc_relay.uncompressed.html if it is not
+             //uncomment the line below and set the path correctly
+            //OWF.relayFile = Ozone.util.contextPath() + '/js/eventing/rpc_relay.uncompressed.html';
+            owfdojo.config.dojoBlankHtmlUrl = '../js/dojo-1.5.0-windowname-only/dojo/resources/blank.html';
+            function prefsInit() {
+                OWF.Preferences.getUserPreference({namespace:'owf.sample.preferences',
+                                                        name:'test-preference-value',
+                                                        onSuccess:function(result) {
+                                                            document.getElementById('testPreference').value = result.value;
+                                                        },
+                                                        onFailure:function(err) { /* No op */ } });
+            }
+            function storePreference() {
+                OWF.Preferences.getUserPreference({namespace:'owf.sample.preferences',  name:'test-preference-value', onSuccess:putPreference, onFailure:postPreference});
+            }
+            function deletePreference() {
+                OWF.Preferences.deleteUserPreference({namespace:'owf.sample.preferences',
+                                                        name:'test-preference-value',
+                                                        onSuccess:function(result) {
+                                                          if (result.value != null) {
+                                                            alert('Deleting preference successful.');
+                                                          }
+                                                          else {
+                                                              alert('Deleting preference successful, however preference did not exist');
+                                                          }
+                                                          document.getElementById('testPreference').value = undefined;
+                                                        },
+                                                        onFailure:function(err) {
+                                                            alert('Deleting preference failed: ' + err);
+                                                        }});
+            }
+            var putPreference = function(result) {
+                setPreference("PUT");
+            };
+            var postPreference = function(err) {
+                setPreference("POST");
+            };
+            var setPreference = function(method) {
+                OWF.Preferences.setUserPreference({namespace:'owf.sample.preferences',
+                                                        name:'test-preference-value',
+                                                        value:document.getElementById('testPreference').value,
+                                                        onSuccess:onSetPreferenceSuccess,
+                                                        onFailure:onSetPreferenceFailure});
+            };
+            var onSetPreferenceSuccess = function(result) {
+                alert('Saving preference successful.');
+            };
+            var onSetPreferenceFailure = function(err) {
+                alert('Saving preference failed: ' + err);
+            };
+            owfdojo.addOnLoad(function() {
+                OWF.ready(prefsInit);
+            });
+        </script>
+     </head>
+    <body class="examplesBody">
+        <div class="innerContent">
+            <div class="chanName">
+                Enter a value to be stored in "owf.sample.preferences/test-preference-value".
+            </div>
+            <br/>
+            <br/>
+            <div class="msgName">
+                Preference Value:
+                <textarea rows="5" id="testPreference" class="widgetFormInput"></textarea>
+            </div>
+            <br/>
+            <input type="submit" id='submitButton' value="Save" onClick="storePreference();" class="ozoneButton" style="float:left;"/>
+            <input type="submit" id='deleteButton' value="Delete" onClick="deletePreference();" class="ozoneButton" style="float:left;"/>
+        </div>
+    </body>
+</html>

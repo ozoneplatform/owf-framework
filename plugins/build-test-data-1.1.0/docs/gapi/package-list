@@ -1,0 +1,8 @@
+DefaultPackage
+grails-app.conf
+grails-app.services.grails.buildtestdata
+scripts
+src.groovy.grails.buildtestdata
+src.groovy.grails.buildtestdata.handler
+test.integration
+test.unit

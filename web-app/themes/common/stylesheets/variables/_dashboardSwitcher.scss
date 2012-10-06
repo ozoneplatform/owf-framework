@@ -1,0 +1,25 @@
+$dashboard-switcher-header-font-size: 12px !default;
+
+$dashboard-switcher-body-radius: 15px !default;
+$dashboard-switcher-background-color: $owf-base-color !default;
+$dashboard-switcher-opacity: 0.90 !default;
+
+$dashboard-switcher-dashboard-background-color: $dashboard-switcher-background-color !default;
+$dashboard-switcher-dashboard-over-background-color: darken($dashboard-switcher-dashboard-background-color, 15) !default;
+$dashboard-switcher-dashboard-selected-background-color: lighten($dashboard-switcher-dashboard-background-color, 10) !default;
+
+$dashboard-switcher-dashboard-border-color: $dashboard-switcher-background-color !default;
+$dashboard-switcher-dashboard-over-border-color: $dashboard-switcher-dashboard-over-background-color !default;
+$dashboard-switcher-dashboard-selected-border-color: $dashboard-switcher-dashboard-selected-background-color !default;
+
+$dashboard-switcher-dashboard-text-color: getHighContrastColor($dashboard-switcher-dashboard-background-color) !default;
+$dashboard-switcher-dashboard-over-text-color: getHighContrastColor($dashboard-switcher-dashboard-over-background-color) !default;
+$dashboard-switcher-dashboard-selected-text-color: getHighContrastColor($dashboard-switcher-dashboard-selected-background-color) !default;
+
+$dashboard-switcher-dashboard-groups-text-color: #9ac558 !default;
+$dashboard-switcher-dashboard-groups-over-text-color: #9ac558 !default;
+$dashboard-switcher-dashboard-groups-selected-text-color: #9ac558 !default;
+
+$dashboard-switcher-header-icon: theme-image($theme-name,'banner/dashboards.png') !default;
+$dashboard-switcher-layout-default-icon: theme-image($theme-name, 'dashboardswitcher/DefaultDashboard_White.png') !default;
+$dashboard-switcher-layout-default-icon-over: theme-image($theme-name, 'dashboardswitcher/DefaultDashboard_Color.png') !default;

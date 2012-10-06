@@ -1,0 +1,8 @@
+DefaultPackage
+grails-app.conf
+grails-app.domain.org.grails.taggable
+grails-app.services.org.grails.taggable
+grails-app.taglib.org.grails.taggable
+scripts
+src.groovy.org.grails.taggable
+test.integration.org.grails.taggable

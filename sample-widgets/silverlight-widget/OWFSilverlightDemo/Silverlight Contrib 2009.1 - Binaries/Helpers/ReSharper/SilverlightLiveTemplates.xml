@@ -1,0 +1,109 @@
+<TemplatesExport family="Live Templates">
+  <Template uid="8d16bbd7-6e12-4c37-94e2-dd470a8e7e50" text="&lt;vsm:VisualStateManager.VisualStateGroups&gt;&#xD;&#xA;	&lt;vsm:VisualStateGroup x:Name=&quot;$STATEGROUPNAME$&quot;&gt;&#xD;&#xA;		&lt;vsm:VisualState x:Name=&quot;Normal&quot; /&gt;&#xD;&#xA;		&lt;vsm:VisualState x:Name=&quot;$STATENAME$&quot;&gt;&#xD;&#xA;			&lt;Storyboard&gt;&#xD;&#xA;				$END$&#xD;&#xA;			&lt;/Storyboard&gt;&#xD;&#xA;		&lt;/vsm:VisualState&gt;&#xD;&#xA;	&lt;/vsm:VisualStateGroup&gt;&#xD;&#xA;&lt;/vsm:VisualStateManager.VisualStateGroups&gt;" shortcut="vsm" description="Generates a Visual State Manager block" reformat="true" shortenQualifiedReferences="false">
+    <Context>
+      <FileNameContext mask="*.xaml" />
+    </Context>
+    <Categories>
+      <Category name="Silverlight Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="STATEGROUPNAME" expression="" initialRange="0" />
+      <Variable name="STATENAME" expression="" initialRange="0" />
+    </Variables>
+    <CustomProperties />
+  </Template>
+  <Template uid="93c053d8-34ae-4b74-a081-8128ff8de2ab" text="#region $DEPENDENCYPROPERTYNAME$ Dependency Property&#xD;&#xA;&#xD;&#xA;/// &lt;summary&gt;&#xD;&#xA;/// &#xD;&#xA;/// &lt;/summary&gt;&#xD;&#xA;public $TYPE$ $DEPENDENCYPROPERTYNAME$&#xD;&#xA;{&#xD;&#xA;    get { return ($TYPE$)GetValue($DEPENDENCYPROPERTYNAME$Property); }&#xD;&#xA;    set { SetValue($DEPENDENCYPROPERTYNAME$Property, value); }&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;/// &lt;summary&gt;&#xD;&#xA;/// $DEPENDENCYPROPERTYNAME$ Dependency Property.&#xD;&#xA;/// &lt;/summary&gt;&#xD;&#xA;public static readonly DependencyProperty $DEPENDENCYPROPERTYNAME$Property =&#xD;&#xA;    DependencyProperty.Register(&#xD;&#xA;    &quot;$DEPENDENCYPROPERTYNAME$&quot;,&#xD;&#xA;    typeof($TYPE$),&#xD;&#xA;    typeof($PARENTCLASSNAME$),&#xD;&#xA;    new PropertyMetadata(new PropertyChangedCallback($DEPENDENCYPROPERTYNAME$Changed)));&#xD;&#xA;&#xD;&#xA;private static void $DEPENDENCYPROPERTYNAME$Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)&#xD;&#xA;{&#xD;&#xA;    $PARENTCLASSNAME$ c = d as $PARENTCLASSNAME$;&#xD;&#xA;    if(c != null)&#xD;&#xA;    {&#xD;&#xA;		$END$&#xD;&#xA;    }&#xD;&#xA;}&#xD;&#xA;    &#xD;&#xA;#endregion&#xD;&#xA;" shortcut="DependProp" description="Generates a Dependency Property" reformat="true" shortenQualifiedReferences="true">
+    <Context>
+      <CSharpContext context="TypeMember" minimumLanguageVersion="3.0" />
+    </Context>
+    <Categories>
+      <Category name="Silverlight Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="DEPENDENCYPROPERTYNAME" expression="" initialRange="0" />
+      <Variable name="TYPE" expression="" initialRange="0" />
+      <Variable name="PARENTCLASSNAME" expression="typeName()" initialRange="-1" />
+    </Variables>
+    <CustomProperties />
+  </Template>
+  <Template uid="caf4edbf-e2bf-453d-b1cd-6941c8a3400c" text="#region $DEPENDENCYPROPERTYNAME$ Dependency Property&#xD;&#xA;&#xD;&#xA;/// &lt;summary&gt;&#xD;&#xA;/// $DEPENDENCYPROPERTYNAME$&#xD;&#xA;/// &lt;/summary&gt;&#xD;&#xA;public $TYPE$ $DEPENDENCYPROPERTYNAME$&#xD;&#xA;{&#xD;&#xA;	get { return ($TYPE$)GetValue($DEPENDENCYPROPERTYNAME$Property); }&#xD;&#xA;	set { SetValue($DEPENDENCYPROPERTYNAME$Property, value); }&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;/// &lt;summary&gt;&#xD;&#xA;/// $DEPENDENCYPROPERTYNAME$ Dependency Property.&#xD;&#xA;/// &lt;/summary&gt;&#xD;&#xA;public static readonly DependencyProperty $DEPENDENCYPROPERTYNAME$Property =&#xD;&#xA;	DependencyProperty.Register(&#xD;&#xA;	&quot;$DEPENDENCYPROPERTYNAME$&quot;,&#xD;&#xA;	typeof($TYPE$),&#xD;&#xA;	typeof($PARENTCLASSNAME$),&#xD;&#xA;	new PropertyMetadata($DEFAULTVALUE$));&#xD;&#xA;$END$&#xD;&#xA;#endregion" shortcut="SLDependProp" description="Generates a Dependency Property" reformat="true" shortenQualifiedReferences="true">
+    <Context>
+      <CSharpContext context="TypeMember" minimumLanguageVersion="3.0" />
+    </Context>
+    <Categories>
+      <Category name="Silverlight Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="DEPENDENCYPROPERTYNAME" expression="" initialRange="0" />
+      <Variable name="TYPE" expression="" initialRange="0" />
+      <Variable name="PARENTCLASSNAME" expression="" initialRange="0" />
+      <Variable name="DEFAULTVALUE" expression="" initialRange="0" />
+    </Variables>
+    <CustomProperties />
+  </Template>
+  <Template uid="35c25c19-47cb-4020-b19b-3c5572e114b1" text="#region $DEPENDENCYPROPERTYNAME$ Dependency Property (Attached)&#xD;&#xA;&#xD;&#xA;/// &lt;summary&gt;&#xD;&#xA;/// $DEPENDENCYPROPERTYNAME$ Dependency Property.&#xD;&#xA;/// &lt;/summary&gt;&#xD;&#xA;public static readonly DependencyProperty $DEPENDENCYPROPERTYNAME$Property =&#xD;&#xA;    DependencyProperty.RegisterAttached(&#xD;&#xA;		&quot;$DEPENDENCYPROPERTYNAME$&quot;, &#xD;&#xA;		typeof($TYPE$), &#xD;&#xA;		typeof($PARENTCLASSNAME$),&#xD;&#xA;		new PropertyMetadata(new PropertyChangedCallback($DEPENDENCYPROPERTYNAME$Changed)));   &#xD;&#xA;        &#xD;&#xA;public static void Set$DEPENDENCYPROPERTYNAME$(DependencyObject o, $TYPE$ value)&#xD;&#xA;{&#xD;&#xA;    o.SetValue($DEPENDENCYPROPERTYNAME$Property, value);&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;public static $TYPE$ Get$DEPENDENCYPROPERTYNAME$(DependencyObject o)&#xD;&#xA;{&#xD;&#xA;    return ($TYPE$)o.GetValue($DEPENDENCYPROPERTYNAME$Property);&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;private static void $DEPENDENCYPROPERTYNAME$Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)&#xD;&#xA;{&#xD;&#xA;    $PARENTCLASSNAME$ c = d as $PARENTCLASSNAME$;&#xD;&#xA;    if(c != null)&#xD;&#xA;    {&#xD;&#xA;		$END$&#xD;&#xA;    }&#xD;&#xA;}&#xD;&#xA;    &#xD;&#xA;#endregion" shortcut="SLDependPropAttached" description="" reformat="true" shortenQualifiedReferences="true">
+    <Context>
+      <CSharpContext context="TypeMember" minimumLanguageVersion="3.0" />
+    </Context>
+    <Categories>
+      <Category name="Silverlight Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="DEPENDENCYPROPERTYNAME" expression="" initialRange="0" />
+      <Variable name="TYPE" expression="" initialRange="0" />
+      <Variable name="PARENTCLASSNAME" expression="" initialRange="0" />
+    </Variables>
+    <CustomProperties />
+  </Template>
+  <Template uid="93c053d8-34ae-4b74-a081-8128ff8de2ab" text="#region $DEPENDENCYPROPERTYNAME$ Dependency Property&#xD;&#xA;&#xD;&#xA;/// &lt;summary&gt;&#xD;&#xA;/// $DEPENDENCYPROPERTYNAME$&#xD;&#xA;/// &lt;/summary&gt;&#xD;&#xA;public $TYPE$ $DEPENDENCYPROPERTYNAME$&#xD;&#xA;{&#xD;&#xA;    get { return ($TYPE$)GetValue($DEPENDENCYPROPERTYNAME$Property); }&#xD;&#xA;    set { SetValue($DEPENDENCYPROPERTYNAME$Property, value); }&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;/// &lt;summary&gt;&#xD;&#xA;/// $DEPENDENCYPROPERTYNAME$ Dependency Property.&#xD;&#xA;/// &lt;/summary&gt;&#xD;&#xA;public static readonly DependencyProperty $DEPENDENCYPROPERTYNAME$Property =&#xD;&#xA;    DependencyProperty.Register(&#xD;&#xA;    &quot;$DEPENDENCYPROPERTYNAME$&quot;,&#xD;&#xA;    typeof($TYPE$),&#xD;&#xA;    typeof($PARENTCLASSNAME$),&#xD;&#xA;    new PropertyMetadata(new PropertyChangedCallback($DEPENDENCYPROPERTYNAME$Changed)));&#xD;&#xA;&#xD;&#xA;private static void $DEPENDENCYPROPERTYNAME$Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)&#xD;&#xA;{&#xD;&#xA;    $PARENTCLASSNAME$ c = d as $PARENTCLASSNAME$;&#xD;&#xA;    if(c != null)&#xD;&#xA;    {&#xD;&#xA;		$END$&#xD;&#xA;    }&#xD;&#xA;}&#xD;&#xA;    &#xD;&#xA;#endregion&#xD;&#xA;" shortcut="SLDependPropChange" description="Generates a Dependency Property with a PropertyChangedCallback" reformat="true" shortenQualifiedReferences="true">
+    <Context>
+      <CSharpContext context="TypeMember" minimumLanguageVersion="3.0" />
+    </Context>
+    <Categories>
+      <Category name="Silverlight Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="DEPENDENCYPROPERTYNAME" expression="" initialRange="0" />
+      <Variable name="TYPE" expression="" initialRange="0" />
+      <Variable name="PARENTCLASSNAME" expression="typeName()" initialRange="-1" />
+    </Variables>
+    <CustomProperties />
+  </Template>
+  <Template uid="7c0e3ace-a8a1-4ac7-bad0-2fff54a394b1" text="EventHandler handler = null;&#xD;&#xA;handler = delegate(object s, EventArgs e)&#xD;&#xA;{&#xD;&#xA;    $STORYBOARDNAME$.Completed -= handler;&#xD;&#xA;&#xD;&#xA;    $END$&#xD;&#xA;};&#xD;&#xA;&#xD;&#xA;$STORYBOARDNAME$.Completed += handler;&#xD;&#xA;$STORYBOARDNAME$.Begin();" shortcut="SLInlineSBCompletedHandler" description="" reformat="true" shortenQualifiedReferences="true">
+    <Context>
+      <CSharpContext context="Statement" minimumLanguageVersion="3.0" />
+    </Context>
+    <Categories>
+      <Category name="Silverlight Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="STORYBOARDNAME" expression="" initialRange="0" />
+    </Variables>
+    <CustomProperties />
+  </Template>
+  <Template uid="9133a555-2561-415d-8422-f44a72f4fc8e" text="/// &lt;summary&gt;&#xD;&#xA;/// $EVENTNAME$&#xD;&#xA;/// &lt;/summary&gt;&#xD;&#xA;public event RoutedEventHandler $EVENTNAME$;&#xD;&#xA;&#xD;&#xA;private void Raise$EVENTNAME$()&#xD;&#xA;{&#xD;&#xA;    if ($EVENTNAME$ != null)&#xD;&#xA;    {&#xD;&#xA;        $EVENTNAME$(this, new RoutedEventArgs());&#xD;&#xA;    }&#xD;&#xA;}&#xD;&#xA;$END$&#xD;&#xA;" shortcut="SLRoutedEvent" description="Creates a simple event" reformat="true" shortenQualifiedReferences="true">
+    <Context>
+      <CSharpContext context="TypeMember" minimumLanguageVersion="3.0" />
+    </Context>
+    <Categories>
+      <Category name="Silverlight Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="EVENTNAME" expression="" initialRange="0" />
+    </Variables>
+    <CustomProperties />
+  </Template>
+  <Template uid="8d16bbd7-6e12-4c37-94e2-dd470a8e7e50" text="&lt;vsm:VisualStateManager.VisualStateGroups&gt;&#xD;&#xA;	&lt;vsm:VisualStateGroup x:Name=&quot;$STATEGROUPNAME$&quot;&gt;&#xD;&#xA;		&lt;vsm:VisualState x:Name=&quot;Normal&quot; /&gt;&#xD;&#xA;		&lt;vsm:VisualState x:Name=&quot;$STATENAME$&quot;&gt;&#xD;&#xA;			&lt;Storyboard&gt;&#xD;&#xA;				$END$&#xD;&#xA;			&lt;/Storyboard&gt;&#xD;&#xA;		&lt;/vsm:VisualState&gt;&#xD;&#xA;	&lt;/vsm:VisualStateGroup&gt;&#xD;&#xA;&lt;/vsm:VisualStateManager.VisualStateGroups&gt;" shortcut="SLVsm" description="Generates a Visual State Manager block" reformat="true" shortenQualifiedReferences="false">
+    <Context>
+      <FileNameContext mask="*.xaml" />
+    </Context>
+    <Categories>
+      <Category name="Silverlight Templates" />
+    </Categories>
+    <Variables>
+      <Variable name="STATEGROUPNAME" expression="" initialRange="0" />
+      <Variable name="STATENAME" expression="" initialRange="0" />
+    </Variables>
+    <CustomProperties />
+  </Template>
+</TemplatesExport>

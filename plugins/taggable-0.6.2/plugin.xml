@@ -1,0 +1,156 @@
+<plugin name='taggable' version='0.6.2' grailsVersion='1.1 &gt; *'>
+  <author>Graeme Rocher</author>
+  <authorEmail>graeme.rocher@springsource.com</authorEmail>
+  <title>Taggable Plugin</title>
+  <description>\
+A plugin that adds a generic mechanism for tagging data
+</description>
+  <documentation>http://grails.org/Taggable+Plugin</documentation>
+  <resources>
+    <resource>DataSource</resource>
+    <resource>UrlMappings</resource>
+    <resource>org.grails.taggable.Tag</resource>
+    <resource>org.grails.taggable.TagLink</resource>
+    <resource>org.grails.taggable.TestDescendent</resource>
+    <resource>org.grails.taggable.TestDomain</resource>
+    <resource>org.grails.taggable.TaggableService</resource>
+    <resource>org.grails.taggable.TagsTagLib</resource>
+  </resources>
+  <dependencies>
+    <plugin name='hibernate' version='1.1 &gt; *' />
+  </dependencies>
+  <behavior>
+    <method name='addTag' artefact='Domain' type='org.grails.taggable.TestDescendent'>
+      <description />
+      <argument type='java.lang.String' />
+    </method>
+    <method name='addTags' artefact='Domain' type='org.grails.taggable.TestDescendent'>
+      <description />
+      <argument type='java.lang.Object' />
+    </method>
+    <method name='getTags' artefact='Domain' type='org.grails.taggable.TestDescendent'>
+      <description />
+    </method>
+    <method name='parseTags' artefact='Domain' type='org.grails.taggable.TestDescendent'>
+      <description />
+      <argument type='java.lang.String' />
+    </method>
+    <method name='parseTags' artefact='Domain' type='org.grails.taggable.TestDescendent'>
+      <description />
+      <argument type='java.lang.String' />
+      <argument type='java.lang.String' />
+    </method>
+    <method name='removeTag' artefact='Domain' type='org.grails.taggable.TestDescendent'>
+      <description />
+      <argument type='java.lang.String' />
+    </method>
+    <method name='setTags' artefact='Domain' type='org.grails.taggable.TestDescendent'>
+      <description />
+      <argument type='java.util.List' />
+    </method>
+    <method name='addTag' artefact='Domain' type='org.grails.taggable.TestDomain'>
+      <description />
+      <argument type='java.lang.String' />
+    </method>
+    <method name='addTags' artefact='Domain' type='org.grails.taggable.TestDomain'>
+      <description />
+      <argument type='java.lang.Object' />
+    </method>
+    <method name='getTags' artefact='Domain' type='org.grails.taggable.TestDomain'>
+      <description />
+    </method>
+    <method name='parseTags' artefact='Domain' type='org.grails.taggable.TestDomain'>
+      <description />
+      <argument type='java.lang.String' />
+    </method>
+    <method name='parseTags' artefact='Domain' type='org.grails.taggable.TestDomain'>
+      <description />
+      <argument type='java.lang.String' />
+      <argument type='java.lang.String' />
+    </method>
+    <method name='removeTag' artefact='Domain' type='org.grails.taggable.TestDomain'>
+      <description />
+      <argument type='java.lang.String' />
+    </method>
+    <method name='setTags' artefact='Domain' type='org.grails.taggable.TestDomain'>
+      <description />
+      <argument type='java.util.List' />
+    </method>
+    <static-method name='getAllTags' artefact='Domain' type='org.grails.taggable.TestDescendent'>
+      <description />
+    </static-method>
+    <static-method name='countByTag' artefact='Domain' type='org.grails.taggable.TestDescendent'>
+      <description />
+      <argument type='java.lang.String' />
+    </static-method>
+    <static-method name='findAllByTag' artefact='Domain' type='org.grails.taggable.TestDescendent'>
+      <description />
+      <argument type='java.lang.String' />
+    </static-method>
+    <static-method name='findAllByTag' artefact='Domain' type='org.grails.taggable.TestDescendent'>
+      <description />
+      <argument type='java.lang.String' />
+      <argument type='java.util.Map' />
+    </static-method>
+    <static-method name='findAllByTagWithCriteria' artefact='Domain' type='org.grails.taggable.TestDescendent'>
+      <description />
+      <argument type='java.lang.String' />
+      <argument type='groovy.lang.Closure' />
+    </static-method>
+    <static-method name='findAllTagsWithCriteria' artefact='Domain' type='org.grails.taggable.TestDescendent'>
+      <description />
+      <argument type='java.util.Map' />
+      <argument type='groovy.lang.Closure' />
+    </static-method>
+    <static-method name='getAllTags' artefact='Domain' type='org.grails.taggable.TestDomain'>
+      <description />
+    </static-method>
+    <static-method name='countByTag' artefact='Domain' type='org.grails.taggable.TestDomain'>
+      <description />
+      <argument type='java.lang.String' />
+    </static-method>
+    <static-method name='findAllByTag' artefact='Domain' type='org.grails.taggable.TestDomain'>
+      <description />
+      <argument type='java.lang.String' />
+    </static-method>
+    <static-method name='findAllByTag' artefact='Domain' type='org.grails.taggable.TestDomain'>
+      <description />
+      <argument type='java.lang.String' />
+      <argument type='java.util.Map' />
+    </static-method>
+    <static-method name='findAllByTagWithCriteria' artefact='Domain' type='org.grails.taggable.TestDomain'>
+      <description />
+      <argument type='java.lang.String' />
+      <argument type='groovy.lang.Closure' />
+    </static-method>
+    <static-method name='findAllTagsWithCriteria' artefact='Domain' type='org.grails.taggable.TestDomain'>
+      <description />
+      <argument type='java.util.Map' />
+      <argument type='groovy.lang.Closure' />
+    </static-method>
+    <property name='tags' type='org.grails.taggable.TestDescendent' artefact='Domain'>
+      <description />
+    </property>
+    <property name='tags' type='org.grails.taggable.TestDescendent' artefact='Domain'>
+      <description />
+    </property>
+    <property name='allTags' type='org.grails.taggable.TestDescendent' artefact='Domain'>
+      <description />
+    </property>
+    <property name='totalTags' type='org.grails.taggable.TestDescendent' artefact='Domain'>
+      <description />
+    </property>
+    <property name='tags' type='org.grails.taggable.TestDomain' artefact='Domain'>
+      <description />
+    </property>
+    <property name='tags' type='org.grails.taggable.TestDomain' artefact='Domain'>
+      <description />
+    </property>
+    <property name='allTags' type='org.grails.taggable.TestDomain' artefact='Domain'>
+      <description />
+    </property>
+    <property name='totalTags' type='org.grails.taggable.TestDomain' artefact='Domain'>
+      <description />
+    </property>
+  </behavior>
+</plugin>

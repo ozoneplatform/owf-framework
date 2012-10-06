@@ -1,0 +1,246 @@
+@-webkit-keyframes slide-left {
+	0% {
+		margin-left: 10px;
+	}
+	100% {
+		margin-left: 0px;
+	}
+}
+
+@-webkit-keyframes fade-in {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+.pane.portalpane {
+	padding: 0px;
+	overflow-y: auto;
+}
+
+.paneshim {
+	background-image: theme-background-image($theme-name, 's.gif');
+	z-index: exponent(10, 7) !important;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+
+.x-form-invalid-tip {
+	z-index: exponent(10, 7) !important;
+}
+
+.highlight-dashboard-designer-drop {
+	@extend .paneshim; // IE in quirks mode doesn't support chained or multiple classes on an element
+	@include transparent-background-color($dashboard-designer-drop-shim-background-color, $dashboard-designer-drop-shim-opacity, $importance: $owf_css_important);
+		
+	-webkit-transition-property: background, opacity;
+	-webkit-transition-duration: 0.5s, 0.5s;
+	-moz-transition-property: background, opacity;
+	-moz-transition-duration: 0.5s, 0.5s;
+	-ms-transition-property: background, opacity;
+	-ms-transition-duration: 0.5s, 0.5s;
+	transition-property: background, opacity;
+	transition-duration: 0.5s, 0.5s;
+}
+
+#dashboard-designer {
+	width: 100%;
+	//height: 100%;
+	top: 0;
+	left: 0;
+	position: absolute;
+	background: $dashboard-designer-background-color;
+	z-index: exponent(10, 6) !important;
+	background-image: theme-background-image($theme-name, $dashboard-designer-background-image);
+	background-repeat: repeat;
+
+	.accordionpane,
+	.desktoppane,
+	.portalpane,
+	.tabbedpane,
+    .fitpane {
+		background-position: 15px 10px;
+		background-repeat: no-repeat;
+	}
+
+	.accordionpane {
+		@include transparent-background-color($dashboard-designer-accordion-pane-background-color, $dashboard-designer-accordion-pane-opacity);
+		background-image: theme-background-image($theme-name, $dashboard-designer-accordion-pane-image);
+	}
+	.desktoppane {
+		@include transparent-background-color($dashboard-designer-desktop-pane-background-color, $dashboard-designer-desktop-pane-opacity);
+		background-image: theme-background-image($theme-name, $dashboard-designer-desktop-pane-image);
+	}
+	.portalpane {
+		@include transparent-background-color($dashboard-designer-portal-pane-background-color, $dashboard-designer-portal-pane-opacity);
+		background-image: theme-background-image($theme-name, $dashboard-designer-portal-pane-image);
+	}
+	.tabbedpane {
+		@include transparent-background-color($dashboard-designer-tabbed-pane-background-color, $dashboard-designer-tabbed-pane-opacity);
+		background-image: theme-background-image($theme-name, $dashboard-designer-tabbed-pane-image);
+	}
+    .fitpane {
+        @include transparent-background-color($dashboard-designer-fit-pane-background-color, $dashboard-designer-fit-pane-opacity);
+        background-image: theme-background-image($theme-name, $dashboard-designer-fit-pane-image);
+    }
+
+	h3 {
+		padding-top: 0.1667em;
+		position: absolute;
+		bottom: 10%;
+		left: 40%;
+		width: 4em;
+		line-height: 2em;
+		font-size: 1.5em;
+		text-shadow: $dashboard-designer-pane-dimensions-text-shadow;
+		color: $dashboard-designer-pane-dimensions-color;
+		text-align: center;
+		border-radius: 0.5em;
+		border: $dashboard-designer-pane-dimensions-border;
+		background: rgba($dashboard-designer-pane-dimensions-background-color, $dashboard-designer-pane-dimensions-opacity);
+	}
+
+	.top > h3, .bottom > h3 {
+		left: 15px;
+		bottom: 40%;
+	}
+
+	.top > .x-editor, .bottom > .x-editor {
+		// Ext isn't calculating left correctly and it gets cut off
+		left: 15px !important;
+	}
+}
+
+// OWF-6185: IE 7 crashes when certain configurations of the dashboard are attempted.
+.x-ie78 {
+	.highlight-dashboard-designer-drop {
+		background-color: $dashboard-designer-drop-shim-ie78-background-color !important;
+	}
+
+	#dashboard-designer {
+
+		.accordionpane {
+			background-color: $dashboard-designer-accordion-pane-ie78-background-color;
+		}
+		.desktoppane {
+			background-color: $dashboard-designer-desktop-pane-ie78-background-color;
+		}
+		.portalpane {
+			background-color: $dashboard-designer-portal-pane-ie78-background-color;
+		}
+		.tabbedpane {
+			background-color: $dashboard-designer-tabbed-pane-ie78-background-color;
+		}
+	    .fitpane {
+	    	background-color: $dashboard-designer-fit-pane-ie78-background-color;
+	    }
+
+		h3 {
+			@include ie-transparent-background-color($dashboard-designer-pane-dimensions-background-color, $dashboard-designer-pane-dimensions-opacity);
+		}
+	}
+}
+
+#dashboard-designer, .dashboard {
+
+	.hbox {
+		.left {
+			border-right: $dashboard-designer-border;
+		}
+	}
+
+	.vbox {
+		.top {
+			border-bottom: $dashboard-designer-border;
+		}
+	}
+}
+
+#dashboard-designer-side-panel {
+
+	background: $dashboard-designer-side-panel-background-color;
+	border-left: $dashboard-designer-side-panel-border;
+	position: absolute;
+	float: right;
+	right: 0;
+	top: 0;
+	width: 10em;
+	height: 100%;
+	overflow: auto;
+
+	.layout-type, .layout, .dashboard-lock {
+		padding: 0.5em;
+		img {
+			height: 50px; 
+			width: 50px; 
+			@extend .center;
+		}
+	}
+
+	.dashboard-lock {
+		padding: 0.5em;
+		img {
+			height: 30px; 
+			width: 30px; 
+			@extend .center;
+		}
+	}
+	
+	.layout-type.x-item-selected, .layout.x-item-selected, .dashboard-lock.x-focus {
+        background-color: $dashboard-designer-side-panel-item-background-color;
+    }
+    
+    .dashboard-lock.x-focus {
+        border: none !important;
+    }
+
+	.layout-type {
+		-webkit-animation: 
+			slide-left 0.5s,
+			fade-in 1s;
+	}
+
+	.layout {
+		-webkit-animation: fade-in 1s;
+	}
+
+	.x-btn {
+		display: block;
+		width: 70%;
+		margin: 1em auto;
+		text-align: center;
+	}
+	
+	@include transition-property(width);
+	@include transition-duration(0.4s);
+}
+
+#dashboard-designer-base-layout, #dashboard-designer-layout {
+	overflow: hidden;
+	clear: both;
+	border-bottom: 1px solid #666;
+	padding: 1em 0;
+}
+
+.active-pane {
+	border: 3px solid $active-pane-border-color !important;
+
+	& > h3 {
+		border-color: $active-pane-border-color !important;
+		border-style: solid !important;
+	}
+}
+
+.sibling-active-pane {
+	border: 3px dashed $active-pane-border-color !important;
+
+	& > h3 {
+		border-color: $active-pane-border-color !important;
+	}
+}

@@ -1,0 +1,15 @@
+$widget-switcher-body-radius: 10px !default;
+$widget-switcher-background-color: #292929 !default;
+$widget-switcher-opacity: 0.90 !default;
+
+$widget-switcher-widget-background-color: $widget-switcher-background-color !default;
+$widget-switcher-widget-over-background-color: darken($owf-base-color, 10) !default;
+$widget-switcher-widget-selected-background-color: lighten($owf-base-color, 10) !default;
+
+$widget-switcher-widget-border-color: $widget-switcher-background-color !default;
+$widget-switcher-widget-over-border-color: $widget-switcher-widget-over-background-color !default;
+$widget-switcher-widget-selected-border-color: $widget-switcher-widget-selected-background-color !default;
+
+$widget-switcher-widget-text-color: getHighContrastColor($widget-switcher-widget-background-color) !default;
+$widget-switcher-widget-over-text-color: getHighContrastColor($widget-switcher-widget-over-background-color) !default;
+$widget-switcher-widget-selected-text-color: getHighContrastColor($widget-switcher-widget-selected-background-color) !default;

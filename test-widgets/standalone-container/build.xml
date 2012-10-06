@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="standalone-container" default="war" basedir=".">
+	<property environment="env"/>
+	
+	<property name="build.dir" value="${basedir}/target" />
+	<property name="web.dir" value="${basedir}/src/main/webapp" />
+
+	<target name="clean-build-dir" description="Cleans out the build directory.">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+	</target>
+	
+	<target name="war" depends="clean-build-dir" description="Creates the WAR file.">
+        <copy todir="${basedir}/src/main/webapp/js-min" failonerror="false" overwrite="true">
+            <fileset dir="../../web-app/js-min">
+                <include name="*.js" />
+            </fileset>
+        </copy>
+		<war warfile="${build.dir}/standalone-container.war" webxml="${web.dir}/WEB-INF/web.xml" duplicate="preserve">
+			<fileset dir="${web.dir}">
+				<exclude name="WEB-INF/web.xml" />
+			</fileset>
+		</war>		
+	</target>
+
+    <target name="diagnostics" description="Displays Ant diagnostics.">
+        <diagnostics/>
+    </target>
+
+</project>

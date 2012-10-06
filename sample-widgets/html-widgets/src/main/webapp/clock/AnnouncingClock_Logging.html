@@ -1,0 +1,96 @@
+<html>
+   <head>
+   <link href="../css/widgetContents.css" type="text/css" rel="stylesheet">
+   <link href="../css/dragAndDrop.css" rel="stylesheet" type="text/css">
+
+   <script type="text/javascript" src="../js/owf-widget-debug.js"></script>
+
+   <script type="text/javascript">
+      //The location is assumed to be at /<context>/js/eventing/rpc_relay.uncompressed.html if it is not set
+      //OWF.relayFile = '/owf-sample-html/js/eventing/rpc_relay.uncompressed.html';
+
+      var logger = OWF.Log.getDefaultLogger();
+      var appender = logger.getEffectiveAppenders()[0];
+   
+      appender.setThreshold(log4javascript.Level.INFO);
+      OWF.Log.setEnabled(false);
+
+
+      function updateClock() {
+         var currentTime = new Date ( );
+         
+         var currentHours = currentTime.getHours ( );
+         var currentMinutes = currentTime.getMinutes ( );
+         var currentSeconds = currentTime.getSeconds ( );
+         
+         // Pad the minutes and seconds with leading zeros, if required
+         currentMinutes = ( currentMinutes < 10 ? "0" : "" ) + currentMinutes;
+         currentSeconds = ( currentSeconds < 10 ? "0" : "" ) + currentSeconds;
+         
+         // Choose either "AM" or "PM" as appropriate
+         var timeOfDay = ( currentHours < 12 ) ? "AM" : "PM";
+         
+         // Convert the hours component to 12-hour format if needed
+         currentHours = ( currentHours > 12 ) ? currentHours - 12 : currentHours;
+         
+         // Convert an hours component of "0" to "12"
+         currentHours = ( currentHours == 0 ) ? 12 : currentHours;
+         
+         // Compose the string for display
+         var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
+         
+         // Update the time display
+         document.getElementById("clock").firstChild.nodeValue = currentTimeString;
+
+         if (currentSeconds % 10 == 0) {
+            logger.info(currentTimeString);
+         }
+      }
+
+      function pageInit() {
+         updateClock(); 
+         setInterval('updateClock()', 1000);
+
+         msg = 'Running in OWF: ' + (OWF.Util.isRunningInOWF()?"Yes":"No");
+
+         document.getElementById("message-panel").innerHTML = msg;
+         document.getElementById("message-panel").style.display = 'block';
+      }
+
+      owfdojo.addOnLoad(function() {
+        OWF.ready(pageInit);
+      });
+      
+      </script>
+   </head>
+   <body>
+    <div class="widgetContents">
+
+
+          <div class="panel-header">
+              Announcing Clock
+          </div>
+
+          <div id="error-panel" class="error-panel">
+          </div>
+
+          <div class="panel-body">
+              <div class="clock-frame">
+                 <span id="clock">&nbsp;</span>
+              </div>
+          </div>
+
+          <div class="button-panel">
+          </div>
+
+          <div id="message-panel" class="message-panel">
+          </div>
+
+       </div>
+
+   </body>
+
+   <script type="text/javascript">
+  </script>
+
+</html>

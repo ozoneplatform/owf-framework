@@ -1,0 +1,6 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" basedir="." name="test-widgets" default="war">
+    <target name="war">
+        <ant dir="standalone-container" target="war"/>
+        <ant dir="html-widgets" target="war"/>
+    </target>
+</project>

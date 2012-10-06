@@ -1,0 +1,31 @@
+{
+    "name": "accessibility-bow",
+    "display_name": "Black on White",
+    "type": "Black on White High Contrast",
+    "author": "OWF Community Support Team",
+    "contact_email": "ozone-developers@googlegroups.com",
+    "created_date": "March 21, 2012",
+    "modified_date": "March 21, 2012",
+    "description": "This is a high-contrast theme that features dark text over a white background for easier readability.",
+    "css": "themes/accessibility-bow.theme/css/accessibility-bow.css",
+    "base_url": "themes/accessibility-bow.theme/",
+
+    "contrast": "black-on-white",
+    "owf_font_size": 12,
+
+    "thumb": "themes/accessibility-bow.theme/images/preview/bow-dashboard.png",
+    "screenshots": [
+        {
+            "url": "themes/accessibility-bow.theme/images/preview/bow-launch.png",
+            "description": "Launch Menu"
+        },
+        {
+            "url": "themes/accessibility-bow.theme/images/preview/bow-designer.png",
+            "description": "Dashboard Designer"
+        },
+        {
+            "url": "themes/accessibility-bow.theme/images/preview/bow-split-dash.png",
+            "description": "Split Dashboard"
+        }
+    ]
+}

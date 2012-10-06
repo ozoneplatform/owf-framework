@@ -1,0 +1,122 @@
+//EXT STYLESHEETS
+@import "compass/css3";
+@import "blueprint/typography";
+
+$include-default: true !default;
+$include-default-uis: true !default;
+
+@import 'ext4/default/functions';
+@import 'ext4/default/variables';
+@import 'ext4/default/mixins';
+
+//core
+@import 'ext4/default/core';
+
+//override disabled style
+.#{$prefix}item-disabled {
+    @include opacity(0.5);
+}
+
+//layout
+@import 'ext4/default/layout/layout';
+
+//utils
+@import 'ext4/default/util/tool';
+@import 'ext4/default/util/messagebox';
+@import 'ext4/default/util/splitter';
+@import 'ext4/default/util/resizable';
+@import 'ext4/default/util/dragdrop';
+@import 'ext4/default/util/scroller';
+@import 'ext4/default/util/focus';
+
+//widgets
+@import 'ext4/default/widgets';
+
+@if $scope-reset-css {
+    .#{$prefix}reset {
+        @if $include-default {
+            @include extjs-boundlist;
+            @include extjs-button;
+            @include extjs-btn-group;
+            @include extjs-datepicker;
+            @include extjs-colorpicker;
+            @include extjs-menu;
+            @include extjs-grid;
+            @include extjs-form;
+                @include extjs-form-field;
+                @include extjs-form-fieldset;
+                @include extjs-form-file;
+                @include extjs-form-checkboxfield;
+                @include extjs-form-checkboxgroup;
+                @include extjs-form-triggerfield;
+                @include extjs-form-htmleditor;
+            @include extjs-panel;
+            @include extjs-qtip;
+            @include extjs-slider;
+            @include extjs-progress;
+            @include extjs-toolbar;
+            @include extjs-window;
+            @include extjs-messagebox;
+            @include extjs-tabbar;
+            @include extjs-tab;
+            @include extjs-tree;
+            @include extjs-drawcomponent;
+            @include extjs-viewport;
+        }
+
+        @include extjs-dragdrop;
+        @include extjs-resizable;
+        @include extjs-splitter;
+        @include extjs-layout;
+
+        //commenting it out so that we can redefine the mixin
+        //@include extjs-tool;
+        @include extjs-scroller;
+        
+        @include extjs-html;
+    }
+
+    @include extjs-reset-extras;
+}
+@else {
+    @if $include-default {
+        @include extjs-boundlist;
+        @include extjs-button;
+        @include extjs-btn-group;
+        @include extjs-datepicker;
+        @include extjs-colorpicker;
+        @include extjs-menu;
+        @include extjs-grid;
+        @include extjs-form;
+            @include extjs-form-field;
+            @include extjs-form-fieldset;
+            @include extjs-form-file;
+            @include extjs-form-checkboxfield;
+            @include extjs-form-checkboxgroup;
+            @include extjs-form-triggerfield;
+            @include extjs-form-htmleditor;
+        @include extjs-panel;
+        @include extjs-qtip;
+        @include extjs-slider;
+        @include extjs-progress;
+        @include extjs-toolbar;
+        @include extjs-window;
+        @include extjs-messagebox;
+        @include extjs-tabbar;
+        @include extjs-tab;
+        @include extjs-tree;
+        @include extjs-drawcomponent;
+        @include extjs-viewport;
+    }
+
+    @include extjs-dragdrop;
+    @include extjs-resizable;
+    @include extjs-splitter;
+    @include extjs-layout;
+
+    //commenting it out so that we can redefine the mixin
+    //@include extjs-tool;
+    @include extjs-scroller;
+    
+    @include extjs-html;
+}

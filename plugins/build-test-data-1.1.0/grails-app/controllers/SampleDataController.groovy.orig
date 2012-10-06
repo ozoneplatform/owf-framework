@@ -1,0 +1,94 @@
+import org.codehaus.groovy.grails.commons.DefaultGrailsDomainClass 
+
+class SampleDataController {
+
+//TODO:  add functionality to create all objects, so you can test your buildData configurations
+//TODO:  add ability to call methods (i.e. if you want to bootstrap a bunch of data)
+//TODO:  add ability to do different things in different environments, i.e. dev vs. test, etc. 
+//def tagLib = new ApplicationTagLib() def link = tagLib.createLink(action:'index', id:'1') render "Generated link: " + link }
+
+
+ def index = {
+  redirect(action:build)
+ }
+
+  def build = {
+
+	  int numObjects = params.numberOfElements? Integer.parseInt(params.numberOfElements) :1
+	  //println "numberObjects $numObjects"
+	
+	//createLink(controller:"book", action:"list")    
+
+	  String domainObjectName = params.domainObjectName
+
+     //def allDomainObjects = org.codehaus.groovy.grails.commons.ApplicationHolder.application.domainClasses*.getFullName()
+	  def objects = []
+
+	  if (domainObjectName)  {
+		  def clazz = null
+			  try {
+				  //println "looking up class $domainObjectName"
+				  clazz = Class.forName(domainObjectName, false, Thread.currentThread().contextClassLoader ) 
+			  } catch (ClassNotFoundException e) {
+				  //println "class not found $e"
+				  flash.message = "Could not find Class $domainObjectName"
+					  return [numObjects:numObjects, objects:objects]
+			  }
+
+		  numObjects.times {
+			  //  def x = Class.forName("java.util.Date").newInstance()
+			  if (!clazz)
+				  println "Class $domainObjectName does not exist"
+			  else 
+			  try {
+				  objects << clazz.build().save()
+				  } catch (Exception e) {
+						log.error ("Some kind of error occured", e)	
+						flash.message += "Error: ${e}"
+	               render(view:"build",  plugin:"buildTestData", model:[numObjects:numObjects,  objects:objects, domainObjectName:domainObjectName])
+				  }
+		  }
+
+
+		  //flash.message = "Created $numObjects of Class $domainObjectName <br>Created Objects <br>&nbsp;&nbsp;${objects.join ('<br/>&nbsp;&nbsp;')}"
+		  //println "xyz ${["abc","ad"].collect {it+"a"}.join(',')}"
+
+        String controllerName = new DefaultGrailsDomainClass(clazz).propertyName
+		  flash.message = """Created $numObjects of Class <a href=\'${createLink(controller:"$controllerName", action:'list')}\'>$domainObjectName</a> <br>Created Objects <br>&nbsp;&nbsp;${objects.collect { 
+		         "$it <a href=\'${createLink(controller:"$controllerName", action:'show', id:it.id)}\'>show</a> " 
+				 }.join('<br/>&nbsp;&nbsp;')}"""
+
+		  //println clazz.propertyName
+
+	  } else {
+		  flash.message = "Nothing Ventured, Nothing Gained (Nothing Created)"
+	  }
+
+	  render(view:"build",  plugin:"buildTestData", model:[numObjects:numObjects,  objects:objects, domainObjectName:domainObjectName])
+  }
+
+def buildAllObjects = {
+     String successMessages = ""
+     String failureMessages = ""
+	  boolean successful = true
+
+     def domainClasses = org.codehaus.groovy.grails.commons.ApplicationHolder.application.domainClasses
+        domainClasses.each { domainClass ->
+            //messages += "<br><br>Test of ${domainClass.name}.build()<br>"
+            try {
+                def domainObject = domainClass.clazz.build()
+                successMessages += "<br><br>****** $domainClass<br>"
+            } catch (Exception e) {
+                failureMessages += "<br>****** FAILED BUILD OF $domainClass<br>"
+                failureMessages += "  Exception ${e}<br><br>"
+					 log.error "****** FAILED BUILD OF $domainClass", e
+                successful = false
+            }
+        }
+	  flash.message = "Successful<br> $successMessages <br>\nFailed Objects <br>$failureMessages"
+	  render(view:"build",  plugin:"buildTestData", model:[])
+}
+
+
+}
+

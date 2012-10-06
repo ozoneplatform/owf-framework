@@ -1,0 +1,38 @@
+@include extjs-window-ui(
+    'system-window',
+    
+    $ui-padding: null,
+    $ui-border-radius: $dashboard-switcher-body-radius,
+    $ui-border-color: $dashboard-switcher-background-color,
+    $ui-inner-border-color: null,
+    
+    $ui-header-color: $dashboard-switcher-dashboard-text-color,
+    $ui-header-font-size: $owf-font-size,
+    $ui-header-font-weight: $window-header-font-weight,
+    
+    $ui-body-border-color: $dashboard-switcher-background-color,
+    $ui-body-background-color: $dashboard-switcher-background-color,
+    $ui-body-color: $dashboard-switcher-background-color,
+    
+    $ui-background-color: $dashboard-switcher-background-color
+);
+
+.x-window-system-window {
+    @include opacity($dashboard-switcher-opacity);
+
+    //@include border-radius($dashboard-switcher-body-radius);
+    .x-window-header {
+        @include border-top-radius($dashboard-switcher-body-radius);
+        background-image: none;
+        filter: none;
+        border-color: $dashboard-switcher-background-color;
+        background-color: $dashboard-switcher-background-color;
+        padding: 9px;
+    }
+
+    .x-window-body {
+        @include border-bottom-radius($dashboard-switcher-body-radius);
+        //padding: 10px;
+        border:none;
+    }
+}

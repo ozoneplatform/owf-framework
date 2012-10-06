@@ -1,0 +1,27 @@
+.ddBox {
+    font-family: arial;
+    font-size: 11px;
+    height: 22px;
+    padding: 0px 3px 0px 21px;
+    border: #c1c1c1 1px solid;
+    line-height: 2;
+    position: absolute;
+    z-index: 99999;
+    display: none;
+    top: -10000px;
+    left: -10000px;
+    white-space: nowrap;
+}
+
+.ddBoxCannotDrop {
+    background: #FFFFFF url('../images/dragAndDrop/dndNoMove.png') no-repeat left center;
+}
+
+.ddBoxCanDrop {
+    background: #FFFFFF url('../images/dragAndDrop/dndMove.png') no-repeat left center;
+}
+
+.ddOver {
+    border: #c1c1c1 5px solid !important;
+    background-color: #ccffff !important;
+}

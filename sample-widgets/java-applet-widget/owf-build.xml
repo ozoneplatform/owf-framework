@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="java-applet-widget" default="zip" basedir=".">
+	
+	<target name="zip">
+            <delete file="java-applet-widget.zip" failonerror="false" />
+		<zip destfile="java-applet-widget.zip" basedir="${basedir}"
+		excludes="pom.xml,zip-assembly.xml,**/target/**,owf-build.xml,*.zip" />
+	</target>
+	
+</project>

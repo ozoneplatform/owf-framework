@@ -1,0 +1,333 @@
+.mpWindow {
+
+    .x-toolbar {
+        //@include owf-background-gradient($toolbar-theme);
+        border-color: getWidgetBodyBorderColor($active-widget_theme);
+    }
+
+    .mpPagingToolbar {
+        //IE incorrectly applies owfButton styles to buttons that are not OWF buttons,
+        //making the paging toolbar buttons look odd. This undoes the owfButton styles for
+        //toolbar buttons
+        .x-btn {
+            filter: none;
+            background-position: 0% 0%;
+            border-color: transparent;
+        }
+    }
+
+
+    img {
+        color: getHighContrastColor($owf-window-background-color); //for the title text that appears when the image isn't found
+    }
+
+    .mpSearchResultsPanel {
+        .mpPagingToolbar {
+//            @include owf-background-theme-gradient($active-widget-theme); 
+            border: medium none;
+            .x-toolbar-text {
+                //color: #FFFFFF!important;
+            }
+        }
+    }
+
+    .mpHomeIcon {
+        .x-panel-body {
+            background:#000000 theme-image($theme-name, 'marketplace/shoppebg.png') repeat 0 0;
+        }
+    }
+
+    .mpMainPanel {
+        .x-btn {
+            .searchBtnIcon {
+                width: 15px!important;
+                height: 15px!important;
+                background-position:0 -270px!important;
+                background-image: theme-image($theme-name, 'tools/tool-sprites.gif')!important;
+            }
+        }
+        .x-toolbar {
+            //@include owf-background-gradient($toolbar-theme); 
+            border: none;
+            .x-toolbar-text {
+                color: getHighContrastColor(nth($toolbar-theme, length($toolbar-theme))) !important;
+            }
+        }
+    }
+
+    .mp-specifications-panel, .mp-required-panel {
+        @include owf-panel;
+        border: 1px solid adjustColorForBackground(#3C5D7A);
+
+        .x-toolbar {
+            border-top: 1px solid adjustColorForBackground(#3C5D7A);
+        }
+
+        .x-panel-header {
+            border-style: none;
+        }
+
+        .x-panel-body {
+            border-style: none;
+        }
+
+    }
+
+    .mp-specifications-panel .x-panel-body {
+        padding: 3px;
+        border-top: 1px solid adjustColorForBackground(#3C5D7A);
+    }
+
+    .category-tree {
+        font-family: Arial, Helvetica, sans-serif;
+        color: #FFFFFF;
+        padding-left: 10px;
+        padding-top: 10px;
+    }
+
+    .mpNavigation {
+        border: 1px solid #8CAFC9 !important;
+    }
+    .mpShoppeIcon {
+        width: 150px;
+        padding-top: 15px;
+    }
+    .market-icon {
+        position: relative;
+        left: 59px;
+        padding-bottom: 5px;
+    }
+    .market-text {
+        color: #FFFFFF;
+        font-size: ceil($owf-font-size * 1.5);
+        text-align: center;
+    }
+    .mpSearchResults {
+        color: getHighContrastColor($owf-window-background-color);
+    }
+    .mpSearchResults .thumb{
+        padding:3px;
+    }
+    .mpSearchResults .thumb img{
+        height: 49px;
+        width: 48px;
+    }
+    .mpSearchResults .thumb-wrap{
+        float: left;
+        margin: 4px;
+        margin-right: 0;
+    }
+    .mpSearchResults .x-view-selected .thumb{
+        background:#8db2e3;
+    }
+    .mpWidgetDetailPage{
+        padding:5px;	
+
+        .mpDetailInfo, .detail-description, .detail-categories, .detail-specifications {
+            color: getHighContrastColor($owf-window-background-color);
+        }
+
+        .detail-specifications-table {
+            width: 99%; //would be 100 except for wierd IE bug where 100% makes it much larger
+        }
+    }
+    .mpDetailIcon {
+        margin: 4px;
+    }
+    .mpDetailIcon .detail-icon img{
+        height: 100px;
+        width: 100px;
+    }
+    .mpDetailInfo .detail-categories{
+        float: left;
+    }
+    .detail-categories {
+        padding-bottom: 10px;
+    }
+    .detail-icon {
+        position: relative;
+        left: -3px;
+    }
+    .detail-author-label, .detail-version, .detail-category-header, .detail-specification-header {
+        font-weight: bold;
+        //color: #575757;
+        font-size: ceil($owf-font-size * 1.2);
+    }
+    .detail-author {
+        font-size: ceil($owf-font-size * 1.1);
+        padding-top: 2px;
+        //color: #777777;
+    }
+    .detail-version {
+        padding-left: 25px;
+    }
+    .detail-category-link, .return-search-link {
+        color: adjustColorForBackground(#1A6CB5);
+    }
+    .return-search-link {
+        padding-bottom: 10px;
+    }
+    .detail-add-button {
+        margin-left: auto;
+        margin-right: auto;
+        cursor: pointer;
+        padding-top: 2px;
+    }
+    .detail-added-text {
+        font-size: ($owf-font-size * 1.2); //!important
+        //color: #777777;
+    }
+    .detail-add-button-text {
+        position: relative;
+        top: -3px;
+        font-size: ceil($owf-font-size * 1.2) !important;
+        color: adjustColorForBackground(#1A6CB5);
+        text-decoration: underline;
+    }
+    .detail-category-link {
+        font-size: ceil($owf-font-size * 1.2);
+        font-family: Arial;
+    }
+    .detail-description {
+        font-size: ceil($owf-font-size * 1.1);
+        color: #000000;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .detail-specifications {
+        font-size: ceil($owf-font-size * 1.1);
+        //color: #777777;
+    }
+    .detail-specifications-row {
+        padding-bottom: 5px;
+        padding-top: 5px;
+    }
+    .detail-title {
+        color: adjustColorForBackground(#3C5D7A);
+        font-weight: bold;
+        font-size: ceil($owf-font-size * 2);
+    }
+    .detail-specifications-title {
+        font-size: ceil($owf-font-size * 1.5);
+    }
+    .detail-specifications-screenshot img{
+        height: 100px;
+        width: 100px;
+    }
+    .category-header {
+        font-size: ceil($owf-font-size * 1.1);
+        font-weight: bold;
+    }
+    .category-selectable, .category-all-selectable {
+        padding-left: 10px;
+        font-size: $owf-font-size;
+    }
+    .category-selected {
+        font-size: ceil($owf-font-size * 1.1);
+        font-weight: bold;
+        text-decoration: none !important;
+        cursor: default !important;
+        color: #F1D36D;
+    }
+    .navigation-panel {
+        background-color: #537D9E;
+    }
+    .detail-selectable, .category-selectable, .category-all-selectable {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    .tooltip-title {
+        font-weight: bold;
+    }
+    .mpDependencies {
+        padding-top: 10px;
+    }
+
+    .requiredListingsVersion {
+        color: adjustColorForBackground(#808080);
+    }
+
+    .x-grid-row-over .requiredListingsVersion{
+        color: adjustColorForBackground(#808080, $owf-grid-row-cell-over-background-color);
+    }
+
+    .mpMsgWindow {
+        margin: 4px;
+
+        .mpParentListing {
+            .parent-icon img {
+                height: 50px;
+                width: 50px;
+            }
+            .parent-title {
+                color: adjustColorForBackground(#3C5D7A);
+                font-weight: bold;
+                font-size: ceil($owf-font-size * 1.8);
+            }
+            .parent-text {
+                font-size: ceil($owf-font-size * 1.1);
+                color: getHighContrastColor($owf-window-background-color);
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+        }    
+
+        .mpMsgWindowProgress {
+            padding: 5px;
+        }
+
+        .mpRequiredListings {
+            //background-color: #FFFFFF;
+            height: 15em;
+            overflow: auto;
+            margin: 0 10px 0;
+
+            border: 1px solid getHighContrastColor($owf-window-background-color);
+
+            .mpDetailSummary {
+                background-color: adjustColorForBackground(#D3D3D3, $reversed: true);
+            }
+
+            .striped-row {
+                background-color: adjustColorForBackground(#D3D3D3);
+            }
+            .detail-title {
+                color: #3C5D7A;
+                font-weight: bold;
+                font-size: ceil($owf-font-size * 1.8);
+            }
+            .detail-icon {
+                position: relative;
+                left: -3px;
+                margin: 4px;
+
+                img {
+                    height: 75px;
+                    width: 75px;
+                    margin-right: 10px;
+                }
+            }
+            .detail-author-label, .detail-version, .detail-organization-label {
+                font-weight: bold;
+                //color: #575757;
+                font-size: ceil($owf-font-size * 1.2);
+                padding: 0px;
+            }
+            .detail-author, .detail-organization {
+                font-size: ceil($owf-font-size * 1.1);
+                padding-top: 2px;
+                //color: #777777;
+            }
+            .detail-modified-label, .detail-released-label {
+                font-size: ceil($owf-font-size * 1.1);
+                font-weight: bold;
+                //color: #777777;
+            }
+            .detail-modified, .detail-released {
+                font-size: ceil($owf-font-size * 1.1);
+                padding-top: 2px;
+                //color: #777777;
+            }
+        }
+    }
+}

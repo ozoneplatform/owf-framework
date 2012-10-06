@@ -1,0 +1,69 @@
+/*
+ * The base color for buttons. Defaults to being derived from the owf-base color, but
+ * can be overriden to be anything
+ */
+$owf-button-base-color: adjust-color($owf-base-color, $saturation: 10%) !default;
+$owf-button-small-icon-size: 16px;
+$owf-button-medium-icon-size: 24px;
+$owf-button-large-icon-size: 32px;
+
+$owf-button-border-radius: 2px !default;
+
+@if $owf-font-size >= 17px and $owf-font-size < 19px {
+    $owf-button-small-icon-size : 17px;
+}
+@else if $owf-font-size >= 19px and $owf-font-size < 21px {
+    $owf-button-small-icon-size : 21px;
+}
+@else if $owf-font-size >= 21px {
+    $owf-button-small-icon-size : 24px;
+}
+
+/*
+ * Buttons themes are 3-element lists.  This theme is applied to buttons that are not pressed
+ * or hovered over
+ */
+$default_button_theme: (	
+    /*
+     *  background gradient. Can have one or more colors optionally 
+     * including gradient stop percentages
+     */
+    (adjust-color($owf-button-base-color, $lightness: 50%), $owf-button-base-color),
+     
+    getHighContrastColor($owf-button-base-color),	// text color
+    getHighContrastColor($owf-button-base-color)	// border color
+) !default;
+
+/*
+ * Theme for buttons that are currently being hovered over
+ */
+$over_button_theme: (
+    ((adjust-color($owf-alt-base-color, $lightness: 20%)), $owf-alt-base-color),	// background gradient
+    getHighContrastColor($owf-alt-base-color),	// text color
+    getHighContrastColor($owf-alt-base-color)	// border color
+) !default;
+
+
+/*
+ * Theme for buttons that are depressed
+ */
+$pressed_button_theme: (
+    ($owf-alt-base-color, (adjust-color($owf-alt-base-color, $lightness: 20%))),	// background gradient
+    getHighContrastColor($owf-alt-base-color),	// text color
+    getHighContrastColor($owf-alt-base-color)	// border color
+) !default;
+
+
+/*
+ * Theme for buttons that are disabled
+ */
+$disabled_button_theme: (
+    (adjust-color($owf-button-base-color, $saturation: -75%, $lightness: 10%), adjust-color($owf-button-base-color, $saturation: -50%, $lightness: 10%)),	// background gradient
+    getHighContrastColor($owf-button-base-color),	// text color
+    getHighContrastColor($owf-button-base-color)	// border color
+) !default;
+
+/*
+ * Theme for buttons that are focused
+ */
+$focused_button_theme: $over_button_theme !default;

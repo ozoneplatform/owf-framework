@@ -1,0 +1,92 @@
+<html>
+    <head>
+        <title>Stock Watcher</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <link type="text/css" rel="stylesheet" href="StockWatcher.css">
+        <link type="text/css" rel="stylesheet" href="css/dragAndDrop.css">
+
+        <script type="text/javascript" language="javascript" src="https://localhost:8443/owf/js-min/owf-widget-debug.js"></script>
+
+
+		<script type="text/javascript" language="javascript">
+			//OWF.relayFile = 'StockWatcher/js/eventing/rpc_relay.uncompressed.html';
+            owfdojo.config.dojoBlankHtmlUrl = './js/dojo-1.5.0-windowname-only/dojo/resources/blank.html';
+            
+			var NAMESPACE = 'ozone.example.gwt.stockwatcher';
+			var PATH = 'STOCK_LIST';
+            
+            function shoutInit() { }
+
+			function shout(message) {
+				var channel = 'stockwatcher';
+				OWF.Eventing.publish(channel, message);
+			}
+
+			function onDeleteSuccess(result) {
+			};
+
+			function onDeleteFailure(err) {
+				//OWF.Util.ErrorDlg.show("Deleting preferences failed: " + err);
+			};
+
+			function onSetSuccess(result) {
+			};
+
+			function onSetFailure(err) {
+				//OWF.Util.ErrorDlg.show("Saving preferences failed: " + err);
+			};
+
+			function persist(arr) {
+
+				OWF.Preferences.deleteUserPreference({
+					namespace:NAMESPACE,
+					name:PATH,
+					onSuccess:onDeleteSuccess,
+					onFailure:onDeleteFailure
+                });
+
+				OWF.Preferences.setUserPreference({
+					namespace:NAMESPACE,
+					name:PATH,
+					value:arr,
+					onSuccess:onSetSuccess,
+					onFailure:onSetFailure
+                });
+
+			};
+			
+			var owf_gwt_example = {
+                onSuccess        :  null, //loaded by StockWatcher
+			    fetch            : function(sw) {
+		            OWF.Preferences.getUserPreference({
+                        namespace:NAMESPACE,
+                        name:PATH,
+                        onSuccess:function(result) { //onSuccess callback
+                                owf_gwt_example.onSuccess(sw, result);
+                        },
+                        onFailure:function(error,status) { //onFailure
+                        	if (status != 404) OWF.Util.ErrorDlg.show("Got an error getting preferences! Status Code: " + status + " . Error message: " + error);
+                        }
+                    });
+			    }
+			};
+		</script>
+		
+		<!--                                            -->
+        <!-- This script is required bootstrap stuff.   -->
+        <!--                                            -->
+        <script type="text/javascript" language="javascript" src="stockwatcher/stockwatcher.nocache.js"></script>
+    </head>
+
+<!--                                           -->
+<!-- The body can have arbitrary html, or      -->
+<!-- you can leave the body empty if you want  -->
+<!-- to create a completely dynamic ui         -->
+<!--                                           -->
+    <body>
+		<img src="images/GoogleCode.png" />
+		<span style="font-size: 2em; font-weight: bold; color: #777">StockWatcher</span>
+		<div id="stockList"></div>
+		<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position: absolute; width: 0; height: 0; border: 0"></iframe>
+	</body>
+</html>

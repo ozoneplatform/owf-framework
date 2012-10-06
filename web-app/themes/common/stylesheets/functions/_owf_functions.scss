@@ -1,0 +1,197 @@
+﻿/**
+ * Functions for getting components of owf theme structures
+ */
+
+//widget theme indexes
+$WIDGET_BASE_COLOR_INDEX: 1;
+$WIDGET_GRADIENT_INDEX: 2;
+$WIDGET_TEXT_COLOR_INDEX: 3;
+$WIDGET_OUTER_BORDER_COLOR: 4;
+$WIDGET_BODY_BORDER_COLOR: 5;
+
+//button theme indexes
+$BUTTON_GRADIENT_INDEX: 1;
+$BUTTON_TEXT_COLOR_INDEX: 2;
+$BUTTON_BORDER_COLOR_INDEX: 3;
+
+//grid theme indexes
+$GRID_BACKGROUND_COLOR_INDEX: 1;
+$GRID_TEXT_COLOR_INDEX: 2;
+$GRID_BACKGROUND_GRADIENT_INDEX: 3;
+
+//dropdown theme indexes
+$DD_BACKGROUND_COLOR_INDEX: 1;
+$DD_TEXT_COLOR_INDEX: 2;
+$DD_BORDER_COLOR_INDEX: 3;
+$DD_BACKGROUND_GRADIENT_INDEX: 4;
+
+// --wiget theme functions-----------------------------------
+
+@function getWidgetBaseColor($widget_theme) {
+    @return nth($widget_theme, $WIDGET_BASE_COLOR_INDEX);
+}
+
+@function getWidgetGradientColors($widget_theme) {
+    @return nth($widget_theme, $WIDGET_GRADIENT_INDEX);
+}
+
+@function getWidgetTextColor($widget_theme) {
+    @return nth($widget_theme, $WIDGET_TEXT_COLOR_INDEX);
+}
+
+@function getWidgetOuterBorderColor($widget_theme) {
+    @return nth($widget_theme, $WIDGET_OUTER_BORDER_COLOR);
+}
+
+@function getWidgetBodyBorderColor($widget_theme) {
+    @return nth($widget_theme, $WIDGET_BODY_BORDER_COLOR);
+}
+
+// --button theme functions-----------------------------------
+
+@function getButtonGradient($button_theme) {
+    @return nth($button_theme, $BUTTON_GRADIENT_INDEX);
+}
+
+@function getButtonTextColor($button_theme) {
+    @return nth($button_theme, $BUTTON_TEXT_COLOR_INDEX);
+}
+
+@function getButtonBorderColor($button_theme) {
+    @return nth($button_theme, $BUTTON_BORDER_COLOR_INDEX);
+}
+
+// --grid theme functions-----------------------------------
+@function getGridTextColor($grid_theme) {
+    @return nth($grid_theme, $GRID_TEXT_COLOR_INDEX);
+}
+
+@function getGridBackgroundColor($grid_theme) {
+    @return nth($grid_theme, $GRID_BACKGROUND_COLOR_INDEX);
+}
+
+@function getGridBackgroundGradient($grid_theme) {
+    @if length($grid_theme) < $GRID_BACKGROUND_GRADIENT_INDEX {
+        @return null;
+    }
+    @return nth($grid_theme, $GRID_BACKGROUND_GRADIENT_INDEX);
+}
+
+// --drop down theme functions-----------------------------------
+
+@function getDDTextColor($dd_theme) {
+    @return nth($dd_theme, $DD_TEXT_COLOR_INDEX);
+}
+
+@function getDDBorderColor($dd_theme) {
+    @return nth($dd_theme, $DD_BORDER_COLOR_INDEX);
+}
+
+@function getDDBackgroundColor($dd_theme) {
+    @return nth($dd_theme, $DD_BACKGROUND_COLOR_INDEX);
+}
+
+@function getDDBackgroundGradient($dd_theme) {
+    @if length($dd_theme) < $DD_BACKGROUND_GRADIENT_INDEX {
+        @return null;
+    }
+    @return nth($dd_theme, $DD_BACKGROUND_GRADIENT_INDEX);
+}
+
+// --utility functions-----------------------------------
+@function getHighContrastColor($color) {
+    @if lightness($color) < 50 {
+        @return white;
+    }
+    @return black;
+}
+
+@function adjustColorForBackground($font-color, 
+                                $background-color: $owf-window-background-color, 
+                                $reversed: false) {
+    $amount: 15%;
+
+    @if getHighContrastColor($background-color) == #FFF {
+        @if $reversed {
+            @return darken($font-color, $amount);
+        }
+        @else {
+            @return lighten($font-color, $amount);
+        }
+    }
+    @else {
+        @if $reversed {
+            @return lighten($font-color, $amount);
+        }
+        @else {
+            @return darken($font-color, $amount);
+        }
+    }
+}
+
+@function lightest($colors) {
+    $i: 1;
+
+    $lightest-color: strip-stop(nth($colors, $i));
+    $lightest-i: $i;
+
+    @each $color in $colors {
+        $stripped: strip-stop($color);
+
+        @if (lightness($stripped) > lightness($lightest-color)) {
+            $lightest-color: $stripped;
+            $lightest-i: $i;
+        }
+
+        $i: $i + 1;
+    }
+
+    @return $lightest-i;
+}
+
+@function darkest($colors) {
+    $i: 1;
+
+    $darkest-color: strip-stop(nth($colors, 1));
+    $darkest-i: $i;
+
+    @each $color in $colors {
+        $stripped: strip-stop($color);
+
+        @if (lightness($stripped) < lightness($darkest-color)) {
+            $darkest-color: $stripped;
+            $darkest-i: $i;
+        }
+
+        $i: $i + 1;
+    }
+
+    @return $darkest-i;
+}
+
+//returns the last color in a gradient
+@function getBaseFromGradient($gradient) {
+    @return strip-stop(nth($gradient, length($gradient)));
+}
+
+// exponent support
+@function exponent($base, $exponent) {
+  // reset value
+  $value: $base;
+
+  // positive intergers get multiplied
+  @if $exponent > 1 {
+    @for $i from 2 through $exponent {
+      $value: $value * $base
+    }
+  }
+  // negitive intergers get divided. A number divided by itself is 1
+  @if $exponent < 1 {
+    @for $i from 0 through -$exponent {
+      $value: $value / $base
+    }
+  }
+  
+  // return the last value written
+  @return $value;
+}

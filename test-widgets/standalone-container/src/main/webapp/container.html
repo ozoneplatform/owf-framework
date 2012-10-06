@@ -1,0 +1,39 @@
+<html>
+<head>
+    <script type='text/javascript' src='js-min/owf-lite-container-with-dojo-debug.js'></script>
+    <script type='text/javascript'>
+
+        function getWidgetUrl(widgetName, useRemote) {
+            var hostname;
+            if(useRemote) {
+                hostname = "127.0.0.1"; //assume test being run on localhost, so 127.0.0.1 will be "remote"
+            } else {
+                hostname = window.location.hostname;
+            }
+            var port = window.location.port != '' ? ':' + window.location.port : '';
+            return window.location.protocol + "//" + hostname + port + "/standalone-container/" + widgetName;
+        }
+
+        owfdojo.addOnLoad(function() {
+            Ozone.eventing.initializeContainer();
+
+
+            //Setup two widgets that will intercommunicate in tests
+            var widget1 = Ozone.eventing.createWidget( getWidgetUrl("widget1.html", true), "widget1", "one",300,300);
+            var widget2 = Ozone.eventing.createWidget( getWidgetUrl("widget2.html", true), "widget2", "two",300,300);
+
+        });
+    </script>
+
+</head>
+<body>
+<div style="border: 2px solid black;">
+    <h>Container</h>
+    <div id="message"></div>
+    <div id="one" style="border: 2px solid black;">
+    </div>
+    <div id="two" style="border: 2px solid black;">
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="html-widget" default="zip" basedir=".">
+		
+	<target name="zip">
+        <copy todir="${basedir}/src/main/webapp/js" overwrite="true">
+            <fileset dir="../../web-app/js-min">
+                <include name="owf-widget-*.js" />
+            </fileset>
+        </copy>
+        <delete file="html-widget.zip" failonerror="false" />
+		<zip destfile="html-widget.zip" basedir="${basedir}"
+		excludes="pom.xml,zip-assembly.xml,**/target/**,owf-build.xml,*.zip" />
+	</target>
+	
+</project>

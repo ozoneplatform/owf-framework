@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="2.2">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Edit Widget Preferences Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments">This test plan edits a user&apos;s widget preferences, such as tags and visibility.</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ConfigTestElement guiclass="SimpleConfigGui" testclass="ConfigTestElement" testname="Instructions" enabled="true">
+        <stringProp name="TestPlan.comments"> To run these tests:
+1. Ensure your security plugin knows about your test users.  There is a users.propeties file under test/load/jmeter for this. If running from a bundle, 
+    place it in tomcat&apos;s lib directory (overriding any existing file).
+2. Inspect the &apos;Test Variables&apos; node for test parameters; number of users, number of repetitions, etc.
+    Pay attention here to where your server is hosted, and where CAS (required) is hosted; these may be the same
+3. Examine HTTP Request Defaults for the protocol, hostname, and port of your test server; this gets pre-pended on 
+    every HTTP request sent during the tests
+4. [Optional] Disable portions of the test by selecting nodes and right-clicking
+5. [Optional] For readability, collapse all Thread Groups (User Threads, Admin Threads, etc.) 
+6. [Optional] Select the &apos;View Results Tree&apos; or &apos;Aggregate Report&apos; results at the bottom of test
+7. Clear previous run results using Run-&gt;Clear All, or the double broom button
+8. Execute using menu choice Run-&gt;Start , or the Play button
+
+**To run from the command line and override the properties in Test Variables, see the comment in Test Variables.</stringProp>
+      </ConfigTestElement>
+      <hashTree/>
+      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Test Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="loopsPerUser" elementType="Argument">
+            <stringProp name="Argument.name">loopsPerUser</stringProp>
+            <stringProp name="Argument.value">${__P(loopsPerUser, 10)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="numUsers" elementType="Argument">
+            <stringProp name="Argument.name">numUsers</stringProp>
+            <stringProp name="Argument.value">${__P(numUsers, 100)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.desc">Should be 500 or less to ensure successful login.</stringProp>
+          </elementProp>
+          <elementProp name="threadTimeToFail" elementType="Argument">
+            <stringProp name="Argument.name">threadTimeToFail</stringProp>
+            <stringProp name="Argument.value">${__P(threadTimeToFail, 1200)}</stringProp>
+            <stringProp name="Argument.desc">The amount of time in milliseconds to put into the duration assertion of each thread. If the thread takes longer, it will fail.</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="approxTimePerRequest" elementType="Argument">
+            <stringProp name="Argument.name">approxTimePerRequest</stringProp>
+            <stringProp name="Argument.value">${__P(approxTimePerRequest, 30)}</stringProp>
+            <stringProp name="Argument.desc">Approximate amount to time to allow each request, used in Gaussian Timer.</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="versionTesting" elementType="Argument">
+            <stringProp name="Argument.name">versionTesting</stringProp>
+            <stringProp name="Argument.value">${__P(versionTesting, 5.0.0-ALPHA-SPRINT2-v1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="hostName" elementType="Argument">
+            <stringProp name="Argument.name">hostName</stringProp>
+            <stringProp name="Argument.value">${__P(hostName, perfowfapp01.goss.owfgoss.org)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.desc">OWF Perf Server: perfowfapp01.goss.owfgoss.org</stringProp>
+          </elementProp>
+          <elementProp name="hostPort" elementType="Argument">
+            <stringProp name="Argument.name">hostPort</stringProp>
+            <stringProp name="Argument.value">${__P(hostPort, 8443)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="casHost" elementType="Argument">
+            <stringProp name="Argument.name">casHost</stringProp>
+            <stringProp name="Argument.value">${__P(casHost, perfowfapp01.goss.owfgoss.org)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.desc">OWF Perf Server: perfowfapp01.goss.owfgoss.org</stringProp>
+          </elementProp>
+          <elementProp name="casPort" elementType="Argument">
+            <stringProp name="Argument.name">casPort</stringProp>
+            <stringProp name="Argument.value">${__P(casPort, 8443)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="debugEnabled" elementType="Argument">
+            <stringProp name="Argument.name">debugEnabled</stringProp>
+            <stringProp name="Argument.value">${__P(debugEnabled, false)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="resultsFileBase" elementType="Argument">
+            <stringProp name="Argument.name">resultsFileBase</stringProp>
+            <stringProp name="Argument.value">~/${__P(resultsDir,test-reports/jtl)}/${__javaScript(&apos;${__TestPlanName()}&apos;.replace(&apos;.jmx&apos;\, &apos;&apos;))}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+        <stringProp name="TestPlan.comments">To override these in the command line use the format -J[variableName]=value.
+
+If they are not set via the command line, they will use their default value which is the second parameter, following the variable name.
+
+Command line example:
+jmeter -n -t perf_get_dashboards.jmx -l results.txt -JloopsPerUser=3 -JapproxTimePerRequest=500 -JnumUser=100 -JthreadTimeToFail=1000</stringProp>
+      </Arguments>
+      <hashTree/>
+      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+          <collectionProp name="Arguments.arguments"/>
+        </elementProp>
+        <stringProp name="HTTPSampler.domain">${hostName}</stringProp>
+        <stringProp name="HTTPSampler.port">${hostPort}</stringProp>
+        <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+        <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        <stringProp name="HTTPSampler.protocol">https</stringProp>
+        <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+        <stringProp name="HTTPSampler.path"></stringProp>
+        <stringProp name="HTTPSampler.concurrentPool">4</stringProp>
+      </ConfigTestElement>
+      <hashTree/>
+      <AuthManager guiclass="AuthPanel" testclass="AuthManager" testname="HTTP Authorization Manager" enabled="true">
+        <collectionProp name="AuthManager.auth_list">
+          <elementProp name="" elementType="Authorization">
+            <stringProp name="Authorization.url"></stringProp>
+            <stringProp name="Authorization.username">${userName}</stringProp>
+            <stringProp name="Authorization.password">password</stringProp>
+            <stringProp name="Authorization.domain"></stringProp>
+            <stringProp name="Authorization.realm"></stringProp>
+          </elementProp>
+        </collectionProp>
+      </AuthManager>
+      <hashTree/>
+      <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
+        <collectionProp name="CookieManager.cookies"/>
+        <boolProp name="CookieManager.clearEachIteration">false</boolProp>
+        <stringProp name="CookieManager.policy">rfc2109</stringProp>
+      </CookieManager>
+      <hashTree/>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="User Threads" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${numUsers}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">0</stringProp>
+        <longProp name="ThreadGroup.start_time">1290786324000</longProp>
+        <longProp name="ThreadGroup.end_time">1290786324000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <stringProp name="TestPlan.comments">Ramp-Up set to 0 because the Login scripts handle their throughput automatically.</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+          <collectionProp name="UserParameters.names">
+            <stringProp name="-266534175">userRole</stringProp>
+          </collectionProp>
+          <collectionProp name="UserParameters.thread_values">
+            <collectionProp name="115842275">
+              <stringProp name="2645995">User</stringProp>
+            </collectionProp>
+          </collectionProp>
+          <boolProp name="UserParameters.per_iteration">false</boolProp>
+          <stringProp name="TestPlan.comments">Sets parameters specific to a User thread (as opposed to an Admin thread).
+
+Variable Explanations:
+1. userRole: Tells the login script what type of usernames to generate. (e.g. testUser1 or testAdmin1)</stringProp>
+        </UserParameters>
+        <hashTree/>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Login" enabled="true"/>
+        <hashTree>
+          <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Include Login Script" enabled="true">
+            <stringProp name="TestPlan.comments">Includes fragments/login.jmx, which handles the actual login for each user.</stringProp>
+            <stringProp name="IncludeController.includepath">fragments/login.jmx</stringProp>
+          </IncludeController>
+          <hashTree/>
+        </hashTree>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Synchronize Users" enabled="true"/>
+        <hashTree>
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Test Action" enabled="true">
+            <intProp name="ActionProcessor.action">1</intProp>
+            <intProp name="ActionProcessor.target">0</intProp>
+            <stringProp name="ActionProcessor.duration">0</stringProp>
+          </TestAction>
+          <hashTree/>
+          <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer" enabled="true">
+            <stringProp name="groupSize">${__V(num${userRole}s)}</stringProp>
+          </SyncTimer>
+          <hashTree/>
+        </hashTree>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Get Widgets Set Up" enabled="true"/>
+        <hashTree>
+          <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Include List Widgets Component" enabled="true">
+            <stringProp name="IncludeController.includepath">components/user/list_widgets.jmx</stringProp>
+            <stringProp name="TestPlan.comments">Required to get the user&apos;s widgets.</stringProp>
+          </IncludeController>
+          <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+            <stringProp name="ConstantTimer.delay">${__jexl2(${__threadNum()} * 100)}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Synchronize Users" enabled="true"/>
+        <hashTree>
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Test Action" enabled="true">
+            <intProp name="ActionProcessor.action">1</intProp>
+            <intProp name="ActionProcessor.target">0</intProp>
+            <stringProp name="ActionProcessor.duration">0</stringProp>
+          </TestAction>
+          <hashTree/>
+          <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer" enabled="true">
+            <stringProp name="groupSize">${__V(num${userRole}s)}</stringProp>
+          </SyncTimer>
+          <hashTree/>
+        </hashTree>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="widgetsToUpdate Array Set Up Loop" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">${loopsPerUser}</stringProp>
+        </LoopController>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter" enabled="true">
+            <stringProp name="CounterConfig.start">1</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">counter1</stringProp>
+            <stringProp name="CounterConfig.format"></stringProp>
+            <boolProp name="CounterConfig.per_user">true</boolProp>
+            <boolProp name="CounterConfig.reset_on_tg_iteration">true</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Test Action" enabled="true">
+            <intProp name="ActionProcessor.action">1</intProp>
+            <intProp name="ActionProcessor.target">0</intProp>
+            <stringProp name="ActionProcessor.duration">0</stringProp>
+          </TestAction>
+          <hashTree>
+            <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+              <collectionProp name="UserParameters.names">
+                <stringProp name="-372020810">counter2</stringProp>
+                <stringProp name="607400741">widgetsToUpdate_${counter1}</stringProp>
+              </collectionProp>
+              <collectionProp name="UserParameters.thread_values">
+                <collectionProp name="2663335">
+                  <stringProp name="49">1</stringProp>
+                  <stringProp name="0"></stringProp>
+                </collectionProp>
+              </collectionProp>
+              <boolProp name="UserParameters.per_iteration">false</boolProp>
+            </UserParameters>
+            <hashTree/>
+          </hashTree>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Set Up widgetsToUpdate Loop" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="LoopController.loops">${widgetGuid_matchNr}</stringProp>
+          </LoopController>
+          <hashTree>
+            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Set Up Parameters for Edit Widgets" enabled="true">
+              <intProp name="ActionProcessor.action">1</intProp>
+              <intProp name="ActionProcessor.target">0</intProp>
+              <stringProp name="ActionProcessor.duration">0</stringProp>
+            </TestAction>
+            <hashTree>
+              <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+                <collectionProp name="UserParameters.names">
+                  <stringProp name="-827553833">randomTag</stringProp>
+                </collectionProp>
+                <collectionProp name="UserParameters.thread_values">
+                  <collectionProp name="-28989564">
+                    <stringProp name="117642219">${__RandomString(${__Random(1,5)},1234567890abcdefghijklmnopqrstuvwxyz)}</stringProp>
+                  </collectionProp>
+                </collectionProp>
+                <boolProp name="UserParameters.per_iteration">false</boolProp>
+              </UserParameters>
+              <hashTree/>
+              <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="BSF PreProcessor To Update All Widgets" enabled="false">
+                <stringProp name="scriptLanguage">javascript</stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="script">var widgetsToUpdate = vars.get(&apos;widgetsToUpdate_&apos; + vars.get(&apos;counter1&apos;));
+var counter = parseInt(vars.get(&apos;counter2&apos;));
+
+if(counter == 1) {
+    widgetsToUpdate = &apos;[&apos;;
+} else {
+    widgetsToUpdate += &apos;,&apos;;
+}
+
+//Get a random boolean
+function getRandomBoolean() {
+    if(Math.round(Math.random()) === 0) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+var widgetGuid = vars.get(&apos;widgetGuid_&apos; + counter);
+
+//Random whether it gets a tag or not
+if(getRandomBoolean()) {
+    widgetsToUpdate += &apos;{&quot;guid&quot;:&quot;&apos; + widgetGuid + &apos;&quot;, &quot;visible&quot;:&apos; + getRandomBoolean().toString() + &apos;,&quot;tags&quot;:[{&quot;name&quot;:&quot;&apos; + vars.get(&apos;randomTag&apos;) + &apos;&quot;,&quot;visible&quot;:true,&quot;position&quot;:-1,&quot;editable&quot;:true}]}&apos;;
+} else {
+    widgetsToUpdate += &apos;{&quot;guid&quot;:&quot;&apos; + widgetGuid + &apos;&quot;, &quot;visible&quot;:&apos; + getRandomBoolean() + &apos;,&quot;tags&quot;:[]}&apos;;
+}
+
+//Last widget guid, close the string
+if(counter == vars.get(&apos;widgetGuid_matchNr&apos;)) {
+    widgetsToUpdate += &apos;]&apos;;
+}
+
+vars.put(&apos;widgetsToUpdate_&apos; + vars.get(&apos;counter1&apos;), widgetsToUpdate);
+var counter = vars.put(&apos;counter2&apos;, counter + 1);</stringProp>
+              </BSFPreProcessor>
+              <hashTree/>
+              <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="BSF PreProcessor To Update One Widget" enabled="true">
+                <stringProp name="scriptLanguage">javascript</stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="script">var widgetsToUpdate = vars.get(&apos;widgetsToUpdate_&apos; + vars.get(&apos;counter1&apos;));
+var counter = parseInt(vars.get(&apos;counter2&apos;));
+
+widgetsToUpdate = &apos;[&apos;;
+
+//Get a random boolean
+function getRandomBoolean() {
+    if(Math.round(Math.random()) === 0) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+//Select a random widget guid
+var widgetGuid = vars.get(&apos;widgetGuid_&apos; + Math.floor(Math.random()*parseInt(vars.get(&apos;widgetGuid_matchNr&apos;)) + 1));
+
+//Random whether it gets a tag or not
+if(getRandomBoolean()) {
+    widgetsToUpdate += &apos;{&quot;guid&quot;:&quot;&apos; + widgetGuid + &apos;&quot;, &quot;visible&quot;:&apos; + getRandomBoolean().toString() + &apos;,&quot;tags&quot;:[{&quot;name&quot;:&quot;&apos; + vars.get(&apos;randomTag&apos;) + &apos;&quot;,&quot;visible&quot;:true,&quot;position&quot;:-1,&quot;editable&quot;:true}]}&apos;;
+} else {
+    widgetsToUpdate += &apos;{&quot;guid&quot;:&quot;&apos; + widgetGuid + &apos;&quot;, &quot;visible&quot;:&apos; + getRandomBoolean() + &apos;,&quot;tags&quot;:[]}&apos;;
+}
+
+widgetsToUpdate += &apos;]&apos;;
+
+vars.put(&apos;widgetsToUpdate_&apos; + vars.get(&apos;counter1&apos;), widgetsToUpdate);
+var counter = vars.put(&apos;counter2&apos;, counter + 1);</stringProp>
+              </BSFPreProcessor>
+              <hashTree/>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Synchronize Users" enabled="true"/>
+        <hashTree>
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Test Action" enabled="true">
+            <intProp name="ActionProcessor.action">1</intProp>
+            <intProp name="ActionProcessor.target">0</intProp>
+            <stringProp name="ActionProcessor.duration">0</stringProp>
+          </TestAction>
+          <hashTree/>
+          <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer" enabled="true">
+            <stringProp name="groupSize">${__V(num${userRole}s)}</stringProp>
+          </SyncTimer>
+          <hashTree/>
+        </hashTree>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Edit Widget Preferences Loop" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">${loopsPerUser}</stringProp>
+        </LoopController>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter" enabled="true">
+            <stringProp name="CounterConfig.start">1</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">counter</stringProp>
+            <stringProp name="CounterConfig.format"></stringProp>
+            <boolProp name="CounterConfig.per_user">true</boolProp>
+            <boolProp name="CounterConfig.reset_on_tg_iteration">true</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+            <collectionProp name="UserParameters.names">
+              <stringProp name="1408851699">widgetsToUpdate</stringProp>
+            </collectionProp>
+            <collectionProp name="UserParameters.thread_values">
+              <collectionProp name="1597947721">
+                <stringProp name="1815711073">${__V(widgetsToUpdate_${counter})}</stringProp>
+              </collectionProp>
+            </collectionProp>
+            <boolProp name="UserParameters.per_iteration">false</boolProp>
+          </UserParameters>
+          <hashTree/>
+          <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Include Send Banner State Fragment" enabled="true">
+            <stringProp name="IncludeController.includepath">components/user/update_widget_preferences.jmx</stringProp>
+          </IncludeController>
+          <hashTree/>
+          <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
+            <stringProp name="ConstantTimer.delay">0</stringProp>
+            <stringProp name="RandomTimer.range">${__jexl2(${__V(num${userRole}s)} * ${approxTimePerRequest})}</stringProp>
+          </GaussianRandomTimer>
+          <hashTree/>
+          <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>true</xml>
+                <fieldNames>false</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+              </value>
+            </objProp>
+            <stringProp name="filename">${resultsFileBase}-user_send_banner_state.jtl</stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Logout" enabled="true"/>
+        <hashTree>
+          <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Include Logout Script" enabled="true">
+            <stringProp name="TestPlan.comments">Includes fragments/logout.jmx, which handles the logout of each user.</stringProp>
+            <stringProp name="IncludeController.includepath">fragments/logout.jmx</stringProp>
+          </IncludeController>
+          <hashTree/>
+          <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer" enabled="true">
+            <stringProp name="groupSize">${__V(num${userRole}s)}</stringProp>
+          </SyncTimer>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>true</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>true</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

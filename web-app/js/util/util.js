@@ -1,0 +1,473 @@
+/**
+ * @ignore
+ */
+var Ozone = Ozone || {};
+Ozone.util = Ozone.util || {};
+Ozone.util.formField = Ozone.util.formField || {};
+Ozone.config = Ozone.config || {};
+
+/**
+ * @private
+ * 
+ * @description This method is useful if you want to see if a specfic url is the same
+ * as the local url.  Can be used to test if AJAX can be used.  If url
+ * is not a URL, it's assumed to be a relative filename, so this function
+ * returns true.
+ *
+ * @param {String} url String that you want to check to see if its local.
+ *
+ * @returns Boolean
+ *
+ * @throws "Not a valid URL" if the parameter is not a valid url
+ */
+Ozone.util.isUrlLocal = function(url) {
+
+    var webContextPath = Ozone.util.contextPath();
+
+    //append last '/' this value should never be null
+    if (webContextPath != '' && webContextPath != null) {
+        webContextPath += '/';
+    }
+
+    //this regex matches urls against the configured webcontext path https://<contextPath>/.....
+    //only one match is possible since this regex matches from the start of the string
+    var regex = new RegExp("^(https?:)//([^/:]+):?(.*)" + webContextPath);
+    var server = url.match(regex);
+
+    //check if this might be a relative url 
+    if (!server) {
+        if (url.match(new RegExp('^https?:\/\/'))) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    var port = window.location.port || ( window.location.protocol === "https:" ? "443" : "80" )
+
+    return window.location.protocol === server[1] && window.location.hostname === server[2] && port === server[3]
+};
+
+/**
+ * @private
+ *
+ * @description This method will convert a string into a json object.  There is a check
+ * done to ensure no unsafe json is included.
+ *
+ * @param {String} str String that represents a json object
+ *
+ * @returns {Object} json object
+ *
+ * @throws Error if parameter is not a string
+ * @throws Error if secure check finds unsafe JSON
+ * @throws Error if there is an issue converting to JSON
+ *
+ * @requires dojox.secure.capability
+ * @requires dojo base
+ */
+Ozone.util.parseJson = function(str) {
+    if (typeof(str) === 'string') {
+        owfdojox.secure.capability.validate(str,[],{}); // will error if there is unsafe JSON
+        var x = owfdojo.fromJson(str);
+        return x;
+    } else {
+        throw "Ozone.util.parseJson expected a string, but didn't get one";
+    }
+};
+
+/**
+ * @private
+ */
+Ozone.util.HTMLEncodeReservedJS = function(str) {
+    return str.replace(/"/g, '&quot;').replace(/'/g, "&#39;");
+};
+
+/**
+ * @private
+ * 
+ * @description Similar to Ext.util.Format.htmlEncode except this method also handles the single quote
+ */
+Ozone.util.HTMLEncode = function(str){
+    return !str ? str : String(str).replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+};
+
+/**
+ * @private
+ *
+ * @description This method returns the current context path by
+ * calling a controller at the server (will not
+ * make the call if it has already been done).
+ * 
+ * @param {Object} o unused
+ *
+ * @returns context path with leading slash
+ *          (ex. "/owf")
+ *
+ * @requires Ext base, dojo
+ */
+Ozone.util.contextPath = function(o) {
+
+    if (Ozone.config.webContextPath == null) {
+        //check window name for the property
+        var configParams = Ozone.util.parseWindowNameData();
+        if (configParams != null) {
+            // launchConfig
+            if (configParams.webContextPath != null) {
+                Ozone.config.webContextPath = configParams.webContextPath;
+            }
+        }
+    }
+
+    // return empty string if a valid context path wasn't found on window.name
+    return Ozone.config.webContextPath || '';
+};
+
+/**
+ * @private
+ * 
+ * @description Checks whether the url context is local or not,
+ * then returns the valid url w/ context.
+ * 
+ * @param {String} value the url
+ * @param {String} validContext valid context
+ *
+ * @returns valid url w/context if necessary, if not local then the url
+ */
+Ozone.util.validUrlContext = function(value, validContext){
+    var containsRelDotPath = (value.indexOf("../") == 0)?true:false;
+    var containsRelPath = (value.indexOf("/") == 0)?true:false;
+    var isLocalUrl = (containsRelPath || containsRelDotPath || (value.indexOf("localhost") == 7) || (value.indexOf("localhost") == 11) || (value.indexOf("127.0.0.1") == 7)) ? true : false;
+    var urlValidContext = value;
+    validContext = ((validContext == undefined) ? Ozone.util.contextPath() : validContext);
+    if((isLocalUrl == true) && (validContext != null)){
+        if(containsRelPath){
+            urlValidContext = String.format("{0}{1}", validContext, value);
+        }else if(containsRelDotPath){
+            var valuePathNoRel = value.substring(3);
+            urlValidContext = String.format("{0}/{1}", validContext, valuePathNoRel);
+        }
+    }
+    return urlValidContext;
+};
+
+/**
+ * @private
+ *
+ * @description This method centralizes the container relay file for
+ * RPC calls.
+ *
+ * @returns relay file path with context
+ */
+Ozone.util.getContainerRelay = function() {
+    return Ozone.util.contextPath() + 
+    '/js/eventing/rpc_relay.uncompressed.html';
+};
+
+/**
+ * @private
+ *
+ * Constructively clears the entire array
+ */
+Ozone.util.parseWindowNameData = function() {
+  var configParams = null;
+  return function() {
+
+    //if already parsed just return the value
+    if (configParams) return configParams;
+
+    //parse out the config
+    try {
+      configParams = Ozone.util.parseJson(
+              window.name
+      );
+      return configParams;
+    }
+    catch (e) {
+      return null;
+    }
+  }
+}();
+
+/**
+ * @private
+ * 
+ * @description This method will convert anything to a string.
+ * There is no check for recursion, so don't do that
+ *
+ * @param {Object} obj object to convert
+ *
+ * @returns string
+ *
+ * @requires dojo base
+ */
+Ozone.util.toString = function(obj) {
+    if (typeof(obj) === 'object') {
+        return owfdojo.toJson(obj);
+    } else {
+        return obj+'';
+    }
+};
+
+/**
+ * @private
+ */
+Ozone.util.formatWindowNameData = function(data) {
+    // this value needs to be not uri encoded
+    // return decodeURIComponent(owfdojo.objectToQuery(data));
+    return Ozone.util.toString(data);
+};
+
+/**
+ * @private
+ *  
+ * Removes the Leading and Trailing Spaces in any ExtJs Form Field
+ */
+Ozone.util.formField.removeLeadingTrailingSpaces = function(thisField){
+    var thisField_noLeadingTrailingSpacesValue = thisField.getValue().replace(new RegExp(Ozone.lang.regexLeadingTailingSpaceChars), '');
+    thisField.setValue(thisField_noLeadingTrailingSpacesValue);
+    return thisField_noLeadingTrailingSpacesValue;
+};
+
+if (!Ozone.util.ModalBox) {
+    Ozone.util.ModalBox = function() {
+        var ab = 'absolute';
+        var n = 'none';
+        var obody = document.getElementsByTagName('body')[0];
+        var frag = document.createDocumentFragment();
+        var obol = document.createElement('div');
+        obol.setAttribute('id', 'ol');
+        obol.style.display = n;
+        obol.style.position = ab;
+        obol.style.top = 0;
+        obol.style.left = 0;
+        obol.style.zIndex = 10000;
+        obol.style.width = '100%';
+        obol.style.backgroundColor = "#555";
+        obol.style.filter = 'alpha(opacity=50)';
+        obol.style.MozOpacity = 0.5;
+        obol.style.opacity = 0.5;
+
+        
+        frag.appendChild(obol);
+        this.obol = obol;
+        var obbx = document.createElement('div');
+        obbx.setAttribute('id', 'mbox');
+        obbx.style.display = n;
+        obbx.style.position = ab;
+        obbx.style.backgroundColor = '#eee';
+        obbx.style.padding = '8px';
+        obbx.style.border = '2px outset #666';
+        obbx.style.zIndex = 10001;
+        this.obbx = obbx;
+        var obl = document.createElement('span');
+        obbx.appendChild(obl);
+        var obbxd = document.createElement('div');
+        obbxd.setAttribute('id', 'mbd');
+        var d = document.createElement('div');
+        var txt = document.createElement('span');
+        txt.innerHTML = 'Press OK to continue.';
+        this.txt = txt;
+        var d2 = document.createElement('div');
+        d2.style.textAlign = 'center';
+        d2.style.fontSize = '14px';
+        d2.appendChild(txt);
+        d2.appendChild(document.createElement('br'));       
+        var but = document.createElement('button');
+        
+        but.innerHTML = 'OK';
+        var self = this;
+        but.onclick= function()
+        {
+            self.hide();
+        }
+        d2.appendChild(but);
+        d.appendChild(d2);
+        obbxd.appendChild(d);
+        this.obbxd = obbxd;
+        obl.appendChild(obbxd);
+        frag.insertBefore(obbx, obol.nextSibling);
+        obody.insertBefore(frag, obody.firstChild);
+        window.onscroll = function(){
+            self.scrollFix();
+        }
+        window.onresize = function(){
+            self.sizeFix();
+        }
+    }
+    
+    Ozone.util.ModalBox.prototype.pageWidth = function () {
+        return window.innerWidth != null ? window.innerWidth
+        : document.documentElement && document.documentElement.clientWidth ? document.documentElement.clientWidth
+        : document.body != null ? document.body.clientWidth : null;
+    }
+    Ozone.util.ModalBox.prototype.pageHeight = function () {
+        return window.innerHeight != null ? window.innerHeight
+        : document.documentElement && document.documentElement.clientHeight ? document.documentElement.clientHeight
+        : document.body != null ? document.body.clientHeight : null;
+    }
+    Ozone.util.ModalBox.prototype.posLeft = function() {
+        return typeof window.pageXOffset != 'undefined' ? window.pageXOffset
+        : document.documentElement && document.documentElement.scrollLeft ? document.documentElement.scrollLeft
+        : document.body.scrollLeft ? document.body.scrollLeft : 0;
+    }
+    Ozone.util.ModalBox.prototype.posTop = function () {
+        return typeof window.pageYOffset != 'undefined' ? window.pageYOffset
+        : document.documentElement && document.documentElement.scrollTop ? document.documentElement.scrollTop
+        : document.body.scrollTop ? document.body.scrollTop : 0;
+    }
+
+    Ozone.util.ModalBox.prototype.scrollFix = function() 
+    {
+        //var obol = $('ol');
+        this.obol.style.top = this.posTop() + 'px';
+        this.obol.style.left = this.posLeft() + 'px'
+    }
+    Ozone.util.ModalBox.prototype.sizeFix = function () {
+        //var obol = $('ol');
+        this.obol.style.height = this.pageHeight() + 'px';
+        this.obol.style.width = this.pageWidth() + 'px';
+        var tp = this.posTop() + ((this.pageHeight() - this.height) / 2) - 12;
+        var lt = this.posLeft() + ((this.pageWidth() - this.width) / 2) - 12;
+        this.obbx.style.top = (tp < 0 ? 0 : tp) + 'px';
+        this.obbx.style.left = (lt < 0 ? 0 : lt) + 'px';
+
+    }
+    Ozone.util.ModalBox.prototype.kp = function (e) {
+        ky = e ? e.which : event.keyCode;
+        if (ky == 88 || ky == 120)
+            this.hide();
+        return false
+    }
+    Ozone.util.ModalBox.prototype.inf = function (h) {
+        tag = document.getElementsByTagName('select');
+        for (i = tag.length - 1; i >= 0; i--)
+            tag[i].style.visibility = h;
+        tag = document.getElementsByTagName('iframe');
+        for (i = tag.length - 1; i >= 0; i--)
+            tag[i].style.visibility = h;
+        tag = document.getElementsByTagName('object');
+        for (i = tag.length - 1; i >= 0; i--)
+            tag[i].style.visibility = h;
+    }
+    Ozone.util.ModalBox.prototype.hide = function () {
+        var v = 'visible';
+        var n = 'none';
+        this.obol.style.display = n;
+        this.obbx.style.display = n;
+        this.inf(v);
+        document.onkeypress = ''
+    }
+    Ozone.util.ModalBox.prototype.show = function (msg,wd, ht) {
+        var h = 'hidden';
+        var b = 'block';
+        var p = 'px';
+        wd = wd | 200;
+        ht = ht | 100;
+        var obol = this.obol
+        var obbxd = this.obbxd;
+        this.txt.innerHTML = msg;
+        obol.style.height = this.pageHeight() + p;
+        obol.style.width = this.pageWidth() + p;
+        obol.style.top = this.posTop() + p;
+        obol.style.left = this.posLeft() + p;
+        obol.style.display = b;
+        var tp = this.posTop() + ((this.pageHeight() - ht) / 2) - 12;
+        var lt = this.posLeft() + ((this.pageWidth() - wd) / 2) - 12;
+        var obbx = this.obbx
+        obbx.style.top = (tp < 0 ? 0 : tp) + p;
+        obbx.style.left = (lt < 0 ? 0 : lt) + p;
+        obbx.style.width = wd + p;
+        obbx.style.height = ht + p;
+        this.inf(h);
+        obbx.style.display = b;
+        this.width = wd;
+        this.height = ht;
+        return false;
+    }
+}
+if (!Ozone.util.ErrorDlg) 
+{
+    Ozone.util.ErrorDlg = {};
+    Ozone.util.ErrorDlg.show=function(msg,width,height)
+    {
+        if (!this.dlgBox)
+            this.dlgBox = new Ozone.util.ModalBox();
+        this.dlgBox.show(msg,width,height);
+    };
+}
+
+
+/**
+ * @private
+ */
+Ozone.util.fireBrowserEvent = function(dom, type, bubble, cancelable) {
+    if (document.createEvent) {
+        var event = document.createEvent('Events');
+        event.initEvent(type, bubble || true, cancelable || true);
+        dom.dispatchEvent(event);
+    }
+    else if (document.createEventObject) {
+        dom.fireEvent('on' + type);
+    }
+};
+
+/**
+    Clones dashboard and returns a dashboard cfg object that can be used to create new dashboards.
+    @name cloneDashboard
+    @methodOf OWF.Util
+
+    @returns Object dashboard cfg object that can be used to create new dashboards.
+ */
+Ozone.util.cloneDashboard = function(dashboardCfg, regenerateIds, removeLaunchData) {
+    
+    var dashboardStr = Ozone.util.toString(dashboardCfg);
+
+    if(regenerateIds === true) {
+        var newDashboardGuid = guid.util.guid(),
+            dashboardGuid = dashboardCfg.guid;
+
+        // update dashboard guid
+        dashboardStr = dashboardStr.replace(new RegExp(dashboardGuid, 'g'), newDashboardGuid);
+        dashboardStrCopy = dashboardStr;
+
+        // update widget instance ids
+        var widgetInstanceIdRegex = /\"uniqueId\"\:\"([A-Fa-f\d]{8}-[A-Fa-f\d]{4}-[A-Fa-f\d]{4}-[A-Fa-f\d]{4}-[A-Fa-f\d]{12})\"/g;
+        var result;
+        while ((result = widgetInstanceIdRegex.exec(dashboardStrCopy)) != null) {
+            // var msg = "Found " + result[1];
+            // console.log(msg);
+            dashboardStr = dashboardStr.replace(new RegExp(result[1], 'g'), guid.util.guid());
+        }
+    }
+
+    var dashboard = Ozone.util.parseJson(dashboardStr);
+    
+    if(removeLaunchData === true) {
+        var cleanData = function(cfg) {
+            if(!cfg || !cfg.items)
+                return;
+
+            if(cfg.items.length === 0 && cfg.widgets) {
+                for(var i = 0, len = cfg.widgets.length; i < len; i++) {
+                    console.log('deleteing launchData', cfg.widgets[i].launchData);
+                    delete cfg.widgets[i].launchData;
+                }
+            }
+            else {
+                for(var i = 0, len = cfg.items.length; i < len; i++) {
+                    cleanData(cfg.items[i]);
+                }
+
+            }
+        };
+
+        cleanData(dashboard.layoutConfig);
+    }
+
+    return dashboard;
+};
+
+Ozone.util.createRequiredLabel= function(label) {
+    return "<span class='required-label'>" + label + " <span class='required-indicator'>*</span></span>";
+}

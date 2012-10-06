@@ -1,0 +1,18 @@
+/*
+ * This file contains defined constants that are used within the owf stylesheets. 
+ * There should generally not be a reason for theme creators to modify these values.
+ */
+$owf_css_important: '!important';
+$owf_css_not_important: '';
+
+$owf_frame_is_IE: true;
+$owf_frame_is_not_IE: false;
+
+$owf_incl_non_header_border: true;
+$owf_no_incl_non_header_border: false;
+
+$owf_incl_header_border: true;
+$owf_no_incl_header_border: false;
+
+$owf_full_header_border: true;
+$owf_no_full_header_border: false;

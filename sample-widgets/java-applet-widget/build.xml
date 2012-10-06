@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="owf-sample-applet" default="war" basedir=".">
+	<property environment="env"/>
+	
+	<property name="tomcat.home.dir" value="C:\apache-tomcat-6.0.18"/>
+	
+	<property name="build.dir" value="${basedir}/target" />
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="src.dir" value="${basedir}/src/main/java" />
+	<property name="resource.dir" value="${basedir}/src/main/resources" />
+	<property name="web.dir" value="${basedir}/src/main/webapp" />
+	<property name="security.dir" value="${basedir}/security" />
+
+	<path id="compile.classpath">
+		<pathelement location="${build.dir}/classes"/>
+		<fileset dir="${web.dir}/WEB-INF/lib">
+			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<target name="clean-build-dir" description="Cleans out the build directory.">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.dir}/classes" />
+	</target>
+	
+	<target name="compile" depends="clean-build-dir" description="Compiles classes and copies resources.">
+  		<javac srcdir="${src.dir}"
+  			   destdir="${build.dir}/classes"
+               classpathref="compile.classpath"
+               debug="true"
+  		/>
+		<copy todir="${build.dir}/classes" >
+			<fileset dir="${resource.dir}" >
+				<include name="**/*.gif"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="applet-jar" depends="compile" description="Creates and signs the applet jar.">
+		<jar destfile="${build.dir}/owf-applet.jar" basedir="${build.dir}/classes" />
+		<signjar alias="owf" 
+			     keystore="${security.dir}/keystore.jks"
+		         storepass="changeit"
+		         lazy="true">
+			<path>
+		    	<fileset dir="${build.dir}" includes="owf-applet.jar" />
+		  	</path>
+		</signjar>
+	</target>
+
+	<target name="war" depends="applet-jar" description="Creates the WAR file.">
+		<war warfile="${build.dir}/owf-sample-applet.war" webxml="${web.dir}/WEB-INF/web.xml" duplicate="preserve">
+			<fileset dir="${web.dir}">
+				<exclude name="WEB-INF/web.xml" />
+			</fileset>
+			<fileset dir="${build.dir}">
+				<include name="owf-applet.jar"/>
+			</fileset>
+		</war>		
+	</target>
+
+	<target name="deploy" depends="war" description="Optional deployment target.">
+		<delete dir="${tomcat.home.dir}/webapps/owf-sample-applet"/>
+		<delete file="${tomcat.home.dir}/webapps/owf-sample-applet.war"/>
+		<copy file="${build.dir}/owf-sample-applet.war" todir="${tomcat.home.dir}/webapps"/>
+	</target>
+
+    <target name="diagnostics" description="Displays Ant diagnostics.">
+        <diagnostics/>
+    </target>
+
+</project>

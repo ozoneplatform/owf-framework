@@ -1,0 +1,509 @@
+@charset "UTF-8";
+/*
+This CSS is for specific style for the OWF UI.  This does not include the Admin UI.  This CSS is also for
+specifically overriding any default ExtJS css rules for OWF specific elements.
+*/
+
+.clear {
+    clear: both;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.center {
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.owf-manage-window {
+    @include owf-manage-window();
+}
+
+.x-css-shadow {
+    //change border radius to match our custom windows
+    @include owf-border-radius;
+}
+
+.owf-view {
+    background-color: $panel-body-background-color;
+}
+
+.x-splitter {
+    @include owf-background-gradient($toolbar-theme);
+}
+
+.x-toolbar {
+    padding: 5px;
+    padding-top: 6px;
+    .x-toolbar-text {
+        line-height: 1.2;
+    }
+}
+
+.x-toolbar-default {
+    @include owf-background-gradient($toolbar-theme);
+}
+
+.x-btn-icon {
+    background-position: center center;
+}
+
+// dropdown
+.x-boundlist {
+    //ext does not provide customizable variables for text color
+    //for various states, so overriding it here
+    .x-boundlist-item {
+        color: $owf-boundlist-item-color;
+        &.x-boundlist-item-over {
+            color: $owf-boundlist-item-over-color;
+        }
+        &.x-boundlist-selected {
+            color: $owf-boundlist-item-selected-color;
+        }
+    }
+}
+
+/*****
+ * MESSAGE BOX
+ */
+.x-message-box {
+    @extend .owf-window;
+
+    .x-window-body {
+        background-color: $message-box-body-color;
+        color: $message-box-text-color;
+    }
+    /*.x-btn {*/
+        /*.x-btn-inner {*/
+            /*background-image:theme-image($theme-name, 'blue/icons/Check-16.png');*/
+        /*}*/
+    /*}*/
+}
+
+/*****
+ * ACCESS ALERT WINDOW
+ */
+.accessAlert {
+    @extend .owf-window;
+
+    .x-window-body {
+        background-color: $access-alert-body-color;
+        color: $access-alert-text-color;
+        padding: 4px;
+    }
+
+    .accessAlertIcon {
+        background-image:theme-image($theme-name, 'blue/icons/Check-16.png');
+    }
+    .x-toolbar{
+        background: transparent;
+        border: none;
+    }
+}
+
+/**
+ * Ghost proxy for portal layout
+ */
+.x-panel-ghost {
+    @include owf-panel($ghost-widget-theme);
+} 
+
+.x-window {
+    @include owf-window;
+}
+
+.x-focus .x-window-header {
+    border-right: $owf-focus-style !important;
+    border-top: $owf-focus-style !important;
+    border-left: $owf-focus-style !important;
+}
+
+.x-window-inactive {
+    @include owf-window($inactive-widget-theme);
+}
+
+.x-window-ghost{
+    @include owf-window($ghost-widget-theme);
+    overflow: hidden; //fix to add borders around ghost header
+}
+
+.x-window-header, .x-panel-header {
+    .x-editor {
+        input {
+            line-height: normal;
+        }
+    }
+}
+.x-window-header-text, .x-panel-header-text {
+    cursor: pointer !important;
+}
+
+#northBanner, #southBanner {
+    .x-panel-body {
+        border: none !important;
+    }
+}
+
+.x-menu.box-overflow-menu {
+    width: 27px !important;
+    .x-menu-body {
+        background: none repeat scroll 0 0 transparent!important;
+        border: none;
+        left: -2px !important;
+        top: 2px !important;
+        .x-vertical-box-overflow-body {
+            width: 27px !important;
+        }
+    }
+}
+
+.x-panel-header.widgetheader,
+.x-window-header.widgetheader {
+    .x-box-menu-right {
+        .x-btn-menu-active {
+            @include owf-button-background($pressed_button_theme);
+        }
+    }
+    .x-box-menu-right {
+        padding: 0px;
+        overflow: visible;
+    }
+    .x-btn {
+        .x-widgetheader-more-icon {
+            background: theme-image($theme-name, 'blue/button/Wrench-16.png') no-repeat scroll 0 0 transparent;
+            position: absolute;
+            //left: -1px;
+            //top: -1px;
+        }
+    }
+}
+.x-panel-header.widgetheader {
+    .x-btn {
+        padding: 0 !important;
+        height: 18px !important;
+        button {
+            height: 16px;
+        }
+        .x-btn-inner {
+            height: 16px;
+            line-height: 16px;
+            //padding-left: 20px;
+        }
+    }
+    .x-btn-icon {
+        width: 16px;
+        height: 16px;
+    }
+}
+    
+#mainPanel { 
+    //PORTAL DASHBOARD
+    .x-panel.x-portlet {
+        @include owf-panel($active-widget-theme, 
+                            $owf_css_important, 
+                            $owf_frame_is_not_IE,
+                            //BORDER PROPERTIES
+                            $owf_incl_non_header_border,
+                            $owf_incl_header_border,
+                            $owf_no_full_header_border,
+                            $applyGradient: false); 
+    }
+    //TABBED DASHBOARD
+    .x-panel.tab-dashboard-panel {
+        .widget-tab-bar {
+            overflow: hidden !important;
+            padding-top: 2px;
+            //height: 29px!important;
+            .widget-tab {
+                @include owf-panel($inactive-widget-theme,
+                                    $owf_css_important,
+                                    $owf_frame_is_not_IE,
+                                    //BORDER PROPERTIES 
+                                    $owf_no_incl_non_header_border,
+                                    $owf_incl_header_border,
+                                    $owf_no_full_header_border); 
+            }
+            .widget-tab.x-panel-active {
+                @include owf-panel($active-widget-theme, 
+                                    $owf_css_important,
+                                    $owf_frame_is_not_IE,
+                                    //BORDER PROPERTIES 
+                                    $owf_no_incl_non_header_border,
+                                    $owf_incl_header_border,
+                                    $owf_no_full_header_border); 
+            }
+            .x-box-scroller-right { 
+                .x-toolbar-scroll-right {
+                    top: 0;
+                }
+            }
+            .x-box-scroller-left { 
+                .x-toolbar-scroll-left {
+                    top: 0;
+                }
+            }
+        }
+    }
+    //ACCORDION DASHBOARD
+	.x-accordion-hd .x-panel-header-text {
+		font-weight: bold;
+	}
+    // .x-panel.accordion_right_side_region {
+    //     @include owf-panel($active-widget-theme, 
+    //                         $owf_css_important, 
+    //                         $owf_frame_is_not_IE,
+    //                         //BORDER PROPERTIES 
+    //                         $owf_no_incl_non_header_border,
+    //                         $owf_incl_header_border,
+    //                         $owf_no_full_header_border); 
+    // }
+    .x-accordion-item {
+        @include owf-panel($active-widget-theme, 
+                            $owf_css_important,
+                            $owf_frame_is_not_IE,
+                            //BORDER PROPERTIES 
+                            $owf_no_incl_non_header_border,
+                            $owf_no_incl_non_header_border,
+                            $owf_no_full_header_border);
+        filter: none;
+
+        .x-panel-header {
+            //all of these need to be important to override ext
+            border-bottom-style: solid !important;
+            border-bottom-width: 1px !important;
+            border-top-style: solid !important;
+            border-top-width: 1px !important;
+            //background-color: nth(getWidgetGradientColors($active-widget-theme),2) !important;
+        }
+        .x-panel-header-body { 
+            .x-tool-collapse-top {
+                background-position: 0 -210px;
+            }
+            .x-tool-expand-bottom {
+                background-position: 0 -195px;
+            }
+        }
+    }
+    .x-panel-body { 
+        background-color: transparent!important;
+        background-image: none!important;
+        border: none;
+    }
+
+    //BOTTOM DOCKED
+    .taskbar {
+        @include owf-panel($active-widget-theme,
+                            $owf_css_not_important,
+                            $owf_frame_is_not_IE,
+                            //BORDER PROPERTIES 
+                            $owf_no_incl_non_header_border,
+                            $owf_incl_header_border,
+                            $owf_full_header_border); 
+//        .x-panel-header {
+//            -moz-border-radius: 5px 5px 0 0;
+//            border-radius: 5px 5px 0 0;
+//        }
+
+        //active item in the taskbar
+        .x-tab-top-inactive {
+            @include owf-panel-header($inactive-widget-theme, 
+                                        $owf_css_not_important,
+                                        $owf_frame_is_not_IE,
+                                        //BORDER PROPERTIES 
+                                        $owf_incl_header_border,
+                                        $owf_full_header_border); 
+                                        
+            .x-btn-default-small {
+			    -moz-border-radius: 2px 2px 2px 2px;
+			    filter: none;
+			    background-color: #C9CBCE;
+			    background-image: -moz-linear-gradient(#BABFC3 0%, #F1F2F2 45%, #C9CBCE 50%);
+			    border-color: #7A868C;
+			    
+				.x-btn-inner {
+				    color: #454F55;
+				    font-weight: bold;
+			    }
+			}
+        }
+    }
+    
+    .widgetheader, .x-panel-header {
+        .x-box-menu-right .x-btn {
+            border-width: 1px !important;
+        }
+    }
+}
+
+.x-ie {
+    #mainPanel { 
+        .accordion_region {
+            .x-panel-collapsed {
+                border: none;
+            }
+        }
+    }
+}
+
+// Clear All button icon
+.clearAllBtnIcon {
+    background-image: theme-image($theme-name, 'blue/icons/iconClearAll.gif');
+}
+
+// Cancel button icon
+.cancelBtnIcon { 
+    background-image: theme-image($theme-name, 'icons/fam/cross.gif');
+}
+
+// Save button icon
+.saveBtnIcon, .okSaveBtnIcon {
+    background-image: theme-image($theme-name, 'blue/icons/Check-16.png');
+}
+
+//OWF-4265: Flex Widgets are refreshed when switching dashboards
+.dashboard, .tab-dashboard-panel .x-tabpanel-child {
+  position: absolute;
+}
+
+.x-focus, .x-nbr .x-focus {
+    border: $owf-focus-style !important;
+    outline: 0 none;
+}
+
+iframe {
+    height: 100%;
+    width: 100%;
+    border-width: 0px;
+    outline: 0 none;
+    background-color: white;
+}
+
+.focus-catch {
+    position: absolute;
+    width: 1px !important; //ext will try to resize to full width in IE
+    height: 1px;
+    font-size: 1px; //height cannot be less than font-size in IE
+    border-style: none;
+    background: transparent;
+}
+
+@include owf-tool;
+
+// EXT overrides 
+
+.x-form-text,
+textarea.x-form-field {
+  background-image: none;
+  }
+
+.x-form-invalid-field,
+textarea.x-form-invalid-field {
+  background-image: none;
+}
+
+// ext override for overriding toolbar GIFs to PNGs
+
+
+.x-tbar-page-first {
+  background-image: theme-image($theme-name, 'grid/page-first.png') !important;
+}
+
+.x-tbar-loading {
+  background-image: theme-image($theme-name, 'grid/refresh.png') !important;
+}
+
+.x-tbar-page-last {
+  background-image: theme-image($theme-name, 'grid/page-last.png') !important;
+}
+
+.x-tbar-page-next {
+  background-image: theme-image($theme-name, 'grid/page-next.png') !important;
+}
+
+.x-tbar-page-prev {
+  background-image: theme-image($theme-name, 'grid/page-prev.png') !important;
+}
+
+.x-item-disabled .x-tbar-loading {
+  background-image: theme-image($theme-name, 'grid/refresh-disabled.png') !important;
+}
+
+.x-item-disabled .x-tbar-page-first {
+  background-image: theme-image($theme-name, 'grid/page-first-disabled.png') !important;
+}
+ 
+.x-item-disabled .x-tbar-page-last {
+  background-image: theme-image($theme-name, 'grid/page-last-disabled.png') !important;
+}
+
+.x-item-disabled .x-tbar-page-next {
+  background-image: theme-image($theme-name, 'grid/page-next-disabled.png') !important;
+}
+
+.x-item-disabled .x-tbar-page-prev {
+  background-image: theme-image($theme-name, 'grid/page-prev-disabled.png') !important;
+}
+
+
+
+//These changes are to change GIF to PNG but impact all from common images folder
+
+.x-form-invalid-under {
+  background-image: url('../../common/images/form/exclamation.png');
+}
+
+.x-form-invalid-icon {
+  background-image: url('../../common/images/form/exclamation.png');
+}
+
+// set z-index of drag proxy very high so that it is always on top
+.x-dd-drag-proxy {
+    z-index: exponent(10, 10) !important;
+}
+.x-dd-drag-ghost {
+    @include border-radius(4px);
+}
+img.widget-drag-proxy {
+    width: 64px;
+    height: 64px;
+}
+
+// CSS for reordering and moving widgets to panes
+#mainPanel {
+    .x-closable.indicate-drop-after {
+        .x-panel-body {
+            border-bottom: 5px solid $owf-focus-color !important;
+        }
+    }
+    .x-closable.indicate-drop-after {
+        &.collapsed, &.x-collapsed {
+            .widgetheader {
+                padding-bottom: 1px;
+                border-bottom: 5px solid $owf-focus-color !important;
+            }
+        }
+    }
+    .x-closable.indicate-drop-before {
+        .widgetheader {
+            border-top: 5px solid $owf-focus-color !important;
+        }
+    }
+    .x-closable.indicate-drop-before.widget-tab {
+        .widgetheader {
+            border-top: 0px !important;
+            border-left: 5px solid $owf-focus-color !important;
+            padding-left: 0px;
+        }
+    }
+    .x-closable.indicate-drop-after.widget-tab {
+        .widgetheader {
+            border-top: 0px !important;
+            border-right: 5px solid $owf-focus-color !important;
+            padding-right: 0px;
+        }
+    }
+}
