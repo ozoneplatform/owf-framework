@@ -111,13 +111,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                     scope: this
                 },
                 refresh: {
-                    fn: function() {
-                        var widgetEls = this.view.getEl().query(this.view.itemSelector),
-                            len = widgetEls.length;
-                        if(len > 0) {
-                            this.setupFocus(Ext.get(widgetEls[0]), Ext.get(widgetEls[len-1]));
-                        }
-                    },
+                    fn: this.reSetupFocus,
                     scope: this
                 },
                 viewready: {
@@ -188,14 +182,24 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             this.view.refresh();
         }
     },
+    
+    reSetupFocus: function() {
+        var widgetEls = this.view.getEl().query(this.view.itemSelector),
+        len = widgetEls.length;
+        if(len > 0) {
+            this.setupFocus(Ext.get(widgetEls[0]), Ext.get(widgetEls[len-1]));
+        }
+    },
 
     focusSelectedDashboard: function() {
         var selectedDB = this.view.getNode(this.view.store.getById(this.dashboardContainer.activeDashboard.id));
+        var me = this;
 
         if(selectedDB) {
             setTimeout(function() {
-                try {
+                try {   
                     selectedDB.focus();
+                    me.reSetupFocus();
                 }
                 catch(e) {}
             }, 100);
