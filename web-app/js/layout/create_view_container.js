@@ -360,6 +360,11 @@ Ext.define('Ozone.layout.CreateViewContainer', {
 
                         var title = this.getComponent('titleBox').getValue();
                         var desc = this.getComponent('description').getValue();
+                        
+                        // add a space to the field if it is empty or null so that it will
+                        // store an empty string to the db instead of it thinking its a null value
+                        if (desc == null || desc == '')
+                            desc = ' ';
 
                         //edit an existing dashboard if a record was passed in
                         if (this.existingDashboardRecord != null) {
