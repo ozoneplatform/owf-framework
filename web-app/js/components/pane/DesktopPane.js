@@ -79,27 +79,27 @@ Ext.define('Ozone.components.pane.DesktopPane', {
 
         if(this.widgets.length > 0) {
 
+            // sort by zIndex and store the order in a temp array
+            // so that we can use it later to bring the widgets to 
+            // foreground in the correct order
             this.stateStore.sort('zIndex', 'ASC');
-
             for(var i = 0, len = this.stateStore.getCount(); i < len; i++) {
-                this._sortedUniqueIds.push( this.stateStore.getAt(i).get('uniqueId') );
+                var record = this.stateStore.getAt(i);
+
+                if(!record.get('floatingWidget') && !record.get('background')) {
+                    this._sortedUniqueIds.push( record.get('uniqueId') );
+                }
             }
             
+            // sort by statePosition to render them in the order
+            // widgets were launched by a user
             this.stateStore.sort('statePosition', 'ASC');
         }
 
         deferreds = this.launchWidgets(this.stateStore.data.items);
 
-        //Get only the non-floating and non-background widgets
-        var desktopWidgets = [];
-        for(var i = 0, len = this.stateStore.getCount(); i < len; i++) {
-            if(!this.stateStore.getAt(i).get('floatingWidget') && !this.stateStore.getAt(i).get('background')) {
-                desktopWidgets.push(Ext.getCmp(this.stateStore.getAt(i).data.uniqueId));
-            }
-        }
-
-        for(var i = 0, len = desktopWidgets.length; i < len; i++) {
-            var widgetCmp = desktopWidgets[i];
+        for(var i = 0, len = this._sortedUniqueIds.length; i < len; i++) {
+            var widgetCmp = Ext.getCmp( this._sortedUniqueIds[i] );
 
             // if widget wasn't launched
             if(!widgetCmp)
