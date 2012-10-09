@@ -62,8 +62,7 @@ Ext.define('Ozone.components.launchMenu.WidgetViewContainer', {
     },
 
     showIconOrGridView:function (iconOrGrid) {
-        var
-            flag = false,
+        var flag = false,
             widgetsView = this.getComponent('widgetsview'),
             openedWidgetsView = this.getComponent('openedwidgetsview');
 
