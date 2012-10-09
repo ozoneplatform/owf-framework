@@ -53,7 +53,9 @@ Ext.define('Ozone.components.launchMenu.WidgetViewContainer', {
             ]
         });
 
-        this.callParent();
+        this.callParent(arguments);
+
+        this.on('itemclick', this.frameClickedWidgetInstance);
 
 //        this.addEvents(['dragStarted', 'dragEnd', 'invalidDrop', 'itemclick', 'itemdblclick', 'itemkeydown', 'selectionchange']);
 //        this.enableBubble(['dragStarted', 'dragEnd', 'invalidDrop', 'itemclick', 'itemdblclick', 'itemkeydown', 'selectionchange']);
@@ -144,5 +146,12 @@ Ext.define('Ozone.components.launchMenu.WidgetViewContainer', {
         }
 
         return returnValue;
+    },
+
+    frameClickedWidgetInstance: function (view, record) {
+        var uniqueId = record.get('uniqueId');
+        if(uniqueId) {
+            Ext.getCmp(uniqueId).el.frame('#f00');
+        }
     }
 });
