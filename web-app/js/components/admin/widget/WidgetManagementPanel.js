@@ -73,7 +73,7 @@ Ext.define('Ozone.components.admin.widget.WidgetManagementPanel', {
                     searchChanged: function(box, value) {
                         var grid = me.down('#grid');
                         if (grid != null) {
-                            grid.applyFilter(value, ['displayName']);
+                            grid.applyFilter(value, ['displayName', 'universalName']);
                         }
                     }
                 }
