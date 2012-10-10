@@ -425,7 +425,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     launchWidgets: function(widgetModel, isEnterPressed) {
         var me = this;
 
-        me.selectPane(isEnterPressed).then(function(e, pane) {
+        me.selectPane(isEnterPressed).then(function(pane, e) {
             me.activeDashboard.launchWidgets(pane, null, e, {
                 widgetModel: widgetModel
             })
@@ -527,7 +527,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
         else if( key === Ext.EventObject.ENTER ) {
 
-            eOpts.deferred.resolve( e, panes[ this._previousPaneIndex ] );
+            eOpts.deferred.resolve( panes[ this._previousPaneIndex ], e );
             delete this._previousPaneIndex;
 
         }
@@ -545,7 +545,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             deferred = eOpts.deferred;
 
         if( paneEl ) {
-            deferred.resolve( e, Ext.getCmp( paneEl.id ) );
+            deferred.resolve( Ext.getCmp( paneEl.id ), e );
         }
         else {
             deferred.reject();
