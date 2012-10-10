@@ -6,6 +6,10 @@ Ext.define('Ozone.components.admin.EditPreferenceWindow', {
         'widget.Ozone.components.admin.EditPreferenceWindow'
     ],
 
+    mixins: {
+      widget: 'Ozone.components.focusable.CircularFocus'
+    },
+
     cls: 'editpreferencewindow',
     
     callback: Ext.emptyFn,
@@ -17,7 +21,7 @@ Ext.define('Ozone.components.admin.EditPreferenceWindow', {
     
     resizable: false,
     modal: true,
-    	    
+            
     initComponent: function() {
         
         var me = this;
@@ -25,7 +29,7 @@ Ext.define('Ozone.components.admin.EditPreferenceWindow', {
         
         if (!this.scope)
             this.scope = this;
-			
+            
         Ext.apply(this, {
             layout: 'fit',
             items: [{
@@ -172,6 +176,7 @@ Ext.define('Ozone.components.admin.EditPreferenceWindow', {
                             name: 'username'
                         }, {
                             xtype: 'textfield',
+                            itemId: 'nameField',
                             value: this.path,
                             fieldLabel: Ozone.util.createRequiredLabel('Preference Name'),
                             labelWidth: 140,
@@ -226,6 +231,10 @@ Ext.define('Ozone.components.admin.EditPreferenceWindow', {
         })
         
         this.callParent(arguments);
+
+        this.on('afterrender', function() {
+            this.setupFocus(this.down('#nameField').getFocusEl(), this.down('#cancel').getFocusEl());
+        });
         
         this.on('beforeclose', function(panel, e) {
             this.callback.call(this.scope, this.submitValues, this.closeButton);
