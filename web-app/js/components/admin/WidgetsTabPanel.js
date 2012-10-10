@@ -45,7 +45,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                             fn: function(cmp, value) {
                                 var grid = this.getComponent('widgetsGrid');
                                 if (grid != null) {
-                                    grid.applyFilter(value, ['displayName']);
+                                    grid.applyFilter(value, ['displayName', 'universalName']);
                                 }
                             },
                             scope: this

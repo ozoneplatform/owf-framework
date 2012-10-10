@@ -103,27 +103,55 @@ class WidgetDefinitionService {
             if(params?.widgetName) like("displayName", params.widgetName)
             if(params?.widgetVersion) like("widgetVersion", params.widgetVersion)
             if(params?.filters) {
-                JSON.parse(params.filters).each {
-                    if (it.filterField == 'singleton') {
-                        if (it.filterValue) {
-                            eq('singleton', true)
-                        } else {
-                            or {
-                                eq('singleton', false)
-                                isNull('singleton')
+                if(params.filterOperator?.toUpperCase() == 'OR') {
+                    or {
+                        JSON.parse(params.filters).each {
+                            if (it.filterField == 'singleton') {
+                                if (it.filterValue) {
+                                    eq('singleton', true)
+                                } else {
+                                    or {
+                                        eq('singleton', false)
+                                        isNull('singleton')
+                                    }
+                                }
+                            } else if (it.filterField == 'visible') {
+                                if (it.filterValue) {
+                                    eq('visible', true)
+                                } else {
+                                    or {
+                                        eq('visible', false)
+                                        isNull('visible')
+                                    }
+                                }
+                            } else {
+                                if (it.filterField != 'tags') ilike(it.filterField, '%' + it.filterValue + '%')
                             }
                         }
-                    } else if (it.filterField == 'visible') {
-                        if (it.filterValue) {
-                            eq('visible', true)
-                        } else {
-                            or {
-                                eq('visible', false)
-                                isNull('visible')
+                    }
+                } else {
+                    JSON.parse(params.filters).each {
+                        if (it.filterField == 'singleton') {
+                            if (it.filterValue) {
+                                eq('singleton', true)
+                            } else {
+                                or {
+                                    eq('singleton', false)
+                                    isNull('singleton')
+                                }
                             }
+                        } else if (it.filterField == 'visible') {
+                            if (it.filterValue) {
+                                eq('visible', true)
+                            } else {
+                                or {
+                                    eq('visible', false)
+                                    isNull('visible')
+                                }
+                            }
+                        } else {
+                            if (it.filterField != 'tags') ilike(it.filterField, '%' + it.filterValue + '%')
                         }
-                    } else {
-                        if (it.filterField != 'tags') ilike(it.filterField, '%' + it.filterValue + '%')
                     }
                 }
             }

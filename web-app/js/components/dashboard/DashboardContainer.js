@@ -419,28 +419,89 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         delete this._paneWidgetsBox;
     },
 
-    doLaunch: function(e, dom, eOpts) {
-        this.el.un('click', this.doLaunch, this);
-        this.activeDashboard.disableWidgetMove();
+    /*
+    * Launches widget on the current dashboard.
+    */
+    launchWidgets: function(widgetModel, isEnterPressed) {
+        var me = this;
 
-        if (!this.activeDashboard.launchWidgets(dom, null, e, eOpts)) {
+        me.selectPane(isEnterPressed).then(function(e, pane) {
+            me.activeDashboard.launchWidgets(pane, null, e, {
+                widgetModel: widgetModel
+            })
+        },
+        function () {
             var launchMenu = Ext.getCmp('widget-launcher');
             if (launchMenu) {
-              launchMenu.fireEvent('noWidgetLaunched');
+                launchMenu.fireEvent('noWidgetLaunched');
             }
-        }
+        });
     },
 
-    doKeyboardLaunch: function(e, dom, eOpts) {
-        //event.shiftKey
-        var panes = this.activeDashboard.panes, lastPaneIndex = panes.length - 1, nextPaneIndex;
+    /*
+    * Selects a Pane from the active dashboard.
+    * 
+    * Returns: a promise object that will be resolved with
+    * event and pane selected
+    */
+    selectPane: function(isUsingKeyboard) {
+        var me = this,
+            deferred = jQuery.Deferred(),
+            panes = this.activeDashboard.panes,
+            doc = Ext.getDoc();
 
-        // required to prevent from bubbling down
+        // if one page resolve right away
+        if( panes.length === 1 ) {
+            deferred.resolve( panes[0] );
+        }
+        else {
+
+            this.activeDashboard.enableWidgetMove();
+
+            // if using keyboard, highlight first pane
+            if( isUsingKeyboard === true ) {
+                document.activeElement.blur();
+                panes[0].focus();
+            }
+
+            doc.on('keydown', this._selectPaneOnKeyDown, this, {
+                capture: true,
+                deferred: deferred
+            });
+
+            this.el.on('click', this._selectPaneOnClick, this, {
+                deferred: deferred
+            });
+
+            // cleanup listeners when deferred is either resolved or rejected
+            deferred.always(function() {
+                me.activeDashboard.disableWidgetMove();
+
+                doc.un('keydown', me._selectPaneOnKeyDown, me, {capture: true});
+                me.el.un('click', me._selectPaneOnClick, me);
+            });
+        }
+
+        return deferred.promise();
+    },
+
+    /*
+    * Manages pane selection using keyboard.
+    * Resolves deferred when Enter key is pressed and 
+    * rejects when Esc is pressed
+    */
+    _selectPaneOnKeyDown: function(e, dom, eOpts) {
+        var panes = this.activeDashboard.panes,
+            key = e.getKey(),
+            lastPaneIndex = panes.length - 1,
+            nextPaneIndex;
+
+        // prevent from bubbling down
         e.stopEvent();
 
         this._previousPaneIndex = this._previousPaneIndex || 0;
 
-        if (e.getKey() === Ext.EventObject.TAB) {
+        if( key === Ext.EventObject.TAB ) {
             if(e.shiftKey) {
                 //Go back a pane
                 if(this._previousPaneIndex === 0) {
@@ -464,63 +525,31 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
             this._previousPaneIndex = nextPaneIndex;
         }
-        else if (e.getKey() === Ext.EventObject.ENTER) {
-            // launch widget
-            Ext.getDoc().un('keydown', this.doKeyboardLaunch, this, eOpts);
-            this.activeDashboard.disableWidgetMove();
-            this.activeDashboard.launchWidgets(dom, null, e, eOpts);
+        else if( key === Ext.EventObject.ENTER ) {
 
+            eOpts.deferred.resolve( e, panes[ this._previousPaneIndex ] );
             delete this._previousPaneIndex;
+
         }
         //Enable ESC to cancel
-        else if (e.getKey() === Ext.EventObject.ESC) {
-            Ext.getDoc().un('keydown', this.doKeyboardLaunch, this, eOpts);
-            this.activeDashboard.disableWidgetMove();
-            var launchMenu = Ext.getCmp('widget-launcher');
-            if (launchMenu) {
-              launchMenu.fireEvent('noWidgetLaunched');
-            }
+        else if( key === Ext.EventObject.ESC ) {
+            eOpts.deferred.reject();
         }
     },
 
-    launchWidgets: function(widgetModel, isEnterPressed) {
-        var panes = this.activeDashboard.panes;
+    /*
+    * Manages pane selection using mouse.
+    */
+    _selectPaneOnClick: function(e, dom, eOpts) {
+        var paneEl = Ext.get(dom).up('.pane'),
+            deferred = eOpts.deferred;
 
-        if (panes.length === 1) {
-            panes[0].launchWidgets(widgetModel);
-            return;
-        }
-
-        this.activeDashboard.enableWidgetMove();
-
-        if (!isEnterPressed) {
-            //panes[0].enableDrop();
-            this.el.on('click', this.doLaunch, this, {
-                widgetModel: widgetModel
-            });
-            //Enable ESC to cancel
-            Ext.getDoc().on('keydown', function escLaunch(e, dom, eOpts) {
-                if (e.getKey() === Ext.EventObject.ESC) {
-                    Ext.getDoc().un('keydown', this.escLaunch, this, eOpts);
-                    this.el.un('click', this.doLaunch, this);
-                    this.activeDashboard.disableWidgetMove();
-                    var launchMenu = Ext.getCmp('widget-launcher');
-                    if (launchMenu) {
-                      launchMenu.fireEvent('noWidgetLaunched');
-                    }
-                }
-            }, this);
+        if( paneEl ) {
+            deferred.resolve( e, Ext.getCmp( paneEl.id ) );
         }
         else {
-            // keyboard navigation
-            document.activeElement.blur();
-            panes[0].focus();
-            Ext.getDoc().on('keydown', this.doKeyboardLaunch, this, {
-                capture: true,
-                widgetModel: widgetModel
-            });
+            deferred.reject();
         }
-        return;
     },
 
     initLoad: function() {
