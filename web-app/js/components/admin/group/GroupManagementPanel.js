@@ -221,7 +221,11 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
         
         this.callParent(arguments);
         
-        OWF.Eventing.subscribe('AdminChannel',this.handleEvent);
+        OWF.Eventing.subscribe('AdminChannel', owfdojo.hitch(this, function(sender, msg, channel) {
+            if(msg.domain === 'Group') {
+                this.gridGroups.getBottomToolbar().doRefresh();
+            }
+        }));
         
         this.on(
     		'afterrender', 

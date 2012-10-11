@@ -200,6 +200,13 @@ Ext.define('Ozone.components.admin.user.UserManagementPanel', {
 			}]
 		});
 		this.callParent(arguments);
+        
+        OWF.Eventing.subscribe('AdminChannel', owfdojo.hitch(this, function(sender, msg, channel) {
+            if(msg.domain === 'User') {
+                this.down('#usersgrid').getBottomToolbar().doRefresh();
+            }
+        }));
+
 		this.on({
 			render: {
 				fn: function() {

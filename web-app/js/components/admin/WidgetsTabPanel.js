@@ -121,6 +121,15 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                         }
                     };
                     grid.store.proxy.callback = refreshPagingToolbar;
+
+                    grid.store.on('write', function(store, action, result, records, rs) {
+                        OWF.Eventing.publish(this.ownerCt.channel, {
+                            action: action,
+                            domain: this.ownerCt.domain,
+                            records: result
+                        });
+                    }, this);
+
                     if (grid && comp) {
                         comp.record = comp.recordId ? comp.store.getAt(comp.store.findExact('id', comp.recordId)) : undefined;
                         compId = comp.recordId ? comp.recordId : -1;

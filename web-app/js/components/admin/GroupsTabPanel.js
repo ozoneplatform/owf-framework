@@ -107,6 +107,14 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                         }
                     };
                     grid.store.proxy.callback = refreshPagingToolbar;
+
+                    grid.store.on('write', function(store, action, result, records, rs) {
+                        OWF.Eventing.publish(this.ownerCt.channel, {
+                            action: action,
+                            domain: this.ownerCt.domain,
+                            records: result
+                        });
+                    }, this);
                     
                     if (grid && owner) {
                         owner.record = owner.recordId ? owner.store.getAt(owner.store.findExact('id', owner.recordId)) : undefined;

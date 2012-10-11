@@ -128,8 +128,13 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
                     
                     store.on({
                         write: {
-                            fn: function(store, operation, eOpts) {
+                            fn: function(store, action, result, records, rs) {
                                 if (grid && grid.store) {
+                                    OWF.Eventing.publish(this.ownerCt.channel, {
+                                        action: action,
+                                        domain: this.ownerCt.domain,
+                                        records: result
+                                    });
                                     grid.store.load();
                                 }
                             },
