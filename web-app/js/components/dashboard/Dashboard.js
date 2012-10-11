@@ -257,8 +257,12 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         var targetPaneId = target.id,
             targetPaneEl, offsets,
             targetPane = Ext.getCmp(targetPaneId),
-            x = coordinates['x'] ? coordinates['x'] : coordinates.getX(),
+            x, y;
+
+        if( coordinates ) {
+            x = coordinates['x'] ? coordinates['x'] : coordinates.getX();
             y = coordinates['y'] ? coordinates['y'] : coordinates.getY();
+        }
 
         if(!targetPane || !targetPane.isXType('pane')) {
             targetPaneEl = Ext.get(target).up('.pane');
@@ -269,8 +273,14 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
         if(targetPane && targetPane.isXType('pane')) {
             targetPane = Ext.getCmp(targetPane.id);
-            offsets = targetPane.el.getOffsetsTo(Ext.getBody());
-            targetPane.launchWidgets(data.widgetModel, x - offsets[0], y - offsets[1], 0);
+
+            if(coordinates) {
+                offsets = targetPane.el.getOffsetsTo(Ext.getBody());
+                targetPane.launchWidgets(data.widgetModel, x - offsets[0], y - offsets[1], 0);
+            }
+            else {
+                targetPane.launchWidgets(data.widgetModel);
+            }
             return true;
         }
 

@@ -155,8 +155,10 @@
 	        return '<span class="company-profile">' + value + '</span>';
 	    }
 
-	    // create the Grid
-		var sm = Ext.create('Ext.selection.CheckboxModel');	 
+	// create the Grid
+        var sm = new Ext.selection.CheckboxModel({
+            checkOnly: true
+        });	 
 		   
         new Ext.Viewport({
             layout: 'fit',
