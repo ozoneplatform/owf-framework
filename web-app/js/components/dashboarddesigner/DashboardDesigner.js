@@ -453,8 +453,16 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
             me.dashboard.saveToServer(null, null, null, function() {
                 //TODO revisit, reload can be worked around by manually updating Ext layout
 
-                // reload, to updated edited dashboard
-                window.location.reload();
+                me.dashboardContainer.dashboardStore.load({
+                    callback: function(records, options, success) {
+                        if (success == true) {
+                            me.dashboardContainer.updateDashboardsFromStore(records, options, success);
+                            me.dashboardContainer.activateDashboard(me.dashboard.getGuid());
+                        }
+                    },
+                    scope: me
+                });
+                
             });
         }
         else {

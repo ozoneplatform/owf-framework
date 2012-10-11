@@ -853,11 +853,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             //make the new dashboard active and visible
             var dashboardPanel = dashboardCardPanel.layout.setActiveItem(guid);
             
-            //save a reference
-            this.activeDashboard = dashboardPanel;
+            if (dashboardPanel) {
+                //save a reference
+                this.activeDashboard = dashboardPanel;
 
-            this.fireEvent(OWF.Events.Dashboard.CHANGED, guid);
-            this.setDefaultDashboard(guid);
+                this.fireEvent(OWF.Events.Dashboard.CHANGED, guid);
+                this.setDefaultDashboard(guid);
+            }
         }
         else {
             if (guid == '') {
