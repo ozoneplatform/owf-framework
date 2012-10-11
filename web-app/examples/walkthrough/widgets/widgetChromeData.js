@@ -99,6 +99,7 @@
                         });
                         //Fix for IE7 where the textArea extends beyond the messagebox
                         msgBox.textArea.setWidth(msgBox.width - 30);
+                        msgBox.textArea.setHeight(msgBox.height - 100);
                         msgBox.textArea.doComponentLayout();
                     }
                 },
@@ -134,6 +135,7 @@
                         });
                         //Fix for IE7 where the textArea extends beyond the messagebox
                         msgBox.textArea.setWidth(msgBox.width - 30);
+                        msgBox.textArea.setHeight(msgBox.height - 100);
                         msgBox.textArea.doComponentLayout();
                     }
                 },
