@@ -150,8 +150,8 @@
                         var msgBox = Ext.Msg.prompt('Remove Menu', 'Menu itemId: ', function(btn, text){
                        		if (btn == 'ok') {
                        			var protectedMenus = ['menus','addmenu','insertmenu','updatemenu','removemenu','listmenu'];
-                       			if (protectedMenus.indexOf(text) == -1) {
-                                   OWF.Chrome.removeHeaderMenus({
+                       			if (Ext.Array.indexOf(protectedMenus, text) == -1) {
+                                        OWF.Chrome.removeHeaderMenus({
                                        items:[{
                                        	itemId: text
                                        }]
