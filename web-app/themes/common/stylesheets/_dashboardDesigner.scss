@@ -56,7 +56,6 @@
 	left: 0;
 	position: absolute;
 	background: $dashboard-designer-background-color;
-	z-index: exponent(10, 6) !important;
 	background-image: theme-background-image($theme-name, $dashboard-designer-background-image);
 	background-repeat: repeat;
 

@@ -486,7 +486,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             floating : true,
             draggable: true,
             state: 'full',
-            fixedZIndex: 1000000,
+            // fixedZIndex: 1000000,
             plugins: [
                 new Ozone.components.keys.KeyMoveable(),
                 new Ozone.components.focusable.Focusable()
@@ -626,8 +626,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
         me.popOutToolbar.on('show', function() {
             //Ensure it's on top
-            me.dashboardContainer.floatingWindowManager.register(me.popOutToolbar);
-            me.dashboardContainer.floatingWindowManager.bringToFront(me.popOutToolbar);
+            me.dashboardContainer.bannerManager.register(me.popOutToolbar);
+            me.dashboardContainer.bannerManager.bringToFront(me.popOutToolbar);
             
             //Fix bug where height somehow gets set to 0
             if(this.height < this.originalHeight) {

@@ -320,7 +320,7 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
             },
             onFailure: function() {
                 Ozone.Msg.alert(Ozone.util.ErrorMessageString.saveUpdatedWidgets, Ozone.util.ErrorMessageString.saveUpdatedWidgetsMsg,
-                    null, null, null, scope.dashboardContainer.floatingWindowManager);
+                    null, null, null, scope.dashboardContainer.modalWindowManager);
             }
         });
         

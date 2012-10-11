@@ -41,7 +41,8 @@
             // OWF-6032
             window.opener = null;
 
-            function initLayoutComponents(customHeaderFooter, floatingWindowManager){
+            function initLayoutComponents(customHeaderFooter, floatingWidgetManager, 
+                    bannerManager, dashboardDesignerManager, modalWindowManager, tooltipManager) {
                 var layoutComponents = [];
                 
                 // create panel for custom header
@@ -94,7 +95,11 @@
                     autoHeight:true,
                     viewportId: 'viewport',
                     anchor: '100% ' + heightOffset,
-                    floatingWindowManager: floatingWindowManager
+                    floatingWidgetManager: floatingWidgetManager,
+                    bannerManager: bannerManager,
+                    dashboardDesignerManager: dashboardDesignerManager,
+                    modalWindowManager: modalWindowManager,
+                    tooltipManager: tooltipManager
                 });
                 if (showFooter) {
                     customFooter.loader = {
@@ -155,15 +160,18 @@
 
                 handleBodyOnScrollEvent();
 
-                //Create floating window zIndexManager here so tooltips manager is
-                //instantiated after and is on top of it
-                var floatingWindowManager = new Ext.ZIndexManager();
-                var tooltipManager = new Ext.ZIndexManager();
+                //Create the various z-index layers to be on top of the
+                //base ZIndexManager, last created will be on top of others
+                var floatingWidgetManager = new Ext.ZIndexManager(),
+                    bannerManager = new Ext.ZIndexManager(),
+                    dashboardDesignerManager = new Ext.ZIndexManager(),
+                    modalWindowManager = new Ext.ZIndexManager(),
+                    tooltipManager = new Ext.ZIndexManager();
 
                 //TODO: add additional zIndexManagers for all layers so
                 //banner will have one and not be hard-coded, once that is
                 //done, this hard coded value should be removed (OWF-6403)
-                tooltipManager.setBase(999999999);
+                // tooltipManager.setBase(999999999);
 
                 //init quicktips
                 Ext.tip.QuickTipManager.init(true,{
@@ -177,7 +185,9 @@
                 // Use new shim for dd
                 Ext.dd.DragDropMgr.useShim = true;
 
-                var layoutComponents = initLayoutComponents(Ozone.config.customHeaderFooter, floatingWindowManager);
+                var layoutComponents = initLayoutComponents(Ozone.config.customHeaderFooter, 
+                        floatingWidgetManager, bannerManager, dashboardDesignerManager,
+                        modalWindowManager, tooltipManager);
                 
                 var continueProcessingPage = function() {
                     
