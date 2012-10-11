@@ -3,6 +3,7 @@ Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
     alias: ['widget.preferencestabpanel'],
     
     initComponent: function() {
+        var me = this;
         
         Ext.apply(this, {
 
@@ -67,14 +68,14 @@ Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
                     handler: this.onCreateClicked,
                     scope: this
                 }, {
-					xtype: 'button',
+                    xtype: 'button',
                     itemId: 'btnEdit',
                     text: 'Edit',
                     handler: function() {
                       this.onEditClicked();
                     },
                     scope: this
-				}, {
+                }, {
                     xtype: 'button',
                     itemId: 'btnDelete',
                     text: 'Delete',
@@ -83,14 +84,15 @@ Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
                       var store = grid.store;
                       var records = grid.getSelectionModel().getSelection();
                       if (records && records.length > 0) {
-                          Ext.Msg.confirm('Delete Preferences', 'Are you sure you want to delete the selected ' + records.length + ' preference(s)?', function(button) {
-						  	if (button == 'yes') {
-						  	    store.remove(records);
-                          	    store.save();
-                          	}
-						  }, this);
+                          var okFn = function(btn, text, opts) {
+                              if (btn == 'ok') {
+                                  store.remove(records);
+                                  store.save();
+                              }
+                          };
+                          me.showConfirmation('Delete Preferences', 'This action will permanently delete the selected ' + records.length + ' preference(s)?', okFn);
                       } else {
-                          Ext.Msg.alert("Error", "You must select at least one preferences to delete.");
+                          me.showAlert("Error", "You must select at least one preferences to delete.");
                       }
                     },
                     scope: this
@@ -110,10 +112,10 @@ Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
                     
                     grid.setStore(Ext.create('Ozone.data.stores.PreferenceStore', cmp.storeCfg));
                     var refreshPagingToolbar = function(operation) {
-                    	if (operation.action == "destroy" || operation.action == "create") {
-	                        var ptb = grid.getBottomToolbar();
-	                        ptb.doRefresh();
-                    	}
+                        if (operation.action == "destroy" || operation.action == "create") {
+                            var ptb = grid.getBottomToolbar();
+                            ptb.doRefresh();
+                        }
                     };
                     grid.store.proxy.callback = refreshPagingToolbar;
                     if (grid && comp) {
@@ -143,7 +145,7 @@ Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
                                         }
                                     }
                                     else {
-                                        Ext.Msg.alert("Error", "You must select at least one preferences to edit.");
+                                        me.showAlert("Error", "You must select at least one preference to edit.");
                                     }
                                 },
                                 scope: this
@@ -176,57 +178,127 @@ Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
            }
         });
 
+        //Set the messagebox to use display:none to hide otherwise
+        //the circular focus of the editor will break
+        Ext.Msg.hideMode = 'display';
+
         this.callParent(arguments);
     },
     onCreateClicked: function(btn, evt) {
         evt.stopPropagation();
         Ext.create('Ozone.components.admin.EditPreferenceWindow', {
-			title: 'Create Preference',
-			username: this.ownerCt.record.data.username,
-			width: Math.round(Ext.getBody().getViewSize().width * .9),
-			height: Math.round(Ext.getBody().getViewSize().height * .9),
-			scope: this,
-			callback: function(values, button) {
-				if (values != undefined) {
-					var store = this.getComponent('preferencesGrid').getStore();
-					store.add(values);
-					store.save();
-				}
-			}
-		}).show();
+            title: 'Create Preference',
+            username: this.ownerCt.record.data.username,
+            width: Math.round(Ext.getBody().getViewSize().width * .9),
+            height: Math.round(Ext.getBody().getViewSize().height * .9),
+            scope: this,
+            callback: function(values, button) {
+                if (values != undefined) {
+                    var store = this.getComponent('preferencesGrid').getStore();
+                    store.add(values);
+                    store.save();
+                }
+            }
+        }).show();
     },
-	onEditClicked: function() {
-		var records = this.getComponent('preferencesGrid').getSelectionModel().getSelection();
-		if (records.length == 1) {
-			Ext.create('Ozone.components.admin.EditPreferenceWindow', {
-				title: 'Edit Preference',
-				namespace: records[0].data.namespace,
-				path: records[0].data.path,
-				value: records[0].data.value,
-				username: this.ownerCt.record.data.username,
-				width: Math.round(Ext.getBody().getViewSize().width * .9),
-				height: Math.round(Ext.getBody().getViewSize().height * .9),
-				scope: this,
-				callback: function(values, button){
-					if (values != undefined) {
-						var record = this.getComponent('preferencesGrid').getSelectionModel().getSelection()[0];
-						var store = this.getComponent('preferencesGrid').getStore();
-						record.beginEdit()
-							for (var field in values) {
-				                if (!Ext.isFunction(field)) {
-				                    record.set(field, values[field]);
-				                }
-				            }
-						record.endEdit()
-						store.save();
-						record.commit();
-					}
-				}
-			}).show();
-		} else if (records.length < 1) {
-			 Ext.Msg.alert("Error", "You must select at least one preferences to edit.");
-		} else {
-			Ext.Msg.alert("Error", "You can only edit one preference at a time.");
-		}
-	}
+    onEditClicked: function() {
+        var records = this.getComponent('preferencesGrid').getSelectionModel().getSelection();
+        if (records.length == 1) {
+            Ext.create('Ozone.components.admin.EditPreferenceWindow', {
+                title: 'Edit Preference',
+                namespace: records[0].data.namespace,
+                path: records[0].data.path,
+                value: records[0].data.value,
+                username: this.ownerCt.record.data.username,
+                width: Math.round(Ext.getBody().getViewSize().width * .9),
+                height: Math.round(Ext.getBody().getViewSize().height * .9),
+                scope: this,
+                callback: function(values, button){
+                    if (values != undefined) {
+                        var record = this.getComponent('preferencesGrid').getSelectionModel().getSelection()[0];
+                        var store = this.getComponent('preferencesGrid').getStore();
+                        record.beginEdit()
+                            for (var field in values) {
+                                if (!Ext.isFunction(field)) {
+                                    record.set(field, values[field]);
+                                }
+                            }
+                        record.endEdit()
+                        store.save();
+                        record.commit();
+                    }
+                }
+            }).show();
+        } else if (records.length < 1) {
+            this.showAlert("Error", "You must select at least one preferences to edit.");
+        } else {
+            this.showAlert("Error", "You can only edit one preference at a time.");
+        }
+    },
+    showAlert: function(title, msg) {
+        var alert = Ext.Msg.alert(title, msg),
+            okBtnEl = alert.down('button').btnEl;
+            
+        var onKeyDown = function(event) {
+            if(event.keyCode === Ext.EventObject.TAB) {
+                //Disable tabbing out of the alert
+                event.stopEvent();
+            }
+        };
+
+        okBtnEl.on('keydown', onKeyDown);
+
+        alert.on('hide', function() {
+            okBtnEl.un('keydown', onKeyDown);
+        }, this, {single: true});
+    },
+    showConfirmation: function(title, msg, okFn) {
+        var alert = Ext.Msg.show({
+            title: title,
+            msg: msg,
+            buttons: Ext.Msg.OKCANCEL,
+            closable: false,
+            modal: true,
+            scope: this,
+            listeners: null,
+            fn: okFn
+        });
+
+        var buttons = alert.query('button'),
+            okBtn, cancelBtn;
+
+        for(var i = 0; i < buttons.length; i++) {
+            if(buttons[i].itemId === 'ok') {
+                okBtn = buttons[i];
+            }
+            else if(buttons[i].itemId === 'cancel') {
+                cancelBtn = buttons[i];
+            }
+        }
+
+        var onKeyDownOkBtn = function(event) {
+            if(event.keyCode === Ext.EventObject.TAB) {
+                event.stopEvent();
+                Ext.defer(function() {
+                    cancelBtn.focus();
+                }, 1);
+            }
+        };
+        var onKeyDownCancelBtn = function(event) {
+            if(event.keyCode === Ext.EventObject.TAB) {
+                event.stopEvent();
+                Ext.defer(function() {
+                    okBtn.focus();
+                }, 1);
+            }
+        };
+
+        okBtn.el.on('keydown', onKeyDownOkBtn);
+        cancelBtn.el.on('keydown', onKeyDownCancelBtn);
+
+        alert.on('hide', function() {
+            okBtn.el.un('keydown', onKeyDownOkBtn);
+            cancelBtn.el.un('keydown', onKeyDownCancelBtn);
+        }, this, {single: true});
+    }
 });
