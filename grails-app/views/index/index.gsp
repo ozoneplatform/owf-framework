@@ -168,11 +168,6 @@
                     modalWindowManager = new Ext.ZIndexManager(),
                     tooltipManager = new Ext.ZIndexManager();
 
-                //TODO: add additional zIndexManagers for all layers so
-                //banner will have one and not be hard-coded, once that is
-                //done, this hard coded value should be removed (OWF-6403)
-                // tooltipManager.setBase(999999999);
-
                 //init quicktips
                 Ext.tip.QuickTipManager.init(true,{
                     xtype: 'ozonequicktip',
