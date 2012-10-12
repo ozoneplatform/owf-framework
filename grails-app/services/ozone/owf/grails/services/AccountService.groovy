@@ -210,11 +210,18 @@ class AccountService {
                 }
                 projections { rowCount() }
             }
+            def dashboardCount = Dashboard.withCriteria {
+                cacheMode(CacheMode.GET)
+                user {
+                    eq('id', p.id)
+                }
+                projections { rowCount() }
+            }
 
             serviceModelService.createServiceModel(p, [
                         totalGroups: groupCount[0],
                         totalWidgets: widgetCount[0],
-                        totalDashboards: p.dashboards?.size()
+                        totalDashboards: dashboardCount[0]
                     ])
         }
 

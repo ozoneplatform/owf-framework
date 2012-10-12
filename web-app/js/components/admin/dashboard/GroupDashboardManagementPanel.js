@@ -209,7 +209,11 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
         
         this.callParent(arguments);
         
-        OWF.Eventing.subscribe('AdminChannel',this.handleEvent);
+        OWF.Eventing.subscribe('AdminChannel', owfdojo.hitch(this, function(sender, msg, channel) {
+            if(msg.domain === 'Dashboard') {
+               this.gridDashboards.getBottomToolbar().doRefresh();
+            }
+        }));
         
         this.on(
         		'afterrender', 

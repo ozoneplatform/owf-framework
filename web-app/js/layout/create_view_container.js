@@ -153,7 +153,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             dashboardJson = null;
             Ozone.Msg.alert(Ozone.util.ErrorMessageString.dashboardConfig, "Invalid configuration file.", function () {
                 current.focusTitleBox();
-            }, current, null, current.dashboardContainer.floatingWindowManager);
+            }, current, null, current.dashboardContainer.modalWindowManager);
         }
 
         var container = this;
@@ -388,7 +388,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                                     this.down('#existViewCb').markInvalid("This field cannot be blank.");
                                     Ozone.Msg.alert(Ozone.util.ErrorMessageString.invalidForm, Ozone.util.ErrorMessageString.invalidFormMsg, function () {
                                             this.focusTitleBox();
-                                        }, this, null, this.dashboardContainer.floatingWindowManager);
+                                        }, this, null, this.dashboardContainer.modalWindowManager);
                                     return;
                                 }
 
@@ -418,7 +418,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                                     if (!Ozone.util.validateDashboardJSON(dashboardJson)) {
                                         Ozone.Msg.alert(Ozone.util.ErrorMessageString.dashboardConfig, "Invalid " + dashboardJson.layout + " configuration file.", function () {
                                             this.focusTitleBox();
-                                        }, this, null, this.dashboardContainer.floatingWindowManager);
+                                        }, this, null, this.dashboardContainer.modalWindowManager);
                                     }
                                     else {
                                         delete dashboardJson.state;
@@ -432,7 +432,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                                 else {
                                     Ozone.Msg.alert(Ozone.util.ErrorMessageString.invalidForm, Ozone.util.ErrorMessageString.invalidFormMsg, function () {
                                         this.focusTitleBox();
-                                    }, this, null, this.dashboardContainer.floatingWindowManager);
+                                    }, this, null, this.dashboardContainer.modalWindowManager);
                                 }
                             }
                             //create new using name, and description
@@ -450,7 +450,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                     else {
                         Ozone.Msg.alert(Ozone.util.ErrorMessageString.invalidForm, Ozone.util.ErrorMessageString.invalidFormMsg, function () {
                             this.focusTitleBox();
-                        }, this, null, this.dashboardContainer.floatingWindowManager);
+                        }, this, null, this.dashboardContainer.modalWindowManager);
                     }
                 },
                 scope: this,

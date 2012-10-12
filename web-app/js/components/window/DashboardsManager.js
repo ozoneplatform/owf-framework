@@ -356,8 +356,8 @@ Ext.define('Ozone.components.window.DashboardsManager', {
 				myPopup.show();
 
                 //Ensure its on top
-                this.dashboardContainer.floatingWindowManager.register(myPopup);
-                this.dashboardContainer.floatingWindowManager.bringToFront(myPopup);
+                this.dashboardContainer.modalWindowManager.register(myPopup);
+                this.dashboardContainer.modalWindowManager.bringToFront(myPopup);
 
 				myPopup.center();
 				shareFormPanel.down('textarea').focus();
@@ -419,7 +419,7 @@ Ext.define('Ozone.components.window.DashboardsManager', {
                                 Ext.defer(function() {
                                     this.down('gridview').focus();
                                 }, 200, this);
-                            }, this, null, this.dashboardContainer.floatingWindowManager);
+                            }, this, null, this.dashboardContainer.modalWindowManager);
 							return;
 						},
 						scope: this

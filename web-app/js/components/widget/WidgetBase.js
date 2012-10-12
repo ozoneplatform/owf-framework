@@ -213,11 +213,9 @@ Ext.define('Ozone.components.widget.WidgetBase', {
 				ghostPanel.header.insert(0, iconCmp);
 			}
 			ghostPanel.floatParent = me.floatParent;
-			if (me.floating) {
-				ghostPanel.setZIndex(Ext.Number.from(me.el.getStyle('zIndex'), 0));
-			} else {
-				ghostPanel.toFront();
-			}
+            me.floating && this.dashboard.dashboardContainer.floatingWidgetManager.register(ghostPanel);
+			ghostPanel.toFront();
+            
 			header = ghostPanel.header;
 			// restore options
 			if (header) {

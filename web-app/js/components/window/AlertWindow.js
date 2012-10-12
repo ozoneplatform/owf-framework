@@ -66,10 +66,10 @@ Ext.define('Ozone.components.window.AlertWindow', {
             });
 
             //Ensure its on top
-            me.dashboardContainer && me.mon(el, 'show', function() {
-                this.dashboardContainer.floatingWindowManager.register(this);
-                this.dashboardContainer.floatingWindowManager.bringToFront(this);
-            });
+            // me.dashboardContainer && me.mon(el, 'show', function() {
+            //     this.dashboardContainer.floatingWidgetManager.register(this);
+            //     this.dashboardContainer.floatingWidgetManager.bringToFront(this);
+            // });
 
             //Set up circular focus on buttons
             me.setupFocus(el,cancelBtnEl);

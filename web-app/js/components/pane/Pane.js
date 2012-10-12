@@ -195,6 +195,9 @@ Ext.define('Ozone.components.pane.Pane', {
 
         // show widget
         widget = Ext.widget('widgetwindow', widgetCfg);
+
+        // register with the floating widget zindexmanager so always on top of other widgets
+        !isDesktop && this.dashboard.dashboardContainer.floatingWidgetManager.register(widget);
                 
         widget.on("statesave", function(obj, state) {
             this.defaultSettings.widgetStates = this.defaultSettings.widgetStates || {};
@@ -221,7 +224,7 @@ Ext.define('Ozone.components.pane.Pane', {
         }
         else {
             // register with the top zindexmanager so always on top of other widgets
-            this.dashboard.dashboardContainer.floatingWindowManager.register(widget);
+            this.dashboard.dashboardContainer.floatingWidgetManager.register(widget);
 
             widget.show();
             widget.model.get('minimized') && widget.minimize();
@@ -365,7 +368,7 @@ Ext.define('Ozone.components.pane.Pane', {
     onBeforeClose: function(obj) {
 		if(this.dashboard.configRecord.get('locked') && !obj.floatingWidget) {
 			Ozone.Msg.alert(Ozone.layout.DialogMessages.dashboardLockAlertTitle, Ozone.layout.DialogMessages.dashboardLockAlert,
-                    null, null, null, this.dashboard.dashboardContainer.floatingWindowManager);
+                    null, null, null, this.dashboard.dashboardContainer.modalWindowManager);
 			return false;
 		}
 		return true;

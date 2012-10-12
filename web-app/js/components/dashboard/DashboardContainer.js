@@ -28,8 +28,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     suppressLockWarning: false,
 
-    // Manages z-indexes of the floating widgets and OWF windows (passed from index.gsp)
-    floatingWindowManager: null,
+    // ZIndexManagers for the various z-index levels, must be instantiated in 
+    // index.gsp so the tooltipManager can be used and still be created last
+    floatingWidgetManager: null,
+    bannerManager: null,
+    dashboardDesignerManager: null,
+    modalWindowManager: null,
+    tooltipManager: null,
 
     // private
     initComponent: function() {
@@ -853,11 +858,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             //make the new dashboard active and visible
             var dashboardPanel = dashboardCardPanel.layout.setActiveItem(guid);
             
-            //save a reference
-            this.activeDashboard = dashboardPanel;
+            if (dashboardPanel) {
+                //save a reference
+                this.activeDashboard = dashboardPanel;
 
-            this.fireEvent(OWF.Events.Dashboard.CHANGED, guid);
-            this.setDefaultDashboard(guid);
+                this.fireEvent(OWF.Events.Dashboard.CHANGED, guid);
+                this.setDefaultDashboard(guid);
+            }
         }
         else {
             if (guid == '') {
@@ -875,7 +882,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     [Ozone.util.ErrorMessageString.invalidDashboard, this.activeDashboard.isdefault 
                         ? Ozone.util.ErrorMessageString.invalidDashboardMsg 
                         : Ozone.util.ErrorMessageString.invalidDashboardGotoDefaultMsg,
-                        null, null, null, this.floatingWindowManager]);
+                        null, null, null, this.modalWindowManager]);
 
                 //set guid on hash back to previous guid
                 Ext.util.History.add(Ext.urlEncode({
@@ -1561,7 +1568,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         if (!failure) {
             failure = function() {
-                Ozone.Msg.alert('Dashboard Manager', "Error creating or updating dashboard.", null, null, null, me.floatingWindowManager);
+                Ozone.Msg.alert('Dashboard Manager', "Error creating or updating dashboard.", null, null, null, me.modalWindowManager);
                 return;
             }
         }
@@ -1698,12 +1705,12 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 if (wrecords.length >= 0) {
                     if (!wsuccess) {
                         Ozone.Msg.alert(Ozone.util.ErrorMessageString.retrieveUpdatedWidgets, Ozone.util.ErrorMessageString.retrieveUpdatedWidgetsMsg,
-                            null, null, null, this.floatingWindowManager);
+                            null, null, null, this.modalWindowManager);
                     }
                 }
                 else {
                     Ozone.Msg.alert(Ozone.util.ErrorMessageString.retrieveUpdatedWidgets, Ozone.util.ErrorMessageString.retrieveUpdatedWidgetsMsg,
-                        null, null, null, this.floatingWindowManager);
+                        null, null, null, this.modalWindowManager);
                 }
                 //Ext.getCmp('widget-launcher').loadLauncherState();
             }

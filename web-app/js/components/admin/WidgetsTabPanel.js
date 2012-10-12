@@ -3,6 +3,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
     alias: ['widget.widgetstabpanel'],
     
     initComponent: function() {
+        var me = this;
         
         Ext.apply(this, {
 
@@ -80,7 +81,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                           store.remove(records);
                           store.save();
                       } else {
-                          Ext.Msg.alert("Error", "You must select at least one widget to remove.");
+                          me.showAlert("Error", "You must select at least one widget to remove.");
                       }
                     },
                     scope: this
@@ -106,20 +107,29 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                             cmp.guid_EditCopyWidget = result.value;
                         },
                         onFailure: function(err) { /* No op */
-                            Ext.Msg.alert('Preferences Error', 'Error looking up Widget Editor: ' + err);
+                            me.showAlert('Preferences Error', 'Error looking up Widget Editor: ' + err);
                         }
                     });
     
                     // Create modified widget store and bind to grid
                     grid.setStore(Ext.create('Ozone.data.stores.AdminWidgetStore', cmp.storeCfg));
                     var refreshPagingToolbar = function(operation) {
-                    	cmp.refreshWidgetLaunchMenu();
-                    	if (operation.action == "destroy" || operation.action == "create") {
-	                        var ptb = grid.getBottomToolbar();
-	                        ptb.doRefresh();
-                    	}
+                        cmp.refreshWidgetLaunchMenu();
+                        if (operation.action == "destroy" || operation.action == "create") {
+                            var ptb = grid.getBottomToolbar();
+                            ptb.doRefresh();
+                        }
                     };
                     grid.store.proxy.callback = refreshPagingToolbar;
+
+                    grid.store.on('write', function(store, action, result, records, rs) {
+                        OWF.Eventing.publish(this.ownerCt.channel, {
+                            action: action,
+                            domain: this.ownerCt.domain,
+                            records: result
+                        });
+                    }, this);
+
                     if (grid && comp) {
                         comp.record = comp.recordId ? comp.store.getAt(comp.store.findExact('id', comp.recordId)) : undefined;
                         compId = comp.recordId ? comp.recordId : -1;
@@ -132,7 +142,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                     
                     // Set the title
                     if (comp.record) {
-                    	var titleText = Ext.htmlEncode(comp.record.get('title')) || 'Widgets';
+                        var titleText = Ext.htmlEncode(comp.record.get('title')) || 'Widgets';
                         lbl.setText(titleText);
                     }
                     
@@ -147,7 +157,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                                         }
                                     }
                                     else {
-                                        Ext.Msg.alert("Error", "You must select at least one widget to edit.");
+                                        me.showAlert("Error", "You must select at least one widget to edit.");
                                     }
                                 },
                                 scope: this
@@ -196,6 +206,10 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
            }
         });
 
+        //Set the messagebox to use display:none to hide otherwise
+        //the circular focus of the editor will break
+        Ext.Msg.hideMode = 'display';
+
         this.callParent(arguments);
     },
     
@@ -208,6 +222,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
     },
     
     doEdit: function(id) {
+        var me = this;
         var dataString = Ozone.util.toString({
             id: id,
             copyFlag: false
@@ -219,156 +234,43 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
             data: dataString
         }, function(response) {
             if (response.error) {
-                Ext.Msg.alert('Launch Error', 'Widget Editor Launch Failed: ' + response.message);
+                me.showAlert('Launch Error', 'Widget Editor Launch Failed: ' + response.message);
             }
         });
     },
     
     onAddClicked: function(button, e) {
-        var me = this;
-        var vpSize = Ext.getBody().getViewSize();
-        var win = Ext.create('Ext.window.Window', {
-            title: me.generateTitle(),
-            itemId: 'addwidgetwindow',
-            closable: true,
-            draggable: false,
-            resizable: false,
-            border: false,
-            minWidth: 250,
-            minHeight: 200,
-            width: Math.round(vpSize.width * .9),
-            height: Math.round(vpSize.height * .9),
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            },
-            modal: true,
-            items: [{
-                xtype: 'panel',
-                itemId: 'widgetsaddpanel',
-                cls: 'widgetsaddpanel',
-                layout: 'fit',
-                flex: 1,
-                items: [{
-                    xtype: 'widgetsgrid',
-                    itemId: 'widgetsaddgrid',
-                    border: false,
-                    enableColumnHide: false,
-                    sortableColumns: false,
-                    listeners: {
-                        afterrender: {
-                            fn: function(cmp, opts) {
-                                var store = cmp.getStore();
-                                if (store) {
-                                    
-                                    store.load({
-                                        params: {
-                                            offset: 0,
-                                            max: store.pageSize
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }],
-                dockedItems: [{
-                    xtype: 'toolbar',
-                    itemId: 'widgetsaddtoolbar',
-                    dock: 'top',
-                    items: [{
-                        itemId: 'tbtext',
-                        xtype: 'tbtext',
-                    	cls: 'tbWidgetsGridHdr',
-                        text: 'Widgets'
-                    },
-                    '->',
-                    {
-                        xtype: 'searchbox',
-                        listeners: {
-                            searchChanged: function (cmp, queryString) {
-                                var grid = win.getComponent('widgetsaddpanel').getComponent('widgetsaddgrid');
-                                var filters = [];
-                                if(queryString.length > 0){
-                                    grid.applyFilter(queryString, ['displayName']);
-                                } else {
-                                    grid.applyFilter();
-                                }
-                            }
-                        }
-                    }]
-                }]
-            }],
-            buttons: [{
-                text: 'OK',
-                handler: function() {
-                    var grdWidgets = me.getComponent('widgetsGrid');
-                    var storeWidgets = grdWidgets.getStore();
-                    var wap = win.getComponent('widgetsaddpanel');
-                    var grdWidgetsAdd = wap.getComponent('widgetsaddgrid');
-                    var recordsToAdd = [];
-                    
-                    var records = grdWidgetsAdd.getSelectionModel().getSelection();
-                    
-                    for (var i = 0 ; i < records.length ; i++) {
-                        var rec = records[i];
-
-                        // skip records already in store
-                        if (storeWidgets.findExact('id', rec.data.id) == -1) {
-                            var newRec = storeWidgets.createModel(rec);
-                            newRec.phantom = true;
-                            recordsToAdd.push(newRec);
-                        }
-                    }
-                    if (recordsToAdd.length > 0) {
-                        storeWidgets.insert(0, recordsToAdd);
-                        storeWidgets.save();
-                    }
-                    win.close();
-                }
-            }, {
-                text: 'Cancel',
-                handler: function() {
-                    win.close();
-                }
-            }]
+        var win = Ext.widget('admineditoraddwindow', {
+            addType: 'Widget',
+            itemName: this.ownerCt.record.get('title'),
+            editor: this.editor,
+            focusOnClose: this.down(),
+            existingItemsStore: this.getComponent('widgetsGrid').getStore(),
+            searchFields: ['displayName'],
+            grid: Ext.widget('widgetsgrid', {
+                itemId: 'widgetsaddgrid',
+                border: false,
+                enableColumnHide: false,
+                sortableColumns: false
+            })
         });
         win.show();
     },
-    generateTitle: function() {
+    showAlert: function(title, msg) {
+        var alert = Ext.Msg.alert(title, msg),
+            okBtnEl = alert.down('button').btnEl;
+            
+        var onKeyDown = function(event) {
+            if(event.keyCode === Ext.EventObject.TAB) {
+                //Disable tabbing out of the alert
+                event.stopEvent();
+            }
+        };
 
-        var title = "Add Widget(s)";
+        okBtnEl.on('keydown', onKeyDown);
 
-        var data = this.ownerCt.store.data.items[0].data;
-        if(data.name) {
-            //Adding widget to a group
-            title += " to " + data.name;
-        } else if (data.userRealName) {
-            //Adding widget to a person
-            title += " to " + data.userRealName;
-        }
-
-        //Set a character limit to start at and truncate the title to it if necessary
-        var charLimit = 100;
-        title = Ext.util.Format.ellipsis(title, charLimit);
-
-        //Get the size of the parent container
-        var vpSize = Ext.getBody().getViewSize();
-
-        //Use TextMetrics to get the pixel width of the title
-        var textMetrics = new Ext.util.TextMetrics();
-        var titleWidth = textMetrics.getWidth(title);
-
-        //If the title's pixel width is too large for the window, decrease it
-        //by 5 characters until its pixel width fits
-        while(titleWidth > ((vpSize.width * .8))) {
-            charLimit -= 5;
-            title = Ext.util.Format.ellipsis(title, charLimit);
-            titleWidth = textMetrics.getWidth(title);
-        }
-
-        textMetrics.destroy();
-
-        return Ext.htmlEncode(title);
+        alert.on('hide', function() {
+            okBtnEl.un('keydown', onKeyDown);
+        }, this, {single: true});
     }
 });
