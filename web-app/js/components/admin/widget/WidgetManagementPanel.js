@@ -146,6 +146,12 @@ Ext.define('Ozone.components.admin.widget.WidgetManagementPanel', {
     });
 
     this.callParent();
+        
+    OWF.Eventing.subscribe('AdminChannel', owfdojo.hitch(this, function(sender, msg, channel) {
+        if(msg.domain === 'Widget') {
+            this.down('#grid').getBottomToolbar().doRefresh();
+        }
+    }));
 
     this.on({
       render: {

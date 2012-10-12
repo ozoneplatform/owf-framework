@@ -128,8 +128,13 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
                     
                     store.on({
                         write: {
-                            fn: function(store, operation, eOpts) {
+                            fn: function(store, action, result, records, rs) {
                                 if (grid && grid.store) {
+                                    OWF.Eventing.publish(this.ownerCt.channel, {
+                                        action: action,
+                                        domain: this.ownerCt.domain,
+                                        records: result
+                                    });
                                     grid.store.load();
                                 }
                             },
@@ -220,7 +225,7 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
             }).show();
         }
         else {
-            Ext.Msg.alert("Error", "You must select at least one dashboard to edit.");
+            this.showAlert("Error", "You must select at least one dashboard to edit.");
         }
     },
     doCopy: function(button, e) {
@@ -234,7 +239,7 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
             this.openCopyWindow(dashboardData);
         }
         else {
-            Ext.Msg.alert("Error", "You must select at least one dashboard to copy.");
+            this.showAlert("Error", "You must select at least one dashboard to copy.");
         }
     },
     openCopyWindow: function (dashboardData) {
@@ -243,141 +248,64 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
         if (me.editor) {
             addTitle = "To copy the selected dashboards, select one or more groups and click 'OK':";
         }
-        var vpSize = Ext.getBody().getViewSize();
-        var win = Ext.create('Ext.window.Window',{
-            title: 'Add Groups',
-            closable: true,
-            draggable: false,
-            resizable: false,
-            border: false,
-            minWidth: 250,
-            minHeight: 200,
-            width: vpSize.width * .9,
-            height: vpSize.height * .9,
-            modal:true,
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            },
-            items: [{
-                xtype: 'label',
+
+        var win = Ext.widget('admineditoraddwindow', {
+            addType: 'Group',
+            itemName: dashboardData.length === 1 ? dashboardData[0].name : 'Dashboards',
+            editor: this.editor,
+            focusOnClose: this.down(),
+            instructions: addTitle,
+            searchFields: ['name', 'description'],
+            grid: Ext.widget('groupsgrid', {
+                itemId: 'groupsaddgrid',
+                preventHeader:true,
                 border: false,
-                //height: 20,
-                text: addTitle,
-                style: {
-                    textAlign: 'left'
-                //backgroundColor: '#CED9E7'
-                }
-            }, {
-                xtype: 'panel',
-                itemId: 'groupsaddpanel',
-                layout: 'fit',
-                flex: 1,
-                items: [{
-                    xtype:'groupsgrid',
-                    itemId: 'groupsaddgrid',
-                    preventHeader:true,
-                    border: false,
-                    enableColumnHide: false,
-                    sortableColumns: false
-                }],
-                dockedItems: [{
-                    xtype:'toolbar',
-                    dock:'bottom',
-                    ui:'footer',
-                    defaults:{
-                        minWidth:80
-                    },
-                    items:['->',{
-                        xtype:'button',
-                        text:'OK',
-                        handler: function() {
-                            var grid = win.down('#groupsaddgrid');
-                            if(grid) {
-                                var groupRecords = grid.getSelectionModel().getSelection();
-                                if (groupRecords && groupRecords.length > 0) {
-                                    var groupData = [];
-                                    for (var i = 0 ; i < groupRecords.length ; i++) {
-                                        groupData.push(groupRecords[i].data);
-                                    }
-
-                                    //ajax call to the server
-                                    Ozone.util.Transport.send({
-                                        url : Ozone.util.contextPath() + '/group/copyDashboard',
-                                        method : "POST",
-                                        onSuccess: Ext.bind(function (json){
-                                            var dashboardsgrid = this.down("#dashboardsgrid");
-                                            if (dashboardsgrid) {
-                                                dashboardsgrid.refresh();
-                                            }
-                                        },this),
-                                        onFailure: function (errorMsg){
-                                            Ext.Msg.alert("Error", "Error while " +
-                                                "copying dashboard(s): " + 
-                                                errorMsg);
-                                        },
-                                        autoSendVersion : false,
-                                        content : {
-                                            isGroupDashboard: true,
-                                            groups: Ext.encode(groupData),
-                                            dashboards: Ext.encode(dashboardData)
-                                        }
-                                    });
-
-                                }
-                            }
-                            win.close();
-                        },
-                        scope: this
-                    },{
-                        xtype:'button',
-                        text:'Cancel',
-                        handler: function() {
-                            win.close();
-                        },
-                        scope: this
-                    }]
-                },{
-                    xtype:'toolbar',
-                    dock:'top',
-                    items:[{
-                        xtype:'tbtext',
-                        text:'Groups'
-                    },'->',{
-                        xtype: 'searchbox',
-                        listeners: {
-                            searchChanged: {
-                                fn: function(cmp, value) {
-                                    var grid = this.getComponent('groupsaddgrid');
-                                    if (grid != null) {
-                                        grid.applyFilter(value, ['name', 'description']);
-                                    }
-                                },
-                                scope: this
-                            }
+                enableColumnHide: false,
+                sortableColumns: false
+            }),
+            okFn: function() {
+                var grid = win.down('#groupsaddgrid');
+                if(grid) {
+                    var groupRecords = grid.getSelectionModel().getSelection();
+                    if (groupRecords && groupRecords.length > 0) {
+                        var groupData = [];
+                        for (var i = 0 ; i < groupRecords.length ; i++) {
+                            groupData.push(groupRecords[i].data);
                         }
-                    }]
-                }]
-            }]
-        });
-        win.on(
-            'activate',
-            function(cmp,opts) {
-                var grid = cmp.getComponent('groupsaddpanel').getComponent('groupsaddgrid');
-                grid.store.load({
-                    params: {
-                        offset: 0,
-                        max: this.pageSize
+
+                        //ajax call to the server
+                        Ozone.util.Transport.send({
+                            url : Ozone.util.contextPath() + '/group/copyDashboard',
+                            method : "POST",
+                            onSuccess: Ext.bind(function (json){
+                                var dashboardsgrid = this.down("#dashboardsgrid");
+                                if (dashboardsgrid) {
+                                    dashboardsgrid.refresh();
+                                }
+                            },this),
+                            onFailure: function (errorMsg){
+                                me.showAlert("Error", "Error while " +
+                                    "copying dashboard(s): " + 
+                                    errorMsg);
+                            },
+                            autoSendVersion : false,
+                            content : {
+                                isGroupDashboard: true,
+                                groups: Ext.encode(groupData),
+                                dashboards: Ext.encode(dashboardData)
+                            }
+                        });
+
                     }
-                });
-            },
-            this);
+                }
+            }
+        });
         win.show();
     },
     doDelete: function(button, e) {
-        var grid = this.getComponent('dashboardsgrid');
-        var store = grid.getStore();
-        var records = grid.getSelectedDashboards();
+        var grid = this.getComponent('dashboardsgrid'),
+            store = grid.getStore()
+            records = grid.getSelectedDashboards();
         if (records && records.length > 0) {
             var msg = 'This action will permanently<br>delete the selected dashboard(s)';
             if (records.length == 1) {
@@ -387,22 +315,15 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
                 msg = 'This action will permanently<br>delete the selected <span class="heading-bold">' 
                         + records.length + ' dashboards</span>.';
             }
-            Ext.Msg.show({
-                title: 'Warning',
-                msg: msg,
-                buttons: Ext.Msg.OKCANCEL,
-                closable: false,
-                modal: true,
-                scope: this,
-                fn: function(btn, text, opts) {
-                    if (btn == 'ok') {
-                        store.remove(records);
-                        store.save();
-                    }
+            var okFn = function(btn, text, opts) {
+                if (btn == 'ok') {
+                    store.remove(records);
+                    store.save();
                 }
-            });
+            };
+            this.showConfirmation('Warning', msg, okFn);
         } else {
-            Ext.Msg.alert("Error", "You must select at least one dashboard to delete.");
+            this.showAlert("Error", "You must select at least one dashboard to delete.");
         }
     }
 

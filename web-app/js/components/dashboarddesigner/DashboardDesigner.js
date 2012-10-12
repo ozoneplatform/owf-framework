@@ -21,6 +21,7 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
 
     //layout: 'fit',
     height: '100%',
+    floating: true,
 
     // array of all widgets for the dashboard
     // used when user removes all the panes by resetting dashboard
@@ -106,6 +107,9 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
     setup: function() {
         var ddpanes = this.query('dashboarddesignerpane'),
             firstEl;
+
+        this.dashboardContainer.dashboardDesignerManager.register(this);
+        this.dashboardContainer.dashboardDesignerManager.bringToFront(this);
 
         if(ddpanes.length > 0)
             firstEl = ddpanes[0].el;
@@ -322,6 +326,7 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
                 + Ext.htmlEncode(activeWidget.name) + '</i> will be removed from the dashboard.</p><br/>'
                 + '<p>Set to Fit layout and <b>permanently</b> remove the other widgets?</p>',
             width: 400,
+            dashboardContainer: me.dashboardContainer,
             focusOnClose: focusOnClose,
             okFn: function() {
                 cmp.el.replaceCls(cmp.initialConfig.paneType, 'fitpane');
@@ -356,7 +361,7 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
                     me.allWidgets = remainingWidgets;
                 }
             }
-        }).show().setZIndex(this.el.getStyle('z-index') + 10);
+        }).show();
     },
 
     setupDropZone: function() {
@@ -453,8 +458,16 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
             me.dashboard.saveToServer(null, null, null, function() {
                 //TODO revisit, reload can be worked around by manually updating Ext layout
 
-                // reload, to updated edited dashboard
-                window.location.reload();
+                me.dashboardContainer.dashboardStore.load({
+                    callback: function(records, options, success) {
+                        if (success == true) {
+                            me.dashboardContainer.updateDashboardsFromStore(records, options, success);
+                            me.dashboardContainer.activateDashboard(me.dashboard.getGuid());
+                        }
+                    },
+                    scope: me
+                });
+                
             });
         }
         else {

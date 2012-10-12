@@ -238,7 +238,7 @@ Ext.define('Ozone.components.tab.WidgetTabPanel', {
     onBeforeClose: function(cmp) {
 		if(cmp.card.dashboard.configRecord.get('locked') && !cmp.card.model.get('floatingWidget')) {
 			Ozone.Msg.alert(Ozone.layout.DialogMessages.dashboardLockAlertTitle, Ozone.layout.DialogMessages.dashboardLockAlert,
-                null, null, null, cmp.card.dashboard.dashboardContainer.floatingWindowManager);
+                null, null, null, cmp.card.dashboard.dashboardContainer.modalWindowManager);
 			return false;
 		}
 	}    

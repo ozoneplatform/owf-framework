@@ -818,7 +818,7 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
             }
             else {
                 Ozone.Msg.alert(Ozone.util.ErrorMessageString.errorTitle, Ozone.util.ErrorMessageString.widgetNotApproved,
-                    null, null, null, scope.floatingWindowManager);
+                    null, null, null, scope.modalWindowManager);
                 ok2Add = false;
             }
 

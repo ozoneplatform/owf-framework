@@ -244,9 +244,9 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                     itemcontextmenu: {
                         fn: function (view, rec, node, index, e) {
                             e.stopEvent();
-                            this.dashboardContainer.floatingWindowManager.register(contextMenu);
+                            this.dashboardContainer.modalWindowManager.register(contextMenu);
                             contextMenu.showAt(e.getXY());
-                            this.dashboardContainer.floatingWindowManager.bringToFront(contextMenu);
+                            this.dashboardContainer.modalWindowManager.bringToFront(contextMenu);
                             return false;
                         },
                         scope: this
@@ -281,9 +281,9 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                                         coordinates[0] -= 5;
                                         coordinates[1] += 10; // Approximates a good location for the context menu to appear
 
-                                        this.dashboardContainer.floatingWindowManager.register(contextMenu);
+                                        this.dashboardContainer.modalWindowManager.register(contextMenu);
                                         contextMenu.showAt(coordinates);
-                                        this.dashboardContainer.floatingWindowManager.bringToFront(contextMenu);
+                                        this.dashboardContainer.modalWindowManager.bringToFront(contextMenu);
 
                                         //Add a listener to the context menu so that when it is closed with ESC it will 
                                         //move focus back to the widget grid
@@ -615,7 +615,7 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
         
         function onFailure() {
             Ozone.Msg.alert(Ozone.util.ErrorMessageString.saveUpdatedWidgets, Ozone.util.ErrorMessageString.saveUpdatedWidgetsMsg,
-                null, null, null, scope.dashboardContainer.floatingWindowManager);
+                null, null, null, scope.dashboardContainer.modalWindowManager);
         }
         
         Ext.getCmp(this.winId).close();
@@ -649,8 +649,8 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                 listeners: {
                     show: function (cmp) {
                         //Ensure its on top
-                        cmp.dashboardContainer.floatingWindowManager.register(cmp);
-                        cmp.dashboardContainer.floatingWindowManager.bringToFront(cmp);
+                        cmp.dashboardContainer.modalWindowManager.register(cmp);
+                        cmp.dashboardContainer.modalWindowManager.bringToFront(cmp);
                         
                         /*
                          * Needs to be deferred or it will happen before the

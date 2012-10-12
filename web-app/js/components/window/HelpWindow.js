@@ -162,8 +162,8 @@ Ext.define('Ozone.components.window.HelpWindow', {
 
     //Ensure it is on top
     this.dashboardContainer && this.on('show', function() {
-        this.dashboardContainer.floatingWindowManager.register(this);
-        this.dashboardContainer.floatingWindowManager.bringToFront(this);
+        this.dashboardContainer.modalWindowManager.register(this);
+        this.dashboardContainer.modalWindowManager.bringToFront(this);
     });
 
     this.callParent(arguments);

@@ -5,6 +5,10 @@ Ext.define('Ozone.components.admin.EditDashboardWindow', {
         'widget.Ozone.components.admin.EditDashboardWindow'
     ],
 
+    mixins: {
+      widget: 'Ozone.components.focusable.CircularFocus'
+    },
+
     cls: 'editdashboardwindow',
     
     callback: Ext.emptyFn,
@@ -24,7 +28,7 @@ Ext.define('Ozone.components.admin.EditDashboardWindow', {
         
         if (!this.scope)
             this.scope = this;
-			
+            
         Ext.apply(this, {
             layout: 'fit',
             items: [{
@@ -173,6 +177,7 @@ Ext.define('Ozone.components.admin.EditDashboardWindow', {
                             itemId: 'guid'
                         }, {
                             xtype: 'textfield',
+                            itemId: 'nameField',
                             value: this.name,
                             fieldLabel: Ozone.util.createRequiredLabel('Name'),
                             labelWidth: 140,
@@ -244,6 +249,10 @@ Ext.define('Ozone.components.admin.EditDashboardWindow', {
         })
         
         this.callParent(arguments);
+
+        this.on('afterrender', function() {
+            this.setupFocus(this.down('#nameField').getFocusEl(), this.down('#cancel').getFocusEl());
+        });
         
         this.on('beforeclose', function(panel, e) {
             this.callback.call(this.scope, this.submitValues, this.closeButton);

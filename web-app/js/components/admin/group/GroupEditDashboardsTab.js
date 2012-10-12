@@ -17,6 +17,7 @@ Ext.define('Ozone.components.admin.group.GroupEditDashboardsTab', {
             itemId: 'tabDashboards',
             title: 'Dashboards',
             iconCls: 'dashboard-tab',
+            editor: 'Group',
             componentId: 'group_id',
             storeCfg: {
                 api: {
@@ -72,24 +73,17 @@ Ext.define('Ozone.components.admin.group.GroupEditDashboardsTab', {
         });
     },
     onAddClicked: function () {
-        var me = this;
-        var vpSize = Ext.getBody().getViewSize();
-        var win = Ext.create('Ext.window.Window', {
-            title: me.generateTitle(),
-            minWidth: 250,
-            minHeight: 200,
-            width: vpSize.width * .9,
-            height: vpSize.height * .9,
-            modal:true,
-            layout: 'fit',
-            cls: 'dashboardsaddpanel',
-            items: [
-            {
-                xtype:'dashboardsgrid',
+        var win = Ext.widget('admineditoraddwindow', {
+            addType: 'Dashboard',
+            itemName: this.ownerCt.record.get('displayName'),
+            editor: this.editor,
+            focusOnClose: this.down(),
+            existingItemsStore: this.getComponent('dashboardsgrid').getStore(),
+            grid: Ext.widget('dashboardsgrid', {
                 itemId: 'dashboardsaddgrid',
-                cls: 'adddashboardsgrid',
-                preventHeader:true,
-                border:false,
+                border: false,
+                enableColumnHide: false,
+                sortableColumns: false,
                 listeners: {
                     render: {
                         fn: function(cmp) {
@@ -101,90 +95,8 @@ Ext.define('Ozone.components.admin.group.GroupEditDashboardsTab', {
                         scope: this
                     }
                 }
-            }
-            ],
-            dockedItems: [
-            {
-                xtype:'toolbar',
-                dock:'bottom',
-                ui:'footer',
-                defaults:{
-                    minWidth:80
-                },
-                items:['->',{
-                    xtype:'button',
-                    text:'OK',
-                    handler: function() {
-                        var addgrid = win.down('#dashboardsaddgrid');
-                        if (addgrid) {
-                            var records = addgrid.getSelectionModel().getSelection();
-                            if (records && records.length > 0) {
-                                var grid = me.down('#dashboardsgrid');
-                                if (grid) {
-                                    var store = grid.getStore();
-                                    var uniqueRecords = [];
-
-                                    for (var i = 0, length = records.length; i < length; i++) {
-                                        //if it doesn't exist in the store, add it to the unique records list
-                                        if (store.getById(records[i].data.guid) === null) {
-                                            var recordToPush = records[i];
-                                            recordToPush.phantom = true;
-                                            uniqueRecords.push(recordToPush);
-                                        }
-                                    }
-
-                                    store.insert(0, uniqueRecords);
-                                    store.sync();
-                                }
-                            }
-                        }
-                        win.close();
-                    },
-                    scope: this
-                },{
-                    xtype:'button',
-                    text:'Cancel',
-                    handler: function() {
-                        win.close();
-                    },
-                    scope: win
-                }]
-            },
-            {
-                xtype:'toolbar',
-                dock:'top',
-                items:[
-                {
-                    xtype:'tbtext',
-                    cls: 'tbDashboardsGridHdr',
-                    text:'Dashboards'
-                },
-                '->',
-                {
-                    xtype: 'searchbox',
-                    listeners: {
-                        searchChanged: function (cmp, value) {
-                            var grid = win.down('#dashboardsaddgrid');
-                            grid.applyFilter(value, grid.quickSearchFields);
-                        }
-                    }
-                }
-                ]
-            }
-            ]
+            })
         });
-        win.on(
-            'activate',
-            function(cmp, opts) {
-                var grid = cmp.down('#dashboardsaddgrid');
-                grid.store.load({
-                    params: {
-                        offset: 0,
-                        max: this.pageSize
-                    }
-                });
-            },
-            this);
         win.show();
     },
     doDelete: function(button, e) {
@@ -196,41 +108,7 @@ Ext.define('Ozone.components.admin.group.GroupEditDashboardsTab', {
             store.remove(records);
             store.save();
         } else {
-            Ext.Msg.alert("Error", "You must select at least one dashboard to delete.");
+            this.showAlert("Error", "You must select at least one dashboard to delete.");
         }
-    },
-    generateTitle: function() {
-
-        var title = "Add Dashboard(s)";
-
-        //Set the title to the name of whatever the group is being added to 
-        var data = this.ownerCt.store.data.items[0].data;
-        if(data.name) {
-            //Adding dashboard to a group
-            title += " to " + data.name;
-        }
-
-        //Set a character limit to start at and truncate the title to it if necessary
-        var charLimit = 100;
-        title = Ext.util.Format.ellipsis(title, charLimit);
-
-        //Get the size of the parent container
-        var vpSize = Ext.getBody().getViewSize();
-
-        //Use TextMetrics to get the pixel width of the title
-        var textMetrics = new Ext.util.TextMetrics();
-        var titleWidth = textMetrics.getWidth(title);
-
-        //If the title's pixel width is too large for the window, decrease it
-        //by 5 characters until its pixel width fits
-        while(titleWidth > ((vpSize.width * .8))) {
-            charLimit -= 5;
-            title = Ext.util.Format.ellipsis(title, charLimit);
-            titleWidth = textMetrics.getWidth(title);
-        }
-
-        textMetrics.destroy();
-
-        return Ext.htmlEncode(title);
     }
 });

@@ -16,7 +16,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
     isGroupDashboard: false,
     
     initComponent: function() {
-		
+        
       var self = this;
 
       Ext.apply(this,{
@@ -78,6 +78,15 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
                 var compId = -1;
                 // Create modified widget store and bind to grid
                 grid.setStore(Ext.create('Ozone.data.stores.AdminDashboardStore', cmp.storeCfg));
+
+                grid.store.on('write', function(store, action, result, records, rs) {
+                    OWF.Eventing.publish(this.ownerCt.channel, {
+                        action: action,
+                        domain: this.ownerCt.domain,
+                        records: result
+                    });
+                }, this);
+
                 if (grid && comp) {
                     comp.record = comp.recordId ? comp.store.getAt(comp.store.findExact('id', comp.recordId)) : undefined;
                     compId = comp.recordId ? comp.recordId : -1;
@@ -103,7 +112,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
              
              // Set the title
              if (cmp.ownerCt.record) {
-            	 var titleText = cmp.ownerCt.record.get('title') || 'Dashboards';
+                 var titleText = cmp.ownerCt.record.get('title') || 'Dashboards';
                  var title = this.getDockedItems('toolbar[dock="top"]')[0].getComponent('lblDashboardsGrid');
                  titleText = '<span class="heading-bold">' + Ext.htmlEncode(titleText) + '</span>';
                  title.setText(titleText);
@@ -129,51 +138,21 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
           self.guid_DashboardEditCopyWidget = result.value;
         },
         onFailure: function(err) { /* No op */
-            Ext.Msg.alert('Preferences Error', 'Error looking up Dashboard Editor: ' + err);
+            self.showAlert('Preferences Error', 'Error looking up Dashboard Editor: ' + err);
         }
       });
+
+      //Set the messagebox to use display:none to hide otherwise
+      //the circular focus of the editor will break
+      Ext.Msg.hideMode = 'display';
 
       this.callParent();
   },
 
   launchFailedHandler: function(response) {
       if (response.error) {
-          Ext.Msg.alert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
+          this.showAlert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
       }
-  },
-
-  doCreate: function(button, e) {
-    var dataString = Ozone.util.toString({
-        isGroupDashboard: this.isGroupDashboard
-    });
-	OWF.Launcher.launch({
-	      guid: this.guid_DashboardEditCopyWidget,
-	      launchOnlyIfClosed: false,
-	      data: dataString
-    }, this.launchFailedHandler);
-  },
-  doEdit: function(button, e) {
-	 var grid = this.getComponent('dashboardsgrid');
-     var records = grid.getSelectedDashboards();
-     if (records && records.length > 0) {
-     	for (var i = 0; i < records.length; i++) {
-          var id = records[i].data.guid;//From Id property of Dashboard Model
-          var dataString = Ozone.util.toString({
-	          id: id,
-	          copyFlag: false,
-              isGroupDashboard: this.isGroupDashboard
-	      });
-	
-	      OWF.Launcher.launch({
-	          guid: this.guid_DashboardEditCopyWidget,
-	          launchOnlyIfClosed: false,
-	          data: dataString
-	      }, this.launchFailedHandler);
-        }
-     }
-     else {
-        Ext.Msg.alert("Error", "You must select at least one dashboard to edit");
-     }
   },
 
   onStoreException: function(proxy, response, operation, eOpts) {
@@ -187,7 +166,72 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
           };
       }
   
-      Ext.Msg.alert('Server Error', 
-              'Error during ' + operation.action + ': ' + errorMsg);
-  }
+      this.showAlert('Server Error', 'Error during ' + operation.action + ': ' + errorMsg);
+  },
+    showAlert: function(title, msg) {
+        var alert = Ext.Msg.alert(title, msg),
+            okBtnEl = alert.down('button').btnEl;
+            
+        var onKeyDown = function(event) {
+            if(event.keyCode === Ext.EventObject.TAB) {
+                //Disable tabbing out of the alert
+                event.stopEvent();
+            }
+        };
+
+        okBtnEl.on('keydown', onKeyDown);
+
+        alert.on('hide', function() {
+            okBtnEl.un('keydown', onKeyDown);
+        }, this, {single: true});
+    },
+    showConfirmation: function(title, msg, okFn) {
+        var alert = Ext.Msg.show({
+            title: title,
+            msg: msg,
+            buttons: Ext.Msg.OKCANCEL,
+            closable: false,
+            modal: true,
+            scope: this,
+            listeners: null,
+            fn: okFn
+        });
+
+        var buttons = alert.query('button'),
+            okBtn, cancelBtn;
+
+        for(var i = 0; i < buttons.length; i++) {
+            if(buttons[i].itemId === 'ok') {
+                okBtn = buttons[i];
+            }
+            else if(buttons[i].itemId === 'cancel') {
+                cancelBtn = buttons[i];
+            }
+        }
+
+        var onKeyDownOkBtn = function(event) {
+            if(event.keyCode === Ext.EventObject.TAB) {
+                event.stopEvent();
+                Ext.defer(function() {
+                    cancelBtn.focus();
+                }, 1);
+            }
+        };
+        var onKeyDownCancelBtn = function(event) {
+            if(event.keyCode === Ext.EventObject.TAB) {
+                event.stopEvent();
+                Ext.defer(function() {
+                    okBtn.focus();
+                }, 1);
+            }
+        };
+
+        okBtn.el.on('keydown', onKeyDownOkBtn);
+        cancelBtn.el.on('keydown', onKeyDownCancelBtn);
+
+        alert.on('hide', function() {
+            okBtn.el.un('keydown', onKeyDownOkBtn);
+            cancelBtn.el.un('keydown', onKeyDownCancelBtn);
+        }, this, {single: true});
+    }
 });

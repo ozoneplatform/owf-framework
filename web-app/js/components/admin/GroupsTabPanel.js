@@ -1,7 +1,7 @@
 Ext.define('Ozone.components.admin.GroupsTabPanel',{
     extend: 'Ext.panel.Panel',
     alias: ['widget.groupstabpanel','widget.Ozone.components.admin.GroupsTabPanel'],
-	
+    
     initComponent: function () {
         var self = this;
         Ext.apply(this, {
@@ -79,7 +79,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                                 store.save();
                             }
                             else {
-                                Ext.Msg.alert("Error", "You must select at least one group to remove.");
+                                self.showAlert("Error", "You must select at least one group to remove.")
                             }
                         }
                     },
@@ -100,13 +100,21 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     
                     grid.setStore(Ext.create('Ozone.data.GroupStore',cmp.storeCfg));
                     var refreshPagingToolbar = function(operation) {
-                    	cmp.refreshWidgetLaunchMenu();
-                    	if (operation.action == "destroy" || operation.action == "create") {
-	                        var ptb = grid.getBottomToolbar();
-	                        ptb.doRefresh();
-                    	}
+                        cmp.refreshWidgetLaunchMenu();
+                        if (operation.action == "destroy" || operation.action == "create") {
+                            var ptb = grid.getBottomToolbar();
+                            ptb.doRefresh();
+                        }
                     };
                     grid.store.proxy.callback = refreshPagingToolbar;
+
+                    grid.store.on('write', function(store, action, result, records, rs) {
+                        OWF.Eventing.publish(this.ownerCt.channel, {
+                            action: action,
+                            domain: this.ownerCt.domain,
+                            records: result
+                        });
+                    }, this);
                     
                     if (grid && owner) {
                         owner.record = owner.recordId ? owner.store.getAt(owner.store.findExact('id', owner.recordId)) : undefined;
@@ -114,8 +122,8 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     
                     // Set the title
                     if (owner.record) {
-                    	var titleText = Ext.htmlEncode(owner.record.get('title')) || 'Groups';
-                    	var title = cmp.getDockedItems('toolbar[dock="top"]')[0].getComponent('lblGroupsGrid');
+                        var titleText = Ext.htmlEncode(owner.record.get('title')) || 'Groups';
+                        var title = cmp.getDockedItems('toolbar[dock="top"]')[0].getComponent('lblGroupsGrid');
                         title.setText(titleText);
                     }
 
@@ -126,7 +134,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                             cmp.guid_EditCopyWidget = result.value;
                         },
                         onFailure: function(err) { /* No op */
-                            Ext.Msg.alert('Preferences Error', 'Error looking up Group Editor: ' + err);
+                            self.showAlert('Preferences Error', 'Error looking up Group Editor: ' + err);
                         }
                     });
                     
@@ -147,7 +155,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                                         }
                                     }
                                     else {
-                                        Ext.Msg.alert("Error", "You must select at least one group to edit.");
+                                        self.showAlert("Error", "You must select at least one group to edit.");
                                     }
                                 },
                                 scope: this
@@ -178,129 +186,35 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
            }
         });
 
+        //Set the messagebox to use display:none to hide otherwise
+        //the circular focus of the editor will break
+        Ext.Msg.hideMode = 'display';
+
         this.callParent();
     },
     onAddClicked: function (button, e) {
-        var me = this;
-        var vpSize = Ext.getBody().getViewSize();
-        var win = Ext.create('Ext.window.Window',{
-            title: me.generateTitle(),
-            closable: true,
-            draggable: false,
-            resizable: false,
-            border: false,
-            minWidth: 250,
-            minHeight: 200,
-            width: Math.round(vpSize.width * .9),
-            height: Math.round(vpSize.height * .9),
-            modal:true,
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            },
-            items: [{
-                xtype: 'panel',
-                itemId: 'groupsaddpanel',
-                cls: 'groupsaddpanel',
-                layout: 'fit',
-                flex: 1,
-                items: [{
-                    xtype:'groupsgrid',
-                    itemId: 'groupsaddgrid',
-                    preventHeader:true,
-                    border: false,
-                    enableColumnHide: false,
-                    sortableColumns: false
-                }],
-                dockedItems: [{
-                    xtype:'toolbar',
-                    dock:'bottom',
-                    ui:'footer',
-                    defaults:{
-                        minWidth:80
-                    },
-                    items:['->',{
-                        xtype:'button',
-                        text:'OK',
-                        handler: function() {
-                            var grid = win.down('#groupsaddgrid');
-                            if(grid) {
-                                var records = grid.getSelectionModel().getSelection();
-                                if (records && records.length>0) {
-                                    var groupgrid = me.down('#groupsgrid');
-                                    if(groupgrid) {
-                                        var store = groupgrid.getStore();
-                                        var uniqueRecords = [];
-									
-                                        for(var i = 0, length = records.length; i<length; i++) {
-                                            //if it doesn't exist in the store, add it to the unique records list
-                                            if(store.getById(records[i].data.id)===null){
-                                                var recordToPush = records[i];
-                                                recordToPush.phantom = true;
-                                                uniqueRecords.push(recordToPush);
-                                            }
-                                        }
-									
-                                        store.insert(0,uniqueRecords);
-                                        store.sync();
-                                    }
-                                }
+        var record = this.ownerCt.store.getById(this.ownerCt.launchData.id),
+            itemName = record.get('name') ? record.get('name') : record.get('userRealName');
 
-                            }
-                            win.close();
-                        },
-                        scope: this
-                    },{
-                        xtype:'button',
-                        text:'Cancel',
-                        handler: function() {
-                            win.close();
-                        },
-                        scope: this
-                    }]
-                },{
-                    xtype:'toolbar',
-                    dock:'top',
-                    items:[{
-                        xtype:'tbtext',
-                    	cls: 'tbGroupsGridHdr',
-                        text:'Groups'
-                    },'->',{
-                        xtype: 'searchbox',
-                        listeners: {
-                            searchChanged: function (cmp, queryString) {
-                                var grid = win.getComponent('groupsaddpanel').getComponent('groupsaddgrid');
-                                var filters = [];
-                                if(queryString.length > 0){
-                                    grid.applyFilter(queryString, ['name', 'description']);
-                                } else {
-                                    grid.applyFilter();
-                                }
-                            }
-                        }
-                    }
-                    ]
-                }]
-            }]
+        var win = Ext.widget('admineditoraddwindow', {
+            addType: 'Group',
+            itemName: itemName,
+            editor: this.editor,
+            focusOnClose: this.down(),
+            existingItemsStore: this.getComponent('groupsgrid').getStore(),
+            searchFields: ['displayName'],
+            grid: Ext.widget('groupsgrid', {
+                itemId: 'groupsaddgrid',
+                border: false,
+                preventHeader:true,
+                enableColumnHide: false,
+                sortableColumns: false
+            })
         });
-        win.on(
-            'activate',
-            function(cmp,opts) {
-                var grid = cmp.getComponent('groupsaddpanel').getComponent('groupsaddgrid');
-                if (this.addFilter) {
-                   grid.setBaseParams(this.addFilter)
-               }
-                grid.store.load({
-                    params: {
-                        offset: 0,
-                        max: this.pageSize
-                    }
-                });
-            },
-            this);
         win.show();
     },
     doEdit: function(id) {
+        var self = this;
         var dataString = Ozone.util.toString({
             id: id,
             copyFlag: false
@@ -312,7 +226,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
             data: dataString
         }, function(response) {
             if (response.error) {
-                Ext.Msg.alert('Launch Error', 'Group Editor Launch Failed: ' + response.message);
+                self.showAlert('Launch Error', 'Group Editor Launch Failed: ' + response.message);
             }
         });
     },
@@ -323,38 +237,21 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
             });
         }
     },
-    generateTitle: function() {
+    showAlert: function(title, msg) {
+        var alert = Ext.Msg.alert(title, msg),
+            okBtnEl = alert.down('button').btnEl;
+            
+        var onKeyDown = function(event) {
+            if(event.keyCode === Ext.EventObject.TAB) {
+                //Disable tabbing out of the alert
+                event.stopEvent();
+            }
+        };
 
-        var title = "Add Group(s)";
+        okBtnEl.on('keydown', onKeyDown);
 
-        var data = this.ownerCt.store.data.items[0].data;
-        if((this.editor === "Widget" || this.editor === "Dashboard") && data.name) {
-            title = "Add " + data.name + " to Group(s)";
-        } else if(this.editor === "User" && data.userRealName) {
-            title = "Add " + data.userRealName + " to Groups(s)";
-        }
-
-        //Set a character limit to start at and truncate the title to it if necessary
-        var charLimit = 100;
-        title = Ext.util.Format.ellipsis(title, charLimit);
-
-        //Get the size of the parent container
-        var vpSize = Ext.getBody().getViewSize();
-
-        //Use TextMetrics to get the pixel width of the title
-        var textMetrics = new Ext.util.TextMetrics();
-        var titleWidth = textMetrics.getWidth(title);
-
-        //If the title's pixel width is too large for the window, decrease it
-        //by 5 characters until its pixel width fits
-        while(titleWidth > ((vpSize.width * .8))) {
-            charLimit -= 5;
-            title = Ext.util.Format.ellipsis(title, charLimit);
-            titleWidth = textMetrics.getWidth(title);
-        }
-
-        textMetrics.destroy();
-
-        return Ext.htmlEncode(title);
+        alert.on('hide', function() {
+            okBtnEl.un('keydown', onKeyDown);
+        }, this, {single: true});
     }
 });
