@@ -129,6 +129,18 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             load:function (response, ioArgs) {
                 var widgetLauncher = Ext.getCmp('widget-launcher');
                 widgetLauncher.loadLauncherState();
+
+                var stack_bottomright = {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25};
+                $.pnotify({
+                    title: Ozone.layout.DialogMessages.added,
+                    text: Ozone.layout.DialogMessages.marketplaceWindow_AddSuccessful,
+                    type: 'success',
+                    addclass: "stack-bottomright",
+                    stack: stack_bottomright,
+                    history: false,
+                    sticker: false,
+                    icon: false
+                });
             },
             error:function (response, ioArgs) {
                 Ozone.Msg.alert(Ozone.layout.DialogMessages.error, Ozone.layout.DialogMessages.marketplaceWindow_AddWidget, null, null, {
