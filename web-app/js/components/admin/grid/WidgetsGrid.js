@@ -89,9 +89,9 @@ Ext.define('Ozone.components.admin.grid.WidgetsGrid', {
               }
             }
           
-            var retVal = '<div class="grid-widget-title-box"><div class="grid-widget-icon"><img class="grid-widget-icon-image" src="' + Ext.htmlEncode(url) + '">';
+            var retVal = '<div class="grid-icon-and-text-title-box"><div class="grid-icon-and-text-icon"><img class="grid-icon-and-text-icon-image" src="' + Ext.htmlEncode(url) + '">';
             retVal += '</div>';
-            retVal += '<div class="grid-widget-title">' + Ext.htmlEncode(title) + '</div>';
+            retVal += '<div class="grid-icon-and-text-title">' + Ext.htmlEncode(title) + '</div>';
 
             return  retVal;
           }

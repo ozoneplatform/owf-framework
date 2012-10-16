@@ -1,30 +1,29 @@
-Ext.define('Ozone.components.admin.group.GroupEditDashboardsTab', {
+Ext.define('Ozone.components.admin.stack.StackEditDashboardsTab', {
     extend: 'Ozone.components.admin.DashboardsTabPanel',
     alias: [
-        'widget.groupeditdashboards',
-        'widget.groupeditdashboardstab',
-        'widget.Ozone.components.admin.group.GroupEditDashboardsTab'
+        'widget.stackeditdashboards',
+        'widget.stackeditdashboardstab',
+        'widget.Ozone.components.admin.stack.StackEditDashboardsTab'
     ],
 
-    cls: 'groupeditdashboardstab',
+    cls: 'stackeditdashboardstab',
 
     isGroupDashboard: true,
 
     initComponent: function () {
-        //get widget to launch
         Ext.applyIf(this, {
             layout: 'fit',
             itemId: 'tabDashboards',
             title: 'Dashboards',
             iconCls: 'dashboard-tab',
-            editor: 'Group',
-            componentId: 'group_id',
+            editor: 'Stack',
+            componentId: 'stack_id',
             storeCfg: {
                 api: {
                     read: '/dashboard',
-                    create: '/group',
+                    create: '/stack',
                     update: '/dashboard',
-                    destroy: '/group'
+                    destroy: '/stack'
                 },
                 methods: {
                     read: 'GET',

@@ -22,7 +22,7 @@ Ext.define('Ozone.components.admin.ManagementPanel', {
         OWF.Launcher.launch({
             guid: this.guid_EditCopyWidget,
             launchOnlyIfClosed: false,
-      data: undefined
+            data: undefined
         }, this.launchFailureHandler);
     },
 

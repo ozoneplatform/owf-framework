@@ -1,13 +1,11 @@
-Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
+Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
     extend: 'Ozone.components.admin.ManagementPanel',
-    alias: ['widget.groupdashboardmanagement','widget.groupdashboardmanagementpanel','widget.Ozone.components.admin.GroupDashboardManagementPanel'],
+    alias: ['widget.stackmanagement'],
     
     layout: 'fit',
     
-    cls: 'groupdashboardmanagementpanel',
-    
-    gridDashboards: null,
-    pnlDashboardDetail: null,
+    gridStacks: null,
+    pnlStackDetail: null,
     txtHeading: null,
     lastAction: null,
     guid_EditCopyWidget: null,
@@ -16,7 +14,7 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
     dragAndDrop: true,
     launchesWidgets: true,
     channel: 'AdminChannel',
-    defaultTitle: 'Group Dashboards',
+    defaultTitle: 'Stacks',
     minButtonWidth: 80,
     detailsAutoOpen: true,
     
@@ -25,37 +23,30 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
         var self = this;
         
         OWF.Preferences.getUserPreference({
-            namespace: 'owf.admin.DashboardEditCopy',
+            namespace: 'owf.admin.StackEditCopy',
             name: 'guid_to_launch',
             onSuccess: function(result) {
                 self.guid_EditCopyWidget = result.value;
             },
             onFailure: function(err){ /* No op */
-                Ext.Msg.alert('Preferences Error', 'Error looking up Dashboard Editor: ' + err);
+                Ext.Msg.alert('Preferences Error', 'Error looking up Stack Editor: ' + err);
             }
         });
         
-        this.gridDashboards = Ext.create('Ozone.components.admin.grid.DashboardGroupsGrid', {
+        this.gridStacks = Ext.create('Ozone.components.admin.StacksGrid', {
             preventHeader: true,
             region: 'center',
             border: false
         });
-        
-        this.gridDashboards.setBaseParams({
-                adminEnabled: true,
-	            isGroupDashboard: true
-        });
-        
-        this.gridDashboards.store.load({
-            params: {
+        this.gridStacks.store.load({
+        	params: {
                 offset: 0,
                 max: this.pageSize
             }
         });
+        this.relayEvents(this.gridStacks, ['datachanged', 'select', 'deselect', 'itemdblclick']);
         
-        this.relayEvents(this.gridDashboards, ['datachanged', 'select', 'deselect', 'itemdblclick']);
-        
-        this.pnlDashboardDetail = Ext.create('Ozone.components.admin.dashboard.DashboardDetailPanel', {
+        this.pnlStackDetail = Ext.create('Ozone.components.admin.stack.StackDetailPanel', {
             layout: {
                 type: 'fit',
                 align: 'stretch'
@@ -67,21 +58,23 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
             collapsed: true,
             split: true,
             border: false,
-            width: 266
+            width: 200
         });
         
         this.txtHeading = Ext.create('Ext.toolbar.TextItem', {
             text: '<span class="heading-bold">'+this.defaultTitle+'</span>'
         });
         
-        this.searchBox = Ext.widget('searchbox');        
+        
+        this.searchBox = Ext.widget('searchbox');
+
         this.items = [{
             xtype: 'panel',
             layout: 'border',
             border: false,
             items: [
-                this.gridDashboards,
-                this.pnlDashboardDetail
+                this.gridStacks,
+                this.pnlStackDetail
             ]
         }];
         
@@ -122,36 +115,20 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
             }, {
                 xtype: 'button', 
                 text: 'Delete',
+                itemId: 'btnDelete',
                 handler: function(button) {
                     self.doDelete();
                 }
             }]
         }];
     
-        this.gridDashboards.store.on(
-        	'load',
-        	function(thisStore, records, options){
-        		if ((this.pnlDashboardDetail != null ) && 
-        		   (!this.pnlDashboardDetail.collapsed) && 
-        		    (this.pnlDashboardDetail.loadedRecord != null)){
-        			for(var idx=0; idx < records.length; idx++){
-        				if(records[idx].id == this.pnlDashboardDetail.loadedRecord.id){
-        					this.pnlDashboardDetail.loadData(records[idx]);
-        					break;
-        				}
-        			}
-        		}
-        	},
-        	this
-        );
-        
         this.on(
             'datachanged',
             function(store, opts) {
                   //collapse and clear detail panel if the store is refreshed
-                  if (this.pnlDashboardDetail != null ) {
-                    this.pnlDashboardDetail.collapse();
-                    this.pnlDashboardDetail.removeData();
+                  if (this.pnlStackDetail != null ) {
+                    this.pnlStackDetail.collapse();
+                    this.pnlStackDetail.removeData();
                   }
 
                   //refresh launch menu
@@ -165,129 +142,93 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
         this.on(
             'select',
             function(rowModel, record, index, opts) {
-                this.pnlDashboardDetail.loadData(record);
-                if (this.pnlDashboardDetail.collapsed && this.detailsAutoOpen) {this.pnlDashboardDetail.expand();}
-            },
-            this
-        );
-        
-        this.searchBox.on(
-            'searchChanged',
-            function(searchbox, value) {
-                var grid = this.gridDashboards;
-
-                if (grid)  {
-                    if (!value)
-                        this.gridDashboards.clearFilters();
-                    else
-                        this.gridDashboards.applyFilter(value, ['name', 'description']);
-                }
+                this.pnlStackDetail.loadData(record);
+                if (this.pnlStackDetail.collapsed && this.detailsAutoOpen) {this.pnlStackDetail.expand();}
             },
             this
         );
             
-        this.on({
-            'itemdblclick': {
-	            scope: this,
-	            fn: this.doEdit
-            }
-        });
+        this.searchBox.on(
+            'searchChanged',
+            function(searchbox, value) {
+                this.gridStacks.applyFilter(value, ['name', 'description', 'displayName']);
+            },
+            this
+        );
 
-        this.gridDashboards.getView().on({
-            itemkeydown: {
-                scope: this,
-                fn: function(view, record, dom, index, evt) {
-                    switch(evt.getKey()) {
-                        case evt.SPACE:
-                        case evt.ENTER:
-                            this.doEdit();
-                    }
-                }
+        this.on(
+             'itemdblclick',
+             function(view, record, item, index, evt, opts) {
+                 this.doEdit(record.data.id);
+             },
+             this
+         );
+
+        this.gridStacks.getView().on('itemkeydown', function(view, record, dom, index, evt) {
+            switch(evt.getKey()) {
+                case evt.SPACE:
+                case evt.ENTER:
+                    this.doEdit(record.data.id);
             }
-        });
-        
+        }, this);
         
         this.callParent(arguments);
         
         OWF.Eventing.subscribe('AdminChannel', owfdojo.hitch(this, function(sender, msg, channel) {
-            if(msg.domain === 'Dashboard') {
-               this.gridDashboards.getBottomToolbar().doRefresh();
+            if(msg.domain === 'Stack') {
+                this.gridStacks.getBottomToolbar().doRefresh();
             }
         }));
         
         this.on(
-        		'afterrender', 
-        		function() {
-    				var splitterEl = this.el.down(".x-collapse-el");
-    				splitterEl.on('click', function() {
-    					var collapsed = this.el.down(".x-splitter-collapsed");
-    					if(collapsed) {
-    						this.detailsAutoOpen = true;
-    					}
-    					else {
-    						this.detailsAutoOpen = false;
-    					}
-    				}, this);
-    			}, 
-    			this
-    		);
-    },
-    
-    onLaunchFailed: function(response) {
-        if (response.error) {
-            Ext.Msg.alert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
-        }
+            'afterrender', 
+            function() {
+                var splitterEl = this.el.down(".x-collapse-el");
+                splitterEl.on('click', function() {
+                    var collapsed = this.el.down(".x-splitter-collapsed");
+                    if(collapsed) {
+                        this.detailsAutoOpen = true;
+                    }
+                    else {
+                        this.detailsAutoOpen = false;
+                    }
+                }, this);
+            }, 
+            this
+            );
     },
 
-    doCreate: function() {
-    	var dataString = Ozone.util.toString({
-            copyFlag: false,
-            isCreate: true,
-            isGroupDashboard: true
+    launchFailedHandler: function(response) {
+        if (response.error) {
+            Ext.Msg.alert('Launch Error', 'Stack Editor Launch Failed: ' + response.message);
+        }
+    },
+    
+    doEdit: function(id) {
+        var dataString = Ozone.util.toString({
+            id: id,
+            copyFlag: false
         });
         
         OWF.Launcher.launch({
             guid: this.guid_EditCopyWidget,
             launchOnlyIfClosed: false,
             data: dataString
-        }, this.onLaunchFailed);
-    },
-    
-    doEdit: function() {
-    	var records = this.gridDashboards.getSelectedDashboards();
-        if (records && records.length > 0) {
-            for (var i = 0; i < records.length; i++) {
-                var id = records[i].getId();//From Id property of Dashboard Model
-                var dataString = Ozone.util.toString({
-		            id: id,
-		            copyFlag: false,
-		            isCreate: false,
-		            isGroupDashboard: true
-		        });
-		        
-		        OWF.Launcher.launch({
-		            guid: this.guid_EditCopyWidget,
-		            launchOnlyIfClosed: false,
-		            data: dataString
-		        }, this.onLaunchFailed);
-            }
-        } else {
-            Ext.Msg.alert("Error", "You must select at least one dashboard to edit");
-        }
+        }, this.launchFailedHandler);
     },
     
     doDelete: function() {
-        var records = this.gridDashboards.getSelectionModel().getSelection();
+        var records = this.gridStacks.getSelectionModel().getSelection();
         if (records && records.length > 0) {
 
-            var msg = 'This action will permanently<br>delete the selected dashboard(s)';
+            var msg = 'This action will permanently<br>delete the selected stack(s)';
             if (records.length == 1) {
               msg = 'This action will permanently<br>delete <span class="heading-bold">' 
-                    + Ext.htmlEncode(records[0].data.name) + '</span>.';
+                    + Ext.htmlEncode(records[0].data.title) + '</span>.';
             }
             else {
               msg = 'This action will permanently<br>delete the selected <span class="heading-bold">'
-                    + records.length + ' dashboards</span>.';
+                    + records.length + ' stacks</span>.';
             }
             Ext.create('Ozone.window.MessageBoxPlus', {}).show({
                 title: 'Warning',
@@ -298,7 +239,7 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
                 scope: this,
                 fn: function(btn, text, opts) {
                     if (btn == 'ok') {
-                        var store = this.gridDashboards.getStore();
+                        var store = this.gridStacks.getStore();
                         store.remove(records);
                         var remainingRecords = store.getTotalCount() - records.length;
                         store.on({
@@ -310,8 +251,8 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
                                    var pageToLoad = (lastPage>=store.currentPage)?store.currentPage:lastPage;
                                    store.loadPage(pageToLoad);
                                }
-                               this.gridDashboards.getBottomToolbar().doRefresh();
-                               this.pnlDashboardDetail.removeData();
+                               this.gridStacks.getBottomToolbar().doRefresh();
+                               this.pnlStackDetail.removeData();
                                if (!this.pnlDashboardDetail.collapsed) {this.pnlDashboardDetail.collapse();}
                                this.refreshWidgetLaunchMenu();
                              },
