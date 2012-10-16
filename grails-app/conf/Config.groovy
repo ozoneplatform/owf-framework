@@ -274,11 +274,19 @@ uiperformance.bundles = [
                         '../js/components/admin/dashboard/DashboardEditPropertiesTab',
                         '../js/data/models/Group',
                         '../js/data/stores/GroupStore',
+<<<<<<< HEAD
                         'components/focusable/CircularFocus',
                         'components/focusable/Focusable',
                         'components/layout/SearchBoxLayout',
                         'components/form/field/SearchBox',
                         '../js/components/admin/AdminEditorAddWindow',
+=======
+                        'components/focusable/CircularFocus',
+                        'components/focusable/Focusable',
+                        'components/layout/SearchBoxLayout',
+                        'components/form/field/SearchBox',
+                        '../js/components/admin/AdminEditorAddWindow',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         '../js/components/admin/grid/GroupsGrid',
                         '../js/components/admin/GroupsTabPanel',
                         '../js/components/admin/dashboard/DashboardEditGroupsTab',
@@ -330,10 +338,17 @@ uiperformance.bundles = [
             'chrome/WidgetChrome',
             'dd/WidgetDragAndDrop',
             'data/OWFTransportProxy',
+<<<<<<< HEAD
             'data/models/Dashboard',
             'data/OWFStore',
             'data/stores/AdminDashboardStore',
             'components/admin/grid/DashboardGroupsGrid',
+=======
+            'data/models/Dashboard',
+            'data/OWFStore',
+            'data/stores/AdminDashboardStore',
+            'components/admin/grid/DashboardGroupsGrid',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
             'components/admin/dashboard/DashboardDetailPanel',
             'components/admin/ManagementPanel',
             'components/admin/dashboard/GroupDashboardManagementPanel',
@@ -400,11 +415,19 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-group-edit-widget',
+<<<<<<< HEAD
     
         files: [
                         '../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed',
                         'util/pageload',
                         '../js-lib/ext-4.0.7/ext-all-debug',
+=======
+    
+        files: [
+                        '../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed',
+                        'util/pageload',
+                        '../js-lib/ext-4.0.7/ext-all-debug',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         '../js-lib/patches/BorderLayoutAnimation',
                         '../js-lib/patches/menuAlign',
                         '../js-lib/patches/menuBlankImage',
@@ -413,16 +436,26 @@ uiperformance.bundles = [
                         '../js-lib/patches/PluginMerge',
             '../js-lib/patches/GridScroller',
             //'../js-lib/patches/fieldWithToolTipIcon',
+<<<<<<< HEAD
                         'util/version',
                         'util/util',
                         'lang/ozone-lang',
                         'lang/DateJs/globalization/en-US',
                         'util/transport',
                         'util/widget_utils',
+=======
+                        'util/version',
+                        'util/util',
+                        'lang/ozone-lang',
+                        'lang/DateJs/globalization/en-US',
+                        'util/transport',
+                        'util/widget_utils',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         'components/util/InstanceVariablizer',
                         'components/keys/HotKeys',
                         'components/keys/KeyEventSender',
                         'components/focusable/FocusableGridPanel',
+<<<<<<< HEAD
                         '../js-lib/shindig/util',
                         '../js-lib/shindig/json',
                         '../js-lib/shindig/rpc',
@@ -803,12 +836,57 @@ uiperformance.bundles = [
                         '../js/components/admin/group/GroupEditWidgetsTab',
                         '../js/components/admin/group/GroupEditDashboardsTab',
                         '../js/components/admin/group/GroupEditPanel',
+=======
+                        '../js-lib/shindig/util',
+                        '../js-lib/shindig/json',
+                        '../js-lib/shindig/rpc',
+                        '../js-lib/shindig/pubsub',
+                        'eventing/Widget',
+                        '../js-lib/log4javascript/log4javascript',
+                        'util/log',
+                        'pref/preference',
+                        'launcher/WidgetLauncher',
+                        'state/WidgetStateHandler',
+                        'state/WidgetState',
+                        'chrome/WidgetChrome',
+                        'dd/WidgetDragAndDrop',
+                        '../js/data/ModelIdGenerator',
+                        '../js/data/OWFTransportProxy',
+                        '../js/data/OWFStore',
+                        '../js/data/models/Group',
+                        '../js/data/stores/GroupStore',
+                        '../js/data/models/User',
+                        '../js/data/stores/UserStore',
+                        '../js/data/models/WidgetDefinition',
+                        '../js/data/models/Dashboard',
+                        '../js/data/stores/AdminWidgetStore',
+                        '../js/data/stores/AdminDashboardStore',
+                        'components/focusable/CircularFocus',
+                        'components/focusable/Focusable',
+                        'components/layout/SearchBoxLayout',
+                        'components/form/field/SearchBox',
+                        '../js/components/admin/AdminEditorAddWindow',
+                        '../js/components/admin/grid/UsersGrid',
+                        '../js/components/admin/grid/WidgetsGrid',
+                        '../js/components/admin/grid/DashboardsGrid',
+                        '../js/components/admin/UsersTabPanel',
+                        '../js/components/admin/PropertiesPanel',
+                        '../js/components/admin/WidgetsTabPanel',
+                        '../js/components/admin/DashboardsTabPanel',
+                        '../js/components/admin/EditWidgetPanel',
+                        '../js/components/admin/group/GroupEditPropertiesTab',
+                        '../js/components/admin/group/GroupEditUsersTab',
+                        '../js/components/admin/group/GroupEditWidgetsTab',
+                        '../js/components/admin/group/GroupEditDashboardsTab',
+                        '../js/components/admin/group/GroupEditPanel',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         'widget/Widget',
                         'widget/widgetInit'
         ]
     ],
     [
         type: 'js',
+<<<<<<< HEAD
         name: 'owf-user-management-widget',
     
         files: [
@@ -816,6 +894,155 @@ uiperformance.bundles = [
                         '../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed',
                         'util/pageload',
                         '../js-lib/ext-4.0.7/ext-all-debug',
+=======
+        name: 'owf-stack-management-widget',
+
+        files: [
+            '../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed',
+            'util/pageload',
+            '../js-lib/ext-4.0.7/ext-all-debug',
+            '../js-lib/patches/BorderLayoutAnimation',
+            '../js-lib/patches/menuAlign',
+            '../js-lib/patches/menuBlankImage',
+            '../js-lib/patches/firefox_computed_style_on_hidden_elements_patch',
+            '../js-lib/patches/CreateInterceptor',
+            '../js-lib/patches/PluginMerge',
+            '../js-lib/patches/GridScroller',
+            'ux/menu/Item',
+            'util/version',
+            'util/util',
+            'lang/ozone-lang',
+            'lang/DateJs/globalization/en-US',
+            'util/transport',
+            'util/widget_utils',
+            'components/util/InstanceVariablizer',
+            'components/keys/HotKeys',
+            'components/keys/KeyEventSender',
+            'components/focusable/Focusable',
+            'components/focusable/FocusableGridPanel',
+            'components/layout/SearchBoxLayout',
+            'components/form/field/SearchBox',
+            'components/window/MessageBoxPlus',
+            '../js-lib/shindig/util',
+            '../js-lib/shindig/json',
+            '../js-lib/shindig/rpc',
+            '../js-lib/shindig/pubsub',
+            'eventing/Widget',
+            '../js-lib/log4javascript/log4javascript',
+            'util/log',
+            'pref/preference',
+            'launcher/WidgetLauncher',
+            'state/WidgetStateHandler',
+            'chrome/WidgetChrome',
+            'dd/WidgetDragAndDrop',
+            'data/OWFTransportProxy',
+            'data/models/Stack',
+            'data/models/Group',
+            'data/models/User',
+            'data/OWFStore',
+            'data/stores/StackStore',
+            'data/stores/GroupStore',
+            'data/stores/UserStore',
+            'components/admin/grid/StacksGrid',
+            'components/admin/stack/StackDetailPanel',
+            'components/admin/ManagementPanel',
+            'components/admin/stack/StackManagementPanel',
+            'widget/Widget',
+            'widget/widgetInit'
+        ]
+    ],
+    [
+        type: 'js',
+        name: 'owf-stack-edit-widget',
+    
+        files: [
+            '../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed',
+            'util/pageload',
+            '../js-lib/ext-4.0.7/ext-all-debug',
+            '../js-lib/patches/BorderLayoutAnimation',
+            '../js-lib/patches/menuAlign',
+            '../js-lib/patches/menuBlankImage',
+            '../js-lib/patches/firefox_computed_style_on_hidden_elements_patch',
+            '../js-lib/patches/CreateInterceptor',
+            '../js-lib/patches/PluginMerge',
+            '../js-lib/patches/TextFieldOverrides',
+            '../js-lib/patches/GridScroller',
+            'util/version',
+            'util/util',
+            'lang/ozone-lang',
+            'util/transport',
+            'util/widget_utils',
+            'components/util/InstanceVariablizer',
+            'components/keys/HotKeys',
+            'components/keys/KeyEventSender',
+            'components/focusable/FocusableGridPanel',
+            '../js-lib/shindig/util',
+            '../js-lib/shindig/json',
+            '../js-lib/shindig/rpc',
+            '../js-lib/shindig/pubsub',
+            'eventing/Widget',
+            '../js-lib/log4javascript/log4javascript',
+            'util/log',
+            'pref/preference',
+            'launcher/WidgetLauncher',
+            'state/WidgetStateHandler',
+            'state/WidgetState',
+            'chrome/WidgetChrome',
+            'dd/WidgetDragAndDrop',
+            '../js/data/OWFTransportProxy',
+            '../js/data/OWFStore',
+            '../js/data/models/User',
+            '../js/data/stores/UserStore',
+            '../js/data/models/Dashboard',
+            '../js/data/stores/AdminDashboardStore',
+            '../js/data/models/Group',
+            '../js/data/stores/GroupStore',
+            '../js/data/models/Stack',
+            '../js/data/stores/StackStore',
+            '../js/data/models/WidgetDefinition',
+            '../js/data/stores/AdminWidgetStore',
+            'components/focusable/CircularFocus',
+            'components/focusable/Focusable',
+            'components/layout/SearchBoxLayout',
+            'components/form/field/SearchBox',
+            '../js/components/admin/UrlField',
+            '../js/components/admin/AdminEditorAddWindow',
+            '../js/components/admin/EditDashboardWindow',
+            '../js/components/admin/grid/DashboardsGrid',
+            '../js/components/admin/grid/GroupsGrid',
+            '../js/components/admin/grid/UsersGrid',
+            '../js/components/admin/grid/WidgetsGrid',
+            '../js/components/admin/DashboardsTabPanel',
+            '../js/components/admin/GroupsTabPanel',
+            '../js/components/admin/PropertiesPanel',
+            '../js/components/admin/UsersTabPanel',
+            '../js/components/admin/WidgetsTabPanel',
+            '../js/components/admin/EditWidgetPanel',
+            '../js/components/admin/user/UserEditPropertiesTab',
+            '../js/components/admin/user/UserEditGroupsTab',
+            '../js/components/admin/user/UserEditWidgetsTab',
+            '../js/components/admin/user/UserEditDashboardsTab',
+            '../js/components/admin/user/UserEditPanel',
+            '../js/components/admin/stack/StackEditPanel',
+            '../js/components/admin/stack/StackEditPropertiesTab',
+            '../js/components/admin/stack/StackEditUsersTab',
+            '../js/components/admin/stack/StackEditDashboardsTab',
+            '../js/components/admin/stack/StackEditGroupsTab',
+            '../js/components/admin/stack/StackEditUsersTab',
+            '../js/components/admin/stack/StackEditWidgetsTab',
+            'widget/Widget',
+            'widget/widgetInit'
+        ]
+    ],
+    [
+        type: 'js',
+        name: 'owf-user-management-widget',
+    
+        files: [
+                        '../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed',
+                        'util/pageload',
+                        '../js-lib/ext-4.0.7/ext-all-debug',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         '../js-lib/patches/BorderLayoutAnimation',
                         '../js-lib/patches/menuAlign',
                         '../js-lib/patches/menuBlankImage',
@@ -823,6 +1050,7 @@ uiperformance.bundles = [
                         '../js-lib/patches/CreateInterceptor',
                         '../js-lib/patches/PluginMerge',
             '../js-lib/patches/GridScroller',
+<<<<<<< HEAD
                         'util/version',
                         'util/util',
 <<<<<<< HEAD
@@ -841,6 +1069,14 @@ uiperformance.bundles = [
                         'lang/DateJs/globalization/en-US',
                         'util/transport',
                         'util/widget_utils',
+=======
+                        'util/version',
+                        'util/util',
+                        'lang/ozone-lang',
+                        'lang/DateJs/globalization/en-US',
+                        'util/transport',
+                        'util/widget_utils',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         'components/util/InstanceVariablizer',
                         'components/keys/HotKeys',
                         'components/keys/KeyEventSender',
@@ -849,6 +1085,7 @@ uiperformance.bundles = [
                         'components/layout/SearchBoxLayout',
                         'components/form/field/SearchBox',
                         'components/window/MessageBoxPlus',
+<<<<<<< HEAD
                         '../js-lib/shindig/util',
                         '../js-lib/shindig/json',
                         '../js-lib/shindig/rpc',
@@ -872,16 +1109,49 @@ uiperformance.bundles = [
                         'widget/Widget',
                         'widget/widgetInit'
                         
+=======
+                        '../js-lib/shindig/util',
+                        '../js-lib/shindig/json',
+                        '../js-lib/shindig/rpc',
+                        '../js-lib/shindig/pubsub',
+                        'eventing/Widget',
+                        '../js-lib/log4javascript/log4javascript',
+                        'util/log',
+                        'pref/preference',
+                        'launcher/WidgetLauncher',
+                        'state/WidgetStateHandler',
+                        'chrome/WidgetChrome',
+                        'dd/WidgetDragAndDrop',
+                        'data/OWFTransportProxy',
+                        'data/OWFStore',
+                        'data/models/User',
+                        'data/stores/UserStore',
+                        'components/admin/grid/UsersGrid',
+                        'components/admin/user/UserDetailPanel',
+                        'components/admin/ManagementPanel',
+                        'components/admin/user/UserManagementPanel',
+                        'widget/Widget',
+                        'widget/widgetInit'
+                        
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
         ]
     ],
     [
         type: 'js',
         name: 'owf-user-edit-widget',
+<<<<<<< HEAD
     
         files: [
                         '../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed',
                         'util/pageload',
                         '../js-lib/ext-4.0.7/ext-all-debug',
+=======
+    
+        files: [
+                        '../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed',
+                        'util/pageload',
+                        '../js-lib/ext-4.0.7/ext-all-debug',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         '../js-lib/patches/BorderLayoutAnimation',
                         '../js-lib/patches/menuAlign',
                         '../js-lib/patches/menuBlankImage',
@@ -891,6 +1161,7 @@ uiperformance.bundles = [
             '../js-lib/patches/GridScroller',
             //'../js-lib/patches/fieldWithToolTipIcon',
                                                 'ux/menu/Item',
+<<<<<<< HEAD
                         'util/version',
             'util/guid',
                         'util/util',
@@ -898,10 +1169,20 @@ uiperformance.bundles = [
                         'lang/DateJs/globalization/en-US',
                         'util/transport',
                         'util/widget_utils',
+=======
+                        'util/version',
+            'util/guid',
+                        'util/util',
+                        'lang/ozone-lang',
+                        'lang/DateJs/globalization/en-US',
+                        'util/transport',
+                        'util/widget_utils',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         'components/util/InstanceVariablizer',
                         'components/keys/HotKeys',
                         'components/keys/KeyEventSender',
                         'components/focusable/FocusableGridPanel',
+<<<<<<< HEAD
                         '../js-lib/shindig/util',
                         '../js-lib/shindig/json',
                         '../js-lib/shindig/rpc',
@@ -1047,6 +1328,57 @@ uiperformance.bundles = [
                         '../js/components/admin/user/UserEditDashboardsTab',
                         '../js/components/admin/user/UserEditPreferencesTab',
                         '../js/components/admin/user/UserEditPanel',
+=======
+                        '../js-lib/shindig/util',
+                        '../js-lib/shindig/json',
+                        '../js-lib/shindig/rpc',
+                        '../js-lib/shindig/pubsub',
+                        'eventing/Widget',
+                        '../js-lib/log4javascript/log4javascript',
+                        'util/log',
+                        'pref/preference',
+                        'launcher/WidgetLauncher',
+                        'state/WidgetStateHandler',
+                        'state/WidgetState',
+                        'chrome/WidgetChrome',
+                        'dd/WidgetDragAndDrop',
+                        '../js/data/ModelIdGenerator',
+                        '../js/data/OWFTransportProxy',
+                        '../js/data/OWFStore',
+                        '../js/data/models/User',
+                        '../js/data/stores/UserStore',
+                        '../js/data/models/WidgetDefinition',
+                        '../js/data/models/Dashboard',
+                        '../js/data/stores/AdminWidgetStore',
+                        '../js/data/stores/AdminDashboardStore',
+                        '../js/data/models/Preference',
+                        '../js/data/stores/PreferenceStore',
+                        '../js/data/models/Group',
+                        '../js/data/stores/GroupStore',
+                        'components/focusable/CircularFocus',
+                        'components/focusable/Focusable',
+                        'components/layout/SearchBoxLayout',
+                        'components/form/field/SearchBox',
+                        '../js/components/admin/AdminEditorAddWindow',
+                        '../js/components/admin/EditPreferenceWindow',
+                        '../js/components/admin/EditDashboardWindow',
+                        '../js/components/admin/grid/DashboardsGrid',
+                        '../js/components/admin/grid/WidgetsGrid',
+                        '../js/components/admin/grid/GroupsGrid',
+                        '../js/components/admin/grid/PreferencesGrid',
+                        '../js/components/admin/DashboardsTabPanel',
+                        '../js/components/admin/WidgetsTabPanel',
+                        '../js/components/admin/GroupsTabPanel',
+                        '../js/components/admin/PreferencesTabPanel',
+                        '../js/components/admin/PropertiesPanel',
+                        '../js/components/admin/EditWidgetPanel',
+                        '../js/components/admin/user/UserEditPropertiesTab',
+                        '../js/components/admin/user/UserEditGroupsTab',
+                        '../js/components/admin/user/UserEditWidgetsTab',
+                        '../js/components/admin/user/UserEditDashboardsTab',
+                        '../js/components/admin/user/UserEditPreferencesTab',
+                        '../js/components/admin/user/UserEditPanel',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         'widget/Widget',
                         'widget/widgetInit'
             //'../js/components/admin/UserEditWidget'
@@ -1069,7 +1401,11 @@ uiperformance.bundles = [
             '../js-lib/patches/GridScroller',
                         'util/version',
                         'util/util',
+<<<<<<< HEAD
                         'ux/menu/Item',
+=======
+                        'ux/menu/Item',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         'components/util/InstanceVariablizer',
                         'components/keys/HotKeys',
                         'components/keys/KeyEventSender',
@@ -1111,6 +1447,7 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-widget-edit-widget',
+<<<<<<< HEAD
     
         files: [
 >>>>>>> 0b093e1fc0270e4c929b02c3057578bdd9cb7a0f
@@ -1146,23 +1483,39 @@ uiperformance.bundles = [
                         '../js-lib/patches/CreateInterceptor',
                         '../js-lib/patches/PluginMerge',
 =======
+=======
+    
+        files: [
+                        '../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed',
+                        'util/pageload',
+                        '../js-lib/ext-4.0.7/ext-all-debug',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         '../js-lib/patches/BorderLayoutAnimation',
                         '../js-lib/patches/menuAlign',
                         '../js-lib/patches/menuBlankImage',
                         '../js-lib/patches/firefox_computed_style_on_hidden_elements_patch',
                         '../js-lib/patches/CreateInterceptor',
                         '../js-lib/patches/PluginMerge',
+<<<<<<< HEAD
 >>>>>>> 0b093e1fc0270e4c929b02c3057578bdd9cb7a0f
                         '../js-lib/patches/TextFieldOverrides',
             '../js-lib/patches/GridScroller',
                         //'../js-lib/patches/fieldWithToolTipIcon',
                         'util/version',
                         'util/util',
+=======
+                        '../js-lib/patches/TextFieldOverrides',
+            '../js-lib/patches/GridScroller',
+                        //'../js-lib/patches/fieldWithToolTipIcon',
+                        'util/version',
+                        'util/util',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         'util/guid',
                         'components/util/InstanceVariablizer',
                         'components/keys/HotKeys',
                         'components/keys/KeyEventSender',
                         'components/focusable/FocusableGridPanel',
+<<<<<<< HEAD
                         'lang/ozone-lang',
                         'lang/DateJs/globalization/en-US',
                         'util/transport',
@@ -1469,6 +1822,57 @@ environments {
                         '../js/components/admin/widget/WidgetEditPropertiesTab',
                         '../js/components/admin/EditWidgetPanel',
                         '../js/components/admin/widget/WidgetEditPanel',
+=======
+                        'lang/ozone-lang',
+                        'lang/DateJs/globalization/en-US',
+                        'util/transport',
+                        'util/widget_utils',
+                        '../js-lib/shindig/util',
+                        '../js-lib/shindig/json',
+                        '../js-lib/shindig/rpc',
+                        '../js-lib/shindig/pubsub',
+                        'eventing/Widget',
+                        '../js-lib/log4javascript/log4javascript',
+                        'util/log',
+                        'pref/preference',
+                        'launcher/WidgetLauncher',
+                        'state/WidgetStateHandler',
+                        'state/WidgetState',
+                        'chrome/WidgetChrome',
+                        'dd/WidgetDragAndDrop',
+                        '../js/data/ModelIdGenerator',
+                        '../js/data/OWFTransportProxy',
+                        '../js/data/OWFStore',
+                        '../js/components/admin/UrlField',
+                        '../js/data/models/WidgetDefinition',
+                        '../js/data/stores/AdminWidgetStore',
+                        '../js/data/models/User',
+                        '../js/data/stores/UserStore',
+                        '../js/data/models/Group',
+                        '../js/data/stores/GroupStore',
+                        '../js/data/models/WidgetType',
+                        '../js/data/stores/WidgetTypeStore',
+                        '../js/data/models/Intent',
+                        '../js/data/stores/IntentStore',
+                        'components/focusable/Focusable',
+                        'components/focusable/CircularFocus',
+                        'components/layout/SearchBoxLayout',
+                        'components/form/field/SearchBox',
+                        'components/window/MessageBoxPlus',
+                        '../js/components/admin/AdminEditorAddWindow',
+                        '../js/components/admin/grid/UsersGrid',
+                        '../js/components/admin/grid/GroupsGrid',
+                        '../js/components/admin/grid/IntentsGrid',
+                        '../js/components/admin/UsersTabPanel',
+                        '../js/components/admin/GroupsTabPanel',
+                        '../js/components/admin/IntentsTabPanel',
+                        '../js/components/admin/widget/WidgetEditUsersTab',
+                        '../js/components/admin/widget/WidgetEditGroupsTab',
+                        '../js/components/admin/PropertiesPanel',
+                        '../js/components/admin/widget/WidgetEditPropertiesTab',
+                        '../js/components/admin/EditWidgetPanel',
+                        '../js/components/admin/widget/WidgetEditPanel',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         'widget/Widget',
                         'widget/widgetInit'
         ]
@@ -1484,7 +1888,10 @@ environments {
                         '../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed',
                         '../js-lib/ext-4.0.7/ext-all-debug',
                         '../js-lib/jquery/jquery-1.8.0',
+<<<<<<< HEAD
                         '../js-lib/pnotify-1.2.0/jquery.pnotify',
+=======
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         '../js-lib/stubconsole',
                         '../js-plugins/Banner',
                         '../js-plugins/Dashboard',
@@ -1507,7 +1914,11 @@ environments {
                         '../js-lib/patches/GridOverrides',
                         '../js-lib/patches/ButtonOverrides',
                         '../js-lib/patches/ComboBoxOverrides',
+<<<<<<< HEAD
                         '../js-lib/patches/BorderLayoutAnimation',
+=======
+                        '../js-lib/patches/BorderLayoutAnimation',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         '../js-lib/patches/menuAlign',
                         '../js-lib/patches/CreateInterceptor',
                         '../js-lib/patches/PluginMerge',
@@ -1558,7 +1969,11 @@ environments {
                         'ux/AutoHideLoadMask',
                         'ux/menu/Item',
                         'util/transport',
+<<<<<<< HEAD
                         'ux/layout/container/boxOverflow/Menu',
+=======
+                        'ux/layout/container/boxOverflow/Menu',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         'pref/preference',
                         '../js-lib/shindig/util',
                         '../js-lib/shindig/json',
@@ -1668,7 +2083,11 @@ environments {
                         'marketplace/MPCategoryAPI',
                         'components/marketplace/MarketplaceWindow',
                         'components/marketplace/MPWidgetDetailsPanel',
+<<<<<<< HEAD
                         'chrome/WidgetChromeContainer',
+=======
+                        'chrome/WidgetChromeContainer',
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
                         'components/widget/DeleteWidgetsPanel',
                         'metrics/BaseMetrics',
             //this patch file should be at the end
@@ -1811,6 +2230,7 @@ environments {
     development {
         uiperformance.enabled = false
 
+<<<<<<< HEAD
         perfTest.enabled = false            // Determines whether or not bootstrap is run
         perfTest.clearCacheEvery = 10
 >>>>>>> 0b093e1fc0270e4c929b02c3057578bdd9cb7a0f
@@ -1993,6 +2413,21 @@ casSettings.FullServiceURL='https://localhost:8443/cas'
 
 
 =======
+=======
+        perfTest.enabled = false            // Determines whether or not bootstrap is run
+        perfTest.clearCacheEvery = 10
+        perfTest.numDashboards = 5          // The number of dashboards each user will get assigned to them
+        perfTest.numGroupDashboards = 1     // The number of dashboards each group will get assigned to them
+        perfTest.numDashboardsWidgets = 5   // The number of widgets on each dashboard
+        perfTest.numAdmins = 5              // The number of administrators
+        perfTest.numUsers = 995             // The number of non-admin users
+        perfTest.numGroups = 50             // The number of groups
+        perfTest.numGroupsPerUser = 5       // The number of groups each user is assigned to
+        perfTest.numWidgetsInGroups = 5     // The number of widgets assigned to each group
+        perfTest.numWidgetsPerUser = 10     // The number of widgets assigned to each user
+        perfTest.numPreferences = 50        // The number of preferences per user
+        perfTest.numWidgets = 500           // The number of unique widget definitions
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
 
         perfTest.createRequiredWidgets = false
         perfTest.createSampleWidgets = false
@@ -2081,8 +2516,13 @@ owf {
 //      officeName = "Sample Office"
 //
 //      bannerIcon = "images/blue/header/wfLogo48.gif"
+<<<<<<< HEAD
 //      bannerIconHeight = 48       /* DO NOT CHANGE until entire banner is componentized */
 //      bannerIconWidth = 250       /* DO NOT CHANGE until entire banner is componentized */
+=======
+//      bannerIconHeight = 48       /* DO NOT CHANGE until entire banner is componentized */
+//      bannerIconWidth = 250       /* DO NOT CHANGE until entire banner is componentized */
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
 
       adminBannerIcon = "images/adminLogo52.png"
       adminBannerIconHeight = 52
@@ -2138,6 +2578,7 @@ owf {
       //timeout = 1800000
     }
 
+<<<<<<< HEAD
     // Configuration elements for custom headers/footers.
     customHeaderFooter {
         header = ''
@@ -2147,6 +2588,17 @@ owf {
         jsImports = []
         cssImports = []
     }
+=======
+    // Configuration elements for custom headers/footers.
+    customHeaderFooter {
+        header = ''
+        headerHeight = 0
+        footer = ''
+        footerHeight = 0
+        jsImports = []
+        cssImports = []
+    }
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772
 
 }
 
@@ -2159,4 +2611,7 @@ casSettings.useCas=true
 casSettings.FullServiceURL='https://localhost:8443/cas'
 
 
+<<<<<<< HEAD
 >>>>>>> 0b093e1fc0270e4c929b02c3057578bdd9cb7a0f
+=======
+>>>>>>> 526819ae7cbac1edc791c5b3f0159bd75a4fe772

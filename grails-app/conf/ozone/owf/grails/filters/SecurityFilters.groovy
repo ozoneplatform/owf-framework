@@ -501,6 +501,43 @@ class SecurityFilters {
             dashboardEdit = saveInstance(dashboardEdit)
             dashboardEdit.addTag('admin')
         }
+        
+        def stackAdmin = WidgetDefinition.findByWidgetUrl('admin/StackManagement.gsp',[cache:true]);
+        if (stackAdmin == null) {
+            id = generateId()
+            stackAdmin = new WidgetDefinition(
+                displayName: 'Stacks',
+                height: 440,
+                imageUrlLarge: 'themes/common/images/adm-tools/Stacks64.png',
+                imageUrlSmall: 'themes/common/images/adm-tools/Stacks24.png',
+                widgetGuid: id,
+                widgetUrl: 'admin/StackManagement.gsp',
+                widgetVersion: '1.0',
+                width: 818
+            )
+            stackAdmin.addToWidgetTypes(adminWidgetType)
+            stackAdmin = saveInstance(stackAdmin)
+            stackAdmin.addTag('admin')
+        }
+
+        def stackEdit = WidgetDefinition.findByWidgetUrl('admin/StackEdit.gsp',[cache:true]);
+        if (stackEdit == null) {
+            id = generateId()
+            stackEdit = new WidgetDefinition(
+                displayName: 'Stack Editor',
+                visible: false,
+                height: 440,
+                imageUrlLarge: 'themes/common/images/adm-tools/Stacks64.png',
+                imageUrlSmall: 'themes/common/images/adm-tools/Stacks24.png',
+                widgetGuid: id,
+                widgetUrl: 'admin/StackEdit.gsp',
+                widgetVersion: '1.0',
+                width: 581
+            )
+            stackEdit.addToWidgetTypes(adminWidgetType)
+            stackEdit = saveInstance(stackEdit)
+            stackEdit.addTag('admin')
+        }
 
         def marketplaceApproval = WidgetDefinition.findByWidgetUrl('admin/MarketplaceApprovals.gsp',[cache:true]);
         if (marketplaceApproval == null) {
@@ -548,6 +585,12 @@ class SecurityFilters {
                 namespace: 'owf.admin.DashboardEditCopy',
                 userid: admin.id,
                 value: dashboardEdit.widgetGuid
+            )
+            preferenceService.updateForUser(
+                path: 'guid_to_launch',
+                namespace: 'owf.admin.StackEditCopy',
+                userid: admin.id,
+                value: stackEdit.widgetGuid
             )
 
             // Create OWF Administrators group if it doesn't already exist
@@ -621,6 +664,18 @@ class SecurityFilters {
             if (mapping[0] == null) {
                 // If none of the admin widgets exist yet, create them
                 domainMappingService.createMapping(adminGroup, RelationshipType.owns, dashboardEdit);
+            }
+            
+            mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, stackAdmin);
+            if (mapping[0] == null) {
+                // If none of the admin widgets exist yet, create them
+                domainMappingService.createMapping(adminGroup, RelationshipType.owns, stackAdmin);
+            }
+            
+            mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, stackEdit);
+            if (mapping[0] == null) {
+                // If none of the admin widgets exist yet, create them
+                domainMappingService.createMapping(adminGroup, RelationshipType.owns, stackEdit);
             }
 			
             mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, marketplaceApproval);

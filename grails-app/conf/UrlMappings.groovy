@@ -299,6 +299,10 @@ class UrlMappings {
             controller = "group"
             action = UrlMappings.getAction
         }
+        "/stack/$id?" {
+            controller = "stack"
+            action = UrlMappings.getAction
+        }
 		
         //Mapping for widget definitions
         "/widget/$widgetGuid?" {
