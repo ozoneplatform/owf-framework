@@ -18,6 +18,7 @@
         <owfImport:jsOwf path="config" resource="config" />
 
         <!-- include our server bundle, in dev mode a full list of js includes will appear -->
+        <p:javascript src='owf-admin-widget'/>
         <p:javascript src='owf-widget-management-widget'/>
         <!-- include our server bundle, in dev mode a full list of js includes will appear -->
 

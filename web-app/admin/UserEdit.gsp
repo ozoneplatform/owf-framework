@@ -17,9 +17,10 @@
 		<!-- initialize ozone configuration from server -->
 		<owfImport:jsOwf path="config" resource="config" />
 
-		<!-- include our server bundle, in dev mode a full list of js includes will appear -->
-		<p:javascript src='owf-user-edit-widget'/>
-		<!-- include our server bundle, in dev mode a full list of js includes will appear -->
+        <!-- include our server bundle, in dev mode a full list of js includes will appear -->
+        <p:javascript src='owf-admin-widget'/>
+        <p:javascript src='owf-user-edit-widget'/>
+        <!-- include our server bundle, in dev mode a full list of js includes will appear -->
 			
 		<script language = "javascript">
 			if(Ext.isIE) {

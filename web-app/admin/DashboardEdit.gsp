@@ -18,8 +18,10 @@
         <owfImport:jsOwf path="config" resource="config" />
 
         <!-- include our server bundle, in dev mode a full list of js includes will appear -->
+        <p:javascript src='owf-admin-widget'/>
         <p:javascript src='owf-dashboard-edit-widget'/>
         <!-- include our server bundle, in dev mode a full list of js includes will appear -->
+
         <script language = "javascript">
 			if(Ext.isIE) {
 				Ext.BLANK_IMAGE_URL = '../themes/common/images/s.gif';
