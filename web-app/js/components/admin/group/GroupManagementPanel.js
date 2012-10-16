@@ -251,14 +251,6 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
         }
     },
     
-    doCreate: function() {
-        OWF.Launcher.launch({
-            guid: this.guid_EditCopyWidget,
-            launchOnlyIfClosed: false,
-            data: undefined
-        }, this.launchFailedHandler);
-    },
-    
     doEdit: function(id) {
         var dataString = Ozone.util.toString({
             id: id,
@@ -451,14 +443,6 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
         }
         else {
             btnDelete.enable();
-        }
-    },
-    
-    refreshWidgetLaunchMenu: function() {
-        if (this.widgetStateHandler) {
-          this.widgetStateHandler.handleWidgetRequest({
-              fn: 'refreshWidgetLaunchMenu'
-          });
         }
     }
 });

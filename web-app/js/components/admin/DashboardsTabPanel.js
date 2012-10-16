@@ -17,9 +17,9 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
     
     initComponent: function() {
         
-      var self = this;
+        var self = this;
 
-      Ext.apply(this,{
+        Ext.apply(this,{
         items: [{
             xtype: 'dashboardsgrid',
             itemId: 'dashboardsgrid',
@@ -28,7 +28,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             listeners: {
               itemdblclick: {
                 fn: function() {
-                  this.doEdit();
+                    this.doEdit();
                 },
                 scope: this
               }
@@ -63,9 +63,9 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
 
                 }]
             }]
-      });
+        });
 
-      this.on({
+        this.on({
         //setup panel on the first activate
         'activate': {
             scope: this,
@@ -91,8 +91,8 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
                     comp.record = comp.recordId ? comp.store.getAt(comp.store.findExact('id', comp.recordId)) : undefined;
                     compId = comp.recordId ? comp.recordId : -1;
                     var p = {
-                      tab: 'dashboards',
-                      adminEnabled: true
+                        tab: 'dashboards',
+                        adminEnabled: true
                     };
                     p[cmp.componentId] = compId;
                     grid.setBaseParams(p);
@@ -101,73 +101,138 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             single: true
         }
 
-      });
+        });
 
-      //reload store everytime the tab is activated
-      this.on({
-         activate: {
-           fn: function(cmp, opts) {
-             var grid = cmp.getComponent('dashboardsgrid');
-             var store = grid.getStore();
-             
-             // Set the title
-             if (cmp.ownerCt.record) {
-                 var titleText = cmp.ownerCt.record.get('title') || 'Dashboards';
-                 var title = this.getDockedItems('toolbar[dock="top"]')[0].getComponent('lblDashboardsGrid');
-                 titleText = '<span class="heading-bold">' + Ext.htmlEncode(titleText) + '</span>';
-                 title.setText(titleText);
-             }
-             
-             if (store) {
-                 store.load({
-                     params: {
-                         offset: 0,
-                         max: store.pageSize
-                     }
-                 });
-             }
-           },
-           scope: this
-         }
-      });
-      
-      OWF.Preferences.getUserPreference({
-        namespace: 'owf.admin.DashboardEditCopy',
-        name: 'guid_to_launch',
-        onSuccess: function(result) {
-          self.guid_DashboardEditCopyWidget = result.value;
-        },
-        onFailure: function(err) { /* No op */
-            self.showAlert('Preferences Error', 'Error looking up Dashboard Editor: ' + err);
+        //reload store everytime the tab is activated
+        this.on({
+            activate: {
+                fn: function(cmp, opts) {
+                    var grid = cmp.getComponent('dashboardsgrid');
+                    var store = grid.getStore();
+
+                    // Set the title
+                    if (cmp.ownerCt.record) {
+                        var titleText = cmp.ownerCt.record.get('title') || 'Dashboards';
+                        var title = this.getDockedItems('toolbar[dock="top"]')[0].getComponent('lblDashboardsGrid');
+                        titleText = '<span class="heading-bold">' + Ext.htmlEncode(titleText) + '</span>';
+                        title.setText(titleText);
+                    }
+
+                    if (store) {
+                        store.load({
+                            params: {
+                                offset: 0,
+                                max: store.pageSize
+                            }
+                        });
+                    }
+                },
+                scope: this
+            }
+        });
+
+        OWF.Preferences.getUserPreference({
+            namespace: 'owf.admin.DashboardEditCopy',
+            name: 'guid_to_launch',
+            onSuccess: function(result) {
+                self.guid_DashboardEditCopyWidget = result.value;
+            },
+            onFailure: function(err) { /* No op */
+                self.showAlert('Preferences Error', 'Error looking up Dashboard Editor: ' + err);
+            }
+        });
+
+        //Set the messagebox to use display:none to hide otherwise
+        //the circular focus of the editor will break
+        Ext.Msg.hideMode = 'display';
+
+        this.callParent();
+    },
+
+    launchFailedHandler: function(response) {
+        if (response.error) {
+            this.showAlert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
         }
-      });
+    },
 
-      //Set the messagebox to use display:none to hide otherwise
-      //the circular focus of the editor will break
-      Ext.Msg.hideMode = 'display';
+    onStoreException: function(proxy, response, operation, eOpts) {
+        var decodedResponse;
+        try {
+            decodedResponse = Ext.JSON.decode(response);
+        }
+        catch (e) {
+            decodedResponse = {
+                errorMsg: response
+            };
+        }
 
-      this.callParent();
-  },
+        this.showAlert('Server Error', 'Error during ' + operation.action + ': ' + errorMsg);
+    },
 
-  launchFailedHandler: function(response) {
-      if (response.error) {
-          this.showAlert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
-      }
-  },
+    onAddClicked: function () {
+        var win = Ext.widget('admineditoraddwindow', {
+            addType: 'Dashboard',
+            itemName: this.ownerCt.record.get('displayName'),
+            editor: this.editor,
+            focusOnClose: this.down(),
+            existingItemsStore: this.getComponent('dashboardsgrid').getStore(),
+            grid: Ext.widget('dashboardsgrid', {
+                itemId: 'dashboardsaddgrid',
+                border: false,
+                enableColumnHide: false,
+                sortableColumns: false,
+                listeners: {
+                    render: {
+                        fn: function(cmp) {
+                            cmp.setBaseParams({
+                                adminEnabled: true,
+                                isGroupDashboard: true
+                            });
+                        },
+                        scope: this
+                    }
+                }
+            })
+        });
+        win.show();
+    },
+    
+    doEdit: function(button, e) {
+        var grid = this.getComponent('dashboardsgrid');
+        var records = grid.getSelectedDashboards();
+        if (records && records.length > 0) {
+            for (var i = 0; i < records.length; i++) {
+                var id = records[i].data.guid;//From Id property of Dashboard Model
+                var dataString = Ozone.util.toString({
+                    id: id,
+                    copyFlag: false,
+                    isGroupDashboard: this.isGroupDashboard
+                });
 
-  onStoreException: function(proxy, response, operation, eOpts) {
-      var decodedResponse;
-      try {
-          decodedResponse = Ext.JSON.decode(response);
-      }
-      catch (e) {
-          decodedResponse = {
-              errorMsg: response
-          };
-      }
-  
-      this.showAlert('Server Error', 'Error during ' + operation.action + ': ' + errorMsg);
-  },
+                OWF.Launcher.launch({
+                    guid: this.guid_DashboardEditCopyWidget,
+                    launchOnlyIfClosed: false,
+                    data: dataString
+                }, this.launchFailedHandler);
+            }
+        }
+        else {
+        Ext.Msg.alert("Error", "You must select at least one dashboard to edit");
+        }
+    },
+
+    doDelete: function(button, e) {
+        var grid = this.getComponent('dashboardsgrid');
+        var store = grid.getStore();
+        var records = grid.getSelectedDashboards();
+        if (records && records.length > 0) {
+            store.remove(records);
+            store.save();
+        } else {
+            this.showAlert("Error", "You must select at least one dashboard to delete.");
+        }
+    },
+
     showAlert: function(title, msg) {
         var alert = Ext.Msg.alert(title, msg),
             okBtnEl = alert.down('button').btnEl;
@@ -185,6 +250,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             okBtnEl.un('keydown', onKeyDown);
         }, this, {single: true});
     },
+
     showConfirmation: function(title, msg, okFn) {
         var alert = Ext.Msg.show({
             title: title,

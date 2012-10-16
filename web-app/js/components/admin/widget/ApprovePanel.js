@@ -82,9 +82,9 @@ Ext.define('Ozone.components.admin.widget.ApprovePanel', {
                   }
                 }
 
-                var retVal = '<div class="grid-widget"><div class="grid-widget-title-box"><div class="grid-widget-icon"><img class="grid-widget-icon-image" src="' + url + '"> ';
+                var retVal = '<div class="grid-widget"><div class="grid-icon-and-text-title-box"><div class="grid-icon-and-text-icon"><img class="grid-icon-and-text-icon-image" src="' + url + '"> ';
                 retVal += '</div>';
-                retVal += '<div class="grid-widget-title">' + title + '</div>';
+                retVal += '<div class="grid-icon-and-text-title">' + title + '</div>';
                     
                 return  retVal;
               }
