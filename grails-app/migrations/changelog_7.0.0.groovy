@@ -47,4 +47,32 @@ databaseChangeLog = {
         dropColumn(tableName: "dashboard", columnName: "column_count")
     }
     
+    changeSet(author: "owf", id: "7.0.0-9", context: "create, upgrade, 7.0.0") {
+        comment("Create stack table")
+
+        createTable(tableName: "stack") {
+            column(autoIncrement: "true", name: "id", type: "bigint") {
+                constraints(nullable: "false", primaryKey: "true", primaryKeyName: "stackPK")
+            }
+            column(name: "name", type:"varchar(200)") {
+                constraints(nullable: "false")
+            }
+            column(name: "stackPosition", type: "bigint") {
+                constraints(nullable: "false", unique: "true")
+            }
+            column(name: "description", type:"varchar(255)") {
+                constraints(nullable: "true")
+            }
+            column(name: "stackContext", type:"varchar(200)") {
+                constraints(nullable: "false", unique: "true")
+            }
+            column(name: "imageUrl", type:"varchar(2083)") {
+                constraints(nullable: "true")
+            }
+            column(name: "descriptorUrl", type:"varchar(2083)") {
+                constraints(nullable: "true")
+            }
+        }
+    }
+    
 }
