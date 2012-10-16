@@ -147,28 +147,5 @@ Ext.define('Ozone.components.admin.group.GroupEditPropertiesTab', {
   			activated.setValue('active' == data.status).originalValue = 'active' == data.status;
   			status.setValue(data.status).originalValue = data.status;
   		}
-    },
-    onApply: function() {
-      var panel = this;
-      var widget = panel.ownerCt;
-      var formValues = this.getValues();
-
-      if (widget.store.data.length > 0) {
-          var record = widget.store.getById(widget.recordId);
-          record.beginEdit();
-          for (var field in formValues) {
-              if (!Ext.isFunction(field)) {
-                  record.set(field, formValues[field]);
-              }
-          }
-          record.endEdit();
-      } else {
-          widget.store.add(formValues);
-          widget.store.data.items[0].phantom = true;
-          if (Ext.isFunction(panel.initFieldValues)) {
-              panel.initFieldValues(widget.store.data.items[0]);
-          }
-      }
-      widget.store.save();
     }
 });
