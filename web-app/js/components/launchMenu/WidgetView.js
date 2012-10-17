@@ -215,17 +215,17 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
                                     icon = encodeURI(val);
                                 }
                                 else {
-                                    //if the val is null then get the headerIcon directly from the record
+                                    //if the val is null then get the image directly from the record
                                     //if this record is from a statestore it will lookup the right widgetdef
-                                    //and return the headerIcon
-                                    icon = encodeURI(record.get('headerIcon'));
+                                    //and return the image
+                                    icon = encodeURI(record.get('image'));
                                 }
 
 
                                 //todo remove this hardcoded style
                                 return '<img onerror="this.src = \''+defaultIcon+'\'" src="' + icon + '" style="width: 24px;height: 24px">';
                             },
-                            dataIndex:'headerIcon',
+                            dataIndex:'image',
                             flex:0,
                             width:45,
                             sortable:false
