@@ -165,27 +165,32 @@
 
 .widgeteditintentstab,
 .widgeteditgroupstab ,
+.widgeteditstackstab,
 .widgetedituserstab,
 .usereditdashboardstab,
 .usereditgroupstab,
 .usereditpreferencestab,
+.usereditstackstab,
 .usereditwidgetstab,
 .groupedituserstab,
 .groupeditdashboardstab,
+.groupeditstackstab,
 .groupeditwidgetstab,
 .dashboardeditgroupstab,
+.dashboardeditstackstab,
 .stackeditdashboardstab,
 .stackeditwidgetstab,
 .stackeditgroupstab,
 .stackedituserstab,
 .admineditoraddpanel {
-    .tbIntentsGridHdr, 
-    .tbGroupsGridHdr, 
-    .tbDashboardsGridHdr, 
-    .tbPreferencesGridHdr, 
-    .tbUsersGridHdr, 
-    .tbWidgetsGridHdr,
-    .tbAdminEditorAddGridHdr {
+    .tbAdminEditorAddGridHdr,
+    .tbDashboardsGridHdr,
+    .tbGroupsGridHdr,
+    .tbIntentsGridHdr,
+    .tbPreferencesGridHdr,
+    .tbStacksGridHdr,
+    .tbUsersGridHdr,
+    .tbWidgetsGridHdr {
         font-size: 1.3 * $owf-font-size;
         font-weight: bold;
     }
@@ -465,6 +470,13 @@ div.detail-info {
 
     .preferences-tab-over {
       background-image: theme-image($theme-name, 'admin/preferences_hover.png');
+    }
+
+    .stacks-tab {
+        background-image: theme-image($theme-name, 'admin/stack.png');
+    }
+    .x-btn-disabled .stacks-tab {
+        background-image: theme-image($theme-name, 'admin/stack_disabled.png');
     }
     
     .gridHeader {
