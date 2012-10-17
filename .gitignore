@@ -13,6 +13,14 @@
 # "temporary" files
 /staging
 /build-base*
+/src
+/target
+/build.number
+/cobertura.ser
+/lib
+/work
+/web-app/js-min
+/js-plugins/*.gz.js
 *.sass-cache
 *.css
 
