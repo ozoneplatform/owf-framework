@@ -60,19 +60,19 @@ databaseChangeLog = {
             column(name: "name", type:"varchar(200)") {
                 constraints(nullable: "false")
             }
-            column(name: "stackPosition", type: "bigint") {
+            column(name: "stack_position", type: "bigint") {
                 constraints(nullable: "false", unique: "true")
             }
             column(name: "description", type:"varchar(255)") {
                 constraints(nullable: "true")
             }
-            column(name: "stackContext", type:"varchar(200)") {
+            column(name: "stack_context", type:"varchar(200)") {
                 constraints(nullable: "false", unique: "true")
             }
-            column(name: "imageUrl", type:"varchar(2083)") {
+            column(name: "image_url", type:"varchar(2083)") {
                 constraints(nullable: "true")
             }
-            column(name: "descriptorUrl", type:"varchar(2083)") {
+            column(name: "descriptor_url", type:"varchar(2083)") {
                 constraints(nullable: "true")
             }
         }
