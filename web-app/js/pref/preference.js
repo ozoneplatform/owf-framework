@@ -199,16 +199,12 @@ Ozone.pref = Ozone.pref || {};
               content = {
                   '_method': cfg.method,
                   'name': cfg.json.name,
-//                  'layout': cfg.json.layout,
                   'description': cfg.json.description,
-//                  'columnCount': cfg.json.columnCount,
                   'guid': cfg.json.guid,
                   'isdefault': cfg.json.isdefault,
                   'locked': cfg.json.locked,
                   'state': cfg.json.state,
-//                  'defaultSettings': cfg.json.defaultSettings,
                 'layoutConfig': cfg.json.layoutConfig
-//                'intentConfig': cfg.json.intentConfig
               };
               if (cfg.json.cloned === true) content.cloned = true;
               if (cfg.json.bypassLayoutRearrange === true) content.bypassLayoutRearrange = true;
@@ -266,29 +262,17 @@ Ozone.pref = Ozone.pref || {};
       var generateDashboardPostParamsJSON = function (json) {
           var postParams = {
             'name': json.name,
-            'layout': json.layout,
             'description': json.description,
-            'columnCount': json.columnCount,
             'guid': json.guid,
             'isdefault': json.isdefault,
             'locked': json.locked,
             'state': json.state,
-            'defaultSettings': json.defaultSettings,
-            'layoutConfig': typeof json.layoutConfig === 'string' ? json.layoutConfig : Ozone.util.toString(json.layoutConfig),
-            'intentConfig': typeof json.intentConfig === 'string' ? json.intentConfig : Ozone.util.toString(json.intentConfig)
+            'layoutConfig': typeof json.layoutConfig === 'string' ? json.layoutConfig : Ozone.util.toString(json.layoutConfig)
           };
           return postParams;
       };
 
       return /** @lends Ozone.pref.PrefServer.prototype */{
-
-          dashTypeDesktop: 'desktop',
-
-          dashTypeAccordion: 'accordion',
-
-          dashTypeTabbed: 'tabbed',
-
-          dashTypePortal: 'portal',
 
           version: Ozone.version.owfversion + Ozone.version.preference,
 
@@ -319,14 +303,10 @@ Ozone.pref = Ozone.pref || {};
            *     {Boolean} alteredByAdmin: true if altered by an administrator<br>
            *     {Date} createdDate: date dashboard was created<br>
            *     {Boolean} isGroupDashboard: true if dashboard is a group dashboard<br>
-           *     {String} layout: layout of dashboard<br>
            *     {Boolean} isdefault: true if this is a default dashboard<br>
            *     {String} name: name of dashboard<br>
-           *     {Number} columnCount: number of columns if dashboard is a portal type<br>
            *     {Object} user: the dashoard owner.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
-           *     {List} EDashboardLayoutList: list of dashboard types<br>
-           *     {String} defaultSettings: JSON string of default settings which varies by dashboard type<br>
            *     {Object} createdBy: dashboard creator.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userRealName: user's name<br>
@@ -334,37 +314,57 @@ Ozone.pref = Ozone.pref || {};
            *     {Array} groups:  groups dashboard is assigned to<br>
            *     {String} description: description of dashboard<br>
            *     {String} guid: uniqued dashboard identifier<br>
-           *     {Array} state: array of widget state objects.  Has the following properties:<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} widgetGuid: unique widget identifier<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} width: width of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} zIndex: in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} region: containing region on dashboard.  Dashboard type specific.<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} pinned: true if widget is pinned open<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} buttonId: identifier of button that opens widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} height: height of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} columnPos: position of widget in a column<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} name: widget name<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} statePosition<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} active: true if this widget is the active (has focus) widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} uniqueId: unique widget identifier on dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} minimized: true if widget is minimized<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} buttonOpened: true if button launched widget is opened<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} collapsed: true if widget is collapsed<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} y: y-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} x: x-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} maximized: true if widget is maximized<br>
+           *     {String} layoutConfig: Holds the various containers and panes on a dashboard and the widgets inside of the panes, including the widget states.
+           *     This parameter provides an EXT JS style configuration used to layout the supported pane types in an OWF dashboard along. Each
+           *     internal definition can hold nested panes in an items array, widgets in a widgets array, and default values for those widgets in a defaultValues array.
+           *     Panes can have the following parameters:<br>
+           *     <ul style="list-style-type:none">
+           *        <li>{String} xtype: container|accordionpane|desktoppane|fitpane|portalpane|tabbedpane|dashboardsplitter</li>
+           *        <li>{Number} flex: 1 if for a pane; 3 for a container<li>
+           *        <li>{String} htmlText: in pixels (e.g., 300px) or percent (e.g., 100%) or "variable"; valid if nested in a horizontally/vertically split pane</li>
+           *        <li>{String} cls: left|right if nested in a horizontally split pane; top|bottom if nested in a vertically split pane; vbox|hbox if xtype is container</li>
+           *        <li>{Array} items: an array of 2 nested pane configurations along with a possible dashboardspliiter for vbox and hbox containers; empty otherwise</li>
+           *        <li>{String} paneType: accordionpane|desktoppane|fitpane|portalpane|tabbedpane; valid if xtype is not container</li>
+           *        <li>{Array} layout: valid only for container xtype.  Includes the following elements:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} type: vbox|hbox</li>
+           *           <li>{String} align: stretch</li>
+           *        </ul>
+           *        <li>{Array} widgets: array of widget state objects.  Each has the following properties:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} widgetGuid: unique widget identifier</li>
+           *           <li>{Number} width: width of widget in pixels</li>
+           *           <li>{Number} zIndex: in pixels</li>
+           *           <li>{String} region: containing region on dashboard.  Dashboard type specific.</li>
+           *           <li>{Boolean} pinned: true if widget is pinned open</li>
+           *           <li>{String} buttonId: identifier of button that opens widget</li>
+           *           <li>{Number} height: height of widget in pixels</li>
+           *           <li>{Number} columnPos: position of widget in a column</li>
+           *           <li>{String} name: widget name</li>
+           *           <li>{Number} statePosition</li>
+           *           <li>{Boolean} active: true if this widget is the active (has focus) widget</li>
+           *           <li>{String} uniqueId: unique widget identifier on dashboard</li>
+           *           <li>{Boolean} minimized: true if widget is minimized</li>
+           *           <li>{Boolean} buttonOpened: true if button launched widget is opened</li>
+           *           <li>{Boolean} collapsed: true if widget is collapsed</li>
+           *           <li>{Number} y: y-axis position in pixels</li>
+           *           <li>{Number} x: x-axis position in pixels</li>
+           *           <li>{Boolean} maximized: true if widget is maximized</li>
+           *        </ul>
+           *        <li>{String} defaultSettings: JSON string of default settings which varies by pane type; not valid for containers</li>
+           *     </ul>
            * <br>
            * @param {Function} [cfg.onFailure] Callback to execute if there is an error (optional, a default alert provided). Callback parameter is an error string.
            * @example
            *
            * var onSuccess = function(dashboard) {
-       *     alert(dashboard.name);
-       * };
-       *
-       * var onFailure = function(error) {
-           *     alert(error);
-       * };
-       *
+           *     alert(dashboard.name);
+           * };
+           *
+           * var onFailure = function(error) {
+               *     alert(error);
+           * };
+           *
            * Ozone.pref.PrefServer.getDashboard({
            *     dashboardId:'917b4cd0-ecbd-410b-afd9-42d150c26426',
            *     onSuccess:onSuccess,
@@ -385,14 +385,10 @@ Ozone.pref = Ozone.pref || {};
            *     {Boolean} alteredByAdmin: true if altered by an administrator<br>
            *     {Date} createdDate: date dashboard was created<br>
            *     {Boolean} isGroupDashboard: true if dashboard is a group dashboard<br>
-           *     {String} layout: layout of dashboard<br>
            *     {Boolean} isdefault: true if this is a default dashboard<br>
            *     {String} name: name of dashboard<br>
-           *     {Number} columnCount: number of columns if dashboard is a portal type<br>
            *     {Object} user: the dashoard owner.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
-           *     {List} EDashboardLayoutList: list of dashboard types<br>
-           *     {String} defaultSettings: JSON string of default settings which varies by dashboard type<br>
            *     {Object} createdBy: dashboard creator.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userRealName: user's name<br>
@@ -400,37 +396,57 @@ Ozone.pref = Ozone.pref || {};
            *     {Array} groups:  groups dashboard is assigned to<br>
            *     {String} description: description of dashboard<br>
            *     {String} guid: uniqued dashboard identifier<br>
-           *     {Array} state: array of widget state objects.  Has the following properties:<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} widgetGuid: unique widget identifier<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} width: width of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} zIndex: in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} region: containing region on dashboard.  Dashboard type specific.<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} pinned: true if widget is pinned open<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} buttonId: identifier of button that opens widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} height: height of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} columnPos: position of widget in a column<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} name: widget name<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} statePosition<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} active: true if this widget is the active (has focus) widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} uniqueId: unique widget identifier on dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} minimized: true if widget is minimized<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} buttonOpened: true if button launched widget is opened<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} collapsed: true if widget is collapsed<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} y: y-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} x: x-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} maximized: true if widget is maximized<br>
+           *     {String} layoutConfig: Holds the various containers and panes on a dashboard and the widgets inside of the panes, including the widget states.
+           *     This parameter provides an EXT JS style configuration used to layout the supported pane types in an OWF dashboard along. Each
+           *     internal definition can hold nested panes in an items array, widgets in a widgets array, and default values for those widgets in a defaultValues array.
+           *     Panes can have the following parameters:<br>
+           *     <ul style="list-style-type:none">
+           *        <li>{String} xtype: container|accordionpane|desktoppane|fitpane|portalpane|tabbedpane|dashboardsplitter</li>
+           *        <li>{Number} flex: 1 if for a pane; 3 for a container<li>
+           *        <li>{String} htmlText: in pixels (e.g., 300px) or percent (e.g., 100%) or "variable"; valid if nested in a horizontally/vertically split pane</li>
+           *        <li>{String} cls: left|right if nested in a horizontally split pane; top|bottom if nested in a vertically split pane; vbox|hbox if xtype is container</li>
+           *        <li>{Array} items: an array of 2 nested pane configurations along with a possible dashboardspliiter for vbox and hbox containers; empty otherwise</li>
+           *        <li>{String} paneType: accordionpane|desktoppane|fitpane|portalpane|tabbedpane; valid if xtype is not container</li>
+           *        <li>{Array} layout: valid only for container xtype.  Includes the following elements:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} type: vbox|hbox</li>
+           *           <li>{String} align: stretch</li>
+           *        </ul>
+           *        <li>{Array} widgets: array of widget state objects.  Each has the following properties:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} widgetGuid: unique widget identifier</li>
+           *           <li>{Number} width: width of widget in pixels</li>
+           *           <li>{Number} zIndex: in pixels</li>
+           *           <li>{String} region: containing region on dashboard.  Dashboard type specific.</li>
+           *           <li>{Boolean} pinned: true if widget is pinned open</li>
+           *           <li>{String} buttonId: identifier of button that opens widget</li>
+           *           <li>{Number} height: height of widget in pixels</li>
+           *           <li>{Number} columnPos: position of widget in a column</li>
+           *           <li>{String} name: widget name</li>
+           *           <li>{Number} statePosition</li>
+           *           <li>{Boolean} active: true if this widget is the active (has focus) widget</li>
+           *           <li>{String} uniqueId: unique widget identifier on dashboard</li>
+           *           <li>{Boolean} minimized: true if widget is minimized</li>
+           *           <li>{Boolean} buttonOpened: true if button launched widget is opened</li>
+           *           <li>{Boolean} collapsed: true if widget is collapsed</li>
+           *           <li>{Number} y: y-axis position in pixels</li>
+           *           <li>{Number} x: x-axis position in pixels</li>
+           *           <li>{Boolean} maximized: true if widget is maximized</li>
+           *        </ul>
+           *        <li>{String} defaultSettings: JSON string of default settings which varies by pane type; not valid for containers</li>
+           *     </ul>
            * <br>
            * @param {Function} [cfg.onFailure] Callback to execute if there is an error (optional, a default alert provided). Callback parameter is an error string.
            * @example
            *
            * var onSuccess = function(dashboard) {
-       *     alert(dashboard.name);
-       * };
-       *
-       * var onFailure = function(error) {
-           *     alert(error);
-       * };
-       *
+           *     alert(dashboard.name);
+           * };
+           *
+           * var onFailure = function(error) {
+               *     alert(error);
+           * };
+           *
            * Ozone.pref.PrefServer.getDefaultDashboard({
            *     onSuccess:onSuccess,
            *     onFailure:onFailure
@@ -453,14 +469,10 @@ Ozone.pref = Ozone.pref || {};
            *     {Boolean} alteredByAdmin: true if altered by an administrator<br>
            *     {Date} createdDate: date dashboard was created<br>
            *     {Boolean} isGroupDashboard: true if dashboard is a group dashboard<br>
-           *     {String} layout: layout of dashboard<br>
            *     {Boolean} isdefault: true if this is a default dashboard<br>
            *     {String} name: name of dashboard<br>
-           *     {Number} columnCount: number of columns if dashboard is a portal type<br>
            *     {Object} user: the dashoard owner.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
-           *     {List} EDashboardLayoutList: list of dashboard types<br>
-           *     {String} defaultSettings: JSON string of default settings which varies by dashboard type<br>
            *     {Object} createdBy: dashboard creator.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userRealName: user's name<br>
@@ -468,25 +480,45 @@ Ozone.pref = Ozone.pref || {};
            *     {Array} groups:  groups dashboard is assigned to<br>
            *     {String} description: description of dashboard<br>
            *     {String} guid: uniqued dashboard identifier<br>
-           *     {Array} state: array of widget state objects.  Has the following properties:<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} widgetGuid: unique widget identifier<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} width: width of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} zIndex: in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} region: containing region on dashboard.  Dashboard type specific.<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} pinned: true if widget is pinned open<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} buttonId: identifier of button that opens widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} height: height of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} columnPos: position of widget in a column<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} name: widget name<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} statePosition<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} active: true if this widget is the active (has focus) widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} uniqueId: unique widget identifier on dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} minimized: true if widget is minimized<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} buttonOpened: true if button launched widget is opened<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} collapsed: true if widget is collapsed<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} y: y-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} x: x-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} maximized: true if widget is maximized<br>
+           *     {String} layoutConfig: Holds the various containers and panes on a dashboard and the widgets inside of the panes, including the widget states.
+           *     This parameter provides an EXT JS style configuration used to layout the supported pane types in an OWF dashboard along. Each
+           *     internal definition can hold nested panes in an items array, widgets in a widgets array, and default values for those widgets in a defaultValues array.
+           *     Panes can have the following parameters:<br>
+           *     <ul style="list-style-type:none">
+           *        <li>{String} xtype: container|accordionpane|desktoppane|fitpane|portalpane|tabbedpane|dashboardsplitter</li>
+           *        <li>{Number} flex: 1 if for a pane; 3 for a container<li>
+           *        <li>{String} htmlText: in pixels (e.g., 300px) or percent (e.g., 100%) or "variable"; valid if nested in a horizontally/vertically split pane</li>
+           *        <li>{String} cls: left|right if nested in a horizontally split pane; top|bottom if nested in a vertically split pane; vbox|hbox if xtype is container</li>
+           *        <li>{Array} items: an array of 2 nested pane configurations along with a possible dashboardspliiter for vbox and hbox containers; empty otherwise</li>
+           *        <li>{String} paneType: accordionpane|desktoppane|fitpane|portalpane|tabbedpane; valid if xtype is not container</li>
+           *        <li>{Array} layout: valid only for container xtype.  Includes the following elements:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} type: vbox|hbox</li>
+           *           <li>{String} align: stretch</li>
+           *        </ul>
+           *        <li>{Array} widgets: array of widget state objects.  Each has the following properties:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} widgetGuid: unique widget identifier</li>
+           *           <li>{Number} width: width of widget in pixels</li>
+           *           <li>{Number} zIndex: in pixels</li>
+           *           <li>{String} region: containing region on dashboard.  Dashboard type specific.</li>
+           *           <li>{Boolean} pinned: true if widget is pinned open</li>
+           *           <li>{String} buttonId: identifier of button that opens widget</li>
+           *           <li>{Number} height: height of widget in pixels</li>
+           *           <li>{Number} columnPos: position of widget in a column</li>
+           *           <li>{String} name: widget name</li>
+           *           <li>{Number} statePosition</li>
+           *           <li>{Boolean} active: true if this widget is the active (has focus) widget</li>
+           *           <li>{String} uniqueId: unique widget identifier on dashboard</li>
+           *           <li>{Boolean} minimized: true if widget is minimized</li>
+           *           <li>{Boolean} buttonOpened: true if button launched widget is opened</li>
+           *           <li>{Boolean} collapsed: true if widget is collapsed</li>
+           *           <li>{Number} y: y-axis position in pixels</li>
+           *           <li>{Number} x: x-axis position in pixels</li>
+           *           <li>{Boolean} maximized: true if widget is maximized</li>
+           *        </ul>
+           *        <li>{String} defaultSettings: JSON string of default settings which varies by pane type; not valid for containers</li>
+           *     </ul>
            * <br>
            * @param {Function} [cfg.onFailure] Callback to execute if there is an error (optional, a default alert provided). Callback parameter is an error string.
            * @example
@@ -536,25 +568,45 @@ Ozone.pref = Ozone.pref || {};
            *     {Array} groups:  groups dashboard is assigned to<br>
            *     {String} description: description of dashboard<br>
            *     {String} guid: uniqued dashboard identifier<br>
-           *     {Array} state: array of widget state objects.  Has the following properties:<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} widgetGuid: unique widget identifier<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} width: width of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} zIndex: in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} region: containing region on dashboard.  Dashboard type specific.<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} pinned: true if widget is pinned open<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} buttonId: identifier of button that opens widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} height: height of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} columnPos: position of widget in a column<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} name: widget name<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} statePosition<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} active: true if this widget is the active (has focus) widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} uniqueId: unique widget identifier on dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} minimized: true if widget is minimized<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} buttonOpened: true if button launched widget is opened<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} collapsed: true if widget is collapsed<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} y: y-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} x: x-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} maximized: true if widget is maximized<br>
+           *     {String} layoutConfig: Holds the various containers and panes on a dashboard and the widgets inside of the panes, including the widget states.
+           *     This parameter provides an EXT JS style configuration used to layout the supported pane types in an OWF dashboard along. Each
+           *     internal definition can hold nested panes in an items array, widgets in a widgets array, and default values for those widgets in a defaultValues array.
+           *     Panes can have the following parameters:<br>
+           *     <ul style="list-style-type:none">
+           *        <li>{String} xtype: container|accordionpane|desktoppane|fitpane|portalpane|tabbedpane|dashboardsplitter</li>
+           *        <li>{Number} flex: 1 if for a pane; 3 for a container<li>
+           *        <li>{String} htmlText: in pixels (e.g., 300px) or percent (e.g., 100%) or "variable"; valid if nested in a horizontally/vertically split pane</li>
+           *        <li>{String} cls: left|right if nested in a horizontally split pane; top|bottom if nested in a vertically split pane; vbox|hbox if xtype is container</li>
+           *        <li>{Array} items: an array of 2 nested pane configurations along with a possible dashboardspliiter for vbox and hbox containers; empty otherwise</li>
+           *        <li>{String} paneType: accordionpane|desktoppane|fitpane|portalpane|tabbedpane; valid if xtype is not container</li>
+           *        <li>{Array} layout: valid only for container xtype.  Includes the following elements:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} type: vbox|hbox</li>
+           *           <li>{String} align: stretch</li>
+           *        </ul>
+           *        <li>{Array} widgets: array of widget state objects.  Each has the following properties:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} widgetGuid: unique widget identifier</li>
+           *           <li>{Number} width: width of widget in pixels</li>
+           *           <li>{Number} zIndex: in pixels</li>
+           *           <li>{String} region: containing region on dashboard.  Dashboard type specific.</li>
+           *           <li>{Boolean} pinned: true if widget is pinned open</li>
+           *           <li>{String} buttonId: identifier of button that opens widget</li>
+           *           <li>{Number} height: height of widget in pixels</li>
+           *           <li>{Number} columnPos: position of widget in a column</li>
+           *           <li>{String} name: widget name</li>
+           *           <li>{Number} statePosition</li>
+           *           <li>{Boolean} active: true if this widget is the active (has focus) widget</li>
+           *           <li>{String} uniqueId: unique widget identifier on dashboard</li>
+           *           <li>{Boolean} minimized: true if widget is minimized</li>
+           *           <li>{Boolean} buttonOpened: true if button launched widget is opened</li>
+           *           <li>{Boolean} collapsed: true if widget is collapsed</li>
+           *           <li>{Number} y: y-axis position in pixels</li>
+           *           <li>{Number} x: x-axis position in pixels</li>
+           *           <li>{Boolean} maximized: true if widget is maximized</li>
+           *        </ul>
+           *        <li>{String} defaultSettings: JSON string of default settings which varies by pane type; not valid for containers</li>
+           *     </ul>
            * <br>
            * @param {Boolean} cfg.saveAsNew A Boolean indicating whether the entity being saved is new.
            * @param {Function} cfg.onSuccess Callback function to capture the success result. Callback parameter is json representation of a Dashboard.
@@ -563,14 +615,10 @@ Ozone.pref = Ozone.pref || {};
            *     {Boolean} alteredByAdmin: true if altered by an administrator<br>
            *     {Date} createdDate: date dashboard was created<br>
            *     {Boolean} isGroupDashboard: true if dashboard is a group dashboard<br>
-           *     {String} layout: layout of dashboard<br>
            *     {Boolean} isdefault: true if this is a default dashboard<br>
            *     {String} name: name of dashboard<br>
-           *     {Number} columnCount: number of columns if dashboard is a portal type<br>
            *     {Object} user: the dashoard owner.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
-           *     {List} EDashboardLayoutList: list of dashboard types<br>
-           *     {String} defaultSettings: JSON string of default settings which varies by dashboard type<br>
            *     {Object} createdBy: dashboard creator.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userRealName: user's name<br>
@@ -578,25 +626,45 @@ Ozone.pref = Ozone.pref || {};
            *     {Array} groups:  groups dashboard is assigned to<br>
            *     {String} description: description of dashboard<br>
            *     {String} guid: uniqued dashboard identifier<br>
-           *     {Array} state: array of widget state objects.  Has the following properties:<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} widgetGuid: unique widget identifier<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} width: width of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} zIndex: in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} region: containing region on dashboard.  Dashboard type specific.<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} pinned: true if widget is pinned open<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} buttonId: identifier of button that opens widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} height: height of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} columnPos: position of widget in a column<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} name: widget name<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} statePosition<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} active: true if this widget is the active (has focus) widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} uniqueId: unique widget identifier on dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} minimized: true if widget is minimized<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} buttonOpened: true if button launched widget is opened<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} collapsed: true if widget is collapsed<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} y: y-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} x: x-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} maximized: true if widget is maximized<br>
+           *     {String} layoutConfig: Holds the various containers and panes on a dashboard and the widgets inside of the panes, including the widget states.
+           *     This parameter provides an EXT JS style configuration used to layout the supported pane types in an OWF dashboard along. Each
+           *     internal definition can hold nested panes in an items array, widgets in a widgets array, and default values for those widgets in a defaultValues array.
+           *     Panes can have the following parameters:<br>
+           *     <ul style="list-style-type:none">
+           *        <li>{String} xtype: container|accordionpane|desktoppane|fitpane|portalpane|tabbedpane|dashboardsplitter</li>
+           *        <li>{Number} flex: 1 if for a pane; 3 for a container<li>
+           *        <li>{String} htmlText: in pixels (e.g., 300px) or percent (e.g., 100%) or "variable"; valid if nested in a horizontally/vertically split pane</li>
+           *        <li>{String} cls: left|right if nested in a horizontally split pane; top|bottom if nested in a vertically split pane; vbox|hbox if xtype is container</li>
+           *        <li>{Array} items: an array of 2 nested pane configurations along with a possible dashboardspliiter for vbox and hbox containers; empty otherwise</li>
+           *        <li>{String} paneType: accordionpane|desktoppane|fitpane|portalpane|tabbedpane; valid if xtype is not container</li>
+           *        <li>{Array} layout: valid only for container xtype.  Includes the following elements:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} type: vbox|hbox</li>
+           *           <li>{String} align: stretch</li>
+           *        </ul>
+           *        <li>{Array} widgets: array of widget state objects.  Each has the following properties:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} widgetGuid: unique widget identifier</li>
+           *           <li>{Number} width: width of widget in pixels</li>
+           *           <li>{Number} zIndex: in pixels</li>
+           *           <li>{String} region: containing region on dashboard.  Dashboard type specific.</li>
+           *           <li>{Boolean} pinned: true if widget is pinned open</li>
+           *           <li>{String} buttonId: identifier of button that opens widget</li>
+           *           <li>{Number} height: height of widget in pixels</li>
+           *           <li>{Number} columnPos: position of widget in a column</li>
+           *           <li>{String} name: widget name</li>
+           *           <li>{Number} statePosition</li>
+           *           <li>{Boolean} active: true if this widget is the active (has focus) widget</li>
+           *           <li>{String} uniqueId: unique widget identifier on dashboard</li>
+           *           <li>{Boolean} minimized: true if widget is minimized</li>
+           *           <li>{Boolean} buttonOpened: true if button launched widget is opened</li>
+           *           <li>{Boolean} collapsed: true if widget is collapsed</li>
+           *           <li>{Number} y: y-axis position in pixels</li>
+           *           <li>{Number} x: x-axis position in pixels</li>
+           *           <li>{Boolean} maximized: true if widget is maximized</li>
+           *        </ul>
+           *        <li>{String} defaultSettings: JSON string of default settings which varies by pane type; not valid for containers</li>
+           *     </ul>
            * <br>
            * @param {Function} [cfg.onFailure] Callback to execute if there is an error (optional, a default alert provided). Callback parameter is an error string.
            * @param {Boolean} [cfg.async] Async true or false defaults to true
@@ -614,15 +682,12 @@ Ozone.pref = Ozone.pref || {};
            *   alteredByAdmin: 'false',
            *   createdDate: '04/18/2012 11:29 AM EDT',
            *   isGroupDashboard: false,
-           *   layout: 'desktop',
            *   isdefault: false,
+           *   locked: false,
            *   name: 'My Dashboard',
-           *   columnCount: 0,
            *   user: {
            *     userId: 'testAdmin1',
            *   },
-           *   EDashboardLayoutList: ['accordion', 'desktop', 'portal', 'tabbed'],
-           *   defaultSettings: {},
            *   createdBy: {
            *     userId: 'testAdmin1',
            *     userRealName: 'Test Admin 1'
@@ -631,7 +696,52 @@ Ozone.pref = Ozone.pref || {};
            *   groups: [],
            *   description: 'This is my dashboard',
            *   guid: guid.util.guid(),
-           *   state: []
+           *   layoutConfig: {
+           *       xtype: "desktoppane", 
+           *       flex: 1, 
+           *       height: "100%", 
+           *       items: [
+           *       ], 
+           *       paneType: "desktoppane", 
+           *       widgets: [{
+           *               widgetGuid: "ec5435cf-4021-4f2a-ba69-dde451d12551", 
+           *               uniqueId: guid.util.guid(), 
+           *               dashboardGuid: "6d7219cb-b485-ace5-946b-0affa1f227a3", 
+           *               paneGuid: guid.util.guid(), 
+           *               name: "Channel Listener", 
+           *               active: false, 
+           *               x: 50, 
+           *               y: 66, 
+           *               minimized: false, 
+           *               maximized: false, 
+           *               pinned: false, 
+           *               collapsed: false, 
+           *               columnPos: 0, 
+           *               buttonId: null, 
+           *               buttonOpened: false, 
+           *               region: "none", 
+           *               statePosition: 1, 
+           *               intentConfig: null, 
+           *               singleton: false, 
+           *               floatingWidget: false, 
+           *               background: false, 
+           *               zIndex: 19050, 
+           *               height: 440, 
+           *               width: 540
+           *           }
+           *       ], 
+           *       defaultSettings: {
+           *           widgetStates: {
+           *               "ec5435cf-4021-4f2a-ba69-dde451d12551": {
+           *                   x: 50, 
+           *                   y: 66, 
+           *                   height: 440, 
+           *                   width: 540, 
+           *                   timestamp: 1349809747336
+           *                }
+           *           }
+           *       }
+           *      }
            * };
            *
            * Ozone.pref.PrefServer.createOrUpdateDashboard({
@@ -660,14 +770,10 @@ Ozone.pref = Ozone.pref || {};
            *     {Boolean} alteredByAdmin: true if altered by an administrator<br>
            *     {Date} createdDate: date dashboard was created<br>
            *     {Boolean} isGroupDashboard: true if dashboard is a group dashboard<br>
-           *     {String} layout: layout of dashboard<br>
            *     {Boolean} isdefault: true if this is a default dashboard<br>
            *     {String} name: name of dashboard<br>
-           *     {Number} columnCount: number of columns if dashboard is a portal type<br>
            *     {Object} user: the dashoard owner.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
-           *     {List} EDashboardLayoutList: list of dashboard types<br>
-           *     {String} defaultSettings: JSON string of default settings which varies by dashboard type<br>
            *     {Object} createdBy: dashboard creator.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userRealName: user's name<br>
@@ -675,25 +781,45 @@ Ozone.pref = Ozone.pref || {};
            *     {Array} groups:  groups dashboard is assigned to<br>
            *     {String} description: description of dashboard<br>
            *     {String} guid: uniqued dashboard identifier<br>
-           *     {Array} state: array of widget state objects.  Has the following properties:<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} widgetGuid: unique widget identifier<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} width: width of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} zIndex: in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} region: containing region on dashboard.  Dashboard type specific.<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} pinned: true if widget is pinned open<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} buttonId: identifier of button that opens widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} height: height of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} columnPos: position of widget in a column<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} name: widget name<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} statePosition<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} active: true if this widget is the active (has focus) widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} uniqueId: unique widget identifier on dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} minimized: true if widget is minimized<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} buttonOpened: true if button launched widget is opened<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} collapsed: true if widget is collapsed<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} y: y-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} x: x-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} maximized: true if widget is maximized<br>
+           *     {String} layoutConfig: Holds the various containers and panes on a dashboard and the widgets inside of the panes, including the widget states.
+           *     This parameter provides an EXT JS style configuration used to layout the supported pane types in an OWF dashboard along. Each
+           *     internal definition can hold nested panes in an items array, widgets in a widgets array, and default values for those widgets in a defaultValues array.
+           *     Panes can have the following parameters:<br>
+           *     <ul style="list-style-type:none">
+           *        <li>{String} xtype: container|accordionpane|desktoppane|fitpane|portalpane|tabbedpane|dashboardsplitter</li>
+           *        <li>{Number} flex: 1 if for a pane; 3 for a container<li>
+           *        <li>{String} htmlText: in pixels (e.g., 300px) or percent (e.g., 100%) or "variable"; valid if nested in a horizontally/vertically split pane</li>
+           *        <li>{String} cls: left|right if nested in a horizontally split pane; top|bottom if nested in a vertically split pane; vbox|hbox if xtype is container</li>
+           *        <li>{Array} items: an array of 2 nested pane configurations along with a possible dashboardspliiter for vbox and hbox containers; empty otherwise</li>
+           *        <li>{String} paneType: accordionpane|desktoppane|fitpane|portalpane|tabbedpane; valid if xtype is not container</li>
+           *        <li>{Array} layout: valid only for container xtype.  Includes the following elements:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} type: vbox|hbox</li>
+           *           <li>{String} align: stretch</li>
+           *        </ul>
+           *        <li>{Array} widgets: array of widget state objects.  Each has the following properties:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} widgetGuid: unique widget identifier</li>
+           *           <li>{Number} width: width of widget in pixels</li>
+           *           <li>{Number} zIndex: in pixels</li>
+           *           <li>{String} region: containing region on dashboard.  Dashboard type specific.</li>
+           *           <li>{Boolean} pinned: true if widget is pinned open</li>
+           *           <li>{String} buttonId: identifier of button that opens widget</li>
+           *           <li>{Number} height: height of widget in pixels</li>
+           *           <li>{Number} columnPos: position of widget in a column</li>
+           *           <li>{String} name: widget name</li>
+           *           <li>{Number} statePosition</li>
+           *           <li>{Boolean} active: true if this widget is the active (has focus) widget</li>
+           *           <li>{String} uniqueId: unique widget identifier on dashboard</li>
+           *           <li>{Boolean} minimized: true if widget is minimized</li>
+           *           <li>{Boolean} buttonOpened: true if button launched widget is opened</li>
+           *           <li>{Boolean} collapsed: true if widget is collapsed</li>
+           *           <li>{Number} y: y-axis position in pixels</li>
+           *           <li>{Number} x: x-axis position in pixels</li>
+           *           <li>{Boolean} maximized: true if widget is maximized</li>
+           *        </ul>
+           *        <li>{String} defaultSettings: JSON string of default settings which varies by pane type; not valid for containers</li>
+           *     </ul>
            * <br>
            * @param {Function} cfg.onSuccess Callback function to capture the success result. Callback parameter is json representation of a Dashboard.
            * This method will be passed the dashboard object which has the following properties:<br>
@@ -701,14 +827,10 @@ Ozone.pref = Ozone.pref || {};
            *     {Boolean} alteredByAdmin: true if altered by an administrator<br>
            *     {Date} createdDate: date dashboard was created<br>
            *     {Boolean} isGroupDashboard: true if dashboard is a group dashboard<br>
-           *     {String} layout: layout of dashboard<br>
            *     {Boolean} isdefault: true if this is a default dashboard<br>
            *     {String} name: name of dashboard<br>
-           *     {Number} columnCount: number of columns if dashboard is a portal type<br>
            *     {Object} user: the dashoard owner.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
-           *     {List} EDashboardLayoutList: list of dashboard types<br>
-           *     {String} defaultSettings: JSON string of default settings which varies by dashboard type<br>
            *     {Object} createdBy: dashboard creator.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userRealName: user's name<br>
@@ -716,25 +838,45 @@ Ozone.pref = Ozone.pref || {};
            *     {Array} groups:  groups dashboard is assigned to<br>
            *     {String} description: description of dashboard<br>
            *     {String} guid: uniqued dashboard identifier<br>
-           *     {Array} state: array of widget state objects.  Has the following properties:<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} widgetGuid: unique widget identifier<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} width: width of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} zIndex: in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} region: containing region on dashboard.  Dashboard type specific.<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} pinned: true if widget is pinned open<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} buttonId: identifier of button that opens widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} height: height of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} columnPos: position of widget in a column<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} name: widget name<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} statePosition<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} active: true if this widget is the active (has focus) widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} uniqueId: unique widget identifier on dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} minimized: true if widget is minimized<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} buttonOpened: true if button launched widget is opened<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} collapsed: true if widget is collapsed<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} y: y-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} x: x-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} maximized: true if widget is maximized<br>
+           *     {String} layoutConfig: Holds the various containers and panes on a dashboard and the widgets inside of the panes, including the widget states.
+           *     This parameter provides an EXT JS style configuration used to layout the supported pane types in an OWF dashboard along. Each
+           *     internal definition can hold nested panes in an items array, widgets in a widgets array, and default values for those widgets in a defaultValues array.
+           *     Panes can have the following parameters:<br>
+           *     <ul style="list-style-type:none">
+           *        <li>{String} xtype: container|accordionpane|desktoppane|fitpane|portalpane|tabbedpane|dashboardsplitter</li>
+           *        <li>{Number} flex: 1 if for a pane; 3 for a container<li>
+           *        <li>{String} htmlText: in pixels (e.g., 300px) or percent (e.g., 100%) or "variable"; valid if nested in a horizontally/vertically split pane</li>
+           *        <li>{String} cls: left|right if nested in a horizontally split pane; top|bottom if nested in a vertically split pane; vbox|hbox if xtype is container</li>
+           *        <li>{Array} items: an array of 2 nested pane configurations along with a possible dashboardspliiter for vbox and hbox containers; empty otherwise</li>
+           *        <li>{String} paneType: accordionpane|desktoppane|fitpane|portalpane|tabbedpane; valid if xtype is not container</li>
+           *        <li>{Array} layout: valid only for container xtype.  Includes the following elements:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} type: vbox|hbox</li>
+           *           <li>{String} align: stretch</li>
+           *        </ul>
+           *        <li>{Array} widgets: array of widget state objects.  Each has the following properties:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} widgetGuid: unique widget identifier</li>
+           *           <li>{Number} width: width of widget in pixels</li>
+           *           <li>{Number} zIndex: in pixels</li>
+           *           <li>{String} region: containing region on dashboard.  Dashboard type specific.</li>
+           *           <li>{Boolean} pinned: true if widget is pinned open</li>
+           *           <li>{String} buttonId: identifier of button that opens widget</li>
+           *           <li>{Number} height: height of widget in pixels</li>
+           *           <li>{Number} columnPos: position of widget in a column</li>
+           *           <li>{String} name: widget name</li>
+           *           <li>{Number} statePosition</li>
+           *           <li>{Boolean} active: true if this widget is the active (has focus) widget</li>
+           *           <li>{String} uniqueId: unique widget identifier on dashboard</li>
+           *           <li>{Boolean} minimized: true if widget is minimized</li>
+           *           <li>{Boolean} buttonOpened: true if button launched widget is opened</li>
+           *           <li>{Boolean} collapsed: true if widget is collapsed</li>
+           *           <li>{Number} y: y-axis position in pixels</li>
+           *           <li>{Number} x: x-axis position in pixels</li>
+           *           <li>{Boolean} maximized: true if widget is maximized</li>
+           *        </ul>
+           *        <li>{String} defaultSettings: JSON string of default settings which varies by pane type; not valid for containers</li>
+           *     </ul>
            * <br>
            * @param {Function} [cfg.onFailure] Callback to execute if there is an error (optional, a default alert provided). Callback parameter is an error string.
            * @example
@@ -751,15 +893,11 @@ Ozone.pref = Ozone.pref || {};
            *   alteredByAdmin: 'false',
            *   createdDate: '04/18/2012 11:29 AM EDT',
            *   isGroupDashboard: false,
-           *   layout: 'desktop',
            *   isdefault: false,
            *   name: 'My Dashboard',
-           *   columnCount: 0,
            *   user: {
            *     userId: 'testAdmin1',
            *   },
-           *   EDashboardLayoutList: ['accordion', 'desktop', 'portal', 'tabbed'],
-           *   defaultSettings: {},
            *   createdBy: {
            *     userId: 'testAdmin1',
            *     userRealName: 'Test Admin 1'
@@ -768,7 +906,6 @@ Ozone.pref = Ozone.pref || {};
            *   groups: [],
            *   description: 'This is my dashboard',
            *   guid: guid.util.guid(),
-           *   state: []
            * };
            *
            * Ozone.pref.PrefServer.cloneDashboard({
@@ -819,14 +956,10 @@ Ozone.pref = Ozone.pref || {};
            *     {Boolean} alteredByAdmin: true if altered by an administrator<br>
            *     {Date} createdDate: date dashboard was created<br>
            *     {Boolean} isGroupDashboard: true if dashboard is a group dashboard<br>
-           *     {String} layout: layout of dashboard<br>
            *     {Boolean} isdefault: true if this is a default dashboard<br>
            *     {String} name: name of dashboard<br>
-           *     {Number} columnCount: number of columns if dashboard is a portal type<br>
            *     {Object} user: the dashoard owner.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
-           *     {List} EDashboardLayoutList: list of dashboard types<br>
-           *     {String} defaultSettings: JSON string of default settings which varies by dashboard type<br>
            *     {Object} createdBy: dashboard creator.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} userRealName: user's name<br>
@@ -834,37 +967,57 @@ Ozone.pref = Ozone.pref || {};
            *     {Array} groups:  groups dashboard is assigned to<br>
            *     {String} description: description of dashboard<br>
            *     {String} guid: uniqued dashboard identifier<br>
-           *     {Array} state: array of widget state objects.  Has the following properties:<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} widgetGuid: unique widget identifier<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} width: width of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} zIndex: in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} region: containing region on dashboard.  Dashboard type specific.<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} pinned: true if widget is pinned open<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} buttonId: identifier of button that opens widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} height: height of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} columnPos: position of widget in a column<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} name: widget name<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} statePosition<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} active: true if this widget is the active (has focus) widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} uniqueId: unique widget identifier on dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} minimized: true if widget is minimized<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} buttonOpened: true if button launched widget is opened<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} collapsed: true if widget is collapsed<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} y: y-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} x: x-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} maximized: true if widget is maximized<br>
+           *     {String} layoutConfig: Holds the various containers and panes on a dashboard and the widgets inside of the panes, including the widget states.
+           *     This parameter provides an EXT JS style configuration used to layout the supported pane types in an OWF dashboard along. Each
+           *     internal definition can hold nested panes in an items array, widgets in a widgets array, and default values for those widgets in a defaultValues array.
+           *     Panes can have the following parameters:<br>
+           *     <ul style="list-style-type:none">
+           *        <li>{String} xtype: container|accordionpane|desktoppane|fitpane|portalpane|tabbedpane|dashboardsplitter</li>
+           *        <li>{Number} flex: 1 if for a pane; 3 for a container<li>
+           *        <li>{String} htmlText: in pixels (e.g., 300px) or percent (e.g., 100%) or "variable"; valid if nested in a horizontally/vertically split pane</li>
+           *        <li>{String} cls: left|right if nested in a horizontally split pane; top|bottom if nested in a vertically split pane; vbox|hbox if xtype is container</li>
+           *        <li>{Array} items: an array of 2 nested pane configurations along with a possible dashboardspliiter for vbox and hbox containers; empty otherwise</li>
+           *        <li>{String} paneType: accordionpane|desktoppane|fitpane|portalpane|tabbedpane; valid if xtype is not container</li>
+           *        <li>{Array} layout: valid only for container xtype.  Includes the following elements:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} type: vbox|hbox</li>
+           *           <li>{String} align: stretch</li>
+           *        </ul>
+           *        <li>{Array} widgets: array of widget state objects.  Each has the following properties:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} widgetGuid: unique widget identifier</li>
+           *           <li>{Number} width: width of widget in pixels</li>
+           *           <li>{Number} zIndex: in pixels</li>
+           *           <li>{String} region: containing region on dashboard.  Dashboard type specific.</li>
+           *           <li>{Boolean} pinned: true if widget is pinned open</li>
+           *           <li>{String} buttonId: identifier of button that opens widget</li>
+           *           <li>{Number} height: height of widget in pixels</li>
+           *           <li>{Number} columnPos: position of widget in a column</li>
+           *           <li>{String} name: widget name</li>
+           *           <li>{Number} statePosition</li>
+           *           <li>{Boolean} active: true if this widget is the active (has focus) widget</li>
+           *           <li>{String} uniqueId: unique widget identifier on dashboard</li>
+           *           <li>{Boolean} minimized: true if widget is minimized</li>
+           *           <li>{Boolean} buttonOpened: true if button launched widget is opened</li>
+           *           <li>{Boolean} collapsed: true if widget is collapsed</li>
+           *           <li>{Number} y: y-axis position in pixels</li>
+           *           <li>{Number} x: x-axis position in pixels</li>
+           *           <li>{Boolean} maximized: true if widget is maximized</li>
+           *        </ul>
+           *        <li>{String} defaultSettings: JSON string of default settings which varies by pane type; not valid for containers</li>
+           *     </ul>
            * <br>
            * @param {Function} [cfg.onFailure] Callback to execute if there is an error (optional, a default alert provided). Callback parameter is an error string.
            * @example
            *
            * var onSuccess = function(dashboard) {
-       *     alert(dashboard.name);
-       * };
-       *
-       * var onFailure = function(error) {
-           *     alert(error);
-       * };
-       *
+           *     alert(dashboard.name);
+           * };
+           *
+           * var onFailure = function(error) {
+               *     alert(error);
+           * };
+           *
            * Ozone.pref.PrefServer.deleteDashboard({
            *     dashboardId:'917b4cd0-ecbd-410b-afd9-42d150c26426',
            *     onSuccess:onSuccess,
@@ -889,14 +1042,10 @@ Ozone.pref = Ozone.pref || {};
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} alteredByAdmin: true if altered by an administrator<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Date} createdDate: date dashboard was created<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} isGroupDashboard: true if dashboard is a group dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} layout: layout of dashboard<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} isdefault: true if this is a default dashboard<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} name: name of dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} columnCount: number of columns if dashboard is a portal type<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Object} user: the dashoard owner.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{List} EDashboardLayoutList: list of dashboard types<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} defaultSettings: JSON string of default settings which varies by dashboard type<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Object} createdBy: dashboard creator.  Has the following properties:<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} userRealName: user's name<br>
@@ -904,25 +1053,45 @@ Ozone.pref = Ozone.pref || {};
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Array} groups:  groups dashboard is assigned to<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} description: description of dashboard<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} guid: uniqued dashboard identifier<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Array} state: array of widget state objects.  Has the following properties:<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} widgetGuid: unique widget identifier<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Number} width: width of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Number} zIndex: in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} region: containing region on dashboard.  Dashboard type specific.<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} pinned: true if widget is pinned open<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} buttonId: identifier of button that opens widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Number} height: height of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Number} columnPos: position of widget in a column<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} name: widget name<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Number} statePosition<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} active: true if this widget is the active (has focus) widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} uniqueId: unique widget identifier on dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} minimized: true if widget is minimized<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} buttonOpened: true if button launched widget is opened<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} collapsed: true if widget is collapsed<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Number} y: y-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Number} x: x-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} maximized: true if widget is maximized<br>
+           *     {String} layoutConfig: Holds the various containers and panes on a dashboard and the widgets inside of the panes, including the widget states.
+           *     This parameter provides an EXT JS style configuration used to layout the supported pane types in an OWF dashboard along. Each
+           *     internal definition can hold nested panes in an items array, widgets in a widgets array, and default values for those widgets in a defaultValues array.
+           *     Panes can have the following parameters:<br>
+           *     <ul style="list-style-type:none">
+           *        <li>{String} xtype: container|accordionpane|desktoppane|fitpane|portalpane|tabbedpane|dashboardsplitter</li>
+           *        <li>{Number} flex: 1 if for a pane; 3 for a container<li>
+           *        <li>{String} htmlText: in pixels (e.g., 300px) or percent (e.g., 100%) or "variable"; valid if nested in a horizontally/vertically split pane</li>
+           *        <li>{String} cls: left|right if nested in a horizontally split pane; top|bottom if nested in a vertically split pane; vbox|hbox if xtype is container</li>
+           *        <li>{Array} items: an array of 2 nested pane configurations along with a possible dashboardspliiter for vbox and hbox containers; empty otherwise</li>
+           *        <li>{String} paneType: accordionpane|desktoppane|fitpane|portalpane|tabbedpane; valid if xtype is not container</li>
+           *        <li>{Array} layout: valid only for container xtype.  Includes the following elements:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} type: vbox|hbox</li>
+           *           <li>{String} align: stretch</li>
+           *        </ul>
+           *        <li>{Array} widgets: array of widget state objects.  Each has the following properties:</li>
+           *        <ul style="list-style-type:none">
+           *           <li>{String} widgetGuid: unique widget identifier</li>
+           *           <li>{Number} width: width of widget in pixels</li>
+           *           <li>{Number} zIndex: in pixels</li>
+           *           <li>{String} region: containing region on dashboard.  Dashboard type specific.</li>
+           *           <li>{Boolean} pinned: true if widget is pinned open</li>
+           *           <li>{String} buttonId: identifier of button that opens widget</li>
+           *           <li>{Number} height: height of widget in pixels</li>
+           *           <li>{Number} columnPos: position of widget in a column</li>
+           *           <li>{String} name: widget name</li>
+           *           <li>{Number} statePosition</li>
+           *           <li>{Boolean} active: true if this widget is the active (has focus) widget</li>
+           *           <li>{String} uniqueId: unique widget identifier on dashboard</li>
+           *           <li>{Boolean} minimized: true if widget is minimized</li>
+           *           <li>{Boolean} buttonOpened: true if button launched widget is opened</li>
+           *           <li>{Boolean} collapsed: true if widget is collapsed</li>
+           *           <li>{Number} y: y-axis position in pixels</li>
+           *           <li>{Number} x: x-axis position in pixels</li>
+           *           <li>{Boolean} maximized: true if widget is maximized</li>
+           *        </ul>
+           *        <li>{String} defaultSettings: JSON string of default settings which varies by pane type; not valid for containers</li>
+           *     </ul>
            *     <br>
            * <br>
            * @param {Function} [cfg.onFailure] Callback to execute if there is an error (optional, a default alert provided). Callback parameter is an error string.
@@ -952,6 +1121,8 @@ Ozone.pref = Ozone.pref || {};
           },
 
           /**
+           * @deprecated Deprecated starting with OWF 7. Dashboards no longer have a specific type. This function is stubbed 
+           * to return success with 0 results until removal.
            * @description Returns all dashboards for the logged in user filtered by the type of dashboard.
            * @param {Object} cfg config object see below for properties
            * @param {String} cfg.type A string representing the type of dashboard. If using built in dashboard types, this would include desktop, tabbed, portal, and accordion.
@@ -960,46 +1131,8 @@ Ozone.pref = Ozone.pref || {};
            * <br>
            *     {Boolean} success: true if dashboards found<br>
            *     {Number} results: number of dashboards found<br>
-           *     {Array} data: array of dashboards objects found.  Dashboard object has the following properties:<br>
-           *     <br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} alteredByAdmin: true if altered by an administrator<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Date} createdDate: date dashboard was created<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} isGroupDashboard: true if dashboard is a group dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} layout: layout of dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} isdefault: true if this is a default dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} name: name of dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Number} columnCount: number of columns if dashboard is a portal type<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Object} user: the dashoard owner.  Has the following properties:<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{List} EDashboardLayoutList: list of dashboard types<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} defaultSettings: JSON string of default settings which varies by dashboard type<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Object} createdBy: dashboard creator.  Has the following properties:<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} userId: unique user identifier<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} userRealName: user's name<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Date} editedDate: date dashboard was last edited<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Array} groups:  groups dashboard is assigned to<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} description: description of dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{String} guid: uniqued dashboard identifier<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Array} state: array of widget state objects.  Has the following properties:<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} widgetGuid: unique widget identifier<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Number} width: width of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Number} zIndex: in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} region: containing region on dashboard.  Dashboard type specific.<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} pinned: true if widget is pinned open<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} buttonId: identifier of button that opens widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Number} height: height of widget in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Number} columnPos: position of widget in a column<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} name: widget name<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Number} statePosition<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} active: true if this widget is the active (has focus) widget<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{String} uniqueId: unique widget identifier on dashboard<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} minimized: true if widget is minimized<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} buttonOpened: true if button launched widget is opened<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} collapsed: true if widget is collapsed<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Number} y: y-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Number} x: x-axis position in pixels<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} maximized: true if widget is maximized<br>
-           *     <br>
+           *     {Array} data: an empty array<br>
+           *     
            * <br>
            * @param {Function} [cfg.onFailure] Callback to execute if there is an error (optional, a default alert provided). Callback parameter is an error string.
            * @example
@@ -1024,8 +1157,14 @@ Ozone.pref = Ozone.pref || {};
            * });
            */
           findDashboardsByType : function (cfg){
-              cfg.url = "dashboard?layout=" + cfg.type;
-              list(cfg);
+              if (typeof cfg.onSuccess === 'function') {
+                  var retVal = { 
+                          data: [],
+                          results: 0,
+                          success: true
+                      };
+                  cfg.onSuccess(retVal);
+              }
           },
 
           /**
