@@ -12,6 +12,7 @@ import ozone.owf.grails.services.model.TagLinkServiceModel
 import ozone.owf.grails.services.model.PersonWidgetDefinitionServiceModel
 import ozone.owf.grails.services.model.GroupServiceModel
 import ozone.owf.grails.services.model.WidgetTypeServiceModel
+import ozone.owf.grails.services.model.StackServiceModel
 
 import ozone.owf.grails.domain.Dashboard
 import ozone.owf.grails.domain.Intent
@@ -22,6 +23,7 @@ import ozone.owf.grails.domain.Preference
 import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.grails.domain.WidgetDefinitionIntent
 import ozone.owf.grails.domain.WidgetType
+import ozone.owf.grails.domain.Stack
 
 /**
  *
@@ -167,6 +169,22 @@ class ServiceModelService {
                 model = new WidgetTypeServiceModel(
                         id: widgetType.id,
                         name: widgetType.name
+                        )
+                break
+            case Stack:
+                ozone.owf.grails.domain.Stack domain = (ozone.owf.grails.domain.Stack) obj
+                model = new StackServiceModel(
+                        id: domain.id,
+                        name: domain.name,
+                        stackPosition: domain.stackPosition,
+                        description: domain.description,
+                        stackContext: domain.stackContext,
+                        imageUrl: domain.imageUrl,
+                        descriptorUrl: domain.descriptorUrl,
+                        totalDashboards: params.totalDashboards ? params.totalDashboards : 0,
+                        totalUsers: params.totalUsers ? params.totalUsers : 0,
+                        totalGroups: params.totalGroups ? params.totalGroups : 0,
+                        totalWidgets: params.totalWidgets ? params.totalWidgets : 0
                         )
                 break
             default:

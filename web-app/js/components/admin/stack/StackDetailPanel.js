@@ -10,9 +10,10 @@ Ext.define('Ozone.components.admin.stack.StackDetailPanel', {
             store: Ext.create('Ext.data.Store', {
                 storeId: 'storeStackItem',
                 fields: [
-                    { name: 'title', type: 'string' },
+                    { name: 'name', type: 'string' },
                     { name: 'description', type: 'string' },
-                    { name: 'icon', type: 'string' }
+                    { name: 'stackContext', type: 'string' },
+                    { name: 'imageUrl', type: 'string' }
                 ]
             }),
             deferEmptyText: false,
@@ -23,16 +24,20 @@ Ext.define('Ozone.components.admin.stack.StackDetailPanel', {
                             '<div class="detail-header-block">',
                                 '<div class="detail-widget">',
                                     '<div class="detail-icon">',
-                                        '<img src={icon:this.renderImage} title="{title:htmlEncode}" class="detail-icon-image">',
+                                        '<img src={imageUrl:this.renderImage} title="{name:htmlEncode}" class="detail-icon-image">',
                                     '</div>',
                                 '</div>',
                                 '<div class="detail-icon-block">',
-                                    '<div class="detail-title">{title:htmlEncode}</div>',
+                                    '<div class="detail-title">{name:htmlEncode}</div>',
                                 '</div>',
                             '</div>',
                             '<div class="detail-block">',
                                 '<div><span class="detail-label">Description:</span></div>',
                                 '<div>{description:htmlEncode}</div>',
+                            '</div>',
+                            '<div class="detail-block">',
+                                '<div><span class="detail-label">Context:</span></div>',
+                                '<div>{stackContext:htmlEncode}</div>',
                             '</div>',
                         '</div>',
                     '</div>',

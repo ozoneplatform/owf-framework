@@ -16,16 +16,16 @@ Ext.define('Ozone.components.admin.StacksGrid', {
         },
         {
             header: '#',
-            dataIndex: 'order',
+            dataIndex: 'stackPosition',
             flex: 1
         },
         {
             header: 'Title',
-            dataIndex: 'title',
-            flex: 9,
+            dataIndex: 'name',
+            flex: 8,
             renderer: function(value, metaData, record, rowIndex, colIndex, store) {
                 var title = value;
-                var url = record.get('icon');
+                var url = record.get('imageUrl');
 
                 var contextPath = Ozone.util.contextPath();
                 if (!url.match(new RegExp('^/?' + contextPath + '/.*$', 'i')) && !url.match(new RegExp('^https?://.*', 'i'))) {
@@ -43,6 +43,13 @@ Ext.define('Ozone.components.admin.StacksGrid', {
                 retVal += '<div class="grid-icon-and-text-title">' + Ext.htmlEncode(title) + '</div>';
 
                 return  retVal;
+            }
+        }, {
+            header: 'Context',
+            dataIndex: 'stackContext',
+            flex: 4,
+            renderer: function(value, metaData, record, rowIndex, colIndex, store) {
+                return  Ext.htmlEncode(value);
             }
         }, {
             header: 'Dashboards',
