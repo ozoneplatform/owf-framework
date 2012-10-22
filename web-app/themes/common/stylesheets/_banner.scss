@@ -46,6 +46,12 @@
     }
 }
 
+.x-ie78 {
+    .banner {
+        filter: none;
+    }
+}
+
 
 /*#popOutBanner {*/
     /*z-index: 100000000000 !important;*/
@@ -444,11 +450,11 @@
     #userMenuBtn {
         //include opaque version of background for IE
         @include owf-background-color(nth($banner-button-background, 
-            length($banner-button-background)), false);
+            length($banner-button-background)), $owf_css_not_important, false);
     }
 
     #userMenu {
-        @include owf-background-color($user-menu-background-color, false);
+        @include owf-background-color($user-menu-background-color, $owf_css_not_important, false);
 
         li {
             //have to trigger IE hasLayout or the logout link doesn't get
@@ -456,7 +462,7 @@
             zoom: 1;
 
             &.over, &.x-focus {
-                @include owf-background-color($user-menu-item-over-background-color, false);
+                @include owf-background-color($user-menu-item-over-background-color, $owf_css_not_important, false);
             }
 
             //it would be cleaner to do this with ids 

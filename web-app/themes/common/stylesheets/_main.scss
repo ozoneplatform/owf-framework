@@ -142,6 +142,7 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
     cursor: pointer !important;
 }
 
+
 #northBanner, #southBanner {
     .x-panel-body {
         border: none !important;
@@ -346,6 +347,19 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
                 border: none;
             }
         }
+    }
+}
+.x-ie78 {
+    #mainPanel { 
+        .x-panel.x-portlet .x-panel-header,
+        .widgetheader,
+        .x-panel.tab-dashboard-panel .widget-tab-bar .widget-tab .x-panel-header {
+            filter: none;
+        }
+    }
+
+    .x-window .x-window-header {
+        filter: none;
     }
 }
 

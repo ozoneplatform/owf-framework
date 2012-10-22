@@ -10,25 +10,24 @@ class StackServiceTests extends GroovyTestCase {
     
     def accountService
     def stackService
-    def stackId
+    def stackIds = []
         
     protected void setUp() {
         super.setUp()
         
         def acctService = new AutoLoginAccountService()
         def person = new Person(username: 'testAdmin', userRealName: 'Test Admin', enabled: true)
-        def theStack
         
         person.save()
-	acctService.autoAccountName = 'testAdmin'
-	acctService.autoRoles = [ERoleAuthority.ROLE_ADMIN.strVal]
-	accountService = acctService
-	stackService.accountService = acctService
+        acctService.autoAccountName = 'testAdmin'
+        acctService.autoRoles = [ERoleAuthority.ROLE_ADMIN.strVal]
+        accountService = acctService
+        stackService.accountService = acctService
         
-        theStack = ozone.owf.grails.domain.Stack.build(name: 'Stack One', stackPosition: 1, description: 'Stack One description', stackContext: 'one', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
-        theStack = ozone.owf.grails.domain.Stack.build(name: 'Stack Two', stackPosition: 2, description: 'Stack Two description', stackContext: 'two', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
-        stackId = theStack.id
-
+        def stack1 = ozone.owf.grails.domain.Stack.build(name: 'Stack One', stackPosition: 1, description: 'Stack One description', stackContext: 'one', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
+        def stack2 = ozone.owf.grails.domain.Stack.build(name: 'Stack Two', stackPosition: 2, description: 'Stack Two description', stackContext: 'two', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
+        def stack3 = ozone.owf.grails.domain.Stack.build(name: 'Stack Three', stackPosition: 3, description: 'Stack Three description', stackContext: 'three', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
+        stackIds = [stack1.id, stack2.id, stack3.id]
     }
 
     protected void tearDown() {
@@ -37,7 +36,7 @@ class StackServiceTests extends GroovyTestCase {
     
     void testList() {
         def ret = stackService.list([:])
-        assertEquals 2, ret.results
+        assertEquals stackIds.size(), ret.results
     }
     
     void testCreate() {
@@ -57,7 +56,7 @@ class StackServiceTests extends GroovyTestCase {
     void testUpdate() {
         def ret = stackService.createOrUpdate([
             "data": """{
-                id: ${stackId},
+                id: ${stackIds[1]},
                 name: 'The Updated Stack',
                 stackPosition: 2,
                 description: 'This is the Stack description',
@@ -71,12 +70,47 @@ class StackServiceTests extends GroovyTestCase {
         assertEquals 'The Updated Stack', ret.data[0].name
     }
     
+    void testMoveUp() {
+        def ret = stackService.createOrUpdate([
+            "data": """[{
+                id: ${stackIds[1]},
+                stackPosition: 1
+            },{
+                id: ${stackIds[2]},
+                stackPosition: 2
+            }]"""
+        ])
+        assertTrue ret.success
+        assertEquals 1, ret.data[0].stackPosition
+        assertEquals stackIds[1], ret.data[0].id
+        assertEquals 2, ret.data[1].stackPosition
+        assertEquals stackIds[2], ret.data[1].id
+    }
+    
+    void testMoveDown() {
+        def ret = stackService.createOrUpdate([
+            "data": """[{
+                id: ${stackIds[0]},
+                stackPosition: 2
+            },{
+                id: ${stackIds[1]},
+                stackPosition: 3
+            }]"""
+        ])
+        assertTrue ret.success
+        assertEquals 2, ret.data[0].stackPosition
+        assertEquals stackIds[0], ret.data[0].id
+        assertEquals 3, ret.data[1].stackPosition
+        assertEquals stackIds[1], ret.data[1].id
+    }
+    
     void testDelete() {
         def ret = stackService.delete([
             "data": """{
-                id: ${stackId}
+                id: ${stackIds[0]}
             }"""
         ])
         assertTrue ret.success
+        assertEquals stackIds.size() - 1, stackService.list([:]).results
     }
 }
