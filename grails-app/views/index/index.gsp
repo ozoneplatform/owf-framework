@@ -6,7 +6,9 @@
         <title id='title'>Ozone Widget Framework</title>
         
         <link rel="shortcut icon" href="images/favicon.ico" />
-        
+        <script language="javascript">
+            //console.time('page');
+        </script>
         <!-- ** CSS ** -->
         <!-- base library -->
         <p:css id='theme' name='${owfCss.defaultCssPath()}' absolute='true'/>
@@ -87,20 +89,38 @@
                     }
                     layoutComponents.push(customHeader);
                 }
-                layoutComponents.push(
-                {
+
+                 // user's dashboards instances
+                var dashboardStore = Ext.create('Ozone.data.DashboardStore', {
+                    storeId: 'dashboardStore',
+                    data: ${dashboards}
+                });
+
+                // user's widgets
+                var widgetStore = Ext.create('Ozone.data.WidgetStore', {
+                    storeId: 'widgetStore'
+                });
+
+                // mappings are not supported in Models,
+                // they only supported through Ext Proxy Reader
+                widgetStore.loadRecords(widgetStore.proxy.reader.read(${widgets}).records);
+
+                layoutComponents.push({
                     id: 'mainPanel',
                     itemId: 'mainPanel',
                     xtype: 'dashboardContainer',
                     autoHeight:true,
                     viewportId: 'viewport',
                     anchor: '100% ' + heightOffset,
+                    dashboardStore: dashboardStore,
+                    widgetStore: widgetStore,
                     floatingWidgetManager: floatingWidgetManager,
                     bannerManager: bannerManager,
                     dashboardDesignerManager: dashboardDesignerManager,
                     modalWindowManager: modalWindowManager,
                     tooltipManager: tooltipManager
                 });
+
                 if (showFooter) {
                     customFooter.loader = {
                         url: customHeaderFooter.footer,
@@ -186,7 +206,8 @@
                 
                 var continueProcessingPage = function() {
                     
-                    // console.time('initload');
+                    //console.time('initload');
+
                     OWF.Mask = new Ozone.ux.AutoHideLoadMask(Ext.getBody(), {
                         msg:"Please wait...",
                         id: 'owf-body-mask'

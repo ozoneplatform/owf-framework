@@ -183,7 +183,6 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
         $.when(allWidgetsDeferreds).then(function() {
             me.fireEvent(OWF.Events.Dashboard.COMPLETE_RENDER, me);
-            //console.timeEnd('initload');
             OWF.Mask.hide();
 
             //      loop through dashboard stateStore and validate intentConfig
@@ -208,7 +207,8 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 }
             }, me);
 
-
+            //console.timeEnd('page');
+            //console.timeEnd('initload');
         });
     },
 
@@ -347,7 +347,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             }
             pane.stateStore.add(widgetState);
 
-            console.log('Launching background widget', widgetState.name)
+            //console.log('Launching background widget', widgetState.name)
 
             pane.fireEvent(OWF.Events.Widget.AFTER_LAUNCH, widget, widgetModel);
             return false;
