@@ -39,13 +39,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     // private
     initComponent: function() {
 
-        this.dashboardStore = Ext.create('Ozone.data.DashboardStore', {
-            storeId:'dashboardStore'
-        });
-
-        this.widgetStore = Ext.create('Ozone.data.WidgetStore', {
-            storeId:'widgetStore'
-        });
         this.originalDashboardStore = Ext.create('Ozone.data.DashboardStore', {
         });
         this.dashboardMenuItems = [];
@@ -77,15 +70,15 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         OWF.Container.State = new Ozone.state.WidgetStateContainer(OWF.Container.Eventing);
 
         //load both stores in sequence
-        this.dashboardStore.load({scope:this, callback:function (drecords, doptions, dsuccess) {
-            if (dsuccess && drecords.length >= 0) {
-                this.widgetStore.load({scope:this, callback:function (wrecords, woptions, wsuccess) {
-                    if (wsuccess && wrecords.length >= 0) {
-                        this.initLoad();
-                    }
-                }});
-            }
-        }});
+        // this.dashboardStore.load({scope:this, callback:function (drecords, doptions, dsuccess) {
+        //     if (dsuccess && drecords.length >= 0) {
+        //         this.widgetStore.load({scope:this, callback:function (wrecords, woptions, wsuccess) {
+        //             if (wsuccess && wrecords.length >= 0) {
+        //                 this.initLoad();
+        //             }
+        //         }});
+        //     }
+        // }});
 
         this.widgetGroupStore = Ext.create('Ozone.data.WidgetGroupStore');
 
@@ -221,6 +214,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         // delegate all mousedown to document
         // enables moving widgets from one pane to another
         Ext.getDoc().on('mousedown', this.onWidgetMouseDown, this, { delegate: '.widgetheader' });
+
+        this.initLoad();
     },
 
     onWidgetMouseDown: function(evt, target) {
