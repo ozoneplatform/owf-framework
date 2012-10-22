@@ -53,10 +53,14 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 id: widgetId
             },
             onSuccess: function(jsonData) {
-                var widgetListJson = [];
-                Ext.Array.each(jsonData.data, function(serviceItem, index, list) {
-                    widgetListJson.push(Ext.JSON.encode(self.createOwfWidgetJson(serviceItem, widgetId)));
-                });
+                var widgetListJson = [],
+                    data = jsonData.data;
+
+                for (var i = 0, len = data.length; i < len; i++) {
+                    var serviceItem = data[i];
+                    widgetListJson.push( Ext.JSON.encode(self.createOwfWidgetJson(serviceItem, widgetId)) );
+                }
+                
                 self.submitWidgetList(Ext.JSON.encode(widgetListJson));
             },
             onFailure: function (json){
