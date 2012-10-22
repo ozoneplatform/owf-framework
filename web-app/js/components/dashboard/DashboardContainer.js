@@ -69,19 +69,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         // initialize widget state event container for receiving events
         OWF.Container.State = new Ozone.state.WidgetStateContainer(OWF.Container.Eventing);
 
-        //load both stores in sequence
-        // this.dashboardStore.load({scope:this, callback:function (drecords, doptions, dsuccess) {
-        //     if (dsuccess && drecords.length >= 0) {
-        //         this.widgetStore.load({scope:this, callback:function (wrecords, woptions, wsuccess) {
-        //             if (wsuccess && wrecords.length >= 0) {
-        //                 this.initLoad();
-        //             }
-        //         }});
-        //     }
-        // }});
-
-        this.widgetGroupStore = Ext.create('Ozone.data.WidgetGroupStore');
-
         this.user = Ozone.config.user;
         this.widgetNames = Ozone.config.widgetNames || {};
         this.widgetStore.on('datachanged', function() {
@@ -119,9 +106,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             else {
                 this.getBanner().removeMetricButton();
             }
-
-            //todo remove this store
-            this.loadWidgetGroupStore(this.widgetStore, this.widgetStore.getRange());
         }, this);
 
         //setup component properties
@@ -1710,56 +1694,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 //Ext.getCmp('widget-launcher').loadLauncherState();
             }
         });
-    },
-
-    loadWidgetGroupStore: function(store, recs, options) {
-        //flatten records and load into groupstore
-        var rows = [];
-
-        for (var i = 0; i < recs.length; i++) {
-            var recData = recs[i].data;
-
-            var groups = recData.tags;
-            if (groups != null && groups.length > 0) {
-                for (var j = 0; j < groups.length; j++) {
-                    var group = groups[j];
-                    //put widget data in as ungrouped
-                    var data = Ext.apply({}, recData);
-                    data = Ext.apply(data, {
-                        groupId: group.name + '-' + recData.widgetGuid,
-                        group: group.name,
-                        groupTitle: group.name,
-                        groupShowHeader: true,
-                        groupCollapsed: false,
-                        groupVisible: group.visible !== false,
-                        groupPosition: group.position != null ? group.position : 0,
-                        groupEditable: group.editable != null ? group.editable : true
-                    });
-
-                    if (group.name == Ozone.config.carousel.pendingApprovalTagGroupName) {
-                        data.group = '__' + Ozone.config.carousel.pendingApprovalTagGroupName;
-                    }
-
-                    rows.push(data);
-                }
-            }
-            else {
-                //put widget data in as ungrouped
-                var data = Ext.apply({}, recData);
-                data = Ext.apply(data, {
-                    groupId: 'zzzz_ungrouped-' + recData.widgetGuid,
-                    group: 'zzzz_ungrouped',
-                    groupTitle: 'ungrouped',
-                    groupShowHeader: true,
-                    groupCollapsed: false,
-                    groupVisible: true,
-                    groupPosition: 0,
-                    groupEditable: true
-                });
-                rows.push(data);
-            }
-        }
-        this.widgetGroupStore.loadData(rows);
     },
 
     storeContains: function(widgetGuid) {
