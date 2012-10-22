@@ -13,15 +13,29 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
             layout: 'fit',
             title: 'Properties',
             iconCls: 'properties-tab',
+            defaults: {
+                labelWidth: 140
+            },
             items: [
                 {
                     xtype: 'textfield',
                     name: 'name',
                     itemId: 'name',
-                    fieldLabel: Ozone.util.createRequiredLabel('Title'),
+                    fieldLabel: Ozone.util.createRequiredLabel('Display Name'),
                     allowBlank: false,
                     maxLength: 200,
                     enforceMaxLength: true
+                },
+                {
+                    xtype: 'textfield',
+                    name: 'stackContext',
+                    itemId: 'stackContext',
+                    fieldLabel: Ozone.util.createRequiredLabel('URL Name'),
+                    allowBlank: false,
+                    maxLength: 200,
+                    enforceMaxLength: true,
+                    regex: /^[a-zA-Z\d\-\_]+$/,
+                    regexText: 'Invalid characters! The URL Name may only contain letters, numbers, dashes, and underscores.'
                 },
                 {
                     xtype: 'textarea',
@@ -31,15 +45,6 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     height: 100,
                     allowBlank: true,
                     maxLength: 255,
-                    enforceMaxLength: true
-                },
-                {
-                    xtype: 'textfield',
-                    name: 'stackContext',
-                    itemId: 'stackContext',
-                    fieldLabel: Ozone.util.createRequiredLabel('Context'),
-                    allowBlank: false,
-                    maxLength: 200,
                     enforceMaxLength: true
                 },
                 {

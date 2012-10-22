@@ -83,7 +83,7 @@ class StackService {
     
     def createOrUpdate(params) {
         
-        // Only admins may delete Stacks
+        // Only admins may create or update Stacks
         ensureAdmin()
         def stacks = []
 
@@ -106,13 +106,21 @@ class StackService {
 
         def stack, returnValue = null
         
-        if (params.id >= 0) {  // Existing Stack, get you one
+        if (params.id >= 0) {  // Existing Stack
             stack = Stack.findById(params.id, [cache: true])
-            if (!stack ) {
+            if (!stack) {
                 throw new OwfException(message: 'Stack ' + params.id + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
             }
         } else { // New Stack
             stack = new ozone.owf.grails.domain.Stack()
+        }
+
+        //If context was modified and it already exists, throw a unique constrain error
+        if(params.stackContext && params.stackContext != stack.stackContext) {
+            if(Stack.findByStackContext(params.stackContext)) {
+                throw new OwfException(message: 'A stack with URL Name ' + params.stackContext + ' already exists.', 
+                    exceptionType: OwfExceptionTypes.Validation_UniqueConstraint)
+            }
         }
 
         //If stack position is changed, move the stack it will be switched with
