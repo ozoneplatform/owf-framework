@@ -4,7 +4,7 @@ Ext.define('Ozone.data.StackStore', {
 
     sorters: [
       {
-        property : 'title',
+        property : 'stackPosition',
         direction: 'ASC'
       }
     ],
@@ -20,7 +20,7 @@ Ext.define('Ozone.data.StackStore', {
                 update: '/stack',
                 destroy: '/stack'
             },
-            fields: ['id', 'order', 'title', 'description', 'icon', 'totalDashboards', 'totalUsers', 'totalGroups', 'totalWidgets'],
+            fields: ['id', 'name', 'stackPosition', 'description', 'stackContext', 'imageUrl', 'descriptorUrl', 'totalDashboards', 'totalUsers', 'totalGroups', 'totalWidgets'],
             autoDestroy: true
         });
     	

@@ -110,7 +110,18 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                 xtype: 'button',
                 text: 'Edit',
                 handler: function() {
-                    self.doEdit();
+                    var records = self.gridStacks.getSelectionModel().getSelection();
+                    if (records && records.length > 0) {
+                        for (var i = 0; i < records.length; i++) {
+                            self.doEdit(records[i].data.id);
+                        }
+                    } else {
+                        Ext.create('Ozone.window.MessageBoxPlus', {}).show({
+                            title: "Error",
+                            msg: "You must select at least one stack to edit.",
+                            buttons: Ext.Msg.OK
+                        });
+                    }
                 }
             }, {
                 xtype: 'button', 
@@ -151,7 +162,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
         this.searchBox.on(
             'searchChanged',
             function(searchbox, value) {
-                this.gridStacks.applyFilter(value, ['name', 'description', 'displayName']);
+                this.gridStacks.applyFilter(value, ['name', 'description', 'stackContext']);
             },
             this
         );
@@ -224,7 +235,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
             var msg = 'This action will permanently<br>delete the selected stack(s)';
             if (records.length == 1) {
               msg = 'This action will permanently<br>delete <span class="heading-bold">' 
-                    + Ext.htmlEncode(records[0].data.title) + '</span>.';
+                    + Ext.htmlEncode(records[0].data.name) + '</span>.';
             }
             else {
               msg = 'This action will permanently<br>delete the selected <span class="heading-bold">'
@@ -267,7 +278,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
         } else {
             Ext.create('Ozone.window.MessageBoxPlus', {}).show({
                 title: "Error",
-                msg: "You must select at least one dashboard to delete.",
+                msg: "You must select at least one stack to delete.",
                 buttons: Ext.Msg.OK
             });
         }

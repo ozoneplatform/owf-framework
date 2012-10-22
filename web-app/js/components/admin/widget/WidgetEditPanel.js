@@ -19,10 +19,26 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPanel', {
                 channel: 'AdminChannel',
                 store: Ext.create('Ozone.data.stores.AdminWidgetStore', {}),
                 items: [
-                    { xtype: 'widgeteditpropertiestab' },
-                    { xtype: 'intentstabpanel' },
-                    { xtype: 'widgetedituserstab' },
-                    { xtype: 'widgeteditgroupstab' }
+                    {
+                        xtype: 'widgeteditproperties',
+                        itemId: 'widgeteditproperties'
+                    },
+                    {
+                        xtype: 'intentstabpanel',
+                        itemId: 'intentstabpanel'
+                    },
+                    {
+                        xtype: 'widgeteditusers',
+                        itemId: 'widgeteditusers'
+                    },
+                    {
+                        xtype: 'widgeteditgroups',
+                        itemId: 'widgeteditgroups'
+                    },
+                    {
+                        xtype: 'widgeteditstacks',
+                        itemId: 'widgeteditstacks'
+                    }
                 ]
             }]
         });

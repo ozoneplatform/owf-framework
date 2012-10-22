@@ -31,6 +31,10 @@ Ext.define('Ozone.components.admin.dashboard.DashboardEditPanel', {
         {
           xtype: 'dashboardeditgroups',
           itemId: 'dashboardeditgroups'
+        },
+        {
+          xtype: 'dashboardeditstacks',
+          itemId: 'dashboardeditstacks'
         }
     ]
     });

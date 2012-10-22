@@ -13,7 +13,7 @@
 # "temporary" files
 /staging
 /build-base*
-/src
+#/src
 /target
 /build.number
 /cobertura.ser
