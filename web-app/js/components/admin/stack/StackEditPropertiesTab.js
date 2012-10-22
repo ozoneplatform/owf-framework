@@ -69,6 +69,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
             description.setValue(data.description).originalValue = data.description;
             stackContext.setValue(data.stackContext).originalValue = data.stackContext;
             imageUrl.setValue(data.imageUrl).originalValue = data.imageUrl;
+            this.getForm().isValid();
         }
     }
 });
