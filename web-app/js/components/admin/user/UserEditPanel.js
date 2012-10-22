@@ -19,11 +19,30 @@ Ext.define('Ozone.components.admin.user.UserEditPanel', {
                 channel: 'AdminChannel',
                 store: Ext.create('Ozone.data.UserStore', {}),
                 items: [
-                Ext.create('Ozone.components.admin.user.UserEditPropertiesTab', {}),
-                Ext.create('Ozone.components.admin.user.UserEditGroupsTab', {}),
-                Ext.create('Ozone.components.admin.user.UserEditWidgetsTab', {}),
-                Ext.create('Ozone.components.admin.user.UserEditDashboardsTab', {}),
-				Ext.create('Ozone.components.admin.user.UserEditPreferencesTab', {})
+                    {
+                        xtype: 'usereditproperties',
+                        itemId: 'usereditproperties'
+                    },
+                    {
+                        xtype: 'usereditgroups',
+                        itemId: 'usereditgroups'
+                    },
+                    {
+                        xtype: 'usereditwidgets',
+                        itemId: 'usereditwidgets'
+                    },
+                    {
+                        xtype: 'usereditdashboards',
+                        itemId: 'usereditdashboards'
+                    },
+                    {
+                        xtype: 'usereditstacks',
+                        itemId: 'usereditstacks'
+                    },
+                    {
+                        xtype: 'usereditpreferences',
+                        itemId: 'usereditpreferences'
+                    }
                 ]
             }]
         });
