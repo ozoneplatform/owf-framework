@@ -107,8 +107,9 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                     self.doCreate();
                 }
             }, {
-                xtype: 'button',
+                xtype: 'splitbutton',
                 text: 'Edit',
+                itemId: 'btnEdit',
                 handler: function() {
                     var records = self.gridStacks.getSelectionModel().getSelection();
                     if (records && records.length > 0) {
@@ -122,6 +123,29 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                             buttons: Ext.Msg.OK
                         });
                     }
+                },
+                menu: {
+                    xtype: 'menu',
+                    plain: true,
+                    defaults: {
+                        minWidth: this.minButtonWidth
+                    },
+                    items: [
+                        {
+                            xtype: 'owfmenuitem',
+                            text: 'Move Up',
+                            handler: function(button, event) {
+                                self.doMoveRow('up');
+                            }
+                        },
+                        {
+                            xtype: 'owfmenuitem',
+                            text: 'Move Down',
+                            handler: function(button, event) {
+                                self.doMoveRow('down');
+                            }
+                        }
+                    ]
                 }
             }, {
                 xtype: 'button', 
@@ -279,6 +303,73 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
             Ext.create('Ozone.window.MessageBoxPlus', {}).show({
                 title: "Error",
                 msg: "You must select at least one stack to delete.",
+                buttons: Ext.Msg.OK
+            });
+        }
+    },
+    
+    doMoveRow: function(direction) {
+        var stacks = this.gridStacks.getSelectionModel().getSelection();
+
+        if (stacks && stacks.length > 0) {
+            var store = this.gridStacks.getStore();
+
+            //Sort them by stackPosition because are sorted by selection time now
+            stacks.sort(function(a,b) {
+                return a.get('stackPosition') - b.get('stackPosition');
+            });
+
+            if(direction === "up") {
+                var firstPosition = 1;
+                //If moving up, we have to start with the top-most selection
+                for(var i = 0; i < stacks.length; i++) {
+                    if(stacks[i].get('stackPosition') === firstPosition) {
+                        //Don't move up since its already at the top, add 1 to the firstPosition
+                        //so if the next row is selected too, it won't be moved up either
+                        firstPosition++;
+                    }
+                    else {
+                        //Not first position already, so move it up
+                        stacks[i].set('stackPosition', stacks[i].get('stackPosition') - 1);
+                    }
+                }
+            }
+            else {
+                var lastPosition = store.getCount();
+                //If moving down, we have to start with the bottom-most selection
+                for(var i = stacks.length - 1; i >= 0; i--) {
+                    if(stacks[i].get('stackPosition') === lastPosition) {
+                        //Don't move down since its already at the end, subtract 1 to the lastPosition
+                        //so if the next row is selected too, it won't be moved down either
+                        lastPosition--;
+                    }
+                    else {
+                        //Not last position already, so move it down
+                        stacks[i].set('stackPosition', stacks[i].get('stackPosition') + 1);
+                    }
+                }
+            }
+
+            //If records were updated, sync, refresh, and reselect rows
+            if(store.getUpdatedRecords().length) {
+                store.sync();
+
+                store.on('write', function() {
+                    this.gridStacks.refresh();
+                }, this, {single: true});
+
+                //After the store is loaded, reselect the selected stacks
+                store.on('load', function(store, records, successful, operation) {
+                    for(var i = 0; i < stacks.length; i++) {
+                        this.gridStacks.getSelectionModel().select(store.indexOfId(stacks[i].get('id')), true);
+                    }
+                }, this, {single: true});
+            }
+        }
+        else {
+            Ext.create('Ozone.window.MessageBoxPlus', {}).show({
+                title: "Error",
+                msg: 'You must select a stack to move.',
                 buttons: Ext.Msg.OK
             });
         }
