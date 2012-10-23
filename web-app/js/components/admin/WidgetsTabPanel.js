@@ -81,7 +81,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                           store.remove(records);
                           store.save();
                       } else {
-                          me.showAlert("Error", "You must select at least one widget to remove.");
+                          me.ownerCt.ownerCt.showAlert("Error", "You must select at least one widget to remove.");
                       }
                     },
                     scope: this
@@ -107,7 +107,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                             cmp.guid_EditCopyWidget = result.value;
                         },
                         onFailure: function(err) { /* No op */
-                            me.showAlert('Preferences Error', 'Error looking up Widget Editor: ' + err);
+                            me.ownerCt.ownerCt.showAlert('Preferences Error', 'Error looking up Widget Editor: ' + err);
                         }
                     });
     
@@ -157,7 +157,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                                         }
                                     }
                                     else {
-                                        me.showAlert("Error", "You must select at least one widget to edit.");
+                                        me.ownerCt.ownerCt.showAlert("Error", "You must select at least one widget to edit.");
                                     }
                                 },
                                 scope: this
@@ -234,7 +234,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
             data: dataString
         }, function(response) {
             if (response.error) {
-                me.showAlert('Launch Error', 'Widget Editor Launch Failed: ' + response.message);
+                me.ownerCt.ownerCt.showAlert('Launch Error', 'Widget Editor Launch Failed: ' + response.message);
             }
         });
     },
@@ -255,22 +255,5 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
             })
         });
         win.show();
-    },
-    showAlert: function(title, msg) {
-        var alert = Ext.Msg.alert(title, msg),
-            okBtnEl = alert.down('button').btnEl;
-            
-        var onKeyDown = function(event) {
-            if(event.keyCode === Ext.EventObject.TAB) {
-                //Disable tabbing out of the alert
-                event.stopEvent();
-            }
-        };
-
-        okBtnEl.on('keydown', onKeyDown);
-
-        alert.on('hide', function() {
-            okBtnEl.un('keydown', onKeyDown);
-        }, this, {single: true});
     }
 });

@@ -79,7 +79,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                 store.save();
                             }
                             else {
-                                self.showAlert("Error", "You must select at least one stack to remove.")
+                                self.ownerCt.ownerCt.showAlert("Error", "You must select at least one stack to remove.")
                             }
                         }
                     },
@@ -134,7 +134,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                             cmp.guid_EditCopyWidget = result.value;
                         },
                         onFailure: function(err) { /* No op */
-                            self.showAlert('Preferences Error', 'Error looking up Stack Editor: ' + err);
+                            self.ownerCt.ownerCt.showAlert('Preferences Error', 'Error looking up Stack Editor: ' + err);
                         }
                     });
                     
@@ -155,7 +155,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                         }
                                     }
                                     else {
-                                        self.showAlert("Error", "You must select at least one stack to edit.");
+                                        self.ownerCt.ownerCt.showAlert("Error", "You must select at least one stack to edit.");
                                     }
                                 },
                                 scope: this
@@ -226,7 +226,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
             data: dataString
         }, function(response) {
             if (response.error) {
-                self.showAlert('Launch Error', 'Stack Editor Launch Failed: ' + response.message);
+                self.ownerCt.ownerCt.showAlert('Launch Error', 'Stack Editor Launch Failed: ' + response.message);
             }
         });
     },
@@ -236,22 +236,5 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                 fn: 'refreshWidgetLaunchMenu'
             });
         }
-    },
-    showAlert: function(title, msg) {
-        var alert = Ext.Msg.alert(title, msg),
-            okBtnEl = alert.down('button').btnEl;
-            
-        var onKeyDown = function(event) {
-            if(event.keyCode === Ext.EventObject.TAB) {
-                //Disable tabbing out of the alert
-                event.stopEvent();
-            }
-        };
-
-        okBtnEl.on('keydown', onKeyDown);
-
-        alert.on('hide', function() {
-            okBtnEl.un('keydown', onKeyDown);
-        }, this, {single: true});
     }
 });

@@ -67,7 +67,7 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                       store.save();
                   }
                   else {
-                    me.showAlert("Error", "You must select at least one user to remove.");
+                    me.ownerCt.ownerCt.showAlert("Error", "You must select at least one user to remove.");
                   }
                 },
                 scope: this
@@ -109,7 +109,7 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                             cmp.guid_EditCopyWidget = result.value;
                         },
                         onFailure: function(err) { /* No op */
-                            me.showAlert('Preferences Error', 'Error looking up User Editor: ' + err);
+                            me.ownerCt.ownerCt.showAlert('Preferences Error', 'Error looking up User Editor: ' + err);
                         }
                     });
                     
@@ -150,7 +150,7 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                                         }
                                     }
                                     else {
-                                        me.showAlert("Error", "You must select at least one user to edit.");
+                                        me.ownerCt.ownerCt.showAlert("Error", "You must select at least one user to edit.");
                                     }
                                 },
                                 scope: this
@@ -229,25 +229,8 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
             data: dataString
         }, function(response) {
             if (response.error) {
-                this.showAlert('Launch Error', 'User Editor Launch Failed: ' + response.message);
+                this.ownerCt.ownerCt.showAlert('Launch Error', 'User Editor Launch Failed: ' + response.message);
             }
         });
-    },
-    showAlert: function(title, msg) {
-        var alert = Ext.Msg.alert(title, msg),
-            okBtnEl = alert.down('button').btnEl;
-            
-        var onKeyDown = function(event) {
-            if(event.keyCode === Ext.EventObject.TAB) {
-                //Disable tabbing out of the alert
-                event.stopEvent();
-            }
-        };
-
-        okBtnEl.on('keydown', onKeyDown);
-
-        alert.on('hide', function() {
-            okBtnEl.un('keydown', onKeyDown);
-        }, this, {single: true});
     }
 });

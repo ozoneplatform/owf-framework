@@ -2,6 +2,8 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPanel', {
     extend: 'Ext.panel.Panel',
     alias: ['widget.widgetedit','widget.widgeteditpanel','widget.Ozone.components.admin.widget.WidgetEditPanel'],
 
+    mixins: ['Ozone.components.WidgetAlerts'],
+
     cls: 'widgeteditpanel',
 	
     initComponent: function () {

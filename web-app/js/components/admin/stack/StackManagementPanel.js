@@ -20,16 +20,16 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
     
     initComponent: function() {
         
-        var self = this;
+        var me = this;
         
         OWF.Preferences.getUserPreference({
             namespace: 'owf.admin.StackEditCopy',
             name: 'guid_to_launch',
             onSuccess: function(result) {
-                self.guid_EditCopyWidget = result.value;
+                me.guid_EditCopyWidget = result.value;
             },
             onFailure: function(err){ /* No op */
-                Ext.Msg.alert('Preferences Error', 'Error looking up Stack Editor: ' + err);
+                me.showAlert('Preferences Error', 'Error looking up Stack Editor: ' + err);
             }
         });
         
@@ -104,24 +104,20 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                 text: 'Create',
                 handler: function(button, evt) {
                     evt.stopPropagation();
-                    self.doCreate();
+                    me.doCreate();
                 }
             }, {
                 xtype: 'splitbutton',
                 text: 'Edit',
                 itemId: 'btnEdit',
                 handler: function() {
-                    var records = self.gridStacks.getSelectionModel().getSelection();
+                    var records = me.gridStacks.getSelectionModel().getSelection();
                     if (records && records.length > 0) {
                         for (var i = 0; i < records.length; i++) {
-                            self.doEdit(records[i].data.id);
+                            me.doEdit(records[i].data.id);
                         }
                     } else {
-                        Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                            title: "Error",
-                            msg: "You must select at least one stack to edit.",
-                            buttons: Ext.Msg.OK
-                        });
+                        me.showAlert('Error', 'You must select at least one stack to edit.');
                     }
                 },
                 menu: {
@@ -135,14 +131,14 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                             xtype: 'owfmenuitem',
                             text: 'Move Up',
                             handler: function(button, event) {
-                                self.doMoveRow('up');
+                                me.doMoveRow('up');
                             }
                         },
                         {
                             xtype: 'owfmenuitem',
                             text: 'Move Down',
                             handler: function(button, event) {
-                                self.doMoveRow('down');
+                                me.doMoveRow('down');
                             }
                         }
                     ]
@@ -152,7 +148,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                 text: 'Delete',
                 itemId: 'btnDelete',
                 handler: function(button) {
-                    self.doDelete();
+                    me.doDelete();
                 }
             }]
         }];
@@ -235,7 +231,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
 
     launchFailedHandler: function(response) {
         if (response.error) {
-            Ext.Msg.alert('Launch Error', 'Stack Editor Launch Failed: ' + response.message);
+            this.showAlert('Launch Error', 'Stack Editor Launch Failed: ' + response.message);
         }
     },
     
@@ -256,55 +252,41 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
         var records = this.gridStacks.getSelectionModel().getSelection();
         if (records && records.length > 0) {
 
-            var msg = 'This action will permanently<br>delete the selected stack(s)';
-            if (records.length == 1) {
-              msg = 'This action will permanently<br>delete <span class="heading-bold">' 
-                    + Ext.htmlEncode(records[0].data.name) + '</span>.';
+            var msg = 'This action will permanently<br>delete ';
+            if (records.length === 1) {
+              msg += '<span class="heading-bold">' + Ext.htmlEncode(records[0].data.name) + '</span>.';
             }
             else {
-              msg = 'This action will permanently<br>delete the selected <span class="heading-bold">'
-                    + records.length + ' stacks</span>.';
+              msg += 'the selected <span class="heading-bold">' + records.length + ' stacks</span>.';
             }
-            Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                title: 'Warning',
-                msg: msg,
-                buttons: Ext.Msg.OKCANCEL,
-                closable: false,
-                modal: true,
-                scope: this,
-                fn: function(btn, text, opts) {
-                    if (btn == 'ok') {
-                        var store = this.gridStacks.getStore();
-                        store.remove(records);
-                        var remainingRecords = store.getTotalCount() - records.length;
-                        store.on({
-                           write: {
-                             fn: function() {
-                               if(store.data.items.length==0 && store.currentPage>1)
-                               {
-                                   var lastPage = store.getPageFromRecordIndex(remainingRecords - 1);
-                                   var pageToLoad = (lastPage>=store.currentPage)?store.currentPage:lastPage;
-                                   store.loadPage(pageToLoad);
-                               }
-                               this.gridStacks.getBottomToolbar().doRefresh();
-                               this.pnlStackDetail.removeData();
-                               if (!this.pnlDashboardDetail.collapsed) {this.pnlDashboardDetail.collapse();}
-                               this.refreshWidgetLaunchMenu();
-                             },
-                             scope: this,
-                             single: true
+            this.showConfirmation('Warning', msg, function(btn, text, opts) {
+                if (btn == 'ok') {
+                    var store = this.gridStacks.getStore();
+                    store.remove(records);
+                    var remainingRecords = store.getTotalCount() - records.length;
+                    store.on({
+                       write: {
+                         fn: function() {
+                           if(store.data.items.length==0 && store.currentPage>1)
+                           {
+                               var lastPage = store.getPageFromRecordIndex(remainingRecords - 1);
+                               var pageToLoad = (lastPage>=store.currentPage)?store.currentPage:lastPage;
+                               store.loadPage(pageToLoad);
                            }
-                        });
-                        store.save();
-                    }
+                           this.gridStacks.getBottomToolbar().doRefresh();
+                           this.pnlStackDetail.removeData();
+                           if (!this.pnlDashboardDetail.collapsed) {this.pnlDashboardDetail.collapse();}
+                           this.refreshWidgetLaunchMenu();
+                         },
+                         scope: this,
+                         single: true
+                       }
+                    });
+                    store.save();
                 }
             });
         } else {
-            Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                title: "Error",
-                msg: "You must select at least one stack to delete.",
-                buttons: Ext.Msg.OK
-            });
+            this.showAlert('Error', 'You must select at least one stack to delete.');
         }
     },
     
@@ -367,11 +349,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
             }
         }
         else {
-            Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                title: "Error",
-                msg: 'You must select a stack to move.',
-                buttons: Ext.Msg.OK
-            });
+            this.showAlert('Error', 'You must select at least one stack to move.');
         }
     }
 });

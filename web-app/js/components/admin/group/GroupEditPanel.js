@@ -2,6 +2,8 @@ Ext.define('Ozone.components.admin.group.GroupEditPanel', {
 	extend: 'Ext.panel.Panel',
 	alias: ['widget.groupedit','widget.groupeditpanel','widget.Ozone.components.admin.group.GroupEditPanel'],
 
+    mixins: ['Ozone.components.WidgetAlerts'],
+
 	cls: 'groupeditpanel',
 	
 	initComponent: function () {

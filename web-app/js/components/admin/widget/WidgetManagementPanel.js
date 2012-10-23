@@ -21,7 +21,7 @@ Ext.define('Ozone.components.admin.widget.WidgetManagementPanel', {
         me.guid_EditCopyWidget = result.value;
       },
       onFailure: function(err) { /* No op */
-        Ext.Msg.alert('Preferences Error', 'Error looking up Widget Editor: ' + err);
+        me.showAlert('Preferences Error', 'Error looking up Widget Editor: ' + err);
       }
     });
 
@@ -106,16 +106,12 @@ Ext.define('Ozone.components.admin.widget.WidgetManagementPanel', {
                 var grid = this.down('#grid');
                 var records = grid.getSelectionModel().getSelection();
                 if (records && records.length > 0) {
-                  for (var i = 0; i < records.length; i++) {
-                    this.doEdit(records[i].data.id);
-                  }
+                    for (var i = 0; i < records.length; i++) {
+                        this.doEdit(records[i].data.id);
+                    }
                 }
                 else {
-                  Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                      title: "Error",
-                      msg: "You must select at least one widget to edit.",
-                      buttons: Ext.Msg.OK
-                  });
+                    me.showAlert('Error', 'You must select at least one widget to edit.');
                 }
               },
               scope: this
@@ -128,14 +124,10 @@ Ext.define('Ozone.components.admin.widget.WidgetManagementPanel', {
                 var grid = this.down('#grid');
                 var records = grid.getSelectionModel().getSelection();
                 if (records && records.length > 0) {
-                  this.createDeleteWindow(records);
+                    this.createDeleteWindow(records);
                 }
                 else {
-                  Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                      title: "Error",
-                      msg: "You must select at least one widget to delete.",
-                      buttons: Ext.Msg.OK
-                  });
+                    me.showAlert('Error', 'You must select at least one widget to delete.');
                 }
               },
               scope: this
@@ -171,11 +163,7 @@ Ext.define('Ozone.components.admin.widget.WidgetManagementPanel', {
                     }
                   }
                   else {
-                    Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                        title: "Error",
-                        msg: "You must select at least one widget to edit.",
-                        buttons: Ext.Msg.OK
-                    });
+                    me.showAlert('Error', 'You must select at least one widget to edit.');
                   }
                 },
                 scope: this
@@ -305,7 +293,7 @@ Ext.define('Ozone.components.admin.widget.WidgetManagementPanel', {
                             win.close();
                           }, this),
                           onFailure: function() {
-                            Ext.Msg.alert(Ozone.util.ErrorMessageString.saveUpdatedWidgets, Ozone.util.ErrorMessageString.saveUpdatedWidgetsMsg);
+                            me.showAlert(Ozone.util.ErrorMessageString.saveUpdatedWidgets, Ozone.util.ErrorMessageString.saveUpdatedWidgetsMsg);
                           }
                         });
                       }
@@ -325,73 +313,42 @@ Ext.define('Ozone.components.admin.widget.WidgetManagementPanel', {
           win.show();
         }
         else {
-          //just show a simple delete dialog
-
-          var msg = null;
-          if (widgetsToDelete.length == 1) {
-            msg = 'This action will permanently<br>delete <span class="heading-bold">' 
-                  + Ext.htmlEncode(widgetsToDelete[0].data.name) + '</span>.';
-          }
-          else {
-            msg = 'This action will permanently<br>delete the selected <span class="heading-bold">' 
-                  + widgetsToDelete.length + ' widgets</span>.';
-          }
-
-          Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-            title: 'Warning',
-            msg: msg,
-            buttons: Ext.Msg.OKCANCEL,
-            closable: true,
-            modal: true,
-            scope: this,
-            fn: function(btn, text, opts) {
-              if (btn == 'ok') {
-                var grid = me.down('#grid');
-                var store = grid.store;
-
-//                var tbtext = this.down('#tbtext');
-//                if (widgetsToDelete.length > 1) {
-//                  tbtext.setText('<span class="heading-bold">' + this.defaultTitle +
-//                          ' </span><span class="heading-message"> (' +
-//                          '<span class="heading-bold">' + widgetsToDelete.length + ' widgets</span> deleted )</span>');
-//                }
-//                else {
-//                  tbtext.setText('<span class="heading-bold">' + this.defaultTitle +
-//                          ' </span><span class="heading-message"> ( <span class="heading-bold">'
-//                          + widgetsToDelete[0].data.name + '</span> deleted) </span>');
-//                }
-
-                var autoSave = store.autoSave;
-                store.autoSave = false;
-                store.remove(widgetsToDelete);
-                var remainingRecords = store.getTotalCount() - widgetsToDelete.length;
-                store.on({
-                  write: {
-                    fn: function(s, b, data) {
-                      if(store.data.items.length == 0 && store.currentPage>1){
-                          var lastPage = store.getPageFromRecordIndex(remainingRecords - 1);
-                          var pageToLoad = (lastPage>=store.currentPage)?store.currentPage:lastPage;
-                          store.loadPage(pageToLoad);
-                      }
-                      grid.getBottomToolbar().doRefresh();
-                    },
-                    scope: this,
-                    single: true
-                  }
-                });
-                store.save();
-              }
+            var msg = 'This action will permanently<br>delete ';
+            if (widgetsToDelete.length == 1) {
+                msg += '<span class="heading-bold">' + Ext.htmlEncode(widgetsToDelete[0].data.name) + '</span>.';
             }
-          });
-
+            else {
+                msg += 'the selected <span class="heading-bold">' + widgetsToDelete.length + ' widgets</span>.';
+            }
+            this.showConfirmation('Warning', msg, function(btn, text, opts) {
+                if (btn == 'ok') {
+                    var grid = me.down('#grid');
+                    var store = grid.store;
+                    var autoSave = store.autoSave;
+                    store.autoSave = false;
+                    store.remove(widgetsToDelete);
+                    var remainingRecords = store.getTotalCount() - widgetsToDelete.length;
+                    store.on({
+                        write: {
+                            fn: function(s, b, data) {
+                                if(store.data.items.length == 0 && store.currentPage > 1) {
+                                    var lastPage = store.getPageFromRecordIndex(remainingRecords - 1);
+                                    var pageToLoad = (lastPage >= store.currentPage) ? store.currentPage : lastPage;
+                                    store.loadPage(pageToLoad);
+                                }
+                                grid.getBottomToolbar().doRefresh();
+                            },
+                            scope: this,
+                            single: true
+                        }
+                    });
+                    store.save();
+                }
+            });
         }
       }, this),
       onFailure: function() {
-        Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-            title: "Error",
-            msg: "Error",
-            buttons: Ext.Msg.OK
-        });
+          me.showAlert('Error', 'Error deleting the selected widget(s).');
       }
     });
   }

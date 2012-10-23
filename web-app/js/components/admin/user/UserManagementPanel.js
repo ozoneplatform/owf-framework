@@ -27,15 +27,15 @@ Ext.define('Ozone.components.admin.user.UserManagementPanel', {
 	},
 	initComponent: function (config) {
 		//get widget to launch
-		var self = this;
+		var me = this;
 		OWF.Preferences.getUserPreference({
 			namespace: 'owf.admin.UserEditCopy',
 			name: 'guid_to_launch',
 			onSuccess: function(result){
-				self.guid_EditCopyWidget = result.value;
+				me.guid_EditCopyWidget = result.value;
 			},
 			onFailure: function(err){ /* No op */
-				Ext.Msg.alert('Preferences Error', 'Error looking up User Editor: ' + err);
+				me.showAlert('Preferences Error', 'Error looking up User Editor: ' + err);
 			}
 		});
 		Ext.applyIf(this,{
@@ -122,11 +122,7 @@ Ext.define('Ozone.components.admin.user.UserManagementPanel', {
 			                    }
 							}
 							else {
-                                Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                                    title: "Error",
-                                    msg: "You must select at least one user to edit.",
-                                    buttons: Ext.Msg.OK
-                                });
+                                me.showAlert('Error', 'You must select at least one user to edit.');
 							}
 						}
 					},
@@ -141,56 +137,42 @@ Ext.define('Ozone.components.admin.user.UserManagementPanel', {
 						var grid = this.down('#usersgrid');
 						if(grid) {
 							var records = grid.getSelectionModel().getSelection();
-							if(records && records.length >0){
-								var msg = null;
-								if(records.length==1) {
-									msg = 'This action will permanently<br>delete <span class="heading-bold">'
-											+ Ext.htmlEncode(records[0].data.userRealName) + '</span>.';
+							if(records && records.length > 0){
+								var msg = 'This action will permanently<br>delete ';
+								if(records.length === 1) {
+									msg += '<span class="heading-bold">' + Ext.htmlEncode(records[0].data.userRealName) + '</span>.';
 								}
 								else {
-									msg = 'This action will permanently<br>delete the selected <span class="heading-bold">' 
-											+ records.length + ' users</span>.';
+									msg += 'the selected <span class="heading-bold">' + records.length + ' users</span>.';
 								}
-								this.lastAction = '<span class="heading-message">(<span class="heading-bold">'+(records.length==1?records[0].data.userRealName:records.length+ " users");
-								this.lastAction += '</span> deleted)</span>';
-                                                                Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-										title: "Warning",
-										msg: msg,
-										buttons: Ext.Msg.OKCANCEL,
-										fn: function(btn, text, opts) {
-											if(btn == "ok"){
-												var userstore = this.down('#usersgrid').store;
-                                                userstore.remove(records);
-												 var remainingRecords = userstore.getTotalCount() - records.length;
-                                                 userstore.on({
-                                                    write: {
-                                                      fn: function() {
-                                                        if(userstore.data.items.length == 0 && userstore.currentPage>1	)
-                                                        {
-                                                            //fencepost, since it's by index
-                                                           var lastPage = userstore.getPageFromRecordIndex(remainingRecords-1);
-                                                           var pageToLoad = (lastPage>=userstore.currentPage)?userstore.currentPage:lastPage;
-                                                           userstore.loadPage(pageToLoad);
-                                                        }
-                                                        grid.getBottomToolbar().doRefresh();
-                                                      },
-                                                      scope: this,
-                                                      single: true
+								// this.lastAction = '<span class="heading-message">(<span class="heading-bold">'+(records.length==1?records[0].data.userRealName:records.length+ " users");
+								// this.lastAction += '</span> deleted)</span>';
+                                me.showConfirmation('Warning', msg, function(btn, text, opts) {
+                                    if(btn === "ok"){
+                                        var userstore = this.down('#usersgrid').store;
+                                        userstore.remove(records);
+                                        var remainingRecords = userstore.getTotalCount() - records.length;
+                                        userstore.on({
+                                            write: {
+                                                fn: function() {
+                                                    if(userstore.data.items.length == 0 && userstore.currentPage > 1) {
+                                                        //fencepost, since it's by index
+                                                        var lastPage = userstore.getPageFromRecordIndex(remainingRecords - 1);
+                                                        var pageToLoad = (lastPage >= userstore.currentPage) ? userstore.currentPage : lastPage;
+                                                        userstore.loadPage(pageToLoad);
                                                     }
-                                                 });
-												 userstore.save();
-											}
-										},
-										scope: this
-											
-								});
+                                                    grid.getBottomToolbar().doRefresh();
+                                                },
+                                                scope: this,
+                                                single: true
+                                            }
+                                        });
+                                        userstore.save();
+                                    }
+                                });
 							}
 							else {
-                                Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                                    title: "Error",
-                                    msg: "You must select at least one user to delete.",
-                                    buttons: Ext.Msg.OK
-                                });
+                                me.showAlert('Error', 'You must select at least one user to delete.');
 							}
 						}
 							
@@ -241,11 +223,7 @@ Ext.define('Ozone.components.admin.user.UserManagementPanel', {
 										}
 									}
 									else {
-                                        Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                                            title: "Error",
-                                            msg: "You must select at least one user to edit.",
-                                            buttons: Ext.Msg.OK
-                                        });
+                                        me.showAlert('Error', 'You must select at least one user to edit.');
 									}
 								},
 								scope: this
@@ -303,7 +281,7 @@ Ext.define('Ozone.components.admin.user.UserManagementPanel', {
                                             errorMsg: response
                                         }
                                     }
-                                    Ext.Msg.alert('Server Error',
+                                    me.showAlert('Server Error',
                                         'Error during ' + operation.action + (json && json.errorMsg ? (':\n ' + json.errorMsg) : ''));
                                     theStore.removed = [];
                                     theStore.load();
