@@ -315,6 +315,9 @@ class SecurityFilters {
                     args.guid = db.guid
                     args.isdefault = db.isdefault
                     args.name = db.name
+                    args.description = db.description
+                    args.locked = db.locked
+                    args.layoutConfig = db.layoutConfig
 
                     administrationService.cloneDashboards(args)
                 }
