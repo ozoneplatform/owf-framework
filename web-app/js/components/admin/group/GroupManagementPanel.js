@@ -123,6 +123,7 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
                 menu: {
                     xtype: 'menu',
                     plain: true,
+                    hideMode: 'display',
                     defaults: {
                         minWidth: this.minButtonWidth
                     },

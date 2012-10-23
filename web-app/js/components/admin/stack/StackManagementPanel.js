@@ -123,6 +123,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                 menu: {
                     xtype: 'menu',
                     plain: true,
+                    hideMode: 'display',
                     defaults: {
                         minWidth: this.minButtonWidth
                     },
