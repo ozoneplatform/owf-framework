@@ -379,6 +379,7 @@ uiperformance.bundles = [
         name: 'owf-user-edit-widget',
     
         files: [
+            'util/guid',
             '../js/data/models/Dashboard',
             '../js/data/stores/AdminDashboardStore',
             '../js/data/models/Group',
