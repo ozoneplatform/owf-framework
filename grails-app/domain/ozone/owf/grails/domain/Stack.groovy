@@ -12,7 +12,7 @@ class Stack {
     String descriptorUrl
 
     static constraints = {
-        name(nullable: false, blank: false, maxSize: 200)
+        name(nullable: false, blank: false, maxSize: 256)
         stackPosition(nullable: false, min: 1, unique: true)
         description(nullable: true, blank: true)
         stackContext(nullable: false, blank: false, maxSize: 200, unique: true)

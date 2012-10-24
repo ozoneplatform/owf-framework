@@ -23,8 +23,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     itemId: 'name',
                     fieldLabel: Ozone.util.createRequiredLabel('Display Name'),
                     allowBlank: false,
-                    maxLength: 200,
-                    enforceMaxLength: true
+                    maxLength: 256
                 },
                 {
                     xtype: 'textfield',
@@ -33,7 +32,6 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     fieldLabel: Ozone.util.createRequiredLabel('URL Name'),
                     allowBlank: false,
                     maxLength: 200,
-                    enforceMaxLength: true,
                     regex: /^[a-zA-Z\d\-\_]+$/,
                     regexText: 'Invalid characters! The URL Name may only contain letters, numbers, dashes, and underscores.'
                 },
@@ -44,11 +42,10 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     fieldLabel: 'Description',
                     height: 100,
                     allowBlank: true,
-                    maxLength: 255,
-                    enforceMaxLength: true
+                    maxLength: 4000
                 },
                 {
-                    xtype: 'urlfield',
+                    xtype: 'textfield',
                     name: 'imageUrl',
                     itemId: 'imageUrl',
                     fieldLabel: Ozone.util.createRequiredLabel('Icon URL'),
