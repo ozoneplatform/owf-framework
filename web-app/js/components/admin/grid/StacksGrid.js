@@ -45,7 +45,7 @@ Ext.define('Ozone.components.admin.StacksGrid', {
                 return  retVal;
             }
         }, {
-            header: 'Context',
+            header: 'URL Name',
             dataIndex: 'stackContext',
             flex: 4,
             renderer: function(value, metaData, record, rowIndex, colIndex, store) {
