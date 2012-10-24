@@ -16,10 +16,27 @@ codeCoverageExclusionList = [
         "*GrailsPlugin*"]
 
 
+eventCreateWarStart = { warName, stagingDir ->
+    ant.delete(includeemptydirs: true) {
+        fileset(dir: "$stagingDir") {
+            include(name: '**/code-coverage*/**')
+            include(name: '**/code-coverage*')
+            if (new File("$stagingDir/WEB-INF/classes/application.properties").text.indexOf('code-coverage') == -1) {
+                include(name: '**/CodeCoverageGrailsPlugin*')
+            }
+        }
+    }
+}
+
 eventTestPhasesStart = {
     if (isCoverageEnabled()) {
         event("StatusUpdate", ["Instrumenting classes for coverage"])
-        ant.delete(file: "${dataFile}")
+
+        if (isAppendCoverageResultsEnabled() && new File("${dataFile}").exists()) {
+            println "Appending coverage results to existing Cobertura ser file ${dataFile}."
+        } else {
+            ant.delete(file: "${dataFile}")
+        }
 
         if (buildConfig.coverage.exclusionListOverride) {
             codeCoverageExclusionList = buildConfig.coverage.exclusionListOverride
@@ -115,7 +132,9 @@ def replaceClosureNames(artefacts) {
 def replaceClosureNamesInXmlReports(artefacts) {
     def xml = new File("${coverageReportDir}/coverage.xml")
     if (xml.exists()) {
-        def parser = new XmlParser().parse(xml)
+        def p = new XmlParser()
+        p.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        def parser = p.parse(xml)
 
         artefacts?.each {artefact ->
             def closures = [:]
@@ -160,6 +179,16 @@ boolean isCoverageEnabled() {
         return true
     } else {
         return buildConfig.coverage.enabledByDefault
+    }
+}
+
+boolean isAppendCoverageResultsEnabled() {
+    if (argsMap.containsKey('noappend')) {
+        return false
+    } else if (argsMap.containsKey('append')) {
+        return true
+    } else {
+        return buildConfig.coverage.appendCoverageResults
     }
 }
 
