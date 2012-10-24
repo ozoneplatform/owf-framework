@@ -434,7 +434,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             widgetGuid.setValue(newGuid).originalValue = newGuid;
             name.setValue(data.name).originalValue = data.name;
             description.setValue(data.description).originalValue = data.description;
-            description_dsp.setValue(data.description)
+            description_dsp.setValue(Ext.String.htmlEncode(data.description));
             version.setValue(data.version).originalValue = data.version;
             universalName.setValue(data.universalName).originalValue = data.universalName;
             guid.setValue(newGuid).originalValue = newGuid;
@@ -552,7 +552,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             // Set the description values
             name.setValue(Ext.String.trim(data.displayName));
             description.setValue(Ext.String.trim(data.description || ""));
-            description_dsp.setValue(Ext.String.trim(data.description || ""));
+            description_dsp.setValue(Ext.String.htmlEncode(Ext.String.trim(data.description || "")));
             version.setValue(Ext.String.trim(data.widgetVersion || ""));
             universalName.setValue(Ext.htmlEncode(data.universalName) || "");
             url.setValue(Ext.String.trim(data.widgetUrl));
