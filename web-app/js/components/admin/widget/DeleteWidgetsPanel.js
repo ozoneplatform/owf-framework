@@ -2,6 +2,10 @@ Ext.define('Ozone.components.admin.widget.DeleteWidgetsPanel', {
   extend: 'Ext.panel.Panel',
   alias: ['widget.deletewidgetspanel', 'widget.Ozone.components.admin.widget.DeleteWidgetsPanel'],
 
+  mixins: {
+    circularFocus: 'Ozone.components.focusable.CircularFocus'
+  },
+
   delWidgets: null,
   itemId: 'deletepanel',
   cls: 'deletepanel',
@@ -105,6 +109,7 @@ Ext.define('Ozone.components.admin.widget.DeleteWidgetsPanel', {
       buttons: [
         {
           text: Ozone.layout.DialogMessages.ok,
+          itemId: 'ok',
           handler: function(button) {
             this.del();
           },
@@ -112,6 +117,7 @@ Ext.define('Ozone.components.admin.widget.DeleteWidgetsPanel', {
         },
         {
           text: 'Cancel',
+          itemId: 'cancel',
           handler: function(button) {
             this.cancel();
           },
@@ -125,13 +131,17 @@ Ext.define('Ozone.components.admin.widget.DeleteWidgetsPanel', {
     this.on({
       afterrender: {
         fn: function() {
-          if (this.delWidgets != null) {
+            if (this.delWidgets != null) {
             this.loadData(this.delWidgets);
-          }
+            }
+            var okBtn = this.down('#ok').getFocusEl(),
+                cancelBtn = this.down('#cancel').getFocusEl();
+            this.setupFocus(okBtn, cancelBtn);
+            Ext.defer(function() {cancelBtn.focus();}, 400);
         },
         scope: this
       }
-    })
+    });
   },
 
   loadData: function(delWidgets) {

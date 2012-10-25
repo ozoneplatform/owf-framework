@@ -418,6 +418,7 @@ uiperformance.bundles = [
             '../js/data/models/WidgetDefinition',
             '../js/data/stores/AdminWidgetStore',
             '../js/components/admin/grid/WidgetsGrid',
+            '../js/components/admin/widget/DeleteWidgetsPanel',
             '../js/components/admin/widget/WidgetDetailPanel',
             '../js/components/admin/widget/WidgetManagementPanel'
         ]

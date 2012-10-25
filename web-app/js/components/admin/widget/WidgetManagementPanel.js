@@ -280,13 +280,6 @@ Ext.define('Ozone.components.admin.widget.WidgetManagementPanel', {
                           onSuccess: Ext.bind(function(ret) {
                             var grid = this.down('#grid');
 
-                            //since the deletewidgetspanel was used there is always at least 2 widgets to delete
-//                            var tbtext = this.down('#tbtext');
-//                            tbtext.setText('<span class="heading-bold">' + this.defaultTitle +
-//                                    ' </span><span class="heading-message"> ('+
-//                                    '<span class="heading-bold">' + data.widgetGuidsToDelete.length +
-//                                    ' widgets</span> deleted) </span>');
-
                             if (grid != null) {
                               grid.refresh();
                             }
