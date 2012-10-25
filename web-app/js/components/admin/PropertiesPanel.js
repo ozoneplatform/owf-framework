@@ -169,8 +169,7 @@ Ext.define('Ozone.components.PropertiesPanel', {
                                     errorMsg: response
                                 }
                             }
-                            me.ownerCt.ownerCt.showAlert('Server Error!',
-                               'Error during ' + operation.action + ':  ' + Ext.htmlEncode(json.errorMsg));
+                            me.ownerCt.ownerCt.showAlert('Server Error!', Ext.htmlEncode(json.errorMsg));
                         }
                     );
                 }

@@ -118,8 +118,8 @@ class StackService {
         //If context was modified and it already exists, throw a unique constrain error
         if(params.stackContext && params.stackContext != stack.stackContext) {
             if(Stack.findByStackContext(params.stackContext)) {
-                throw new OwfException(message: 'A stack with URL Name ' + params.stackContext + ' already exists.', 
-                    exceptionType: OwfExceptionTypes.Validation_UniqueConstraint)
+                throw new OwfException(message: 'Another stack uses ' + params.stackContext + ' as its URL Name. ' 
+                    + 'Please select a unique URL Name for this stack.', exceptionType: OwfExceptionTypes.GeneralServerError)
             }
         }
 
