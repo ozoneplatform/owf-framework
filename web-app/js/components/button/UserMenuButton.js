@@ -116,12 +116,13 @@ Ext.define('Ozone.components.button.UserMenuButton', {
         }
 
         //defaults for user menu items
-        Ext.Array.each(me.items, function(item) {
+        for (var i = 0, len = me.items.length; i < len; i++) {
+            var item = me.items[i];
             Ext.applyIf(item, { spacer: false, clickable: true });
 
             //spacers are not clickable
             if (item.spacer) item.clickable = false;
-        });
+        }
 
     	function logout(){
 			window.location.href = Ozone.util.contextPath() + Ozone.config.logoutURL;
@@ -231,14 +232,16 @@ Ext.define('Ozone.components.button.UserMenuButton', {
         });
 
         //handle item clicks
-        Ext.Array.each(cmp.items, function(item) {
+        for (var i = 0, len = cmp.items.length; i < len; i++) {
+            var item = cmp.items[i];
+            
             if (item.clickable) {
                 var el = Ext.get(item.id);
                 el.handler = item.handler;
 
-                this.mon(el, 'click', el.handler);
+                cmp.mon(el, 'click', el.handler);
             }
-        }, cmp);
+        }
 
 //        //handle ENTER on userMenuBtn
 //        keymap = new Ext.util.KeyMap(cmp.getEl(), {

@@ -20,16 +20,16 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
     
     initComponent: function() {
         
-        var self = this;
+        var me = this;
         
         OWF.Preferences.getUserPreference({
             namespace: 'owf.admin.GroupEditCopy',
             name: 'guid_to_launch',
             onSuccess: function(result) {
-                self.guid_EditCopyWidget = result.value;
+                me.guid_EditCopyWidget = result.value;
             },
             onFailure: function(err){ /* No op */
-                Ext.Msg.alert('Preferences Error', 'Error looking up Group Editor: ' + err);
+                me.showAlert('Preferences Error', 'Error looking up Group Editor: ' + err);
             }
         });
         
@@ -104,29 +104,26 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
                 text: 'Create',
                 handler: function(button, evt) {
                     evt.stopPropagation();
-                    self.doCreate();
+                    me.doCreate();
                 }
             }, {
                 xtype: 'splitbutton',
                 text: 'Edit',
                 itemId: 'btnEdit',
                 handler: function() {
-                    var records = self.gridGroups.getSelectionModel().getSelection();
+                    var records = me.gridGroups.getSelectionModel().getSelection();
                     if (records && records.length > 0) {
                         for (var i = 0; i < records.length; i++) {
-                            self.doEdit(records[i].data.id);
+                            me.doEdit(records[i].data.id);
                         }
                     } else {
-                        Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                            title: "Error",
-                            msg: "You must select at least one group to edit.",
-                            buttons: Ext.Msg.OK
-                        });
+                        me.showAlert('Error', 'You must select at least one group to edit.');
                     }
                 },
                 menu: {
                     xtype: 'menu',
                     plain: true,
+                    hideMode: 'display',
                     defaults: {
                         minWidth: this.minButtonWidth
                     },
@@ -135,14 +132,14 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
                           xtype: 'owfmenuitem',
                           text: 'Activate',
                           handler: function(button) {
-                            self.doActivate();
+                            me.doActivate();
                           }
                         },
                         {
                           xtype: 'owfmenuitem',
                           text: 'Deactivate',
                           handler: function(button) {
-                            self.doDeactivate();
+                            me.doDeactivate();
                           }
                         }
                     ]
@@ -152,7 +149,7 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
                 text: 'Delete',
                 itemId: 'btnDelete',
                 handler: function(button) {
-                    self.doDelete();
+                    me.doDelete();
                 }
             }]
         }];
@@ -247,7 +244,7 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
 
     launchFailedHandler: function(response) {
         if (response.error) {
-            Ext.Msg.alert('Launch Error', 'Group Editor Launch Failed: ' + response.message);
+            this.showAlert('Launch Error', 'Group Editor Launch Failed: ' + response.message);
         }
     },
     
@@ -277,13 +274,7 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
             store.save();
             this.refreshWidgetLaunchMenu();
         } else {
-            Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                msg: 'You must select at least one group to activate.',
-                buttons: Ext.Msg.OK,
-                closable: false,
-                modal: true,
-                scope: this
-            });
+            this.showAlert('Error', 'You must select at least one group to activate.');
         }
     },
     
@@ -300,13 +291,7 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
             store.save();
             this.refreshWidgetLaunchMenu();
         } else {
-            Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                msg: 'You must select at least one group to deactivate.',
-                buttons: Ext.Msg.OK,
-                closable: false,
-                modal: true,
-                scope: this
-            });
+            this.showAlert('Error', 'You must select at least one group to deactivate.');
         }
     },
     
@@ -363,54 +348,31 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
                         + records.length + ' groups</span>.';
             }
 
-            Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                title: 'Warning',
-                msg: msg,
-                buttons: Ext.Msg.OKCANCEL,
-                closable: false,
-                modal: true,
-                scope: this,
-                fn: function(btn, text, opts) {
-                    if (btn == 'ok') {
-//                        if (records.length > 1) {
-//                          this.txtHeading.setText('<span class="heading-bold">' + this.defaultTitle +
-//                                  ' </span><span class="heading-message"> ('+
-//                                  '<span class="heading-bold">' + records.length +
-//                                  ' groups</span> deleted) </span>');
-//                        } else {
-//                          this.txtHeading.setText('<span class="heading-bold">' + this.defaultTitle +
-//                                  ' </span><span class="heading-message"> ( <span class="heading-bold">'
-//                                  + records[0].data.name + '</span> deleted) </span>');
-//                        }
-                        var store = this.gridGroups.getStore();
-                        store.remove(records);
-                        var remainingRecords = store.getTotalCount() - records.length;
-                        store.on({
-                            write: {
-                                fn: function(s,b,data) {
-                                  if(store.data.items.length==0 && store.currentPage>1)
-                                  {
-                                      var lastPage = store.getPageFromRecordIndex(remainingRecords - 1);
-                                      var pageToLoad = (lastPage>=store.currentPage)?store.currentPage:lastPage;
-                                      store.loadPage(pageToLoad);
-                                  }
-                                  this.gridGroups.getBottomToolbar().doRefresh();
-                                  this.refreshWidgetLaunchMenu();
-                                },
-                                single: true,
-                                scope: this
-                            }
-                        });
-                        store.save();
-                    }
+            this.showConfirmation('Warning', msg, function(btn, text, opts) {
+                if (btn == 'ok') {
+                    var store = this.gridGroups.getStore();
+                    store.remove(records);
+                    var remainingRecords = store.getTotalCount() - records.length;
+                    store.on({
+                        write: {
+                            fn: function(s,b,data) {
+                                if(store.data.items.length === 0 && store.currentPage > 1) {
+                                    var lastPage = store.getPageFromRecordIndex(remainingRecords - 1);
+                                    var pageToLoad = (lastPage >= store.currentPage) ? store.currentPage : lastPage;
+                                    store.loadPage(pageToLoad);
+                                }
+                                this.gridGroups.getBottomToolbar().doRefresh();
+                                this.refreshWidgetLaunchMenu();
+                            },
+                            single: true,
+                            scope: this
+                        }
+                    });
+                    store.save();
                 }
             });
         } else {
-           Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                title: "Error",
-                msg: "You must select at least one group to delete.",
-                buttons: Ext.Msg.OK
-            });
+            this.showAlert('Error', 'You must select at least one group to delete.');
         }
     },
     

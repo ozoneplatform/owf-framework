@@ -22,16 +22,16 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
     
     initComponent: function() {
         
-        var self = this;
+        var me = this;
         
         OWF.Preferences.getUserPreference({
             namespace: 'owf.admin.DashboardEditCopy',
             name: 'guid_to_launch',
             onSuccess: function(result) {
-                self.guid_EditCopyWidget = result.value;
+                me.guid_EditCopyWidget = result.value;
             },
             onFailure: function(err){ /* No op */
-                Ext.Msg.alert('Preferences Error', 'Error looking up Dashboard Editor: ' + err);
+                me.showAlert('Preferences Error', 'Error looking up Dashboard Editor: ' + err);
             }
         });
         
@@ -111,19 +111,19 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
                 text: 'Create',
                 handler: function(button, evt) {
                     evt.stopPropagation();
-                    self.doCreate();
+                    me.doCreate();
                 }
             }, {
                 xtype: 'button',
                 text: 'Edit',
                 handler: function() {
-                    self.doEdit();
+                    me.doEdit();
                 }
             }, {
                 xtype: 'button', 
                 text: 'Delete',
                 handler: function(button) {
-                    self.doDelete();
+                    me.doDelete();
                 }
             }]
         }];
@@ -235,7 +235,7 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
     
     onLaunchFailed: function(response) {
         if (response.error) {
-            Ext.Msg.alert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
+            this.showAlert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
         }
     },
 
@@ -272,7 +272,7 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
 		        }, this.onLaunchFailed);
             }
         } else {
-            Ext.Msg.alert("Error", "You must select at least one dashboard to edit");
+            this.showAlert("Error", "You must select at least one dashboard to edit");
         }
     },
     
@@ -280,55 +280,41 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
         var records = this.gridDashboards.getSelectionModel().getSelection();
         if (records && records.length > 0) {
 
-            var msg = 'This action will permanently<br>delete the selected dashboard(s)';
+            var msg = 'This action will permanently<br>delete ';
             if (records.length == 1) {
-              msg = 'This action will permanently<br>delete <span class="heading-bold">' 
-                    + Ext.htmlEncode(records[0].data.name) + '</span>.';
+              msg += '<span class="heading-bold">' + Ext.htmlEncode(records[0].data.name) + '</span>.';
             }
             else {
-              msg = 'This action will permanently<br>delete the selected <span class="heading-bold">'
-                    + records.length + ' dashboards</span>.';
+              msg += 'the selected <span class="heading-bold">' + records.length + ' dashboards</span>.';
             }
-            Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                title: 'Warning',
-                msg: msg,
-                buttons: Ext.Msg.OKCANCEL,
-                closable: false,
-                modal: true,
-                scope: this,
-                fn: function(btn, text, opts) {
-                    if (btn == 'ok') {
-                        var store = this.gridDashboards.getStore();
-                        store.remove(records);
-                        var remainingRecords = store.getTotalCount() - records.length;
-                        store.on({
-                           write: {
-                             fn: function() {
-                               if(store.data.items.length==0 && store.currentPage>1)
-                               {
-                                   var lastPage = store.getPageFromRecordIndex(remainingRecords - 1);
-                                   var pageToLoad = (lastPage>=store.currentPage)?store.currentPage:lastPage;
-                                   store.loadPage(pageToLoad);
-                               }
-                               this.gridDashboards.getBottomToolbar().doRefresh();
-                               this.pnlDashboardDetail.removeData();
-                               if (!this.pnlDashboardDetail.collapsed) {this.pnlDashboardDetail.collapse();}
-                               this.refreshWidgetLaunchMenu();
-                             },
-                             scope: this,
-                             single: true
-                           }
-                        });
-                        store.save();
-                    }
+            this.showConfirmation('Warning', msg, function(btn, text, opts) {
+                if(btn == 'ok') {
+                    var store = this.gridDashboards.getStore();
+                    store.remove(records);
+                    var remainingRecords = store.getTotalCount() - records.length;
+                    store.on({
+                        write: {
+                            fn: function() {
+                                if(store.data.items.length == 0 && store.currentPage > 1) {
+                                    var lastPage = store.getPageFromRecordIndex(remainingRecords - 1);
+                                    var pageToLoad = (lastPage >= store.currentPage) ? store.currentPage : lastPage;
+                                    store.loadPage(pageToLoad);
+                                }
+                                this.gridDashboards.getBottomToolbar().doRefresh();
+                                this.pnlDashboardDetail.removeData();
+                                if(!this.pnlDashboardDetail.collapsed) {
+                                this.pnlDashboardDetail.collapse();}
+                                this.refreshWidgetLaunchMenu();
+                            },
+                            scope: this,
+                            single: true
+                        }
+                    });
+                    store.save();
                 }
             });
         } else {
-            Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                title: "Error",
-                msg: "You must select at least one dashboard to delete.",
-                buttons: Ext.Msg.OK
-            });
+            this.showAlert("Error", "You must select at least one dashboard to delete");
         }
     }
 });

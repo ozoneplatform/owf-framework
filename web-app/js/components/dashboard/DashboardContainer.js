@@ -71,42 +71,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         this.user = Ozone.config.user;
         this.widgetNames = Ozone.config.widgetNames || {};
-        this.widgetStore.on('datachanged', function() {
-            // Update widget titles with user-defined titles
-            // and find out if there are marketplace widgets
-            var hasMpWidget = false;
-            var hasMetricWidget = false;
-            var records = this.widgetStore.getRange();
-            for (var i = 0; i < records.length; i++) {
-                var newTitle = this.widgetNames[records[i].data.widgetGuid];
-                if (newTitle) {
-                    records[i].data.name = newTitle;
-                }
-                if (records[i].data.widgetTypes[0].name == 'marketplace') {
-                    hasMpWidget = true;
-                }
-                if (records[i].data.widgetTypes[0].name == 'metric') {
-                    hasMetricWidget = true;
-                }
-
-            }
-            //if we have a marketplace widget or marketplace config, tell the banner to add a button
-            if (hasMpWidget
-//                    || (!!Ozone.config.marketplaceLocation)
-                    ) {
-                this.getBanner().addMarketplaceButton();
-            }
-            else {
-                this.getBanner().removeMarketplaceButton();
-            }
-
-            if (hasMetricWidget) {
-                this.getBanner().addMetricButton();
-            }
-            else {
-                this.getBanner().removeMetricButton();
-            }
-        }, this);
+        this.widgetStore.on('datachanged', this.updateTitlesandBanner, this);
 
         //setup component properties
         Ext.apply(this, {
@@ -199,6 +164,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         // enables moving widgets from one pane to another
         Ext.getDoc().on('mousedown', this.onWidgetMouseDown, this, { delegate: '.widgetheader' });
 
+        this.updateTitlesandBanner();
         this.initLoad();
     },
 
@@ -1724,6 +1690,43 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         if (widget && widget.isFloating()) {
             widget.onStateChange();
+        }
+    },
+
+    updateTitlesandBanner: function() {
+        // Update widget titles with user-defined titles
+        // and find out if there are marketplace widgets
+        var hasMpWidget = false;
+        var hasMetricWidget = false;
+        var records = this.widgetStore.getRange();
+        for (var i = 0; i < records.length; i++) {
+            var newTitle = this.widgetNames[records[i].data.widgetGuid];
+            if (newTitle) {
+                records[i].data.name = newTitle;
+            }
+            if (records[i].data.widgetTypes[0].name == 'marketplace') {
+                hasMpWidget = true;
+            }
+            if (records[i].data.widgetTypes[0].name == 'metric') {
+                hasMetricWidget = true;
+            }
+
+        }
+        //if we have a marketplace widget or marketplace config, tell the banner to add a button
+        if (hasMpWidget
+//              || (!!Ozone.config.marketplaceLocation)
+                ) {
+            this.getBanner().addMarketplaceButton();
+        }
+        else {
+            this.getBanner().removeMarketplaceButton();
+        }
+
+        if (hasMetricWidget) {
+            this.getBanner().addMetricButton();
+        }
+        else {
+            this.getBanner().removeMetricButton();
         }
     }
 

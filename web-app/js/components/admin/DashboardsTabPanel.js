@@ -138,7 +138,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
                 self.guid_DashboardEditCopyWidget = result.value;
             },
             onFailure: function(err) { /* No op */
-                self.showAlert('Preferences Error', 'Error looking up Dashboard Editor: ' + err);
+                self.ownerCt.ownerCt.showAlert('Preferences Error', 'Error looking up Dashboard Editor: ' + err);
             }
         });
 
@@ -151,7 +151,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
 
     launchFailedHandler: function(response) {
         if (response.error) {
-            this.showAlert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
+            this.ownerCt.ownerCt.showAlert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
         }
     },
 
@@ -166,7 +166,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             };
         }
 
-        this.showAlert('Server Error', 'Error during ' + operation.action + ': ' + errorMsg);
+        this.ownerCt.ownerCt.showAlert('Server Error', 'Error during ' + operation.action + ': ' + errorMsg);
     },
 
     onAddClicked: function () {
@@ -217,7 +217,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             }
         }
         else {
-        Ext.Msg.alert("Error", "You must select at least one dashboard to edit");
+            this.ownerCt.ownerCt.showAlert("Error", "You must select at least one dashboard to edit");
         }
     },
 
@@ -229,75 +229,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             store.remove(records);
             store.save();
         } else {
-            this.showAlert("Error", "You must select at least one dashboard to delete.");
+            this.ownerCt.ownerCt.showAlert("Error", "You must select at least one dashboard to remove.");
         }
-    },
-
-    showAlert: function(title, msg) {
-        var alert = Ext.Msg.alert(title, msg),
-            okBtnEl = alert.down('button').btnEl;
-            
-        var onKeyDown = function(event) {
-            if(event.keyCode === Ext.EventObject.TAB) {
-                //Disable tabbing out of the alert
-                event.stopEvent();
-            }
-        };
-
-        okBtnEl.on('keydown', onKeyDown);
-
-        alert.on('hide', function() {
-            okBtnEl.un('keydown', onKeyDown);
-        }, this, {single: true});
-    },
-
-    showConfirmation: function(title, msg, okFn) {
-        var alert = Ext.Msg.show({
-            title: title,
-            msg: msg,
-            buttons: Ext.Msg.OKCANCEL,
-            closable: false,
-            modal: true,
-            scope: this,
-            listeners: null,
-            fn: okFn
-        });
-
-        var buttons = alert.query('button'),
-            okBtn, cancelBtn;
-
-        for(var i = 0; i < buttons.length; i++) {
-            if(buttons[i].itemId === 'ok') {
-                okBtn = buttons[i];
-            }
-            else if(buttons[i].itemId === 'cancel') {
-                cancelBtn = buttons[i];
-            }
-        }
-
-        var onKeyDownOkBtn = function(event) {
-            if(event.keyCode === Ext.EventObject.TAB) {
-                event.stopEvent();
-                Ext.defer(function() {
-                    cancelBtn.focus();
-                }, 1);
-            }
-        };
-        var onKeyDownCancelBtn = function(event) {
-            if(event.keyCode === Ext.EventObject.TAB) {
-                event.stopEvent();
-                Ext.defer(function() {
-                    okBtn.focus();
-                }, 1);
-            }
-        };
-
-        okBtn.el.on('keydown', onKeyDownOkBtn);
-        cancelBtn.el.on('keydown', onKeyDownCancelBtn);
-
-        alert.on('hide', function() {
-            okBtn.el.un('keydown', onKeyDownOkBtn);
-            cancelBtn.el.un('keydown', onKeyDownCancelBtn);
-        }, this, {single: true});
     }
 });

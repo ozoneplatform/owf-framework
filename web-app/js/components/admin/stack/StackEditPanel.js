@@ -2,6 +2,8 @@ Ext.define('Ozone.components.admin.stack.StackEditPanel', {
 	extend: 'Ext.panel.Panel',
 	alias: ['widget.stackedit','widget.stackeditpanel','widget.Ozone.components.admin.stack.StackEditPanel'],
 
+    mixins: ['Ozone.components.WidgetAlerts'],
+
 	cls: 'stackeditpanel',
 	
 	initComponent: function () {

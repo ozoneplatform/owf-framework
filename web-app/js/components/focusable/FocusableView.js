@@ -19,8 +19,8 @@
 
             this.on('selectionchange', function (selectionModel, selections) {
                 //keep focus in sync with selection
-                Ext.Array.each(selections, function(it) {
-                    var dom = this.getNode(it);
+                for (var i = 0, len = selections.length; i < len; i++) {
+                    var dom = this.getNode( selections[i] );
                     if (dom != null) {
                         if (preventFocusOnSelectionChange) {
                             preventFocusOnSelectionChange = false;
@@ -33,7 +33,7 @@
                             catch(e) {}
                         }
                     }
-                }, this);
+                }
             }, this);
 
             this.on('itemupdate', function(record, index, node) {

@@ -79,7 +79,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                                 store.save();
                             }
                             else {
-                                self.showAlert("Error", "You must select at least one group to remove.")
+                                self.ownerCt.ownerCt.showAlert("Error", "You must select at least one group to remove.")
                             }
                         }
                     },
@@ -134,7 +134,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                             cmp.guid_EditCopyWidget = result.value;
                         },
                         onFailure: function(err) { /* No op */
-                            self.showAlert('Preferences Error', 'Error looking up Group Editor: ' + err);
+                            self.ownerCt.ownerCt.showAlert('Preferences Error', 'Error looking up Group Editor: ' + err);
                         }
                     });
                     
@@ -155,7 +155,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                                         }
                                     }
                                     else {
-                                        self.showAlert("Error", "You must select at least one group to edit.");
+                                        self.ownerCt.ownerCt.showAlert("Error", "You must select at least one group to edit.");
                                     }
                                 },
                                 scope: this
@@ -193,7 +193,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
         this.callParent();
     },
     onAddClicked: function (button, e) {
-        var record = this.ownerCt.store.getById(this.ownerCt.launchData.id),
+        var record = this.ownerCt.record,
             itemName = record.get('name') ? record.get('name') : record.get('userRealName');
 
         var win = Ext.widget('admineditoraddwindow', {
@@ -226,7 +226,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
             data: dataString
         }, function(response) {
             if (response.error) {
-                self.showAlert('Launch Error', 'Group Editor Launch Failed: ' + response.message);
+                self.ownerCt.ownerCt.showAlert('Launch Error', 'Group Editor Launch Failed: ' + response.message);
             }
         });
     },
@@ -236,22 +236,5 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                 fn: 'refreshWidgetLaunchMenu'
             });
         }
-    },
-    showAlert: function(title, msg) {
-        var alert = Ext.Msg.alert(title, msg),
-            okBtnEl = alert.down('button').btnEl;
-            
-        var onKeyDown = function(event) {
-            if(event.keyCode === Ext.EventObject.TAB) {
-                //Disable tabbing out of the alert
-                event.stopEvent();
-            }
-        };
-
-        okBtnEl.on('keydown', onKeyDown);
-
-        alert.on('hide', function() {
-            okBtnEl.un('keydown', onKeyDown);
-        }, this, {single: true});
     }
 });

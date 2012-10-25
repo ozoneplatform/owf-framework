@@ -20,16 +20,16 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
     
     initComponent: function() {
         
-        var self = this;
+        var me = this;
         
         OWF.Preferences.getUserPreference({
             namespace: 'owf.admin.StackEditCopy',
             name: 'guid_to_launch',
             onSuccess: function(result) {
-                self.guid_EditCopyWidget = result.value;
+                me.guid_EditCopyWidget = result.value;
             },
             onFailure: function(err){ /* No op */
-                Ext.Msg.alert('Preferences Error', 'Error looking up Stack Editor: ' + err);
+                me.showAlert('Preferences Error', 'Error looking up Stack Editor: ' + err);
             }
         });
         
@@ -104,31 +104,52 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                 text: 'Create',
                 handler: function(button, evt) {
                     evt.stopPropagation();
-                    self.doCreate();
+                    me.doCreate();
                 }
             }, {
-                xtype: 'button',
+                xtype: 'splitbutton',
                 text: 'Edit',
+                itemId: 'btnEdit',
                 handler: function() {
-                    var records = self.gridStacks.getSelectionModel().getSelection();
+                    var records = me.gridStacks.getSelectionModel().getSelection();
                     if (records && records.length > 0) {
                         for (var i = 0; i < records.length; i++) {
-                            self.doEdit(records[i].data.id);
+                            me.doEdit(records[i].data.id);
                         }
                     } else {
-                        Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                            title: "Error",
-                            msg: "You must select at least one stack to edit.",
-                            buttons: Ext.Msg.OK
-                        });
+                        me.showAlert('Error', 'You must select at least one stack to edit.');
                     }
+                },
+                menu: {
+                    xtype: 'menu',
+                    plain: true,
+                    hideMode: 'display',
+                    defaults: {
+                        minWidth: this.minButtonWidth
+                    },
+                    items: [
+                        {
+                            xtype: 'owfmenuitem',
+                            text: 'Move Up',
+                            handler: function(button, event) {
+                                me.doMoveRow('up');
+                            }
+                        },
+                        {
+                            xtype: 'owfmenuitem',
+                            text: 'Move Down',
+                            handler: function(button, event) {
+                                me.doMoveRow('down');
+                            }
+                        }
+                    ]
                 }
             }, {
                 xtype: 'button', 
                 text: 'Delete',
                 itemId: 'btnDelete',
                 handler: function(button) {
-                    self.doDelete();
+                    me.doDelete();
                 }
             }]
         }];
@@ -211,7 +232,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
 
     launchFailedHandler: function(response) {
         if (response.error) {
-            Ext.Msg.alert('Launch Error', 'Stack Editor Launch Failed: ' + response.message);
+            this.showAlert('Launch Error', 'Stack Editor Launch Failed: ' + response.message);
         }
     },
     
@@ -232,55 +253,104 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
         var records = this.gridStacks.getSelectionModel().getSelection();
         if (records && records.length > 0) {
 
-            var msg = 'This action will permanently<br>delete the selected stack(s)';
-            if (records.length == 1) {
-              msg = 'This action will permanently<br>delete <span class="heading-bold">' 
-                    + Ext.htmlEncode(records[0].data.name) + '</span>.';
+            var msg = 'This action will permanently<br>delete ';
+            if (records.length === 1) {
+              msg += '<span class="heading-bold">' + Ext.htmlEncode(records[0].data.name) + '</span>.';
             }
             else {
-              msg = 'This action will permanently<br>delete the selected <span class="heading-bold">'
-                    + records.length + ' stacks</span>.';
+              msg += 'the selected <span class="heading-bold">' + records.length + ' stacks</span>.';
             }
-            Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                title: 'Warning',
-                msg: msg,
-                buttons: Ext.Msg.OKCANCEL,
-                closable: false,
-                modal: true,
-                scope: this,
-                fn: function(btn, text, opts) {
-                    if (btn == 'ok') {
-                        var store = this.gridStacks.getStore();
-                        store.remove(records);
-                        var remainingRecords = store.getTotalCount() - records.length;
-                        store.on({
-                           write: {
-                             fn: function() {
-                               if(store.data.items.length==0 && store.currentPage>1)
-                               {
-                                   var lastPage = store.getPageFromRecordIndex(remainingRecords - 1);
-                                   var pageToLoad = (lastPage>=store.currentPage)?store.currentPage:lastPage;
-                                   store.loadPage(pageToLoad);
-                               }
-                               this.gridStacks.getBottomToolbar().doRefresh();
-                               this.pnlStackDetail.removeData();
-                               if (!this.pnlDashboardDetail.collapsed) {this.pnlDashboardDetail.collapse();}
-                               this.refreshWidgetLaunchMenu();
-                             },
-                             scope: this,
-                             single: true
+            this.showConfirmation('Warning', msg, function(btn, text, opts) {
+                if (btn == 'ok') {
+                    var store = this.gridStacks.getStore();
+                    store.remove(records);
+                    var remainingRecords = store.getTotalCount() - records.length;
+                    store.on({
+                       write: {
+                         fn: function() {
+                           if(store.data.items.length==0 && store.currentPage>1)
+                           {
+                               var lastPage = store.getPageFromRecordIndex(remainingRecords - 1);
+                               var pageToLoad = (lastPage>=store.currentPage)?store.currentPage:lastPage;
+                               store.loadPage(pageToLoad);
                            }
-                        });
-                        store.save();
-                    }
+                           this.gridStacks.getBottomToolbar().doRefresh();
+                           this.pnlStackDetail.removeData();
+                           if (!this.pnlDashboardDetail.collapsed) {this.pnlDashboardDetail.collapse();}
+                           this.refreshWidgetLaunchMenu();
+                         },
+                         scope: this,
+                         single: true
+                       }
+                    });
+                    store.save();
                 }
             });
         } else {
-            Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                title: "Error",
-                msg: "You must select at least one stack to delete.",
-                buttons: Ext.Msg.OK
+            this.showAlert('Error', 'You must select at least one stack to delete.');
+        }
+    },
+    
+    doMoveRow: function(direction) {
+        var stacks = this.gridStacks.getSelectionModel().getSelection();
+
+        if (stacks && stacks.length > 0) {
+            var store = this.gridStacks.getStore();
+
+            //Sort them by stackPosition because are sorted by selection time now
+            stacks.sort(function(a,b) {
+                return a.get('stackPosition') - b.get('stackPosition');
             });
+
+            if(direction === "up") {
+                var firstPosition = 1;
+                //If moving up, we have to start with the top-most selection
+                for(var i = 0; i < stacks.length; i++) {
+                    if(stacks[i].get('stackPosition') === firstPosition) {
+                        //Don't move up since its already at the top, add 1 to the firstPosition
+                        //so if the next row is selected too, it won't be moved up either
+                        firstPosition++;
+                    }
+                    else {
+                        //Not first position already, so move it up
+                        stacks[i].set('stackPosition', stacks[i].get('stackPosition') - 1);
+                    }
+                }
+            }
+            else {
+                var lastPosition = store.getCount();
+                //If moving down, we have to start with the bottom-most selection
+                for(var i = stacks.length - 1; i >= 0; i--) {
+                    if(stacks[i].get('stackPosition') === lastPosition) {
+                        //Don't move down since its already at the end, subtract 1 to the lastPosition
+                        //so if the next row is selected too, it won't be moved down either
+                        lastPosition--;
+                    }
+                    else {
+                        //Not last position already, so move it down
+                        stacks[i].set('stackPosition', stacks[i].get('stackPosition') + 1);
+                    }
+                }
+            }
+
+            //If records were updated, sync, refresh, and reselect rows
+            if(store.getUpdatedRecords().length) {
+                store.sync();
+
+                store.on('write', function() {
+                    this.gridStacks.refresh();
+                }, this, {single: true});
+
+                //After the store is loaded, reselect the selected stacks
+                store.on('load', function(store, records, successful, operation) {
+                    for(var i = 0; i < stacks.length; i++) {
+                        this.gridStacks.getSelectionModel().select(store.indexOfId(stacks[i].get('id')), true);
+                    }
+                }, this, {single: true});
+            }
+        }
+        else {
+            this.showAlert('Error', 'You must select at least one stack to move.');
         }
     }
 });

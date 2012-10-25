@@ -2,6 +2,8 @@ Ext.define('Ozone.components.admin.ManagementPanel', {
   extend: 'Ext.panel.Panel',
   alias: ['widget.management', 'widget.managementpanel', 'widget.Ozone.components.admin.ManagementPanel'],
 
+  mixins: ['Ozone.components.WidgetAlerts'],
+
   initComponent: function() {
 
     this.widgetStateHandler = Ozone.state.WidgetStateHandler.getInstance();

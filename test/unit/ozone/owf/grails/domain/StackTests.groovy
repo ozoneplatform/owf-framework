@@ -14,10 +14,14 @@ class StackTests extends GrailsUnitTestCase {
     void testConstraints() {
         mockForConstraintsTests(Stack)
         
-        def s201 = "", s2084 = ""
+        def s201 = "", s257 = "", s2084 = ""
         
         for (int i = 0; i <= 201; ++i) {
             s201 += "a";
+        }
+
+        for (int i = 0; i <= 257; ++i) {
+            s257 += "a";
         }
         
         for (int i = 0; i <= 2084; ++i) {
@@ -32,7 +36,7 @@ class StackTests extends GrailsUnitTestCase {
         assertEquals "nullable", stack.errors["stackContext"]
         
         // Test maxSize
-        stack = new Stack(name: s201, stackPosition: 1, description: s2084, stackContext: s201, imageUrl: s2084, descriptorUrl: s2084)
+        stack = new Stack(name: s257, stackPosition: 1, description: s2084, stackContext: s201, imageUrl: s2084, descriptorUrl: s2084)
         assertFalse stack.validate()
         assertEquals "maxSize", stack.errors["name"]
         assertEquals "maxSize", stack.errors["stackContext"]

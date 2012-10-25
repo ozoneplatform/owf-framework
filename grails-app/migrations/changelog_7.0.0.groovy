@@ -57,13 +57,13 @@ databaseChangeLog = {
             column(name: "version", type: "bigint") {
                 constraints(nullable: "false")
             }
-            column(name: "name", type:"varchar(200)") {
+            column(name: "name", type:"varchar(256)") {
                 constraints(nullable: "false")
             }
             column(name: "stack_position", type: "bigint") {
                 constraints(nullable: "false", unique: "true")
             }
-            column(name: "description", type:"varchar(255)") {
+            column(name: "description", type:"varchar(4000)") {
                 constraints(nullable: "true")
             }
             column(name: "stack_context", type:"varchar(200)") {

@@ -72,7 +72,7 @@ Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
                     itemId: 'btnEdit',
                     text: 'Edit',
                     handler: function() {
-                      this.onEditClicked();
+                        this.onEditClicked();
                     },
                     scope: this
                 }, {
@@ -80,20 +80,21 @@ Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
                     itemId: 'btnDelete',
                     text: 'Delete',
                     handler: function() {
-                      var grid = this.getComponent('preferencesGrid');
-                      var store = grid.store;
-                      var records = grid.getSelectionModel().getSelection();
-                      if (records && records.length > 0) {
-                          var okFn = function(btn, text, opts) {
-                              if (btn == 'ok') {
-                                  store.remove(records);
-                                  store.save();
-                              }
-                          };
-                          me.showConfirmation('Delete Preferences', 'This action will permanently delete the selected ' + records.length + ' preference(s)?', okFn);
-                      } else {
-                          me.showAlert("Error", "You must select at least one preferences to delete.");
-                      }
+                        var grid = this.getComponent('preferencesGrid');
+                        var store = grid.store;
+                        var records = grid.getSelectionModel().getSelection();
+                        if (records && records.length > 0) {
+                            me.ownerCt.ownerCt.showConfirmation('Delete Preferences', 
+                                'This action will permanently delete the selected ' + records.length + ' preference(s)?', 
+                                function(btn, text, opts) {
+                                    if (btn == 'ok') {
+                                        store.remove(records);
+                                        store.save();
+                                    }
+                                });
+                        } else {
+                            me.ownerCt.ownerCt.showAlert("Error", "You must select at least one preferences to delete.");
+                        }
                     },
                     scope: this
                 }]
@@ -145,7 +146,7 @@ Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
                                         }
                                     }
                                     else {
-                                        me.showAlert("Error", "You must select at least one preference to edit.");
+                                        me.ownerCt.ownerCt.showAlert("Error", "You must select at least one preference to edit.");
                                     }
                                 },
                                 scope: this
@@ -230,75 +231,9 @@ Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
                 }
             }).show();
         } else if (records.length < 1) {
-            this.showAlert("Error", "You must select at least one preferences to edit.");
+            this.ownerCt.ownerCt.showAlert("Error", "You must select at least one preferences to edit.");
         } else {
-            this.showAlert("Error", "You can only edit one preference at a time.");
+            this.ownerCt.ownerCt.showAlert("Error", "You can only edit one preference at a time.");
         }
-    },
-    showAlert: function(title, msg) {
-        var alert = Ext.Msg.alert(title, msg),
-            okBtnEl = alert.down('button').btnEl;
-            
-        var onKeyDown = function(event) {
-            if(event.keyCode === Ext.EventObject.TAB) {
-                //Disable tabbing out of the alert
-                event.stopEvent();
-            }
-        };
-
-        okBtnEl.on('keydown', onKeyDown);
-
-        alert.on('hide', function() {
-            okBtnEl.un('keydown', onKeyDown);
-        }, this, {single: true});
-    },
-    showConfirmation: function(title, msg, okFn) {
-        var alert = Ext.Msg.show({
-            title: title,
-            msg: msg,
-            buttons: Ext.Msg.OKCANCEL,
-            closable: false,
-            modal: true,
-            scope: this,
-            listeners: null,
-            fn: okFn
-        });
-
-        var buttons = alert.query('button'),
-            okBtn, cancelBtn;
-
-        for(var i = 0; i < buttons.length; i++) {
-            if(buttons[i].itemId === 'ok') {
-                okBtn = buttons[i];
-            }
-            else if(buttons[i].itemId === 'cancel') {
-                cancelBtn = buttons[i];
-            }
-        }
-
-        var onKeyDownOkBtn = function(event) {
-            if(event.keyCode === Ext.EventObject.TAB) {
-                event.stopEvent();
-                Ext.defer(function() {
-                    cancelBtn.focus();
-                }, 1);
-            }
-        };
-        var onKeyDownCancelBtn = function(event) {
-            if(event.keyCode === Ext.EventObject.TAB) {
-                event.stopEvent();
-                Ext.defer(function() {
-                    okBtn.focus();
-                }, 1);
-            }
-        };
-
-        okBtn.el.on('keydown', onKeyDownOkBtn);
-        cancelBtn.el.on('keydown', onKeyDownCancelBtn);
-
-        alert.on('hide', function() {
-            okBtn.el.un('keydown', onKeyDownOkBtn);
-            cancelBtn.el.un('keydown', onKeyDownCancelBtn);
-        }, this, {single: true});
     }
 });

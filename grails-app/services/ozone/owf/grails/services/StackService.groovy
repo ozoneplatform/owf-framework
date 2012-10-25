@@ -4,6 +4,7 @@ import grails.converters.JSON
 import org.hibernate.CacheMode
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
+import ozone.owf.grails.domain.Stack
 
 class StackService {
 
@@ -82,7 +83,7 @@ class StackService {
     
     def createOrUpdate(params) {
         
-        // Only admins may delete Stacks
+        // Only admins may create or update Stacks
         ensureAdmin()
         def stacks = []
 
@@ -105,24 +106,50 @@ class StackService {
 
         def stack, returnValue = null
         
-        if (params.id >= 0) {  // Existing Stack, get you one
-            stack = ozone.owf.grails.domain.Stack.findById(params.id, [cache: true])
-            if (!stack ) {
+        if (params.id >= 0) {  // Existing Stack
+            stack = Stack.findById(params.id, [cache: true])
+            if (!stack) {
                 throw new OwfException(message: 'Stack ' + params.id + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
             }
         } else { // New Stack
             stack = new ozone.owf.grails.domain.Stack()
         }
+
+        //If context was modified and it already exists, throw a unique constrain error
+        if(params.stackContext && params.stackContext != stack.stackContext) {
+            if(Stack.findByStackContext(params.stackContext)) {
+                throw new OwfException(message: 'A stack with URL Name ' + params.stackContext + ' already exists.', 
+                    exceptionType: OwfExceptionTypes.Validation_UniqueConstraint)
+            }
+        }
+
+        //If stack position is changed, move the stack it will be switched with
+        //to the end to avoid conflicts, then move it to its new position after
+        def stackToSwitch = null, prevPosition = null
+        if(stack.stackPosition && params.stackPosition && params.stackPosition != stack.stackPosition) {
+            if(params.stackPosition > 0 && params.stackPosition < getMaxPosition()) {
+                stackToSwitch = Stack.findByStackPosition(params.stackPosition)
+                stackToSwitch.stackPosition = getMaxPosition()
+                prevPosition = stack.stackPosition
+                stackToSwitch.save(flush: true, failOnError: true)
+            }
+        }
         
         stack.properties = [
-            name: params.name,
-            stackPosition: stack.stackPosition ?: getMaxPosition(),
-            description: params.description,
-            stackContext: params.stackContext,
-            imageUrl: params.imageUrl
+            name: params.name ?: stack.name,
+            stackPosition: stackToSwitch ? params.stackPosition : stack.stackPosition ?: getMaxPosition(),
+            description: params.description ?: stack.description,
+            stackContext: params.stackContext ?: stack.stackContext,
+            imageUrl: params.imageUrl ?: stack.imageUrl
         ]
         
         stack.save(flush: true, failOnError: true)
+
+        //If stack switched position, set the one it switched with to its previous position
+        if(stackToSwitch) {
+            stackToSwitch.stackPosition = prevPosition
+            stackToSwitch.save(flush: true, failOnError: true)
+        }
         
         returnValue = serviceModelService.createServiceModel(stack,[
             totalDashboards: 0,
