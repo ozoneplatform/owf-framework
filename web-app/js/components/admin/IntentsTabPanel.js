@@ -59,6 +59,23 @@ Ext.define('Ozone.components.admin.IntentsTabPanel', {
         this.callParent(arguments);
         
         this.on({
+            activate: {
+                scope: this,
+                fn: function(cmp, opts) {
+                    var comp = cmp.ownerCt;
+                    
+                    // Set the title
+                    if (comp.record) {
+                        var titleText = Ext.htmlEncode(comp.record.get('title')) || 'Intents';
+                        var title = cmp.getDockedItems('toolbar[dock="top"]')[0].getComponent('lblIntentsGrid');
+                        title.setText(titleText);
+                    }
+                },
+                single: true
+            }
+        });
+        
+        this.on({
         	afterrender: {
         		fn: function(cmp) {
         	        this.ownerCt.on({
@@ -70,13 +87,6 @@ Ext.define('Ozone.components.admin.IntentsTabPanel', {
         	               
         	               var storeData = [];
         	            	 
-        	               // Set the title
-        	               if (record) {
-        	            	   var titleText = Ext.htmlEncode(record.title) || 'Intents';
-        	                   var title = this.getDockedItems('toolbar[dock="top"]')[0].getComponent('lblIntentsGrid');
-        	                   title.setText(titleText);
-        	               }
-        	               
         	               // Format intents for store
         	               if (intents) {
         	            	   // Add send intents
