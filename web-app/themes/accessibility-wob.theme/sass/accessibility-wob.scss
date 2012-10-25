@@ -469,4 +469,12 @@ textarea.x-form-focus {
     .x-grid-group-title {
         background-image: url('../images/icons/arrow_down.png');
     }
-}   
+}
+
+div.detail-info {
+    .detail-link {
+        a {
+            color: $owfgreen2;
+        }
+    }
+}

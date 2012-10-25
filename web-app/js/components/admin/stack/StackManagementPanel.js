@@ -253,7 +253,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
         var records = this.gridStacks.getSelectionModel().getSelection();
         if (records && records.length > 0) {
 
-            var msg = 'This action will permanently<br>delete ';
+            var msg = 'This action will permanently delete ';
             if (records.length === 1) {
               msg += '<span class="heading-bold">' + Ext.htmlEncode(records[0].data.name) + '</span>.';
             }

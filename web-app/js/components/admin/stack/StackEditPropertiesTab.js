@@ -8,7 +8,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
     cls: 'stackeditpropertiestab',
     
     initComponent: function () {
-        var self = this;
+        var me = this;
         Ext.applyIf(this, {
             layout: 'fit',
             title: 'Properties',
@@ -21,7 +21,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     xtype: 'textfield',
                     name: 'name',
                     itemId: 'name',
-                    fieldLabel: Ozone.util.createRequiredLabel('Display Name'),
+                    fieldLabel: Ozone.util.createRequiredLabel('Title'),
                     allowBlank: false,
                     maxLength: 256
                 },
@@ -33,7 +33,23 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     allowBlank: false,
                     maxLength: 200,
                     regex: /^[a-zA-Z\d\-\_]+$/,
-                    regexText: 'Invalid characters! The URL Name may only contain letters, numbers, dashes, and underscores.'
+                    regexText: 'Invalid characters! The URL Name may only contain letters, numbers, dashes, and underscores.',
+                    listeners: {
+                        change: {
+                            fn: function(field) {
+                                me.handleChange(field);
+                                me.down('#stackUrl').setValue(OWF.getContainerUrl() + '/' + this.getValue());
+                            }
+                        }
+                    }
+                },
+                {
+                    xtype: 'textfield',
+                    name: 'stackUrl',
+                    itemId: 'stackUrl',
+                    fieldLabel: 'Stack URL',
+                    value: OWF.getContainerUrl() + '/',
+                    disabled: true
                 },
                 {
                     xtype: 'textarea',
@@ -45,7 +61,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     maxLength: 4000
                 },
                 {
-                    xtype: 'textfield',
+                    xtype: 'urlfield',
                     name: 'imageUrl',
                     itemId: 'imageUrl',
                     fieldLabel: Ozone.util.createRequiredLabel('Icon URL'),

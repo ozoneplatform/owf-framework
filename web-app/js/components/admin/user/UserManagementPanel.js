@@ -138,7 +138,7 @@ Ext.define('Ozone.components.admin.user.UserManagementPanel', {
 						if(grid) {
 							var records = grid.getSelectionModel().getSelection();
 							if(records && records.length > 0){
-								var msg = 'This action will permanently<br>delete ';
+								var msg = 'This action will permanently delete ';
 								if(records.length === 1) {
 									msg += '<span class="heading-bold">' + Ext.htmlEncode(records[0].data.userRealName) + '</span>.';
 								}
@@ -282,7 +282,7 @@ Ext.define('Ozone.components.admin.user.UserManagementPanel', {
                                         }
                                     }
                                     me.showAlert('Server Error',
-                                        'Error during ' + operation.action + (json && json.errorMsg ? (':\n ' + json.errorMsg) : ''));
+                                        'Error during ' + operation.action + (json && json.errorMsg ? (': ' + json.errorMsg) : ''));
                                     theStore.removed = [];
                                     theStore.load();
                                 }

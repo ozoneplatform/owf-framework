@@ -122,36 +122,6 @@ Ext.define('Ozone.components.EditWidgetPanel', {
                         this.widgetState.closeWidget();
                     },this)
                 });
-				
-				
-            /*var form = Ext.getCmp("editForm");
-				var isDirty = form.getForm().isDirty();
-				var scope = this;
-				
-				if (isDirty) {
-					var msg = "You have unsaved changes.  Close anyway?";
-					Ext.Msg.confirm ("Warning", msg, function(button) {
-						if (button == "yes") {
-							// remove listener override to prevent looping
-							scope.widgetState.removeStateEventOverrides({
-								events: ['beforeclose'],
-								callback: function() {
-						            // close widget in callback
-									scope.widgetState.closeWidget();
-								}
-							});
-						}
-					}, this);
-				} else {
-					// remove listener override to prevent looping
-					this.widgetState.removeStateEventOverrides({
-						events: ['beforeclose'],
-						callback: function() {
-				            // close widget in callback
-							scope.widgetState.closeWidget();
-						}
-					});
-				}*/
             }
         } 
     },

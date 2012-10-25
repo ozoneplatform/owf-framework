@@ -16,7 +16,7 @@ Ext.define('Ozone.components.admin.ManagementPanel', {
 
   launchFailureHandler: function(response) {
       if (response.error) {
-          Ext.Msg.alert('Error', 'Widget Launch Failed: ' + response.message);
+          this.showAlert('Error', 'Widget Launch Failed: ' + response.message);
       }
   },
 
@@ -50,7 +50,7 @@ Ext.define('Ozone.components.admin.ManagementPanel', {
         strSelections += records[i].data['name'] + '<br />';
         }
         strSelections += '</b></div>';
-      Ext.Msg.confirm('Delete Selection', 'Are you sure you want to delete the following?<br /><br />' + strSelections, function(btn, text) {
+        this.showConfirmation('Delete Selection', 'Are you sure you want to delete the following?<br /><br />' + strSelections, function(btn, text) {
             if (btn == 'yes') {
           var store = grid.getStore();
                 var autoSave = store.autoSave;
@@ -68,10 +68,10 @@ Ext.define('Ozone.components.admin.ManagementPanel', {
                 store.save();
                 this.refreshWidgetLaunchMenu();
             }
-        }, this);
+        });
     }
     else {
-      Ext.Msg.alert('Error', "No records selected");
+        this.showAlert('Error', "No records selected");
     }
     },
 

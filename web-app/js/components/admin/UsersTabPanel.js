@@ -188,10 +188,6 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
            }
         });
 
-        //Set the messagebox to use display:none to hide otherwise
-        //the circular focus of the editor will break
-        Ext.Msg.hideMode = 'display';
-
         this.callParent(arguments);
     },
     refreshWidgetLaunchMenu: function() {

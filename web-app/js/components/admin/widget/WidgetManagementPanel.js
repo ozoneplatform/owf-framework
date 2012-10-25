@@ -313,7 +313,7 @@ Ext.define('Ozone.components.admin.widget.WidgetManagementPanel', {
           win.show();
         }
         else {
-            var msg = 'This action will permanently<br>delete ';
+            var msg = 'This action will permanently delete ';
             if (widgetsToDelete.length == 1) {
                 msg += '<span class="heading-bold">' + Ext.htmlEncode(widgetsToDelete[0].data.name) + '</span>.';
             }

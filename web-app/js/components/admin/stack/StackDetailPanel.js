@@ -32,12 +32,12 @@ Ext.define('Ozone.components.admin.stack.StackDetailPanel', {
                                 '</div>',
                             '</div>',
                             '<div class="detail-block">',
-                                '<div><span class="detail-label">Description:</span></div>',
-                                '<div>{description:htmlEncode}</div>',
+                                '<div><span class="detail-label">Stack URL:</span></div>',
+                                '<div><span class="detail-link">{stackContext:this.renderStackUrl}</span></div>',
                             '</div>',
                             '<div class="detail-block">',
-                                '<div><span class="detail-label">Context:</span></div>',
-                                '<div>{stackContext:htmlEncode}</div>',
+                                '<div><span class="detail-label">Description:</span></div>',
+                                '<div>{description:htmlEncode}</div>',
                             '</div>',
                         '</div>',
                     '</div>',
@@ -56,6 +56,11 @@ Ext.define('Ozone.components.admin.stack.StackDetailPanel', {
                             }
                         }
                         return encodeURI(decodeURI(url));
+                    },
+                    renderStackUrl: function(context) {
+                        context = Ext.htmlEncode(context);
+                        var url = OWF.getContainerUrl() + '/' + context;
+                        return '<a href="' + url + '" target="_blank">' + url + '</a>';
                     }
                 }
             ),

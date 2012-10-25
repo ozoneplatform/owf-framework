@@ -307,12 +307,12 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
             store = grid.getStore()
             records = grid.getSelectedDashboards();
         if (records && records.length > 0) {
-            var msg = 'This action will permanently<br>delete the selected dashboard(s)';
+            var msg = 'This action will permanently delete the selected dashboard(s)';
             if (records.length == 1) {
-                msg = 'This action will permanently<br>delete <span class="heading-bold">' 
+                msg = 'This action will permanently delete <span class="heading-bold">' 
                         + Ext.htmlEncode(records[0].data.name) + '</span>.';
             } else {
-                msg = 'This action will permanently<br>delete the selected <span class="heading-bold">' 
+                msg = 'This action will permanently delete the selected <span class="heading-bold">' 
                         + records.length + ' dashboards</span>.';
             }
             var okFn = function(btn, text, opts) {
