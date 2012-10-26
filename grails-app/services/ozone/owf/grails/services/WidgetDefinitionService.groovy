@@ -311,7 +311,8 @@ class WidgetDefinitionService {
             // a universal name that is already used.
             if (params.descriptorUrl && params.descriptorUrl.size() > 0) {
                 if (params.universalName && !canUseUniversalName(widgetDefinition, params.universalName)) {
-                    throw new OwfException(message: 'Universal Name ' + params.universalName + ' already in use.', exceptionType: OwfExceptionTypes.Validation_UniqueConstraint)
+                    throw new OwfException(message: 'Another widget uses ' + params.universalName + ' as its Universal Name. ' 
+                        + 'Please select a unique Universal Name for this widget.', exceptionType: OwfExceptionTypes.GeneralServerError)
                 }
             }
             

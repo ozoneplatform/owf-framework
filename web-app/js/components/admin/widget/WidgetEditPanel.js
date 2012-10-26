@@ -36,10 +36,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPanel', {
                     {
                         xtype: 'widgeteditgroups',
                         itemId: 'widgeteditgroups'
-                    },
-                    {
-                        xtype: 'widgeteditstacks',
-                        itemId: 'widgeteditstacks'
                     }
                 ]
             }]

@@ -3,8 +3,19 @@ Ext.define('Ozone.components.WidgetAlerts', {
     //Creates a simple alert with an Ok button that
     //the user cannot tab out of until it is closed
     showAlert: function(title, msg) {
-        var alert = Ext.Msg.alert(title, msg),
-            okBtnEl = alert.down('button').btnEl;
+        //Set the messagebox to use display:none to hide otherwise
+        //the circular focus of the editor will break
+        Ext.Msg.hideMode = 'display';
+
+        var alert = Ext.Msg.show({
+            title: title,
+            msg: msg,
+            buttons: Ext.Msg.OK,
+            closable: false,
+            modal: true,
+            width: this.ownerCt.width * .7
+        });
+        var okBtnEl = alert.down('button').btnEl;
             
         var onKeyDown = function(event) {
             if(event.keyCode === Ext.EventObject.TAB) {
@@ -23,6 +34,10 @@ Ext.define('Ozone.components.WidgetAlerts', {
     //Creates a confirmation with an Ok and Cancel button that
     //the user cannot tab out of until it is ok'ed or canceled
     showConfirmation: function(title, msg, closeFn) {
+        //Set the messagebox to use display:none to hide otherwise
+        //the circular focus of the editor will break
+        Ext.Msg.hideMode = 'display';
+        
         var alert = Ext.Msg.show({
             title: title,
             msg: msg,
@@ -31,7 +46,8 @@ Ext.define('Ozone.components.WidgetAlerts', {
             modal: true,
             scope: this,
             listeners: null,
-            fn: closeFn
+            fn: closeFn,
+            width: this.ownerCt.width * .7
         });
 
         var buttons = alert.query('button'),

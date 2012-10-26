@@ -308,7 +308,7 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
                 }
             }
 
-            var msg = 'This action will permanently<br>delete the selected group(s).';
+            var msg = 'This action will permanently delete the selected group(s).';
 
             //If the OWF Users or OWF Administrators groups were selected for deletion, warn the user they will not be deleted
             if (allUsersOrAdminsGroupSelected) {
@@ -340,11 +340,11 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
                 records = Ext.Array.clean(records);
             }
             else if (records.length == 1) {
-                msg = 'This action will permanently<br>delete <span class="heading-bold">' 
+                msg = 'This action will permanently delete <span class="heading-bold">' 
                         + Ext.htmlEncode(records[0].data.name) + '</span>.';
             }
             else {
-                 msg = 'This action will permanently<br>delete the selected <span class="heading-bold">' 
+                 msg = 'This action will permanently delete the selected <span class="heading-bold">' 
                         + records.length + ' groups</span>.';
             }
 
