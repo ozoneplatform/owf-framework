@@ -44,7 +44,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     }
                 },
                 {
-                    xtype: 'textfield',
+                    xtype: 'displayfield',
                     name: 'stackUrl',
                     itemId: 'stackUrl',
                     fieldLabel: 'Stack URL',

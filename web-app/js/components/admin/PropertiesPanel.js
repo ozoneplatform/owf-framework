@@ -16,7 +16,6 @@ Ext.define('Ozone.components.PropertiesPanel', {
         me.buttons = [{
             text: 'Apply',
             itemId: 'apply',
-            disabled: true,
             handler: me.onApply,
             scope: me
         }];
@@ -148,6 +147,8 @@ Ext.define('Ozone.components.PropertiesPanel', {
                             }
                         }
                         widget.enableTabs();
+
+                        me.showApplyAlert('Your changes have been saved.');
                     }
                 );
                 if (widget.store.proxy) {
@@ -197,14 +198,7 @@ Ext.define('Ozone.components.PropertiesPanel', {
     },
     initFieldValues: Ext.emptyFn,
     handleChange: function(field, newValue, oldValue, eOpts) {
-        var form = this.getForm(),
-            applyButton = this.getDockedItems()[0].getComponent('apply');
-        if (!field.changed && field.isDirty()) field.changed = true;
-        if (form.isDirty() && !form.hasInvalidField()) {
-            applyButton.enable();
-        } else {
-            applyButton.disable();
-        }
+        if(!field.changed && field.isDirty()) field.changed = true;
     },
     refreshWidgetLaunchMenu: function()
     {
@@ -215,26 +209,57 @@ Ext.define('Ozone.components.PropertiesPanel', {
         }
     },
     onApply: function() {
-        var panel = this;
-        var widget = panel.ownerCt;
-        var formValues = this.getValues();
+        if(!this.getForm().hasInvalidField()) {
+            var panel = this;
+            var widget = panel.ownerCt;
+            var formValues = this.getValues();
 
-        if (widget.store.data.length > 0) {
-            var record = widget.store.getById(widget.recordId);
-            record.beginEdit();
-            for (var field in formValues) {
-                if (!Ext.isFunction(field)) {
-                    record.set(field, formValues[field]);
+            if (widget.store.data.length > 0) {
+                var record = widget.store.getById(widget.recordId);
+                record.beginEdit();
+                for (var field in formValues) {
+                    if (!Ext.isFunction(field)) {
+                        record.set(field, formValues[field]);
+                    }
+                }
+                record.endEdit();
+            } else {
+                widget.store.add(formValues);
+                widget.store.data.items[0].phantom = true;
+                if (Ext.isFunction(panel.initFieldValues)) {
+                    panel.initFieldValues(widget.store.data.items[0]);
                 }
             }
-            record.endEdit();
-        } else {
-            widget.store.add(formValues);
-            widget.store.data.items[0].phantom = true;
-            if (Ext.isFunction(panel.initFieldValues)) {
-                panel.initFieldValues(widget.store.data.items[0]);
+
+            //Even if the user made no changes, still display the changes saved alert for confirmation
+            if(widget.store.getNewRecords().length === 0 && widget.store.getUpdatedRecords().length === 0) {
+                panel.showApplyAlert('Your changes have been saved.');
             }
+
+            widget.store.save();
         }
-        widget.store.save();
+        else {
+            this.showApplyAlert('Invalid field, changes cannot be saved.', 3000);
+        }
+    },
+    showApplyAlert: function(msg, duration) {
+        var me = this,
+            toolbar = this.getDockedItems()[0];
+
+        if(!toolbar.getComponent(me.applyAlert)) {
+            me.applyAlert = Ext.widget('displayfield', {
+                itemId: 'applyAlert',
+                name: 'applyAlert',
+                cls: 'applyAlert',
+                width: 450,
+                html: msg
+            });
+
+            toolbar.add(me.applyAlert);
+
+            Ext.defer(function() {
+                toolbar.remove(me.applyAlert);
+            }, duration ? duration : 2000);
+        }
     }
 });

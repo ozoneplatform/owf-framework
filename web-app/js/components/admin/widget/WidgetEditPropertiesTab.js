@@ -123,13 +123,14 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
         	    	  handler: function(btn) {
 		        		  var field = this.getComponent('descriptorUrl');
 		        		  var universalName = this.getComponent('universalName');
-                                          var description_dsp = this.getComponent('description_dsp');
+                          var description_dsp = this.getComponent('description_dsp');
 		        		  field.setValue("");
 		        		  // Show all major properties.
         	    		  this.showProperties(true);
         	    		  // Explicitly hide the Universal ID in manual entry mode.
         	    		  universalName.hide();
-                                  description_dsp.hide();
+                          description_dsp.hide();
+                          this.getComponent('descriptorUrlErrorMsg').hide();
         	    	  },
         	    	  scope: this
         	      },
@@ -379,6 +380,11 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
       //handle auto-selecting widget type for a new widget
       this.on('afterrender',
         function() {
+          // Disable apply button until descriptor load or manual entry mode
+          var toolbars = this.getDockedItems('toolbar[dock="bottom"]');
+          var applyBtn = toolbars[0].getComponent('apply');
+          applyBtn.disable();
+
     	  if (this.ownerCt.launchData && this.ownerCt.launchData.id) {
     		  this.showProperties(true);
     	  }
@@ -453,8 +459,8 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             intents.setValue(strIntents).originalValue = strIntents;
             this.setWidgetType();
             
-            // If we have a descriptor URL, disable the edit fields.
-            if(data.descriptorUrl) {
+            // If we have a descriptor loaded without errors, disable the edit fields.
+            if(data.descriptorUrl && component.getComponent('descriptorUrlErrorMsg').isHidden()) {
             	this.loadedFromDescriptor = true;
             	this.disablePropertiesFields();
                 description.hide();
@@ -465,20 +471,17 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             }
             this.getForm().isValid();
         }
-        
-      	// Enable the apply button.
-      	var toolbars = this.getDockedItems('toolbar[dock="bottom"]');
-      	var applyBtn = toolbars[0].getComponent('apply');
-      	applyBtn.disable(); 
       	
         this.ownerCt.fireEvent('recordupdated', this.record);
     },
     
     loadDescriptor: function(component) {
-		var field = component.getComponent('descriptorUrl');
-		var loading = component.getComponent('descriptorUrlLoading');
-		var text = Ext.String.trim(field.getValue());
-		var btn = component.getComponent('descriptorUrlToolbar').getComponent('descriptorUrlBtn');
+		var field = component.getComponent('descriptorUrl'),
+            loading = component.getComponent('descriptorUrlLoading'),
+            text = Ext.String.trim(field.getValue()),
+            btn = component.getComponent('descriptorUrlToolbar').getComponent('descriptorUrlBtn'),
+            applyBtn = this.getDockedItems('toolbar[dock="bottom"]')[0].getComponent('apply'),
+            manualEntryLinkBtn = descriptorUrlToolbar.getComponent('manualEntryLinkBtn');
 		
 		component.getComponent('descriptorUrlErrorMsg').hide();
 		field.disable();
@@ -490,15 +493,22 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             forceXdomain: true,
             onSuccess: Ext.bind(component.updatePropertiesFromDescriptor, component),
             onFailure: function (json){
-          	  	loading.hide();
-        		field.enable();
-    			btn.setText('Load');
-    			component.showProperties(true);
-    			component.getComponent('descriptorUrlErrorMsg').show();
+                if(component.record) {
+                    component.showProperties(true);
+                }
+                else {
+                    manualEntryLinkBtn.show();
+                }
+                loading.hide();
+                field.enable();
+                btn.setText('Load');
+                component.getComponent('descriptorUrlErrorMsg').show();
             },
             autoSendVersion : false
         });
 		btn.setText('Cancel');
+        //Disable the apply button while descriptor is loading
+        applyBtn.disable();
     },
     
     updatePropertiesFromDescriptor: function(data) {
@@ -509,8 +519,10 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
 		loading.hide();
 		var btn = this.getComponent('descriptorUrlToolbar').getComponent('descriptorUrlBtn');
 		btn.setText('Load');
-		var field = this.getComponent('descriptorUrl');
-		field.enable();
+        var applyBtn = this.getDockedItems('toolbar[dock="bottom"]')[0].getComponent('apply');
+        applyBtn.enable();
+		var descriptorUrl = component.getComponent('descriptorUrl');
+		descriptorUrl.enable();
         this.record = data;
     	this.record.descriptorUrl = field.getValue();
         if (data) {
@@ -519,7 +531,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
 			var widgetGuid = component.getComponent('widgetGuid'),
 			    name = component.getComponent('name'),
 			    description = component.getComponent('description'),
-                            description_dsp = component.getComponent('description_dsp'),
+                description_dsp = component.getComponent('description_dsp'),
 				version = component.getComponent('version'),
 				universalName = component.getComponent('universalName'),
 				guid = component.getComponent('guid'),
@@ -604,12 +616,11 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
 		manualEntryLinkBtn.hide();
 		
         var component = this;
-		component.getComponent('descriptorUrlErrorMsg').hide();
 		var horizontalRule = component.getComponent('horizontalRule'),
 			manualEntryTitle = component.getComponent('manualEntryTitle'),
 			name = component.getComponent('name'),
 			description = component.getComponent('description'),
-                        description_dsp = component.getComponent('description_dsp'),
+            description_dsp = component.getComponent('description_dsp'),
 			version = component.getComponent('version'),
 			universalName = component.getComponent('universalName'),
 			guid = component.getComponent('guid'),
@@ -625,6 +636,11 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
 			widgetType = component.getComponent('_types');
 		
         if (show) {
+            // Enable the apply button.
+            var toolbars = this.getDockedItems('toolbar[dock="bottom"]');
+            var applyBtn = toolbars[0].getComponent('apply');
+            applyBtn.enable();
+
         	horizontalRule.show();
         	manualEntryTitle.show();
             name.show();
@@ -675,118 +691,110 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
         } else {
         	descriptorUrlBtn.disable();
         }
-        // Disable the apply button until a valid descriptor file has been loaded
-        // unless the user returns the value to its original state.
-        var toolbars = this.getDockedItems('toolbar[dock="bottom"]');
-        var applyBtn = toolbars[0].getComponent('apply');
-        if ((typeof (me.record) === 'undefined') ||
-                (me.record !== null && me.record.descriptorUrl !== null && field.getValue() !== me.record.descriptorUrl) ||
-                (me.record !== null && me.record.descriptorUrl === null && field.getValue() !== "")) {
-            applyBtn.disable();
-        }
     },
-    onApply: function() {        
-    	// Enable the apply button.
-    	var toolbars = this.getDockedItems('toolbar[dock="bottom"]');
-    	var applyBtn = toolbars[0].getComponent('apply');
-    	applyBtn.disable();
-        
-      var panel = this;
-      var widget = panel.ownerCt;
-      var record = null;
+    onApply: function() {
+        if(!this.getForm().hasInvalidField()) {
+          var panel = this;
+          var widget = panel.ownerCt;
+          var record = null;
 
-      // Collect form values. Can't use this.getValues() because if descriptorUrl is used
-      // fields may be disabled.
-  	  var formFields = ['widgetGuid', 'name', 'description', 'version', 'universalName', 
-	                  'guid', 'url', 'headerIcon', 'image', 'width',
-	                  'height', '_tags', 'singleton', 'visible', 
-	                  'background', '_types', 'descriptorUrl', 'intents'];
-      
-  	  var formValues = {};
-      for (var i = 0; i < formFields.length; i++) {
-    	  var field = formFields[i];
-    	  var cmp = this.getComponent(field);
-    	  var value = cmp.getValue();
-    	  if (Ext.isEmpty(value) || (cmp.inputEl && cmp.inputEl.hasCls(cmp.emptyCls))) {
-    		  if (field in ['singleton', 'visible', 'background']) {
-    			  formValues[field] = false;
-    		  } else {
-    			  formValues[field] = "";
-    		  }
-    	  } else if (field == 'intents' && value){
-        	  formValues[field] = Ozone.util.parseJson(value);
-    	  } else {
-    		  formValues[field] = value;
-    	  }
-      }
-      
-      if (widget.store.data.length > 0) {
-          record = widget.store.getById(widget.recordId);
-          record.beginEdit();
-          for (field in formValues) {
-        	  record.set(field, formValues[field]);
+          // Collect form values. Can't use this.getValues() because if descriptorUrl is used
+          // fields may be disabled.
+          var formFields = ['widgetGuid', 'name', 'description', 'version', 'universalName', 
+                          'guid', 'url', 'headerIcon', 'image', 'width',
+                          'height', '_tags', 'singleton', 'visible', 
+                          'background', '_types', 'descriptorUrl', 'intents'];
+          
+          var formValues = {};
+          for (var i = 0; i < formFields.length; i++) {
+              var field = formFields[i];
+              var cmp = this.getComponent(field);
+              var value = cmp.getValue();
+              if (Ext.isEmpty(value) || (cmp.inputEl && cmp.inputEl.hasCls(cmp.emptyCls))) {
+                  if (field in ['singleton', 'visible', 'background']) {
+                      formValues[field] = false;
+                  } else {
+                      formValues[field] = "";
+                  }
+              } else if (field == 'intents' && value){
+                  formValues[field] = Ozone.util.parseJson(value);
+              } else {
+                  formValues[field] = value;
+              }
           }
-          record.endEdit();
-      }
-      else {
-          widget.store.add(formValues);
-          record = widget.store.data.items[0];
-          record.phantom = true;
-      }
 
-      //the _tags text field it needs to be turned into json
-        var tags = [];
-        var tagString = formValues['_tags'];
-        if (tagString && tagString.length > 0 && tagString != '') {
-            var splits = tagString.split(',');
-            for (var j = 0 ; j < splits.length ; j++) {
-                var name = Ext.String.trim(splits[j]);
-                if (name != '') {
-                    tags.push({
-                        name: name,
-                        visible: true,
+          
+          if (widget.store.data.length > 0) {
+              record = widget.store.getById(widget.recordId);
+              record.beginEdit();
+              for (field in formValues) {
+                  record.set(field, formValues[field]);
+              }
+              record.endEdit();
+          }
+          else {
+              widget.store.add(formValues);
+              record = widget.store.data.items[0];
+              record.phantom = true;
+          }
 
-                        //todo use position to order groups for now just set to -1
-                        position: -1,
-                        editable: true
-                    });
+          //the _tags text field it needs to be turned into json
+            var tags = [];
+            var tagString = formValues['_tags'];
+            if (tagString && tagString.length > 0 && tagString != '') {
+                var splits = tagString.split(',');
+                for (var j = 0 ; j < splits.length ; j++) {
+                    var name = Ext.String.trim(splits[j]);
+                    if (name != '') {
+                        tags.push({
+                            name: name,
+                            visible: true,
+
+                            //todo use position to order groups for now just set to -1
+                            position: -1,
+                            editable: true
+                        });
+                    }
                 }
             }
-        }
-        var types = [];
-        var typeId = formValues['_types'];
-        if(!Ext.isNumeric(typeId))
-        {
-          typeId = this.widgetTypeStore.getAt(this.widgetTypeStore.find('name',typeId)).get('id');
-        }
-        types.push({
-          id:typeId,
-          name: this.widgetTypeStore.getById(typeId).get('name')
-        });
-       record.beginEdit();
-       // Set title because incoming json won't have this value
-       record.set('title', formValues['name']);
-       
-       //set the tags record with the json
-       record.set('tags', tags);
-       record.set('widgetTypes',types);
-       record.endEdit();
+            var types = [];
+            var typeId = formValues['_types'];
+            if(!Ext.isNumeric(typeId))
+            {
+              typeId = this.widgetTypeStore.getAt(this.widgetTypeStore.find('name',typeId)).get('id');
+            }
+            types.push({
+              id:typeId,
+              name: this.widgetTypeStore.getById(typeId).get('name')
+            });
+           record.beginEdit();
+           // Set title because incoming json won't have this value
+           record.set('title', formValues['name']);
+           
+           //set the tags record with the json
+           record.set('tags', tags);
+           record.set('widgetTypes',types);
+           record.endEdit();
 
-       widget.record = record;
-       widget.store.on({
-         write: {
-           fn: function() {
-             if (Ext.isFunction(panel.initFieldValues)) {
-            	 panel.showProperties(true);
-                 panel.initFieldValues(widget.record);
+           widget.record = record;
+           widget.store.on({
+             write: {
+               fn: function() {
+                 if (Ext.isFunction(panel.initFieldValues)) {
+                     panel.showProperties(true);
+                     panel.initFieldValues(widget.record);
+                 }
+                 this.refreshWidgetLaunchMenu();
+               },
+               scope: this,
+               single: true
              }
-             this.refreshWidgetLaunchMenu();
-           },
-           scope: this,
-           single: true
-         }
-      });
-      widget.store.save();
+          });
+          widget.store.save();
+        }
+        else {
+            this.showApplyAlert('Invalid field, changes cannot be saved.', 3000);
+        }
     },
     setWidgetType: function() {
         var widgetTypeCmp = this.getComponent('_types');
