@@ -78,7 +78,7 @@ databaseChangeLog = {
         }
     }
     
-    changeSet(author: "owf", id: "7.0.0-10", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-10", context: "create, upgrade, 7.0.0", dbms: "hsqldb, mysql, postgresql, oracle") {
         comment("Create stack_groups table")
 
         createTable(tableName: "stack_groups") {
@@ -91,12 +91,18 @@ databaseChangeLog = {
         }
     }
     
-    changeSet(author: "owf", id: "7.0.0-11", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-11", context: "create, upgrade, 7.0.0", dbms: "mssql") {
+      sql ( text = """
+        create table stack_groups (group_id numeric(19,0) not null, stack_id bigint not null);
+      """)
+  }
+    
+    changeSet(author: "owf", id: "7.0.0-12", context: "create, upgrade, 7.0.0") {
         comment("Add primary key constraint for group_id and stack_id in stack_groups table")
         addPrimaryKey(constraintName: "pk_stack_groups", tableName: "stack_groups", columnNames: "group_id,stack_id")
     }
     
-    changeSet(author: "owf", id: "7.0.0-12", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-13", context: "create, upgrade, 7.0.0") {
         comment("Add foreign key constraints for group_id and stack_id in stack_groups table")
         
         addForeignKeyConstraint(constraintName: "FK9584AB6B6B3A1281", 
@@ -108,7 +114,7 @@ databaseChangeLog = {
             referencedTableName: "owf_group", referencedColumnNames: "id")
     }
     
-    changeSet(author: "owf", id: "7.0.0-13", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-14", context: "create, upgrade, 7.0.0") {
         comment("Add stack_default field to group")
         addColumn(tableName: "owf_group") {
             column(name: "stack_default", type: "boolean", defaultValueBoolean: "false", valueBoolean: "false")
