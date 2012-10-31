@@ -32,6 +32,9 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
     closable: true,
     widgetIframeDelay: 200,
 
+    // show actual widget while dragging
+    liveDrag: true,
+
     onEsc: Ext.emptyFn, //no close on ESC, we have alt+shift+W for that
     
     initComponent: function(){

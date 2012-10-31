@@ -18,30 +18,28 @@ Ext.define('Ozone.components.pane.DesktopPane', {
     initComponent: function() {
         var me = this;
 
-        Ext.apply(this, {
-            dockedItems: [{
-                xtype: 'widgettoolbar',
-                itemId: 'taskbar',
-                cls: 'taskbar',
-                dock: 'bottom',
-                layout: { 
-                    type: 'hbox',
-                    align: 'stretch',
-                    autoSize: false,
-                    clearInnerCtOnLayout: true,
-                    overflowHandler: 'Scroller',
-                    scollerResetPerformed: false
-                },
-                items: [],
-                //height: 33,
-                listeners: {
-                    resize: {
-                        fn: me.attemptScrollerReset,
-                        scope: me
-                    }
+        this.dockedItems = [{
+            xtype: 'widgettoolbar',
+            itemId: 'taskbar',
+            cls: 'taskbar',
+            dock: 'bottom',
+            layout: { 
+                type: 'hbox',
+                align: 'stretch',
+                autoSize: false,
+                clearInnerCtOnLayout: true,
+                overflowHandler: 'Scroller',
+                scollerResetPerformed: false
+            },
+            items: [],
+            //height: 33,
+            listeners: {
+                resize: {
+                    fn: me.attemptScrollerReset,
+                    scope: me
                 }
-            }]
-        });
+            }
+        }];
 
         me.callParent(arguments);
     },
