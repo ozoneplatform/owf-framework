@@ -31,6 +31,11 @@ class GroupService {
                         eq('id', value.toLong())
                     }
                     break
+                case 'stack_id':
+                    stacks {
+                        eq('id', value.toLong())
+                    }
+                    break
                 default:
                     ilike(name, "%" + value + "%")
             }
@@ -67,6 +72,8 @@ class GroupService {
         else {
 
             def results = criteria.list(opts) {
+                
+                eq("stackDefault", false)
 
                 if (params.id)
                     eq("id",Long.parseLong(params.id))
@@ -121,6 +128,10 @@ class GroupService {
 
                 if (params.user_id) {
                     addFilter('user_id',params.user_id,criteria)
+                }
+                
+                if (params.stack_id) {
+                    addFilter('stack_id', params.stack_id, criteria)
                 }
 
                 //sorting -- only single sort
@@ -395,6 +406,28 @@ class GroupService {
             }
             if (!updatedDashboards.isEmpty()) {
                 returnValue = updatedDashboards.collect{ serviceModelService.createServiceModel(it) }
+            }
+        }
+        else if (params.update_action != null && params.update_action != '' && 'stacks' == params.tab) {
+
+            def updatedStacks = []
+            def stacks = JSON.parse(params.data)
+
+            stacks?.each { it ->
+                def stack = ozone.owf.grails.domain.Stack.findById(it.id.toLong(), [cache: true])
+                if (stack) {
+                    if (params.update_action == 'add') {
+                        group.addToStacks(stack)
+                    }
+                    else if (params.update_action == 'remove') {
+                        group.removeFromStacks(stack)
+                    }
+
+                    updatedStacks << stack
+                }
+            }
+            if (!updatedStacks.isEmpty()) {
+                returnValue = updatedStacks.collect{ serviceModelService.createServiceModel(it) }
             }
         }
         else {

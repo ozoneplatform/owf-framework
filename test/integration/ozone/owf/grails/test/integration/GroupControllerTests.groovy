@@ -19,14 +19,16 @@ class GroupControllerTests extends OWFGroovyTestCase {
 				description: '',
 				email: 'test@test.com',
 				automatic: false,
+                                stackDefault: false,
 				status: 'active')
 	}
 	
-	void createGroupForTest(name, description, email, automatic, status) {
+	void createGroupForTest(name, description, email, stackDefault, automatic, status) {
 		Group.build(
 				name: name,
 				description: description,
 				email: email,
+                                stackDefault: stackDefault,
 				automatic: automatic,
 				status: status)
 	}
@@ -70,7 +72,7 @@ class GroupControllerTests extends OWFGroovyTestCase {
 		
 		controller.params.id = Group.findByName('Group1').id as String
 		controller.list()
-
+                
 		assertNotNull JSON.parse(controller.response.contentAsString).data
 		assertEquals 'Group1', JSON.parse(controller.response.contentAsString).data.name[0]
 		assertEquals Group.findByName('Group1').id, JSON.parse(controller.response.contentAsString).data.id[0]

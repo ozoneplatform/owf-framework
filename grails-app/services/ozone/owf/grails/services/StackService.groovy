@@ -4,12 +4,27 @@ import grails.converters.JSON
 import org.hibernate.CacheMode
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
+import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.Stack
 
 class StackService {
 
     def accountService
     def serviceModelService
+    
+    private static def addFilter(name, value, c) {
+        c.with {
+            switch (name) {
+                case 'group_id':
+                    groups {
+                        eq('id', value.toLong())
+                    }
+                    break
+                default:
+                    ilike(name, "%" + value + "%")
+            }
+        }
+    }
 
     def list(params) {
         
@@ -54,6 +69,10 @@ class StackService {
                 }
             }
             
+            if (params.group_id) {
+                addFilter('group_id', params.group_id, criteria)
+            }
+            
             // Sort
             if (params?.sort) {
                 order(params.sort, params?.order?.toLowerCase() ?: 'asc')
@@ -69,10 +88,19 @@ class StackService {
         
         def processedResults = results.collect { g ->
             
+            def totalGroups = Group.withCriteria {
+                cacheMode(CacheMode.GET)
+                eq('stackDefault', false)
+                stacks {
+                    eq('id', g.id)
+                }
+                projections { rowCount() }
+            }
+            
             serviceModelService.createServiceModel(g,[
                 totalDashboards: 0,
                 totalUsers: 0,
-                totalGroups: 0,
+                totalGroups: totalGroups[0],
                 totalWidgets: 0
             ])
             
@@ -87,13 +115,19 @@ class StackService {
         ensureAdmin()
         def stacks = []
 
-        if (params.data) {
-            def json = JSON.parse(params.data)
-            
-            if (json instanceof List) {
-                stacks = json
+        if (params.update_action) {
+            stacks << params;
+        } else {
+            if (params.data) {
+                def json = JSON.parse(params.data)
+                
+                if (json instanceof List) {
+                    stacks = json
+                } else {
+                    stacks << json
+                }
             } else {
-                stacks << json
+                stacks << params
             }
         }
 
@@ -106,57 +140,93 @@ class StackService {
 
         def stack, returnValue = null
         
-        if (params.id >= 0) {  // Existing Stack
+        if (params?.id >= 0 || params.stack_id) {  // Existing Stack
+            params.id = params.id ?: params.stack_id
             stack = Stack.findById(params.id, [cache: true])
             if (!stack) {
                 throw new OwfException(message: 'Stack ' + params.id + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
             }
         } else { // New Stack
             stack = new ozone.owf.grails.domain.Stack()
+            def dfltGroup = new Group(name: java.util.UUID.randomUUID().toString(), stackDefault: true)
+            stack.addToGroups(dfltGroup)
         }
 
-        //If context was modified and it already exists, throw a unique constrain error
-        if(params.stackContext && params.stackContext != stack.stackContext) {
-            if(Stack.findByStackContext(params.stackContext)) {
-                throw new OwfException(message: 'Another stack uses ' + params.stackContext + ' as its URL Name. ' 
-                    + 'Please select a unique URL Name for this stack.', exceptionType: OwfExceptionTypes.GeneralServerError)
+        if (!params.update_action) {
+            
+            //If context was modified and it already exists, throw a unique constrain error
+            if(params.stackContext && params.stackContext != stack.stackContext) {
+                if(Stack.findByStackContext(params.stackContext)) {
+                    throw new OwfException(message: 'Another stack uses ' + params.stackContext + ' as its URL Name. ' 
+                        + 'Please select a unique URL Name for this stack.', exceptionType: OwfExceptionTypes.GeneralServerError)
+                }
             }
-        }
 
-        //If stack position is changed, move the stack it will be switched with
-        //to the end to avoid conflicts, then move it to its new position after
-        def stackToSwitch = null, prevPosition = null
-        if(stack.stackPosition && params.stackPosition && params.stackPosition != stack.stackPosition) {
-            if(params.stackPosition > 0 && params.stackPosition < getMaxPosition()) {
-                stackToSwitch = Stack.findByStackPosition(params.stackPosition)
-                stackToSwitch.stackPosition = getMaxPosition()
-                prevPosition = stack.stackPosition
+            //If stack position is changed, move the stack it will be switched with
+            //to the end to avoid conflicts, then move it to its new position after
+            def stackToSwitch = null, prevPosition = null
+            if(stack.stackPosition && params.stackPosition && params.stackPosition != stack.stackPosition) {
+                if(params.stackPosition > 0 && params.stackPosition < getMaxPosition()) {
+                    stackToSwitch = Stack.findByStackPosition(params.stackPosition)
+                    stackToSwitch.stackPosition = getMaxPosition()
+                    prevPosition = stack.stackPosition
+                    stackToSwitch.save(flush: true, failOnError: true)
+                }
+            }
+
+            stack.properties = [
+                name: params.name ?: stack.name,
+                stackPosition: stackToSwitch ? params.stackPosition : stack.stackPosition ?: getMaxPosition(),
+                description: params.description ?: stack.description,
+                stackContext: params.stackContext ?: stack.stackContext,
+                imageUrl: params.imageUrl ?: stack.imageUrl
+            ]
+            
+            stack.save(flush: true, failOnError: true)
+
+            //If stack switched position, set the one it switched with to its previous position
+            if(stackToSwitch) {
+                stackToSwitch.stackPosition = prevPosition
                 stackToSwitch.save(flush: true, failOnError: true)
             }
+            
+            def totalGroups = 0
+            
+            stack.groups.each { it ->
+                if (!it.stackDefault) { totalGroups++ }
+            }
+            
+            returnValue = serviceModelService.createServiceModel(stack,[
+                totalDashboards: 0,
+                totalUsers: 0,
+                totalGroups: totalGroups,
+                totalWidgets: 0
+            ])
+    
+        } else {
+            
+            if ('groups' == params.tab) {
+                
+                def updatedGroups = []
+                def groups = JSON.parse(params.data)
+                
+                groups?.each { it ->
+                    def group = Group.findById(it.id.toLong(), [cache: true])
+                    if (group) {
+                        if (params.update_action == 'add') {
+                            stack.addToGroups(group)
+                        } else if (params.update_action == 'remove') {
+                            stack.removeFromGroups(group)
+                        }
+                        
+                        updatedGroups << group
+                    }
+                }
+                if (!updatedGroups.isEmpty()) {
+                    returnValue = updatedGroups.collect{ serviceModelService.createServiceModel(it) }
+                }
+            }
         }
-        
-        stack.properties = [
-            name: params.name ?: stack.name,
-            stackPosition: stackToSwitch ? params.stackPosition : stack.stackPosition ?: getMaxPosition(),
-            description: params.description ?: stack.description,
-            stackContext: params.stackContext ?: stack.stackContext,
-            imageUrl: params.imageUrl ?: stack.imageUrl
-        ]
-        
-        stack.save(flush: true, failOnError: true)
-
-        //If stack switched position, set the one it switched with to its previous position
-        if(stackToSwitch) {
-            stackToSwitch.stackPosition = prevPosition
-            stackToSwitch.save(flush: true, failOnError: true)
-        }
-        
-        returnValue = serviceModelService.createServiceModel(stack,[
-            totalDashboards: 0,
-            totalUsers: 0,
-            totalGroups: 0,
-            totalWidgets: 0
-        ])
 
         return returnValue
     }
@@ -192,6 +262,9 @@ class StackService {
         
         stacks.each {
             def stack = ozone.owf.grails.domain.Stack.findById(it.id, [cache: true])
+            stack?.groups?.each { group ->
+                if (group?.stackDefault) { group?.delete() }
+            }
             stack?.delete(flush: true)
         }
         

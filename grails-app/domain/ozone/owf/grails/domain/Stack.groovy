@@ -2,6 +2,7 @@ package ozone.owf.grails.domain
 
 class Stack {
     
+    static String TYPE = 'stack'
     static final long serialVersionUID = 600L
     
     String name
@@ -10,7 +11,14 @@ class Stack {
     String stackContext
     String imageUrl
     String descriptorUrl
-
+    
+    static hasMany = [groups: Group]
+    
+    static mapping = {
+        cache true
+        groups(lazy: true, cache: true)
+    }
+    
     static constraints = {
         name(nullable: false, blank: false, maxSize: 256)
         stackPosition(nullable: false, min: 1, unique: true)
