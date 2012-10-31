@@ -100,7 +100,6 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     
                     grid.setStore(Ext.create('Ozone.data.GroupStore',cmp.storeCfg));
                     var refreshPagingToolbar = function(operation) {
-                        cmp.refreshWidgetLaunchMenu();
                         if (operation.action == "destroy" || operation.action == "create") {
                             var ptb = grid.getBottomToolbar();
                             ptb.doRefresh();
