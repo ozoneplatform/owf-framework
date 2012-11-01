@@ -72,7 +72,8 @@ class ServiceModelService {
                         lastLogin: domain.lastLogin ? domain.lastLogin.getTime() : null,
                         totalWidgets: params.totalWidgets ? params.totalWidgets : 0,
                         totalGroups: params.totalGroups ? params.totalGroups: 0,
-                        totalDashboards: params.totalDashboards ? params.totalDashboards: 0
+                        totalDashboards: params.totalDashboards ? params.totalDashboards: 0,
+                        totalStacks: params.totalStacks ?: 0
                         )
                 break
 

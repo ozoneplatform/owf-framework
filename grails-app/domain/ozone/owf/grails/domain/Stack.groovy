@@ -27,4 +27,10 @@ class Stack {
         imageUrl(nullable: true, blank: true, maxSize: 2083)
         descriptorUrl(nullable: true, blank: true, maxSize: 2083)
     }
+
+    Group findStackDefaultGroup() {
+        return this.groups.find {
+            it.stackDefault == true
+        }
+    }
 }

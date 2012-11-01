@@ -5,6 +5,7 @@ import org.hibernate.CacheMode
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
 import ozone.owf.grails.domain.Group
+import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.Stack
 
 class StackService {
@@ -73,6 +74,15 @@ class StackService {
                 addFilter('group_id', params.group_id, criteria)
             }
             
+            if (params.user_id) {
+                groups {
+                    eq('stackDefault', true)
+                    people {
+                        eq('id', Long.parseLong(params.user_id))
+                    }
+                }
+            }
+            
             // Sort
             if (params?.sort) {
                 order(params.sort, params?.order?.toLowerCase() ?: 'asc')
@@ -86,20 +96,31 @@ class StackService {
             cacheMode(CacheMode.GET)
         }
         
-        def processedResults = results.collect { g ->
+        def processedResults = results.collect { stack ->
             
             def totalGroups = Group.withCriteria {
                 cacheMode(CacheMode.GET)
                 eq('stackDefault', false)
                 stacks {
-                    eq('id', g.id)
+                    eq('id', stack.id)
                 }
                 projections { rowCount() }
             }
             
-            serviceModelService.createServiceModel(g,[
+            def totalUsers = Person.withCriteria {
+                cacheMode(CacheMode.GET)
+                groups {
+                    eq('stackDefault', true)
+                    stacks {
+                        eq('id', stack.id)
+                    }
+                    projections { rowCount() }
+                }
+            }
+            
+            serviceModelService.createServiceModel(stack,[
                 totalDashboards: 0,
-                totalUsers: 0,
+                totalUsers: totalUsers[0],
                 totalGroups: totalGroups[0],
                 totalWidgets: 0
             ])
@@ -190,16 +211,10 @@ class StackService {
                 stackToSwitch.save(flush: true, failOnError: true)
             }
             
-            def totalGroups = 0
-            
-            stack.groups.each { it ->
-                if (!it.stackDefault) { totalGroups++ }
-            }
-            
             returnValue = serviceModelService.createServiceModel(stack,[
                 totalDashboards: 0,
-                totalUsers: 0,
-                totalGroups: totalGroups,
+                totalUsers: stack.findStackDefaultGroup()?.people ? stack.findStackDefaultGroup().people.size() : 0,
+                totalGroups: stack.groups ? stack.groups.size() - 1 : 0, // Don't include the default stack group
                 totalWidgets: 0
             ])
     
@@ -224,6 +239,28 @@ class StackService {
                 }
                 if (!updatedGroups.isEmpty()) {
                     returnValue = updatedGroups.collect{ serviceModelService.createServiceModel(it) }
+                }
+            } else if ('users' == params.tab) {
+
+                def stackDefaultGroup = stack.findStackDefaultGroup()
+
+                def updatedUsers = []
+                def users = JSON.parse(params.data)
+                
+                users?.each { it ->
+                    def user = Person.findById(it.id.toLong(), [cache: true])
+                    if (user) {
+                        if (params.update_action == 'add') {
+                            stackDefaultGroup.addToPeople(user)
+                        } else if (params.update_action == 'remove') {
+                            stackDefaultGroup.removeFromPeople(user)
+                        }
+                        
+                        updatedUsers << user
+                    }
+                }
+                if (!updatedUsers.isEmpty()) {
+                    returnValue = updatedUsers.collect{ serviceModelService.createServiceModel(it) }
                 }
             }
         }
