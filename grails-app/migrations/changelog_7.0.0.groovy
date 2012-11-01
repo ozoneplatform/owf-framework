@@ -142,7 +142,7 @@ databaseChangeLog = {
     
     changeSet(author: "owf", id: "7.0.0-16", context: "create, upgrade, 7.0.0") {
         sql (text = """
-            insert into stack_groups (stack_id, group_id) values (select id from stack where name = ""OWF"", select id from owf_group where name = ""ce86a612-c355-486e-9c9e-5252553cc58e"");
+            insert into stack_groups (stack_id, group_id) values (select id from stack where name = "OWF", select id from owf_group where name = "ce86a612-c355-486e-9c9e-5252553cc58e");
         """)
     }
 }
