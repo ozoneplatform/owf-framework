@@ -125,9 +125,16 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                     grid.store.proxy.callback = refreshPagingToolbar;
 
                     grid.store.on('write', function(store, action, result, records, rs) {
+                        //Refresh whatever manager lauched this editor widget
                         OWF.Eventing.publish(this.ownerCt.channel, {
                             action: action,
                             domain: this.ownerCt.domain,
+                            records: result
+                        });
+                        //Refresh the user manager
+                        OWF.Eventing.publish(this.ownerCt.channel, {
+                            action: action,
+                            domain: 'User',
                             records: result
                         });
                     }, this);
@@ -160,7 +167,10 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                     
                     // Set the title
                     if (comp.record) {
-                        var titleText = Ext.htmlEncode(comp.record.get('title')) || 'Users';
+                        var titleText = Ext.htmlEncode(comp.record.get('title'));
+                        if(!titleText) {
+                            titleText = Ext.htmlEncode(comp.record.get('name')) || 'Users';
+                        }
                         var title = cmp.getDockedItems('toolbar[dock="top"]')[0].getComponent('usersHeaderLabel');
                         title.setText(titleText);
                     }
@@ -198,9 +208,13 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
         }
     },
     onAddClicked: function(button, e) {
+        var itemName = this.ownerCt.record.get('title');
+        if(!itemName){
+            itemName = this.ownerCt.record.get('name');
+        }
         var win = Ext.widget('admineditoraddwindow', {
             addType: 'User',
-            itemName: this.ownerCt.record.get('title'),
+            itemName: itemName,
             editor: this.editor,
             focusOnClose: this.down(),
             existingItemsStore: this.getComponent('usersgrid').getStore(),

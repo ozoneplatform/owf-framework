@@ -100,7 +100,6 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     
                     grid.setStore(Ext.create('Ozone.data.GroupStore',cmp.storeCfg));
                     var refreshPagingToolbar = function(operation) {
-                        cmp.refreshWidgetLaunchMenu();
                         if (operation.action == "destroy" || operation.action == "create") {
                             var ptb = grid.getBottomToolbar();
                             ptb.doRefresh();
@@ -109,20 +108,30 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     grid.store.proxy.callback = refreshPagingToolbar;
 
                     grid.store.on('write', function(store, action, result, records, rs) {
+                        //Refresh whatever manager lauched this editor widget
                         OWF.Eventing.publish(this.ownerCt.channel, {
                             action: action,
                             domain: this.ownerCt.domain,
                             records: result
                         });
+                        //Refresh the group manager
+                        OWF.Eventing.publish(this.ownerCt.channel, {
+                            action: action,
+                            domain: 'Group',
+                            records: result
+                        });
                     }, this);
                     
                     if (grid && owner) {
-                        owner.record = owner.recordId ? owner.store.getAt(owner.store.findExact('id', owner.recordId)) : undefined;
+                        owner.record = owner.recordId > -1 ? owner.store.getAt(owner.store.findExact('id', owner.recordId)) : undefined;
                     }
                     
                     // Set the title
                     if (owner.record) {
-                        var titleText = Ext.htmlEncode(owner.record.get('title')) || 'Groups';
+                        var titleText = Ext.htmlEncode(owner.record.get('title'));
+                        if(!titleText) {
+                            titleText = Ext.htmlEncode(owner.record.get('name')) || 'Groups';
+                        }
                         var title = cmp.getDockedItems('toolbar[dock="top"]')[0].getComponent('lblGroupsGrid');
                         title.setText(titleText);
                     }
@@ -139,7 +148,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     });
                     
                     if(grid && owner) {
-                        var compId = owner.recordId ? owner.recordId: -1;
+                        var compId = owner.recordId > -1 ? owner.recordId: -1;
                         var p = {
                             tab:'groups'
                         };

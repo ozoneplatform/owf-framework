@@ -32,6 +32,9 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
     closable: true,
     widgetIframeDelay: 200,
 
+    // show actual widget while dragging
+    liveDrag: true,
+
     onEsc: Ext.emptyFn, //no close on ESC, we have alt+shift+W for that
     
     initComponent: function(){
@@ -44,25 +47,35 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
 
         this.callParent(arguments);
 
-        this.on('activate', this.onActivate);
-        this.on('deactivate', this.onDeActivate);
-        this.on('maximize', this.onMaximize);
-        this.on('restore', this.onRestore);
-        this.on('render', function(){
-            if (this.initialMouseOverActivate) {
-                this.addMouseOverActivate();
+        this.on({
+            activate: this.onActivate,
+            deactivate: this.onDeActivate,
+            maximize: this.onMaximize,
+            restore: this.onRestore,
+            afterrender: {
+                fn: this.onAfterRender,
+                scope: this
             }
-        }, this, {
-            single: true
         });
-
-        this.on('restore', function() {
-            if (this.focusOnRestore) this.focusOnRestore.focus();
-        }, this);
         
         //override functions
         Ext.apply(this,this.mixins.widget.overrides);
         this.afterInitComponent();
+
+        if(!this.headers) {
+            this.headers = [];
+        }
+
+        this.on('toolbaritem:created', function (toolbaritem) {
+            this.headers.push( toolbaritem.header );
+        });
+    },
+
+    onAfterRender: function () {
+        this.headers.push(this.header);
+        if (this.initialMouseOverActivate) {
+            this.addMouseOverActivate();
+        }
     },
     
     bringToFront: function(){
@@ -111,16 +124,6 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
             this.mouseOverDeferredId = null;
         }
     },
-
-    onActivate: function(cmp){
-        if (this.enableDeactivateShim) {
-            if (this.deactivateShim) {
-            
-                //just hide the shim
-                this.deactivateShim.hide();
-            }
-        }
-    },
     
     onMaximize: function(cmp) {
         cmp.resizer.disable();
@@ -128,6 +131,17 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
     
     onRestore: function(cmp) {
         cmp.resizer.enable();
+        if (cmp.focusOnRestore)
+            cmp.focusOnRestore.focus();
+    },
+
+    onActivate: function(cmp){
+        if (this.enableDeactivateShim) {
+            if (this.deactivateShim) {
+                //just hide the shim
+                this.deactivateShim.hide();
+            }
+        }
     },
     
     onDeActivate: function(cmp){

@@ -109,9 +109,16 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                     grid.store.proxy.callback = refreshPagingToolbar;
 
                     grid.store.on('write', function(store, action, result, records, rs) {
+                        //Refresh whatever manager lauched this editor widget
                         OWF.Eventing.publish(this.ownerCt.channel, {
                             action: action,
                             domain: this.ownerCt.domain,
+                            records: result
+                        });
+                        //Refresh the stack manager
+                        OWF.Eventing.publish(this.ownerCt.channel, {
+                            action: action,
+                            domain: 'Stack',
                             records: result
                         });
                     }, this);
