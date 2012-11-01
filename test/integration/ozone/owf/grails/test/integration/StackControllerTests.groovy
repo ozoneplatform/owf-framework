@@ -15,8 +15,8 @@ class StackControllerTests extends OWFGroovyTestCase {
         super.setUp()
         
         def theStack
-        theStack = ozone.owf.grails.domain.Stack.build(name: 'Stack One', stackPosition: 1, description: 'Stack One description', stackContext: 'one', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
-        theStack = ozone.owf.grails.domain.Stack.build(name: 'Stack Two', stackPosition: 2, description: 'Stack Two description', stackContext: 'two', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
+        theStack = ozone.owf.grails.domain.Stack.build(name: 'Stack One', stackPosition: 2, description: 'Stack One description', stackContext: 'one', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
+        theStack = ozone.owf.grails.domain.Stack.build(name: 'Stack Two', stackPosition: 3, description: 'Stack Two description', stackContext: 'two', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
         stackId = theStack.id
     }
 
@@ -37,7 +37,7 @@ class StackControllerTests extends OWFGroovyTestCase {
         
         assertEquals 2, resp.results
         assertEquals 'Stack One', resp.data[0].name
-        assertEquals 1, resp.data[0].stackPosition
+        assertEquals 2, resp.data[0].stackPosition
         assertEquals 'Stack One description', resp.data[0].description
         assertEquals 'one', resp.data[0].stackContext
         assertEquals 'http://www.images.com/theimage.png', resp.data[0].imageUrl
@@ -63,7 +63,7 @@ class StackControllerTests extends OWFGroovyTestCase {
         def resp = JSON.parse(stackController.response.contentAsString)
         assertTrue resp.success
         assertEquals 'Stack Three', resp.data[0].name
-        assertEquals 3, resp.data[0].stackPosition
+        assertEquals 4, resp.data[0].stackPosition
         assertEquals 'Stack Three description', resp.data[0].description
         assertEquals 'three', resp.data[0].stackContext
         assertEquals 'http://www.images.com/theimage.png', resp.data[0].imageUrl
@@ -79,7 +79,7 @@ class StackControllerTests extends OWFGroovyTestCase {
         stackController.params.data = """{
                 id: ${stackId},
                 name: 'The Updated Stack',
-                stackPosition: 2,
+                stackPosition: 3,
                 description: 'This is the Stack description',
                 stackContext: 'thestack',
                 imageUrl: 'http://www.images.com/theimage.png',
