@@ -6,9 +6,10 @@ Ext.define('Ozone.data.User',{
 	        {name:'username'},
 	        {name:'userRealName'},
 	        {name:'email'},
+            {name:'totalGroups'},
 	        {name:'totalWidgets'},
-	        {name:'totalGroups'},
 	        {name:'totalDashboards'},
+            {name:'totalStacks'},
 	        {name:'lastLogin'},
 	        {name:'title', mapping:'userRealName'}
 	]

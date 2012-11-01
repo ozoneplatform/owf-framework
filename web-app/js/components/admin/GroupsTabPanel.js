@@ -108,9 +108,16 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     grid.store.proxy.callback = refreshPagingToolbar;
 
                     grid.store.on('write', function(store, action, result, records, rs) {
+                        //Refresh whatever manager lauched this editor widget
                         OWF.Eventing.publish(this.ownerCt.channel, {
                             action: action,
                             domain: this.ownerCt.domain,
+                            records: result
+                        });
+                        //Refresh the group manager
+                        OWF.Eventing.publish(this.ownerCt.channel, {
+                            action: action,
+                            domain: 'Group',
                             records: result
                         });
                     }, this);
@@ -121,7 +128,10 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     
                     // Set the title
                     if (owner.record) {
-                        var titleText = Ext.htmlEncode(owner.record.get('title')) || 'Groups';
+                        var titleText = Ext.htmlEncode(owner.record.get('title'));
+                        if(!titleText) {
+                            titleText = Ext.htmlEncode(owner.record.get('name')) || 'Groups';
+                        }
                         var title = cmp.getDockedItems('toolbar[dock="top"]')[0].getComponent('lblGroupsGrid');
                         title.setText(titleText);
                     }

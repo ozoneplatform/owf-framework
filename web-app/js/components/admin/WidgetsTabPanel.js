@@ -123,9 +123,16 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                     grid.store.proxy.callback = refreshPagingToolbar;
 
                     grid.store.on('write', function(store, action, result, records, rs) {
+                        //Refresh whatever manager lauched this editor widget
                         OWF.Eventing.publish(this.ownerCt.channel, {
                             action: action,
                             domain: this.ownerCt.domain,
+                            records: result
+                        });
+                        //Refresh the widget manager
+                        OWF.Eventing.publish(this.ownerCt.channel, {
+                            action: action,
+                            domain: 'Widget',
                             records: result
                         });
                     }, this);
@@ -142,7 +149,10 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                     
                     // Set the title
                     if (comp.record) {
-                        var titleText = Ext.htmlEncode(comp.record.get('title')) || 'Widgets';
+                        var titleText = Ext.htmlEncode(comp.record.get('title'));
+                        if(!titleText) {
+                            titleText = Ext.htmlEncode(comp.record.get('name')) || 'Widgets';
+                        }
                         lbl.setText(titleText);
                     }
                     
