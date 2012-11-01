@@ -121,28 +121,28 @@ databaseChangeLog = {
         }
     }
     
-    changeSet(author: "owf", id: "7.0.0-15", context: "create, upgrade, 7.0.0") {
-        comment(text="Insert OWF stack")
-        insert(tableName: "stack") {
-            column(name: "version", valueNumeric: "0")
-            column(name: "name", value: "OWF")
-            column(name: "stack_position", valueNumeric: "1")
-            column(name: "description", value: "OWF Stack")
-            column(name: "stack_context", value: "owf")
-            column(name: "image_url", value: "themes/common/images/owf.png")
-        }
-        insert(tableName: "owf_group") {
-            column(name: "version", valueNumeric: "0")
-            column(name: "automatic", valueBoolean: "false")
-            column(name: "name", value: "ce86a612-c355-486e-9c9e-5252553cc58e")
-            column(name: "status", value: "active")
-            column(name: "stack_default", valueBoolean: "true")
-        }
-    }
+    //changeSet(author: "owf", id: "7.0.0-15", context: "create, upgrade, 7.0.0") {
+    //    comment(text="Insert OWF stack")
+    //    insert(tableName: "stack") {
+    //        column(name: "version", valueNumeric: "0")
+    //        column(name: "name", value: "OWF")
+    //        column(name: "stack_position", valueNumeric: "1")
+    //        column(name: "description", value: "OWF Stack")
+    //        column(name: "stack_context", value: "owf")
+    //        column(name: "image_url", value: "themes/common/images/owf.png")
+    //    }
+    //    insert(tableName: "owf_group") {
+    //        column(name: "version", valueNumeric: "0")
+    //        column(name: "automatic", valueBoolean: "false")
+    //        column(name: "name", value: "ce86a612-c355-486e-9c9e-5252553cc58e")
+    //        column(name: "status", value: "active")
+    //        column(name: "stack_default", valueBoolean: "true")
+    //    }
+    //}
     
-    changeSet(author: "owf", id: "7.0.0-16", context: "create, upgrade, 7.0.0") {
-        sql (text = """
-            insert into stack_groups (stack_id, group_id) values ((select id from stack where name = 'OWF'), (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58e'));
-        """)
-    }
+    //changeSet(author: "owf", id: "7.0.0-16", context: "create, upgrade, 7.0.0") {
+    //    sql (text = """
+    //        insert into stack_groups (stack_id, group_id) values ((select id from stack where name = 'OWF'), (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58e'));
+    //    """)
+    //}
 }
