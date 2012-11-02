@@ -731,7 +731,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
         function move() {
             if (this.isDragging === true) {
                 this.close();
-                this.dashboardContainer.activeDashboard.enableWidgetMove();
 
                 // Ext has a bug where it executes ondrop events 2 times on just one drop
                 // This works around the bug by adding the same group to active dashboard
@@ -741,8 +740,7 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                     isWidgetGroupAdded = true;
                     srcDragZone.addToGroup('widgets');
                 }
-
-                this.dashboardContainer.activeDashboard.dropZone.addToGroup("widgets");
+                this.dashboardContainer.activeDashboard.enableWidgetDragAndDrop();
             }
         }
 
@@ -751,15 +749,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
 
             var widgetModel = srcDragZone.dragData.widgetModel;
             var disableDragLaunching = widgetModel.get('disabled');
-//            var tags = widgetModel.get('tags');
-//            if (tags != null && tags.length > 0) {
-//              for (var i = 0; i < tags.length; i++) {
-//                  if (tags[i].editable === false) {
-//                      disableDragLaunching =  true;
-//                      break;
-//                  }
-//              }
-//            }
 
             this.isDragging = true;
             if (!disableDragLaunching) {
@@ -782,10 +771,8 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                 delegate: '.x-mask'
             });
 
-            this.dashboardContainer.activeDashboard.dropZone.removeFromGroup("widgets");
-
             this.isDragging = false;
-            this.dashboardContainer.activeDashboard.disableWidgetMove();
+            this.dashboardContainer.activeDashboard.disableWidgetDragAndDrop();
 
         }, this);
     },

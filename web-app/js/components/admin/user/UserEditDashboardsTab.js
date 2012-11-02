@@ -225,7 +225,7 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
             }).show();
         }
         else {
-            this.ownerCt.ownerCt.showAlert("Error", "You must select at least one dashboard to edit.");
+            this.editPanel.showAlert("Error", "You must select at least one dashboard to edit.");
         }
     },
     doCopy: function(button, e) {
@@ -239,7 +239,7 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
             this.openCopyWindow(dashboardData);
         }
         else {
-            this.ownerCt.ownerCt.showAlert("Error", "You must select at least one dashboard to copy.");
+            this.editPanel.showAlert("Error", "You must select at least one dashboard to copy.");
         }
     },
     openCopyWindow: function (dashboardData) {
@@ -284,7 +284,7 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
                                 }
                             },this),
                             onFailure: function (errorMsg){
-                                me.ownerCt.ownerCt.showAlert("Error", "Error while " +
+                                me.editPanel.showAlert("Error", "Error while " +
                                     "copying dashboard(s): " + 
                                     errorMsg);
                             },
@@ -321,9 +321,9 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
                     store.save();
                 }
             };
-            this.ownerCt.ownerCt.showConfirmation('Warning', msg, okFn);
+            this.editPanel.showConfirmation('Warning', msg, okFn);
         } else {
-            this.ownerCt.ownerCt.showAlert("Error", "You must select at least one dashboard to delete.");
+            this.editPanel.showAlert("Error", "You must select at least one dashboard to delete.");
         }
     }
 

@@ -33,7 +33,7 @@ Ext.define('Ozone.components.UsersGrid', {
           {
 			header: 'User Name',
 			dataIndex: 'username',
-			flex: 1,
+			flex: 2,
             sortable: true,
             editable: false,
 			hidden: true,
@@ -43,7 +43,7 @@ Ext.define('Ozone.components.UsersGrid', {
 		}, {
             header: 'Full Name',
             dataIndex: 'userRealName',
-            flex: 1,
+            flex: 2,
             sortable: true,
             editable: false,
             renderer: function(v) {
@@ -52,7 +52,7 @@ Ext.define('Ozone.components.UsersGrid', {
         }, {
             header: 'Last Sign In',
             dataIndex: 'lastLogin',
-            flex: 1,
+            flex: 2,
             sortable: true,
             editable: false,
             renderer: function(v){
@@ -73,6 +73,12 @@ Ext.define('Ozone.components.UsersGrid', {
         }, {
             header: 'Dashboards',
             dataIndex: 'totalDashboards',
+            flex: 1,
+            sortable: false,
+            editable: false
+        }, {
+            header: 'Stacks',
+            dataIndex: 'totalStacks',
             flex: 1,
             sortable: false,
             editable: false

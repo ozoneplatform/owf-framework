@@ -7,6 +7,7 @@ Ext.define('Ozone.components.admin.dashboard.DashboardEditPanel', {
   cls: 'dashboardeditpanel',
 
   initComponent: function () {
+    var self = this;
 
     this.launchConfig = Ozone.launcher.WidgetLauncherUtils.getLaunchConfigData();
     if (this.launchConfig != null) {
@@ -28,11 +29,13 @@ Ext.define('Ozone.components.admin.dashboard.DashboardEditPanel', {
       items: [
         {
           xtype: 'dashboardeditproperties',
-          itemId: 'dashboardeditproperties'
+          itemId: 'dashboardeditproperties',
+          editPanel: self
         },
         {
           xtype: 'dashboardeditgroups',
-          itemId: 'dashboardeditgroups'
+          itemId: 'dashboardeditgroups',
+          editPanel: self
         }
     ]
     });

@@ -7,7 +7,6 @@ Ext.define('Ozone.components.admin.user.UserEditPanel', {
     cls: 'usereditpanel',
 	
     initComponent: function () {
-        //get widget to launch
         var self = this;
         Ext.applyIf(this,{
             layout: 'fit',
@@ -23,27 +22,33 @@ Ext.define('Ozone.components.admin.user.UserEditPanel', {
                 items: [
                     {
                         xtype: 'usereditproperties',
-                        itemId: 'usereditproperties'
+                        itemId: 'usereditproperties',
+                        editPanel: self
                     },
                     {
                         xtype: 'usereditgroups',
-                        itemId: 'usereditgroups'
+                        itemId: 'usereditgroups',
+                        editPanel: self
                     },
                     {
                         xtype: 'usereditwidgets',
-                        itemId: 'usereditwidgets'
+                        itemId: 'usereditwidgets',
+                        editPanel: self
                     },
                     {
                         xtype: 'usereditdashboards',
-                        itemId: 'usereditdashboards'
+                        itemId: 'usereditdashboards',
+                        editPanel: self
                     },
                     {
                         xtype: 'usereditstacks',
-                        itemId: 'usereditstacks'
+                        itemId: 'usereditstacks',
+                        editPanel: self
                     },
                     {
                         xtype: 'usereditpreferences',
-                        itemId: 'usereditpreferences'
+                        itemId: 'usereditpreferences',
+                        editPanel: self
                     }
                 ]
             }]

@@ -1,6 +1,9 @@
 Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
     extend: 'Ext.panel.Panel',
     alias: ['widget.preferencestabpanel'],
+
+    //The editor widget the tab is open in
+    editPanel: null,
     
     initComponent: function() {
         var me = this;
@@ -84,7 +87,7 @@ Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
                         var store = grid.store;
                         var records = grid.getSelectionModel().getSelection();
                         if (records && records.length > 0) {
-                            me.ownerCt.ownerCt.showConfirmation('Delete Preferences', 
+                            me.editPanel.showConfirmation('Delete Preferences', 
                                 'This action will permanently delete the selected ' + records.length + ' preference(s)?', 
                                 function(btn, text, opts) {
                                     if (btn == 'ok') {
@@ -93,7 +96,7 @@ Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
                                     }
                                 });
                         } else {
-                            me.ownerCt.ownerCt.showAlert("Error", "You must select at least one preferences to delete.");
+                            me.editPanel.showAlert("Error", "You must select at least one preferences to delete.");
                         }
                     },
                     scope: this
@@ -146,7 +149,7 @@ Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
                                         }
                                     }
                                     else {
-                                        me.ownerCt.ownerCt.showAlert("Error", "You must select at least one preference to edit.");
+                                        me.editPanel.showAlert("Error", "You must select at least one preference to edit.");
                                     }
                                 },
                                 scope: this
@@ -227,9 +230,9 @@ Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
                 }
             }).show();
         } else if (records.length < 1) {
-            this.ownerCt.ownerCt.showAlert("Error", "You must select at least one preferences to edit.");
+            this.editPanel.showAlert("Error", "You must select at least one preferences to edit.");
         } else {
-            this.ownerCt.ownerCt.showAlert("Error", "You can only edit one preference at a time.");
+            this.editPanel.showAlert("Error", "You can only edit one preference at a time.");
         }
     }
 });

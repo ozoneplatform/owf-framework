@@ -50,15 +50,13 @@ Ext.define('Ozone.components.draggable.DraggableWidgetView', {
 	},
 
 	onStartDrag: function() {
-		this.dashboardContainer.activeDashboard.dropZone.addToGroup("widgets");
-		this.dashboardContainer.activeDashboard.enableWidgetMove();
+		this.dashboardContainer.activeDashboard.enableWidgetDragAndDrop();
 		this.cmpToHideAndShow.hide();
 		this.showAfterLaunch && this.dashboardContainer.activeDashboard.on(OWF.Events.Widget.AFTER_LAUNCH, this.showWindow, this);
 	},
 
 	afterDrop: function() {
-		this.dashboardContainer.activeDashboard.disableWidgetMove();
-		this.dashboardContainer.activeDashboard.dropZone.removeFromGroup("widgets");
+		this.dashboardContainer.activeDashboard.disableWidgetDragAndDrop();
 	},
 
 	showWindow: function() {

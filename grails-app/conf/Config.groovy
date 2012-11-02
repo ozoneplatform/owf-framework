@@ -567,6 +567,7 @@ uiperformance.bundles = [
                         'components/focusable/FocusCatch',
                         'components/widget/WidgetBase',
                         'components/widget/WidgetPanel',
+                        'components/widget/WidgetToolbarItem',
                         'data/models/State',
                         'data/stores/StateStore',
                         'data/models/Dashboard',

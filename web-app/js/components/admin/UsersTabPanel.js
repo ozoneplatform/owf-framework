@@ -8,6 +8,10 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
     border: true,
     padding: 5,
     initDisabled: true,
+
+    //The editor widget the tab is open in
+    editPanel: null,
+    
     initComponent: function() {
         var me = this;
 
@@ -67,7 +71,7 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                       store.save();
                   }
                   else {
-                    me.ownerCt.ownerCt.showAlert("Error", "You must select at least one user to remove.");
+                    me.editPanel.showAlert("Error", "You must select at least one user to remove.");
                   }
                 },
                 scope: this
@@ -109,7 +113,7 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                             cmp.guid_EditCopyWidget = result.value;
                         },
                         onFailure: function(err) { /* No op */
-                            me.ownerCt.ownerCt.showAlert('Preferences Error', 'Error looking up User Editor: ' + err);
+                            me.editPanel.showAlert('Preferences Error', 'Error looking up User Editor: ' + err);
                         }
                     });
                     
@@ -125,9 +129,16 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                     grid.store.proxy.callback = refreshPagingToolbar;
 
                     grid.store.on('write', function(store, action, result, records, rs) {
+                        //Refresh whatever manager lauched this editor widget
                         OWF.Eventing.publish(this.ownerCt.channel, {
                             action: action,
                             domain: this.ownerCt.domain,
+                            records: result
+                        });
+                        //Refresh the user manager
+                        OWF.Eventing.publish(this.ownerCt.channel, {
+                            action: action,
+                            domain: 'User',
                             records: result
                         });
                     }, this);
@@ -150,7 +161,7 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                                         }
                                     }
                                     else {
-                                        me.ownerCt.ownerCt.showAlert("Error", "You must select at least one user to edit.");
+                                        me.editPanel.showAlert("Error", "You must select at least one user to edit.");
                                     }
                                 },
                                 scope: this
@@ -160,7 +171,10 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                     
                     // Set the title
                     if (comp.record) {
-                        var titleText = Ext.htmlEncode(comp.record.get('title')) || 'Users';
+                        var titleText = Ext.htmlEncode(comp.record.get('title'));
+                        if(!titleText) {
+                            titleText = Ext.htmlEncode(comp.record.get('name')) || 'Users';
+                        }
                         var title = cmp.getDockedItems('toolbar[dock="top"]')[0].getComponent('usersHeaderLabel');
                         title.setText(titleText);
                     }
@@ -198,9 +212,13 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
         }
     },
     onAddClicked: function(button, e) {
+        var itemName = this.ownerCt.record.get('title');
+        if(!itemName){
+            itemName = this.ownerCt.record.get('name');
+        }
         var win = Ext.widget('admineditoraddwindow', {
             addType: 'User',
-            itemName: this.ownerCt.record.get('title'),
+            itemName: itemName,
             editor: this.editor,
             focusOnClose: this.down(),
             existingItemsStore: this.getComponent('usersgrid').getStore(),
@@ -225,7 +243,7 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
             data: dataString
         }, function(response) {
             if (response.error) {
-                this.ownerCt.ownerCt.showAlert('Launch Error', 'User Editor Launch Failed: ' + response.message);
+                this.editPanel.showAlert('Launch Error', 'User Editor Launch Failed: ' + response.message);
             }
         });
     }

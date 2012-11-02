@@ -8,6 +8,9 @@ Ext.define('Ozone.components.PropertiesPanel', {
     preventHeader: true,
     padding: 5,
     autoScroll: true,
+
+    //The editor widget the tab is open in
+    editPanel: null,
     
     initComponent: function() {
         var me = this;
@@ -170,7 +173,7 @@ Ext.define('Ozone.components.PropertiesPanel', {
                                     errorMsg: response
                                 }
                             }
-                            me.ownerCt.ownerCt.showAlert('Server Error!', Ext.htmlEncode(json.errorMsg));
+                            me.editPanel.showAlert('Server Error!', Ext.htmlEncode(json.errorMsg));
                         }
                     );
                 }

@@ -170,7 +170,6 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
         OWF.Mask.show();
         this.panes = this.query('pane');
-        this.setupDrop();
 
         // launch previously opened widgets
         for(var i = 0, len = this.panes.length ; i < len ; i++) {
@@ -208,17 +207,14 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             }, me);
 
             //console.timeEnd('page');
-            //console.timeEnd('initload');
+            console.timeEnd('initload');
         });
     },
 
-    setupDrop: function() {
-        var me = this;
+    enableWidgetDragAndDrop: function () {
+        this.dropZone = this.dropZone || new Ext.dd.DropZone(this.getEl(), {
 
-        //TODO use event delegation
-        me.dropZone = new Ext.dd.DropZone(me.getEl(), {
-
-            //ddGroup: 'widgets',
+            ddGroup: 'widgets',
 
             getTargetFromEvent: function(e) {
                 return e.getTarget('.paneshim');
@@ -244,12 +240,20 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             // application object that is the real target of the dragged data.
             onNodeDrop : this.launchWidgets
         });
+        
+        this.enableWidgetMove();
+    },
+
+    disableWidgetDragAndDrop: function () {
+        this.disableWidgetMove();
+        this.cleanup();
     },
 
     cleanup: function() {
         // if dashboard isn't rendered, dropZone won't be setup
         if(this.dropZone) {
             this.dropZone.unreg();
+            delete this.dropZone;
         }
     },
 
@@ -443,29 +447,29 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         }
         else {
                     
-                    // Determine which pane widget was last opened in
-                    if(!pane.isXType('fitpane')) {
-                        if (this.panes && this.panes.length > 1) {
-                            var widgetState, latest, latestPane;
-                            for (var i=0, len=this.panes.length; i<len; i++) {
-                                var p = this.panes[i];
-                                if(!p.isXType('fitpane')) {
-                                    if (p.defaultSettings && p.defaultSettings.widgetStates) {
-                                        widgetState = p.defaultSettings.widgetStates[specifiedWidget.data.widgetGuid];
-                                        if (widgetState && widgetState.timestamp) {
-                                            if (!latest || widgetState.timestamp > latest) {
-                                                latest = widgetState.timestamp;
-                                                latestPane = p;
-                                            }
-                                        }
+            // Determine which pane widget was last opened in
+            if(!pane.isXType('fitpane')) {
+                if (this.panes && this.panes.length > 1) {
+                    var widgetState, latest, latestPane;
+                    for (var i=0, len=this.panes.length; i<len; i++) {
+                        var p = this.panes[i];
+                        if(!p.isXType('fitpane')) {
+                            if (p.defaultSettings && p.defaultSettings.widgetStates) {
+                                widgetState = p.defaultSettings.widgetStates[specifiedWidget.data.widgetGuid];
+                                if (widgetState && widgetState.timestamp) {
+                                    if (!latest || widgetState.timestamp > latest) {
+                                        latest = widgetState.timestamp;
+                                        latestPane = p;
                                     }
                                 }
                             }
-                            
-                            // If a pane is found, launch in that one
-                            if (latestPane) { pane = latestPane; }
                         }
                     }
+                    
+                    // If a pane is found, launch in that one
+                    if (latestPane) { pane = latestPane; }
+                }
+            }
                 
             launchConfig.guid = specifiedWidget.data.widgetGuid;
 

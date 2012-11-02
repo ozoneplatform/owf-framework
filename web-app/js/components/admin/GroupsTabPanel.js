@@ -1,6 +1,9 @@
 Ext.define('Ozone.components.admin.GroupsTabPanel',{
     extend: 'Ext.panel.Panel',
     alias: ['widget.groupstabpanel','widget.Ozone.components.admin.GroupsTabPanel'],
+
+    //The editor widget the tab is open in
+    editPanel: null,
     
     initComponent: function () {
         var self = this;
@@ -79,7 +82,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                                 store.save();
                             }
                             else {
-                                self.ownerCt.ownerCt.showAlert("Error", "You must select at least one group to remove.")
+                                self.editPanel.showAlert("Error", "You must select at least one group to remove.")
                             }
                         }
                     },
@@ -100,7 +103,6 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     
                     grid.setStore(Ext.create('Ozone.data.GroupStore',cmp.storeCfg));
                     var refreshPagingToolbar = function(operation) {
-                        cmp.refreshWidgetLaunchMenu();
                         if (operation.action == "destroy" || operation.action == "create") {
                             var ptb = grid.getBottomToolbar();
                             ptb.doRefresh();
@@ -109,20 +111,30 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     grid.store.proxy.callback = refreshPagingToolbar;
 
                     grid.store.on('write', function(store, action, result, records, rs) {
+                        //Refresh whatever manager lauched this editor widget
                         OWF.Eventing.publish(this.ownerCt.channel, {
                             action: action,
                             domain: this.ownerCt.domain,
                             records: result
                         });
+                        //Refresh the group manager
+                        OWF.Eventing.publish(this.ownerCt.channel, {
+                            action: action,
+                            domain: 'Group',
+                            records: result
+                        });
                     }, this);
                     
                     if (grid && owner) {
-                        owner.record = owner.recordId ? owner.store.getAt(owner.store.findExact('id', owner.recordId)) : undefined;
+                        owner.record = owner.recordId > -1 ? owner.store.getAt(owner.store.findExact('id', owner.recordId)) : undefined;
                     }
                     
                     // Set the title
                     if (owner.record) {
-                        var titleText = Ext.htmlEncode(owner.record.get('title')) || 'Groups';
+                        var titleText = Ext.htmlEncode(owner.record.get('title'));
+                        if(!titleText) {
+                            titleText = Ext.htmlEncode(owner.record.get('name')) || 'Groups';
+                        }
                         var title = cmp.getDockedItems('toolbar[dock="top"]')[0].getComponent('lblGroupsGrid');
                         title.setText(titleText);
                     }
@@ -134,12 +146,12 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                             cmp.guid_EditCopyWidget = result.value;
                         },
                         onFailure: function(err) { /* No op */
-                            self.ownerCt.ownerCt.showAlert('Preferences Error', 'Error looking up Group Editor: ' + err);
+                            self.editPanel.showAlert('Preferences Error', 'Error looking up Group Editor: ' + err);
                         }
                     });
                     
                     if(grid && owner) {
-                        var compId = owner.recordId ? owner.recordId: -1;
+                        var compId = owner.recordId > -1 ? owner.recordId: -1;
                         var p = {
                             tab:'groups'
                         };
@@ -155,7 +167,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                                         }
                                     }
                                     else {
-                                        self.ownerCt.ownerCt.showAlert("Error", "You must select at least one group to edit.");
+                                        self.editPanel.showAlert("Error", "You must select at least one group to edit.");
                                     }
                                 },
                                 scope: this
@@ -222,7 +234,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
             data: dataString
         }, function(response) {
             if (response.error) {
-                self.ownerCt.ownerCt.showAlert('Launch Error', 'Group Editor Launch Failed: ' + response.message);
+                self.editPanel.showAlert('Launch Error', 'Group Editor Launch Failed: ' + response.message);
             }
         });
     },

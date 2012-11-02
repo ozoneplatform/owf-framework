@@ -1608,10 +1608,11 @@ vars.put(&apos;widgetsToUpdate&apos;, widgetsToUpdate);</stringProp>
                       <boolProp name="TransactionController.includeTimers">false</boolProp>
                     </TransactionController>
                     <hashTree>
-                      <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Set tempActiveDashboardGuid" enabled="true">
+                      <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Set Up Parameters for Switch Dashboards" enabled="true">
                         <intProp name="ActionProcessor.action">1</intProp>
                         <intProp name="ActionProcessor.target">0</intProp>
                         <stringProp name="ActionProcessor.duration">0</stringProp>
+                        <stringProp name="TestPlan.comments">Sets the tempActiveDashboardGuid and generates a random activeWidgetCount to be used by the Open Widgets Fragment.</stringProp>
                       </TestAction>
                       <hashTree>
                         <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
@@ -1627,7 +1628,7 @@ vars.put(&apos;widgetsToUpdate&apos;, widgetsToUpdate);</stringProp>
                         </UserParameters>
                         <hashTree/>
                       </hashTree>
-                      <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include Switch Dashboards Module" enabled="true">
+                      <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include Switch Dashboards Module" enabled="false">
                         <collectionProp name="ModuleController.node_path">
                           <stringProp name="-1227702913">WorkBench</stringProp>
                           <stringProp name="-1872384936">Scenario 1 Test Plan</stringProp>
@@ -1635,6 +1636,7 @@ vars.put(&apos;widgetsToUpdate&apos;, widgetsToUpdate);</stringProp>
                           <stringProp name="-182467168">Included Fragments and Components</stringProp>
                           <stringProp name="-420431824">Include Switch Dashboards Component</stringProp>
                         </collectionProp>
+                        <stringProp name="TestPlan.comments">As of 7.0.0 Sprint 2, this is no longer used.</stringProp>
                       </ModuleController>
                       <hashTree/>
                       <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Save Prior Dashboard" enabled="true">
@@ -1697,32 +1699,15 @@ vars.put(&apos;widgetsToUpdate&apos;, widgetsToUpdate);</stringProp>
                         </ResponseAssertion>
                         <hashTree/>
                       </hashTree>
-                      <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Open Active Widgets" enabled="true">
-                        <boolProp name="LoopController.continue_forever">true</boolProp>
-                        <stringProp name="LoopController.loops">${activeWidgetsCount}</stringProp>
-                      </LoopController>
-                      <hashTree>
-                        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include Send Metric Module" enabled="true">
-                          <collectionProp name="ModuleController.node_path">
-                            <stringProp name="-1227702913">WorkBench</stringProp>
-                            <stringProp name="-1872384936">Scenario 1 Test Plan</stringProp>
-                            <stringProp name="977251861">Test Fragments</stringProp>
-                            <stringProp name="-182467168">Included Fragments and Components</stringProp>
-                            <stringProp name="524233325">Include Send Metric Component</stringProp>
-                          </collectionProp>
-                        </ModuleController>
-                        <hashTree/>
-                        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include Send Widget Load Time Module" enabled="true">
-                          <collectionProp name="ModuleController.node_path">
-                            <stringProp name="-1227702913">WorkBench</stringProp>
-                            <stringProp name="-1872384936">Scenario 1 Test Plan</stringProp>
-                            <stringProp name="977251861">Test Fragments</stringProp>
-                            <stringProp name="-182467168">Included Fragments and Components</stringProp>
-                            <stringProp name="291492328">Include Send Widget Load Time Component</stringProp>
-                          </collectionProp>
-                        </ModuleController>
-                        <hashTree/>
-                      </hashTree>
+                      <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include Open Widgets Fragment" enabled="true">
+                        <collectionProp name="ModuleController.node_path">
+                          <stringProp name="-1227702913">WorkBench</stringProp>
+                          <stringProp name="-1872384936">Scenario 1 Test Plan</stringProp>
+                          <stringProp name="977251861">Test Fragments</stringProp>
+                          <stringProp name="1233367769">Open Widgets</stringProp>
+                        </collectionProp>
+                      </ModuleController>
+                      <hashTree/>
                     </hashTree>
                   </hashTree>
                 </hashTree>
@@ -2151,6 +2136,58 @@ vars.put(&apos;widgetsToUpdate&apos;, widgetsToUpdate);</stringProp>
                         <stringProp name="HTTPSampler.implementation">Java</stringProp>
                         <boolProp name="HTTPSampler.monitor">false</boolProp>
                         <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                      </HTTPSamplerProxy>
+                      <hashTree>
+                        <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+                          <collectionProp name="UserParameters.names">
+                            <stringProp name="3184265">guid</stringProp>
+                          </collectionProp>
+                          <collectionProp name="UserParameters.thread_values">
+                            <collectionProp name="772835538">
+                              <stringProp name="1343063667">${__V(dashboardGuid_${__Random(1,${dashboardGuid_matchNr})})}</stringProp>
+                            </collectionProp>
+                          </collectionProp>
+                          <boolProp name="UserParameters.per_iteration">false</boolProp>
+                        </UserParameters>
+                        <hashTree/>
+                        <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+                          <collectionProp name="Asserion.test_strings">
+                            <stringProp name="-57127207">&quot;isGroupDashboard&quot;:</stringProp>
+                          </collectionProp>
+                          <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+                          <boolProp name="Assertion.assume_success">false</boolProp>
+                          <intProp name="Assertion.test_type">2</intProp>
+                        </ResponseAssertion>
+                        <hashTree/>
+                      </hashTree>
+                      <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Save Dashboard Request" enabled="true">
+                        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+                          <collectionProp name="Arguments.arguments">
+                            <elementProp name="_method" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.value">PUT</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              <stringProp name="Argument.name">_method</stringProp>
+                            </elementProp>
+                          </collectionProp>
+                        </elementProp>
+                        <stringProp name="HTTPSampler.domain"></stringProp>
+                        <stringProp name="HTTPSampler.port"></stringProp>
+                        <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                        <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                        <stringProp name="HTTPSampler.protocol"></stringProp>
+                        <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                        <stringProp name="HTTPSampler.path">owf/prefs/dashboard/${guid}</stringProp>
+                        <stringProp name="HTTPSampler.method">POST</stringProp>
+                        <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                        <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                        <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                        <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                        <stringProp name="HTTPSampler.implementation">Java</stringProp>
+                        <boolProp name="HTTPSampler.monitor">false</boolProp>
+                        <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                        <stringProp name="TestPlan.comments">As of 7.0.0 Sprint 2, this is called 2 times during the editing process.</stringProp>
                       </HTTPSamplerProxy>
                       <hashTree>
                         <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
@@ -2805,6 +2842,27 @@ to ensure the users have enough time to log in.</stringProp>
               <intProp name="OnError.action">0</intProp>
             </ResultAction>
             <hashTree/>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Dashboard Guids Extractor" enabled="true">
+              <stringProp name="RegexExtractor.useHeaders">unescaped</stringProp>
+              <stringProp name="RegexExtractor.refname">dashboardGuid</stringProp>
+              <stringProp name="RegexExtractor.regex">&quot;guid&quot;: \&quot;([^&quot;]+?)&quot;</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default"></stringProp>
+              <stringProp name="RegexExtractor.match_number">-1</stringProp>
+              <stringProp name="Scope.variable">AAAAAAA</stringProp>
+            </RegexExtractor>
+            <hashTree/>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Active Dashboard Guid Extractor" enabled="true">
+              <stringProp name="TestPlan.comments">Choose a random dashboard to be the active dashboard.</stringProp>
+              <stringProp name="RegexExtractor.useHeaders">unescaped</stringProp>
+              <stringProp name="RegexExtractor.refname">activeDashboardGuid</stringProp>
+              <stringProp name="RegexExtractor.regex">&quot;guid&quot;: \&quot;([^&quot;]+?)&quot;</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default"></stringProp>
+              <stringProp name="RegexExtractor.match_number">0</stringProp>
+              <stringProp name="Scope.variable">AAAAAAA</stringProp>
+            </RegexExtractor>
+            <hashTree/>
           </hashTree>
         </hashTree>
         <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Sequential Login Script" enabled="true">
@@ -2957,7 +3015,7 @@ threadDelay = [threadNumber] * [fourthGroupDelay] - [firstGroupMaxThread] * [sec
             </collectionProp>
           </ModuleController>
           <hashTree/>
-          <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include Get Dashboards Module" enabled="true">
+          <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include Get Dashboards Module" enabled="false">
             <collectionProp name="ModuleController.node_path">
               <stringProp name="-1227702913">WorkBench</stringProp>
               <stringProp name="-1872384936">Scenario 1 Test Plan</stringProp>
@@ -2965,9 +3023,10 @@ threadDelay = [threadNumber] * [fourthGroupDelay] - [firstGroupMaxThread] * [sec
               <stringProp name="-182467168">Included Fragments and Components</stringProp>
               <stringProp name="465044926">Include Get Dashboards Component</stringProp>
             </collectionProp>
+            <stringProp name="TestPlan.comments">As of Nish&apos;s change to include the user&apos;s dashboards in the config.js loaded, this call is no longer used.</stringProp>
           </ModuleController>
           <hashTree/>
-          <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include List Widgets Module" enabled="true">
+          <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include List Widgets Module" enabled="false">
             <collectionProp name="ModuleController.node_path">
               <stringProp name="-1227702913">WorkBench</stringProp>
               <stringProp name="-1872384936">Scenario 1 Test Plan</stringProp>
@@ -2975,6 +3034,7 @@ threadDelay = [threadNumber] * [fourthGroupDelay] - [firstGroupMaxThread] * [sec
               <stringProp name="-182467168">Included Fragments and Components</stringProp>
               <stringProp name="1758189634">Include List Widgets Component</stringProp>
             </collectionProp>
+            <stringProp name="TestPlan.comments">As of Nish&apos;s change to include the user&apos;s widgets in the config.js loaded, this call is no longer used.</stringProp>
           </ModuleController>
           <hashTree/>
           <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include Send Banner State Module" enabled="true">
@@ -2987,6 +3047,40 @@ threadDelay = [threadNumber] * [fourthGroupDelay] - [firstGroupMaxThread] * [sec
             </collectionProp>
           </ModuleController>
           <hashTree/>
+          <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include Open Widgets Fragment" enabled="true">
+            <collectionProp name="ModuleController.node_path">
+              <stringProp name="-1227702913">WorkBench</stringProp>
+              <stringProp name="-1872384936">Scenario 1 Test Plan</stringProp>
+              <stringProp name="977251861">Test Fragments</stringProp>
+              <stringProp name="1233367769">Open Widgets</stringProp>
+            </collectionProp>
+          </ModuleController>
+          <hashTree/>
+        </hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Open Widgets" enabled="true">
+          <stringProp name="TestPlan.comments">This request uses the activeWidgetsCount to send the appropriate number of metric and widgetLoadTime requests.</stringProp>
+        </GenericController>
+        <hashTree>
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Generate Random Widget Count" enabled="true">
+            <intProp name="ActionProcessor.action">1</intProp>
+            <intProp name="ActionProcessor.target">0</intProp>
+            <stringProp name="ActionProcessor.duration">0</stringProp>
+            <stringProp name="TestPlan.comments">Generates a random widget count to send metric and widgetLoadTime requests for.</stringProp>
+          </TestAction>
+          <hashTree>
+            <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+              <collectionProp name="UserParameters.names">
+                <stringProp name="1940636102">activeWidgetsCount</stringProp>
+              </collectionProp>
+              <collectionProp name="UserParameters.thread_values">
+                <collectionProp name="-1589220549">
+                  <stringProp name="-731379805">${__Random(1,8)}</stringProp>
+                </collectionProp>
+              </collectionProp>
+              <boolProp name="UserParameters.per_iteration">false</boolProp>
+            </UserParameters>
+            <hashTree/>
+          </hashTree>
           <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Open Active Widgets" enabled="true">
             <boolProp name="LoopController.continue_forever">true</boolProp>
             <stringProp name="LoopController.loops">${activeWidgetsCount}</stringProp>

@@ -6,15 +6,16 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import grails.converters.JSON
 import ozone.owf.grails.AuditOWFWebRequestsLogger
 import ozone.owf.grails.OwfException
-import ozone.owf.grails.domain.Person
 import ozone.owf.grails.OwfExceptionTypes
-import ozone.owf.grails.domain.ERoleAuthority
 import ozone.security.authentication.OWFUserDetails
-import ozone.owf.grails.domain.WidgetDefinition
-import ozone.owf.grails.domain.Group
-import ozone.owf.grails.domain.PersonWidgetDefinition
-import org.hibernate.CacheMode
 import ozone.owf.grails.domain.Dashboard
+import ozone.owf.grails.domain.ERoleAuthority
+import ozone.owf.grails.domain.Group
+import ozone.owf.grails.domain.Person
+import ozone.owf.grails.domain.PersonWidgetDefinition
+import ozone.owf.grails.domain.Stack
+import ozone.owf.grails.domain.WidgetDefinition
+import org.hibernate.CacheMode
 /**
  * Service for account-related operations.
  */
@@ -139,6 +140,13 @@ class AccountService {
                 groups{
                     eq("id", Long.parseLong(params.group_id))
                 }
+            if (params.stack_id)
+                groups {
+                    eq("stackDefault", true)
+                    stacks {
+                        eq("id", Long.parseLong(params.stack_id))
+                    }
+                }
             if (params.widget_id)
                 personWidgetDefinitions{
                     widgetDefinition {
@@ -217,11 +225,16 @@ class AccountService {
                 }
                 projections { rowCount() }
             }
+            def totalStacks = 0
+            p.groups?.each { group ->
+                if (group?.stackDefault) { totalStacks++ }
+            }
 
             serviceModelService.createServiceModel(p, [
                         totalGroups: groupCount[0],
                         totalWidgets: widgetCount[0],
-                        totalDashboards: dashboardCount[0]
+                        totalDashboards: dashboardCount[0],
+                        totalStacks: totalStacks
                     ])
         }
 
@@ -359,6 +372,27 @@ class AccountService {
                     }
                     if (!updatedGroups.isEmpty()) {
                         returnValue = updatedGroups.collect{ serviceModelService.createServiceModel(it) }
+                    }
+                }
+
+                if('stacks' == params.tab) {
+                    def updatedStacks = []
+
+                    def stacks = JSON.parse(params.data)
+                    stacks?.each {
+                        def stack = Stack.findById(it.id.toLong(),[cache:true])
+                        if(stack) {
+                            if(params.update_action == 'add')
+                                stack.findStackDefaultGroup().addToPeople(user)
+                            else if(params.update_action == 'remove')
+                                stack.findStackDefaultGroup().removeFromPeople(user)
+
+                            stack.save(flush: true,failOnError: true)
+                            updatedStacks << stack
+                        }
+                    }
+                    if(!updatedStacks.isEmpty()) {
+                        returnValue = updatedStacks.collect{ serviceModelService.createServiceModel(it) }
                     }
                 }
             }

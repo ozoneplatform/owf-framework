@@ -14,6 +14,9 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
     widgetEventingController: null,
     widgetStateHandler: null,
     isGroupDashboard: false,
+
+    //The editor widget the tab is open in
+    editPanel: null,
     
     initComponent: function() {
         
@@ -80,6 +83,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
                 grid.setStore(Ext.create('Ozone.data.stores.AdminDashboardStore', cmp.storeCfg));
 
                 grid.store.on('write', function(store, action, result, records, rs) {
+                    //Refresh whatever manager lauched this editor widget
                     OWF.Eventing.publish(this.ownerCt.channel, {
                         action: action,
                         domain: this.ownerCt.domain,
@@ -112,9 +116,11 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
 
                     // Set the title
                     if (cmp.ownerCt.record) {
-                        var titleText = cmp.ownerCt.record.get('title') || 'Dashboards';
+                        var titleText = Ext.htmlEncode(cmp.ownerCt.record.get('title'));
+                        if(!titleText) {
+                            titleText = Ext.htmlEncode(cmp.ownerCt.record.get('name')) || 'Dashboards';
+                        }
                         var title = this.getDockedItems('toolbar[dock="top"]')[0].getComponent('lblDashboardsGrid');
-                        titleText = '<span class="heading-bold">' + Ext.htmlEncode(titleText) + '</span>';
                         title.setText(titleText);
                     }
 
@@ -138,7 +144,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
                 self.guid_DashboardEditCopyWidget = result.value;
             },
             onFailure: function(err) { /* No op */
-                self.ownerCt.ownerCt.showAlert('Preferences Error', 'Error looking up Dashboard Editor: ' + err);
+                self.editPanel.showAlert('Preferences Error', 'Error looking up Dashboard Editor: ' + err);
             }
         });
 
@@ -147,7 +153,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
 
     launchFailedHandler: function(response) {
         if (response.error) {
-            this.ownerCt.ownerCt.showAlert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
+            this.editPanel.showAlert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
         }
     },
 
@@ -162,7 +168,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             };
         }
 
-        this.ownerCt.ownerCt.showAlert('Server Error', 'Error during ' + operation.action + ': ' + errorMsg);
+        this.editPanel.showAlert('Server Error', 'Error during ' + operation.action + ': ' + errorMsg);
     },
 
     onAddClicked: function () {
@@ -213,7 +219,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             }
         }
         else {
-            this.ownerCt.ownerCt.showAlert("Error", "You must select at least one dashboard to edit");
+            this.editPanel.showAlert("Error", "You must select at least one dashboard to edit");
         }
     },
 
@@ -225,7 +231,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             store.remove(records);
             store.save();
         } else {
-            this.ownerCt.ownerCt.showAlert("Error", "You must select at least one dashboard to remove.");
+            this.editPanel.showAlert("Error", "You must select at least one dashboard to remove.");
         }
     }
 });
