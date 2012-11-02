@@ -126,7 +126,11 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     }, this);
                     
                     if (grid && owner) {
-                        owner.record = owner.recordId > -1 ? owner.store.getAt(owner.store.findExact('id', owner.recordId)) : undefined;
+                        if (Ext.isNumeric(owner.recordId)) {
+                            owner.record = owner.recordId > -1 ? owner.store.getAt(owner.store.findExact('id', owner.recordId)) : undefined;
+                        } else {
+                            owner.record = owner.recordId ? owner.store.getAt(owner.store.findExact('id', owner.recordId)) : undefined;
+                        }
                     }
                     
                     // Set the title
@@ -151,7 +155,12 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     });
                     
                     if(grid && owner) {
-                        var compId = owner.recordId > -1 ? owner.recordId: -1;
+                        var compId
+                        if (Ext.isNumeric(owner.recordId)) {
+                            compId = owner.recordId > -1 ? owner.recordId: -1;
+                        } else {
+                            compId = owner.recordId ? owner.recordId: -1;
+                        }
                         var p = {
                             tab:'groups'
                         };
