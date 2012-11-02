@@ -90,11 +90,7 @@ Ext.define('Ozone.components.admin.widget.WidgetApprovalPanel', {
                   this.approve(records);
                 }
                 else {
-                  Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                      title: "Error",
-                      msg: "You must select at least one widget to approve.",
-                      buttons: Ext.Msg.OK
-                  });
+                    me.showAlert('Error', 'You must select at least one widget to approve.');
                 }
               },
               scope: this
@@ -110,11 +106,7 @@ Ext.define('Ozone.components.admin.widget.WidgetApprovalPanel', {
                   this.reject(records);
                 }
                 else {
-                  Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                      title: "Error",
-                      msg: "You must select at least one widget to reject.",
-                      buttons: Ext.Msg.OK
-                  });
+                    me.showAlert('Error', 'You must select at least one widget to reject.');
                 }
               },
               scope: this
@@ -193,6 +185,8 @@ Ext.define('Ozone.components.admin.widget.WidgetApprovalPanel', {
   },
 
   createApprovalWindow: function(widgets) {
+
+    var me = this;
 
     var requestedWidgetIds  = Ext.create('Ext.util.MixedCollection');
     requestedWidgetIds.getKey = function(obj) {
@@ -320,29 +314,17 @@ Ext.define('Ozone.components.admin.widget.WidgetApprovalPanel', {
                   msg += '. <br/><br/> '+ (selectedWidgetCount > 1 ? 'These widgets require' : 'This widget requires')
                           + ' other widget(s) in OWF. Approving '+ (selectedWidgetCount > 1 ? 'these widgets' : 'this widget ')
                           + ' will automatically approve '+ (selectedWidgetCount > 1 ? 'their' : 'its') +' required widget(s).';
-                  Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                    title: 'Warning',
-                    msg: msg,
-                    buttons: Ext.Msg.OKCANCEL,
-                    closable: true,
-                    modal: true,
-                    width: this.getWidth() - 20,
-                    scope: this,
-                    fn: function(btn, text, opts) {
+
+                  this.showConfirmation('Warning', msg, function(btn, text, opts) {
                       if (btn == 'ok') {
-                         this.doApproveReject(allWidgetRequests.getRange());
+                          this.doApproveReject(allWidgetRequests.getRange());
                       }
-                    }
                   });
                 }
               }
           },
           failure: function(response, opts) {
-              Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-                  title: "Error",
-                  msg: "Error retrieving required widgets",
-                  buttons: Ext.Msg.OK
-              });
+              me.showAlert('Error', 'Error retrieving required widgets.');
           },
           scope: this
       });
@@ -427,11 +409,7 @@ Ext.define('Ozone.components.admin.widget.WidgetApprovalPanel', {
         }
       },
       failure: function() {
-        Ext.create('Ozone.window.MessageBoxPlus', {}).show({
-            title: "Error",
-            msg: "Server Error during approve or reject",
-            buttons: Ext.Msg.OK
-        });
+        me.showAlert('Error', 'Server Error during approve or reject.');
         var win = Ext.getCmp('approvewindow');
         if (win) {
           win.close();
