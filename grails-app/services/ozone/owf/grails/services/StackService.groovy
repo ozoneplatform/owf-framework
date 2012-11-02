@@ -12,6 +12,7 @@ class StackService {
 
     def accountService
     def serviceModelService
+    def domainMappingService
     
     private static def addFilter(name, value, c) {
         c.with {
@@ -261,6 +262,32 @@ class StackService {
                 }
                 if (!updatedUsers.isEmpty()) {
                     returnValue = updatedUsers.collect{ serviceModelService.createServiceModel(it) }
+                }
+            }
+            else if ('dashboards' == params.tab) {
+                // Add the general dashboard definition to the default
+                // stack group.
+                def updatedDashboards = []
+                def dashboards = JSON.parse(params.data)
+                def defaultGroup = groups.findByStackDefault(true)
+                print 'Adding dashboards for ${defaultGroup.name}'
+                
+                dashboards?.each { it ->
+                    def dashboard = Dashboard.findById(it.id.toLong(), [cache: true])
+                    // TODO: May need to clone this depending on what front end editor sends.  Revisit when stack
+                    // editor dashboard tab is done.
+                    if (dashboard) {       
+                        if (params.update_action == 'add') {
+                            domainMappingService.createMapping(group,RelationshipType.owns,dashboard)
+                        }
+                        else if (params.update_action == 'remove') {
+                            domainMappingService.deleteMapping(group,RelationshipType.owns,dashboard)
+                        }
+                        updatedDashbaords << dashboard
+                    }
+                }
+                if (!updatedDashboards.isEmpty()) {
+                    returnValue = updatedDashboards.collect{ serviceModelService.createServiceModel(it) }
                 }
             }
         }

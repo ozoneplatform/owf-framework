@@ -17,6 +17,7 @@ class DashboardServiceModel extends AbstractServiceModel {
   PersonServiceModel createdBy
   String layoutConfig
   Boolean locked = false
+  StackServiceModel stack
   
   Map toDataMap() {
     Map dataMap = [:]

@@ -84,79 +84,84 @@ Ext.define('Ozone.components.admin.dashboard.DashboardEditPropertiesTab', {
     }
   },
   onApply: function() {
-    var panel = this;
-    var widget = panel.ownerCt;
+    if(!this.getForm().hasInvalidField()) {
+        var panel = this;
+        var widget = panel.ownerCt;
 
-    //get values from the form
-    var formValues = this.getValues();
-    var name = formValues.name;
-    var description = formValues.description;
-    var definition = formValues.definition;
+        //get values from the form
+        var formValues = this.getValues();
+        var name = formValues.name;
+        var description = formValues.description;
+        var definition = formValues.definition;
 
-    ///get defObj
-    var defObj = Ext.decode(definition);
+        ///get defObj
+        var defObj = Ext.decode(definition);
 
-    //override fields in defObj
-    if (formValues.guid != '' && formValues.guid != null ) {
-      defObj.guid = formValues.guid;
-    }
-    defObj.name = name;
-    defObj.description = description;
-
-    var record = widget.store.getAt(0);
-    //editing an existing record
-    if (record != null) {
-      record.beginEdit();
-
-      //clear all data fields
-      record.data = {};
-
-      //copy new data from the form into the fields
-      for (var field in defObj) {
-        if (!Ext.isFunction(field)) {
-          record.set(field, defObj[field]);
+        //override fields in defObj
+        if (formValues.guid != '' && formValues.guid != null ) {
+          defObj.guid = formValues.guid;
         }
-      }
-      record.endEdit();
-    }
-    //no record found, creating new one
-    else {
-      //use a new guid if needed
-      if (widget.launchData == null || widget.launchData.isCreate || formValues.guid == '' || formValues.guid == null) {
-        defObj.guid = guid.util.guid();
-      }
+        defObj.name = name;
+        defObj.description = description;
 
-      widget.store.add(defObj);
-      record = widget.store.data.items[0];
-      record.phantom = true;
-    }
+        var record = widget.store.getAt(0);
+        //editing an existing record
+        if (record != null) {
+          record.beginEdit();
 
+          //clear all data fields
+          record.data = {};
 
-    //sync form with the data which returns from the store.sync
-    widget.store.on({
-      write: {
-        fn: function(store, operation, eOpts) {
-        var recs = operation.getRecords();
-        if (recs) {
-          var rec = recs[0];
-          if (rec) {
-            var id = rec.getId();
-            if (id) {
-              widget.recordId = id;
+          //copy new data from the form into the fields
+          for (var field in defObj) {
+            if (!Ext.isFunction(field)) {
+              record.set(field, defObj[field]);
             }
-            //once the save/update is complete update the form
-            this.initFieldValues(rec);
-
-            widget.enableTabs();
           }
+          record.endEdit();
         }
-        widget.fireEvent('itemcreated', widget.recordId);
-        },
-        scope: this,
-        single: this
-      }
-    });
-    widget.store.sync();
+        //no record found, creating new one
+        else {
+          //use a new guid if needed
+          if (widget.launchData == null || widget.launchData.isCreate || formValues.guid == '' || formValues.guid == null) {
+            defObj.guid = guid.util.guid();
+          }
+
+          widget.store.add(defObj);
+          record = widget.store.data.items[0];
+          record.phantom = true;
+        }
+
+
+        //sync form with the data which returns from the store.sync
+        widget.store.on({
+          write: {
+            fn: function(store, operation, eOpts) {
+            var recs = operation.getRecords();
+            if (recs) {
+              var rec = recs[0];
+              if (rec) {
+                var id = rec.getId();
+                if (id) {
+                  widget.recordId = id;
+                }
+                //once the save/update is complete update the form
+                this.initFieldValues(rec);
+
+                widget.enableTabs();
+              }
+            }
+            widget.fireEvent('itemcreated', widget.recordId);
+            },
+            scope: this,
+            single: this
+          }
+        });
+        widget.store.sync();
+    }
+    else {
+        this.showApplyAlert('Invalid field, changes cannot be saved.', 3000);
+    }
   }
 
 });

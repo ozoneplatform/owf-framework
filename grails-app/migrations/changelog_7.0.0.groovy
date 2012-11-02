@@ -177,4 +177,19 @@ databaseChangeLog = {
             insert into stack_groups (stack_id, group_id) values ((select id from stack where name = 'OWF'), (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58e'));
         """)
     }
+    
+    changeSet(author: "owf", id: "7.0.0-22", context: "create, upgrade, 7.0.0") {
+        comment("Add a reference to a host stack to dashboard records to track where user instances should appear")
+        addColumn(tableName: "dashboard") {
+            column(name: "stack_id", type: "bigint")
+        }
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-23", context: "create, upgrade, 7.0.0") {
+        comment("Add foreign key constraint for stack_id in the dashboard table")
+        addForeignKeyConstraint(constraintName: "FKC18AEA946B3A1281",
+            baseColumnNames: "stack_id", baseTableName: "dashboard", 
+            referencedColumnNames: "id", referencedTableName: "stack")
+    }
+    
 }
