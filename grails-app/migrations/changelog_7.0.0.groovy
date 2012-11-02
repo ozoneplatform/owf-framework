@@ -95,7 +95,6 @@ databaseChangeLog = {
       sql ( text = """
         create table stack_groups (group_id numeric(19,0) not null, stack_id bigint not null);
       """)
-  }
     }
     
     changeSet(author: "owf", id: "7.0.0-12", context: "create, upgrade, 7.0.0") {
