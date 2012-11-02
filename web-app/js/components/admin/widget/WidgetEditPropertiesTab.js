@@ -453,7 +453,9 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             singleton.setValue(data.singleton).originalValue = data.singleton;
             visible.setValue(data.visible).originalValue = data.visible;
             background.setValue(data.background).originalValue = data.background;
-            descriptorUrl.setValue(data.descriptorUrl).originalValue = data.descriptorUrl;
+            if(!descriptorUrl.getValue()) {
+                descriptorUrl.setValue(data.descriptorUrl).originalValue = data.descriptorUrl;
+            }
             
             var strIntents = Ext.JSON.encode(data.intents);
             intents.setValue(strIntents).originalValue = strIntents;
@@ -519,12 +521,10 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
 		loading.hide();
 		var btn = this.getComponent('descriptorUrlToolbar').getComponent('descriptorUrlBtn');
 		btn.setText('Load');
-        var applyBtn = this.getDockedItems('toolbar[dock="bottom"]')[0].getComponent('apply');
-        applyBtn.enable();
 		var descriptorUrl = component.getComponent('descriptorUrl');
 		descriptorUrl.enable();
+        this.loadedDecriptorUrl = descriptorUrl.getValue();
         this.record = data;
-    	this.record.descriptorUrl = field.getValue();
         if (data) {
             var strTags = "";
             var newGuid = (data && data.widgetGuid) ? data.widgetGuid : this.generateNewGuid();
@@ -703,7 +703,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
           var formFields = ['widgetGuid', 'name', 'description', 'version', 'universalName', 
                           'guid', 'url', 'headerIcon', 'image', 'width',
                           'height', '_tags', 'singleton', 'visible', 
-                          'background', '_types', 'descriptorUrl', 'intents'];
+                          'background', '_types', 'intents'];
           
           var formValues = {};
           for (var i = 0; i < formFields.length; i++) {
@@ -723,6 +723,13 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
               }
           }
 
+          //If descriptor url was successfully loaded save it, otherwise set blank
+          if(panel.loadedDecriptorUrl) {
+              formValues['descriptorUrl'] = panel.loadedDecriptorUrl;
+          }
+          else {
+              formValues['descriptorUrl'] = "";
+          }
           
           if (widget.store.data.length > 0) {
               record = widget.store.getById(widget.recordId);
