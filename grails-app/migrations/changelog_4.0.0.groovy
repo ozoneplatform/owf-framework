@@ -196,7 +196,7 @@ databaseChangeLog = {
 	  }
   }
 
-  changeSet(author: "owf", id: "4.0.0-5", dbms: "mysql,mssql,oracle,postgresql", context: "sampleData, 4.0.0-sampleData") {
+  changeSet(author: "owf", id: "4.0.0-5", dbms: "postgresql", context: "sampleData, 4.0.0-sampleData") {
       comment(text="deleting old sample data")
 
       delete(tableName: "role_people")
@@ -209,7 +209,29 @@ databaseChangeLog = {
       delete(tableName: "person_widget_definition")
       delete(tableName: "domain_mapping")
       delete(tableName: "dashboard")
-      delete(tableName: "owf_group")
+      delete(tableName: "owf_group") {
+          where(text="not stack_default")
+      }
+      delete(tableName: "widget_definition")
+      delete(tableName: "person")
+  }
+  
+    changeSet(author: "owf", id: "4.0.0-5", dbms: "mysql,mssql,oracle", context: "sampleData, 4.0.0-sampleData") {
+      comment(text="deleting old sample data")
+
+      delete(tableName: "role_people")
+      delete(tableName: "role")
+      delete(tableName: "requestmap")
+      delete(tableName: "preference")
+      delete(tableName: "owf_group_people")
+	  // DEPRECATED delete as of 7.0.0 where dashboard_widget_state table is removed.
+      // delete(tableName: "dashboard_widget_state")
+      delete(tableName: "person_widget_definition")
+      delete(tableName: "domain_mapping")
+      delete(tableName: "dashboard")
+      delete(tableName: "owf_group") {
+          where(text="stack_default=0")
+      }
       delete(tableName: "widget_definition")
       delete(tableName: "person")
   }
@@ -228,7 +250,9 @@ databaseChangeLog = {
       delete(tableName: "person_widget_definition")
       delete(tableName: "domain_mapping")
       delete(tableName: "dashboard")
-      delete(tableName: "owf_group")
+      delete(tableName: "owf_group") {
+          where(text="stack_default=0")
+      }
       delete(tableName: "widget_definition")
       delete(tableName: "person")
   }

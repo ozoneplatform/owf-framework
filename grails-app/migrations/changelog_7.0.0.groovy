@@ -121,42 +121,75 @@ databaseChangeLog = {
         }
     }
     
-    changeSet(author: "owf", id: "7.0.0-15", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-15", context: "create, upgrade, 7.0.0", dbms: "hsqldb, mysql, mssql") {
+        comment(text="Insert OWF stack")
+        insert(tableName: "stack") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "name", value: "OWF")
+            column(name: "stack_position", valueNumeric: "1")
+            column(name: "description", value: "OWF Stack")
+            column(name: "stack_context", value: "owf")
+            column(name: "image_url", value: "themes/common/images/owf.png")
+        }
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-16", context: "create, upgrade, 7.0.0", dbms: "oracle") {
+        comment(text="Insert OWF stack")
+        sql (text = """
+            insert into stack (id, version, name, stack_position, description, stack_context, image_url) values (hibernate_sequence.nextval, 0, 'OWF', 1, 'OWF Stack', 'owf', 'themes/common/images/owf.png');
+        """)
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-17", context: "create, upgrade, 7.0.0", dbms: "postgresql") {
+        comment(text="Insert OWF stack")
+        sql (text = """
+            insert into stack (id, version, name, stack_position, description, stack_context, image_url) values (nextval('hibernate_sequence'), 0, 'OWF', 1, 'OWF Stack', 'owf', 'themes/common/images/owf.png');
+        """)
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-18", context: "create, upgrade, 7.0.0", dbms: "hsqldb, mysql, mssql") {
+        comment(text="Insert OWF stack default group")
+        insert(tableName: "owf_group") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "automatic", valueBoolean: "false")
+            column(name: "name", value: "ce86a612-c355-486e-9c9e-5252553cc58e")
+            column(name: "status", value: "active")
+            column(name: "stack_default", valueBoolean: "true")
+        }
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-19", context: "create, upgrade, 7.0.0", dbms: "oracle") {
+        comment(text="Insert OWF stack default group")
+        sql (text = """
+            insert into owf_group (id, version, automatic, name, status, stack_default) values (hibernate_sequence.nextval, 0, 0, 'ce86a612-c355-486e-9c9e-5252553cc58e', 'active', 1);
+        """)
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-20", context: "create, upgrade, 7.0.0", dbms: "postgresql") {
+        comment(text="Insert OWF stack default group")
+        sql (text = """
+            insert into owf_group (id, version, automatic, name, status, stack_default) values (nextval('hibernate_sequence'), 0, false, 'ce86a612-c355-486e-9c9e-5252553cc58e', 'active', true);
+        """)
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-21", context: "create, upgrade, 7.0.0") {
+        sql (text = """
+            insert into stack_groups (stack_id, group_id) values ((select id from stack where name = 'OWF'), (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58e'));
+        """)
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-22", context: "create, upgrade, 7.0.0") {
         comment("Add a reference to a host stack to dashboard records to track where user instances should appear")
         addColumn(tableName: "dashboard") {
             column(name: "stack_id", type: "bigint")
         }
     }
     
-    changeSet(author: "owf", id: "7.0.0-16", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-23", context: "create, upgrade, 7.0.0") {
         comment("Add foreign key constraint for stack_id in the dashboard table")
         addForeignKeyConstraint(constraintName: "FKC18AEA946B3A1281",
             baseColumnNames: "stack_id", baseTableName: "dashboard", 
             referencedColumnNames: "id", referencedTableName: "stack")
     }
     
-    //changeSet(author: "owf", id: "7.0.0-15", context: "create, upgrade, 7.0.0") {
-    //    comment(text="Insert OWF stack")
-    //    insert(tableName: "stack") {
-    //        column(name: "version", valueNumeric: "0")
-    //        column(name: "name", value: "OWF")
-    //        column(name: "stack_position", valueNumeric: "1")
-    //        column(name: "description", value: "OWF Stack")
-    //        column(name: "stack_context", value: "owf")
-    //        column(name: "image_url", value: "themes/common/images/owf.png")
-    //    }
-    //    insert(tableName: "owf_group") {
-    //        column(name: "version", valueNumeric: "0")
-    //        column(name: "automatic", valueBoolean: "false")
-    //        column(name: "name", value: "ce86a612-c355-486e-9c9e-5252553cc58e")
-    //        column(name: "status", value: "active")
-    //        column(name: "stack_default", valueBoolean: "true")
-    //    }
-    //}
-    
-    //changeSet(author: "owf", id: "7.0.0-16", context: "create, upgrade, 7.0.0") {
-    //    sql (text = """
-    //        insert into stack_groups (stack_id, group_id) values ((select id from stack where name = 'OWF'), (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58e'));
-    //    """)
-    //}
 }
