@@ -1,6 +1,9 @@
 Ext.define('Ozone.components.admin.GroupsTabPanel',{
     extend: 'Ext.panel.Panel',
     alias: ['widget.groupstabpanel','widget.Ozone.components.admin.GroupsTabPanel'],
+
+    //The editor widget the tab is open in
+    editPanel: null,
     
     initComponent: function () {
         var self = this;
@@ -79,7 +82,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                                 store.save();
                             }
                             else {
-                                self.ownerCt.ownerCt.showAlert("Error", "You must select at least one group to remove.")
+                                self.editPanel.showAlert("Error", "You must select at least one group to remove.")
                             }
                         }
                     },
@@ -143,7 +146,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                             cmp.guid_EditCopyWidget = result.value;
                         },
                         onFailure: function(err) { /* No op */
-                            self.ownerCt.ownerCt.showAlert('Preferences Error', 'Error looking up Group Editor: ' + err);
+                            self.editPanel.showAlert('Preferences Error', 'Error looking up Group Editor: ' + err);
                         }
                     });
                     
@@ -164,7 +167,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                                         }
                                     }
                                     else {
-                                        self.ownerCt.ownerCt.showAlert("Error", "You must select at least one group to edit.");
+                                        self.editPanel.showAlert("Error", "You must select at least one group to edit.");
                                     }
                                 },
                                 scope: this
@@ -231,7 +234,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
             data: dataString
         }, function(response) {
             if (response.error) {
-                self.ownerCt.ownerCt.showAlert('Launch Error', 'Group Editor Launch Failed: ' + response.message);
+                self.editPanel.showAlert('Launch Error', 'Group Editor Launch Failed: ' + response.message);
             }
         });
     },

@@ -122,8 +122,8 @@ class StackServiceTests extends GroovyTestCase {
     
     void testAddRemoveUserAndListByUserId() {
         //Ensure user has no stacks and the stack has no users to start
-        assertEquals 0, stackService.list(["user_id": personId]).results
-        assertEquals 0, stackService.list(["id": stackIds[0]]).data.totalUsers[0]
+        assertEquals 0, stackService.list(["user_id": "${personId}"]).results
+        assertEquals 0, stackService.list(["id": "${stackIds[0]}"]).data.totalUsers[0]
 
         def ret = stackService.createOrUpdate([
             "_method": "PUT",
@@ -137,8 +137,8 @@ class StackServiceTests extends GroovyTestCase {
 
         assertTrue ret.success
         //Check user was added to stack both ways
-        assertEquals 1, stackService.list(["user_id": personId]).results
-        assertEquals 1, stackService.list(["id": stackIds[0]]).data.totalUsers[0]
+        assertEquals 1, stackService.list(["user_id": "${personId}"]).results
+        assertEquals 1, stackService.list(["id": "${stackIds[0]}"]).data.totalUsers[0]
 
         ret = stackService.createOrUpdate([
             "_method": "PUT",
@@ -152,7 +152,7 @@ class StackServiceTests extends GroovyTestCase {
 
         assertTrue ret.success
         //Check user was removed from stack both ways
-        assertEquals 0, stackService.list(["user_id": personId]).results
-        assertEquals 0, stackService.list(["id": stackIds[0]]).data.totalUsers[0]
+        assertEquals 0, stackService.list(["user_id": "${personId}"]).results
+        assertEquals 0, stackService.list(["id": "${stackIds[0]}"]).data.totalUsers[0]
     }
 }

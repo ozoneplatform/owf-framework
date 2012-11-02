@@ -7,7 +7,6 @@ Ext.define('Ozone.components.admin.group.GroupEditPanel', {
 	cls: 'groupeditpanel',
 	
 	initComponent: function () {
-		//get widget to launch
 		var self = this;
 		Ext.applyIf(this,{
 			layout: 'fit',
@@ -23,23 +22,28 @@ Ext.define('Ozone.components.admin.group.GroupEditPanel', {
                 items: [
                   {
                     xtype: 'groupeditproperties',
-                    itemId: 'groupeditproperties'
+                    itemId: 'groupeditproperties',
+                    editPanel: self
                   },
                   {
                     xtype: 'groupeditusers',
-                    itemId: 'groupeditusers'
+                    itemId: 'groupeditusers',
+                    editPanel: self
                   },
                   {
                     xtype: 'groupeditwidgets',
-                    itemId: 'groupeditwidgets'
+                    itemId: 'groupeditwidgets',
+                    editPanel: self
                   },
                   {
                     xtype: 'groupeditdashboards',
-                    itemId: 'groupeditdashboards'
+                    itemId: 'groupeditdashboards',
+                    editPanel: self
                   },
                   {
                     xtype: 'groupeditstacks',
-                    itemId: 'groupeditstacks'
+                    itemId: 'groupeditstacks',
+                    editPanel: self
                   }
                 ]
 	        }]
