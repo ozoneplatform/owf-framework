@@ -22,23 +22,28 @@ Ext.define('Ozone.components.admin.stack.StackEditPanel', {
                 items: [
                   {
                     xtype: 'stackeditproperties',
-                    itemId: 'stackeditproperties'
+                    itemId: 'stackeditproperties',
+                    editPanel: self
                   },
                   {
                     xtype: 'stackeditdashboards',
-                    itemId: 'stackeditdashboards'
+                    itemId: 'stackeditdashboards',
+                    editPanel: self
                   },
                   {
                     xtype: 'stackeditwidgets',
-                    itemId: 'stackeditwidgets'
+                    itemId: 'stackeditwidgets',
+                    editPanel: self
                   },
                   {
                     xtype: 'stackeditgroups',
-                    itemId: 'stackeditgroups'
+                    itemId: 'stackeditgroups',
+                    editPanel: self
                   },
                   {
                     xtype: 'stackeditusers',
-                    itemId: 'stackeditusers'
+                    itemId: 'stackeditusers',
+                    editPanel: self
                   }
                 ]
 	        }]

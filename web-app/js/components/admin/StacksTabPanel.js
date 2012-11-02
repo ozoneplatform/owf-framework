@@ -1,6 +1,9 @@
 Ext.define('Ozone.components.admin.StacksTabPanel',{
     extend: 'Ext.panel.Panel',
     alias: ['widget.stackstabpanel','widget.Ozone.components.admin.StacksTabPanel'],
+
+    //The editor widget the tab is open in
+    editPanel: null,
     
     initComponent: function () {
         var self = this;
@@ -79,7 +82,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                 store.save();
                             }
                             else {
-                                self.ownerCt.ownerCt.showAlert("Error", "You must select at least one stack to remove.")
+                                self.editPanel.showAlert("Error", "You must select at least one stack to remove.")
                             }
                         }
                     },
@@ -141,7 +144,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                             cmp.guid_EditCopyWidget = result.value;
                         },
                         onFailure: function(err) { /* No op */
-                            self.ownerCt.ownerCt.showAlert('Preferences Error', 'Error looking up Stack Editor: ' + err);
+                            self.editPanel.showAlert('Preferences Error', 'Error looking up Stack Editor: ' + err);
                         }
                     });
                     
@@ -162,7 +165,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                         }
                                     }
                                     else {
-                                        self.ownerCt.ownerCt.showAlert("Error", "You must select at least one stack to edit.");
+                                        self.editPanel.showAlert("Error", "You must select at least one stack to edit.");
                                     }
                                 },
                                 scope: this
@@ -229,7 +232,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
             data: dataString
         }, function(response) {
             if (response.error) {
-                self.ownerCt.ownerCt.showAlert('Launch Error', 'Stack Editor Launch Failed: ' + response.message);
+                self.editPanel.showAlert('Launch Error', 'Stack Editor Launch Failed: ' + response.message);
             }
         });
     },

@@ -14,6 +14,9 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
     widgetEventingController: null,
     widgetStateHandler: null,
     isGroupDashboard: false,
+
+    //The editor widget the tab is open in
+    editPanel: null,
     
     initComponent: function() {
         
@@ -141,7 +144,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
                 self.guid_DashboardEditCopyWidget = result.value;
             },
             onFailure: function(err) { /* No op */
-                self.ownerCt.ownerCt.showAlert('Preferences Error', 'Error looking up Dashboard Editor: ' + err);
+                self.editPanel.showAlert('Preferences Error', 'Error looking up Dashboard Editor: ' + err);
             }
         });
 
@@ -150,7 +153,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
 
     launchFailedHandler: function(response) {
         if (response.error) {
-            this.ownerCt.ownerCt.showAlert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
+            this.editPanel.showAlert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
         }
     },
 
@@ -165,7 +168,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             };
         }
 
-        this.ownerCt.ownerCt.showAlert('Server Error', 'Error during ' + operation.action + ': ' + errorMsg);
+        this.editPanel.showAlert('Server Error', 'Error during ' + operation.action + ': ' + errorMsg);
     },
 
     onAddClicked: function () {
@@ -216,7 +219,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             }
         }
         else {
-            this.ownerCt.ownerCt.showAlert("Error", "You must select at least one dashboard to edit");
+            this.editPanel.showAlert("Error", "You must select at least one dashboard to edit");
         }
     },
 
@@ -228,7 +231,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             store.remove(records);
             store.save();
         } else {
-            this.ownerCt.ownerCt.showAlert("Error", "You must select at least one dashboard to remove.");
+            this.editPanel.showAlert("Error", "You must select at least one dashboard to remove.");
         }
     }
 });

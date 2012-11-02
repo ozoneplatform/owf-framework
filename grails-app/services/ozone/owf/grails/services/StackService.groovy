@@ -32,15 +32,13 @@ class StackService {
         def criteria = ozone.owf.grails.domain.Stack.createCriteria()
         def opts = [:]
         
-        if (params?.id != null) opts.id = (params.id instanceof String ? Long.parseLong(params.id) : params.id)
-        if (params?.user_id != null) opts.user_id =(params.user_id instanceof String ? Long.parseLong(params.user_id) : params.user_id)
         if (params?.offset != null) opts.offset = (params.offset instanceof String ? Integer.parseInt(params.offset) : params.offset)
         if (params?.max != null) opts.max =(params.max instanceof String ? Integer.parseInt(params.max) : params.max)
         
         def results = criteria.list(opts) {
             
             if (params?.id)
-                eq("id", params.id)
+                eq("id", Long.parseLong(params.id))
                 
             // Apply any filters
             if (params.filters) {
@@ -80,7 +78,7 @@ class StackService {
                 groups {
                     eq('stackDefault', true)
                     people {
-                        eq('id', params.user_id)
+                        eq('id', Long.parseLong(params.user_id))
                     }
                 }
             }

@@ -7,7 +7,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPanel', {
     cls: 'widgeteditpanel',
 	
     initComponent: function () {
-        //get widget to launch
         var self = this;
         Ext.applyIf(this,{
             layout: 'fit',
@@ -23,19 +22,23 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPanel', {
                 items: [
                     {
                         xtype: 'widgeteditproperties',
-                        itemId: 'widgeteditproperties'
+                        itemId: 'widgeteditproperties',
+                        editPanel: self
                     },
                     {
                         xtype: 'intentstabpanel',
-                        itemId: 'intentstabpanel'
+                        itemId: 'intentstabpanel',
+                        editPanel: self
                     },
                     {
                         xtype: 'widgeteditusers',
-                        itemId: 'widgeteditusers'
+                        itemId: 'widgeteditusers',
+                        editPanel: self
                     },
                     {
                         xtype: 'widgeteditgroups',
-                        itemId: 'widgeteditgroups'
+                        itemId: 'widgeteditgroups',
+                        editPanel: self
                     }
                 ]
             }]
