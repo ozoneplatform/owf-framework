@@ -95,6 +95,7 @@ databaseChangeLog = {
       sql ( text = """
         create table stack_groups (group_id numeric(19,0) not null, stack_id bigint not null);
       """)
+  }
     }
     
     changeSet(author: "owf", id: "7.0.0-12", context: "create, upgrade, 7.0.0") {
@@ -119,6 +120,20 @@ databaseChangeLog = {
         addColumn(tableName: "owf_group") {
             column(name: "stack_default", type: "boolean", defaultValueBoolean: "false", valueBoolean: "false")
         }
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-15", context: "create, upgrade, 7.0.0") {
+        comment("Add a reference to a host stack to dashboard records to track where user instances should appear")
+        addColumn(tableName: "dashboard") {
+            column(name: "stack_id", type: "bigint")
+        }
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-16", context: "create, upgrade, 7.0.0") {
+        comment("Add foreign key constraint for stack_id in the dashboard table")
+        addForeignKeyConstraint(constraintName: "FKC18AEA946B3A1281",
+            baseColumnNames: "stack_id", baseTableName: "dashboard", 
+            referencedColumnNames: "id", referencedTableName: "stack")
     }
     
     //changeSet(author: "owf", id: "7.0.0-15", context: "create, upgrade, 7.0.0") {

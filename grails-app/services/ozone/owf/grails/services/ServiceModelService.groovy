@@ -58,7 +58,8 @@ class ServiceModelService {
                         createdDate: OWFDate.standardShortDateDisplay(domain.createdDate),
                         editedDate: OWFDate.standardShortDateDisplay(domain.editedDate),
                         createdBy: createServiceModel(domain.createdBy),
-                        layoutConfig: domain.layoutConfig
+                        layoutConfig: domain.layoutConfig,
+                        stack: createServiceModel(domain.stack)
                         )
                 break
 

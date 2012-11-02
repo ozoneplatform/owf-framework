@@ -20,7 +20,7 @@ class Dashboard implements Serializable, Comparable {
 	String description = ''
 	String layoutConfig = ''
 	boolean locked = false
-
+    Stack stack  // The stack in which this dashboard should appear
     static belongsTo = [user:Person]
   
 	static mapping = {
@@ -38,6 +38,7 @@ class Dashboard implements Serializable, Comparable {
 		description(nullable: true, blank: true)
         user(nullable:true)
 		layoutConfig(nullable: true, blank: true)
+        stack(nullable:true)
 	}
     
 	String toString() {
