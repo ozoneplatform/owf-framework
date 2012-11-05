@@ -95,7 +95,7 @@ Ext.define('Ozone.components.dashboarddesigner.SidePanel', {
 
                             this.on('beforedestroy', function () {
                                 cmp.el.un('click', me.dashboardDesigner.toggleDashboardLock, me.dashboardDesigner);
-                                cmp.tip.destroy();
+                                cmp.tip && cmp.tip.destroy();
                                 keymap.destroy();
                             });
                         },

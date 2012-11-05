@@ -1603,13 +1603,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             banner.el.mask();
         }
 
+        var dashboardCardPanel = Ext.getCmp('dashboardCardPanel');
         var dashboardDesigner = Ext.widget('dashboarddesigner', {
             dashboardContainer: this,
             dashboard: dashboard || this.activeDashboard,
             dashboardStore: this.dashboardStore,
             dashboardExists: dashboardExists,
-            renderTo: this.down('panel').el,
-            ownerCt: this.down('panel')
+            renderTo: dashboardCardPanel.el,
+            ownerCt: dashboardCardPanel
         });
 
         dashboardDesigner.on('destroy', function() {
