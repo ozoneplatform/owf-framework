@@ -64,8 +64,8 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     xtype: 'urlfield',
                     name: 'imageUrl',
                     itemId: 'imageUrl',
-                    fieldLabel: Ozone.util.createRequiredLabel('Icon URL'),
-                    allowBlank: false,
+                    fieldLabel: 'Icon URL',
+                    allowBlank: true,
                     maxLength: 2083,
                     emptyText: 'https://mycompany.com/widget/images/icon.png'
                 }
