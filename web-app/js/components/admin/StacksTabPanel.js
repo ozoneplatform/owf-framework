@@ -199,7 +199,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
         this.callParent();
     },
     onAddClicked: function (button, e) {
-        var record = this.ownerCt.store.getById(this.ownerCt.launchData.id),
+        var record = this.ownerCt.record,
             itemName = record.get('name') ? record.get('name') : record.get('userRealName');
 
         var win = Ext.widget('admineditoraddwindow', {
