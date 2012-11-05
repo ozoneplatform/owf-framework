@@ -162,8 +162,8 @@ class StackService {
 
         def stack, returnValue = null
         
-        if (params?.id >= 0 || params.stack_id) {  // Existing Stack
-            params.id = params.id ?: params.stack_id
+        if (params?.id >= 0 || params.stack_id  >= 0) {  // Existing Stack
+            params.id = params?.id >= 0 ? params.id : params.stack_id
             stack = Stack.findById(params.id, [cache: true])
             if (!stack) {
                 throw new OwfException(message: 'Stack ' + params.id + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
