@@ -56,11 +56,11 @@ Ext.define('Ozone.components.pane.DesktopPane', {
         return Ext.Array.clean(widgets);
     },
     
-    activateWidget: function(widget) {
+    activateWidget: function(widget, showFocusFrame, focusIframe) {
         if (widget.rendered === false || 
             (widget.rendered === true && widget.floating)) {
 
-            widget.minimized === true ? widget.restoreFromMinimize() : widget.focus(false, false, true, true);
+            widget.minimized === true ? widget.restoreFromMinimize(showFocusFrame) : widget.focus(false, false, showFocusFrame, focusIframe);
         }
 
         this.dashboard.updateActiveWidget(widget);

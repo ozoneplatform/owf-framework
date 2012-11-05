@@ -35,7 +35,7 @@ Ext.define('Ozone.components.pane.TabbedPane', {
                 tabchange: {
                     fn: function(tabPanel, card){
                         if(card.getIframeEl()) {
-                            me.activateWidget(card);
+                            me.activateWidget(card, false, true);
                         }
                     }
                 },
@@ -63,9 +63,9 @@ Ext.define('Ozone.components.pane.TabbedPane', {
         return widgets;
     },
 
-    activateWidget: function(widget) {
+    activateWidget: function(widget, showFocusFrame, focusIframe) {
         this.tabPanel.setActiveTab(widget);
-        widget.focus(false, false, true, true);
+        widget.focus(false, false, showFocusFrame, focusIframe);
         this.dashboard.updateActiveWidget(widget);
 
         return true;

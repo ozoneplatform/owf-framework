@@ -21,7 +21,7 @@ Ext.define('Ozone.components.window.WidgetSwitcher', {
         //the ordering of these calls is important
         this.close();
 
-        this.dashboard.activateWidget(record.data.uniqueId);
+        this.dashboard.activateWidget(record.data.uniqueId, true, true);
 
         if(!record.data.background) {
             Ext.getCmp(record.data.uniqueId).focus(false, false, true, true);

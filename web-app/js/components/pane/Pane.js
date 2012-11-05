@@ -277,8 +277,8 @@ Ext.define('Ozone.components.pane.Pane', {
         return deferreds;
     },
 
-    activateWidget: function(widget) {
-        widget.focus(false, false, true, true);
+    activateWidget: function(widget, showFocusFrame, focusIframe) {
+        widget.focus(false, false, showFocusFrame, focusIframe);
         this.dashboard.updateActiveWidget(widget);
 
         return true;
