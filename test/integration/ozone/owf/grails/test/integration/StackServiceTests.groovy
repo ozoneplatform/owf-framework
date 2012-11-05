@@ -13,6 +13,7 @@ class StackServiceTests extends GroovyTestCase {
     def stackService
     def stackIds = []
     def personId
+    def group
         
     protected void setUp() {
         super.setUp()
@@ -34,6 +35,8 @@ class StackServiceTests extends GroovyTestCase {
         def stack2 = Stack.build(name: 'Stack Two', stackPosition: 3, description: 'Stack Two description', stackContext: 'two', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
         def stack3 = Stack.build(name: 'Stack Three', stackPosition: 4, description: 'Stack Three description', stackContext: 'three', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
         stackIds = [stack1.id, stack2.id, stack3.id]
+        
+        group = Group.build(name: 'Test Group', automatic: false, status: 'active', stackDefault: false)
     }
 
     protected void tearDown() {
@@ -154,5 +157,37 @@ class StackServiceTests extends GroovyTestCase {
         //Check user was removed from stack both ways
         assertEquals 0, stackService.list(["user_id": "${personId}"]).results
         assertEquals 0, stackService.list(["id": "${stackIds[0]}"]).data.totalUsers[0]
+    }
+    
+    void testAddGroup() {
+        def ret = stackService.createOrUpdate([
+            "_method": "PUT",
+            "data": """[{
+                id: ${group.id}
+            }]""",
+            "stack_id": stackIds[0],
+            "tab": "groups",
+            "update_action": "add"
+        ])
+    
+        assertTrue ret.success
+        assertEquals 1, stackService.list(["group_id": "${group.id}"]).results
+        assertEquals 1, stackService.list(["id": "${stackIds[0]}"]).data.totalGroups[0]
+    }
+    
+    void testDeleteGroup() {
+        def ret = stackService.createOrUpdate([
+            "_method": "PUT",
+            "data": """[{
+                id: ${group.id}
+            }]""",
+            "stack_id": stackIds[0],
+            "tab": "groups",
+            "update_action": "remove"
+        ])
+    
+        assertTrue ret.success
+        assertEquals 0, stackService.list(["group_id": "${group.id}"]).results
+        assertEquals 0, stackService.list(["id": "${stackIds[0]}"]).data.totalGroups[0]
     }
 }
