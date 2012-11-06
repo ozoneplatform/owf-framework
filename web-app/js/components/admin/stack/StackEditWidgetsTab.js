@@ -7,7 +7,6 @@ Ext.define('Ozone.components.admin.stack.StackEditWidgetsTab', {
     cls: 'stackeditwidgetstab',
             
     initComponent: function () {
-        //get widget to launch
         var self = this;
         Ext.applyIf(this,{
             layout: 'fit',
@@ -18,25 +17,17 @@ Ext.define('Ozone.components.admin.stack.StackEditWidgetsTab', {
             componentId: 'stack_id',
             storeCfg: {
                 api: {
-                    read: '/widget',
-                    create: '/stack',
-                    update: '/widget',
-                    destroy: '/stack'
+                    read: '/widget'
                 },
                 methods: {
                     read: 'GET', 
-                    load: 'GET',  
-                    create: 'PUT', 
-                    update: 'PUT', 
-                    save: 'POST', 
-                    destroy: 'PUT'
-                },
-                updateActions: {
-                    destroy: 'remove',
-                    create: 'add'
+                    load: 'GET'
                 }
             }
         });
         this.callParent(arguments);
+
+        //Remove the bottom toolbar with Add/Remove buttons, a stack's widgets read-only
+        this.removeDocked(this.getDockedComponent('tbWidgetsGridFtr'));
     }
 });

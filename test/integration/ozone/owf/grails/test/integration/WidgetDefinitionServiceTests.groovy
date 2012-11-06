@@ -1,8 +1,12 @@
 package ozone.owf.grails.test.integration
 
 import ozone.owf.grails.services.AutoLoginAccountService
-import ozone.owf.grails.domain.Person
+import ozone.owf.grails.domain.Dashboard
 import ozone.owf.grails.domain.ERoleAuthority
+import ozone.owf.grails.domain.Group
+import ozone.owf.grails.domain.Person
+import ozone.owf.grails.domain.RelationshipType
+import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.grails.OwfException
 import grails.converters.JSON
@@ -10,21 +14,22 @@ import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
 class WidgetDefinitionServiceTests extends GroovyTestCase {
 
+    def domainMappingService
     def grailsApplication
-	def widgetDefinitionService
+    def widgetDefinitionService
     def personWidgetDefinitionService
 
     private final samplesArray = ["A","D","C","AA","B","BB"]
-	
-	protected void setUp() {
+    
+    protected void setUp() {
         super.setUp()
-		def acctService = new AutoLoginAccountService()
-		Person p = new Person(username:'testUserWidgetDefinitionServiceTesting', userRealName: 'foo', passwd: 'foo', enabled:true)
-		p.save()
-		acctService.autoAccountName = 'testUserWidgetDefinitionServiceTesting'
-		acctService.autoRoles = [ERoleAuthority.ROLE_ADMIN.strVal]
-		widgetDefinitionService.accountService = acctService
-		personWidgetDefinitionService.accountService = acctService
+        def acctService = new AutoLoginAccountService()
+        Person p = new Person(username:'testUserWidgetDefinitionServiceTesting', userRealName: 'foo', passwd: 'foo', enabled:true)
+        p.save()
+        acctService.autoAccountName = 'testUserWidgetDefinitionServiceTesting'
+        acctService.autoRoles = [ERoleAuthority.ROLE_ADMIN.strVal]
+        widgetDefinitionService.accountService = acctService
+        personWidgetDefinitionService.accountService = acctService
     }
 
     protected void tearDown() {
@@ -32,31 +37,31 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
     }
 
     void testCreate()
-	{
-		def resultOfCreate = widgetDefinitionService.create(WidgetDefinitionPostParams.generatePostParamsA())
-		assertTrue resultOfCreate.success
-		assertEquals "12345678-1234-1234-1234-1234567890a0", resultOfCreate.data[0].widgetGuid
-		def widgetDefinition = WidgetDefinition.findByWidgetGuid("12345678-1234-1234-1234-1234567890a0")
-		assertEquals widgetDefinition.widgetGuid, resultOfCreate.data[0].widgetGuid
-	}
-	
-	void testUpdate()
-	{
+    {
+        def resultOfCreate = widgetDefinitionService.create(WidgetDefinitionPostParams.generatePostParamsA())
+        assertTrue resultOfCreate.success
+        assertEquals "12345678-1234-1234-1234-1234567890a0", resultOfCreate.data[0].widgetGuid
+        def widgetDefinition = WidgetDefinition.findByWidgetGuid("12345678-1234-1234-1234-1234567890a0")
+        assertEquals widgetDefinition.widgetGuid, resultOfCreate.data[0].widgetGuid
+    }
+    
+    void testUpdate()
+    {
         def postParamsA = WidgetDefinitionPostParams.generatePostParamsA()
-		def resultOfCreate = widgetDefinitionService.create(postParamsA)
+        def resultOfCreate = widgetDefinitionService.create(postParamsA)
 
         def postParamsB = WidgetDefinitionPostParams.generatePostParamsB()
         postParamsB.id = postParamsB.widgetGuid
-		def resultOfUpdate = widgetDefinitionService.update(postParamsB)
-		
-		assertTrue resultOfUpdate.success
-		assertEquals 1, WidgetDefinition.findAll().size()
-		
-		def widgetDefinition = WidgetDefinition.findByWidgetGuid("12345678-1234-1234-1234-1234567890a0")
-		assertEquals "My Widget Updated", widgetDefinition.displayName
-	}
+        def resultOfUpdate = widgetDefinitionService.update(postParamsB)
+        
+        assertTrue resultOfUpdate.success
+        assertEquals 1, WidgetDefinition.findAll().size()
+        
+        def widgetDefinition = WidgetDefinition.findByWidgetGuid("12345678-1234-1234-1234-1234567890a0")
+        assertEquals "My Widget Updated", widgetDefinition.displayName
+    }
 
-	void testListWithStartAndLimit() {
+    void testListWithStartAndLimit() {
         createDataForListTests()
         def expectedOrder = samplesArray
 
@@ -99,6 +104,59 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
         def widgets = widgetDefinitionService.list([sort: 'value.namespace'])
 
         assertEquals expectedOrder, widgets.data*.displayName
+    }
+
+    void testListWithStackId() {
+        createDataForListTests()
+
+        def widget1 = WidgetDefinition.findByDisplayName(samplesArray[0])
+        def widget2 = WidgetDefinition.findByDisplayName(samplesArray[1])
+        def widget3 = WidgetDefinition.findByDisplayName(samplesArray[2])
+        
+        def stack1 = Stack.build(name: 'Stack One', stackPosition: 2, description: 'Stack One description', stackContext: 'one', 
+            imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
+        stack1.addToGroups(Group.build(name: 'Group1', automatic: false, status: 'active', stackDefault: true))
+
+        def stackDashboard1 = Dashboard.build(alteredByAdmin: false, guid: '12345678-1234-1234-1234-123456789000',
+            locked: false, isdefault: false, name: 'Stack Dashboard1', layoutConfig: """{
+                    "xtype": "desktoppane",
+                    "flex": 1,
+                    "height": "100%",
+                    "items": [
+                    ],
+                    "paneType": "desktoppane",
+                    "widgets": [{
+                        "widgetGuid":"${widget1.widgetGuid}"
+                    },{
+                        "widgetGuid":"${widget2.widgetGuid}"
+                    },{
+                        "widgetGuid":"${widget1.widgetGuid}"
+                    }],
+                    "defaultSettings": {}
+                }""", description: 'This is a stack dashboard.')
+
+        def stackDashboard2 = Dashboard.build(alteredByAdmin: false, guid: '12345678-1234-1234-1234-123456789001',
+            locked: false, isdefault: false, name: 'Stack Dashboard2', layoutConfig: """{
+                    "xtype": "tabbedpane",
+                    "flex": 1,
+                    "height": "100%",
+                    "items": [
+                    ],
+                    "paneType": "desktoppane",
+                    "widgets": [{
+                        "widgetGuid":"${widget3.widgetGuid}"
+                    },{
+                        "widgetGuid":"${widget2.widgetGuid}"
+                    }],
+                    "defaultSettings": {}
+                }""", description: 'This is a stack dashboard.')
+
+        domainMappingService.createMapping(stack1.findStackDefaultGroup(), RelationshipType.owns, stackDashboard1)
+        domainMappingService.createMapping(stack1.findStackDefaultGroup(), RelationshipType.owns, stackDashboard2)
+
+        def result = widgetDefinitionService.list([stack_id: stack1.id])
+        assertTrue result.success
+        assertEquals 3, result.results
     }
 
     void testListSuccess() {

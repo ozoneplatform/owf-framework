@@ -141,8 +141,8 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                     }, this);
 
                     if (grid && comp) {
-                        comp.record = comp.recordId ? comp.store.getAt(comp.store.findExact('id', comp.recordId)) : undefined;
-                        compId = comp.recordId ? comp.recordId : -1;
+                        comp.record = comp.recordId > -1 ? comp.store.getAt(comp.store.findExact('id', comp.recordId)) : undefined;
+                        compId = comp.recordId > -1 ? comp.recordId : -1;
                         var p = {
                             tab: 'widgets'
                         };
