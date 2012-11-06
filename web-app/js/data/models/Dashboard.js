@@ -4,6 +4,7 @@ Ext.define('Ozone.data.Dashboard', {
     fields:[
         'alteredByAdmin',
         'guid',
+        {name:'id', mapping: 'guid'},
         { name: 'isdefault', type: 'boolean', defaultValue: false },
         'EDashboardLayoutList',
         'name',
