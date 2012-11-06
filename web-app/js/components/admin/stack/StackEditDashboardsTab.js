@@ -70,5 +70,34 @@ Ext.define('Ozone.components.admin.stack.StackEditDashboardsTab', {
             }
             ]
         });
+    },
+
+    onAddClicked: function () {
+        var win = Ext.widget('admineditoraddwindow', {
+            addType: 'Dashboard',
+            itemName: this.ownerCt.record.get('displayName'),
+            editor: this.editor,
+            focusOnClose: this.down(),
+            existingItemsStore: this.getComponent('dashboardsgrid').getStore(),
+            grid: Ext.widget('dashboardsgrid', {
+                itemId: 'dashboardsaddgrid',
+                border: false,
+                enableColumnHide: false,
+                sortableColumns: false,
+                listeners: {
+                    render: {
+                        fn: function(cmp) {
+                            var user = Ozone.config.user;
+                            cmp.setBaseParams({
+                                adminEnabled: true,
+                                user_id: user.id
+                            });
+                        },
+                        scope: this
+                    }
+                }
+            })
+        });
+        win.show();
     }
 });

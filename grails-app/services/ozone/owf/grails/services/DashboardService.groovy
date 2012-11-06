@@ -196,6 +196,20 @@ class DashboardService extends BaseService {
             return [success: true, dashboardList: [], count: 0]
         }
 
+        def stackDashboardIds = [] as Set
+        if (params.stack_id != null) {
+            Stack stack = Stack.get(params.stack_id)
+            if (stack != null){
+                def defaultGroup = stack.findStackDefaultGroup()
+                domainMappingService.getMappings(defaultGroup,RelationshipType.owns,Dashboard.TYPE).each { stackDashboardIds << it.destId }
+            }
+        }
+
+        //if stack param is set then only stack default group dashboards should be returned, if none are found an empty list should be returned
+        if((params.stack_id != null) && stackDashboardIds.isEmpty()) {
+            return [success: true, dashboardList: [], count: 0]
+        }
+
         //process any groupDashboards for this user
         def privateGroupDashboardToGroupsMap = [:]
         privateGroupDashboardToGroupsMap = processGroupDashboards(groups,params.user)
@@ -231,6 +245,11 @@ class DashboardService extends BaseService {
             //filter by group dashboard ids
             if (groupDashboardIds != null && !groupDashboardIds.isEmpty()) {
                 inList('id',groupDashboardIds)
+            }
+
+            //filter by stack dashboard ids
+            if (stackDashboardIds != null && !stackDashboardIds.isEmpty()) {
+                inList('id',stackDashboardIds)
             }
 
             if (params.isdefault != null) {

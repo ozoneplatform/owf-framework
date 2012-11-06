@@ -121,7 +121,7 @@ class StackService {
                     projections { rowCount() }
                 }
             }
-            
+
             def stackDefaultGroup = stack.findStackDefaultGroup()
             def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
             
@@ -218,8 +218,11 @@ class StackService {
                 stackToSwitch.save(flush: true, failOnError: true)
             }
             
+            def stackDefaultGroup = stack.findStackDefaultGroup()
+            def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
+
             returnValue = serviceModelService.createServiceModel(stack,[
-                totalDashboards: 0,
+                totalDashboards: totalDashboards,
                 totalUsers: stack.findStackDefaultGroup()?.people ? stack.findStackDefaultGroup().people.size() : 0,
                 totalGroups: stack.groups ? stack.groups.size() - 1 : 0, // Don't include the default stack group
                 totalWidgets: 0
@@ -356,7 +359,7 @@ class StackService {
         }
         
         stacks.each {
-            def stack = ozone.owf.grails.domain.Stack.findById(it.id, [cache: true])
+            def stack = Stack.findById(it.id, [cache: true])
             
             // TODO: Break the association with any existing dashboard instances.  Associate them with
             // null or the default OWF stack.
