@@ -32,7 +32,10 @@ class ConfigController {
         pDateString = prettytime.display(date: pDate).toString()
         if ("1 day ago".equalsIgnoreCase(pDateString)) { pDateString = 'Yesterday' }
 
-        def groups = curUser.groups.collect{ serviceModelService.createServiceModel(it) }
+        def groups = []
+        curUser.groups.each { 
+            if (!it.stackDefault) { groups.add(serviceModelService.createServiceModel(it)) }
+        }
         def emailString = curUser.email != null ? curUser.email : ''
 
         def isAdmin = accountService.getLoggedInUserIsAdmin()
