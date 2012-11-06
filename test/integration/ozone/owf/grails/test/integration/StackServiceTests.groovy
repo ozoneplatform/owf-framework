@@ -1,6 +1,7 @@
 package ozone.owf.grails.test.integration
 
 import ozone.owf.grails.OwfException
+import ozone.owf.grails.domain.Dashboard
 import ozone.owf.grails.domain.ERoleAuthority
 import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.Person
@@ -12,6 +13,7 @@ class StackServiceTests extends GroovyTestCase {
     def accountService
     def stackService
     def stackIds = []
+    def userDashboard 
     def personId
     def group
         
@@ -37,6 +39,17 @@ class StackServiceTests extends GroovyTestCase {
         stackIds = [stack1.id, stack2.id, stack3.id]
         
         group = Group.build(name: 'Test Group', automatic: false, status: 'active', stackDefault: false)
+        userDashboard = Dashboard.build(alteredByAdmin: false, guid: '12345678-1234-1234-1234-123456789000', user: person,
+            locked: false, isdefault: false, name: 'Test Dashboard', layoutConfig: """{
+                    "xtype": "desktoppane",
+                    "flex": 1,
+                    "height": "100%",
+                    "items": [
+                    ],
+                    "paneType": "desktoppane",
+                    "widgets": [],
+                    "defaultSettings": {}
+                }""", stack: stack1, description: 'This is a test user instance of a dashboard')
     }
 
     protected void tearDown() {
@@ -189,5 +202,41 @@ class StackServiceTests extends GroovyTestCase {
         assertTrue ret.success
         assertEquals 0, stackService.list(["group_id": "${group.id}"]).results
         assertEquals 0, stackService.list(["id": "${stackIds[0]}"]).data.totalGroups[0]
+    }
+    
+    void testAddRemoveDashboard() {
+        //Ensure stack has no dashboards.
+        assertEquals 0, stackService.list(["id": "${stackIds[0]}"]).data.totalDashboards[0]
+
+        // Update it to add a dashboard.
+        def ret = stackService.createOrUpdate([
+            "_method": "PUT",
+            "data": """[{
+                id: ${userDashboard.id},
+                guid: ${userDashboard.guid}
+            }]""",
+            "stack_id": stackIds[0],
+            "tab": "dashboards",
+            "update_action": "add"
+        ])
+
+        // Check dashboard was added to stack
+        assertTrue ret.success
+        assertEquals 1, stackService.list(["id": "${stackIds[0]}"]).data.totalDashboards[0]
+
+        // TODO:  Use the ret val to delete it from the group.
+        ret = stackService.createOrUpdate([
+            "_method": "PUT",
+            "data": """[{
+                guid: ${ret.data.guid[0]}
+            }]""",
+            "stack_id": stackIds[0],
+            "tab": "dashboards",
+            "update_action": "remove"
+        ])
+
+        assertTrue ret.success
+        //Check user was removed from stack both ways
+        assertEquals 0, stackService.list(["id": "${stackIds[0]}"]).data.totalDashboards[0]
     }
 }

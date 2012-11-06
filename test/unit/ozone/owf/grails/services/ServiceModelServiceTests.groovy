@@ -35,17 +35,21 @@ class ServiceModelServiceTests extends GrailsUnitTestCase {
 
     void testDashboardDefinitionToServiceModel() {
         def dashboard = new Dashboard()
-
+        def stack = new Stack(name:'Test Stack', stackPosition: 1, description: 'This is a test stack', stackContext:'testStack',
+            imageUrl:'testStack.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
 		dashboard.guid = '3F2504E0-4F89-11D3-9A0C-0305E82C3301'
 		dashboard.isdefault = false
 		dashboard.dashboardPosition = 0
 		dashboard.name =  "Hello World 1234567890!@\$%^&*()_+-|?><`~."
 		dashboard.user = new Person()
+        dashboard.stack = stack
 		
         def serviceModel = serviceModelService.createServiceModel(dashboard)
 		
 		assertEquals serviceModel.name, dashboard.name
 		assertEquals serviceModel.isdefault, dashboard.isdefault
+        assertEquals serviceModel.guid, dashboard.guid
+        assertEquals serviceModel.stack.id, stack.id
         
     }
 

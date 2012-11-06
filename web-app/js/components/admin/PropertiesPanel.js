@@ -30,18 +30,10 @@ Ext.define('Ozone.components.PropertiesPanel', {
             anchor: '100%',
             listeners: {
                 blur: {
-                    fn: function(field) {
-                        field.changed = true;
-                        field.doComponentLayout();
-                        if (field.getXType() == 'textfield') {
-                        	field.setValue(Ext.String.trim(field.getValue()));
-                        }
-                    },
-                    scope: me
+                    fn: me.handleBlur
                 },
                 change: {
-                    fn: me.handleChange,
-                    scope: me
+                    fn: me.handleChange
                 },
                 afterrender: {
                     fn: function(field, eOpts) {
@@ -200,6 +192,13 @@ Ext.define('Ozone.components.PropertiesPanel', {
         me.callParent();
     },
     initFieldValues: Ext.emptyFn,
+    handleBlur: function(field) {
+        field.changed = true;
+        field.doComponentLayout();
+        if (field.getXType() == 'textfield') {
+            field.setValue(Ext.String.trim(field.getValue()));
+        }
+    },
     handleChange: function(field, newValue, oldValue, eOpts) {
         if(!field.changed && field.isDirty()) field.changed = true;
     },
@@ -212,6 +211,8 @@ Ext.define('Ozone.components.PropertiesPanel', {
         }
     },
     onApply: function() {
+        this.validateFields();
+
         if(!this.getForm().hasInvalidField()) {
             var panel = this;
             var widget = panel.ownerCt;
@@ -263,6 +264,17 @@ Ext.define('Ozone.components.PropertiesPanel', {
             Ext.defer(function() {
                 toolbar.remove(me.applyAlert);
             }, duration ? duration : 2000);
+        }
+    },
+    validateFields: function() {
+        //Show validation on fields
+        var textfields = this.query('textfield');
+        for (var i = 0; i < textfields.length; i++) {
+            var field = textfields[i];
+            if (!Ext.isFunction(field)) {
+                field.isValid();
+                this.handleBlur(field);
+            }
         }
     }
 });

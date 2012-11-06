@@ -35,6 +35,9 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     regex: /^[a-zA-Z\d\-\_]+$/,
                     regexText: 'Invalid characters! The URL Name may only contain letters, numbers, dashes, and underscores.',
                     listeners: {
+                        blur: {
+                            fn: me.handleBlur
+                        },
                         change: {
                             fn: function(field) {
                                 me.handleChange(field);

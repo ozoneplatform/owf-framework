@@ -84,6 +84,8 @@ Ext.define('Ozone.components.admin.dashboard.DashboardEditPropertiesTab', {
     }
   },
   onApply: function() {
+    this.validateFields();
+        
     if(!this.getForm().hasInvalidField()) {
         var panel = this;
         var widget = panel.ownerCt;
