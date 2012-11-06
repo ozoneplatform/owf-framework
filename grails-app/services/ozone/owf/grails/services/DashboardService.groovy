@@ -9,6 +9,7 @@ import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.grails.domain.PersonWidgetDefinition
 import ozone.owf.grails.domain.Group
+import ozone.owf.grails.domain.Stack
 import org.hibernate.CacheMode
 import ozone.owf.grails.domain.DomainMapping
 import ozone.owf.grails.domain.RelationshipType
@@ -85,9 +86,9 @@ class DashboardService extends BaseService {
                         args.name = groupDash.name
                         args.description = groupDash.description
                         args.locked = groupDash.locked
-
                         args.layoutConfig = groupDash.layoutConfig
-
+                        args.stack = groupDash.stack
+                        
                         def privateDash = deepClone(args,user.id)
 
                         //save mapping
@@ -365,7 +366,7 @@ class DashboardService extends BaseService {
                 person = Person.get(personId);
             }
         }
-
+        
         def queryReturn = Dashboard.executeQuery("SELECT MAX(d.dashboardPosition) AS retVal FROM Dashboard d WHERE d.user = ?", [person])
         def maxPosition = (queryReturn[0] != null)? queryReturn[0] : -1
         maxPosition++
@@ -377,6 +378,8 @@ class DashboardService extends BaseService {
                 dashboardPosition:maxPosition,
                 description: JSONObject.NULL.equals(params.description) ? null : params.description,
                 layoutConfig: params.layoutConfig.toString() ?: "",
+                // TODO: change this to be the default OWF stack if no stack was supplied.
+                stack: params.stack != null ? Stack.get(params.stack.id.toLong()) : null,
                 locked: params.locked != null ? params.locked : false)
 
         //if this is not a group dashboard then assign it to the specified user
@@ -392,6 +395,7 @@ class DashboardService extends BaseService {
 
         dashboard.validate()
         if (dashboard.hasErrors()) {
+            def foo = dashboard.errors.toString()
             throw new OwfException(	message:'A fatal validation error occurred during the creating of a dashboard. Params: ' + params.toString() + ' Validation Errors: ' + dashboard.errors.toString(),
             exceptionType: OwfExceptionTypes.Validation)
         }
@@ -597,7 +601,8 @@ class DashboardService extends BaseService {
         }
 
         dashboard.layoutConfig = params.layoutConfig ?: dashboard.layoutConfig
-
+        // TODO: If no stack is provided, do we change it?  Or do we put it in the default OWF stack?
+        dashboard.stack =  params.stack != null ? Stack.get(params.stack.id.toLong()) : null
         dashboard.locked = params.locked instanceof Boolean ? params.locked : params.locked == "true"
 
         // TODO: Consider renaming the regenerateStateIds param.  This controls regenerating widget instance id's which are encapsulated in layout_config now instead of a state table.
@@ -662,6 +667,7 @@ class DashboardService extends BaseService {
                     args.regenerateStateIds = true
 
                     args.layoutConfig = groupDash.layoutConfig
+                    args.stack = (groupDash.stack != null) ? ['id': groupDash.stack.id, 'guid': groupDash.stack.guid] : null
 
                     updateDashboard(args,accountService.getLoggedInUser(),dashboard)
                 }

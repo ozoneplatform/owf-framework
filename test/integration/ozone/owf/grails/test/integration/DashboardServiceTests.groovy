@@ -7,8 +7,10 @@ import ozone.owf.grails.domain.Dashboard
 import ozone.owf.grails.domain.ERoleAuthority
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.PersonWidgetDefinition
+import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.grails.services.AutoLoginAccountService
+
 
 class DashboardServiceTests extends GroovyTestCase {
 
@@ -17,14 +19,20 @@ class DashboardServiceTests extends GroovyTestCase {
 	def personWidgetDefinitionService
 	def widgetDefinitionService
 	def accountService
-
+    def stack
+    def stackForUpdate
 	def pwdCounter
 	
 	protected void setUp() {
         super.setUp()
 		def acctService = new AutoLoginAccountService()
-        person = new Person(username:'testUserDashboardServiceTesting', userRealName: 'foo', enabled:true)
+        person = Person.build(username:'testUserDashboardServiceTesting', userRealName: 'foo', enabled:true)
         person.save()
+        stack = Stack.build(name:'Test Stack', stackPosition: 1, description: 'This is a test stack', stackContext:'testStack', 
+            imageUrl:'testStack.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
+        stackForUpdate = Stack.build(name:'Test Stack 2', stackPosition: 2, description: 'This is another test stack', stackContext:'testStack2',
+            imageUrl:'testStack.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
+        stack.save()
 		acctService.autoAccountName = 'testUserDashboardServiceTesting'
 		acctService.autoRoles = [ERoleAuthority.ROLE_ADMIN.strVal]
 		accountService = acctService
@@ -35,9 +43,279 @@ class DashboardServiceTests extends GroovyTestCase {
     }
 	
 	protected void tearDown(){
+        person.delete()
+        stack.delete()
+        stackForUpdate.delete()
 		super.tearDown()
 	}
 	
+    def generatePostParamsTestDB() {
+        def retval = [
+                "alteredByAdmin": false,
+                "createdDate": "11/02/2012 02:59 PM EDT",
+                "isGroupDashboard": false,
+                "guid"      : "12345678-1234-1234-1234-123456789000",
+                "isdefault": true,
+                "locked": false,
+                "name": "Test Dashboard",
+                "layoutConfig": """{
+                    "xtype": "desktoppane",
+                    "flex": 1,
+                    "height": "100%",
+                    "items": [
+                    ],
+                    "paneType": "desktoppane",
+                    "widgets": [
+                        {   
+                            "widgetGuid": "12345678-1234-1234-1234-1234567890a0",
+                            "uniqueId": "9a420f76-b50f-a763-8228-538b785c793f",
+                            "dashboardGuid": "e897377c-e68a-efc5-df6a-ef6a3066d7be",
+                            "paneGuid": "e85aed81-5daf-9f76-8a4f-0394b781ac30",
+                            "name": "Channel Shouter",
+                            "active": false,
+                            "x": 2,
+                            "y": 3,
+                            "minimized": false,
+                            "maximized": false,
+                            "pinned": false,
+                            "collapsed": false,
+                            "columnPos": 0,
+                            "buttonId": null,
+                            "buttonOpened": false,
+                            "region": "none",
+                            "statePosition": 1,
+                            "intentConfig": null,
+                            "singleton": false,
+                            "floatingWidget": false,
+                            "background": false,
+                            "zIndex": 19090,
+                            "height": 250,
+                            "width": 295
+                        },
+                        {
+                            "widgetGuid": "12345678-1234-1234-1234-1234567890e2",
+                            "uniqueId": "ae14e03b-1173-3156-7e9b-b1a65c9c2f23",
+                            "dashboardGuid": "e897377c-e68a-efc5-df6a-ef6a3066d7be",
+                            "paneGuid": "e85aed81-5daf-9f76-8a4f-0394b781ac30",
+                            "name": "Channel Listener",
+                            "active": false,
+                            "x": 5,
+                            "y": 259,
+                            "minimized": false,
+                            "maximized": false,
+                            "pinned": false,
+                            "collapsed": false,
+                            "columnPos": 0,
+                            "buttonId": null,
+                            "buttonOpened": false,
+                            "region": "none",
+                            "statePosition": 2,
+                            "intentConfig": null,
+                            "singleton": false,
+                            "floatingWidget": false,
+                            "background": false,
+                            "zIndex": 19100,
+                            "height": 440,
+                            "width": 540
+                        },
+                        {
+                            "widgetGuid": "12345678-1234-1234-1234-1234567890e4",
+                            "uniqueId": "a7391c44-d86a-3121-cb4f-3fa2fbb2b4f8",
+                            "dashboardGuid": "e897377c-e68a-efc5-df6a-ef6a3066d7be",
+                            "paneGuid": "e85aed81-5daf-9f76-8a4f-0394b781ac30",
+                            "name": "Nearly Empty",
+                            "active": true,
+                            "x": 547,
+                            "y": 258,
+                            "minimized": false,
+                            "maximized": false,
+                            "pinned": false,
+                            "collapsed": false,
+                            "columnPos": 0,
+                            "buttonId": null,
+                            "buttonOpened": false,
+                            "region": "none",
+                            "statePosition": 3,
+                            "intentConfig": null,
+                            "singleton": false,
+                            "floatingWidget": false,
+                            "background": false,
+                            "zIndex": 19110,
+                            "height": 440,
+                            "width": 540
+                        }
+                    ],
+                    "defaultSettings": {
+                        "widgetStates": {
+                            "12345678-1234-1234-1234-1234567890a0": {
+                                "x": 2,
+                                "y": 3,
+                                "height": 250,
+                                "width": 295,
+                                "timestamp": 1351882823349
+                            },
+                            "12345678-1234-1234-1234-1234567890e2": {
+                                "x": 5,
+                                "y": 259,
+                                "height": 440,
+                                "width": 540,
+                                "timestamp": 1351882826127
+                            },
+                            "12345678-1234-1234-1234-1234567890e4": {
+                                "x": 547,
+                                "y": 258,
+                                "height": 440,
+                                "width": 540,
+                                "timestamp": 1351882833532
+                            }
+                        }
+                    }
+                }""",
+                "stack": null,
+                "description": "This is a test dashboard.",
+                "guid": "e897377c-e68a-efc5-df6a-ef6a3066d7be"
+            ]
+    }
+    
+    def generatePostParamsTestDBWithStack() {
+        def retval = [
+                "alteredByAdmin": false,
+                "createdDate": "11/02/2012 02:59 PM EDT",
+                "isGroupDashboard": false,
+                "isdefault": true,
+                "guid"      : "12345678-1234-1234-1234-123456789001",
+                "locked": false,
+                "name": "Test Dashboard",
+                "layoutConfig": """{
+                    "xtype": "desktoppane",
+                    "flex": 1,
+                    "height": "100%",
+                    "items": [
+                    ],
+                    "paneType": "desktoppane",
+                    "widgets": [
+                        {
+                            "widgetGuid": "12345678-1234-1234-1234-1234567890a0",
+                            "uniqueId": "9a420f76-b50f-a763-8228-538b785c793f",
+                            "dashboardGuid": "e897377c-e68a-efc5-df6a-ef6a3066d7be",
+                            "paneGuid": "e85aed81-5daf-9f76-8a4f-0394b781ac30",
+                            "name": "Channel Shouter",
+                            "active": false,
+                            "x": 2,
+                            "y": 3,
+                            "minimized": false,
+                            "maximized": false,
+                            "pinned": false,
+                            "collapsed": false,
+                            "columnPos": 0,
+                            "buttonId": null,
+                            "buttonOpened": false,
+                            "region": "none",
+                            "statePosition": 1,
+                            "intentConfig": null,
+                            "singleton": false,
+                            "floatingWidget": false,
+                            "background": false,
+                            "zIndex": 19090,
+                            "height": 250,
+                            "width": 295
+                        },
+                        {
+                            "widgetGuid": "12345678-1234-1234-1234-1234567890e2",
+                            "uniqueId": "ae14e03b-1173-3156-7e9b-b1a65c9c2f23",
+                            "dashboardGuid": "e897377c-e68a-efc5-df6a-ef6a3066d7be",
+                            "paneGuid": "e85aed81-5daf-9f76-8a4f-0394b781ac30",
+                            "name": "Channel Listener",
+                            "active": false,
+                            "x": 5,
+                            "y": 259,
+                            "minimized": false,
+                            "maximized": false,
+                            "pinned": false,
+                            "collapsed": false,
+                            "columnPos": 0,
+                            "buttonId": null,
+                            "buttonOpened": false,
+                            "region": "none",
+                            "statePosition": 2,
+                            "intentConfig": null,
+                            "singleton": false,
+                            "floatingWidget": false,
+                            "background": false,
+                            "zIndex": 19100,
+                            "height": 440,
+                            "width": 540
+                        },
+                        {
+                            "widgetGuid": "12345678-1234-1234-1234-1234567890e4",
+                            "uniqueId": "a7391c44-d86a-3121-cb4f-3fa2fbb2b4f8",
+                            "dashboardGuid": "e897377c-e68a-efc5-df6a-ef6a3066d7be",
+                            "paneGuid": "e85aed81-5daf-9f76-8a4f-0394b781ac30",
+                            "name": "Nearly Empty",
+                            "active": true,
+                            "x": 547,
+                            "y": 258,
+                            "minimized": false,
+                            "maximized": false,
+                            "pinned": false,
+                            "collapsed": false,
+                            "columnPos": 0,
+                            "buttonId": null,
+                            "buttonOpened": false,
+                            "region": "none",
+                            "statePosition": 3,
+                            "intentConfig": null,
+                            "singleton": false,
+                            "floatingWidget": false,
+                            "background": false,
+                            "zIndex": 19110,
+                            "height": 440,
+                            "width": 540
+                        }
+                    ],
+                    "defaultSettings": {
+                        "widgetStates": {
+                            "12345678-1234-1234-1234-1234567890a0": {
+                                "x": 2,
+                                "y": 3,
+                                "height": 250,
+                                "width": 295,
+                                "timestamp": 1351882823349
+                            },
+                            "12345678-1234-1234-1234-1234567890e2": {
+                                "x": 5,
+                                "y": 259,
+                                "height": 440,
+                                "width": 540,
+                                "timestamp": 1351882826127
+                            },
+                            "12345678-1234-1234-1234-1234567890e4": {
+                                "x": 547,
+                                "y": 258,
+                                "height": 440,
+                                "width": 540,
+                                "timestamp": 1351882833532
+                            }
+                        }
+                    }
+                }""",
+                "stack": [
+                  "id": stack.id,
+                  "totalGroups": 0,
+                  "imageUrl": "${stack.imageUrl}",
+                  "description": "${stack.description}",
+                  "name": "${stack.name}",
+                  "totalDashboards": 0,
+                  "stackPosition": stack.stackPosition,
+                  "stackContext": "${stack.stackContext}",
+                  "class": "ozone.owf.grails.services.model.StackServiceModel",
+                  "totalUsers": 0,
+                  "totalWidgets": 0,
+                  "descriptorUrl": "${stack.descriptorUrl}"
+                ] 
+            ]
+    }
+    
 	def generatePostParamsA()
 	{
 		//A dashboard with 3 state items
@@ -1180,6 +1458,71 @@ class DashboardServiceTests extends GroovyTestCase {
 		assertEquals result.success, true
 		assertNotNull result.dashboard
     }
+    
+    void testCreateWithStack() {
+        //Create 3 Person Widget Definitions so the state objects match up.
+        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsA1())
+        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsB1())
+        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsD1())
+        assertEquals 3,PersonWidgetDefinition.list().size()
+        
+        def result = dashboardService.create(generatePostParamsTestDBWithStack())
+        assertEquals result.success, true
+        assertNotNull result.dashboard
+    }
+    
+    void testUpdateWithStack() {
+        //Create 3 Person Widget Definitions so the state objects match up.
+        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsA1())
+        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsB1())
+        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsD1())
+        assertEquals 3,PersonWidgetDefinition.list().size()
+        
+        def params = generatePostParamsTestDBWithStack()
+        def result = dashboardService.create(params)
+        assertEquals result.success, true
+        assertNotNull result.dashboard
+        
+        // Change the params and update it.
+        def dashboard = Dashboard.get(result.dashboard.id)
+        def newDescr = 'This is an updated description'
+        def newGuid = '11111111-1111-1111-1111-1234567892a0'
+        def newName = 'An Updated Title'
+        def newIsdefault = true
+        def newDashboardPos = 4
+        def newLocked = true
+        def newLayoutConfig = '{}'
+        params.description = newDescr
+        params.stack = stackForUpdate
+        params.guid = newGuid
+        params.name = newName
+        params.isdefault = newIsdefault
+        params.dashboardPosition = newDashboardPos
+        params.locked = newLocked
+        params.layoutConfig = newLayoutConfig
+        result = dashboardService.updateDashboard(params, person, dashboard)
+        
+        // Validate the return values
+        assertEquals result.success, true
+        assertNotNull result.dashboard
+        assertEquals newDescr, result.dashboard.description
+        assertEquals newName, result.dashboard.name
+        assertEquals newIsdefault, result.dashboard.isdefault
+        assertEquals newDashboardPos, result.dashboard.dashboardPosition
+        assertEquals newLocked, result.dashboard.locked
+        assertEquals newLayoutConfig, result.dashboard.layoutConfig
+        assertEquals stackForUpdate.id, result.dashboard.stack.id
+        
+        // Fetch the actual dashboard object and test that the values persisted.
+        dashboard = Dashboard.get(result.dashboard.id)
+        assertEquals newDescr, dashboard.description
+        assertEquals newName, dashboard.name
+        assertEquals newIsdefault, dashboard.isdefault
+        assertEquals newDashboardPos, dashboard.dashboardPosition
+        assertEquals newLocked, dashboard.locked
+        assertEquals newLayoutConfig, dashboard.layoutConfig
+        assertEquals stackForUpdate.id, dashboard.stack.id
+    }
 	
 	void testCloneNonexisting() {
 		buildJ(false)
@@ -1189,26 +1532,6 @@ class DashboardServiceTests extends GroovyTestCase {
 	}
 	
 	
-
-//	void testUpdate(){
-//		//Create 3 Person Widget Definitions so the state objects match up.
-//		assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsA1())
-//		assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsA2())
-//		assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsA3())
-//		def resultOfCreate = dashboardService.create(generatePostParamsA())
-//		def dashboard = Dashboard.findByGuid("12345678-1234-1234-1234-1234567890a0")
-//		assertEquals 3, dashboard.state.size()
-//
-//		//Create 2 Person Widget Definitions so the state objects match up.
-//		assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsB1())
-//		assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsB2())
-//		def resultOfUpdate = dashboardService.update(generatePostParamsB())
-//		assertEquals resultOfUpdate.success, true
-//		dashboard = Dashboard.findByGuid("12345678-1234-1234-1234-1234567890a0")
-//		assertEquals 2, dashboard.state.size()
-//		assertEquals 'tabbed', dashboard.layout
-//		assertEquals 2, DashboardWidgetState.count()
-//	}
 
 // TODO: Rewrite; intent config data is now inside of layoutConfig within the widgets array.
 //	void testUpdateWithIntentConfig(){

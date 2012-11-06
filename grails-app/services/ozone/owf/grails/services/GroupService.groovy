@@ -236,7 +236,9 @@ class GroupService {
                     dashConfig.locked = dash.locked
 
                     dashConfig.layoutConfig = dash.layoutConfig
-
+                    // If given a stack override, use that.  Otherwise, use the stack already associated
+                    // with the dashboard to copy.
+                    dashConfig.stack = (params.stack != null) ? params.stack : dash.stack
                     dashConfig.cloned = true
                     dashConfig.isGroupDashboard = params.isGroupDashboard  ?: false
 

@@ -4,15 +4,18 @@ import grails.converters.JSON
 import org.hibernate.CacheMode
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
+import ozone.owf.grails.domain.Dashboard
 import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.Stack
+import ozone.owf.grails.domain.RelationshipType
 
 class StackService {
 
     def accountService
     def serviceModelService
     def domainMappingService
+    def groupService
     
     private static def addFilter(name, value, c) {
         c.with {
@@ -119,8 +122,11 @@ class StackService {
                 }
             }
             
+            def stackDefaultGroup = stack.findStackDefaultGroup()
+            def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
+            
             serviceModelService.createServiceModel(stack,[
-                totalDashboards: 0,
+                totalDashboards: totalDashboards,
                 totalUsers: totalUsers[0],
                 totalGroups: totalGroups[0],
                 totalWidgets: 0
@@ -268,26 +274,51 @@ class StackService {
                 // Add the general dashboard definition to the default
                 // stack group.
                 def updatedDashboards = []
+                def dashboardsToCopy = []
                 def dashboards = JSON.parse(params.data)
-                def defaultGroup = groups.findByStackDefault(true)
-                print 'Adding dashboards for ${defaultGroup.name}'
+                def stackDefaultGroup = stack.findStackDefaultGroup()
+                
                 
                 dashboards?.each { it ->
-                    def dashboard = Dashboard.findById(it.id.toLong(), [cache: true])
-                    // TODO: May need to clone this depending on what front end editor sends.  Revisit when stack
-                    // editor dashboard tab is done.
-                    if (dashboard) {       
-                        if (params.update_action == 'add') {
-                            domainMappingService.createMapping(group,RelationshipType.owns,dashboard)
+                    def dashboard = Dashboard.findByGuid(it.guid)
+                    if (dashboard) {
+                        if (params.update_action == 'remove') {
+                            // Remove the mapping to the group.
+                            domainMappingService.deleteMapping(stackDefaultGroup,RelationshipType.owns,dashboard)
+                            // TODO: Dump any user dashboard instances associated with this stack that were
+                            // clones of this dashboard.  Perhaps find all the clones and associate them with the 
+                            // default owf stack.
+                            
+                            // Delete the dashboard.
+                            dashboard.delete(flush: true)
+                            updatedDashboards << dashboard
                         }
-                        else if (params.update_action == 'remove') {
-                            domainMappingService.deleteMapping(group,RelationshipType.owns,dashboard)
+                        else if (params.update_action == 'add') {
+                            dashboardsToCopy << dashboard
                         }
-                        updatedDashbaords << dashboard
                     }
                 }
+                
+                // Copy any new instances to the default group.  Save the results for the return value.
+                if (!dashboardsToCopy.isEmpty()) {
+                    def copyParams = [:]
+                    copyParams.dashboards = (dashboardsToCopy as JSON).toString()
+                    copyParams.groups = []
+                    copyParams.groups << serviceModelService.createServiceModel(stackDefaultGroup)
+                    copyParams.groups = (copyParams.groups as JSON).toString()
+                    copyParams.isGroupDashboard = true;
+                    copyParams.stack = stack
+                    returnValue = groupService.copyDashboard(copyParams).msg;
+                }
+                // Append the service models for any deleted dashboards.
                 if (!updatedDashboards.isEmpty()) {
-                    returnValue = updatedDashboards.collect{ serviceModelService.createServiceModel(it) }
+                    def serviceModels = updatedDashboards.collect{ serviceModelService.createServiceModel(it) }
+                    if (returnValue != null){
+                        returnValue = (returnValue << updatedDashboards).flatten()
+                    }
+                    else {
+                        returnValue = serviceModels
+                    }
                 }
             }
         }
@@ -326,12 +357,22 @@ class StackService {
         
         stacks.each {
             def stack = ozone.owf.grails.domain.Stack.findById(it.id, [cache: true])
+            
+            // TODO: Break the association with any existing dashboard instances.  Associate them with
+            // null or the default OWF stack.
+            def dashboards = Dashboard.findByStack(stack)
+            dashboards.each { dashboard ->
+                dashboard.stack = null;
+                dashboard.save(flush: true)
+            }
+            
             stack?.groups?.each { group ->
                 if (group?.stackDefault) { group?.delete() }
-            }
+            }         
+            
             stack?.delete(flush: true)
         }
-        
+
         reorder()
         
         return [success: true, data: stacks]
