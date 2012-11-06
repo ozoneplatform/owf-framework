@@ -65,7 +65,7 @@ Ext.define('Ozone.components.admin.IntentsTabPanel', {
                     var comp = cmp.ownerCt;
                     
                     // Set the title
-                    if (comp.record) {
+                    if (comp.record.data) {
                         var titleText = Ext.htmlEncode(comp.record.get('title')) || 'Intents';
                         var title = cmp.getDockedItems('toolbar[dock="top"]')[0].getComponent('lblIntentsGrid');
                         title.setText(titleText);
