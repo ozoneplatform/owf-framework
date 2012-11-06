@@ -1,5 +1,7 @@
 package ozone.owf.grails.domain
 
+import org.hibernate.CacheMode
+
 class Stack {
     
     static String TYPE = 'stack'
@@ -29,8 +31,14 @@ class Stack {
     }
 
     Group findStackDefaultGroup() {
-        return this.groups.find {
-            it.stackDefault == true
+        def defaultGroup = Group.withCriteria(uniqueResult: true){
+            cacheMode(CacheMode.GET)
+            eq('stackDefault', true)
+            stacks {
+                eq('id', this.id)
+            }
         }
+        
+        return defaultGroup;
     }
 }
