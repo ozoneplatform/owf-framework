@@ -4,7 +4,7 @@
     "type": "High Contrast white on black",
     "author": "OWF Community Support Team",
     "contact_email": "ozone-developers@googlegroups.com",
-    "created_date": "Marcb 21, 2012",
+    "created_date": "March 21, 2012",
     "modified_date": "March 21, 2012",
     "description": "This is a high-contrast theme that features white text over a dark background for easier readability in dimly-lit environments.",
     "css": "themes/accessibility-wob.theme/css/accessibility-wob.css",
