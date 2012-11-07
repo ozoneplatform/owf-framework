@@ -375,8 +375,8 @@ Ext.define('Ozone.components.pane.Pane', {
     },
 
     onWidgetRender: function() {
-        var me = this,
-            task = new Ext.util.DelayedTask(function() {
+        // var me = this,
+        //     task = new Ext.util.DelayedTask(function() {
 
                 // fire afterwidgetlaunch launch event
                 // arguments: widgetCmp
@@ -396,9 +396,9 @@ Ext.define('Ozone.components.pane.Pane', {
                     this.focus(false, false, false, true);
                 }
                 
-            }, me);
+        //     }, me);
         
-        task.delay(me.widgetIframeDelay || 1);
+        // task.delay(me.widgetIframeDelay || 1);
     },
 
     // We know that we want events to bubble directly to the dashboard.
