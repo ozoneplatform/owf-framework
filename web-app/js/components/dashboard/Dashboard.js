@@ -186,15 +186,18 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
             //      loop through dashboard stateStore and validate intentConfig
             //      check intentConfig and remove any widgets that don't exist
-            me.stateStore.each(function(rec) {
+            var items = me.stateStore.data.items;
+
+            for (var i = 0, len = items.length; i < len; i++) {
+                var rec = items[i];
                 var intentConfig = rec.get('intentConfig');
                 for (var intent in intentConfig) {
                     var destIds = intentConfig[intent];
                     var newDestIds = [];
-                    for (var i = 0; i < destIds.length; i++) {
-                        var id = Ozone.util.parseJson(destIds[i]).id;
+                    for (var j = 0; j < destIds.length; j++) {
+                        var id = Ozone.util.parseJson(destIds[j]).id;
                         if (me.stateStore.findExact('uniqueId',id) > -1) {
-                            newDestIds.push(destIds[i]);
+                            newDestIds.push(destIds[j]);
                         }
                     }
                     if (newDestIds.length > 0) {
@@ -204,7 +207,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                         delete intentConfig[intent];
                     }
                 }
-            }, me);
+            }
 
             //console.timeEnd('page');
             console.timeEnd('initload');
@@ -509,7 +512,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                     error: false,
                     newWidgetLaunched: true,
                     uniqueId: uniqueId
-                }
+                };
             }
         }
 
@@ -583,7 +586,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         function stateEventHandler(widget, eventAction, eventName) {
             return function() {
                 return widget.handleStateEvent(eventAction, eventName);
-            }
+            };
         }
 
         if (widget) {
@@ -626,7 +629,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @member Ozone.components.dashboard.Dashboard
      * @param eventAction Action to take when an event is received.  Valid values are "listen" and "override".
      * @param guid Id of the widget
-     * @param events Array of events 
+     * @param events Array of events
      */
     removeWidgetStateEvents: function(eventAction, guid, events) {
         // get widget by guid
@@ -782,7 +785,11 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         widget.on("statesave", function() {
             // For each record in state, add/update value in dashboard defaultStates object
             this.defaultSettings.widgetStates = this.defaultSettings.widgetStates || {};
-            this.stateStore.each(function(record) {
+
+            var items = this.stateStore.data.items;
+            
+            for (var i = 0, len = items.length; i < len; i++) {
+                var record = items[i];
                 this.defaultSettings.widgetStates[record.data.widgetGuid] = {
                     "x": record.data.x,
                     "y": record.data.y,
@@ -790,7 +797,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                     "width": record.data.width,
                     "columnPos": record.data.columnPos
                 };
-            }, this);
+            }
         }, this);
     },
 
@@ -805,7 +812,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
         //set statestore in the state provider
         var sp = Ext.state.Manager.getProvider();
-        if (sp.setStore != null && typeof sp.setStore == 'function') {
+        if (sp.setStore && typeof sp.setStore === 'function') {
             sp.setStore(this.stateStore);
         }
         document.title = this.config.name;
@@ -854,7 +861,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     
     saveToServer: function(sync, force, saveAsNew, successCallback, failureCallback) {
         //save state
-        if (this.configRecord != null && this.stateStore != null && !this.dontSave) {
+        if (this.configRecord && this.stateStore && !this.dontSave) {
             if (this.hasChanged || this.configRecord.dirty || force) {
                 var dash = this;
                 if (this.fireEvent('beforeserversave', this) !== false) {
@@ -906,10 +913,10 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         var panes = this.panes;
 
         for (var i = 0, len = panes.length; i < len; i++) {
-        	if(this.configRecord.get("locked") === true) {
-        		panes[i].disableWidgetMove();
-        	} 
-        	else if(sourcePane) {
+            if(this.configRecord.get("locked") === true) {
+                panes[i].disableWidgetMove();
+            }
+            else if(sourcePane) {
                 if(panes[i].id !== sourcePane.id) {
                     panes[i].enableWidgetMove();
                 }
@@ -945,7 +952,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         var baseContextPath = window.location.pathname;
         var baseContextPathRegex = /^(\/[^\/]+\/).*$/i;
         var matches = baseContextPath.match(baseContextPathRegex);
-        if (matches != null && matches[1] != null && matches[1].length > 0) {
+        if (matches && matches[1] && matches[1].length > 0) {
             baseContextPath = matches[1];
             //remove final /
             baseContextPath = baseContextPath.substring(0, baseContextPath.length - 1);
@@ -975,8 +982,8 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             if(this.activeWidget.iframeReady && notify !== false) {
                 this.activeWidget._activated = false;
                 var deactivatedWidgetId = this.activeWidget.getIframeId();
-                if (deactivatedWidgetId != null) {
-                  gadgets.rpc.call(deactivatedWidgetId, '_widget_deactivated');
+                if (deactivatedWidgetId) {
+                    gadgets.rpc.call(deactivatedWidgetId, '_widget_deactivated');
                 }
             }
         }

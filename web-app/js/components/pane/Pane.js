@@ -110,7 +110,10 @@ Ext.define('Ozone.components.pane.Pane', {
 
     // destroy all widgets in the pane
     clearWidgets: function(includeFloatingWidgets) {
-        this.stateStore.each(function(rec) {
+        var items = this.stateStore.data.items;
+        
+        for (var i = 0, len = items.length; i < len; i++) {
+            var rec = items[i];
             var widget = Ext.getCmp(rec.get('uniqueId'));
             if(widget && includeFloatingWidgets !== false) {
                 widget.destroy();
@@ -118,7 +121,7 @@ Ext.define('Ozone.components.pane.Pane', {
             else if(widget && widget.floatingWidget !== true) {
                 widget.destroy();
             }
-        });
+        }
     },
 
     // returns an array of widget components that are launched
