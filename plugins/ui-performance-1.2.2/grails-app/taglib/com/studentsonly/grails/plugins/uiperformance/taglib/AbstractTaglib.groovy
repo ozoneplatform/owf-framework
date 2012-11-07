@@ -33,10 +33,10 @@ abstract class AbstractTaglib {
 		}
 
 		String baseUri = grailsAttributes.getApplicationUri(request)
-		StringBuilder path = new StringBuilder(baseUri)
-		if (!baseUri.endsWith('/')) {
+		StringBuilder path = new StringBuilder('')
+		/*if (!baseUri.endsWith('/')) {
 			path.append '/'
-		}
+		})*/
 		String requestPluginContext = plugin ? pluginContextPath : ''
 		if (requestPluginContext) {
 			path.append (requestPluginContext.startsWith('/') ? requestPluginContext.substring(1) : requestPluginContext)

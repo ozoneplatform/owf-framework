@@ -11,7 +11,7 @@
 	</g:else>
 
 	<script type="text/javascript" src="../../../js-lib/ext-4.0.7/ext-all-debug.js"></script>
-	<p:javascript src="owf-widget" />
+	<p:javascript src="owf-widget" pathToRoot="../../../" />
 
 	<!-- The widget itself  -->
 	<script type="text/javascript" src="ChannelListenerPanel.js"></script>

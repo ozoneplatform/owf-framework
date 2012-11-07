@@ -6,7 +6,7 @@
 /logs
 
 # older plugin install locations
-/plugins
+# /plugins
 /web-app/plugins
 /web-app/WEB-INF/classes
 

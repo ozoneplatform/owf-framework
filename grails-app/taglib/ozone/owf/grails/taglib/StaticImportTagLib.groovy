@@ -11,7 +11,7 @@ class StaticImportTagLib {
         if (attrs['lib'] == null || attrs['resource'] == null) 
             throw new UnsupportedOperationException("You must have a lib and resource attribute to use this tag")
         def version = (attrs['version'] == null) ? '' : "-"+attrs['version']
-        def link = g.createLinkTo(dir: "js-lib/${attrs['lib']}${version}", file: attrs['resource']+".js")
+        def link = g.createLinkTo(dir: "js-lib/${attrs['lib']}${version}", file: attrs['resource']+".js", base: '.')
         out << "<script type='text/javascript' src='${link}'></script>"
     }
     
@@ -52,10 +52,17 @@ class StaticImportTagLib {
     
     // javascript files developed for owf, in the /js folder
     def jsOwf = { attrs ->
+        def pathToRoot = attrs['pathToRoot'] == null ? '.' : attrs['pathToRoot']
+        if(pathToRoot.size() > 1) {
+
+            if(pathToRoot.getAt( pathToRoot.size() - 1 ) == '/') {
+                pathToRoot = pathToRoot.substring(0, pathToRoot.size() - 1);
+            }
+        }
         if (attrs['resource'] == null) 
             throw new UnsupportedOperationException("You must have a resource attribute to use this tag")
         def path = (attrs['path']  == null) ? '' : "/" + attrs['path']
-        def link = g.createLinkTo(dir: "js${path}", file: attrs['resource']+".js")
+        def link = g.createLinkTo(dir: "js${path}", file: attrs['resource']+".js", base: pathToRoot)
         out << "<script type='text/javascript' src='${link}'></script>"
     }
     

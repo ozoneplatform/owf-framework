@@ -18,8 +18,8 @@
         <owfImport:jsOwf path="config" resource="config" />
 
         <!-- include our server bundle, in dev mode a full list of js includes will appear -->
-        <p:javascript src='owf-admin-widget'/>
-        <p:javascript src='owf-group-edit-widget'/>
+        <p:javascript src='owf-admin-widget' pathToRoot="../" />
+        <p:javascript src='owf-group-edit-widget' pathToRoot="../" />
         <!-- include our server bundle, in dev mode a full list of js includes will appear -->
 
         <script language = "javascript">

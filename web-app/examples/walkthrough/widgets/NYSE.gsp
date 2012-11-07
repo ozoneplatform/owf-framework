@@ -54,7 +54,7 @@
 	
 	
 	<script type="text/javascript" src="../../../js-lib/ext-4.0.7/ext-all-debug.js"></script>
-    <p:javascript src="owf-widget" />
+    <p:javascript src="owf-widget" pathToRoot="../../../" />
     <script type="text/javascript" src="../../../js/components/focusable/Focusable.js"></script>
     <script type="text/javascript" src="../../../js/components/focusable/FocusableGridPanel.js"></script>
     <script type="text/javascript" src="../../../js/components/layout/SearchBoxLayout.js"></script>

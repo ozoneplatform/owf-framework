@@ -36,7 +36,7 @@ class JavascriptTagLib extends AbstractTaglib {
 		String html = "<script type='text/javascript' src='$link'${generateExtraAttributes(attrs)}></script>"
 
 		if (jsTagPostProcessor) {
-			html = jsTagPostProcessor.process(html, request)
+			html = jsTagPostProcessor.process(html, request, attrs['pathToRoot'] ?: '')
 		}
 
 		out << html

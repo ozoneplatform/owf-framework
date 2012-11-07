@@ -9,12 +9,16 @@ var Ozone = Ozone || {};
 Ozone.config = ${conf};
 
 //add in contextPath
-Ozone.config.webContextPath = '${request.contextPath}';
+Ozone.config.webContextPath = window.location.pathname;
+
+if(Ozone.config.webContextPath[Ozone.config.webContextPath.length - 1] === '/') {
+    Ozone.config.webContextPath = Ozone.config.webContextPath.substr(0,Ozone.config.webContextPath.length - 1);
+}
 
 Ozone.config.carousel = {
-  restrictedTagGroupsRegex: new RegExp('^(.*,)?\s*'+Ozone.config.pendingApprovalTagGroupName+'\s*(,.*)?$','im'),
-  pendingApprovalTagGroupName:Ozone.config.pendingApprovalTagGroupName,
-  approvedTagGroupName: Ozone.config.approvedTagGroupName
+    restrictedTagGroupsRegex: new RegExp('^(.*,)?\s*'+Ozone.config.pendingApprovalTagGroupName+'\s*(,.*)?$','im'),
+    pendingApprovalTagGroupName:Ozone.config.pendingApprovalTagGroupName,
+    approvedTagGroupName: Ozone.config.approvedTagGroupName
 };
 
 Ozone.config.user = ${user};
@@ -33,7 +37,7 @@ Ozone.config.prefsLocation = window.location.protocol + "//" + window.location.h
 var OWF  = OWF || {};
 OWF.config = Ozone.config;
 OWF.getContainerUrl = function() {
-  //figure out from preference location
-  var pref = Ozone.config.prefsLocation;
-  return pref.substring(0, pref.length - 6);
+    //figure out from preference location
+    var pref = Ozone.config.prefsLocation;
+    return pref.substring(0, pref.length - 6);
 };

@@ -13,7 +13,7 @@
       <link href="../../../css/dragAndDrop.css" rel="stylesheet" type="text/css">
     </g:else>
     <script type="text/javascript" src="../../../js-lib/ext-4.0.7/ext-all-debug.js"></script>
-    <p:javascript src="owf-widget" />
+    <p:javascript src="owf-widget" pathToRoot="../../../" />
 	<script type="text/javascript" src="../../../js-lib/patches/LegendItemOverrides.js"></script>
     <script type="text/javascript" src="StockChart.js"></script>
     <script type="text/javascript" src="../chart/theme/accessibility-wob.js"></script>

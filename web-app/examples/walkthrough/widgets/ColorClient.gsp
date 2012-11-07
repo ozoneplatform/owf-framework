@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Color Client</title>
     <link href="../../../css/dragAndDrop.css" rel="stylesheet" type="text/css">
-    <p:javascript src="owf-widget" />
+    <p:javascript src="owf-widget" pathToRoot="../../../" />
     <script type='text/javascript'>
       
         function getColorList() {

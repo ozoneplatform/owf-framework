@@ -12,6 +12,10 @@ import com.studentsonly.grails.plugins.uiperformance.Utils
 abstract class AbstractTagPostProcessor {
 
 	String process(String html, request) {
+		return process(html, request, '')
+	}
+
+	String process(String html, request, String prepend) {
 
 		if (!Utils.isEnabled()) {
 			return html
@@ -44,38 +48,48 @@ abstract class AbstractTagPostProcessor {
 					name = (name - ".$ext") + ".gz.$ext"
 				}
 			}
-
-			return html.substring(0, indexQuoteStart) + name + html.substring(indexQuoteEnd)
+			
+			return html.substring(0, indexQuoteStart) + prepend + name + html.substring(indexQuoteEnd)
 		}
 
 		return html
 	}
 
 	protected String expandBundle(String html) {
+		return expandBundle(html, '')
+	}
+
+	protected String expandBundle(String html, String prepend) {
 		for (bundle in CH.config.uiperformance.bundles) {
 			String ext = extensions[0]
-            if (html.contains("/${ext}/${bundle.name}.${ext}")) {
-                  return expandBundle(html, bundle, ext)
+            if (html.contains("${ext}/${bundle.name}.${ext}")) {
+                  return expandBundle(html, bundle, ext, prepend)
             }
 		}
 
 		return html
 	}
 
-	protected String expandBundle(String html, bundle, String ext) {
-
-		String path = "/$ext/${bundle.name}.$ext"
+	protected String expandBundle(String html, bundle, String ext, String prepend) {
+		String path = "$ext/${bundle.name}.$ext"
 		int index = html.indexOf(path)
+
 		String start = html.substring(0, index)
 		String end = html.substring(index + path.length())
 
 		def sb = new StringBuilder()
 		for (file in bundle.files) {
 			sb.append(start)
-			sb.append('/').append(ext).append('/')
+
+			if(prepend) {
+				sb.append(prepend)
+			}
+			sb.append(ext).append('/')
+			//sb.append('/').append(ext).append('/')
 			sb.append(file).append('.').append(ext)
 			sb.append(end).append('\n')
 		}
+		
 		return sb.toString()
 	}
 }

@@ -5,7 +5,7 @@ Ext.define('Ozone.components.theming.ThemeBrowser', {
     uses: 'Ext.data.Store',
     
     cls: 'owf-view',
-	singleSelect: true,
+    singleSelect: true,
     trackOver: true,
     overItemCls: 'x-view-over',
     itemSelector: 'div.thumb-wrap',
@@ -14,7 +14,7 @@ Ext.define('Ozone.components.theming.ThemeBrowser', {
             '<tpl for=".">',
                 '<div class="thumb-wrap">',
                     '<div class="thumb">',
-                    	'<img src="{thumb}" />',
+                        '<img src="{thumb}" />',
                     '</div>',
                     '<span>{display_name}</span>',
                 '</div>',
@@ -26,7 +26,7 @@ Ext.define('Ozone.components.theming.ThemeBrowser', {
             fields: ['name', 'display_name', 'author', 'contact_email', 'created_date', 'modified_date', 'description', 'css', 'base_url', 'thumb', 'screenshots'],
             proxy: {
                 type: 'ajax',
-                url: 'themes'
+                url: Ozone.util.contextPath() + '/themes/'
             },
             autoLoad: true,
             sorters: [{

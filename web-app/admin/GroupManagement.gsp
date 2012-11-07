@@ -15,11 +15,11 @@
         </g:else>
 
         <!-- initialize ozone configuration from server -->
-        <owfImport:jsOwf path="config" resource="config" />
+        <owfImport:jsOwf path="config" resource="config" pathToRoot="../" />
 
         <!-- include our server bundle, in dev mode a full list of js includes will appear -->
-        <p:javascript src='owf-admin-widget'/>
-        <p:javascript src='owf-group-management-widget'/>
+        <p:javascript src='owf-admin-widget' pathToRoot="../" />
+        <p:javascript src='owf-group-management-widget' pathToRoot="../" />
         <!-- include our server bundle, in dev mode a full list of js includes will appear -->
 
         <script language="javascript">

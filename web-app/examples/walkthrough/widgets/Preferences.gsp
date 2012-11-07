@@ -3,7 +3,7 @@
         <link href="../../../css/widgetContents.css" rel="stylesheet" type="text/css">
         <link href="../../../css/dragAndDrop.css" rel="stylesheet" type="text/css">
 
-        <p:javascript src="owf-widget" />
+        <p:javascript src="owf-widget" pathToRoot="../../../" />
 
         <script type="text/javascript">
              //The location is assumed to be at /<context>/js/eventing/rpc_relay.uncompressed.html if it is not

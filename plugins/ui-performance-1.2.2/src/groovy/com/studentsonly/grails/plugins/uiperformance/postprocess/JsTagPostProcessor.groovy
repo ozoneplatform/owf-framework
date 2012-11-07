@@ -13,12 +13,12 @@ class JsTagPostProcessor extends AbstractTagPostProcessor {
 	boolean gzip = true
 
 	@Override
-	String process(String html, request) {
+	String process(String html, request, String prepend) {
 
 		if (!Utils.getConfigBoolean('processJS') || !Utils.isEnabled() || request.getParameter('debug')?.toBoolean()) {
-			return expandBundle(html)
+			return expandBundle(html, prepend)
 		}
 
-		return super.process(html, request)
+		return super.process(html, request, prepend)
 	}
 }

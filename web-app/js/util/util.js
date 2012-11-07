@@ -44,8 +44,10 @@ Ozone.util.isUrlLocal = function(url) {
         }
     }
 
-    var port = window.location.port || ( window.location.protocol === "https:" ? "443" : "80" )
+    var port = window.location.port;// || ( window.location.protocol === "https:" ? "443" : "80" )
 
+    //todo need to find a better way of checking same domain requests
+    // see if solution posted here works: http://stackoverflow.com/questions/9404793/check-if-same-origin-policy-applies
     return window.location.protocol === server[1] && window.location.hostname === server[2] && port === server[3]
 };
 
@@ -95,6 +97,32 @@ Ozone.util.HTMLEncode = function(str){
 /**
  * @private
  *
+ * Constructively clears the entire array
+ */
+Ozone.util.parseWindowNameData = function() {
+  var configParams = null;
+  return function() {
+
+    //if already parsed just return the value
+    if (configParams) return configParams;
+
+    //parse out the config
+    try {
+      configParams = Ozone.util.parseJson(
+              window.name
+      );
+      return configParams;
+    }
+    catch (e) {
+      return null;
+    }
+  }
+}();
+
+
+/**
+ * @private
+ *
  * @description This method returns the current context path by
  * calling a controller at the server (will not
  * make the call if it has already been done).
@@ -106,22 +134,18 @@ Ozone.util.HTMLEncode = function(str){
  *
  * @requires Ext base, dojo
  */
-Ozone.util.contextPath = function(o) {
+Ozone.util.contextPath = (function() {
+    var configParams = Ozone.util.parseWindowNameData(),
+        contextPath = Ozone.config.webContextPath;
 
-    if (Ozone.config.webContextPath == null) {
-        //check window name for the property
-        var configParams = Ozone.util.parseWindowNameData();
-        if (configParams != null) {
-            // launchConfig
-            if (configParams.webContextPath != null) {
-                Ozone.config.webContextPath = configParams.webContextPath;
-            }
-        }
+    if (configParams && configParams.webContextPath) {
+        contextPath = Ozone.config.webContextPath = configParams.webContextPath;
     }
 
-    // return empty string if a valid context path wasn't found on window.name
-    return Ozone.config.webContextPath || '';
-};
+    return function () {
+        return contextPath || '';
+    }
+})();
 
 /**
  * @private
@@ -163,31 +187,6 @@ Ozone.util.getContainerRelay = function() {
     return Ozone.util.contextPath() + 
     '/js/eventing/rpc_relay.uncompressed.html';
 };
-
-/**
- * @private
- *
- * Constructively clears the entire array
- */
-Ozone.util.parseWindowNameData = function() {
-  var configParams = null;
-  return function() {
-
-    //if already parsed just return the value
-    if (configParams) return configParams;
-
-    //parse out the config
-    try {
-      configParams = Ozone.util.parseJson(
-              window.name
-      );
-      return configParams;
-    }
-    catch (e) {
-      return null;
-    }
-  }
-}();
 
 /**
  * @private
