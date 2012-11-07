@@ -26,11 +26,11 @@ import ozone.owf.grails.domain.RelationshipType
 import ozone.owf.grails.domain.WidgetType
 
 class BootStrap {
-	
+    
     def grailsApplication
     def sessionFactory
     def domainMappingService
-	
+    
     def init = {servletContext ->
 
         println 'BootStrap running!'
@@ -124,9 +124,9 @@ class BootStrap {
         def enabled = grailsApplication.config?.perfTest?.enabled
 
         log.info('Performance Test Data Generation Enabled: ' + enabled)
-	  
+      
         if (enabled) {  
-		
+        
             def numWidgets = ((grailsApplication.config?.perfTest?.numWidgets && enabled) ? grailsApplication.config.perfTest?.numWidgets : 0);
             log.info 'numWidgets: ' + numWidgets
 
@@ -135,7 +135,7 @@ class BootStrap {
 
             def numAdmins = ((grailsApplication.config?.perfTest?.numAdmins && enabled) ? grailsApplication.config.perfTest?.numAdmins: 1);
             log.info 'admins: ' + numAdmins
-		
+        
             def numUsers = ((grailsApplication.config?.perfTest?.numUsers && enabled) ? grailsApplication.config.perfTest?.numUsers : 2);
             log.info 'users: ' + numUsers
 
@@ -150,7 +150,7 @@ class BootStrap {
 
             def numDashboards = ((grailsApplication.config?.perfTest?.numDashboards && enabled) ? grailsApplication.config.perfTest?.numDashboards : 0);
             log.info 'numDashboards: ' + numDashboards
-		
+        
             def numGroupDashboards = ((grailsApplication.config?.perfTest?.numGroupDashboards && enabled) ? grailsApplication.config.perfTest?.numGroupDashboards : 0);
             log.info 'numGroupDashboards: ' + numGroupDashboards
 
@@ -174,13 +174,13 @@ class BootStrap {
 
             loadGroups(numGroups, clearCacheEvery)
             sessionFactory.currentSession.clear()
-		
+        
             loadAdmins(numAdmins, numGroupsPerUser, clearCacheEvery)
             sessionFactory.currentSession.clear()
-		
+        
             loadPersons(numUsers, numGroupsPerUser, clearCacheEvery)
             sessionFactory.currentSession.clear()
-		
+        
             loadWidgetTypes()
             sessionFactory.currentSession.clear()
 
@@ -205,10 +205,10 @@ class BootStrap {
 
             loadDashboardsAndDashboardWidgetStates(numDashboards, numDashboardsWidgets, clearCacheEvery)
             sessionFactory.currentSession.clear()
-		
+        
             loadGroupDashboardsAndDashboardWidgetStates(numGroupDashboards, numDashboardsWidgets, clearCacheEvery)
             sessionFactory.currentSession.clear()
-		
+        
             loadRequestmaps()
             sessionFactory.currentSession.clear()
 
@@ -543,7 +543,7 @@ class BootStrap {
             }
         }
     }
-	
+    
     private assignGroupsToUser(Person person, int numGroups) {
         def rand = new Random();
         def num = Group.list().size() - numGroups;
@@ -609,7 +609,7 @@ class BootStrap {
         else
         userRole.people += users
         saveInstance(userRole)
-		
+        
         if (!adminRole.people)
         adminRole.people = admins
         else
@@ -619,22 +619,22 @@ class BootStrap {
 
     private assignRequiredWidgets() {
         def nearlyEmpty = WidgetDefinition.findByWidgetGuid('bc5435cf-4021-4f2a-ba69-dde451d12551', [cache: true])
-        def widgetA   	= WidgetDefinition.findByWidgetGuid('ea5435cf-4021-4f2a-ba69-dde451d12551', [cache: true])
-        def widgetB   	= WidgetDefinition.findByWidgetGuid('fb5435cf-4021-4f2a-ba69-dde451d12551', [cache: true])
-        def widgetC   	= WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551', [cache: true])
-        def widgetD   	= WidgetDefinition.findByWidgetGuid('1d5435cf-4021-4f2a-ba69-dde451d12551', [cache: true])
-        def widgetOne 	= WidgetDefinition.findByWidgetGuid('d6543ccf-4021-4f2a-ba69-dde451d12551', [cache: true])
-        def widgetTwo 	= WidgetDefinition.findByWidgetGuid('e65431cf-4021-4f2a-ba69-dde451d12551', [cache: true])
-		
+        def widgetA     = WidgetDefinition.findByWidgetGuid('ea5435cf-4021-4f2a-ba69-dde451d12551', [cache: true])
+        def widgetB     = WidgetDefinition.findByWidgetGuid('fb5435cf-4021-4f2a-ba69-dde451d12551', [cache: true])
+        def widgetC     = WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551', [cache: true])
+        def widgetD     = WidgetDefinition.findByWidgetGuid('1d5435cf-4021-4f2a-ba69-dde451d12551', [cache: true])
+        def widgetOne   = WidgetDefinition.findByWidgetGuid('d6543ccf-4021-4f2a-ba69-dde451d12551', [cache: true])
+        def widgetTwo   = WidgetDefinition.findByWidgetGuid('e65431cf-4021-4f2a-ba69-dde451d12551', [cache: true])
+        
         domainMappingService.createMapping(nearlyEmpty, RelationshipType.requires, widgetA)
         domainMappingService.createMapping(nearlyEmpty, RelationshipType.requires, widgetB)
-        domainMappingService.createMapping(widgetA, 	RelationshipType.requires, widgetC)
-        domainMappingService.createMapping(widgetA, 	RelationshipType.requires, widgetD)
-        domainMappingService.createMapping(widgetB, 	RelationshipType.requires, widgetOne)
-        domainMappingService.createMapping(widgetB, 	RelationshipType.requires, widgetTwo)
-        domainMappingService.createMapping(widgetC, 	RelationshipType.requires, widgetB)
+        domainMappingService.createMapping(widgetA,     RelationshipType.requires, widgetC)
+        domainMappingService.createMapping(widgetA,     RelationshipType.requires, widgetD)
+        domainMappingService.createMapping(widgetB,     RelationshipType.requires, widgetOne)
+        domainMappingService.createMapping(widgetB,     RelationshipType.requires, widgetTwo)
+        domainMappingService.createMapping(widgetC,     RelationshipType.requires, widgetB)
     }
-	
+    
     private loadDashboardsAndDashboardWidgetStates(int numDashboards, int numDashboardsWidgets, int clearCacheEvery) {
 
         def testUsers = Person.findAllByUsernameLike('test%')
@@ -643,7 +643,7 @@ class BootStrap {
             loadUserDashboardsAndDashboardWidgetStates(it,numDashboards,numDashboardsWidgets, clearCacheEvery)
         }
     }
-	
+    
     private loadGroupDashboardsAndDashboardWidgetStates(int numGroupDashboards, int numDashboardsWidgets, int clearCacheEvery) {
         //load group dashboards
         def groups = Group.findAllByNameLike('TestGroup%')
@@ -668,49 +668,45 @@ class BootStrap {
 
     private def loadGroupDashboardsAndDashboardWidgetStates(Group testGroup, int numDashboards, int numDashboardsWidgets, int clearCacheEvery) {
 
+        def dashboardGuid = generateId()
+        def paneGuid = generateId()
+
         def dashboard = new Dashboard(
             name: 'Group Dashboard (' + testGroup.name + ')',
             isdefault: true,
-            guid: generateId(),
+            guid: dashboardGuid,
             dashboardPosition: 0,
             alteredByAdmin: false,
-            layoutConfig: '{"xtype":"desktoppane","flex":1,"height":"100%","items":[],"paneType":"desktoppane","widgets":[{"widgetGuid":"eb5435cf-4021-4f2a-ba69-dde451d12551","uniqueId":"17580ea1-02fc-8ca7-e794-b5644f7dc21d","dashboardGuid":"905968f7-f94d-1c9b-431c-a05dc7bb68d1","paneGuid":"f3712dc1-6e90-2469-8cb3-5b499937cac8","name":"Channel Shouter","active":false,"x":549,"y":7,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":2,"intentConfig":null,"launchData":null,"singleton":false,"floatingWidget":false,"background":false,"zIndex":19120,"height":250,"width":295},{"widgetGuid":"ec5435cf-4021-4f2a-ba69-dde451d12551","uniqueId":"9bdc8e96-f311-4a0b-c5b9-23ae5d768297","dashboardGuid":"905968f7-f94d-1c9b-431c-a05dc7bb68d1","paneGuid":"f3712dc1-6e90-2469-8cb3-5b499937cac8","name":"Channel Listener","active":true,"x":4,"y":5,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":1,"intentConfig":null,"launchData":null,"singleton":false,"floatingWidget":false,"background":false,"zIndex":19130,"height":383,"width":540}],"defaultSettings":{"widgetStates":{"ec5435cf-4021-4f2a-ba69-dde451d12551":{"x":4,"y":5,"height":383,"width":540,"timestamp":1348064185725},"eb5435cf-4021-4f2a-ba69-dde451d12551":{"x":549,"y":7,"height":250,"width":295,"timestamp":1348064183912}}}}'
+            layoutConfig: '{"xtype":"desktoppane","flex":1,"height":"100%","items":[],"paneType":"desktoppane","widgets":[],"defaultSettings":{"widgetStates":{"ec5435cf-4021-4f2a-ba69-dde451d12551":{"x":4,"y":5,"height":383,"width":540,"timestamp":1348064185725},"eb5435cf-4021-4f2a-ba69-dde451d12551":{"x":549,"y":7,"height":250,"width":295,"timestamp":1348064183912}}}}'
         )
 
-//        dashboard.state = [] as SortedSet
-	  
-        //TODO: Change this to write to the layoutConfig property of a dashboard, not the
-        //dashboardWidgetState table which is no longer used to load widgets on a dashboard
-        def widgets = domainMappingService.getMappings(testGroup, RelationshipType.owns, WidgetDefinition.TYPE)
-        for (int i = 0; i < numDashboardsWidgets && i < widgets.size(); i++) {
-//            def dws = new DashboardWidgetState(
-//                name: i + ' Widget',
-//                widgetGuid: widgets[i] ? domainMappingService.getDestObjectFromMapping(widgets[i]).widgetGuid : null,
-//                active: false,
-//                width: 625,
-//                height: 405,
-//                zIndex: 222 + i,
-//                minimized: false,
-//                maximized: false,
-//                pinned: false,
-//                collapsed: false,
-//                columnPos: (i % 3) + 1,
-//                buttonId: null,
-//                buttonOpened: false,
-//                region: 'accordion',
-//                dashboard: dashboard,
-//                uniqueId: generateId(),
-//                statePosition: 3 + i,
-//            );
-//
-//            dws.x = 300 + (i*5)
-//            dws.y = 300 + (i*5)
-		 
-//            dashboard.state << dws
-            if ((i % clearCacheEvery) == 0){
-                sessionFactory.currentSession.clear()
+        def groupWidgets = domainMappingService.getMappings(testGroup, RelationshipType.owns, WidgetDefinition.TYPE)
+
+        def rand = new Random();
+        def randomWidget
+
+        //Create JSON string of widgets
+        def widgets = '[{'
+        for (int i = 0; i < numDashboardsWidgets; i++) {
+            if(i != 0) {
+                widgets += ',{'
             }
+
+            def xyPos = 300 + (i*5)
+
+            //Add a random group widget to the dashboard
+            randomWidget = domainMappingService.getDestObjectFromMapping(groupWidgets[rand.nextInt(groupWidgets.size())])
+
+            widgets += '"widgetGuid":"' + randomWidget.widgetGuid + '","x":' + xyPos + ',"y":' + xyPos +
+                ',"uniqueId":"' + generateId() + '","name":"' + randomWidget.displayName + '","paneGuid":"' +
+                paneGuid + '","height":250,"width":250,"dashboardGuid":"' + dashboardGuid + '"}'
         }
+        widgets += ']'
+
+        def layoutConfig = JSON.parse(dashboard.layoutConfig)
+        layoutConfig.widgets = JSON.parse(widgets)
+        dashboard.layoutConfig = layoutConfig
+
         //save and map group dashboard
         saveInstance(dashboard)
         domainMappingService.createMapping(testGroup, RelationshipType.owns, dashboard)
@@ -720,46 +716,45 @@ class BootStrap {
 
     private def createDashboard(int dashboardNum, int numDashboardsWidgets, Person user, int clearCacheEvery) {
 
+        def dashboardGuid = generateId()
+        def paneGuid = generateId()
+
         def dashboard = new Dashboard(
             name: dashboardNum + '-Dashboard (' + user.username + ')',
             isdefault: false,
-            guid: generateId(),
+            guid: dashboardGuid,
             dashboardPosition: 4 + dashboardNum,
             user: user,
             alteredByAdmin: false,
-            layoutConfig: '{"xtype":"desktoppane","flex":1,"height":"100%","items":[],"paneType":"desktoppane","widgets":[{"widgetGuid":"eb5435cf-4021-4f2a-ba69-dde451d12551","uniqueId":"17580ea1-02fc-8ca7-e794-b5644f7dc21d","dashboardGuid":"905968f7-f94d-1c9b-431c-a05dc7bb68d1","paneGuid":"f3712dc1-6e90-2469-8cb3-5b499937cac8","name":"Channel Shouter","active":false,"x":549,"y":7,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":2,"intentConfig":null,"launchData":null,"singleton":false,"floatingWidget":false,"background":false,"zIndex":19120,"height":250,"width":295},{"widgetGuid":"ec5435cf-4021-4f2a-ba69-dde451d12551","uniqueId":"9bdc8e96-f311-4a0b-c5b9-23ae5d768297","dashboardGuid":"905968f7-f94d-1c9b-431c-a05dc7bb68d1","paneGuid":"f3712dc1-6e90-2469-8cb3-5b499937cac8","name":"Channel Listener","active":true,"x":4,"y":5,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":1,"intentConfig":null,"launchData":null,"singleton":false,"floatingWidget":false,"background":false,"zIndex":19130,"height":383,"width":540}],"defaultSettings":{"widgetStates":{"ec5435cf-4021-4f2a-ba69-dde451d12551":{"x":4,"y":5,"height":383,"width":540,"timestamp":1348064185725},"eb5435cf-4021-4f2a-ba69-dde451d12551":{"x":549,"y":7,"height":250,"width":295,"timestamp":1348064183912}}}}'
+            layoutConfig: '{"xtype":"desktoppane","flex":1,"height":"100%","items":[],"paneType":"desktoppane","widgets":[],"defaultSettings":{"widgetStates":{"ec5435cf-4021-4f2a-ba69-dde451d12551":{"x":4,"y":5,"height":383,"width":540,"timestamp":1348064185725},"eb5435cf-4021-4f2a-ba69-dde451d12551":{"x":549,"y":7,"height":250,"width":295,"timestamp":1348064183912}}}}'
         )
-//        dashboard.state = [] as SortedSet
-		
-        //TODO: Change this to write to the layoutConfig property of a dashboard, not the
-        //dashboardWidgetState table which is no longer used to load widgets on a dashboard
-        //create extra dummy widgets on this dashboard
-        //log.debug "Adding ${numDashboardsWidgets} extra widgets to this dashboard:${dashboard}"
+
+        def userWidgets = PersonWidgetDefinition.findAllByPerson(user)
+
+        def rand = new Random();
+        def randomWidget
+
+        //Create JSON string of widgets
+        def widgets = '[{'
         for (int i = 0; i < numDashboardsWidgets; i++) {
-//            def dws = new DashboardWidgetState(
-//                personWidgetDefinition: PersonWidgetDefinition.findByPerson(user),
-//                name: i + ' Widget',
-//                active: false,
-//                width: 625,
-//                height: 405,
-//                zIndex: 222 + i,
-//                minimized: false,
-//                maximized: false,
-//                pinned: false,
-//                collapsed: false,
-//                columnPos: (i % 3) + 1,
-//                buttonId: null,
-//                buttonOpened: false,
-//                region: 'accordion',
-//                dashboard: dashboard,
-//                uniqueId: generateId(),
-//                statePosition: 3 + i,
-//            );
-//            dashboard.state << dws
-            if ((i % clearCacheEvery) == 0){
-                sessionFactory.currentSession.clear()
+            if(i != 0) {
+                widgets += ',{'
             }
+
+            def xyPos = 300 + (i*5)
+
+            //Add a random widget to the dashboard
+            randomWidget = userWidgets[rand.nextInt(userWidgets.size())].widgetDefinition
+            widgets += '"widgetGuid":"' + randomWidget.widgetGuid + '","x":' + xyPos + ',"y":' + xyPos +
+                ',"uniqueId":"' + generateId() + '","name":"' + randomWidget.displayName + '","paneGuid":"' +
+                paneGuid + '","height":250,"width":250,"dashboardGuid":"' + dashboardGuid + '"}'
         }
+        widgets += ']'
+
+        def layoutConfig = JSON.parse(dashboard.layoutConfig)
+        layoutConfig.widgets = JSON.parse(widgets)
+        dashboard.layoutConfig = layoutConfig
+
         saveInstance(dashboard)
         sessionFactory.currentSession.clear()
     }
@@ -789,17 +784,17 @@ class BootStrap {
             }
         }
     }
-	
+    
     private loadRequestmaps() {
         saveInstance(new Requestmap(configAttribute :'IS_AUTHENTICATED_ANONYMOUSLY', url : '/login/**'))
-		
+        
         saveInstance(new Requestmap(configAttribute :'IS_AUTHENTICATED_ANONYMOUSLY', url : '/denied.jsp'))
-		
+        
         saveInstance(new Requestmap(configAttribute :'IS_AUTHENTICATED_FULLY', url : '/**'))
     }
 
     private loadPreferences(int numPreferences, int clearCacheEvery) {
-		
+        
         def users = Person.list()
         users.each {
             for (int i = 0 ; i < numPreferences ; i++) {
