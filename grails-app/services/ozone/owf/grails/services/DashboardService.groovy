@@ -159,6 +159,23 @@ class DashboardService extends BaseService {
             }
         }
 
+        // Get stack default groups associated through by group association or direct association.
+        def stackDefaultGroups = []
+        if (params.user != null) {
+            
+            def stacks = Stack.withCriteria {
+                groups {
+                    people {
+                        eq('id',params.user.id)
+                    }
+                }
+                cache(true)
+                cacheMode(CacheMode.GET)
+            }
+            
+            stackDefaultGroups = stacks.collect { it.findStackDefaultGroup() }
+        }
+        
         //get groups
         def groups = Group.withCriteria {
 
@@ -212,8 +229,12 @@ class DashboardService extends BaseService {
 
         //process any groupDashboards for this user
         def privateGroupDashboardToGroupsMap = [:]
-        privateGroupDashboardToGroupsMap = processGroupDashboards(groups,params.user)
-
+        if (!stackDefaultGroups.isEmpty()) {
+            privateGroupDashboardToGroupsMap = processGroupDashboards((groups << stackDefaultGroups).flatten(),params.user)
+        } else {
+            privateGroupDashboardToGroupsMap = processGroupDashboards(groups,params.user)
+        }
+        
         //get group dashboards
         def criteria = Dashboard.createCriteria()
         def userDashboardList = criteria.list(opts) {
@@ -686,7 +707,7 @@ class DashboardService extends BaseService {
                     args.regenerateStateIds = true
 
                     args.layoutConfig = groupDash.layoutConfig
-                    args.stack = (groupDash.stack != null) ? ['id': groupDash.stack.id, 'guid': groupDash.stack.guid] : null
+                    args.stack = (groupDash.stack != null) ? ['id': groupDash.stack.id] : null
 
                     updateDashboard(args,accountService.getLoggedInUser(),dashboard)
                 }

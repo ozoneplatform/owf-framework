@@ -361,10 +361,10 @@ class StackService {
         stacks.each {
             def stack = Stack.findById(it.id, [cache: true])
             
-            // TODO: Break the association with any existing dashboard instances.  Associate them with
-            // null or the default OWF stack.
+            // Break the association with any existing dashboard instances.  
             def dashboards = Dashboard.findByStack(stack)
             dashboards.each { dashboard ->
+                // TODO: Associate them with the default OWF stack if we go that design route.
                 dashboard.stack = null;
                 dashboard.save(flush: true)
             }
