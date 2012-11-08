@@ -3,11 +3,10 @@ Ext.define('Ozone.data.Stack', {
     idProperty: 'id',
     fields: [
         { name: 'id', type: 'int', defaultValue: -1 },
-        { name: 'stackPosition', type: 'int' },
         { name: 'name', type: 'string' },
         { name: 'description', type: 'string' },
         { name: 'stackContext', type: 'string' },
-        { name: 'imageUrl', type: 'string'},
+        // { name: 'imageUrl', type: 'string'},
         { name: 'descriptorUrl', type: 'string'},
         { name: 'totalDashboards', type: 'int' },
         { name: 'totalUsers', type: 'int' },

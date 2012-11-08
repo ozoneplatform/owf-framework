@@ -28,9 +28,9 @@ class DashboardServiceTests extends GroovyTestCase {
 		def acctService = new AutoLoginAccountService()
         person = Person.build(username:'testUserDashboardServiceTesting', userRealName: 'foo', enabled:true)
         person.save()
-        stack = Stack.build(name:'Test Stack', stackPosition: 1, description: 'This is a test stack', stackContext:'testStack', 
+        stack = Stack.build(name:'Test Stack', description: 'This is a test stack', stackContext:'testStack', 
             imageUrl:'testStack.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
-        stackForUpdate = Stack.build(name:'Test Stack 2', stackPosition: 2, description: 'This is another test stack', stackContext:'testStack2',
+        stackForUpdate = Stack.build(name:'Test Stack 2', description: 'This is another test stack', stackContext:'testStack2',
             imageUrl:'testStack.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
         stack.save()
 		acctService.autoAccountName = 'testUserDashboardServiceTesting'
@@ -306,7 +306,6 @@ class DashboardServiceTests extends GroovyTestCase {
                   "description": "${stack.description}",
                   "name": "${stack.name}",
                   "totalDashboards": 0,
-                  "stackPosition": stack.stackPosition,
                   "stackContext": "${stack.stackContext}",
                   "class": "ozone.owf.grails.services.model.StackServiceModel",
                   "totalUsers": 0,

@@ -32,24 +32,18 @@ class StackTests extends GrailsUnitTestCase {
         def stack = new Stack()
         assertFalse stack.validate()
         assertEquals "nullable", stack.errors["name"]
-        assertEquals "nullable", stack.errors["stackPosition"]
         assertEquals "nullable", stack.errors["stackContext"]
         
         // Test maxSize
-        stack = new Stack(name: s257, stackPosition: 1, description: s2084, stackContext: s201, imageUrl: s2084, descriptorUrl: s2084)
+        stack = new Stack(name: s257, description: s2084, stackContext: s201, imageUrl: s2084, descriptorUrl: s2084)
         assertFalse stack.validate()
         assertEquals "maxSize", stack.errors["name"]
         assertEquals "maxSize", stack.errors["stackContext"]
         assertEquals "maxSize", stack.errors["imageUrl"]
         assertEquals "maxSize", stack.errors["descriptorUrl"]
         
-        // Test min
-        stack = new Stack(name: "the name", stackPosition: 0, description: "the description", stackContext: "the context", imageUrl: "the url", descriptorUrl: "the url")
-        assertFalse stack.validate()
-        assertEquals "min", stack.errors["stackPosition"]
-        
         // Success
-        stack = new Stack(name: "the name", stackPosition: 1, description: "the description", stackContext: "the context", imageUrl: "the url", descriptorUrl: "the url")
+        stack = new Stack(name: "the name", description: "the description", stackContext: "the context", imageUrl: "the url", descriptorUrl: "the url")
         assertTrue stack.validate()
 
     }

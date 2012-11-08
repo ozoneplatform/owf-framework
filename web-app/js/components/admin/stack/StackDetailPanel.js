@@ -12,8 +12,8 @@ Ext.define('Ozone.components.admin.stack.StackDetailPanel', {
                 fields: [
                     { name: 'name', type: 'string' },
                     { name: 'description', type: 'string' },
-                    { name: 'stackContext', type: 'string' },
-                    { name: 'imageUrl', type: 'string' }
+                    { name: 'stackContext', type: 'string' }
+                    // { name: 'imageUrl', type: 'string' }
                 ]
             }),
             deferEmptyText: false,
@@ -60,7 +60,7 @@ Ext.define('Ozone.components.admin.stack.StackDetailPanel', {
                     renderStackUrl: function(context) {
                         context = Ext.htmlEncode(context);
                         var url = OWF.getContainerUrl() + '/' + context;
-                        return '<a href="' + url + '" target="_blank">' + url + '</a>';
+                        return '<a href="' + url + '" target="_top">' + url + '</a>';
                     }
                 }
             ),

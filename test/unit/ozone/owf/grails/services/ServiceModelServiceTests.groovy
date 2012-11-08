@@ -35,7 +35,7 @@ class ServiceModelServiceTests extends GrailsUnitTestCase {
 
     void testDashboardDefinitionToServiceModel() {
         def dashboard = new Dashboard()
-        def stack = new Stack(name:'Test Stack', stackPosition: 1, description: 'This is a test stack', stackContext:'testStack',
+        def stack = new Stack(name:'Test Stack', description: 'This is a test stack', stackContext:'testStack',
             imageUrl:'testStack.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
 		dashboard.guid = '3F2504E0-4F89-11D3-9A0C-0305E82C3301'
 		dashboard.isdefault = false

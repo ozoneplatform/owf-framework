@@ -3,7 +3,6 @@ package ozone.owf.grails.services.model
 class StackServiceModel extends AbstractServiceModel {
     Long id
     String name
-    Integer stackPosition
     String description
     String stackContext
     String imageUrl

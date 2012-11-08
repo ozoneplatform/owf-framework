@@ -25,7 +25,7 @@
               </elementProp>
               <elementProp name="data" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.value">[{&quot;id&quot;:-1,&quot;stackPosition&quot;:0,&quot;name&quot;:&quot;newStack${stack_num}${userName}&quot;,&quot;description&quot;:&quot;This is new stack ${stack_num} for ${userName}&quot;,&quot;stackContext&quot;:&quot;mystack${stack_num}${userName}&quot;,&quot;imageUrl&quot;:&quot;http://www.cnn.com&quot;,&quot;descriptorUrl&quot;:&quot;&quot;,&quot;totalDashboards&quot;:0,&quot;totalUsers&quot;:0,&quot;totalGroups&quot;:0,&quot;totalWidgets&quot;:0}]</stringProp>
+                <stringProp name="Argument.value">[{&quot;id&quot;:-1,&quot;name&quot;:&quot;newStack${stack_num}${userName}&quot;,&quot;description&quot;:&quot;This is new stack ${stack_num} for ${userName}&quot;,&quot;stackContext&quot;:&quot;mystack${stack_num}${userName}&quot;,&quot;imageUrl&quot;:&quot;http://www.cnn.com&quot;,&quot;descriptorUrl&quot;:&quot;&quot;,&quot;totalDashboards&quot;:0,&quot;totalUsers&quot;:0,&quot;totalGroups&quot;:0,&quot;totalWidgets&quot;:0}]</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">data</stringProp>

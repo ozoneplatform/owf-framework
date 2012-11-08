@@ -60,9 +60,6 @@ databaseChangeLog = {
             column(name: "name", type:"varchar(256)") {
                 constraints(nullable: "false")
             }
-            column(name: "stack_position", type: "bigint") {
-                constraints(nullable: "false", unique: "true")
-            }
             column(name: "description", type:"varchar(4000)") {
                 constraints(nullable: "true")
             }
@@ -126,7 +123,6 @@ databaseChangeLog = {
         insert(tableName: "stack") {
             column(name: "version", valueNumeric: "0")
             column(name: "name", value: "OWF")
-            column(name: "stack_position", valueNumeric: "1")
             column(name: "description", value: "OWF Stack")
             column(name: "stack_context", value: "owf")
             column(name: "image_url", value: "themes/common/images/owf.png")
@@ -136,14 +132,14 @@ databaseChangeLog = {
     changeSet(author: "owf", id: "7.0.0-16", context: "create, upgrade, 7.0.0", dbms: "oracle") {
         comment(text="Insert OWF stack")
         sql (text = """
-            insert into stack (id, version, name, stack_position, description, stack_context, image_url) values (hibernate_sequence.nextval, 0, 'OWF', 1, 'OWF Stack', 'owf', 'themes/common/images/owf.png');
+            insert into stack (id, version, name, description, stack_context, image_url) values (hibernate_sequence.nextval, 0, 'OWF', 'OWF Stack', 'owf', 'themes/common/images/owf.png');
         """)
     }
     
     changeSet(author: "owf", id: "7.0.0-17", context: "create, upgrade, 7.0.0", dbms: "postgresql") {
         comment(text="Insert OWF stack")
         sql (text = """
-            insert into stack (id, version, name, stack_position, description, stack_context, image_url) values (nextval('hibernate_sequence'), 0, 'OWF', 1, 'OWF Stack', 'owf', 'themes/common/images/owf.png');
+            insert into stack (id, version, name, description, stack_context, image_url) values (nextval('hibernate_sequence'), 0, 'OWF', 'OWF Stack', 'owf', 'themes/common/images/owf.png');
         """)
     }
     

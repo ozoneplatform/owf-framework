@@ -178,7 +178,6 @@ class ServiceModelService {
                 model = new StackServiceModel(
                         id: domain.id,
                         name: domain.name,
-                        stackPosition: domain.stackPosition,
                         description: domain.description,
                         stackContext: domain.stackContext,
                         imageUrl: domain.imageUrl,

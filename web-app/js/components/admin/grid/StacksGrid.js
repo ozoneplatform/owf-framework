@@ -15,11 +15,6 @@ Ext.define('Ozone.components.admin.StacksGrid', {
           hidden: true
         },
         {
-            header: '#',
-            dataIndex: 'stackPosition',
-            flex: 1
-        },
-        {
             header: 'Title',
             dataIndex: 'name',
             flex: 8

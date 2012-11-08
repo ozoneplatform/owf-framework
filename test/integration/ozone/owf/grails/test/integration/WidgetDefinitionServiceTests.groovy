@@ -113,7 +113,7 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
         def widget2 = WidgetDefinition.findByDisplayName(samplesArray[1])
         def widget3 = WidgetDefinition.findByDisplayName(samplesArray[2])
         
-        def stack1 = Stack.build(name: 'Stack One', stackPosition: 2, description: 'Stack One description', stackContext: 'one', 
+        def stack1 = Stack.build(name: 'Stack One', description: 'Stack One description', stackContext: 'one', 
             imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
         stack1.addToGroups(Group.build(name: 'Group1', automatic: false, status: 'active', stackDefault: true))
 
