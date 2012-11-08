@@ -119,20 +119,40 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
 
         def stackDashboard1 = Dashboard.build(alteredByAdmin: false, guid: '12345678-1234-1234-1234-123456789000',
             locked: false, isdefault: false, name: 'Stack Dashboard1', layoutConfig: """{
-                    "xtype": "desktoppane",
-                    "flex": 1,
-                    "height": "100%",
-                    "items": [
-                    ],
-                    "paneType": "desktoppane",
-                    "widgets": [{
-                        "widgetGuid":"${widget1.widgetGuid}"
+                    "cls": "hbox",
+                    "items":[{
+                        "xtype": "tabbedpane",
+                        "flex": 1,
+                        "height": "100%",
+                        "items": [],
+                        "paneType": "desktoppane",
+                        "widgets": [{
+                            "widgetGuid":"${widget3.widgetGuid}"
+                        },{
+                            "widgetGuid":"${widget2.widgetGuid}"
+                        }],
+                        "defaultSettings": {}
                     },{
-                        "widgetGuid":"${widget2.widgetGuid}"
-                    },{
-                        "widgetGuid":"${widget1.widgetGuid}"
+                        "xtype": "desktoppane",
+                        "flex": 1,
+                        "height": "100%",
+                        "items": [],
+                        "paneType": "desktoppane",
+                        "widgets": [{
+                            "widgetGuid":"${widget1.widgetGuid}"
+                        },{
+                            "widgetGuid":"${widget2.widgetGuid}"
+                        },{
+                            "widgetGuid":"${widget1.widgetGuid}"
+                        }],
+                        "defaultSettings": {}
                     }],
-                    "defaultSettings": {}
+                    "xtype":"container", 
+                    "layout":[{
+                        "align":"stretch", 
+                        "type":"hbox"
+                    }], 
+                    "flex":3
                 }""", description: 'This is a stack dashboard.')
 
         def stackDashboard2 = Dashboard.build(alteredByAdmin: false, guid: '12345678-1234-1234-1234-123456789001',
@@ -140,12 +160,9 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
                     "xtype": "tabbedpane",
                     "flex": 1,
                     "height": "100%",
-                    "items": [
-                    ],
+                    "items": [],
                     "paneType": "desktoppane",
                     "widgets": [{
-                        "widgetGuid":"${widget3.widgetGuid}"
-                    },{
                         "widgetGuid":"${widget2.widgetGuid}"
                     }],
                     "defaultSettings": {}

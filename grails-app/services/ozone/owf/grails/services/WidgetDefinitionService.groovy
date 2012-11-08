@@ -49,11 +49,8 @@ class WidgetDefinitionService {
             //Reuse DashboardService's method to list the dashboards of the stack's default group
             def dashboards = dashboardService.listDashboards(['group_id': stack.findStackDefaultGroup().id]).dashboardList
             for(def i = 0; i < dashboards.size(); i++) {
-                //Id isn't returned, so extract the widgetGuid
-                def widgets = JSON.parse(dashboards[i].layoutConfig).widgets
-                for(def j = 0; j < widgets.size(); j++) {
-                    widgetGuids.push(widgets[j].widgetGuid)
-                }
+                //Get all the widgetGuids found in the layoutConfig
+                widgetGuids.addAll(inspectForWidgetGuids(JSON.parse(dashboards[i].layoutConfig)))
             }
             widgetGuids.unique()
 
@@ -869,6 +866,24 @@ class WidgetDefinitionService {
             }
         }
         return true;
+    }
+
+    // Looks through the nested layoutConfig of a dashboard and grabs
+    // all of its widgetGuids
+    private def inspectForWidgetGuids(layoutConfig) {
+        def widgetGuids = []
+
+        def widgets = layoutConfig.widgets
+        for(def i = 0; i < widgets?.size(); i++) {
+            widgetGuids.push(widgets[i].widgetGuid)
+        }
+
+        def items = layoutConfig.items
+        for(def i = 0; i < items?.size(); i++) {
+            widgetGuids.addAll(inspectForWidgetGuids(items[i]))
+        }
+
+        return widgetGuids
     }
     
     //TODO: refactor this out when we have time.  I don't like this logic here
