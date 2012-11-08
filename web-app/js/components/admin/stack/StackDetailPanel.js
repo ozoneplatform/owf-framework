@@ -22,11 +22,11 @@ Ext.define('Ozone.components.admin.stack.StackDetailPanel', {
                     '<div class="selector">',
                         '<div id="detail-info" class="detail-info">',
                             '<div class="detail-header-block">',
-                                '<div class="detail-widget">',
-                                    '<div class="detail-icon">',
-                                        '<img src={imageUrl:this.renderImage} title="{name:htmlEncode}" class="detail-icon-image">',
-                                    '</div>',
-                                '</div>',
+                                // '<div class="detail-widget">',
+                                //     '<div class="detail-icon">',
+                                //         '<img src={imageUrl:this.renderImage} title="{name:htmlEncode}" class="detail-icon-image">',
+                                //     '</div>',
+                                // '</div>',
                                 '<div class="detail-icon-block">',
                                     '<div class="detail-title">{name:htmlEncode}</div>',
                                 '</div>',
@@ -44,19 +44,19 @@ Ext.define('Ozone.components.admin.stack.StackDetailPanel', {
                 '</tpl>',
                 {
                     compiled: true,
-                    renderImage: function(url) {
-                        var contextPath = Ozone.util.contextPath();
-                        if (!url.match(new RegExp('^/?' + contextPath + '/.*$', 'i')) && !url.match(new RegExp('^https?://.*', 'i'))) {
-                            //url is not relative to the contextPath
-                            if (url.indexOf('/') == 0) {
-                            url = contextPath + url;
-                            }
-                            else {
-                            url = contextPath + '/' + url;
-                            }
-                        }
-                        return encodeURI(decodeURI(url));
-                    },
+                    // renderImage: function(url) {
+                    //     var contextPath = Ozone.util.contextPath();
+                    //     if (!url.match(new RegExp('^/?' + contextPath + '/.*$', 'i')) && !url.match(new RegExp('^https?://.*', 'i'))) {
+                    //         //url is not relative to the contextPath
+                    //         if (url.indexOf('/') == 0) {
+                    //         url = contextPath + url;
+                    //         }
+                    //         else {
+                    //         url = contextPath + '/' + url;
+                    //         }
+                    //     }
+                    //     return encodeURI(decodeURI(url));
+                    // },
                     renderStackUrl: function(context) {
                         context = Ext.htmlEncode(context);
                         var url = OWF.getContainerUrl() + '/' + context;

@@ -22,28 +22,28 @@ Ext.define('Ozone.components.admin.StacksGrid', {
         {
             header: 'Title',
             dataIndex: 'name',
-            flex: 8,
-            renderer: function(value, metaData, record, rowIndex, colIndex, store) {
-                var title = value;
-                var url = record.get('imageUrl');
+            flex: 8
+            // renderer: function(value, metaData, record, rowIndex, colIndex, store) {
+            //     var title = value;
+            //     var url = record.get('imageUrl');
 
-                var contextPath = Ozone.util.contextPath();
-                if (!url.match(new RegExp('^/?' + contextPath + '/.*$', 'i')) && !url.match(new RegExp('^https?://.*', 'i'))) {
-                    //url is not relative to the contextPath
-                    if (url.indexOf('/') == 0) {
-                        url = contextPath + url;
-                    }
-                    else {
-                        url = contextPath + '/' + url;
-                    }
-                }
+            //     var contextPath = Ozone.util.contextPath();
+            //     if (!url.match(new RegExp('^/?' + contextPath + '/.*$', 'i')) && !url.match(new RegExp('^https?://.*', 'i'))) {
+            //         //url is not relative to the contextPath
+            //         if (url.indexOf('/') == 0) {
+            //             url = contextPath + url;
+            //         }
+            //         else {
+            //             url = contextPath + '/' + url;
+            //         }
+            //     }
 
-                var retVal = '<div class="grid-icon-and-text-title-box"><div class="grid-icon-and-text-icon"><img class="grid-icon-and-text-icon-image" src="' + Ext.htmlEncode(url) + '">';
-                retVal += '</div>';
-                retVal += '<div class="grid-icon-and-text-title">' + Ext.htmlEncode(title) + '</div>';
+            //     var retVal = '<div class="grid-icon-and-text-title-box"><div class="grid-icon-and-text-icon"><img class="grid-icon-and-text-icon-image" src="' + Ext.htmlEncode(url) + '">';
+            //     retVal += '</div>';
+            //     retVal += '<div class="grid-icon-and-text-title">' + Ext.htmlEncode(title) + '</div>';
 
-                return  retVal;
-            }
+            //     return  retVal;
+            // }
         }, {
             header: 'URL Name',
             dataIndex: 'stackContext',

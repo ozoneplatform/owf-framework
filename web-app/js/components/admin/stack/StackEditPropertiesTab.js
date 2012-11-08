@@ -62,16 +62,16 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     height: 100,
                     allowBlank: true,
                     maxLength: 4000
-                },
-                {
-                    xtype: 'urlfield',
-                    name: 'imageUrl',
-                    itemId: 'imageUrl',
-                    fieldLabel: 'Icon URL',
-                    allowBlank: true,
-                    maxLength: 2083,
-                    emptyText: 'https://mycompany.com/widget/images/icon.png'
                 }
+                // {
+                //     xtype: 'urlfield',
+                //     name: 'imageUrl',
+                //     itemId: 'imageUrl',
+                //     fieldLabel: 'Icon URL',
+                //     allowBlank: true,
+                //     maxLength: 2083,
+                //     emptyText: 'https://mycompany.com/widget/images/icon.png'
+                // }
             ]
         });
         this.callParent(arguments);
@@ -83,13 +83,13 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
         if (data) {
             var name = this.getComponent('name'),
                 description = this.getComponent('description'),
-                stackContext = this.getComponent('stackContext'),
-                imageUrl = this.getComponent('imageUrl');
+                stackContext = this.getComponent('stackContext');
+                // imageUrl = this.getComponent('imageUrl');
   			
             name.setValue(data.name).originalValue = data.name;
             description.setValue(data.description).originalValue = data.description;
             stackContext.setValue(data.stackContext).originalValue = data.stackContext;
-            imageUrl.setValue(data.imageUrl).originalValue = data.imageUrl;
+            // imageUrl.setValue(data.imageUrl).originalValue = data.imageUrl;
             this.getForm().isValid();
         }
     }
