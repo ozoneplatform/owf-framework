@@ -229,27 +229,6 @@ environments {
 
         }
     }
-    with_postgres {
-        dataSource {
-            pooled = true
-            dbCreate = "none"
-            username="owfbuild"
-            password = "0wf-bu1!d"
-            driverClassName = "org.postgresql.Driver"
-            url = "jdbc:postgresql://owfdb02:5432/owf_build"
-            dialect="org.hibernate.dialect.PostgreSQLDialect"
-            properties {
-                minEvictableIdleTimeMillis = 180000
-                timeBetweenEvictionRunsMillis = 180000
-                numTestsPerEvictionRun = 3
-                testOnBorrow = true
-                testWhileIdle = true
-                testOnReturn = true
-                validationQuery = "SELECT 1"
-            }
-
-        }
-    }
     with_postgres_empty {
         dataSource {
             pooled = true
