@@ -13,7 +13,7 @@ if (in != null)
 
 String description  = "";
 String notice       = "";
-String image        = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/themes/common/images/brand-logo.png";
+String image        = "./images/brand-logo.png";
 String version      = "${project.version}";
 String buildNumber  = "${buildNumber}";
 String buildDate    = "${buildDate}";

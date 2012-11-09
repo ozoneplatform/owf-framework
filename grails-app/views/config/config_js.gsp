@@ -11,7 +11,7 @@ Ozone.config = ${conf};
 //add in contextPath
 Ozone.config.webContextPath = window.location.pathname;
 
-if(Ozone.config.webContextPath[Ozone.config.webContextPath.length - 1] === '/') {
+if(Ozone.config.webContextPath.charAt(Ozone.config.webContextPath.length - 1) === '/') {
     Ozone.config.webContextPath = Ozone.config.webContextPath.substr(0,Ozone.config.webContextPath.length - 1);
 }
 
