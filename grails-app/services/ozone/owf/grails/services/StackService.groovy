@@ -167,6 +167,8 @@ class StackService {
     private def updateStack(params) {
 
         def stack, returnValue = null
+
+        if (params?.stack_id) params.stack_id = (params.stack_id instanceof String ? Integer.parseInt(params.stack_id) : params.stack_id)
         
         if (params?.id >= 0 || params.stack_id  >= 0) {  // Existing Stack
             params.id = params?.id >= 0 ? params.id : params.stack_id

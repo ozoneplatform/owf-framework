@@ -32,6 +32,7 @@ class WidgetDefinitionService {
         def opts = [:]
         if (params?.offset) opts.offset = (params.offset instanceof String ? Integer.parseInt(params.offset) : params.offset)
         if (params?.max) opts.max =(params.max instanceof String ? Integer.parseInt(params.max) : params.max)
+        if (params?.stack_id) params.stack_id = (params.stack_id instanceof String ? Integer.parseInt(params.stack_id) : params.stack_id)
 
         if(params?.filters) {
             JSON.parse(params.filters).each {
