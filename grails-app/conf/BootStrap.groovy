@@ -250,8 +250,8 @@ class BootStrap {
             saveInstance(new WidgetDefinition(
                     displayName: 'Test Widget '+i,
                     height: 440,
-                    imageUrlLarge: 'themes/common/images/blue/icons/widgetIcons/nearlyEmpty.gif',
-                    imageUrlSmall: 'themes/common/images/blue/icons/widgetContainer/nearlyEmptysm.gif',
+                    imageUrlLarge: 'themes/common/images/widget-icons/NearlyEmpty.png',
+                    imageUrlSmall: 'themes/common/images/widget-icons/NearlyEmpty.png',
                     widgetGuid: id,
                     widgetUrl: 'examples/walkthrough/widgets/NearlyEmptyWidget.html',
                     widgetVersion: '1.0',
