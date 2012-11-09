@@ -442,7 +442,9 @@ Ext.define('Ozone.components.widget.WidgetBase', {
 				//only update active widget if this widget is not being closed via close button
 				if (closeEl == null || t !== closeEl.dom) {
 					this.dashboard.updateActiveWidget(this, true);
-					this.focus(undefined, undefined, undefined, true);
+                                        if(me.xtype === "widgetwindow") {
+                                            this.focus(undefined, undefined, undefined, true);
+                                        }
 				}
 			}, me);
 		}
