@@ -208,6 +208,9 @@ class AccountService {
                 people {
                     eq('id', p.id)
                 }
+                and {
+                    eq('stackDefault', false)
+                }
 
                 projections { rowCount() }
             }
