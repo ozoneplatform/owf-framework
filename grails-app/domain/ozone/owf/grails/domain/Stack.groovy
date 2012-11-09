@@ -12,6 +12,7 @@ class Stack {
     String stackContext
     String imageUrl
     String descriptorUrl
+    Integer uniqueWidgetCount = 0
     
     static hasMany = [groups: Group]
     
@@ -26,6 +27,7 @@ class Stack {
         stackContext(nullable: false, blank: false, maxSize: 200, unique: true)
         imageUrl(nullable: true, blank: true, maxSize: 2083)
         descriptorUrl(nullable: true, blank: true, maxSize: 2083)
+        uniqueWidgetCount(nullable: false, blank: false)
     }
 
     Group findStackDefaultGroup() {

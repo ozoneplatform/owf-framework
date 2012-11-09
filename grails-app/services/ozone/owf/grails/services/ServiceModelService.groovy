@@ -182,10 +182,10 @@ class ServiceModelService {
                         stackContext: domain.stackContext,
                         imageUrl: domain.imageUrl,
                         descriptorUrl: domain.descriptorUrl,
-                        totalDashboards: params.totalDashboards ? params.totalDashboards : 0,
-                        totalUsers: params.totalUsers ? params.totalUsers : 0,
-                        totalGroups: params.totalGroups ? params.totalGroups : 0,
-                        totalWidgets: params.totalWidgets ? params.totalWidgets : 0
+                        totalDashboards: params.totalDashboards ?: 0,
+                        totalUsers: params.totalUsers ?: 0,
+                        totalGroups: params.totalGroups ?: 0,
+                        totalWidgets: domain.uniqueWidgetCount ?: 0
                         )
                 break
             default:

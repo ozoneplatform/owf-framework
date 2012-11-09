@@ -42,7 +42,7 @@ class WidgetDefinitionService {
         }
 
         def stackFilteredIds = []
-        if(params?.stack_id) {
+        if(params?.stack_id > -1) {
             def widgetGuids = []
             def stack = Stack.findById(params?.stack_id)
 

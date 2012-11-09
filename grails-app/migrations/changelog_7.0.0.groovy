@@ -188,4 +188,10 @@ databaseChangeLog = {
             referencedColumnNames: "id", referencedTableName: "stack")
     }
     
+    changeSet(author: "owf", id: "7.0.0-24", context: "create, upgrade, 7.0.0") {
+        comment("Add a property to track the count of unique widgets present on the dashboards of a stack")
+        addColumn(tableName: "stack") {
+            column(name: "unique_widget_count", type: "bigint", defaultValue: 0)
+        }
+    }
 }

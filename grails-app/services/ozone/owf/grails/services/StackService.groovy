@@ -16,6 +16,7 @@ class StackService {
     def serviceModelService
     def domainMappingService
     def groupService
+    def widgetDefinitionService
     
     private static def addFilter(name, value, c) {
         c.with {
@@ -128,8 +129,7 @@ class StackService {
             serviceModelService.createServiceModel(stack,[
                 totalDashboards: totalDashboards,
                 totalUsers: totalUsers[0],
-                totalGroups: totalGroups[0],
-                totalWidgets: 0
+                totalGroups: totalGroups[0]
             ])
             
         }
@@ -304,6 +304,9 @@ class StackService {
                         returnValue = serviceModels
                     }
                 }
+
+                //Update the uniqueWidgetCount of the stack
+                stack.uniqueWidgetCount = widgetDefinitionService.list([stack_id: stack.id]).results
             }
         }
 
