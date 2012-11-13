@@ -194,4 +194,26 @@ databaseChangeLog = {
             column(name: "unique_widget_count", type: "bigint", defaultValue: 0)
         }
     }
+    
+    changeSet(author: "owf", id: "7.0.0-25", context: "create, upgrade, 7.0.0") {
+        sql (text = """
+            delete from stack_groups where stack_id = (select id from stack where name = 'OWF') and group_id = (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58e');
+        """)
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-26", context: "create, upgrade, 7.0.0") {
+        comment("Delete OWF Stack Group")
+
+        delete(tableName: "owf_group") {
+            where(text="name like 'ce86a612-c355-486e-9c9e-5252553cc58e'")
+        }
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-27", context: "create, upgrade, 7.0.0") {
+        comment("Delete OWF Stack")
+
+        delete(tableName: "stack") {
+            where(text="name like 'OWF'")
+        }
+    }
 }
