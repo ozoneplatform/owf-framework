@@ -28,16 +28,26 @@ Ozone.eventing = Ozone.eventing ? Ozone.eventing : {};
      */
     Ozone.eventing.WidgetProxy = function (wid, functions, srcId, proxy) {
         var widgetId = wid,
+            widgetIframeId,
             readyList = [],
             pub = proxy;
 
+        // assume JSON
+        if(widgetId.charAt(0) === '{') {
+            widgetIframeId = widgetId;
+            widgetId = OWF.Util.parseJson(widgetIframeId).id;
+        }
+        else {
+            widgetIframeId = '{\"id\":\"' + widgetId + '\"}';
+        }
+        
         if (pub == null) {
             pub = /** @lends Ozone.eventing.WidgetProxy.prototype */ {
 
                 /**
                  * Id of the Widget that this proxy represents
                  */
-                id:wid,
+                id:widgetIframeId,
                 /**
                  * Flag which represents if the Widget this proxy represents
                  */

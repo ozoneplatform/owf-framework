@@ -130,7 +130,7 @@ OWF = window.OWF ? window.OWF : {};
        */
         notifyWidgetReady: function() {
           //send a message to container that this widget is ready
-          gadgets.rpc.call('..', WIDGET_READY_SERVICE_NAME, null, OWF.getIframeId());
+          gadgets.rpc.call('..', WIDGET_READY_SERVICE_NAME, null, OWF.getInstanceId());
         },
 
 		/**

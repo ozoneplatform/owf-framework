@@ -195,6 +195,11 @@ if (typeof JSON === 'undefined') {
      *        }
      */
     function importWidget(widgetId, ready) {
+        // assume JSON
+        if(widgetId.charAt(0) === '{') {
+            widgetId = OWF.Util.parseJson(widgetId).id;
+        }
+
         var proxy = createClientSideFunctionShims(widgetId);
 
         function processFunctionsFromContainer(functions) {
@@ -204,12 +209,12 @@ if (typeof JSON === 'undefined') {
                   proxy.fireReady();
                 }
                 if (typeof ready == 'function') ready.call(this, proxy);
-            }, widgetId, srcWidgetId);
+            }, widgetId, srcWidgetIframeId);
         }
 
         var id = getIdFromWindowName();
-        var srcWidgetId = '{\"id\":\"' + id + '\"}';
-        gadgets.rpc.call("..", 'GET_FUNCTIONS', processFunctionsFromContainer, widgetId, srcWidgetId);
+        var srcWidgetIframeId = '{\"id\":\"' + id + '\"}';
+        gadgets.rpc.call("..", 'GET_FUNCTIONS', processFunctionsFromContainer, widgetId, srcWidgetIframeId);
         return proxy;
     }
 
