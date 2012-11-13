@@ -107,7 +107,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                     me.doCreate();
                 }
             }, {
-                xtype: 'button',
+                xtype: 'splitbutton',
                 text: 'Edit',
                 itemId: 'btnEdit',
                 handler: function() {
@@ -119,6 +119,28 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                     } else {
                         me.showAlert('Error', 'You must select at least one stack to edit.');
                     }
+                },
+                menu: {
+                    xtype: 'menu',
+                    plain: true,
+                    hideMode: 'display',
+                    defaults: {
+                        minWidth: this.minButtonWidth
+                    },
+                    items: [
+                        {
+                            xtype: 'owfmenuitem',
+                            text: 'Export',
+                            handler: function(button) {
+                                var records = me.gridStacks.getSelectionModel().getSelection();
+                                if (records && records.length > 0) {
+                                    me.doExport(records[0].data.id);
+                                } else {
+                                    me.showAlert('Error', 'You must select a stack to export.');
+                                }
+                            }
+                        }
+                    ]
                 }
             }, {
                 xtype: 'button', 
@@ -265,5 +287,12 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
         } else {
             this.showAlert('Error', 'You must select at least one stack to delete.');
         }
+    },
+    
+    doExport: function(id) {
+        var win = Ext.widget('stackexportwindow', {
+            focusOnClose: this.down()
+        });
+        win.show();
     }
 });

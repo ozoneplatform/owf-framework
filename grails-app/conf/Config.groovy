@@ -316,6 +316,7 @@ uiperformance.bundles = [
         files: [
             'data/models/Stack',
             'data/stores/StackStore',
+            'components/admin/StackExportWindow',
             'components/admin/grid/StacksGrid',
             'components/admin/stack/StackDetailPanel',
             'components/admin/stack/StackManagementPanel'
