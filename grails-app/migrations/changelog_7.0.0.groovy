@@ -224,10 +224,19 @@ databaseChangeLog = {
         }
     }
     
-    changeSet(author: "owf", id: "7.0.0-29", context: "upgrade, 7.0.0, sampleData, 7.0.0-sampleData") {
+    changeSet(author: "owf", id: "7.0.0-29", dbms: "mysql,mssql,oracle", context: "upgrade, 7.0.0, sampleData, 7.0.0-sampleData") {
         comment("Update existing PWD records to set whether they were added to a user directly or just via a group")
-        sql(text= """
-            update person_widget_definition set user_widget = true where group_widget = false;
-        """)
+        update(tableName: "person_widget_definition") {
+            column(name: "user_widget", valueBoolean: true)
+            where("group_widget=0")
+        }
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-29", dbms: "postgresql,hsqldb", context: "upgrade, 7.0.0, sampleData, 7.0.0-sampleData") {
+        comment("Update existing PWD records to set whether they were added to a user directly or just via a group")
+        update(tableName: "person_widget_definition") {
+            column(name: "user_widget", valueBoolean: true)
+            where("group_widget=false")
+        }
     }
 }
