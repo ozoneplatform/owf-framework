@@ -17,7 +17,10 @@ Ext.define('Ozone.components.admin.StacksGrid', {
         {
             header: 'Title',
             dataIndex: 'name',
-            flex: 8
+            flex: 8,
+            renderer: function(v) {
+                return v ? Ext.htmlEncode(v) : "";
+            }
             // renderer: function(value, metaData, record, rowIndex, colIndex, store) {
             //     var title = value;
             //     var url = record.get('imageUrl');
