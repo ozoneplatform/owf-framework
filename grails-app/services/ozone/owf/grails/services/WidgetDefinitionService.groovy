@@ -197,7 +197,7 @@ class WidgetDefinitionService {
 
                     //only list widgets that are explicitly assigned
                     //to this user
-                    eq("groupWidget", false)
+                    eq("userWidget", true)
                 }
             }
             if (params?.intent) {
@@ -493,6 +493,7 @@ class WidgetDefinitionService {
                                 person: person,
                                 widgetDefinition: widgetDefinition,
                                 visible: true,
+                                userWidget: true,
                                 pwdPosition: maxPosition)
                             
                             person.addToPersonWidgetDefinitions(personWidgetDefinition)
@@ -502,11 +503,25 @@ class WidgetDefinitionService {
                                 ['name':it.tag.name,'visible':it.visible,'position':it.position]
                             });
                         }
+                        else {
+                            results.each { result ->
+                                result.userWidget = true
+                                result.save(flush:true)
+                            }
+                        }
                     }
                     else if (params.update_action == 'remove') {
                         results?.eachWithIndex { nestedIt, j ->
-                            person.removeFromPersonWidgetDefinitions(nestedIt)
-                            widgetDefinition.removeFromPersonWidgetDefinitions(nestedIt)
+                            if (!nestedIt.groupWidget) {
+                                // If widget is not assigned directly or via a group, remove the pwd.
+                                person.removeFromPersonWidgetDefinitions(nestedIt)
+                                widgetDefinition.removeFromPersonWidgetDefinitions(nestedIt)
+                            }
+                            else {
+                                // Otherwise, just un-flag the direct widget to user association.
+                                nestedIt.userWidget = false
+                                nestedIt.save(flush:true)
+                            }
                         }
                     }
                     
@@ -567,6 +582,7 @@ class WidgetDefinitionService {
                             def personWidgetDefinition = new PersonWidgetDefinition(
                                 person: person,
                                 widgetDefinition: widgetDefinition,
+                                userWidget: true,
                                 visible: true,
                                 pwdPosition: maxPosition)
                             
@@ -577,11 +593,25 @@ class WidgetDefinitionService {
                                 ['name':pwd.tag.name,'visible':pwd.visible,'position':pwd.position]
                             });
                         }
+                        else {
+                            results.each { result ->
+                                result.userWidget = true
+                                result.save(flush:true)
+                            }
+                        }
                     }
                     else if (params.update_action == 'remove') {
                         results?.eachWithIndex { nestedIt, j ->
-                            person.removeFromPersonWidgetDefinitions(nestedIt)
-                            widgetDefinition.removeFromPersonWidgetDefinitions(nestedIt)
+                            if (!nestedIt.groupWidget) {
+                                // If widget is not assigned directly or via a group, remove the pwd.
+                                person.removeFromPersonWidgetDefinitions(nestedIt)
+                                widgetDefinition.removeFromPersonWidgetDefinitions(nestedIt)
+                            }
+                            else {
+                                // Otherwise, just un-flag the direct widget to user association.
+                                nestedIt.userWidget = false
+                                nestedIt.save(flush:true)
+                            }
                         }
                     }
                     

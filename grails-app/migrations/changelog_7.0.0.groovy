@@ -216,4 +216,18 @@ databaseChangeLog = {
             where(text="name like 'OWF'")
         }
     }
+    
+    changeSet(author: "owf", id: "7.0.0-28", context: "create, upgrade, 7.0.0") {
+        comment("Add user_widget field to person_widget_definition table")
+        addColumn(tableName: "person_widget_definition") {
+            column(name: "user_widget", type: "boolean", defaultValueBoolean: "false", valueBoolean: "false")
+        }
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-29", context: "upgrade, 7.0.0, sampleData, 7.0.0-sampleData") {
+        comment("Update existing PWD records to set whether they were added to a user directly or just via a group")
+        sql(text= """
+            update person_widget_definition set user_widget = true where group_widget = false;
+        """)
+    }
 }

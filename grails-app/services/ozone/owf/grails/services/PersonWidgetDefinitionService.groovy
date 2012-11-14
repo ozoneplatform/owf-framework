@@ -340,6 +340,7 @@ class PersonWidgetDefinitionService {
                 //            groupWidgetsToTagsMap[widgetDef.widgetGuid] << ['name': group.name, 'visible': true, 'position': -1]
                 groupWidgetsToTagsMap[widgetDef.widgetGuid] << group
             }
+            
         }
 
         def allGroupWidgetsToTagsMap = groupWidgetsToTagsMap.clone();
@@ -359,11 +360,19 @@ class PersonWidgetDefinitionService {
                 groupWidgetsToTagsMap.remove(pwd.widgetDefinition.widgetGuid)
             }
             else {
-                // delete pwd if a group widget is no longer in a group
-                Map newParams = new HashMap()
-                newParams.personWidgetDefinition = pwd
-                newParams.guid = pwd.widgetDefinition.widgetGuid
-                delete(newParams)
+                // delete pwd if a group widget is no longer in a group and user is not 
+                // directly associated to it.
+                if (!pwd.userWidget) {
+                    Map newParams = new HashMap()
+                    newParams.personWidgetDefinition = pwd
+                    newParams.guid = pwd.widgetDefinition.widgetGuid
+                    delete(newParams)
+                }
+                else {
+                    // Just remove the group association from the pwd
+                    pwd.groupWidget = false
+                    pwd.save(flush:true)
+                }
             }
         }
 
@@ -387,7 +396,7 @@ class PersonWidgetDefinitionService {
                         pwdPosition: maxPosition++,
                         visible: true,
                         favorite: false,
-
+                        userWidget: false,
                         //only this method will ever set this groupWidget flag to true
                         groupWidget: true
                         )
@@ -631,6 +640,7 @@ class PersonWidgetDefinitionService {
                 widgetDefinition: wd,
                 visible: true,
                 favorite: false,
+                userWidget: true,
                 groupWidget: false,
                 displayName: params.displayName ?: params.name,
                 pwdPosition: maxPosition)

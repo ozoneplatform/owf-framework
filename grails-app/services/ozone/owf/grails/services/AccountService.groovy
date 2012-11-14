@@ -156,7 +156,7 @@ class AccountService {
 
                     //only list widgets that are explicitly assigned
                     //to this user
-                    eq("groupWidget", false)
+                    eq("userWidget", true)
                 }
             if (params.filters) {
                 if (params.filterOperator?.toUpperCase() == 'OR') {
@@ -324,6 +324,7 @@ class AccountService {
                                     def personWidgetDefinition = new PersonWidgetDefinition(
                                             person: user,
                                             widgetDefinition: widget,
+                                            userWidget: true,
                                             visible: true,
                                             pwdPosition: maxPosition)
 
@@ -333,13 +334,29 @@ class AccountService {
                                         ['name':pwd.tag.name,'visible':pwd.visible,'position':pwd.position]
                                     });
 
+                                } 
+                                // If the user already had this PWD, then set the direct user 
+                                // assocation flag.
+                                else if (results[0] != null){
+                                    results[0].userWidget = true
+                                    results[0].save(flush: true);
                                 }
                             }
                             else if (params.update_action == 'remove')
                             {
                                 results?.each { result ->
-                                    user.removeFromPersonWidgetDefinitions(result)
-                                    widget.removeFromPersonWidgetDefinitions(result)
+                                    // If the user was assigned the widget through a group,
+                                    // keep the PWD but un-flag it's direct user association.
+                                    if (result.groupWidget) {
+                                        result.userWidget = false
+                                        result.save(flush:true)
+                                    }
+                                    else {
+                                        // The user no longer has any association to the widget;
+                                        // remove the PWD.
+                                        user.removeFromPersonWidgetDefinitions(result)
+                                        widget.removeFromPersonWidgetDefinitions(result)
+                                    }
                                 }
                             }
 

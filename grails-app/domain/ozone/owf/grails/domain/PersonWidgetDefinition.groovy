@@ -10,7 +10,8 @@ class PersonWidgetDefinition implements Serializable, Comparable, Taggable {
 	WidgetDefinition widgetDefinition
 	Integer pwdPosition
     String displayName
-	Boolean groupWidget = false
+	Boolean groupWidget = false  // True if the PWD was added to a user because of their group membership
+    Boolean userWidget = false // True if the PWD was added directly to a widget.
 	Boolean favorite = false
 	Boolean visible = true
 	Boolean disabled = false
@@ -20,6 +21,7 @@ class PersonWidgetDefinition implements Serializable, Comparable, Taggable {
     static constraints = {
         displayName(nullable:true, maxSize: 256)
 		visible(nullable:false)
+        userWidget(nullable:true)
 		groupWidget(nullable:true)
 		favorite(nullable:true)
         disabled(nullable:true)
