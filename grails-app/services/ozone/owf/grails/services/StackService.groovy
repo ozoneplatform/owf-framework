@@ -363,9 +363,9 @@ class StackService {
                 stack = Stack.findById(params.id, [cache: true])
 
                 def dir = './lib/'
-                if(grails.util.GrailsUtil.environment == 'development') dir = './src/resources/'
+                if(grails.util.GrailsUtil.environment != 'production') dir = './src/resources/'
 
-                def stackDescriptor = new File(dir + "descriptor_template.html").text
+                def stackDescriptor = new File(dir + "empty_descriptor.html").text
 
                 //Construct the list of dashboards for the descriptor
                 def stackDefaultGroup = stack.findStackDefaultGroup()

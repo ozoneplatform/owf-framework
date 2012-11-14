@@ -98,7 +98,7 @@ class StackController extends BaseOwfRestController {
             log.info("Executing stackService: export");
         }
         try {
-            //Is somehow extension isn't given, default is war
+            //If somehow extension isn't given, default is war
             def filename = "stack_descriptor.war"
             if(params.extension) {
                 if(params.filename) {
@@ -117,7 +117,7 @@ class StackController extends BaseOwfRestController {
         }
         catch (Exception e) {
             //Set response back to text to relay the error
-            response.setHeader("Content-disposition", null)
+            response.setHeader("Content-disposition", "")
             response.setContentType("text/html;charset=UTF-8")
 
             result = handleError(e)
