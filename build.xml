@@ -337,6 +337,7 @@
         </copy>
         <copy todir="${tomcat.dir}/lib">
             <fileset dir="src/resources">
+                <include name="empty_descriptor.html" />
                 <include name="OwfConfig.groovy" />
                 <include name="OzoneConfig.properties" />
                 <include name="owf-override-log4j.xml" />

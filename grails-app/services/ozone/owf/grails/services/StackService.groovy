@@ -352,6 +352,103 @@ class StackService {
         return [success: true, data: stacks]
     }
     
+    def export(params, outputStream) {
+        
+        // Only admins may export Stacks
+        ensureAdmin()
+        
+        if(params.id > -1) {
+            def stack
+            try {
+                stack = Stack.findById(params.id, [cache: true])
+
+                def dir = './lib/'
+                if(grails.util.GrailsUtil.environment == 'development') dir = './src/resources/'
+
+                def stackDescriptor = new File(dir + "descriptor_template.html").text
+
+                //Construct the list of dashboards for the descriptor
+                def stackDefaultGroup = stack.findStackDefaultGroup()
+                def dashboards = []
+                if(stackDefaultGroup != null) {
+                    domainMappingService.getMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE).each {
+                        dashboards.push(serviceModelService.createServiceModel(Dashboard.findById(it.destId)))
+                    }
+                }
+
+                def stackData = [:]
+                //Get only the parameters required for a stack descriptor
+                stackData.put('name', stack.name)
+                stackData.put('stackContext', stack.stackContext)
+                stackData.put('description', stack.description)
+                stackData.put('dashboards', dashboards)
+
+                //Pretty print the JSON
+                stackData = (stackData as JSON).toString(true)
+
+                //Replace the empty stackData variable in the copied template with the stack data
+                stackDescriptor = stackDescriptor.replaceFirst("var data;", "var data = ${stackData};")
+
+                def out
+                if(params.extension == 'zip') {
+                    out = new java.util.zip.ZipOutputStream(outputStream)
+                }
+                else {
+                    out = new java.util.jar.JarOutputStream(outputStream)
+                }
+                out.putNextEntry(new java.util.zip.ZipEntry(stack.stackContext + "_descriptor.html")) 
+                out.write(stackDescriptor.getBytes(java.nio.charset.Charset.forName("UTF-8")))
+                out.closeEntry()
+
+                widgetDefinitionService.list([stack_id: stack.id]).data.eachWithIndex { widget, i ->
+
+                    def widgetDefinition = widget.toDataMap().value
+                    def widgetDescriptor = new File(dir + "empty_descriptor.html").text
+                    def widgetData = [:]
+
+                    //Get only the values required for a widget descriptor
+                    widgetData.put("universalName", widgetDefinition.universalName)
+                    widgetData.put("displayName", widgetDefinition.namespace)
+                    widgetData.put("description", widgetDefinition.description)
+                    widgetData.put("widgetVersion", widgetDefinition.widgetVersion)
+                    widgetData.put("widgetUrl", widgetDefinition.url)
+                    widgetData.put("imageUrlSmall", widgetDefinition.smallIconUrl)
+                    widgetData.put("imageUrlLarge", widgetDefinition.largeIconUrl)
+                    widgetData.put("width", widgetDefinition.width)
+                    widgetData.put("height", widgetDefinition.height)
+                    widgetData.put("visible", widgetDefinition.visible)
+                    widgetData.put("singleton", widgetDefinition.singleton)
+                    widgetData.put("background", widgetDefinition.background)
+                    widgetData.put("widgetTypes", [widgetDefinition.widgetTypes[0].name])
+                    widgetData.put("intents", widgetDefinition.intents)
+                    def tags = []
+                    widgetDefinition.tags.each { tags.push(it.name) }
+                    widgetData.put("defaultTags", tags)
+
+                    //Pretty print the JSON
+                    widgetData = (widgetData as JSON).toString(true)
+
+                    widgetDescriptor = widgetDescriptor.replaceFirst("var data;", "var data = ${widgetData};")
+
+                    out.putNextEntry(new java.util.zip.ZipEntry("widget_descriptors/widget" + (i + 1) + "_descriptor.html")) 
+                    out.write(widgetDescriptor.getBytes(java.nio.charset.Charset.forName("UTF-8")))
+                    out.closeEntry()
+                }
+
+                out.close()
+
+            } catch(Exception e) {
+                throw new OwfException(message: 'Server error while exporting stack' +
+                    (stack?.name ? (' ' + stack?.name) : '') + ', please try again.',
+                    exceptionType: OwfExceptionTypes.GeneralServerError)
+            }
+        }
+        else {
+            throw new OwfException(message: 'The stack id ' + params.id + ' is invalid, export failed.',
+                exceptionType: OwfExceptionTypes.GeneralServerError)
+        }
+    }
+    
     private def ensureAdmin() {
         if (!accountService.getLoggedInUserIsAdmin()) {
             throw new OwfException(message: "You must be an admin", exceptionType: OwfExceptionTypes.Authorization)

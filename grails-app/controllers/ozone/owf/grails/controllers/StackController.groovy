@@ -87,4 +87,46 @@ class StackController extends BaseOwfRestController {
             log.info("Executed stackService: delete in " + stopWatch);
         }
     }
+    
+    def export = {
+        def result
+        StopWatch stopWatch = null;
+        
+        if (log.isInfoEnabled()) {
+            stopWatch = new StopWatch();
+            stopWatch.start();
+            log.info("Executing stackService: export");
+        }
+        try {
+            //Is somehow extension isn't given, default is war
+            def filename = "stack_descriptor.war"
+            if(params.extension) {
+                if(params.filename) {
+                    filename = params.filename + '.' + params.extension
+                }
+                else {
+                    filename = "stack_descriptor." + params.extension
+                }
+            }
+
+            //Set response to a file
+            response.setHeader("Content-disposition", "attachment; filename=" + filename);
+            response.setContentType("application/octet-stream")
+
+            stackService.export(params, response.getOutputStream())
+        }
+        catch (Exception e) {
+            //Set response back to text to relay the error
+            response.setHeader("Content-disposition", null)
+            response.setContentType("text/html;charset=UTF-8")
+
+            result = handleError(e)
+            renderResult(result)
+        }
+        
+        if (log.isInfoEnabled()) {
+            stopWatch.stop();
+            log.info("Executed stackService: export in " + stopWatch);
+        }
+    }
 }

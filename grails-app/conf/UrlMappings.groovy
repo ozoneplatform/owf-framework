@@ -299,6 +299,10 @@ class UrlMappings {
             controller = "group"
             action = UrlMappings.getAction
         }
+        "/stack/export" {
+            controller = "stack"
+            action = "export"
+        }
         "/stack/$id?" {
             controller = "stack"
             action = UrlMappings.getAction
