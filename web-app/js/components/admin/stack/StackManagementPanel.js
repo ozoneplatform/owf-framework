@@ -137,10 +137,10 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                                     me.doExport(records[0].data.id, records[0].data.name);
                                 }
                                 else if(records && records.length > 1) {
-                                    this.showAlert('Error', 'You must select only one stack to export.');
+                                    me.showAlert('Error', 'You must select only one stack to export.');
                                 }
                                 else {
-                                    this.showAlert('Error', 'You must select a stack to export.');
+                                    me.showAlert('Error', 'You must select a stack to export.');
                                 }
                             }
                         }
@@ -293,19 +293,19 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
         }
     },
     
-    doExport: function(id) {
+    doExport: function(id, name) {
         var me = this;
 
         var okFn = function(filename, extension) {
             var exportFailed = function(errorMsg) {
-                var msg = 'The export of stack ' + Ext.htmlEncode(stack_name) + ' failed.';
+                var msg = 'The export of stack ' + Ext.htmlEncode(name) + ' failed.';
                 me.showAlert('Server Error!', errorMsg ? errorMsg : msg);
             }
 
             //Create hidden iframe to retrieve file without navigating widget or OWF on failure
             var iframe = document.createElement('iframe');
             iframe.id = 'stackExportIFrame';
-            iframe.src = Ozone.util.contextPath() + '/stack/export?id=' + stack_id + 
+            iframe.src = Ozone.util.contextPath() + '/stack/export?id=' + id + 
                 '&filename=' + filename + '&extension=' + extension;
             iframe.style.display = "none";
 
@@ -341,6 +341,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
 
         var win = Ext.widget('stackexportwindow', {
             focusOnClose: this.down(),
+            itemName: name,
             okFn: okFn
         });
         win.show();
