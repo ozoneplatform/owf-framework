@@ -439,6 +439,8 @@ class StackService {
                 out.close()
 
             } catch(Exception e) {
+                println e.getMessage()
+                println e.getStackTrace()
                 throw new OwfException(message: 'Server error while exporting stack' +
                     (stack?.name ? (' ' + stack?.name) : '') + ', please try again.',
                     exceptionType: OwfExceptionTypes.GeneralServerError)
