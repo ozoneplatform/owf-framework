@@ -95,10 +95,19 @@ Ext.define('Ozone.components.admin.StackExportWindow', {
         
         me.on('afterrender', function() {
             
+            var form = me.down('#form');
             var filename = me.down('#filename');
             var extension = me.down('#extension');
             var okBtn = me.down('#ok');
             var cancelBtn = me.down('#cancel');
+            
+            form.on('fieldvaliditychange', function(form, t, isValid, eOpts) {
+                if (isValid) {
+                    okBtn.enable();
+                } else {
+                    okBtn.disable();
+                }
+            });
             
             cancelBtn.on('click', function(btn, e) {
                 me.close();
@@ -116,6 +125,7 @@ Ext.define('Ozone.components.admin.StackExportWindow', {
         });
         
         me.on('beforeclose', function() {
+            me.down('#form').clearListeners();
             me.down('#ok').clearListeners();
             me.down('#cancel').clearListeners();
             me.focusOnClose && me.focusOnClose.focus();
