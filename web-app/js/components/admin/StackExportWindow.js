@@ -47,7 +47,7 @@ Ext.define('Ozone.components.admin.StackExportWindow', {
                 itemId: 'filename',
                 fieldLabel: 'Filename',
                 labelWidth: 140,
-                allowBlank: true,
+                allowBlank: false,
                 name: 'filename',
                 maxLength: 200,
                 regex: /^[a-zA-Z\d\-\_]+$/,
@@ -76,7 +76,8 @@ Ext.define('Ozone.components.admin.StackExportWindow', {
     }],
     buttons: [{
         text: 'OK',
-        itemId: 'ok'
+        itemId: 'ok',
+        disabled: true
     }, {
         text: 'Cancel',
         itemId: 'cancel'
