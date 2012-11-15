@@ -52,25 +52,6 @@ class ConfigController {
         theme["themeContrast"] =  themeResults["contrast"]
         theme["themeFontSize"] =  themeResults["owf_font_size"]
         
-//        // Remove metric keystore password from config.js
-//        def conf = [:]
-//        def o = grailsApplication.config.owf
-//        if (o) { o = o.entrySet() }
-//        o.each {
-//            if ('metric' != it.key) {
-//                conf[it.key] = it.value
-//            } else {
-//                def toAdd = [:]
-//                def m = it.value
-//                if (m) { m = m.entrySet() }
-//                m.each {
-//                    if ('keystorePass' != it.key) {
-//                        toAdd[it.key] = it.value
-//                    }
-//                }
-//                conf['metric'] = toAdd
-//            }
-//        }
         //copy owf section of grails config, removing sensitive properties
         def conf = grailsApplication.config.owf.clone()
         conf.metric = conf.metric.findAll { 

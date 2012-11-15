@@ -5,7 +5,7 @@ import org.hibernate.CacheMode
 class Stack {
     
     static String TYPE = 'stack'
-    static final long serialVersionUID = 600L
+    static final long serialVersionUID = 700L
     
     String name
     String description

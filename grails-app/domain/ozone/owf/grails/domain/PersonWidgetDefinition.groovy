@@ -4,7 +4,7 @@ import org.grails.taggable.*
 
 class PersonWidgetDefinition implements Serializable, Comparable, Taggable {
 
-    static final long serialVersionUID = 600L
+    static final long serialVersionUID = 700L
 
 	Person person
 	WidgetDefinition widgetDefinition

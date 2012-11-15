@@ -309,6 +309,7 @@ class StackService {
 
                 //Update the uniqueWidgetCount of the stack
                 stack.uniqueWidgetCount = widgetDefinitionService.list([stack_id: stack.id]).results
+                stack.save(flush: true, failOnError: true)
             }
         }
 

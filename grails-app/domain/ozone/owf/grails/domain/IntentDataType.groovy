@@ -7,7 +7,7 @@ package ozone.owf.grails.domain
 class IntentDataType implements Serializable {
 
 	static String TYPE = 'intent_data_type'
-    static final long serialVersionUID = 600L
+    static final long serialVersionUID = 700L
 
 	String dataType
  	

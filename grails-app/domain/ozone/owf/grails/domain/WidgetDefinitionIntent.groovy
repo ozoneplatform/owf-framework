@@ -6,7 +6,7 @@ package ozone.owf.grails.domain
  */
 class WidgetDefinitionIntent implements Serializable {
 
-    static final long serialVersionUID = 600L
+    static final long serialVersionUID = 700L
 
     Boolean send
     Boolean receive

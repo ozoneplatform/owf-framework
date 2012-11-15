@@ -10,7 +10,7 @@ class Dashboard implements Serializable, Comparable {
     //so that all domain classes with a given 
     //version are considered compatible and
     //classes between versions are incompatible.
-    static final long serialVersionUID = 600L
+    static final long serialVersionUID = 700L
 
     String name					//Added for default JSON
     String guid

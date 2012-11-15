@@ -5,7 +5,7 @@ package ozone.owf.grails.domain
 
 class Role implements Serializable {
 
-    static final long serialVersionUID = 600L
+    static final long serialVersionUID = 700L
 
 	static hasMany = [people: Person]
 

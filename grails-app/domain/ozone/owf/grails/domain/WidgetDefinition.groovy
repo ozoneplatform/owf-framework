@@ -7,7 +7,7 @@ class WidgetDefinition implements Taggable, Serializable {
     //	def domainMappingService
 
     static String TYPE = 'widget_definition'
-    static final long serialVersionUID = 600L
+    static final long serialVersionUID = 700L
 
     String universalName
     String widgetGuid

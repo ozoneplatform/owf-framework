@@ -5,7 +5,7 @@ import org.grails.taggable.Taggable
 class DomainMapping implements Taggable {
 
   static String TYPE = 'domain_mapping'
-  static final long serialVersionUID = 600L
+  static final long serialVersionUID = 700L
 
   static mapping = {
       cache true

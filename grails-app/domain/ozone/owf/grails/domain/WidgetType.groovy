@@ -3,7 +3,7 @@ package ozone.owf.grails.domain
 class WidgetType implements Serializable {
 
 	static String TYPE = 'widget_type'
-    static final long serialVersionUID = 600L
+    static final long serialVersionUID = 700L
 
 	String name
  	

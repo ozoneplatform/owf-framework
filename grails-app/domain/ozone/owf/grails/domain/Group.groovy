@@ -5,7 +5,7 @@ import org.hibernate.proxy.HibernateProxy
 class Group implements Serializable{
 
     static String TYPE = 'group'
-    static final long serialVersionUID = 600L
+    static final long serialVersionUID = 700L
 
     String name
     String displayName

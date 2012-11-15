@@ -5,7 +5,7 @@ package ozone.owf.grails.domain
  */
 class Requestmap implements Serializable{
 
-    static final long serialVersionUID = 600L
+    static final long serialVersionUID = 700L
 
 	String url
 	String configAttribute

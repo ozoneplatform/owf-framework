@@ -8,7 +8,7 @@ import org.hibernate.proxy.HibernateProxy
 class Person implements Serializable {
 
      static String TYPE = 'person'
-    static final long serialVersionUID = 600L
+    static final long serialVersionUID = 700L
 
     static final String NEW_USER = "DEFAULT_USER"
 	static final String SYSTEM = "SYSTEM"

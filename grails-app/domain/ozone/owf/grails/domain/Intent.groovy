@@ -9,7 +9,7 @@ import org.hibernate.proxy.HibernateProxy
 class Intent implements Serializable {
 
 	static String TYPE = 'intent'
-    static final long serialVersionUID = 600L
+    static final long serialVersionUID = 700L
 
     String action
 
