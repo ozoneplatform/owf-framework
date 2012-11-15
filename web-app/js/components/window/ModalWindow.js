@@ -6,6 +6,7 @@ Ext.define('Ozone.components.window.ModalWindow', {
       widget: 'Ozone.components.focusable.CircularFocus'
     },
     modal: true,
+    hideMode: 'display',
 
     initComponent: function() {
 

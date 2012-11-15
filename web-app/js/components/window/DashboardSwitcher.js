@@ -4,6 +4,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     
     closeAction: 'hide',
     modal: true,
+    preventHeader: true,
     modalAutoClose: true,
     shadow: false,
     layout: 'auto',
@@ -30,129 +31,324 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     maxDashboardsHeight: 3,
 
     storeLengthChanged: true,
+
+    selectedItemCls : 'dashboard-selected',
     
     initComponent: function() {
-        //this may need to move into an onShow or something.
-        var me = this;
-        var numCols = Math.max(this.minDashboardsWidth,
-                        Math.min(this.maxDashboardsWidth, this.dashboardStore.count()));
-        var numRows = Math.min(this.maxDashboardsHeight,Math.floor((this.dashboardStore.count()-1)/numCols) + 1);
-        
-        this.view = Ext.create("Ozone.components.focusable.FocusableView", {
-            itemId: this.viewId,
-            itemSelector: '.dashboard',
-            overItemCls: 'dashboard-over',
-            selectedItemCls: 'dashboard-selected',
-            trackOver: true,
-            singleSelect: true,
-            store: this.dashboardStore,
-            autoScroll: true,
-            // width:numCols*this.dashboardItemWidth+20,
-            // height:numRows*this.dashboardItemHeight,
-            tpl: new Ext.XTemplate(
-                    '<tpl for=".">',
-                        '<div class="dashboard" tabindex="0" data-qtip="{[Ext.htmlEncode(Ext.htmlEncode(values.name))]}">',
-                            '<div class="thumb-wrap">',
-                                '<div class="thumb {layout}">',
-                                '</div>',
-                            '</div>',
-                            '<div class="dashboard-name">',
-                                '{[this.encodeAndEllipsize(values.name)]}',
-                            '</div>',
-                            //'<tpl if="groups.length &gt; 0">',
-                            //    '<div class="dashboard-groups">',
-                            //        '{[this.getGroupText(values.groups)]}',
-                            //    '</div>',
-                            //'</tpl>',
-                        '</div>',
-                    '</tpl>'
-                ,
-                {
-                    compiled: true,
-                    getGroupText: function(groups) {
-                        var text = "";
-                        text += groups[0].name;
-                        if(groups.length>1) {
-                            text += " (+" + (groups.length-1) + " others)";
-                        }
-                        return text;
-                    },
-                    encodeAndEllipsize: function(str) {
-                        //html encode the result since ellipses are special characters
-                        return Ext.util.Format.htmlEncode(
-                            Ext.Array.map (
-                                //get an array containing the first word of rowData.name as one elem, and the rest of name as another
-                                Ext.Array.erase (/^([\S]+)\s*(.*)?/.exec(Ext.String.trim(str)), 0, 1),
-                                function(it) {
-                                    //for each elem in the array, truncate it with an ellipsis if it is longer than 11 characters
-                                    return Ext.util.Format.ellipsis(it, 14);
-                                }
-                            //join the array back together with spaces
-                            ).join(' ')
-                        );
-                    }
+
+        var me = this,
+            stackOrDashboards = [],
+            stacks = {}, dashboards = {},
+            dashboard, stack;
+
+        for(var i = 0, len = me.dashboardStore.getCount(); i < len; i++) {
+
+            dashboard = me.dashboardStore.getAt(i).data;
+            stack = dashboard.stack;
+
+            if( stack ) {
+                if( stacks[ stack.id ] ) {
+                    stacks[ stack.id ].dashboards.push( dashboard );
                 }
-            ),
-            listeners: {
-                itemclick: {
-                    fn: this.itemClick,
-                    scope: this
-                },
-                itemkeydown: {
-                    fn: this.itemKeyDown,
-                    scope: this
-                },
-                add: {
-                    fn: this.onAddRemove,
-                    scope: this
-                },
-                remove: {
-                    fn: this.onAddRemove,
-                    scope: this
-                },
-                refresh: {
-                    fn: this.reSetupFocus,
-                    scope: this
-                },
-                viewready: {
-                    fn: this.focusSelectedDashboard,
-                    scope: this,
-                    single: true
+                else {
+                    stack.isStack = true;
+                    stack.dashboards = [ dashboard ];
+                    stacks[ stack.id ] = stack;
+                    stackOrDashboards.push( stack );
                 }
             }
-        });
+            else {
+                dashboards[ dashboard.guid ] = dashboard;
+                stackOrDashboards.push( dashboard );
+            }
 
-        this.items = [this.view];
+        }
+
+        // this may need to move into an onShow or something.
+        // var me = this;
+        // var numCols = Math.max(this.minDashboardsWidth,
+        //                 Math.min(this.maxDashboardsWidth, this.dashboardStore.count()));
+        // var numRows = Math.min(this.maxDashboardsHeight,Math.floor((this.dashboardStore.count()-1)/numCols) + 1);
+        
+        // this.view = Ext.create("Ozone.components.focusable.FocusableView", {
+        //     itemId: this.viewId,
+        //     itemSelector: '.dashboard',
+        //     overItemCls: 'dashboard-over',
+        //     selectedItemCls: 'dashboard-selected',
+        //     trackOver: true,
+        //     singleSelect: true,
+        //     store: this.dashboardStore,
+        //     autoScroll: true,
+        //     // width:numCols*this.dashboardItemWidth+20,
+        //     // height:numRows*this.dashboardItemHeight,
+        //     tpl: new Ext.XTemplate(
+        //             '<tpl for=".">',
+        //                 '<div class="dashboard" tabindex="0" data-qtip="{[Ext.htmlEncode(Ext.htmlEncode(values.name))]}">',
+        //                     '<div class="thumb-wrap">',
+        //                         '<div class="thumb {layout}">',
+        //                         '</div>',
+        //                     '</div>',
+        //                     '<div class="dashboard-name">',
+        //                         '{[this.encodeAndEllipsize(values.name)]}',
+        //                     '</div>',
+        //                     //'<tpl if="groups.length &gt; 0">',
+        //                     //    '<div class="dashboard-groups">',
+        //                     //        '{[this.getGroupText(values.groups)]}',
+        //                     //    '</div>',
+        //                     //'</tpl>',
+        //                 '</div>',
+        //             '</tpl>'
+        //         ,
+        //         {
+        //             compiled: true,
+        //             getGroupText: function(groups) {
+        //                 var text = "";
+        //                 text += groups[0].name;
+        //                 if(groups.length>1) {
+        //                     text += " (+" + (groups.length-1) + " others)";
+        //                 }
+        //                 return text;
+        //             },
+        //             encodeAndEllipsize: function(str) {
+        //                 //html encode the result since ellipses are special characters
+        //                 return Ext.util.Format.htmlEncode(
+        //                     Ext.Array.map (
+        //                         //get an array containing the first word of rowData.name as one elem, and the rest of name as another
+        //                         Ext.Array.erase (/^([\S]+)\s*(.*)?/.exec(Ext.String.trim(str)), 0, 1),
+        //                         function(it) {
+        //                             //for each elem in the array, truncate it with an ellipsis if it is longer than 11 characters
+        //                             return Ext.util.Format.ellipsis(it, 14);
+        //                         }
+        //                     //join the array back together with spaces
+        //                     ).join(' ')
+        //                 );
+        //             }
+        //         }
+        //     ),
+        //     listeners: {
+        //         itemclick: {
+        //             fn: this.itemClick,
+        //             scope: this
+        //         },
+        //         itemkeydown: {
+        //             fn: this.itemKeyDown,
+        //             scope: this
+        //         },
+        //         add: {
+        //             fn: this.onAddRemove,
+        //             scope: this
+        //         },
+        //         remove: {
+        //             fn: this.onAddRemove,
+        //             scope: this
+        //         },
+        //         refresh: {
+        //             fn: this.reSetupFocus,
+        //             scope: this
+        //         },
+        //         viewready: {
+        //             fn: this.focusSelectedDashboard,
+        //             scope: this,
+        //             single: true
+        //         }
+        //     }
+        // });
+
+        // this.items = [this.view];
         
         this.callParent(arguments);
 
-        this.on({
-            beforeshow: {
-                fn: function(cmp) {
-                    if(this.dashboardItemWidth > 0 && this.dashboardItemHeight > 0)
-                        this.updateWindowSize();
-                },
-                scope:this
+        // this.on({
+        //     beforeshow: {
+        //         fn: function(cmp) {
+        //             if(this.dashboardItemWidth > 0 && this.dashboardItemHeight > 0)
+        //                 this.updateWindowSize();
+        //         },
+        //         scope:this
+        //     },
+        //     resize: {
+        //         fn: function(cmp) {
+        //             if(this.isVisible()) {
+        //                 this.center();
+        //             }
+        //         },
+        //         scope: this
+        //     },
+        //     show: {
+        //         fn: this.focusSelectedDashboard,
+        //         scope: this
+        //     }
+        // });
+
+        // this.on({
+        //     show: this.updateWindowSize, 
+        //     scope: this, 
+        //     delay: 1 //for IE7
+        // });
+
+        me.stackOrDashboards = stackOrDashboards;
+        me.dashboards = dashboards;
+        me.stacks = stacks;
+
+        me.tpl = new Ext.XTemplate(
+            '<tpl for=".">',
+                '<div class="{[this.getName(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}">',
+                    '<div class="thumb-wrap">',
+                        '<div class="thumb {layout}">',
+                        '</div>',
+                    '</div>',
+                    '<div class="{[this.getName(values)]}-name">',
+                        '{[this.encodeAndEllipsize(values.name)]}',
+                    '</div>',
+                '</div>',
+            '</tpl>'
+        ,{
+            compiled: true,
+            getId: function (values) {
+                return values.isStack ? values.id : values.guid;
             },
-            resize: {
-                fn: function(cmp) {
-                    if(this.isVisible()) {
-                        this.center();
-                    }
-                },
-                scope: this
+            getName: function (values) {
+                return values.isStack ? 'stack' : 'dashboard';
             },
-            show: {
-                fn: this.focusSelectedDashboard,
-                scope: this
+            getGroupText: function(groups) {
+                var text = "";
+                text += groups[0].name;
+                if(groups.length>1) {
+                    text += " (+" + (groups.length-1) + " others)";
+                }
+                return text;
+            },
+            encodeAndEllipsize: function(str) {
+                //html encode the result since ellipses are special characters
+                return Ext.util.Format.htmlEncode(
+                    Ext.Array.map (
+                        //get an array containing the first word of rowData.name as one elem, and the rest of name as another
+                        Ext.Array.erase (/^([\S]+)\s*(.*)?/.exec(Ext.String.trim(str)), 0, 1),
+                        function(it) {
+                            //for each elem in the array, truncate it with an ellipsis if it is longer than 11 characters
+                            return Ext.util.Format.ellipsis(it, 14);
+                        }
+                    //join the array back together with spaces
+                    ).join(' ')
+                );
             }
         });
 
-        this.on({
-            show: this.updateWindowSize, 
-            scope: this, 
-            delay: 1 //for IE7
+        me.stackDashboardsTpl = '<div class="stack-dashboards"><div class="stack-dashboards-anchor-tip x-tip-anchor x-tip-anchor-top"></div></div>';
+        
+        me.on('afterrender', function (cmp) {
+            me.tpl.overwrite( cmp.body, stackOrDashboards );
         });
+
+        me.on('click', me.onDashboardClick, me, {
+            element: 'el',
+            delegate: '.dashboard'
+        });
+        me.on('click', me.onStackClick, me, {
+            element: 'el',
+            delegate: '.stack'
+        });
+    },
+
+    onDashboardClick: function (evt, el, o) {
+        var $clickedDashboard = $(el),
+            guid = $clickedDashboard.attr('data-dashboard-id');
+
+        this.activateDashboard(guid);
+        
+        $clickedDashboard.addClass( this.selectedItemCls );
+
+        if( this._$lastClickedDashboard ) {
+            this._$lastClickedDashboard.removeClass( this.selectedItemCls );
+        }
+
+        this._$lastClickedDashboard = $clickedDashboard;
+    },
+
+    onStackClick: function (evt, el, o) {
+        var me = this,
+            $ = jQuery,
+            $clickedStack = $(el),
+            id = $clickedStack.attr('data-stack-id'),
+            stack = this.stacks[ id ],
+            xy;
+
+        if( stack ) {
+            xy = evt.getXY();
+
+            if( this._lastExpandedStack ) {
+
+                if( this._lastExpandedStack === stack ) {
+                    me.$stackDashboards.slideToggle('fast');
+                }
+                else {
+                    me.$stackDashboards.slideUp('fast').promise().then(function () {
+                        me.$stackDashboards.remove();
+                        me.showStackDashboards(stack, $clickedStack);
+                    });
+                }
+            }
+            else  {
+                me.showStackDashboards(stack, $clickedStack);
+            }
+        }
+        evt.preventDefault();
+    },
+
+
+    showStackDashboards: function (stack, $clickedStack) {
+        var clickedStackElWidth = $clickedStack.outerWidth( true ),
+            clickedStackElHeight = $clickedStack.outerHeight( true ),
+            parent = $clickedStack.parent(),
+            parentWidth = parent.outerWidth( true ),
+            lastElInRow;
+
+
+        // get last element in the clikced stack's row
+        var numItemsInRow = Math.round( parentWidth / clickedStackElWidth ),
+            totalItems = this.stackOrDashboards.length,
+            clickedStackIndex = $clickedStack.index() + 1;
+
+        if( clickedStackIndex === totalItems || (clickedStackIndex % numItemsInRow) == 0 ) {
+            lastElInRow = $clickedStack;
+        }
+        else {
+            var i = clickedStackIndex;
+            while( (i % numItemsInRow) !== 0 ) {
+                i++;
+                if( i >= totalItems ) {
+                    break;
+                }
+            }
+            lastElInRow = parent.children().eq(i-1);
+        }
+
+        // compile template and add to dom
+        this.$stackDashboards = $( this.stackDashboardsTpl ).append( this.tpl.applyTemplate( stack.dashboards ) ).insertAfter( lastElInRow );
+        this.stackDashboardsAnchorTip = $( '.stack-dashboards-anchor-tip' , this.$stackDashboards );
+
+        // cache size of tip
+        if( !this.stackDashboardsAnchorTipHeight ) {
+            this.stackDashboardsAnchorTipHeight = this.stackDashboardsAnchorTip.outerHeight();
+        }
+        if( !this.stackDashboardsAnchorTipWidth ) {
+            this.stackDashboardsAnchorTipWidth = this.stackDashboardsAnchorTip.outerWidth();
+        }
+
+        this.$stackDashboards.hide();
+
+        // calculate top and left value for anchor tip
+        var parentPosition = $clickedStack.position(),
+            top = parentPosition.top + clickedStackElHeight - (this.stackDashboardsAnchorTipHeight),
+            left = parentPosition.left + (clickedStackElWidth / 2) - (this.stackDashboardsAnchorTipWidth / 2);
+        
+        this.stackDashboardsAnchorTip.css({
+            top: top + 'px',
+            left: left + 'px'
+        });
+        
+        this.$stackDashboards.slideDown('fast');
+        this._lastExpandedStack = stack;
     },
 
     onAddRemove: function() {

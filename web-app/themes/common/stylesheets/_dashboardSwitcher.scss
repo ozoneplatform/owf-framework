@@ -1,4 +1,14 @@
 #dashboard-switcher {
+
+    //width: auto !important;
+    width: 625px !important;
+    height: auto !important;
+
+    &-body {
+        height: auto;
+        overflow: hidden;
+    }
+
     .dashboard-switcher-header-icon {
         background-image: $dashboard-switcher-header-icon;
         background-repeat: no-repeat;
@@ -6,7 +16,7 @@
         height: 26px;
         width: 26px;
     }
-    .dashboard {
+    .dashboard, .stack {
         $thumb-width: 73px;
         $name-width: 8.2em;
 
@@ -18,7 +28,7 @@
 
         float: left;
         margin: 10px;
-        padding: 15px;
+        padding: 15px 15px 0px 15px;
         position: relative;
         text-align:center;
         overflow: hidden;
@@ -44,7 +54,7 @@
             }
         }
 
-        .dashboard-name {
+        &-name {
             color: $dashboard-switcher-dashboard-text-color;
             height: 3.25em;
             width: $name-width;
@@ -53,28 +63,37 @@
             margin-right: auto;
         }
         
-      //  .dashboard-groups {
-      //      color: $dashboard-switcher-dashboard-groups-text-color;
-      //  }
-    }
-    .dashboard-selected {
-        .dashboard-name {
-            color: $dashboard-switcher-dashboard-selected-text-color !important;
-            font-weight: bold;
+        &:hover {
+            background-color: $dashboard-switcher-dashboard-over-background-color !important;
+            border-color: $dashboard-switcher-dashboard-over-border-color !important;
+            .dashboard-name {
+                color: $dashboard-switcher-dashboard-over-text-color  !important;
+            }
+            @include border-top-radius($dashboard-switcher-body-radius);
+            @include border-bottom-radius($dashboard-switcher-body-radius);
+            
         }
-        .thumb {
-            background-image: $dashboard-switcher-layout-default-icon-over !important;
-        }
-    }
 
-    .dashboard-over {
-        background-color: $dashboard-switcher-dashboard-over-background-color !important;
-        border-color: $dashboard-switcher-dashboard-over-border-color !important;
-        .dashboard-name {
-            color: $dashboard-switcher-dashboard-over-text-color  !important;
+        &-selected {
+            .dashboard-name {
+                color: $dashboard-switcher-dashboard-selected-text-color !important;
+                font-weight: bold;
+            }
+            .thumb {
+                background-image: $dashboard-switcher-layout-default-icon-over !important;
+            }
         }
-        @include border-top-radius($dashboard-switcher-body-radius);
-        @include border-bottom-radius($dashboard-switcher-body-radius);
-        
-    }
+    }   
+
+}
+
+.stack-dashboards {
+    clear: both;
+    overflow: hidden;
+    background: #000;
+}
+.stack-dashboards-anchor-tip {
+    position: absolute;
+    border-width: 20px;
+    border-bottom-color: #000;
 }
