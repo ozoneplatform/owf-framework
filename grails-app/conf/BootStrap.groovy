@@ -23,6 +23,7 @@ import ozone.owf.grails.domain.Preference
 import ozone.owf.grails.domain.PersonWidgetDefinition
 import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.RelationshipType
+import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.domain.WidgetType
 
 class BootStrap {
@@ -157,6 +158,9 @@ class BootStrap {
             def numDashboardsWidgets = ((grailsApplication.config?.perfTest?.numDashboardsWidgets && enabled) ? grailsApplication.config.perfTest?.numDashboardsWidgets : 0);
             log.info 'numDashboardsWidgets: ' + numDashboardsWidgets
 
+            def numStacks = ((grailsApplication.config?.perfTest?.numStacks && enabled) ? grailsApplication.config.perfTest?.numStacks : 0);
+            log.info 'numStacks: ' + numStacks
+
             def numPreferences = ((grailsApplication.config?.perfTest?.numPreferences && enabled) ? grailsApplication.config.perfTest?.numPreferences : 2);
             log.info 'preferences: ' + numPreferences
 
@@ -213,6 +217,9 @@ class BootStrap {
             sessionFactory.currentSession.clear()
 
             loadPreferences(numPreferences, clearCacheEvery)
+            sessionFactory.currentSession.clear()
+
+            loadStacks(numStacks, clearCacheEvery)
             sessionFactory.currentSession.clear()
 
             //create test required widget relationshipts
@@ -802,6 +809,37 @@ class BootStrap {
                 if ((i % clearCacheEvery) == 0){
                     sessionFactory.currentSession.clear()
                 }
+            }
+        }
+    }
+
+    private loadStacks(int numStacks, int clearCacheEvery) {
+        for (int i = 1; i <= numStacks; i++) {
+            //create stack
+            def stack = new Stack(
+                name: 'TestStack' + i,
+                description: 'TestStack' + i,
+                stackContext: 'TestStack' + i
+            );
+
+            saveInstance(stack)
+
+            //create its default group
+            def stackDefaultGroup = new Group(
+                name: 'TestStack' + i + '-DefaultGroup',
+                displayName: 'TestStack' + i + '-DefaultGroup',
+                stackDefault: true
+            );
+
+            saveInstance(stackDefaultGroup)
+
+            //associate stack with its default group
+            stack.addToGroups(stackDefaultGroup)
+            domainMappingService.createMapping(stack, RelationshipType.owns, stackDefaultGroup)
+            saveInstance(stack)
+
+            if ((i % clearCacheEvery) == 0){
+                sessionFactory.currentSession.clear()
             }
         }
     }
