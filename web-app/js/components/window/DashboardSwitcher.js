@@ -53,6 +53,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 else {
                     stack.isStack = true;
                     stack.dashboards = [ dashboard ];
+
+                    dashboards[ dashboard.guid ] = dashboard;
                     stacks[ stack.id ] = stack;
                     stackOrDashboards.push( stack );
                 }
@@ -197,6 +199,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                         '<div class="thumb {layout}">',
                         '</div>',
                     '</div>',
+                    '{[this.getActions(values)]}',
                     '<div class="{[this.getName(values)]}-name">',
                         '{[this.encodeAndEllipsize(values.name)]}',
                     '</div>',
@@ -210,13 +213,18 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             getName: function (values) {
                 return values.isStack ? 'stack' : 'dashboard';
             },
-            getGroupText: function(groups) {
-                var text = "";
-                text += groups[0].name;
-                if(groups.length>1) {
-                    text += " (+" + (groups.length-1) + " others)";
-                }
-                return text;
+            getActions: function (values) {
+                return values.isStack ? 
+                        '<ul class="stack-actions hide">'+
+                            '<li class="restore icon-refresh" title="Restore"></li>'+
+                            '<li class="delete icon-remove" title="Delete"></li>'+
+                        '</ul>' :
+                        '<ul class="dashboard-actions hide">'+
+                            '<li class="share icon-share" title="Share"></li>'+
+                            '<li class="restore icon-refresh" title="Restore"></li>'+
+                            '<li class="edit icon-edit" title="Edit"></li>'+
+                            '<li class="delete icon-remove" title="Delete"></li>'+
+                        '</ul>'
             },
             encodeAndEllipsize: function(str) {
                 //html encode the result since ellipses are special characters
@@ -234,27 +242,89 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             }
         });
 
-        me.stackDashboardsTpl = '<div class="stack-dashboards"><div class="stack-dashboards-anchor-tip x-tip-anchor x-tip-anchor-top"></div></div>';
+        me.stackDashboardsTpl = '<div class="stack-dashboards"><div class="stack-dashboards-anchor-tip x-tip-anchor x-tip-anchor-top"></div><div class="dashboards"></div></div>';
         
         me.on('afterrender', function (cmp) {
             me.tpl.overwrite( cmp.body, stackOrDashboards );
+            Ext.DomHelper.append( cmp.body, 
+            '<ul class="actions">'+
+                '<li class="manage">Manage</li>'+
+                '<li class="create">+</li>'+
+            '</ul>');
+
+            me.bindEvents(cmp);
         });
 
-        me.on('click', me.onDashboardClick, me, {
-            element: 'el',
-            delegate: '.dashboard'
-        });
-        me.on('click', me.onStackClick, me, {
-            element: 'el',
-            delegate: '.stack'
-        });
+        // me.on('click', me.toggleManage, me, {
+        //     element: 'el',
+        //     delegate: '.manage'
+        // });
+        // me.on('click', me.createDashboard, me, {
+        //     element: 'el',
+        //     delegate: '.create'
+        // });
+
+        // me.on('mouseover', me.onMouseOver, me, {
+        //     element: 'el',
+        //     delegate: '.stack'
+        // });
+        // me.on('mouseover', me.onMouseOver, me, {
+        //     element: 'el',
+        //     delegate: '.dashboard'
+        // });
+
+        // me.on('click', me.restore, me, {
+        //     element: 'el',
+        //     delegate: '.restore'
+        // });
+        // me.on('click', me.onDashboardClick, me, {
+        //     element: 'el',
+        //     delegate: '.dashboard'
+        // });
+        // me.on('click', me.onStackClick, me, {
+        //     element: 'el',
+        //     delegate: '.stack'
+        // });
     },
 
-    onDashboardClick: function (evt, el, o) {
-        var $clickedDashboard = $(el),
-            guid = $clickedDashboard.attr('data-dashboard-id');
+    bindEvents: function (cmp) {
+        var me = this,
+            $ = jQuery;
 
-        this.activateDashboard(guid);
+        $(cmp.el.dom)
+            .on('click', '.dashboard', $.proxy(me.onDashboardClick, me))
+            .on('click', '.stack', $.proxy(me.onStackClick, me))
+            .on('click', '.manage', $.proxy(me.toggleManage, me))
+            .on('click', '.create', $.proxy(me.createDashboard, me))
+            .on('mouseover', '.stack', $.proxy(me.onMouseOver, me))
+            .on('mouseover', '.dashboard', $.proxy(me.onMouseOver, me))
+            .on('click', '.dashboard .restore', $.proxy(me.restoreDashboard, me))
+            .on('click', '.dashboard .share', $.proxy(me.shareDashboard, me))
+            .on('click', '.dashboard .edit', $.proxy(me.editDashboard, me))
+            .on('click', '.dashboard .delete', $.proxy(me.deleteDashboard, me))
+            .on('click', '.stack .restore', $.proxy(me.restoreStack, me))
+            .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
+
+    },
+
+    getDashboard: function ($el) {
+        return this.dashboards[ $el.attr('data-dashboard-id') ];
+    },
+
+    getStack: function ($el) {
+        return this.stacks[ $el.attr('data-stack-id') ];
+    },
+
+    getElByClassFromEvent: function (evt, cls) {
+        var $dashboard = $(evt.currentTarget || evt.target);
+        return $dashboard.hasClass('cls') ? $dashboard : $dashboard.parents('.' + cls);
+    },
+
+    onDashboardClick: function (evt) {
+        var $clickedDashboard = $(evt.currentTarget),
+            dashboard = this.getDashboard( $clickedDashboard );
+
+        this.activateDashboard(dashboard.guid);
         
         $clickedDashboard.addClass( this.selectedItemCls );
 
@@ -265,16 +335,13 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         this._$lastClickedDashboard = $clickedDashboard;
     },
 
-    onStackClick: function (evt, el, o) {
+    onStackClick: function (evt) {
         var me = this,
             $ = jQuery,
-            $clickedStack = $(el),
-            id = $clickedStack.attr('data-stack-id'),
-            stack = this.stacks[ id ],
-            xy;
+            $clickedStack = $(evt.currentTarget),
+            stack = this.getStack( $clickedStack );
 
         if( stack ) {
-            xy = evt.getXY();
 
             if( this._lastExpandedStack ) {
 
@@ -295,7 +362,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         evt.preventDefault();
     },
 
-
     showStackDashboards: function (stack, $clickedStack) {
         var clickedStackElWidth = $clickedStack.outerWidth( true ),
             clickedStackElHeight = $clickedStack.outerHeight( true ),
@@ -309,7 +375,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             totalItems = this.stackOrDashboards.length,
             clickedStackIndex = $clickedStack.index() + 1;
 
-        if( clickedStackIndex === totalItems || (clickedStackIndex % numItemsInRow) == 0 ) {
+        if( clickedStackIndex === totalItems || (clickedStackIndex % numItemsInRow) === 0 ) {
             lastElInRow = $clickedStack;
         }
         else {
@@ -324,7 +390,10 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         }
 
         // compile template and add to dom
-        this.$stackDashboards = $( this.stackDashboardsTpl ).append( this.tpl.applyTemplate( stack.dashboards ) ).insertAfter( lastElInRow );
+        this.$stackDashboards = $( this.stackDashboardsTpl );
+        this.$stackDashboards.children('.dashboards').html( this.tpl.applyTemplate( stack.dashboards ) )
+        this.$stackDashboards.insertAfter( lastElInRow );
+
         this.stackDashboardsAnchorTip = $( '.stack-dashboards-anchor-tip' , this.$stackDashboards );
 
         // cache size of tip
@@ -343,12 +412,113 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             left = parentPosition.left + (clickedStackElWidth / 2) - (this.stackDashboardsAnchorTipWidth / 2);
         
         this.stackDashboardsAnchorTip.css({
-            top: top + 'px',
+            //top: top + 'px',
             left: left + 'px'
         });
         
         this.$stackDashboards.slideDown('fast');
         this._lastExpandedStack = stack;
+    },
+
+    onMouseOver: function (evt) {
+        var el,
+            $ = jQuery;
+
+        if( !this._managing )
+            return;
+
+        el = $(evt.currentTarget);
+
+        if(this._lastManageEl) {
+            if(el[0] === this._lastManageEl[0]) {
+                return;
+            }
+            else {
+                //$('ul', this._lastManageEl).slideUp();
+                $('ul', this._lastManageEl).addClass('hide');
+            }
+        }
+
+        this._lastManageEl = el;
+
+        //$('ul', el).slideDown();
+        $('ul', this._lastManageEl).removeClass('hide');
+    },
+
+    toggleManage: function (evt) {
+        console.log('manage');
+        var el = $(evt.currentTarget);
+
+        if( this._managing ) {
+            el.removeClass('selected');
+            if( this._lastManageEl ) {
+                 //$('ul', this._lastManageEl).slideUp();
+                 $('ul', this._lastManageEl).addClass('hide');
+            }
+        }
+        else {
+            el.addClass('selected');
+        }
+
+        this._managing = !this._managing;
+    },
+
+    createDashboard: function () {
+          console.log('createDashboard');
+    },
+
+    restore: function (evt) {
+        evt.stopPropagation();
+        console.log('restore dashboard');
+        
+    },
+
+    restoreDashboard: function (evt) {
+        evt.stopPropagation();
+        var $dashboard = this.getElByClassFromEvent(evt, 'dashboard'),
+            dashboard = this.getDashboard($dashboard);
+
+        console.log('restore dashboard', dashboard.guid);
+    },
+
+    shareDashboard: function (evt) {
+        evt.stopPropagation();
+        var $dashboard = this.getElByClassFromEvent(evt, 'dashboard'),
+            dashboard = this.getDashboard($dashboard);
+
+        console.log('share dashboard', dashboard.guid);
+    },
+
+    editDashboard: function (evt) {
+        evt.stopPropagation();
+        var $dashboard = this.getElByClassFromEvent(evt, 'dashboard'),
+            dashboard = this.getDashboard($dashboard);
+
+        console.log('edit dashboard', dashboard.guid);
+    },
+
+    deleteDashboard: function (evt) {
+        evt.stopPropagation();
+        var $dashboard = this.getElByClassFromEvent(evt, 'dashboard'),
+            dashboard = this.getDashboard($dashboard);
+
+        console.log('delete dashboard', dashboard.guid);
+    },
+
+    restoreStack: function (evt) {
+        evt.stopPropagation();
+        var $stack = this.getElByClassFromEvent(evt, 'stack'),
+            stack = this.getStack($stack);
+
+        console.log('restore stack', stack.id);
+    },
+
+    deleteStack: function (evt) {
+        evt.stopPropagation();
+        var $stack = this.getElByClassFromEvent(evt, 'stack'),
+            stack = this.getStack($stack);  
+
+        console.log('delete stack', stack.id);
     },
 
     onAddRemove: function() {

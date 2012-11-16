@@ -3,10 +3,12 @@
     //width: auto !important;
     width: 625px !important;
     height: auto !important;
+    padding: 0px;
 
     &-body {
         height: auto;
         overflow: hidden;
+        @include border-radius($dashboard-switcher-body-radius);
     }
 
     .dashboard-switcher-header-icon {
@@ -83,17 +85,95 @@
                 background-image: $dashboard-switcher-layout-default-icon-over !important;
             }
         }
-    }   
+    }
 
+    ul.actions {
+        float: right;
+        color: #fff;
+        margin-right: 15px;
+
+        li {
+            display: inline-block;
+            padding: 5px 10px;
+
+            &:hover, &.selected {
+                background: #000;
+            }
+        }
+    }
+}
+.icon-share:hover {
+    color: #5252FF;
+}
+
+.icon-refresh:hover {
+    color: #FD5B00;
+}
+
+.icon-edit:hover {
+    color: #0f0;
+}
+
+.icon-remove:hover {
+    color: #f00;
+}
+
+.dashboard-actions, .stack-actions {
+    color: #fff;
+    padding: 5px 0px;
+
+        li {
+            display: inline-block;
+            font-size: 1.5em;
+        }
+        -webkit-animation-duration: 0.2s;
+        -webkit-animation-delay: 1s;
+}
+
+.x-ie78 {
+    #dashboard-switcher {
+        ul.actions li{
+            display: inline;
+        }
+    }
+    .dashboard-actions, .stack-actions {
+            li {
+                display: inline;
+                font-size: 1.5em;
+                &:hover {
+                    background: #000;
+                    color: red;
+                }
+            }
+    }
+}
+.dashboard-actions {
+    li {
+        width: 25%;
+    }
+}
+.stack-actions {
+    li {
+        width: 50%;
+    }
+}
+
+#stacks-or-dashboards {
+    overflow: hidden;
 }
 
 .stack-dashboards {
     clear: both;
-    overflow: hidden;
-    background: #000;
+    position: relative;
+    top: -30px;
+
+    .dashboards {
+        background: #000;
+        overflow: hidden;
+    }
 }
 .stack-dashboards-anchor-tip {
-    position: absolute;
+    position: relative;
     border-width: 20px;
     border-bottom-color: #000;
 }
