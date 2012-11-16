@@ -176,39 +176,33 @@ class StackControllerTests extends OWFGroovyTestCase {
         domainMappingService.createMapping(stack1.findStackDefaultGroup(), RelationshipType.owns, stackDashboard2)
 
         def filename = 'test'
-        def extension = 'war'
         
         stackController = new StackController()
         stackController.stackService = stackService
         stackController.request.contentType = "text/json"
         stackController.params.id = stackIds[0]
         stackController.params.filename = filename
-        stackController.params.extension = extension
 
         stackController.export()
         
         def resp = stackController.response
-        assertEquals "application/octet-stream", resp.getContentType()
-        assertEquals "attachment; filename=" + filename + "." + extension, resp.getHeader("Content-disposition")
+        assertEquals "attachment; filename=" + filename + ".html", resp.getHeader("Content-disposition")
         assertNotNull resp.getContentAsString()
     }
     
     void testFailedExportNotAdmin() {
 
         def filename = 'test'
-        def extension = 'war'
         
         stackController = new StackController()
         stackController.stackService = stackService
         stackController.request.contentType = "text/json"
         stackController.params.id = stackIds[0]
         stackController.params.filename = filename
-        stackController.params.extension = extension
 
         stackController.export()
         
         def resp = JSON.parse(stackController.response.contentAsString)
-        assertEquals "text/html;charset=UTF-8", stackController.response.getContentType()
         assertEquals false, resp.success
         assertEquals "You are not authorized to access this entity. You must be an admin", resp.errorMsg
     }
@@ -218,19 +212,16 @@ class StackControllerTests extends OWFGroovyTestCase {
         loginAsUsernameAndRole('testAdmin', ERoleAuthority.ROLE_ADMIN.strVal)
 
         def filename = 'test'
-        def extension = 'war'
         
         stackController = new StackController()
         stackController.stackService = stackService
         stackController.request.contentType = "text/json"
         stackController.params.id = -1 //Invalid id, should fail
         stackController.params.filename = filename
-        stackController.params.extension = extension
 
         stackController.export()
         
         def resp = JSON.parse(stackController.response.contentAsString)
-        assertEquals "text/html;charset=UTF-8", stackController.response.getContentType()
         assertEquals false, resp.success
         assertEquals " The stack id -1 is invalid, export failed.", resp.errorMsg
     }

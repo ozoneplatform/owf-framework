@@ -353,96 +353,89 @@ class StackService {
         return [success: true, data: stacks]
     }
     
-    def export(params, outputStream) {
+    def export(params) {
         
         // Only admins may export Stacks
         ensureAdmin()
         
         if(params.id > -1) {
-            def stack
-            try {
-                stack = Stack.findById(params.id, [cache: true])
+            def stack = Stack.findById(params.id, [cache: true])
 
-                def dir = './lib/'
-                if(grails.util.GrailsUtil.environment != 'production') dir = './src/resources/'
+            //Construct the list of dashboards for the descriptor
+            def dashboards = []
+            def stackGroup = stack.findStackDefaultGroup()
+            if(stackGroup != null) {
+                domainMappingService.getMappings(stackGroup, RelationshipType.owns, Dashboard.TYPE).eachWithIndex { it, i ->
 
-                def stackDescriptor = new File(dir + "empty_descriptor.html").text
+                    def dashboard = Dashboard.findById(it.destId)
 
-                //Construct the list of dashboards for the descriptor
-                def stackDefaultGroup = stack.findStackDefaultGroup()
-                def dashboards = []
-                if(stackDefaultGroup != null) {
-                    domainMappingService.getMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE).each {
-                        dashboards.push(serviceModelService.createServiceModel(Dashboard.findById(it.destId)))
-                    }
+                    def dashboardData = [:]
+                    //Get only the parameters required for a dashboard definition
+                    dashboardData.put('name', dashboard.name)
+                    dashboardData.put('guid', dashboard.guid)
+                    dashboardData.put('description', dashboard.description)
+                    dashboardData.put('isdefault', dashboard.isdefault)
+                    dashboardData.put('locked', dashboard.locked)
+                    dashboardData.put('dashboardPosition', dashboard.dashboardPosition)
+                    dashboardData.put('layoutConfig', JSON.parse(dashboard.layoutConfig))
+
+                    dashboards.push(dashboardData)
                 }
-
-                def stackData = [:]
-                //Get only the parameters required for a stack descriptor
-                stackData.put('name', stack.name)
-                stackData.put('stackContext', stack.stackContext)
-                stackData.put('description', stack.description)
-                stackData.put('dashboards', dashboards)
-
-                //Pretty print the JSON
-                stackData = (stackData as JSON).toString(true)
-
-                //Replace the empty stackData variable in the copied template with the stack data
-                stackDescriptor = stackDescriptor.replaceFirst("var data;", "var data = ${stackData};")
-
-                def out
-                if(params.extension == 'zip') {
-                    out = new java.util.zip.ZipOutputStream(outputStream)
-                }
-                else {
-                    out = new java.util.jar.JarOutputStream(outputStream)
-                }
-                out.putNextEntry(new java.util.zip.ZipEntry(stack.stackContext + "_descriptor.html")) 
-                out.write(stackDescriptor.getBytes("UTF-8"))
-                out.closeEntry()
-
-                widgetDefinitionService.list([stack_id: stack.id]).data.eachWithIndex { widget, i ->
-
-                    def widgetDefinition = widget.toDataMap().value
-                    def widgetDescriptor = new File(dir + "empty_descriptor.html").text
-                    def widgetData = [:]
-
-                    //Get only the values required for a widget descriptor
-                    widgetData.put("universalName", widgetDefinition.universalName)
-                    widgetData.put("displayName", widgetDefinition.namespace)
-                    widgetData.put("description", widgetDefinition.description)
-                    widgetData.put("widgetVersion", widgetDefinition.widgetVersion)
-                    widgetData.put("widgetUrl", widgetDefinition.url)
-                    widgetData.put("imageUrlSmall", widgetDefinition.smallIconUrl)
-                    widgetData.put("imageUrlLarge", widgetDefinition.largeIconUrl)
-                    widgetData.put("width", widgetDefinition.width)
-                    widgetData.put("height", widgetDefinition.height)
-                    widgetData.put("visible", widgetDefinition.visible)
-                    widgetData.put("singleton", widgetDefinition.singleton)
-                    widgetData.put("background", widgetDefinition.background)
-                    widgetData.put("widgetTypes", [widgetDefinition.widgetTypes[0].name])
-                    widgetData.put("intents", widgetDefinition.intents)
-                    def tags = []
-                    widgetDefinition.tags.each { tags.push(it.name) }
-                    widgetData.put("defaultTags", tags)
-
-                    //Pretty print the JSON
-                    widgetData = (widgetData as JSON).toString(true)
-
-                    widgetDescriptor = widgetDescriptor.replaceFirst("var data;", "var data = ${widgetData};")
-
-                    out.putNextEntry(new java.util.zip.ZipEntry("widget_descriptors/widget" + (i + 1) + "_descriptor.html")) 
-                    out.write(widgetDescriptor.getBytes("UTF-8"))
-                    out.closeEntry()
-                }
-
-                out.close()
-
-            } catch(Exception e) {
-                throw new OwfException(message: 'Server error while exporting stack' +
-                    (stack?.name ? (' ' + stack?.name) : '') + ', please try again.',
-                    exceptionType: OwfExceptionTypes.GeneralServerError)
             }
+
+            def widgets = []
+            widgetDefinitionService.list([stack_id: stack.id]).data.eachWithIndex { widget, i ->
+
+                def widgetDefinition = widget.toDataMap().value
+
+                def widgetData = [:]
+                //Get only the values required for a widget descriptor
+                widgetData.put("descriptorUrl", widgetDefinition.descriptorUrl)
+                widgetData.put("universalName", widgetDefinition.universalName)
+                widgetData.put("displayName", widgetDefinition.namespace)
+                widgetData.put("description", widgetDefinition.description)
+                widgetData.put("widgetVersion", widgetDefinition.widgetVersion)
+                widgetData.put("widgetUrl", widgetDefinition.url)
+                widgetData.put("imageUrlSmall", widgetDefinition.smallIconUrl)
+                widgetData.put("imageUrlLarge", widgetDefinition.largeIconUrl)
+                widgetData.put("width", widgetDefinition.width)
+                widgetData.put("height", widgetDefinition.height)
+                widgetData.put("visible", widgetDefinition.visible)
+                widgetData.put("singleton", widgetDefinition.singleton)
+                widgetData.put("background", widgetDefinition.background)
+                widgetData.put("widgetTypes", [widgetDefinition.widgetTypes[0].name])
+                widgetData.put("intents", widgetDefinition.intents)
+                def tags = []
+                widgetDefinition.tags.each { tags.push(it.name) }
+                widgetData.put("defaultTags", tags)
+
+                widgets.push(widgetData)
+            }
+
+            def stackData = [:]
+            //Get only the parameters required for a stack descriptor
+            stackData.put('name', stack.name)
+            stackData.put('stackContext', stack.stackContext)
+            stackData.put('description', stack.description)
+            stackData.put('dashboards', dashboards)
+            stackData.put('widgets', widgets)
+
+            //Pretty print the JSON
+            stackData = (stackData as JSON).toString(true)
+
+            //Get the empty descriptor with appropriate javascript
+            def dir = './lib/'
+            if(grails.util.GrailsUtil.environment != 'production') dir = './src/resources/'
+            def stackDescriptorText = new File(dir + "empty_descriptor.html").text
+
+            stackDescriptorText = stackDescriptorText.replaceFirst("var data;", "var data = ${stackData};")
+
+            def stackDescriptor = new File("stack_descriptor.html")
+            def out = new FileOutputStream(stackDescriptor)
+            out.write(stackDescriptorText.getBytes("UTF-8"))
+            out.close()
+
+            return stackDescriptor
         }
         else {
             throw new OwfException(message: 'The stack id ' + params.id + ' is invalid, export failed.',

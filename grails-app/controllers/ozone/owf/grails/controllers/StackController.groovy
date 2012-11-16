@@ -98,27 +98,17 @@ class StackController extends BaseOwfRestController {
             log.info("Executing stackService: export");
         }
         try {
-            //If somehow extension isn't given, default is war
-            def filename = "stack_descriptor.war"
-            if(params.extension) {
-                if(params.filename) {
-                    filename = params.filename + '.' + params.extension
-                }
-                else {
-                    filename = "stack_descriptor." + params.extension
-                }
-            }
+            def filename = params.filename ? params.filename :"stack_descriptor"
 
-            //Set response to a file
-            response.setHeader("Content-disposition", "attachment; filename=" + filename);
-            response.setContentType("application/octet-stream")
+            //Set content-disposition so browser is expecting a file
+            response.setHeader("Content-disposition", "attachment; filename=" + filename + ".html")
 
-            stackService.export(params, response.getOutputStream())
+            def stackDescriptor = stackService.export(params)
+            response.outputStream << stackDescriptor.newInputStream()
         }
         catch (Exception e) {
-            //Set response back to text to relay the error
+            //Set content-disposition back to text to relay the error
             response.setHeader("Content-disposition", "")
-            response.setContentType("text/html;charset=UTF-8")
 
             result = handleError(e)
             renderResult(result)
