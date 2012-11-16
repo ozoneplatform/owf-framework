@@ -398,7 +398,7 @@ class StackService {
                     out = new java.util.jar.JarOutputStream(outputStream)
                 }
                 out.putNextEntry(new java.util.zip.ZipEntry(stack.stackContext + "_descriptor.html")) 
-                out.write(stackDescriptor.getBytes(java.nio.charset.Charset.forName("UTF-8")))
+                out.write(stackDescriptor.getBytes("UTF-8"))
                 out.closeEntry()
 
                 widgetDefinitionService.list([stack_id: stack.id]).data.eachWithIndex { widget, i ->
@@ -432,7 +432,7 @@ class StackService {
                     widgetDescriptor = widgetDescriptor.replaceFirst("var data;", "var data = ${widgetData};")
 
                     out.putNextEntry(new java.util.zip.ZipEntry("widget_descriptors/widget" + (i + 1) + "_descriptor.html")) 
-                    out.write(widgetDescriptor.getBytes(java.nio.charset.Charset.forName("UTF-8")))
+                    out.write(widgetDescriptor.getBytes("UTF-8"))
                     out.closeEntry()
                 }
 
