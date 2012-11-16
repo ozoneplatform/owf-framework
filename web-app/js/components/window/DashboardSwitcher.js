@@ -194,7 +194,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         me.tpl = new Ext.XTemplate(
             '<tpl for=".">',
-                '<div class="{[this.getName(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}">',
+                '<div class="{[this.getName(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}" {[this.getToolTip(values)]}>',
                     '<div class="thumb-wrap">',
                         '<div class="thumb {layout}">',
                         '</div>',
@@ -213,17 +213,29 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             getName: function (values) {
                 return values.isStack ? 'stack' : 'dashboard';
             },
+            getToolTip: function (values) {
+                return '';
+                var str = 'data-qtip="' +
+                        '<p class=\'name\'>' + values.name + '<p/>' +
+                        '<p class=\'tip-description\'>' + (values.description || 'No description found!') +'</p>';
+
+                return values.isStack ? str + '"':
+                        str +
+                        '<br><p class=\'group\'>Group: ' + values.groups[0].name + '<p/>' +
+                        '<p class=\'created-by\'>Created by: ' + values.createdDate + '<p/>' +
+                        '<p class=\'last-updated\'>Last Modified: ' + values.editedDate + '<p/>"';
+            },
             getActions: function (values) {
                 return values.isStack ? 
                         '<ul class="stack-actions hide">'+
-                            '<li class="restore icon-refresh" title="Restore"></li>'+
-                            '<li class="delete icon-remove" title="Delete"></li>'+
+                            '<li class="restore icon-refresh" data-qtip="Restore"></li>'+
+                            '<li class="delete icon-remove" data-qtip="Delete"></li>'+
                         '</ul>' :
                         '<ul class="dashboard-actions hide">'+
-                            '<li class="share icon-share" title="Share"></li>'+
-                            '<li class="restore icon-refresh" title="Restore"></li>'+
-                            '<li class="edit icon-edit" title="Edit"></li>'+
-                            '<li class="delete icon-remove" title="Delete"></li>'+
+                            '<li class="share icon-share" data-qtip="Share"></li>'+
+                            '<li class="restore icon-refresh" data-qtip="Restore"></li>'+
+                            '<li class="edit icon-edit" data-qtip="Edit"></li>'+
+                            '<li class="delete icon-remove" data-qtip="Delete"></li>'+
                         '</ul>'
             },
             encodeAndEllipsize: function(str) {
