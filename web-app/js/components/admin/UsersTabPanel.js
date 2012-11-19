@@ -135,12 +135,6 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                             domain: this.ownerCt.domain,
                             records: result
                         });
-                        //Refresh the user manager
-                        OWF.Eventing.publish(this.ownerCt.channel, {
-                            action: action,
-                            domain: 'User',
-                            records: result
-                        });
                     }, this);
 
                     if (grid && comp) {

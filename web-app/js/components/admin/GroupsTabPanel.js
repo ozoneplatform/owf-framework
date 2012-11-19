@@ -117,12 +117,6 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                             domain: this.ownerCt.domain,
                             records: result
                         });
-                        //Refresh the group manager
-                        OWF.Eventing.publish(this.ownerCt.channel, {
-                            action: action,
-                            domain: 'Group',
-                            records: result
-                        });
                     }, this);
                     
                     if (grid && owner) {

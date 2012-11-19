@@ -118,12 +118,6 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                             domain: this.ownerCt.domain,
                             records: result
                         });
-                        //Refresh the stack manager
-                        OWF.Eventing.publish(this.ownerCt.channel, {
-                            action: action,
-                            domain: 'Stack',
-                            records: result
-                        });
                     }, this);
                     
                     if (grid && owner) {

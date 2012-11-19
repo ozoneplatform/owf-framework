@@ -132,12 +132,6 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                             domain: this.ownerCt.domain,
                             records: result
                         });
-                        //Refresh the widget manager
-                        OWF.Eventing.publish(this.ownerCt.channel, {
-                            action: action,
-                            domain: 'Widget',
-                            records: result
-                        });
                     }, this);
 
                     if (grid && comp) {
