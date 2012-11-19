@@ -296,7 +296,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
     doExport: function(id, name) {
         var me = this;
 
-        var okFn = function(filename, extension) {
+        var okFn = function(filename) {
             var exportFailed = function(errorMsg) {
                 var msg = 'The export of stack ' + Ext.htmlEncode(name) + ' failed.';
                 me.showAlert('Server Error!', errorMsg ? errorMsg : msg);
@@ -306,7 +306,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
             var iframe = document.createElement('iframe');
             iframe.id = 'stackExportIFrame';
             iframe.src = Ozone.util.contextPath() + '/stack/export?id=' + id + 
-                '&filename=' + filename + '&extension=' + extension;
+                '&filename=' + filename;
             iframe.style.display = "none";
 
             //Inspect body of hidden iframe after load for error message and display alert if found

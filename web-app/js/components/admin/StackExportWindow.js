@@ -52,25 +52,6 @@ Ext.define('Ozone.components.admin.StackExportWindow', {
                 maxLength: 200,
                 regex: /^[a-zA-Z\d\-\_]+$/,
                 regexText: 'Invalid characters! The Filename may only contain letters, numbers, dashes, and underscores.'
-            }, {
-                xtype: 'radiogroup',
-                itemId: 'extension',
-                fieldLabel: 'File Type',
-                labelWidth: 140,
-                columns: [100, 100],
-                vertical: true,
-                items: [
-                    {
-                        boxLabel: '.war',
-                        name: 'val',
-                        inputValue: 'war',
-                        checked: true
-                    }, {
-                        boxLabel: '.zip',
-                        name: 'val',
-                        inputValue: 'zip'
-                    }
-                ]
             }]
         }]
     }],
@@ -98,7 +79,6 @@ Ext.define('Ozone.components.admin.StackExportWindow', {
             
             var form = me.down('#form');
             var filename = me.down('#filename');
-            var extension = me.down('#extension');
             var okBtn = me.down('#ok');
             var cancelBtn = me.down('#cancel');
             
@@ -116,8 +96,7 @@ Ext.define('Ozone.components.admin.StackExportWindow', {
             
             okBtn.on('click', function(btn, e) {
                 if(me.okFn) {
-                    var extn = extension.getValue();
-                    me.okFn(filename.value, extn.val);
+                    me.okFn(filename.value);
                 }
                 me.close();
             });
