@@ -214,7 +214,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 return values.isStack ? 'stack' : 'dashboard';
             },
             getToolTip: function (values) {
-                return '';
                 var str = 'data-qtip="' +
                         '<p class=\'name\'>' + values.name + '<p/>' +
                         '<p class=\'tip-description\'>' + (values.description || 'No description found!') +'</p>';

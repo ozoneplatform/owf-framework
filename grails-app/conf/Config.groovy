@@ -481,6 +481,7 @@ uiperformance.bundles = [
                         '../js-plugins/pane/FitPane',
                         '../js-plugins/pane/PortalPane',
                         '../js-plugins/pane/TabbedPane',
+                        '../js-lib/patches/QuickTipOverrides',
                         '../js-lib/patches/DragDropManagerOverrides',
                         '../js-lib/patches/EventObjectImplOverrides',
                         '../js-lib/patches/DragZoneOverrides',

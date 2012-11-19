@@ -177,3 +177,10 @@
     border-width: 20px;
     border-bottom-color: #000;
 }
+
+.ozonequicktip {
+    p {
+        font-size: $owf-font-size;
+        line-height: $owf-font-size * 1.5;
+    }
+}
