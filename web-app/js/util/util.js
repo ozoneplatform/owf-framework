@@ -449,7 +449,6 @@ Ozone.util.cloneDashboard = function(dashboardCfg, regenerateIds, removeLaunchDa
 
             if(cfg.items.length === 0 && cfg.widgets) {
                 for(var i = 0, len = cfg.widgets.length; i < len; i++) {
-                    console.log('deleteing launchData', cfg.widgets[i].launchData);
                     delete cfg.widgets[i].launchData;
                 }
             }

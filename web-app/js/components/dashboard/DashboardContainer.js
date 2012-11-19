@@ -741,6 +741,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         dashboardSwitcher.show().center();
     },
 
+    destroyDashboardSwitcher: function () {
+        var dashboardSwitcherId = 'dashboard-switcher',
+            dashboardSwitcher = Ext.getCmp(dashboardSwitcherId);
+
+        dashboardSwitcher && dashboardSwitcher.destroy();
+    },
+
     createDashboardConfig: function(dashRecord) {
         var dash = dashRecord.data;
         var stateStore = Ext.create('Ozone.data.StateStore', {
@@ -1446,6 +1453,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 }
             }
         }
+
+        this.destroyDashboardSwitcher();
     },
 
     updateDashboardsFromStore: function(storeRecords, callbackOptions, loadSuccess) {
@@ -1484,6 +1493,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
         // activate dashboard
         this._activateDashboard(defaultTabGuid); // Focus the default dashboard.
+        
+        this.destroyDashboardSwitcher();
     },
 
     reloadDashboards: function() {

@@ -49,6 +49,9 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
 
         me.on('afterrender', me.setupModalFocus, me, {single: true});
         me.on('show', me.focusFirstEl, me);
+
+        // fires 'cancel' event when user cancels editing dashboard
+        me.addEvents('cancel');
     },
 
     setupModalFocus: function() {

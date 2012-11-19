@@ -468,7 +468,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                 itemId: 'cancelBtn',
 //                iconCls: 'cancelBtnIcon',
                 scope: this,
-                handler: this.close
+                handler: this.cancel
             }]
         }];
 		
@@ -521,6 +521,11 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         Ext.defer(function() {
             this.getComponent('titleBox').focus();
         }, 500, this);
+    },
+
+    cancel: function () {
+        Ext.getCmp(this.winId).fireEvent('cancel');
+        this.close();
     },
 
     close: function() {
