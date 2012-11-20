@@ -322,11 +322,28 @@ class StackService {
 
         return returnValue
     }
+
+    def deleteUserStack(stackIds) {
+
+        println 'stacks removing from user'
+        def user = accountService.getLoggedInUser();
+		def stacks = [];
+		
+        stackIds.each {
+            def stack = Stack.findById(it.id, [cache: true])
+            def stackDefaultGroup = stack.findStackDefaultGroup()
+
+            stackDefaultGroup.removeFromPeople(user)
+			
+			stacks << stack
+        }
+        return [success: true, data: stacks];
+    }
     
     def delete(params) {
         
         // Only admins may delete Stacks
-        ensureAdmin()
+        //ensureAdmin()
         
         def stacks = []
         
@@ -337,6 +354,10 @@ class StackService {
             stacks = params.list('id').collect {
                 [id:it]
             }
+        }
+
+        if(!accountService.getLoggedInUserIsAdmin() || (params.adminEnabled != true)) {
+            return deleteUserStack(stacks);
         }
         
         stacks.each {

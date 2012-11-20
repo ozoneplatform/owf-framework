@@ -575,6 +575,8 @@ uiperformance.bundles = [
                         'data/stores/StateStore',
                         'data/models/Dashboard',
                         'data/stores/DashboardStore',
+                        'data/models/Stack',
+                        'data/stores/StackStore',
                         'data/ModelIdGenerator',
                         'data/models/WidgetDefinition',
                         'data/stores/WidgetStore',

@@ -38,7 +38,33 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     // private
     initComponent: function() {
+        var me = this,
+            stackModels = {},
+            dashboard, stack, model;
 
+        this.stackStore = Ext.create('Ozone.data.StackStore', {});
+
+        for(var i = 0, len = this.dashboardStore.getCount(); i < len; i++) {
+
+            model = this.dashboardStore.getAt(i);
+
+            dashboard = model.data;
+            stack = dashboard.stack;
+
+            if( stack ) {
+                if( stackModels[ stack.id ] ) {
+                    stackModels[ stack.id ].get('dashboards').push( model );
+                }
+                else {
+                    var stackModel = this.stackStore.add( stack )[0];
+                    stackModel.set('dashboards', [ model ]);
+
+                    stackModels[ stack.id ] = stackModel;
+                }
+            }
+
+        }
+        
         this.originalDashboardStore = Ext.create('Ozone.data.DashboardStore', {
         });
         this.dashboardMenuItems = [];

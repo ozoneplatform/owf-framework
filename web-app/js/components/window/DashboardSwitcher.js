@@ -607,11 +607,17 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         var me = this,
             $dashboard = this.getElByClassFromEvent(evt, 'dashboard'),
             dashboard = this.getDashboard($dashboard),
-            msg = 'Are you sure you want to permanently delete dashboard <span class="heading-bold">' 
-                    + Ext.htmlEncode(dashboard.name) + '</span>?';
+            msg;
 
-        console.log('delete dashboard', dashboard.guid);
+        console.log('delete dashboard', dashboard);
         
+        if(dashboard.stack) {
+            this.warn('You are not allowed to delete a dashboard that is part of a stack.');
+            return;
+        }
+
+        msg = 'Are you sure you want to permanently delete dashboard <span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span>?';
+
         this.warn(msg, function () {
             me.dashboardStore.remove(dashboard.model);
             me.dashboardStore.save();
@@ -636,22 +642,24 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
     deleteStack: function (evt) {
         evt.stopPropagation();
-        var $stack = this.getElByClassFromEvent(evt, 'stack'),
+        var me = this,
+            $stack = this.getElByClassFromEvent(evt, 'stack'),
             stack = this.getStack($stack),
-            msg = 'This action will permanently delete <span class="heading-bold">' 
-                    + Ext.htmlEncode(stack.name) + '</span>.';
+            msg = 'Are you sure you want to permanently delete stack <span class="heading-bold">' 
+                    + Ext.htmlEncode(stack.name) + '</span> and its dashboards.';
 
-        console.log('delete stack', dashboard.guid);
-        
-        // this.warn(msg, function () {
-        //     me.dashboardStore.remove(dashboard.model);
-        //     me.dashboardStore.save();
+        console.log('delete stack', stack);
 
-        //     $dashboard.remove();
-        //     me.reloadDashboards = true;
-        // }, function () {
-        //     evt.currentTarget.focus();
-        // });
+        this.warn(msg, function () {
+            me.dashboardContainer.stackStore.remove( me.dashboardContainer.stackStore.getById(stack.id) );
+            me.dashboardContainer.stackStore.save();
+
+            // $stack.remove();
+            
+            // me.reloadDashboards = true;
+        }, function () {
+            evt.currentTarget.focus();
+        });
     },
 
     warn: function (msg, okFn, cancelFn) {
