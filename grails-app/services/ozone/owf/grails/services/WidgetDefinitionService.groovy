@@ -6,6 +6,7 @@ import ozone.owf.grails.AuditOWFWebRequestsLogger
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
 import ozone.owf.grails.domain.PersonWidgetDefinition
+import ozone.owf.grails.domain.Dashboard
 import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.Person
 import org.hibernate.CacheMode
@@ -20,7 +21,7 @@ class WidgetDefinitionService {
 
     def loggingService = new AuditOWFWebRequestsLogger()
     def accountService
-    def dashboardService
+    //def dashboardService
     def domainMappingService
     def serviceModelService
 
@@ -53,7 +54,11 @@ class WidgetDefinitionService {
             }
 
             //Reuse DashboardService's method to list the dashboards of the stack's default group
-            def dashboards = dashboardService.listDashboards(['group_id': stack.findStackDefaultGroup().id]).dashboardList
+            //def dashboards = dashboardService.listDashboards(['group_id': stack.findStackDefaultGroup().id]).dashboardList
+            def dashboards = domainMappingService.getMappings(stack.findStackDefaultGroup(),RelationshipType.owns,Dashboard.TYPE)?.collect{
+                Dashboard.get(it.destId)
+            }            
+            
             for(def i = 0; i < dashboards.size(); i++) {
                 //Get all the widgetGuids found in the layoutConfig
                 widgetGuids.addAll(inspectForWidgetGuids(JSON.parse(dashboards[i].layoutConfig)))
@@ -929,7 +934,7 @@ class WidgetDefinitionService {
 
     // Looks through the nested layoutConfig of a dashboard and grabs
     // all of its widgetGuids
-    private def inspectForWidgetGuids(layoutConfig) {
+    public def inspectForWidgetGuids(layoutConfig) {
         def widgetGuids = []
 
         def widgets = layoutConfig.widgets
@@ -1032,6 +1037,28 @@ class WidgetDefinitionService {
     private def ensureAdmin() {
         if (!accountService.getLoggedInUserIsAdmin()) {
             throw new OwfException(message: "You must be an admin", exceptionType: OwfExceptionTypes.Authorization)
+        }
+    }
+    
+    public def reconcileWidgetsFromDashboards(group) {
+        // TODO: Check type of incoming object.
+        
+        // Get all dashboards for this group.
+        def dashboards = domainMappingService.getMappedObjects(group, RelationshipType.owns, Dashboard.TYPE)
+        
+        dashboards.each{ dashboard ->
+            // For each dashboard get its list of widget guids.
+            def widgetGuids = inspectForWidgetGuids(JSON.parse(dashboard.layoutConfig))
+            widgetGuids.unique()
+            
+            // Loop over widgets.  If widget is not already added to this group, add it.
+            widgetGuids.each { widgetGuid ->
+                def widget = WidgetDefinition.findByWidgetGuid(widgetGuid,[cache:true])
+                def widgetMapping = domainMappingService.getMapping(group, RelationshipType.owns, widget)
+                if (widgetMapping.isEmpty()) {
+                    domainMappingService.createMapping(group,RelationshipType.owns,widget)
+                }
+            }
         }
     }
 }

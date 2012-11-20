@@ -22,7 +22,8 @@ class DashboardService extends BaseService {
 
     def domainMappingService
     def serviceModelService
-
+    //def groupService
+    
     def addOrRemove(params) {
         def returnValue = [:]
 
@@ -424,7 +425,6 @@ class DashboardService extends BaseService {
                 dashboardPosition:maxPosition,
                 description: JSONObject.NULL.equals(params.description) ? null : params.description,
                 layoutConfig: params.layoutConfig.toString() ?: "",
-                // TODO: change this to be the default OWF stack if no stack was supplied.
                 stack: params.stack != null ? Stack.get(params.stack.id.toLong()) : null,
                 locked: params.locked != null ? params.locked : false)
 
@@ -441,7 +441,6 @@ class DashboardService extends BaseService {
 
         dashboard.validate()
         if (dashboard.hasErrors()) {
-            def foo = dashboard.errors.toString()
             throw new OwfException(	message:'A fatal validation error occurred during the creating of a dashboard. Params: ' + params.toString() + ' Validation Errors: ' + dashboard.errors.toString(),
             exceptionType: OwfExceptionTypes.Validation)
         }
@@ -647,7 +646,7 @@ class DashboardService extends BaseService {
         }
 
         dashboard.layoutConfig = params.layoutConfig ?: dashboard.layoutConfig
-        // TODO: If no stack is provided, do we change it?  Or do we put it in the default OWF stack?
+        // If no stack is provided, set the stack to null.
         dashboard.stack =  params.stack != null ? Stack.get(params.stack.id.toLong()) : null
         dashboard.locked = params.locked instanceof Boolean ? params.locked : params.locked == "true"
 
@@ -668,6 +667,19 @@ class DashboardService extends BaseService {
         } else {
             try
             {
+                // On a successful save, if this is a group dashboard, cascade the inclusion of any new widgets to owning groups
+                // if this is a group dashboards.
+                if (dashboard.user == null) {
+                    // Get all the groups that own this dashboard
+                    def mappings = domainMappingService.getMappings(dashboard, RelationshipType.owns, Group.TYPE, 'dest');
+                    mappings?.each { 
+                        // Get the actual group object.
+                        def group = Group.get(it.srcId)
+                        if (group != null) {
+                            widgetDefinitionService.reconcileWidgetsFromDashboards(group);
+                        }
+                    }
+                }
                 if (params.doNotEnsureDefault == null || params.doNotEnsureDefault == false)
                 {
                     ensureDefault(dashboard.user)

@@ -349,6 +349,7 @@ class PersonWidgetDefinitionService {
         def groupPwds = PersonWidgetDefinition.withCriteria {
             eq('person',person)
             eq('groupWidget',true)
+            cacheMode(CacheMode.GET)
         }
 
         //loop through and remove groupPwds that are not in the groupWidgetsToTagsMap
@@ -384,7 +385,8 @@ class PersonWidgetDefinitionService {
             def personWidgetDefinitionList = PersonWidgetDefinition.withCriteria {
                 eq('person', person)
                 eq('widgetDefinition', widgetDef)
-                cache(true)
+                //cache(true)
+                cacheMode(CacheMode.GET)
             }
             def personWidgetDefinition = !personWidgetDefinitionList.isEmpty() ?  personWidgetDefinitionList[0] : null
 
@@ -565,7 +567,7 @@ class PersonWidgetDefinitionService {
                 widgetDefinition { inList('id',groupFilteredIds) }
             }
             order("pwdPosition","asc")
-            cache(true)
+            cache(false)
         }
 
         return [success: true, personWidgetDefinitionList: pwdList.collect {

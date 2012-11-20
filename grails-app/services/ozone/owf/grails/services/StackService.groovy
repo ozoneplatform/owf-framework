@@ -276,12 +276,21 @@ class StackService {
                 dashboards?.each { it ->
                     def dashboard = Dashboard.findByGuid(it.guid)
                     if (dashboard) {
-                        if (params.update_action == 'remove') {
+                        if (params.update_action == 'remove') {       
+                            // Find all clones.
+                            def clones = domainMappingService.getMappedObjects([id:dashboard.id,TYPE:Dashboard.TYPE],
+                                RelationshipType.cloneOf,Dashboard.TYPE,[:],{},'dest')
+                            
+                            // Set their stack to null.
+                            if (clones != null) {
+                                clones.each{ clone ->
+                                    clone.stack = null
+                                    clone.save(flush: true)
+                                }
+                            }
+                            
                             // Remove the mapping to the group.
                             domainMappingService.deleteMapping(stackDefaultGroup,RelationshipType.owns,dashboard)
-                            // TODO: Dump any user dashboard instances associated with this stack that were
-                            // clones of this dashboard.  Perhaps find all the clones and associate them with the 
-                            // default owf stack.
                             
                             // Delete the dashboard.
                             dashboard.delete(flush: true)
@@ -314,6 +323,12 @@ class StackService {
                         returnValue = serviceModels
                     }
                 }
+
+                // Add any widgets to the stack's default group if not already there.
+                widgetDefinitionService.reconcileWidgetsFromDashboards(stackDefaultGroup)
+                
+                // Get the unique widgets now contained in the stack's dashboards.
+                def dashboardWidgets = widgetDefinitionService.list([stack_id: stack.id])
 
                 //Update the uniqueWidgetCount of the stack
                 stack.uniqueWidgetCount = widgetDefinitionService.list([stack_id: stack.id]).results
