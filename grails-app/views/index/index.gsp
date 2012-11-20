@@ -207,7 +207,7 @@
                 
                 var continueProcessingPage = function() {
                     
-                    //console.time('initload');
+                    console.time('initload');
 
                     OWF.Mask = new Ozone.ux.AutoHideLoadMask(Ext.getBody(), {
                         msg:"Please wait...",

@@ -15,6 +15,7 @@ class StackService {
     def accountService
     def serviceModelService
     def domainMappingService
+    def dashboardService
     def groupService
     def widgetDefinitionService
     
@@ -325,15 +326,23 @@ class StackService {
 
     def deleteUserStack(stackIds) {
 
-        println 'stacks removing from user'
         def user = accountService.getLoggedInUser();
 		def stacks = [];
 		
         stackIds.each {
             def stack = Stack.findById(it.id, [cache: true])
             def stackDefaultGroup = stack.findStackDefaultGroup()
-
+            
             stackDefaultGroup.removeFromPeople(user)
+
+            // Remove all user dashboards that are in the stack
+            def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
+            userStackDashboards?.each { userStackDashboard ->
+
+                dashboardService.delete([
+                    dashboard: userStackDashboard
+                ])
+            }
 			
 			stacks << stack
         }

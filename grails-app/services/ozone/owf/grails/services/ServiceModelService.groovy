@@ -175,6 +175,14 @@ class ServiceModelService {
                 break
             case Stack:
                 ozone.owf.grails.domain.Stack domain = (ozone.owf.grails.domain.Stack) obj
+
+                // add groups to stack so we can decide client side whether to allow
+                // users to delete this stack
+                def groups = []
+                domain.groups?.each { 
+                    groups << createServiceModel(it)
+                }
+
                 model = new StackServiceModel(
                         id: domain.id,
                         name: domain.name,
@@ -182,6 +190,7 @@ class ServiceModelService {
                         stackContext: domain.stackContext,
                         imageUrl: domain.imageUrl,
                         descriptorUrl: domain.descriptorUrl,
+                        groups: groups,
                         totalDashboards: params.totalDashboards ?: 0,
                         totalUsers: params.totalUsers ?: 0,
                         totalGroups: params.totalGroups ?: 0,

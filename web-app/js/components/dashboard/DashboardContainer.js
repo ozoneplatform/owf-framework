@@ -1457,7 +1457,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         for (var i1 = 0; i1 < deleteCount; i1++) {
 
             // Remove from dashboard store.
-            var dsIndex = this.dashboardStore.find('id', dashboardsToDelete[i1]);
+            var dsIndex = this.dashboardStore.find('guid', dashboardsToDelete[i1]);
             if (dsIndex != -1) {
                 // If default dashboard is deleted reset default to first dashboard.
                 if (this.dashboardStore.getAt(dsIndex).get('isDefault') == true) {

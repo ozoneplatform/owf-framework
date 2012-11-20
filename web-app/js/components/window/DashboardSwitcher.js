@@ -33,6 +33,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     storeLengthChanged: true,
 
     selectedItemCls : 'dashboard-selected',
+
+    _deletedStackOrDashboards: null,
     
     initComponent: function() {
 
@@ -50,7 +52,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             dashboards[ dashboard.guid ] = dashboard;
 
             stack = dashboard.stack;
-
+            console.log(dashboard, stack);
             if( stack ) {
                 if( stacks[ stack.id ] ) {
                     stacks[ stack.id ].dashboards.push( dashboard );
@@ -194,6 +196,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         me.stackOrDashboards = stackOrDashboards;
         me.dashboards = dashboards;
         me.stacks = stacks;
+        me._deletedStackOrDashboards = [];
 
         me.tpl = new Ext.XTemplate(
             '<tpl for=".">',
@@ -270,6 +273,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         });
 
         me.dashboardStore.on('add', me.destroy, me);
+
+        me.on('beforeclose', me.onClose, me);
     },
 
     bindEvents: function (cmp) {
@@ -342,14 +347,14 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         var me = this,
             $ = jQuery,
             $clickedStack = $(evt.currentTarget),
-            stack = this.getStack( $clickedStack );
+            stack = me.getStack( $clickedStack );
 
         if( stack ) {
 
-            if( this._lastExpandedStack ) {
+            if( me._lastExpandedStack ) {
 
-                if( this._lastExpandedStack === stack ) {
-                    me.$stackDashboards.slideToggle('fast');
+                if( me._lastExpandedStack === stack ) {
+                    me.hideStackDashboards()
                 }
                 else {
                     me.$stackDashboards.slideUp('fast').promise().then(function () {
@@ -423,6 +428,11 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         this._lastExpandedStack = stack;
     },
 
+    hideStackDashboards: function () {
+        this.$stackDashboards && this.$stackDashboards.slideToggle('fast');
+        //this.$stackDashboards && this.$stackDashboards.addClass('hide');
+    },
+
     onMouseOver: function (evt) {
         var el,
             $ = jQuery;
@@ -439,6 +449,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             else {
                 //$('ul', this._lastManageEl).slideUp();
                 $('ul', this._lastManageEl).addClass('hide');
+                //this.hideStackDashboards();
             }
         }
 
@@ -612,7 +623,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         console.log('delete dashboard', dashboard);
         
         if(dashboard.stack) {
-            this.warn('You are not allowed to delete a dashboard that is part of a stack.');
+            this.warn('Users cannot remove individual dashboards from a stack. Please contact your administrator.');
             return;
         }
 
@@ -625,11 +636,10 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             $dashboard.remove();
             me.notify('Delete Dashboard', '<span class="heading-bold">' + dashboard.name + '</span> deleted!');
 
-            me.reloadDashboards = true;
+            me._deletedStackOrDashboards.push(dashboard);
         }, function () {
             evt.currentTarget.focus();
         });
-        
     },
 
     restoreStack: function (evt) {
@@ -642,21 +652,51 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
     deleteStack: function (evt) {
         evt.stopPropagation();
+
         var me = this,
             $stack = this.getElByClassFromEvent(evt, 'stack'),
             stack = this.getStack($stack),
             msg = 'Are you sure you want to permanently delete stack <span class="heading-bold">' 
-                    + Ext.htmlEncode(stack.name) + '</span> and its dashboards.';
+                    + Ext.htmlEncode(stack.name) + '</span> and its dashboards?';
 
         console.log('delete stack', stack);
+
+        var stackGroups = stack.groups,
+            userGroups = Ozone.config.user.groups,
+            groupAssignment = false;
+        
+        if(stackGroups && userGroups && stackGroups.length > 0 && userGroups.length > 0) {
+            for (var i = 0, len1 = stackGroups.length; i < len1; i++) {
+                var stackGroup = stackGroups[i];
+                
+                for (var j = 0, len2 = userGroups.length; j < len2; j++) {
+                    var userGroup = userGroups[j];
+                    if(stackGroup.id === userGroup.id) {
+                        groupAssignment = true;
+                        break;
+                    }
+                }
+
+                if(groupAssignment === true)
+                    break;
+            }
+        }
+
+        if(groupAssignment) {
+            this.warn('Users in a group cannot remove stacks assigned to the group. Please contact your administrator.');
+            return;
+        }
 
         this.warn(msg, function () {
             me.dashboardContainer.stackStore.remove( me.dashboardContainer.stackStore.getById(stack.id) );
             me.dashboardContainer.stackStore.save();
 
-            // $stack.remove();
+            if( me._lastExpandedStack === stack) {
+                me.hideStackDashboards();
+            }
+            $stack.remove();
             
-            // me.reloadDashboards = true;
+            me._deletedStackOrDashboards.push(stack);
         }, function () {
             evt.currentTarget.focus();
         });
@@ -780,5 +820,19 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         //update the layout
         this.view.doComponentLayout(newWidth, newHeight);
+    },
+
+    onClose: function() {
+        var me = this;
+
+        // refresh if user deleted all dashboards
+        if(me.dashboardContainer.dashboardStore.getCount() === 0) {
+            window.location.reload();
+            return;
+        }
+
+        if(me._deletedStackOrDashboards.length > 0) {
+            me.dashboardContainer.reloadDashboards();
+        }
     }
 });
