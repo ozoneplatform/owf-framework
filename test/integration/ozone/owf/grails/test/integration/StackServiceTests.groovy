@@ -94,8 +94,9 @@ class StackServiceTests extends GroovyTestCase {
     void testDelete() {
         def ret = stackService.delete([
             "data": """{
-                id: ${stackIds[0]}
-            }"""
+                id: ${stackIds[0]},
+            }""",
+            adminEnabled: true
         ])
         assertTrue ret.success
         assertEquals stackIds.size() - 1, stackService.list([:]).results

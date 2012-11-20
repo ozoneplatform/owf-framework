@@ -106,6 +106,7 @@ class StackControllerTests extends OWFGroovyTestCase {
         stackController.params.data = """{
                 id: ${stackIds[0]}
             }"""
+        stackController.params.adminEnabled = true
         stackController.delete()
         
         def resp = JSON.parse(stackController.response.contentAsString)

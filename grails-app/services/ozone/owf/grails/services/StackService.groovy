@@ -365,7 +365,7 @@ class StackService {
             }
         }
 
-        if(!accountService.getLoggedInUserIsAdmin() || (params.adminEnabled != true)) {
+        if((!accountService.getLoggedInUserIsAdmin()) || (params.adminEnabled != true)) {
             return deleteUserStack(stacks);
         }
         
