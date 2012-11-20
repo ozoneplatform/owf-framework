@@ -247,6 +247,13 @@ class StackService {
                             stackDefaultGroup.addToPeople(user)
                         } else if (params.update_action == 'remove') {
                             stackDefaultGroup.removeFromPeople(user)
+
+                            //Remove all references to stack for all user's dashboards in the stack
+                            def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
+                            userStackDashboards?.each { userStackDashboard ->
+                                userStackDashboard.stack = null
+                                domainMappingService.deleteMappings(userStackDashboard,RelationshipType.cloneOf,'dashboard')
+                            }
                         }
                         
                         updatedUsers << user
