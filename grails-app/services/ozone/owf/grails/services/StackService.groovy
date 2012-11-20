@@ -396,7 +396,8 @@ class StackService {
                 def widgetDefinition = widget.toDataMap().value
 
                 def widgetData = [:]
-                //Get only the values required for a widget descriptor
+                //Get only the values required for a widget definition
+                widgetData.put("widgetGuid", widget.id)
                 widgetData.put("descriptorUrl", widgetDefinition.descriptorUrl)
                 widgetData.put("universalName", widgetDefinition.universalName)
                 widgetData.put("displayName", widgetDefinition.namespace)
