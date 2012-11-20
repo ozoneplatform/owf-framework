@@ -39,5 +39,16 @@ Ext.define('Ozone.components.admin.stack.StackEditUsersTab', {
             }
         });
         this.callParent(arguments);
+
+        this.on({
+            activate: {
+                scope: this,
+                single: true,
+                fn: function(cmp, opts) {
+                    var grid = cmp.getComponent('usersgrid');
+                    grid.setBaseParams({adminEnabled: true});
+                }
+            }
+        });
     }
 });
