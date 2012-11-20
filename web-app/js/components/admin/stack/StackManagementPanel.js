@@ -134,7 +134,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                             handler: function(button) {
                                 var records = me.gridStacks.getSelectionModel().getSelection();
                                 if(records && records.length === 1) {
-                                    me.doExport(records[0].data.id, records[0].data.name);
+                                    me.doExport('stack', records[0].data.id, records[0].data.name);
                                 }
                                 else if(records && records.length > 1) {
                                     me.showAlert('Error', 'You must select only one stack to export.');
@@ -291,59 +291,5 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
         } else {
             this.showAlert('Error', 'You must select at least one stack to delete.');
         }
-    },
-    
-    doExport: function(id, name) {
-        var me = this;
-
-        var okFn = function(filename) {
-            var exportFailed = function(errorMsg) {
-                var msg = 'The export of stack ' + Ext.htmlEncode(name) + ' failed.';
-                me.showAlert('Server Error!', errorMsg ? errorMsg : msg);
-            }
-
-            //Create hidden iframe to retrieve file without navigating widget or OWF on failure
-            var iframe = document.createElement('iframe');
-            iframe.id = 'stackExportIFrame';
-            iframe.src = Ozone.util.contextPath() + '/stack/export?id=' + id + 
-                '&filename=' + filename;
-            iframe.style.display = "none";
-
-            //Inspect body of hidden iframe after load for error message and display alert if found
-            iframe.onload = function() {
-                var iframe = this, bodyIframe = null;
-                try {
-                    if (iframe.contentWindow && iframe.contentWindow.document.body) {
-                        bodyIframe = iframe.contentWindow.document.body;
-                    } else if (iframe.document && iframe.document.body) {
-                        bodyIframe = iframe.document.body;
-                    } else if (iframe.contentDocument && iframe.contentDocument.body) {
-                        bodyIframe = iframe.contentDocument.body;
-                    }
-
-                    //If there is html in the body, check if success if false, if so export failed
-                    if(bodyIframe.innerHTML) {
-                        var response = Ozone.util.parseJson(bodyIframe.innerHTML);
-                        if(!response.success) {
-                            exportFailed(response.errorMsg);
-                        }
-                    }
-                } catch(e) {
-                    //Catches a bug in IE where an 'Access denied' error
-                    //is thrown due to the iframe src returning a 500 response
-                    exportFailed();
-                }
-            }
-
-            //Append iframe to document, which triggers the src call to get the file
-            document.body.appendChild(iframe);
-        }
-
-        var win = Ext.widget('stackexportwindow', {
-            focusOnClose: this.down(),
-            itemName: name,
-            okFn: okFn
-        });
-        win.show();
     }
 });

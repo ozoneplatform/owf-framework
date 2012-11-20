@@ -881,6 +881,29 @@ class WidgetDefinitionService {
 
         return [success: true, data: processedWidgetsIds]
     }
+    
+    def export(params) {
+        // Only admins may export Widgets
+        ensureAdmin()
+
+        def widgetDefinition = WidgetDefinition.findByWidgetGuid(params.id)
+
+        def widgetData = getWidgetDescriptorJson(widgetDefinition)
+
+        //Get the empty descriptor with appropriate javascript
+        def dir = './lib/'
+        if(grails.util.GrailsUtil.environment != 'production') dir = './src/resources/'
+        def widgetDescriptorText = new File(dir + "empty_descriptor.html").text
+
+        widgetDescriptorText = widgetDescriptorText.replaceFirst("var data;", "var data = ${widgetData};")
+
+        def widgetDescriptor = new File("widget_descriptor.html")
+        def out = new FileOutputStream(widgetDescriptor)
+        out.write(widgetDescriptorText.getBytes("UTF-8"))
+        out.close()
+
+        return widgetDescriptor
+    }
 
     public def getDirectRequiredIds(widgetDef) {
         getRequiredWidgetIds(ids: widgetDef.widgetGuid, noRecurse: true)
@@ -920,6 +943,47 @@ class WidgetDefinitionService {
         }
 
         return widgetGuids
+    }
+
+    private def getWidgetDescriptorJson(widgetDefinition) {
+
+        def widgetData = [:]
+        //Get only the values required for a widget descriptor
+        widgetData.put("displayName", widgetDefinition.displayName)
+        widgetData.put("widgetUrl", widgetDefinition.widgetUrl)
+        widgetData.put("imageUrlSmall", widgetDefinition.imageUrlSmall)
+        widgetData.put("imageUrlLarge", widgetDefinition.imageUrlLarge)
+        widgetData.put("width", widgetDefinition.width)
+        widgetData.put("height", widgetDefinition.height)
+        widgetData.put("visible", widgetDefinition.visible)
+        widgetData.put("singleton", widgetDefinition.singleton)
+        widgetData.put("background", widgetDefinition.background)
+        widgetData.put("widgetTypes", widgetDefinition.widgetTypes?.name)
+
+        //Add non-required fields
+        widgetDefinition.descriptorUrl && widgetData.put("descriptorUrl", widgetDefinition.descriptorUrl)
+        widgetDefinition.universalName && widgetData.put("universalName", widgetDefinition.universalName)
+        widgetDefinition.description && widgetData.put("description", widgetDefinition.description)
+        widgetDefinition.widgetVersion && widgetData.put("widgetVersion", widgetDefinition.widgetVersion)
+
+        def tags = []
+        widgetDefinition.getTags().each { tags.push(it.tag.name) }
+        tags && widgetData.put("defaultTags", tags)
+
+        def intents = [:], sendIntents = [], receiveIntents = []
+        widgetDefinition.widgetDefinitionIntents.each {
+            def intent = [action: it.intent.action, dataTypes: it.dataTypes.dataType]
+            it.send && sendIntents.push(intent)
+            it.receive && receiveIntents.push(intent)
+        }
+        sendIntents && intents.put('send', sendIntents)
+        receiveIntents && intents.put('receive', receiveIntents)
+        intents && widgetData.put("intents", intents)
+
+        //Pretty print the JSON
+        widgetData = (widgetData as JSON).toString(true)
+
+        return widgetData
     }
     
     //TODO: refactor this out when we have time.  I don't like this logic here

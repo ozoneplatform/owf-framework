@@ -365,35 +365,34 @@ class StackService {
         // Only admins may export Stacks
         ensureAdmin()
         
-        if(params.id > -1) {
-            def stack = Stack.findById(params.id, [cache: true])
+        def stack = Stack.findById(params.id, [cache: true])
 
-            //Construct the list of dashboards for the descriptor
-            def dashboards = []
-            def stackGroup = stack.findStackDefaultGroup()
-            if(stackGroup != null) {
-                domainMappingService.getMappings(stackGroup, RelationshipType.owns, Dashboard.TYPE).eachWithIndex { it, i ->
+        //Construct the list of dashboards for the descriptor
+        def dashboards = []
+        def stackGroup = stack.findStackDefaultGroup()
+        if(stackGroup != null) {
+            domainMappingService.getMappings(stackGroup, RelationshipType.owns, Dashboard.TYPE).eachWithIndex { it, i ->
 
-                    def dashboard = Dashboard.findById(it.destId)
+                def dashboard = Dashboard.findById(it.destId)
 
-                    def dashboardData = [:]
-                    //Get only the parameters required for a dashboard definition
-                    dashboardData.put('name', dashboard.name)
-                    dashboardData.put('guid', dashboard.guid)
-                    dashboardData.put('description', dashboard.description)
-                    dashboardData.put('isdefault', dashboard.isdefault)
-                    dashboardData.put('locked', dashboard.locked)
-                    dashboardData.put('dashboardPosition', dashboard.dashboardPosition)
-                    dashboardData.put('layoutConfig', JSON.parse(dashboard.layoutConfig))
+                def dashboardData = [:]
+                //Get only the parameters required for a dashboard definition
+                dashboardData.put('name', dashboard.name)
+                dashboardData.put('guid', dashboard.guid)
+                dashboardData.put('description', dashboard.description)
+                dashboardData.put('isdefault', dashboard.isdefault)
+                dashboardData.put('locked', dashboard.locked)
+                dashboardData.put('dashboardPosition', dashboard.dashboardPosition)
+                dashboardData.put('layoutConfig', JSON.parse(dashboard.layoutConfig))
 
-                    dashboards.push(dashboardData)
-                }
+                dashboards.push(dashboardData)
             }
+        }
 
-            def widgets = []
-            widgetDefinitionService.list([stack_id: stack.id]).data.eachWithIndex { widget, i ->
+        def widgets = []
+        widgetDefinitionService.list([stack_id: stack.id]).data.eachWithIndex { widget, i ->
 
-                def widgetDefinition = widget.toDataMap().value
+            def widgetDefinition = widget.toDataMap().value
 
                 def widgetData = [:]
                 //Get only the values required for a widget definition
@@ -417,38 +416,33 @@ class StackService {
                 widgetDefinition.tags.each { tags.push(it.name) }
                 widgetData.put("defaultTags", tags)
 
-                widgets.push(widgetData)
-            }
-
-            def stackData = [:]
-            //Get only the parameters required for a stack descriptor
-            stackData.put('name', stack.name)
-            stackData.put('stackContext', stack.stackContext)
-            stackData.put('description', stack.description)
-            stackData.put('dashboards', dashboards)
-            stackData.put('widgets', widgets)
-
-            //Pretty print the JSON
-            stackData = (stackData as JSON).toString(true)
-
-            //Get the empty descriptor with appropriate javascript
-            def dir = './lib/'
-            if(grails.util.GrailsUtil.environment != 'production') dir = './src/resources/'
-            def stackDescriptorText = new File(dir + "empty_descriptor.html").text
-
-            stackDescriptorText = stackDescriptorText.replaceFirst("var data;", "var data = ${stackData};")
-
-            def stackDescriptor = new File("stack_descriptor.html")
-            def out = new FileOutputStream(stackDescriptor)
-            out.write(stackDescriptorText.getBytes("UTF-8"))
-            out.close()
-
-            return stackDescriptor
+            widgets.push(widgetData)
         }
-        else {
-            throw new OwfException(message: 'The stack id ' + params.id + ' is invalid, export failed.',
-                exceptionType: OwfExceptionTypes.GeneralServerError)
-        }
+
+        def stackData = [:]
+        //Get only the parameters required for a stack descriptor
+        stackData.put('name', stack.name)
+        stackData.put('stackContext', stack.stackContext)
+        stackData.put('description', stack.description)
+        stackData.put('dashboards', dashboards)
+        stackData.put('widgets', widgets)
+
+        //Pretty print the JSON
+        stackData = (stackData as JSON).toString(true)
+
+        //Get the empty descriptor with appropriate javascript
+        def dir = './lib/'
+        if(grails.util.GrailsUtil.environment != 'production') dir = './src/resources/'
+        def stackDescriptorText = new File(dir + "empty_descriptor.html").text
+
+        stackDescriptorText = stackDescriptorText.replaceFirst("var data;", "var data = ${stackData};")
+
+        def stackDescriptor = new File("stack_descriptor.html")
+        def out = new FileOutputStream(stackDescriptor)
+        out.write(stackDescriptorText.getBytes("UTF-8"))
+        out.close()
+
+        return stackDescriptor
     }
     
     private def ensureAdmin() {

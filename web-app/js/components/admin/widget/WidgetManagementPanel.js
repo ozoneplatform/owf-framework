@@ -99,22 +99,48 @@ Ext.define('Ozone.components.admin.widget.WidgetManagementPanel', {
               scope: this
             },
             {
-              xtype: 'button',
-              text: 'Edit',
-              itemId: 'editButton',
-              handler: function() {
-                var grid = this.down('#grid');
-                var records = grid.getSelectionModel().getSelection();
-                if (records && records.length > 0) {
-                    for (var i = 0; i < records.length; i++) {
-                        this.doEdit(records[i].data.id);
+                xtype: 'splitbutton',
+                text: 'Edit',
+                itemId: 'editButton',
+                handler: function() {
+                    var grid = this.down('#grid');
+                    var records = grid.getSelectionModel().getSelection();
+                    if (records && records.length > 0) {
+                        for (var i = 0; i < records.length; i++) {
+                            this.doEdit(records[i].data.id);
+                        }
                     }
-                }
-                else {
-                    me.showAlert('Error', 'You must select at least one widget to edit.');
-                }
-              },
-              scope: this
+                    else {
+                        me.showAlert('Error', 'You must select at least one widget to edit.');
+                    }
+                },
+                menu: {
+                    xtype: 'menu',
+                    plain: true,
+                    hideMode: 'display',
+                    defaults: {
+                        minWidth: this.minButtonWidth
+                    },
+                    items: [
+                        {
+                            xtype: 'owfmenuitem',
+                            text: 'Export',
+                            handler: function(button) {
+                                var records = me.down('#grid').getSelectionModel().getSelection();
+                                if(records && records.length === 1) {
+                                    me.doExport('widget', records[0].data.id, records[0].data.name);
+                                }
+                                else if(records && records.length > 1) {
+                                    me.showAlert('Error', 'You must select only one widget to export.');
+                                }
+                                else {
+                                    me.showAlert('Error', 'You must select a widget to export.');
+                                }
+                            }
+                        }
+                    ]
+                },
+                scope: this
             },
             {
               xtype: 'button',
