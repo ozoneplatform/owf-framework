@@ -218,7 +218,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             },
             getClass: function (values) {
                 var name = this.getName(values);
-                return values.guid === me.dashboardContainer.activeDashboard.id ? name + ' ' + me.selectedItemCls: name;
+                return values.guid === me.activeDashboard.id ? name + ' ' + me.selectedItemCls: name;
             },
             getName: function (values) {
                 return values.isStack ? 'stack' : 'dashboard';
@@ -389,18 +389,23 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     },
 
     focusActiveDashboard: function () {
-        var activeDashboardId = this.activeDashboard.id,
-            selectedEl = this.body.down('#dashboard'+activeDashboardId);
+        var me = this,
+            activeDashboardId = this.activeDashboard.id,
+            selectedEl = $('#dashboard'+activeDashboardId);
 
         // active dashboard must be in a stack
-        if(!selectedEl) {
-            var stack = this.activeDashboard.configRecord.get('stack').id;
-            $('#stack'+stack).trigger('click');
+        // expand the stack, then focus the active dashboard
+        if(selectedEl.length === 0) {
+            var stackId = this.activeDashboard.configRecord.get('stack').id;
+            this.toggleStack(this.stacks[stackId], $('#stack'+stackId)).then(function () {
+                me.focusActiveDashboard();
+            });
+            return;
         }
 
         setTimeout(function () {
-            selectedEl && selectedEl.dom.focus();
-        },100);
+            selectedEl && selectedEl.focus();
+        }, 200);
     },
 
     destroy: function (store) {
@@ -464,28 +469,35 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 stack = me.getStack( $clickedStack );
 
             if( stack ) {
-
-                if( me._lastExpandedStack ) {
-
-                    if( me._lastExpandedStack === stack ) {
-                        me.hideStackDashboards()
-                    }
-                    else {
-                        me.$stackDashboards.slideUp('fast').promise().then(function () {
-                            me.$stackDashboards.remove();
-                            me.showStackDashboards(stack, $clickedStack);
-                        });
-                    }
-                }
-                else  {
-                    me.showStackDashboards(stack, $clickedStack);
-                }
+                me.toggleStack(stack, $clickedStack);
             }
             evt.preventDefault();
         }
     },
 
-    showStackDashboards: function (stack, $clickedStack) {
+    toggleStack: function (stack, $stack) {
+        var me = this,
+            dfd = $.Deferred();
+
+        if( me._lastExpandedStack ) {
+            if( me._lastExpandedStack === stack ) {
+                me.hideStackDashboards()
+            }
+            else {
+                me.$stackDashboards.slideUp('fast').promise().then(function () {
+                    me.$stackDashboards.remove();
+                    me.showStackDashboards(stack, $stack, dfd);
+                });
+            }
+        }
+        else  {
+            me.showStackDashboards(stack, $stack, dfd);
+        }
+
+        return dfd.promise();
+    },
+
+    showStackDashboards: function (stack, $clickedStack, dfd) {
         var me = this,
             clickedStackElWidth = $clickedStack.outerWidth( true ),
             clickedStackElHeight = $clickedStack.outerHeight( true ),
@@ -541,7 +553,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         });
         
         this.$stackDashboards.slideDown('fast').promise().then(function () {
-            me.focusActiveDashboard();
+            dfd.resolve();
         });
         this._lastExpandedStack = stack;
     },
@@ -635,7 +647,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 url: Ozone.util.contextPath() + '/dashboard/restore',
                 params: {
                     guid: dashboardGuid,
-                    isdefault: dashboardGuid == this.dashboardContainer.activeDashboard.guid
+                    isdefault: dashboardGuid == this.activeDashboard.guid
                 },
                 success: function(response, opts) {
                     var json = Ext.decode(response.responseText);
@@ -913,7 +925,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     },
 
     focusSelectedDashboard: function() {
-        var selectedDB = this.view.getNode(this.view.store.getById(this.dashboardContainer.activeDashboard.id));
+        var selectedDB = this.view.getNode(this.view.store.getById(this.activeDashboard.id));
         var me = this;
 
         if(selectedDB) {
