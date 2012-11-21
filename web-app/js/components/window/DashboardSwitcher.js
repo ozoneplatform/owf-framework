@@ -200,7 +200,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         me.tpl = new Ext.XTemplate(
             '<tpl for=".">',
-                '<div class="{[this.getName(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}" {[this.getToolTip(values)]}>',
+                '<div id="{[this.getName(values)+this.getId(values)]}" class="{[this.getClass(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}" {[this.getToolTip(values)]}>',
                     '<div class="thumb-wrap">',
                         '<div class="thumb {layout}">',
                         '</div>',
@@ -215,6 +215,10 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             compiled: true,
             getId: function (values) {
                 return values.isStack ? values.id : values.guid;
+            },
+            getClass: function (values) {
+                var name = this.getName(values);
+                return values.guid === me.dashboardContainer.activeDashboard.id ? name + ' ' + me.selectedItemCls: name;
             },
             getName: function (values) {
                 return values.isStack ? 'stack' : 'dashboard';
@@ -233,14 +237,14 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             getActions: function (values) {
                 return values.isStack ? 
                         '<ul class="stack-actions hide">'+
-                            '<li class="restore icon-refresh" data-qtip="Restore"></li>'+
-                            '<li class="delete icon-remove" data-qtip="Delete"></li>'+
+                            '<li class="restore icon-refresh" tabindex="0" data-qtip="Restore"></li>'+
+                            '<li class="delete icon-remove" tabindex="0" data-qtip="Delete"></li>'+
                         '</ul>' :
                         '<ul class="dashboard-actions hide">'+
-                            '<li class="share icon-share" data-qtip="Share"></li>'+
-                            '<li class="restore icon-refresh" data-qtip="Restore"></li>'+
-                            '<li class="edit icon-edit" data-qtip="Edit"></li>'+
-                            '<li class="delete icon-remove" data-qtip="Delete"></li>'+
+                            '<li class="share icon-share" tabindex="0" data-qtip="Share"></li>'+
+                            '<li class="restore icon-refresh" tabindex="0" data-qtip="Restore"></li>'+
+                            '<li class="edit icon-edit" tabindex="0" data-qtip="Edit"></li>'+
+                            '<li class="delete icon-remove" tabindex="0" data-qtip="Delete"></li>'+
                         '</ul>'
             },
             encodeAndEllipsize: function(str) {
@@ -265,8 +269,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             me.tpl.overwrite( cmp.body, stackOrDashboards );
             Ext.DomHelper.append( cmp.body, 
             '<ul class="actions">'+
-                '<li class="manage">Manage</li>'+
-                '<li class="create">+</li>'+
+                '<li class="manage" tabindex="0" >Manage</li>'+
+                '<li class="create" tabindex="0" >+</li>'+
             '</ul>');
 
             me.bindEvents(cmp);
@@ -275,19 +279,21 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         me.dashboardStore.on('add', me.destroy, me);
 
         me.on('beforeclose', me.onClose, me);
+        me.on('show', me.initCircularFocus, me, {single: true});
+        me.on('show', me.focusActiveDashboard, me);
     },
 
-    bindEvents: function (cmp) {
+    bindEvents: function () {
         var me = this,
             $ = jQuery;
 
-        $(cmp.el.dom)
+        $(me.el.dom)
             .on('click', '.dashboard', $.proxy(me.onDashboardClick, me))
             .on('click', '.stack', $.proxy(me.onStackClick, me))
             .on('click', '.manage', $.proxy(me.toggleManage, me))
             .on('click', '.create', $.proxy(me.createDashboard, me))
-            .on('mouseover', '.stack', $.proxy(me.onMouseOver, me))
-            .on('mouseover', '.dashboard', $.proxy(me.onMouseOver, me))
+            .on('mouseover', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
+            .on('focus', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
             .on('click', '.dashboard .restore', $.proxy(me.restoreDashboard, me))
             .on('click', '.dashboard .share', $.proxy(me.shareDashboard, me))
             .on('click', '.dashboard .edit', $.proxy(me.editDashboard, me))
@@ -295,6 +301,106 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             .on('click', '.stack .restore', $.proxy(me.restoreStack, me))
             .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
 
+        me.initKeyboardNav();
+    },
+
+    initKeyboardNav: function () {
+        var me = this;
+
+        $(me.el.dom)
+            .on('keyup', '.stack', $.proxy(me.onStackClick, me))
+            .on('keyup', '.dashboard', $.proxy(me.onDashboardClick, me))
+            .on('focus', '.dashboard, .stack', function (evt) {
+                console.log('focus')
+                $(evt.currentTarget).addClass(me.selectedItemCls);
+            })
+            .on('blur', '.dashboard, .stack', function (evt) {
+                console.log('blur');
+                $(evt.currentTarget).removeClass(me.selectedItemCls);
+            })
+            .on('focus', '.dashboard-actions li, .stack-actions li', function (evt) {
+                $(evt.currentTarget).addClass('hover');
+            })
+            .on('blur', '.dashboard-actions li, .stack-actions li', function (evt) {
+                $(evt.currentTarget).removeClass('hover');
+            })
+            .on('keyup', '.dashboard-actions .restore', function (evt) {
+                if(evt.which === Ext.EventObject.ENTER) {
+                    me.restoreDashboard(evt);
+                }
+            })
+            .on('keyup', '.dashboard-actions .share', function (evt) {
+                if(evt.which === Ext.EventObject.ENTER) {
+                    me.shareDashboard(evt);
+                }
+            })
+            .on('keyup', '.dashboard-actions .edit', function (evt) {
+                if(evt.which === Ext.EventObject.ENTER) {
+                    me.editDashboard(evt);
+                }
+            })
+            .on('keyup', '.dashboard-actions .delete', function (evt) {
+                if(evt.which === Ext.EventObject.ENTER) {
+                    me.deleteDashboard(evt);
+                }
+            })
+            .on('keyup', '.stack-actions .restore', function (evt) {
+                if(evt.which === Ext.EventObject.ENTER) {
+                    me.restoreStack(evt);
+                }
+            })
+            .on('keyup', '.stack-actions .delete', function (evt) {
+                if(evt.which === Ext.EventObject.ENTER) {
+                    me.deleteStack(evt);
+                }
+            })
+            .on('focus', '.manage', function (evt) {
+                $(evt.currentTarget).addClass('selected');
+            })
+            .on('blur', '.manage', function (evt) {
+                if(!me._managing) {
+                    $(evt.currentTarget).removeClass('selected');
+                }
+            })
+            .on('focus', '.create', function (evt) {
+                $(evt.currentTarget).addClass('selected');
+            })
+            .on('blur', '.create', function (evt) {
+                $(evt.currentTarget).removeClass('selected');
+            })
+            .on('keyup', '.manage', function (evt) {
+                if(evt.which === Ext.EventObject.ENTER) {
+                    me.toggleManage(evt);
+                    $(evt.currentTarget).addClass('selected');
+                }
+            })
+            .on('keyup', '.create', function (evt) {
+                if(evt.which === Ext.EventObject.ENTER) {
+                    me.createDashboard(evt);
+                }
+            });
+    },
+
+    initCircularFocus: function () {
+        var firstEl = this.body.first(),
+            addBtnEl = this.body.last().last();
+
+        this.setupFocus(firstEl, addBtnEl);
+    },
+
+    focusActiveDashboard: function () {
+        var activeDashboardId = this.activeDashboard.id,
+            selectedEl = this.body.down('#dashboard'+activeDashboardId);
+
+        // active dashboard must be in a stack
+        if(!selectedEl) {
+            var stack = this.activeDashboard.configRecord.get('stack').id;
+            $('#stack'+stack).trigger('click');
+        }
+
+        setTimeout(function () {
+            selectedEl && selectedEl.dom.focus();
+        },100);
     },
 
     destroy: function (store) {
@@ -307,6 +413,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         // this.dashboardStore.un('datachanged', this.cleanAndDestroy, this);
 
         console.log('destroying dashboard switcher');
+        
+        me.tearDownCircularFocus();
 
         // remove jQuery listeners
         $(this.el.dom).off();
@@ -329,6 +437,10 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     },
 
     onDashboardClick: function (evt) {
+        // evt.which == 1 => left mouse
+        if((evt.which !== 1 && evt.which !== Ext.EventObject.ENTER) || this._managing === true)
+            return;
+
         var $clickedDashboard = $(evt.currentTarget),
             dashboard = this.getDashboard( $clickedDashboard );
 
@@ -344,34 +456,38 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     },
 
     onStackClick: function (evt) {
-        var me = this,
-            $ = jQuery,
-            $clickedStack = $(evt.currentTarget),
-            stack = me.getStack( $clickedStack );
+        // evt.which == 1 => left mousedown
+        if(evt.which === 1 || evt.which === undefined || evt.which === Ext.EventObject.ENTER) {
+            var me = this,
+                $ = jQuery,
+                $clickedStack = $(evt.currentTarget),
+                stack = me.getStack( $clickedStack );
 
-        if( stack ) {
+            if( stack ) {
 
-            if( me._lastExpandedStack ) {
+                if( me._lastExpandedStack ) {
 
-                if( me._lastExpandedStack === stack ) {
-                    me.hideStackDashboards()
+                    if( me._lastExpandedStack === stack ) {
+                        me.hideStackDashboards()
+                    }
+                    else {
+                        me.$stackDashboards.slideUp('fast').promise().then(function () {
+                            me.$stackDashboards.remove();
+                            me.showStackDashboards(stack, $clickedStack);
+                        });
+                    }
                 }
-                else {
-                    me.$stackDashboards.slideUp('fast').promise().then(function () {
-                        me.$stackDashboards.remove();
-                        me.showStackDashboards(stack, $clickedStack);
-                    });
+                else  {
+                    me.showStackDashboards(stack, $clickedStack);
                 }
             }
-            else  {
-                me.showStackDashboards(stack, $clickedStack);
-            }
+            evt.preventDefault();
         }
-        evt.preventDefault();
     },
 
     showStackDashboards: function (stack, $clickedStack) {
-        var clickedStackElWidth = $clickedStack.outerWidth( true ),
+        var me = this,
+            clickedStackElWidth = $clickedStack.outerWidth( true ),
             clickedStackElHeight = $clickedStack.outerHeight( true ),
             parent = $clickedStack.parent(),
             parentWidth = parent.outerWidth( true ),
@@ -424,7 +540,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             left: left + 'px'
         });
         
-        this.$stackDashboards.slideDown('fast');
+        this.$stackDashboards.slideDown('fast').promise().then(function () {
+            me.focusActiveDashboard();
+        });
         this._lastExpandedStack = stack;
     },
 
@@ -468,34 +586,39 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
     toggleManage: function (evt) {
         console.log('manage');
-        var el = $(evt.currentTarget);
+        var $manageBtn;
+
+        if(evt) {
+            $manageBtn = $(evt.currentTarget);
+            this.$manageBtn = $manageBtn;
+        }
 
         if( this._managing ) {
-            el.removeClass('selected');
-            $('.dashboard, .stack', this.el.dom).css('height', '');
-            if( this._lastManageEl ) {
-                 //$('ul', this._lastManageEl).slideUp();
-                 $('ul', this._lastManageEl).addClass('hide');
-                 this._lastManageEl = null;
-            }
+            this.resetManage();
+            this._managing = false;
         }
         else {
-            el.addClass('selected');
+            // add selected class to manage button
+            $manageBtn && $manageBtn.addClass('selected');
+            this._managing = true;
         }
-
-        this._managing = !this._managing;
     },
 
-    createDashboard: function () {
-        console.log('createDashboard');
+    resetManage: function () {
+        if(!this._managing)
+            return;
 
-        var createDashWindow = Ext.widget('createdashboardwindow', {
-            itemId: 'createDashWindow',
-            dashboardContainer: this.dashboardContainer,
-            ownerCt: this.dashboardContainer
-        });
-        createDashWindow.show();
-        this.close();
+        this.$manageBtn.removeClass('selected');
+        // reset the height to normal
+        $('.dashboard, .stack', this.el.dom).css('height', '');
+        
+        // hide action buttons of previously clicked stack
+        if( this._lastManageEl ) {
+             //$('ul', this._lastManageEl).slideUp();
+             $('ul', this._lastManageEl).addClass('hide');
+             this._lastManageEl = null;
+        }
+        this._managing = false;
     },
 
     restoreDashboard: function (evt) {
@@ -539,6 +662,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 },
                 scope: this
             });
+        }, function () {
+            evt.currentTarget.focus();
         });
     },
 
@@ -582,6 +707,28 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         setTimeout(function() {
             Ext.EventManager.on(window, 'beforeunload', dmScope.dashboardContainer.onBeforeUnload, dmScope.dashboardContainer);
         }, 100);
+    },
+
+    createDashboard: function (evt) {
+        console.log('createDashboard');
+
+        var me = this,
+            createDashWindow = Ext.widget('createdashboardwindow', {
+            itemId: 'createDashWindow',
+            dashboardContainer: me.dashboardContainer,
+            ownerCt: me.dashboardContainer,
+            listeners: {
+                cancel: function () {
+                    me.show();
+                    setTimeout(function () {
+                        evt.currentTarget.focus();
+                    }, 10);
+                }
+            }
+        });
+
+        createDashWindow.show();
+        me.close();
     },
 
     editDashboard: function (evt) {
@@ -824,6 +971,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
     onClose: function() {
         var me = this;
+
+        me.resetManage();
+        //me.tearDownCircularFocus();
 
         // refresh if user deleted all dashboards
         if(me.dashboardContainer.dashboardStore.getCount() === 0) {
