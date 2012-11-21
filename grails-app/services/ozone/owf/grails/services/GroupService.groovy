@@ -476,8 +476,10 @@ class GroupService {
 
                 //delete all user mappings
                 def people = []
-                people += group.people
-                people.each { group.removeFromPeople(it) }
+                if (group.people != null) {
+                    people += group.people
+                }
+                people.each { group?.removeFromPeople(it) }
 
                 //delete group
                 group.delete(flush: true)

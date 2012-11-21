@@ -9,7 +9,6 @@ import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.services.AutoLoginAccountService
 
 class StackServiceTests extends GroovyTestCase {
-    
     def accountService
     def stackService
     def stackIds = []
@@ -30,7 +29,8 @@ class StackServiceTests extends GroovyTestCase {
         acctService.autoRoles = [ERoleAuthority.ROLE_ADMIN.strVal]
         accountService = acctService
         stackService.accountService = acctService
-        
+        stackService.groupService.accountService = acctService
+
         def stack1 = Stack.build(name: 'Stack One', description: 'Stack One description', stackContext: 'one', 
             imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
         stack1.addToGroups(Group.build(name: 'Group1', automatic: false, status: 'active', stackDefault: true))
