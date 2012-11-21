@@ -886,7 +886,7 @@ class WidgetDefinitionService {
 
         return [success: true, data: processedWidgetsIds]
     }
-    
+
     def export(params) {
         // Only admins may export Widgets
         ensureAdmin()
@@ -909,7 +909,7 @@ class WidgetDefinitionService {
 
         return widgetDescriptor
     }
-
+    
     public def getDirectRequiredIds(widgetDef) {
         getRequiredWidgetIds(ids: widgetDef.widgetGuid, noRecurse: true)
             .data
@@ -949,9 +949,9 @@ class WidgetDefinitionService {
 
         return widgetGuids
     }
-
+    
     private def getWidgetDescriptorJson(widgetDefinition) {
-
+        
         def widgetData = [:]
         //Get only the values required for a widget descriptor
         widgetData.put("displayName", widgetDefinition.displayName)
@@ -1040,24 +1040,36 @@ class WidgetDefinitionService {
         }
     }
     
-    public def reconcileWidgetsFromDashboards(group) {
-        // TODO: Check type of incoming object.
-        
+    public def reconcileGroupWidgetsFromDashboards(group, addOnly = true) {
+
         // Get all dashboards for this group.
         def dashboards = domainMappingService.getMappedObjects(group, RelationshipType.owns, Dashboard.TYPE)
+        def groupWidgets = domainMappingService.getMappedObjects(group, RelationshipType.owns, WidgetDefinition.TYPE)
+        def widgetGuids = []
         
-        dashboards.each{ dashboard ->
+        dashboards?.each{ dashboard ->
             // For each dashboard get its list of widget guids.
-            def widgetGuids = inspectForWidgetGuids(JSON.parse(dashboard.layoutConfig))
-            widgetGuids.unique()
-            
-            // Loop over widgets.  If widget is not already added to this group, add it.
-            widgetGuids.each { widgetGuid ->
-                def widget = WidgetDefinition.findByWidgetGuid(widgetGuid,[cache:true])
-                def widgetMapping = domainMappingService.getMapping(group, RelationshipType.owns, widget)
-                if (widgetMapping.isEmpty()) {
-                    domainMappingService.createMapping(group,RelationshipType.owns,widget)
+            def dashGuids = inspectForWidgetGuids(JSON.parse(dashboard.layoutConfig))
+            widgetGuids << dashGuids
+        }
+        widgetGuids = widgetGuids.flatten()
+        widgetGuids.unique()
+        
+        // Remove any group widgets that aren't in the current dashboard layouts if we're not in add-only mode.
+        if (!addOnly) {
+            groupWidgets?.each { groupWidget ->
+                if (!widgetGuids.contains(groupWidget.widgetGuid)) {
+                    domainMappingService.deleteMapping(group,RelationshipType.owns,groupWidget)
                 }
+            }
+        }
+        
+        // Loop over the widgetGuids.  if there's not already a mapping to that widget for this group, add it.
+        widgetGuids.each { widgetGuid ->
+            def widget = WidgetDefinition.findByWidgetGuid(widgetGuid,[cache:true])
+            def widgetMapping = domainMappingService.getMapping(group, RelationshipType.owns, widget)
+            if (widgetMapping.isEmpty()) {
+                domainMappingService.createMapping(group,RelationshipType.owns,widget)
             }
         }
     }

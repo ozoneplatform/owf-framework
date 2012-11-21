@@ -14,8 +14,8 @@ class StackService {
 
     def accountService
     def serviceModelService
-    def domainMappingService
     def dashboardService
+    def domainMappingService
     def groupService
     def widgetDefinitionService
     
@@ -253,7 +253,6 @@ class StackService {
                         } else if (params.update_action == 'remove') {
                             //Remove all references to stack for all user's dashboards in the stack
                             orphanUserStackDashboards(user, stack, stackDefaultGroup)
-
                             stackDefaultGroup.removeFromPeople(user)
                         }
                         
@@ -281,12 +280,11 @@ class StackService {
                             def clones = domainMappingService.getMappedObjects([id:dashboard.id,TYPE:Dashboard.TYPE],
                                 RelationshipType.cloneOf,Dashboard.TYPE,[:],{},'dest')
                             
-                            // Set their stack to null.
-                            if (clones != null) {
-                                clones.each{ clone ->
-                                    clone.stack = null
-                                    clone.save(flush: true)
-                                }
+                            // Set their stack to null and remove it's clone record.
+                            clones?.each{ clone ->
+                                domainMappingService.deleteMapping(clone, RelationshipType.cloneOf,dashboard)
+                                clone.stack = null
+                                clone.save(flush: true)
                             }
                             
                             // Remove the mapping to the group.
@@ -325,12 +323,9 @@ class StackService {
                 }
 
                 // Add any widgets to the stack's default group if not already there.
-                widgetDefinitionService.reconcileWidgetsFromDashboards(stackDefaultGroup)
+                widgetDefinitionService.reconcileGroupWidgetsFromDashboards(stackDefaultGroup, false)
                 
-                // Get the unique widgets now contained in the stack's dashboards.
-                def dashboardWidgets = widgetDefinitionService.list([stack_id: stack.id])
-
-                //Update the uniqueWidgetCount of the stack
+                // Update the unique widgets now contained in the stack's dashboards.
                 stack.uniqueWidgetCount = widgetDefinitionService.list([stack_id: stack.id]).results
                 stack.save(flush: true, failOnError: true)
             }
@@ -338,12 +333,12 @@ class StackService {
 
         return returnValue
     }
-
+    
     def deleteUserStack(stackIds) {
-
+        
         def user = accountService.getLoggedInUser();
-		def stacks = [];
-		
+        def stacks = [];
+        
         stackIds.each {
             def stack = Stack.findById(it.id, [cache: true])
             def stackDefaultGroup = stack.findStackDefaultGroup()
@@ -358,17 +353,13 @@ class StackService {
                     dashboard: userStackDashboard
                 ])
             }
-			
-			stacks << stack
+            
+            stacks << stack
         }
         return [success: true, data: stacks];
     }
     
     def delete(params) {
-        
-        // Only admins may delete Stacks
-        //ensureAdmin()
-        
         def stacks = []
         
         if (params.data) {
@@ -379,27 +370,41 @@ class StackService {
                 [id:it]
             }
         }
-
-        if((!accountService.getLoggedInUserIsAdmin()) || (params.adminEnabled != true)) {
+        
+        // Handle user deletion of their stack association and data.
+        if((!accountService.getLoggedInUserIsAdmin()) || (params.adminEnabled != true  && params.adminEnabled != 'true')) {
             return deleteUserStack(stacks);
         }
         
+        // Handle administrative removal of stacks.
         stacks.each {
-            def stack = Stack.findById(it.id, [cache: true])
-            
-            // Break the association with any existing dashboard instances.  
-            def dashboards = Dashboard.findByStack(stack)
+            def stack = Stack.findById(it.id)
+            def dashboards = Dashboard.findAllByStack(stack)
+            def defaultDashboards = []
+            // Break the association with any existing dashboard instances.
             dashboards.each { dashboard ->
-                // TODO: Associate them with the default OWF stack if we go that design route.
                 dashboard.stack = null;
-                dashboard.save(flush: true)
+                dashboard.save()
+                if (dashboard.user == null) {
+                    defaultDashboards << dashboard
+                }
+            }
+            // Remove the default stack group
+            stack?.groups?.each { group ->
+                if (group?.stackDefault) {
+                    //delete all widget mappings
+                    //domainMappingService.deleteAllMappings(group)
+                    stack.removeFromGroups(group);
+                    stack.save()
+                    groupService.delete(["data": "{id: ${group.id}}"])
+                    //group?.delete()
+                }
             }
             
-            stack?.groups?.each { group ->
-                if (group?.stackDefault) { group?.delete() }
-            }         
-            
-            stack?.delete(flush: true)
+            stack?.delete()
+            defaultDashboards?.each { dashboard ->
+                dashboard.delete()
+            }
         }
         
         return [success: true, data: stacks]

@@ -408,7 +408,7 @@ class GroupService {
             
             if (!updatedDashboards.isEmpty()) {
                 // Reconcile any widgets missing from the group that have been added by a dashboard.
-                widgetDefinitionService.reconcileWidgetsFromDashboards(group)
+                widgetDefinitionService.reconcileGroupWidgetsFromDashboards(group)
                 
                 returnValue = updatedDashboards.collect{ serviceModelService.createServiceModel(it) }
             }

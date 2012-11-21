@@ -188,7 +188,8 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
                         fn: function(cmp) {
                             cmp.setBaseParams({
                                 adminEnabled: true,
-                                isGroupDashboard: true
+                                isGroupDashboard: true,
+                                isStackDashboard: false
                             });
                         },
                         scope: this

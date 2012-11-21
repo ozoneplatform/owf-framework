@@ -206,7 +206,12 @@ class DashboardService extends BaseService {
             //      domainMappingService.getBulkMappings(groups,RelationshipType.owns,Dashboard.TYPE).each {
             //        groupDashboardIds << it.destId
             //      }
-            groupDashboardIds = Dashboard.withCriteria { isNull('user') }.id
+            groupDashboardIds = Dashboard.withCriteria { 
+                isNull('user')
+                if (params.isStackDashboard == false || params.isStackDashboard == 'false') {
+                    isNull('stack')
+                }
+            }.id
         }
 
         //if group params are set then only group dashboards should be returned, if none are found an empty list should be returned

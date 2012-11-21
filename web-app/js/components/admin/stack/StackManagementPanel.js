@@ -38,6 +38,9 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
             region: 'center',
             border: false
         });
+        this.gridStacks.store.proxy.extraParams = {
+                adminEnabled: true
+              };
         this.gridStacks.store.load({
         	params: {
                 offset: 0,
