@@ -810,7 +810,9 @@ environments {
         perfTest.numWidgetsPerUser = 10     // The number of widgets assigned to each user
         perfTest.numPreferences = 50        // The number of preferences per user
         perfTest.numWidgets = 500           // The number of unique widget definitions
-        perfTest.numStacks = 5              // The number of stacks
+        perfTest.numStacks = 10             // The number of stacks
+        perfTest.numStacksPerUser = 3       // The number of stacks per user
+        perfTest.numStackDashboards = 3     // The number of dashboards each stack will get assigned to them
 
         perfTest.createRequiredWidgets = false
         perfTest.createSampleWidgets = false

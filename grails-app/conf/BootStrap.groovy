@@ -161,6 +161,12 @@ class BootStrap {
             def numStacks = ((grailsApplication.config?.perfTest?.numStacks && enabled) ? grailsApplication.config.perfTest?.numStacks : 0);
             log.info 'numStacks: ' + numStacks
 
+            def numStacksPerUser = ((grailsApplication.config?.perfTest?.numStacksPerUser && enabled) ? grailsApplication.config.perfTest?.numStacksPerUser : 0);
+            log.info 'numStacksPerUser: ' + numStacksPerUser
+        
+            def numStackDashboards = ((grailsApplication.config?.perfTest?.numStackDashboards && enabled) ? grailsApplication.config.perfTest?.numStackDashboards : 0);
+            log.info 'numStackDashboards: ' + numStackDashboards
+
             def numPreferences = ((grailsApplication.config?.perfTest?.numPreferences && enabled) ? grailsApplication.config.perfTest?.numPreferences : 2);
             log.info 'preferences: ' + numPreferences
 
@@ -178,11 +184,14 @@ class BootStrap {
 
             loadGroups(numGroups, clearCacheEvery)
             sessionFactory.currentSession.clear()
-        
-            loadAdmins(numAdmins, numGroupsPerUser, clearCacheEvery)
+
+            loadStacks(numStacks, clearCacheEvery)
             sessionFactory.currentSession.clear()
         
-            loadPersons(numUsers, numGroupsPerUser, clearCacheEvery)
+            loadAdmins(numAdmins, numGroupsPerUser, numStacksPerUser, clearCacheEvery)
+            sessionFactory.currentSession.clear()
+        
+            loadPersons(numUsers, numGroupsPerUser, numStacksPerUser, clearCacheEvery)
             sessionFactory.currentSession.clear()
         
             loadWidgetTypes()
@@ -207,19 +216,19 @@ class BootStrap {
             loadPersonWidgetDefinitions(numWidgetsPerUser, clearCacheEvery)
             sessionFactory.currentSession.clear()
 
-            loadDashboardsAndDashboardWidgetStates(numDashboards, numDashboardsWidgets, clearCacheEvery)
+            loadDashboards(numDashboards, numDashboardsWidgets, clearCacheEvery)
+            sessionFactory.currentSession.clear()
+
+            loadStackDashboards(numStackDashboards, numDashboardsWidgets, clearCacheEvery)
             sessionFactory.currentSession.clear()
         
-            loadGroupDashboardsAndDashboardWidgetStates(numGroupDashboards, numDashboardsWidgets, clearCacheEvery)
+            loadGroupDashboards(numGroupDashboards, numDashboardsWidgets, clearCacheEvery)
             sessionFactory.currentSession.clear()
         
             loadRequestmaps()
             sessionFactory.currentSession.clear()
 
             loadPreferences(numPreferences, clearCacheEvery)
-            sessionFactory.currentSession.clear()
-
-            loadStacks(numStacks, clearCacheEvery)
             sessionFactory.currentSession.clear()
 
             //create test required widget relationshipts
@@ -495,7 +504,7 @@ class BootStrap {
         saveInstance(new WidgetType(name: 'standard')) 
     }
   
-    private loadAdmins(int numAdmins, int numGroups, int clearCacheEvery) {
+    private loadAdmins(int numAdmins, int numGroups, int numStacks, int clearCacheEvery) {
         for (int i = 1; i <= numAdmins; i++) {
             def admin = new Person(
                 description: 'Test Administrator '+i,
@@ -508,6 +517,7 @@ class BootStrap {
                 lastLogin: new Date()
             )
             assignGroupsToUser(admin, numGroups)
+            assignStacksToUser(admin, numStacks)
             saveInstance(admin)
             if ((i % clearCacheEvery) == 0){
                 sessionFactory.currentSession.clear()
@@ -515,7 +525,7 @@ class BootStrap {
         }
     }
 
-    private loadPersons(int numPersons, int numGroups, int clearCacheEvery) {
+    private loadPersons(int numPersons, int numGroups, int numStacks, int clearCacheEvery) {
         for (int i = 1; i <= numPersons; i++) {
             def person = saveInstance(new Person(
                     description: 'Test User '+i,
@@ -528,6 +538,7 @@ class BootStrap {
                     lastLogin: new Date() - 5
                 ))
             assignGroupsToUser(person, numGroups)
+            assignStacksToUser(person, numStacks)
             if ((i % clearCacheEvery) == 0){
                 sessionFactory.currentSession.clear()
             }
@@ -553,9 +564,9 @@ class BootStrap {
     
     private assignGroupsToUser(Person person, int numGroups) {
         def rand = new Random();
-        def num = Group.list().size() - numGroups;
+        def num = Group.createCriteria().list() { eq("stackDefault", false) }.size() - numGroups;
         num = num <= 0 ? 1 : num;
-        def groups = Group.list(max:numGroups, offset:rand.nextInt(num))
+        def groups = Group.createCriteria().list(max:numGroups, offset:rand.nextInt(num)) { eq("stackDefault", false) }
         for (def i = 0; i < groups.size(); i++) {
             groups[i].people << person
             groups[i].save(flush: true)
@@ -574,6 +585,65 @@ class BootStrap {
             if ((i % clearCacheEvery) == 0){
                 sessionFactory.currentSession.clear()
             }
+        }
+    }
+
+    private assignDashboardsToStacks(int numStacks, int numDashboards, int clearCacheEvery) {
+        for (int i = 1; i <= numStacks; i++) {
+            def stack = Stack.findByName('TestStack' + i)
+            def dashboards = WidgetDefinition.list(max:numWidgetsInGroups)
+            dashboards.each { dashboard ->
+
+                //save and map group dashboard
+                saveInstance(dashboard)
+                domainMappingService.createMapping(testGroup, RelationshipType.owns, dashboard)
+            }
+            if ((i % clearCacheEvery) == 0){
+                sessionFactory.currentSession.clear()
+            }
+        }
+    }
+
+    private loadStacks(int numStacks, int clearCacheEvery) {
+        for (int i = 1; i <= numStacks; i++) {
+            //create stack
+            def stack = new Stack(
+                name: 'TestStack' + i,
+                description: 'TestStack' + i,
+                stackContext: 'TestStack' + i
+            );
+
+            saveInstance(stack)
+
+            //create its default group
+            def stackDefaultGroup = new Group(
+                name: 'TestStack' + i + '-DefaultGroup',
+                displayName: 'TestStack' + i + '-DefaultGroup',
+                stackDefault: true
+            );
+
+            saveInstance(stackDefaultGroup)
+
+            //associate stack with its default group
+            stack.addToGroups(stackDefaultGroup)
+            domainMappingService.createMapping(stack, RelationshipType.owns, stackDefaultGroup)
+            saveInstance(stack)
+
+            if ((i % clearCacheEvery) == 0){
+                sessionFactory.currentSession.clear()
+            }
+        }
+    }
+    
+    private assignStacksToUser(Person person, int numStacks) {
+        def rand = new Random();
+        def num = Stack.list().size() - numStacks;
+        num = num <= 0 ? 1 : num;
+        def stacks = Stack.list(max:numStacks, offset:rand.nextInt(num))
+        for (def i = 0; i < stacks.size(); i++) {
+            def defaultStackGroup = stacks[i].findStackDefaultGroup()
+            defaultStackGroup.people << person
+            defaultStackGroup.save(flush: true)
         }
     }
 
@@ -642,128 +712,130 @@ class BootStrap {
         domainMappingService.createMapping(widgetC,     RelationshipType.requires, widgetB)
     }
     
-    private loadDashboardsAndDashboardWidgetStates(int numDashboards, int numDashboardsWidgets, int clearCacheEvery) {
+    private loadDashboards(int numDashboards, int numDashboardsWidgets, int clearCacheEvery) {
 
         def testUsers = Person.findAllByUsernameLike('test%')
-        testUsers.each {
-            log.debug 'generating user dashboards for user:'+it
-            loadUserDashboardsAndDashboardWidgetStates(it,numDashboards,numDashboardsWidgets, clearCacheEvery)
+        testUsers.each { user ->
+            log.debug 'generating user dashboards for user:' + user
+
+            for (int i = 0; i < numDashboards; i++) {
+                log.debug 'createDashboard:' + i + ' for user: ' + user
+
+                def dashboardGuid = generateId()
+                def paneGuid = generateId()
+
+                def dashboard = new Dashboard(
+                    name: i + '-Dashboard (' + user.username + ')',
+                    isdefault: false,
+                    guid: dashboardGuid,
+                    dashboardPosition: 4 + i,
+                    user: user,
+                    alteredByAdmin: false,
+                    layoutConfig: '{"xtype":"desktoppane","flex":1,"height":"100%","items":[],"paneType":"desktoppane","widgets":[],"defaultSettings":{"widgetStates":{"ec5435cf-4021-4f2a-ba69-dde451d12551":{"x":4,"y":5,"height":383,"width":540,"timestamp":1348064185725},"eb5435cf-4021-4f2a-ba69-dde451d12551":{"x":549,"y":7,"height":250,"width":295,"timestamp":1348064183912}}}}'
+                )
+
+                def userWidgets = PersonWidgetDefinition.findAllByPerson(user)
+
+                def rand = new Random();
+                def randomWidget
+
+                //Create JSON string of widgets
+                def widgets = '[{'
+                for (int j = 0; j < numDashboardsWidgets; j++) {
+                    if(j != 0) {
+                        widgets += ',{'
+                    }
+
+                    def xyPos = 300 + (j * 5)
+
+                    //Add a random widget to the dashboard
+                    randomWidget = userWidgets[rand.nextInt(userWidgets.size())].widgetDefinition
+                    widgets += '"widgetGuid":"' + randomWidget.widgetGuid + '","x":' + xyPos + ',"y":' + xyPos +
+                        ',"uniqueId":"' + generateId() + '","name":"' + randomWidget.displayName + '","paneGuid":"' +
+                        paneGuid + '","height":250,"width":250,"dashboardGuid":"' + dashboardGuid + '"}'
+                }
+                widgets += ']'
+
+                def layoutConfig = JSON.parse(dashboard.layoutConfig)
+                layoutConfig.widgets = JSON.parse(widgets)
+                dashboard.layoutConfig = layoutConfig
+
+                saveInstance(dashboard)
+                sessionFactory.currentSession.clear()
+            }
         }
     }
     
-    private loadGroupDashboardsAndDashboardWidgetStates(int numGroupDashboards, int numDashboardsWidgets, int clearCacheEvery) {
+    private loadStackDashboards(int numStackDashboards, int numDashboardsWidgets, int clearCacheEvery) {
+        def stacks = Stack.findAllByNameLike('TestStack%')
+        stacks.each { stack ->
+            log.debug 'generating stack dashboards for stack:' + stack
+            assignDashboardsToGroup(stack.findStackDefaultGroup(), 'Stack', numStackDashboards, numDashboardsWidgets, clearCacheEvery)
+        }
+    }
+    
+    private loadGroupDashboards(int numGroupDashboards, int numDashboardsWidgets, int clearCacheEvery) {
         //load group dashboards
         def groups = Group.findAllByNameLike('TestGroup%')
-        groups.each {
-            log.debug 'generating group dashboards for user:'+it
-            loadGroupDashboardsAndDashboardWidgetStates(it,numGroupDashboards, numDashboardsWidgets, clearCacheEvery)
+        groups.each { group ->
+            log.debug 'generating group dashboards for group:' + group
+            assignDashboardsToGroup(group, 'Group', numGroupDashboards, numDashboardsWidgets, clearCacheEvery)
+        }
+    }
+
+    private assignDashboardsToGroup(Group group, String groupType, int numDashboards, int numDashboardsWidgets, int clearCacheEvery) {
+        for (int i = 1; i <= numDashboards; i++) {
+            def dashboardGuid = generateId()
+            def paneGuid = generateId()
+
+            def dashboard = new Dashboard(
+                name: groupType + ' Dashboard ' + i + ' (' + group.name + ')',
+                isdefault: true,
+                guid: dashboardGuid,
+                dashboardPosition: 0,
+                alteredByAdmin: false,
+                layoutConfig: '{"xtype":"desktoppane","flex":1,"height":"100%","items":[],"paneType":"desktoppane","widgets":[],"defaultSettings":{"widgetStates":{"ec5435cf-4021-4f2a-ba69-dde451d12551":{"x":4,"y":5,"height":383,"width":540,"timestamp":1348064185725},"eb5435cf-4021-4f2a-ba69-dde451d12551":{"x":549,"y":7,"height":250,"width":295,"timestamp":1348064183912}}}}'
+            )
+
+            groupType == 'Stack' && (dashboard.stack = group.stacks?.toArray()[0])
+
+            def allWidgets = WidgetDefinition.list()
+
+            def rand = new Random()
+            def randomWidget
+
+            //Create JSON string of widgets
+            def widgets = '[{'
+            for (int j = 0; j < numDashboardsWidgets; j++) {
+                if(j != 0) {
+                    widgets += ',{'
+                }
+
+                def xyPos = 300 + (j * 5)
+
+                //Add a random group widget to the dashboard
+                randomWidget = allWidgets[rand.nextInt(allWidgets.size())]
+
+                widgets += '"widgetGuid":"' + randomWidget.widgetGuid + '","x":' + xyPos + ',"y":' + xyPos +
+                    ',"uniqueId":"' + generateId() + '","name":"' + randomWidget.displayName + '","paneGuid":"' +
+                    paneGuid + '","height":250,"width":250,"dashboardGuid":"' + dashboardGuid + '"}'
+            }
+            widgets += ']'
+
+            def layoutConfig = JSON.parse(dashboard.layoutConfig)
+            layoutConfig.widgets = JSON.parse(widgets)
+            dashboard.layoutConfig = layoutConfig
+
+            //save and map group dashboard
+            saveInstance(dashboard)
+            domainMappingService.createMapping(group, RelationshipType.owns, dashboard)
+
+            sessionFactory.currentSession.clear()
         }
     }
 
     private generateId() {
         return java.util.UUID.randomUUID().toString()
-    }
-
-    private def loadUserDashboardsAndDashboardWidgetStates(Person testUser1, int numDashboards, int numDashboardsWidgets, int clearCacheEvery) {
-
-        //create extra dummy dashboards
-        for (int i = 0; i < numDashboards; i++) {
-            log.debug 'createDashboard:'+i+' for user:'+testUser1
-            createDashboard(i, numDashboardsWidgets, testUser1,clearCacheEvery)
-        }
-    }
-
-    private def loadGroupDashboardsAndDashboardWidgetStates(Group testGroup, int numDashboards, int numDashboardsWidgets, int clearCacheEvery) {
-
-        def dashboardGuid = generateId()
-        def paneGuid = generateId()
-
-        def dashboard = new Dashboard(
-            name: 'Group Dashboard (' + testGroup.name + ')',
-            isdefault: true,
-            guid: dashboardGuid,
-            dashboardPosition: 0,
-            alteredByAdmin: false,
-            layoutConfig: '{"xtype":"desktoppane","flex":1,"height":"100%","items":[],"paneType":"desktoppane","widgets":[],"defaultSettings":{"widgetStates":{"ec5435cf-4021-4f2a-ba69-dde451d12551":{"x":4,"y":5,"height":383,"width":540,"timestamp":1348064185725},"eb5435cf-4021-4f2a-ba69-dde451d12551":{"x":549,"y":7,"height":250,"width":295,"timestamp":1348064183912}}}}'
-        )
-
-        def groupWidgets = domainMappingService.getMappings(testGroup, RelationshipType.owns, WidgetDefinition.TYPE)
-
-        def rand = new Random();
-        def randomWidget
-
-        //Create JSON string of widgets
-        def widgets = '[{'
-        for (int i = 0; i < numDashboardsWidgets; i++) {
-            if(i != 0) {
-                widgets += ',{'
-            }
-
-            def xyPos = 300 + (i*5)
-
-            //Add a random group widget to the dashboard
-            randomWidget = domainMappingService.getDestObjectFromMapping(groupWidgets[rand.nextInt(groupWidgets.size())])
-
-            widgets += '"widgetGuid":"' + randomWidget.widgetGuid + '","x":' + xyPos + ',"y":' + xyPos +
-                ',"uniqueId":"' + generateId() + '","name":"' + randomWidget.displayName + '","paneGuid":"' +
-                paneGuid + '","height":250,"width":250,"dashboardGuid":"' + dashboardGuid + '"}'
-        }
-        widgets += ']'
-
-        def layoutConfig = JSON.parse(dashboard.layoutConfig)
-        layoutConfig.widgets = JSON.parse(widgets)
-        dashboard.layoutConfig = layoutConfig
-
-        //save and map group dashboard
-        saveInstance(dashboard)
-        domainMappingService.createMapping(testGroup, RelationshipType.owns, dashboard)
-
-        sessionFactory.currentSession.clear()
-    }
-
-    private def createDashboard(int dashboardNum, int numDashboardsWidgets, Person user, int clearCacheEvery) {
-
-        def dashboardGuid = generateId()
-        def paneGuid = generateId()
-
-        def dashboard = new Dashboard(
-            name: dashboardNum + '-Dashboard (' + user.username + ')',
-            isdefault: false,
-            guid: dashboardGuid,
-            dashboardPosition: 4 + dashboardNum,
-            user: user,
-            alteredByAdmin: false,
-            layoutConfig: '{"xtype":"desktoppane","flex":1,"height":"100%","items":[],"paneType":"desktoppane","widgets":[],"defaultSettings":{"widgetStates":{"ec5435cf-4021-4f2a-ba69-dde451d12551":{"x":4,"y":5,"height":383,"width":540,"timestamp":1348064185725},"eb5435cf-4021-4f2a-ba69-dde451d12551":{"x":549,"y":7,"height":250,"width":295,"timestamp":1348064183912}}}}'
-        )
-
-        def userWidgets = PersonWidgetDefinition.findAllByPerson(user)
-
-        def rand = new Random();
-        def randomWidget
-
-        //Create JSON string of widgets
-        def widgets = '[{'
-        for (int i = 0; i < numDashboardsWidgets; i++) {
-            if(i != 0) {
-                widgets += ',{'
-            }
-
-            def xyPos = 300 + (i*5)
-
-            //Add a random widget to the dashboard
-            randomWidget = userWidgets[rand.nextInt(userWidgets.size())].widgetDefinition
-            widgets += '"widgetGuid":"' + randomWidget.widgetGuid + '","x":' + xyPos + ',"y":' + xyPos +
-                ',"uniqueId":"' + generateId() + '","name":"' + randomWidget.displayName + '","paneGuid":"' +
-                paneGuid + '","height":250,"width":250,"dashboardGuid":"' + dashboardGuid + '"}'
-        }
-        widgets += ']'
-
-        def layoutConfig = JSON.parse(dashboard.layoutConfig)
-        layoutConfig.widgets = JSON.parse(widgets)
-        dashboard.layoutConfig = layoutConfig
-
-        saveInstance(dashboard)
-        sessionFactory.currentSession.clear()
     }
 
     private loadPersonWidgetDefinitions(int numWidgetsPerUser, int clearCacheEvery) {
@@ -809,37 +881,6 @@ class BootStrap {
                 if ((i % clearCacheEvery) == 0){
                     sessionFactory.currentSession.clear()
                 }
-            }
-        }
-    }
-
-    private loadStacks(int numStacks, int clearCacheEvery) {
-        for (int i = 1; i <= numStacks; i++) {
-            //create stack
-            def stack = new Stack(
-                name: 'TestStack' + i,
-                description: 'TestStack' + i,
-                stackContext: 'TestStack' + i
-            );
-
-            saveInstance(stack)
-
-            //create its default group
-            def stackDefaultGroup = new Group(
-                name: 'TestStack' + i + '-DefaultGroup',
-                displayName: 'TestStack' + i + '-DefaultGroup',
-                stackDefault: true
-            );
-
-            saveInstance(stackDefaultGroup)
-
-            //associate stack with its default group
-            stack.addToGroups(stackDefaultGroup)
-            domainMappingService.createMapping(stack, RelationshipType.owns, stackDefaultGroup)
-            saveInstance(stack)
-
-            if ((i % clearCacheEvery) == 0){
-                sessionFactory.currentSession.clear()
             }
         }
     }
