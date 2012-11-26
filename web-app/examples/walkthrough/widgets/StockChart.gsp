@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Stock Chart</title>
     <g:if test="${params.themeName != null && params.themeName != ''}">
-      <link rel='stylesheet' type='text/css' href='../../../themes/${params.themeName}.theme/css/${params.themeName}.css' />
+      <link rel='stylesheet' type='text/css' href='../../../themes/${params.themeName.encodeAsHTML()}.theme/css/${params.themeName.encodeAsHTML()}.css' />
     </g:if>
     <g:else>
       <link href="../../../js-lib/ext-4.0.7/resources/css/ext-all.css" rel="stylesheet" type="text/css">
@@ -67,7 +67,7 @@
 			    };
 				    
 			    // Set default theme
-			    var currentTheme = "${params.themeName}";
+			    var currentTheme = "${params.themeName.encodeAsHTML()}";
 			    if (!colorSchemes[currentTheme]) {
 			    	colorSchemes[currentTheme] = {
 			    		theme: "Base",

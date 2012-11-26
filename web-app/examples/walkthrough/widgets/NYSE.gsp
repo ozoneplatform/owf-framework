@@ -4,7 +4,7 @@
 	<title>HTML Viewer</title>
 
 	<g:if test="${params.themeName != null && params.themeName != ''}">
-		<link rel='stylesheet' type='text/css' href='../../../themes/${params.themeName}.theme/css/${params.themeName}.css' />
+		<link rel='stylesheet' type='text/css' href='../../../themes/${params.themeName.encodeAsHTML()}.theme/css/${params.themeName.encodeAsHTML()}.css' />
 	</g:if>
 	<g:else>
 		<link href="../../../js-lib/ext-4.0.7/resources/css/ext-all.css" rel="stylesheet" type="text/css">
