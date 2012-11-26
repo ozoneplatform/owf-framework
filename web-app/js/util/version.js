@@ -3,7 +3,7 @@ Ozone.version = Ozone.version || {};
 
 Ozone.version = {
 		
-		owfversion : '7.0.0-ALPHA-SPRINT4',
+		owfversion : '7.0.0-ALPHA-SPRINT5',
 
         mpversion : '2.3',
 
