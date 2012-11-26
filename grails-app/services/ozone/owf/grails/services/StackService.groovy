@@ -231,7 +231,7 @@ class StackService {
                         } else if (params.update_action == 'remove') {
                             //Remove all references to stack for all the groups' user's dashboards in the stack
                             group.people?.each { user ->
-                                orphanUserStackDashboards(user, stack, group)
+                                removeUserStackDashboards(user, stack, group)
                             }
                             stack.removeFromGroups(group)
                         }
@@ -256,7 +256,7 @@ class StackService {
                             stackDefaultGroup.addToPeople(user)
                         } else if (params.update_action == 'remove') {
                             //Remove all references to stack for all user's dashboards in the stack
-                            orphanUserStackDashboards(user, stack, stackDefaultGroup)
+                            removeUserStackDashboards(user, stack, stackDefaultGroup)
                             stackDefaultGroup.removeFromPeople(user)
                         }
                         
@@ -287,8 +287,7 @@ class StackService {
                             // Set their stack to null and remove it's clone record.
                             clones?.each{ clone ->
                                 domainMappingService.deleteMapping(clone, RelationshipType.cloneOf,dashboard)
-                                clone.stack = null
-                                clone.save(flush: true)
+                                clone.delete()
                             }
                             
                             // Remove the mapping to the group.
@@ -385,11 +384,16 @@ class StackService {
             def stack = Stack.findById(it.id)
             def dashboards = Dashboard.findAllByStack(stack)
             def defaultDashboards = []
-            // Break the association with any existing dashboard instances.
+            // Delete the association with any existing dashboard instances.
             dashboards.each { dashboard ->
-                dashboard.stack = null;
-                dashboard.save()
-                if (dashboard.user == null) {
+                // Remove and clean up any user instances of stack dashboards.
+                if (dashboard.user != null) {
+                    domainMappingService.deleteMappings(dashboard, RelationshipType.cloneOf, Dashboard.TYPE)
+                    dashboard.delete()
+                }
+                // Save the stack's master copy of its dashboards for deletion after associated group/stack 
+                // mappings have been cleared.
+                else {
                     defaultDashboards << dashboard
                 }
             }
@@ -401,11 +405,13 @@ class StackService {
                     stack.removeFromGroups(group);
                     stack.save()
                     groupService.delete(["data": "{id: ${group.id}}"])
-                    //group?.delete()
                 }
             }
             
+            // Delete the stack.
             stack?.delete()
+            
+            // Delete the stacks's master dashboards.
             defaultDashboards?.each { dashboard ->
                 dashboard.delete()
             }
@@ -579,13 +585,13 @@ class StackService {
     }
 
     //If a user is no longer assigned to a stack directly or through a group, this method
-    //removes references to the stack for all that user's instances of the stack dashboards
-    private def orphanUserStackDashboards(user, stack, groupToRemove) {
+    //removes that user's instances of the stack dashboards
+    private def removeUserStackDashboards(user, stack, groupToRemove) {
         def stillAssignedStack = false
         stack.groups?.each { stackGroup ->
             if(stackGroup != groupToRemove) { //Skip if it's the group to remove
                 if(stackGroup.people?.contains(user)) {
-                    //This group contains the user, set flag to skip dashboard orphaning
+                    //This group contains the user, set flag to skip dashboard removal
                     stillAssignedStack = true
                 }
             }
@@ -594,9 +600,8 @@ class StackService {
             //The user is no longer assigned to the stack so orphan all their dashboards assigned to the stack
             def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
             userStackDashboards?.each { userStackDashboard ->
-                userStackDashboard.stack = null
-                userStackDashboard.save(flush: true, failOnError: true)
-                domainMappingService.deleteMappings(userStackDashboard,RelationshipType.cloneOf,'dashboard')
+                domainMappingService.deleteMappings(userStackDashboard,RelationshipType.cloneOf,Dashboard.TYPE)
+                userStackDashboard.delete(flush: true, failOnError: true)
             }
         }
     }
