@@ -38,7 +38,33 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     // private
     initComponent: function() {
+        var me = this,
+            stackModels = {},
+            dashboard, stack, model;
 
+        this.stackStore = Ext.create('Ozone.data.StackStore', {});
+
+        for(var i = 0, len = this.dashboardStore.getCount(); i < len; i++) {
+
+            model = this.dashboardStore.getAt(i);
+
+            dashboard = model.data;
+            stack = dashboard.stack;
+
+            if( stack ) {
+                if( stackModels[ stack.id ] ) {
+                    stackModels[ stack.id ].get('dashboards').push( model );
+                }
+                else {
+                    var stackModel = this.stackStore.add( stack )[0];
+                    stackModel.set('dashboards', [ model ]);
+
+                    stackModels[ stack.id ] = stackModel;
+                }
+            }
+
+        }
+        
         this.originalDashboardStore = Ext.create('Ozone.data.DashboardStore', {
         });
         this.dashboardMenuItems = [];
@@ -729,7 +755,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             dashboardSwitcher = Ext.widget('dashboardswitcher', {
                 id: dashboardSwitcherId,
                 dashboardContainer: this,
-                activeDashboard: this.activeDashboard.guid,
+                activeDashboard: this.activeDashboard,
                 dashboardStore: this.dashboardStore,
                 plugins: new Ozone.components.keys.HotKeyComponent(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER)
             });
@@ -738,6 +764,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             dashboardSwitcher.close();
             return;
         }
+        dashboardSwitcher.activeDashboard = this.activeDashboard;
         dashboardSwitcher.show().center();
     },
 
@@ -1431,7 +1458,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         for (var i1 = 0; i1 < deleteCount; i1++) {
 
             // Remove from dashboard store.
-            var dsIndex = this.dashboardStore.find('id', dashboardsToDelete[i1]);
+            var dsIndex = this.dashboardStore.find('guid', dashboardsToDelete[i1]);
             if (dsIndex != -1) {
                 // If default dashboard is deleted reset default to first dashboard.
                 if (this.dashboardStore.getAt(dsIndex).get('isDefault') == true) {

@@ -313,6 +313,10 @@ class UrlMappings {
             controller="widget"
             action = UrlMappings.getAction
         }
+        "/widget/export" {
+            controller = "widget"
+            action = "export"
+        }
         "/widgetLoadTime" {
             controller="widget"
             action = "saveWidgetLoadTime"

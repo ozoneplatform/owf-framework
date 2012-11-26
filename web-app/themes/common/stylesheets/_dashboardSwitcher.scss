@@ -103,20 +103,28 @@
         }
     }
 }
-.icon-share:hover {
-    color: #5252FF;
+.icon-share {
+    &:hover, &.hover {
+        color: #5252FF;
+    }
 }
 
-.icon-refresh:hover {
-    color: #FD5B00;
+.icon-refresh {
+    &:hover, &.hover {
+        color: #FD5B00;
+    }
 }
 
-.icon-edit:hover {
-    color: #0f0;
+.icon-edit {
+    &:hover, &.hover {
+        color: #0f0;
+    }
 }
 
-.icon-remove:hover {
-    color: #f00;
+.icon-remove {
+    &:hover, &.hover {
+        color: #f00;
+    }
 }
 
 .dashboard-actions, .stack-actions {
@@ -141,10 +149,6 @@
             li {
                 display: inline;
                 font-size: 1.5em;
-                &:hover {
-                    background: #000;
-                    color: red;
-                }
             }
     }
 }

@@ -21,6 +21,11 @@
 /work
 /web-app/js-min
 /js-plugins/*.gz.js
+/bin
+/target-eclipse
+/prodDb.properties
+/prodDb.log
+/prodDb.bak
 *.sass-cache
 *.css
 

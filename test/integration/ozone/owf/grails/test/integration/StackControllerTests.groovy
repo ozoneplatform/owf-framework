@@ -106,6 +106,7 @@ class StackControllerTests extends OWFGroovyTestCase {
         stackController.params.data = """{
                 id: ${stackIds[0]}
             }"""
+        stackController.params.adminEnabled = true
         stackController.delete()
         
         def resp = JSON.parse(stackController.response.contentAsString)
@@ -223,6 +224,5 @@ class StackControllerTests extends OWFGroovyTestCase {
         
         def resp = JSON.parse(stackController.response.contentAsString)
         assertEquals false, resp.success
-        assertEquals " The stack id -1 is invalid, export failed.", resp.errorMsg
     }
 }

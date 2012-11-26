@@ -43,7 +43,8 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
         
         this.gridDashboards.setBaseParams({
                 adminEnabled: true,
-	            isGroupDashboard: true
+	            isGroupDashboard: true,
+				isStackDashboard: false
         });
         
         this.gridDashboards.store.load({

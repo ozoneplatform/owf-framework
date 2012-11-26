@@ -14,6 +14,7 @@ class StackService {
 
     def accountService
     def serviceModelService
+    def dashboardService
     def domainMappingService
     def groupService
     def widgetDefinitionService
@@ -224,6 +225,10 @@ class StackService {
                         if (params.update_action == 'add') {
                             stack.addToGroups(group)
                         } else if (params.update_action == 'remove') {
+                            //Remove all references to stack for all the groups' user's dashboards in the stack
+                            group.people?.each { user ->
+                                orphanUserStackDashboards(user, stack, group)
+                            }
                             stack.removeFromGroups(group)
                         }
                         
@@ -246,6 +251,8 @@ class StackService {
                         if (params.update_action == 'add') {
                             stackDefaultGroup.addToPeople(user)
                         } else if (params.update_action == 'remove') {
+                            //Remove all references to stack for all user's dashboards in the stack
+                            orphanUserStackDashboards(user, stack, stackDefaultGroup)
                             stackDefaultGroup.removeFromPeople(user)
                         }
                         
@@ -268,12 +275,20 @@ class StackService {
                 dashboards?.each { it ->
                     def dashboard = Dashboard.findByGuid(it.guid)
                     if (dashboard) {
-                        if (params.update_action == 'remove') {
+                        if (params.update_action == 'remove') {       
+                            // Find all clones.
+                            def clones = domainMappingService.getMappedObjects([id:dashboard.id,TYPE:Dashboard.TYPE],
+                                RelationshipType.cloneOf,Dashboard.TYPE,[:],{},'dest')
+                            
+                            // Set their stack to null and remove it's clone record.
+                            clones?.each{ clone ->
+                                domainMappingService.deleteMapping(clone, RelationshipType.cloneOf,dashboard)
+                                clone.stack = null
+                                clone.save(flush: true)
+                            }
+                            
                             // Remove the mapping to the group.
                             domainMappingService.deleteMapping(stackDefaultGroup,RelationshipType.owns,dashboard)
-                            // TODO: Dump any user dashboard instances associated with this stack that were
-                            // clones of this dashboard.  Perhaps find all the clones and associate them with the 
-                            // default owf stack.
                             
                             // Delete the dashboard.
                             dashboard.delete(flush: true)
@@ -307,7 +322,10 @@ class StackService {
                     }
                 }
 
-                //Update the uniqueWidgetCount of the stack
+                // Add any widgets to the stack's default group if not already there.
+                widgetDefinitionService.reconcileGroupWidgetsFromDashboards(stackDefaultGroup, false)
+                
+                // Update the unique widgets now contained in the stack's dashboards.
                 stack.uniqueWidgetCount = widgetDefinitionService.list([stack_id: stack.id]).results
                 stack.save(flush: true, failOnError: true)
             }
@@ -316,11 +334,32 @@ class StackService {
         return returnValue
     }
     
+    def deleteUserStack(stackIds) {
+        
+        def user = accountService.getLoggedInUser();
+        def stacks = [];
+        
+        stackIds.each {
+            def stack = Stack.findById(it.id, [cache: true])
+            def stackDefaultGroup = stack.findStackDefaultGroup()
+            
+            stackDefaultGroup.removeFromPeople(user)
+
+            // Remove all user dashboards that are in the stack
+            def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
+            userStackDashboards?.each { userStackDashboard ->
+
+                dashboardService.delete([
+                    dashboard: userStackDashboard
+                ])
+            }
+            
+            stacks << stack
+        }
+        return [success: true, data: stacks];
+    }
+    
     def delete(params) {
-        
-        // Only admins may delete Stacks
-        ensureAdmin()
-        
         def stacks = []
         
         if (params.data) {
@@ -332,22 +371,40 @@ class StackService {
             }
         }
         
+        // Handle user deletion of their stack association and data.
+        if((!accountService.getLoggedInUserIsAdmin()) || (params.adminEnabled != true  && params.adminEnabled != 'true')) {
+            return deleteUserStack(stacks);
+        }
+        
+        // Handle administrative removal of stacks.
         stacks.each {
-            def stack = Stack.findById(it.id, [cache: true])
-            
-            // Break the association with any existing dashboard instances.  
-            def dashboards = Dashboard.findByStack(stack)
+            def stack = Stack.findById(it.id)
+            def dashboards = Dashboard.findAllByStack(stack)
+            def defaultDashboards = []
+            // Break the association with any existing dashboard instances.
             dashboards.each { dashboard ->
-                // TODO: Associate them with the default OWF stack if we go that design route.
                 dashboard.stack = null;
-                dashboard.save(flush: true)
+                dashboard.save()
+                if (dashboard.user == null) {
+                    defaultDashboards << dashboard
+                }
+            }
+            // Remove the default stack group
+            stack?.groups?.each { group ->
+                if (group?.stackDefault) {
+                    //delete all widget mappings
+                    //domainMappingService.deleteAllMappings(group)
+                    stack.removeFromGroups(group);
+                    stack.save()
+                    groupService.delete(["data": "{id: ${group.id}}"])
+                    //group?.delete()
+                }
             }
             
-            stack?.groups?.each { group ->
-                if (group?.stackDefault) { group?.delete() }
-            }         
-            
-            stack?.delete(flush: true)
+            stack?.delete()
+            defaultDashboards?.each { dashboard ->
+                dashboard.delete()
+            }
         }
         
         return [success: true, data: stacks]
@@ -358,38 +415,38 @@ class StackService {
         // Only admins may export Stacks
         ensureAdmin()
         
-        if(params.id > -1) {
-            def stack = Stack.findById(params.id, [cache: true])
+        def stack = Stack.findById(params.id, [cache: true])
 
-            //Construct the list of dashboards for the descriptor
-            def dashboards = []
-            def stackGroup = stack.findStackDefaultGroup()
-            if(stackGroup != null) {
-                domainMappingService.getMappings(stackGroup, RelationshipType.owns, Dashboard.TYPE).eachWithIndex { it, i ->
+        //Construct the list of dashboards for the descriptor
+        def dashboards = []
+        def stackGroup = stack.findStackDefaultGroup()
+        if(stackGroup != null) {
+            domainMappingService.getMappings(stackGroup, RelationshipType.owns, Dashboard.TYPE).eachWithIndex { it, i ->
 
-                    def dashboard = Dashboard.findById(it.destId)
+                def dashboard = Dashboard.findById(it.destId)
 
-                    def dashboardData = [:]
-                    //Get only the parameters required for a dashboard definition
-                    dashboardData.put('name', dashboard.name)
-                    dashboardData.put('guid', dashboard.guid)
-                    dashboardData.put('description', dashboard.description)
-                    dashboardData.put('isdefault', dashboard.isdefault)
-                    dashboardData.put('locked', dashboard.locked)
-                    dashboardData.put('dashboardPosition', dashboard.dashboardPosition)
-                    dashboardData.put('layoutConfig', JSON.parse(dashboard.layoutConfig))
+                def dashboardData = [:]
+                //Get only the parameters required for a dashboard definition
+                dashboardData.put('name', dashboard.name)
+                dashboardData.put('guid', dashboard.guid)
+                dashboardData.put('description', dashboard.description)
+                dashboardData.put('isdefault', dashboard.isdefault)
+                dashboardData.put('locked', dashboard.locked)
+                dashboardData.put('dashboardPosition', dashboard.dashboardPosition)
+                dashboardData.put('layoutConfig', JSON.parse(dashboard.layoutConfig))
 
-                    dashboards.push(dashboardData)
-                }
+                dashboards.push(dashboardData)
             }
+        }
 
-            def widgets = []
-            widgetDefinitionService.list([stack_id: stack.id]).data.eachWithIndex { widget, i ->
+        def widgets = []
+        widgetDefinitionService.list([stack_id: stack.id]).data.eachWithIndex { widget, i ->
 
-                def widgetDefinition = widget.toDataMap().value
+            def widgetDefinition = widget.toDataMap().value
 
                 def widgetData = [:]
-                //Get only the values required for a widget descriptor
+                //Get only the values required for a widget definition
+                widgetData.put("widgetGuid", widget.id)
                 widgetData.put("descriptorUrl", widgetDefinition.descriptorUrl)
                 widgetData.put("universalName", widgetDefinition.universalName)
                 widgetData.put("displayName", widgetDefinition.namespace)
@@ -409,37 +466,55 @@ class StackService {
                 widgetDefinition.tags.each { tags.push(it.name) }
                 widgetData.put("defaultTags", tags)
 
-                widgets.push(widgetData)
-            }
-
-            def stackData = [:]
-            //Get only the parameters required for a stack descriptor
-            stackData.put('name', stack.name)
-            stackData.put('stackContext', stack.stackContext)
-            stackData.put('description', stack.description)
-            stackData.put('dashboards', dashboards)
-            stackData.put('widgets', widgets)
-
-            //Pretty print the JSON
-            stackData = (stackData as JSON).toString(true)
-
-            //Get the empty descriptor with appropriate javascript
-            def dir = './lib/'
-            if(grails.util.GrailsUtil.environment != 'production') dir = './src/resources/'
-            def stackDescriptorText = new File(dir + "empty_descriptor.html").text
-
-            stackDescriptorText = stackDescriptorText.replaceFirst("var data;", "var data = ${stackData};")
-
-            def stackDescriptor = new File("stack_descriptor.html")
-            def out = new FileOutputStream(stackDescriptor)
-            out.write(stackDescriptorText.getBytes("UTF-8"))
-            out.close()
-
-            return stackDescriptor
+            widgets.push(widgetData)
         }
-        else {
-            throw new OwfException(message: 'The stack id ' + params.id + ' is invalid, export failed.',
-                exceptionType: OwfExceptionTypes.GeneralServerError)
+
+        def stackData = [:]
+        //Get only the parameters required for a stack descriptor
+        stackData.put('name', stack.name)
+        stackData.put('stackContext', stack.stackContext)
+        stackData.put('description', stack.description)
+        stackData.put('dashboards', dashboards)
+        stackData.put('widgets', widgets)
+
+        //Pretty print the JSON
+        stackData = (stackData as JSON).toString(true)
+
+        //Get the empty descriptor with appropriate javascript
+        def dir = './lib/'
+        if(grails.util.GrailsUtil.environment != 'production') dir = './src/resources/'
+        def stackDescriptorText = new File(dir + "empty_descriptor.html").text
+
+        stackDescriptorText = stackDescriptorText.replaceFirst("var data;", "var data = ${stackData};")
+
+        def stackDescriptor = new File("stack_descriptor.html")
+        def out = new FileOutputStream(stackDescriptor)
+        out.write(stackDescriptorText.getBytes("UTF-8"))
+        out.close()
+
+        return stackDescriptor
+    }
+
+    //If a user is no longer assigned to a stack directly or through a group, this method
+    //removes references to the stack for all that user's instances of the stack dashboards
+    private def orphanUserStackDashboards(user, stack, groupToRemove) {
+        def stillAssignedStack = false
+        stack.groups?.each { stackGroup ->
+            if(stackGroup != groupToRemove) { //Skip if it's the group to remove
+                if(stackGroup.people?.contains(user)) {
+                    //This group contains the user, set flag to skip dashboard orphaning
+                    stillAssignedStack = true
+                }
+            }
+        }
+        if(!stillAssignedStack) {
+            //The user is no longer assigned to the stack so orphan all their dashboards assigned to the stack
+            def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
+            userStackDashboards?.each { userStackDashboard ->
+                userStackDashboard.stack = null
+                userStackDashboard.save(flush: true, failOnError: true)
+                domainMappingService.deleteMappings(userStackDashboard,RelationshipType.cloneOf,'dashboard')
+            }
         }
     }
     

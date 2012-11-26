@@ -7,6 +7,7 @@ class StackServiceModel extends AbstractServiceModel {
     String stackContext
     String imageUrl
     String descriptorUrl
+    List groups
     Integer totalDashboards = 0
     Integer totalUsers = 0
     Integer totalGroups = 0

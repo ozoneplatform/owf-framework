@@ -1,13 +1,13 @@
-Ext.define('Ozone.components.admin.StackExportWindow', {
+Ext.define('Ozone.components.admin.ExportWindow', {
     extend: 'Ext.window.Window',
-    alias: ['widget.stackexportwindow', 'widget.StackExportWindow'],
+    alias: ['widget.exportwindow', 'widget.ExportWindow'],
 
     mixins: {
         widget: 'Ozone.components.focusable.CircularFocus'
     },
 
     title: 'Export',
-    itemId: 'stackexportwindow',
+    itemId: 'exportwindow',
     modal: true,
     closable: true,
     draggable: false,
@@ -15,14 +15,10 @@ Ext.define('Ozone.components.admin.StackExportWindow', {
     closeAction: 'hide',
     border: false,
     minWidth: 250,
-    minHeight: 200,
-    layout: {
-        type: 'vbox',
-        align: 'stretch'
-    },
+    layout: 'auto',
     items: [{
         xtype: 'panel',
-        itemId: 'stackexportpanel',
+        itemId: 'exportpanel',
         cls: 'admineditoraddpanel',
         layout: 'fit',
         border: false,
@@ -67,9 +63,7 @@ Ext.define('Ozone.components.admin.StackExportWindow', {
     initComponent: function() {
         var me = this;
         
-        var vpSize = Ext.getBody().getViewSize();
-        me.setWidth(Math.round(vpSize.width * .9));
-        me.setHeight(Math.round(vpSize.height * .5));
+        me.setWidth(Math.round(Ext.getBody().getViewSize().width * .9));
         
         me.on('beforeshow', function() {
             me.setTitle(me.generateTitle());

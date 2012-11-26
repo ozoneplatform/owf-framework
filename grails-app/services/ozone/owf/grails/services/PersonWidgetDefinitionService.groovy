@@ -10,6 +10,7 @@ import ozone.owf.grails.domain.PersonWidgetDefinition
 import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.Group
+import ozone.owf.grails.domain.Stack
 import org.grails.taggable.TagLink
 import org.grails.taggable.Tag
 
@@ -312,17 +313,37 @@ class PersonWidgetDefinitionService {
         if (params?.max != null) opts.max =(params.max instanceof String ? Integer.parseInt(params.max) : params.max)
 
         def person = accountService.getLoggedInUser()
+  
+        // Get stack default groups associated to the user.
+        def stackDefaultGroups = []
+        def stacks = Stack.withCriteria {
+            groups {
+                people {
+                    eq('id',person.id)
+                }
+            }
+            cache(true)
+            cacheMode(CacheMode.GET)
+        }
+        stackDefaultGroups = stacks.collect { it.findStackDefaultGroup() }
+        
+        // Get non stack default groups that contain this user.
         def groups = Group.withCriteria {
             people {
                 eq('id',person.id)
             }
             eq('status','active')
+            eq('stackDefault', false)
             cache(true)
 
             //turn cache mode to GET which means don't use instances from this query for the 2nd level cache
             //seems to be a bug where the people collection is cached with only one person due to the people association filter above
             cacheMode(CacheMode.GET)
         }
+        
+        // Generate a combined group list.
+        groups = (groups << stackDefaultGroups).flatten()
+        
         def queryReturn = PersonWidgetDefinition.executeQuery("SELECT MAX(pwd.pwdPosition) AS retVal FROM PersonWidgetDefinition pwd WHERE pwd.person = ?", [person])
         def maxPosition = (queryReturn[0] != null)? queryReturn[0] : -1
 
@@ -349,6 +370,7 @@ class PersonWidgetDefinitionService {
         def groupPwds = PersonWidgetDefinition.withCriteria {
             eq('person',person)
             eq('groupWidget',true)
+            cacheMode(CacheMode.GET)
         }
 
         //loop through and remove groupPwds that are not in the groupWidgetsToTagsMap
@@ -384,7 +406,8 @@ class PersonWidgetDefinitionService {
             def personWidgetDefinitionList = PersonWidgetDefinition.withCriteria {
                 eq('person', person)
                 eq('widgetDefinition', widgetDef)
-                cache(true)
+                //cache(true)
+                cacheMode(CacheMode.GET)
             }
             def personWidgetDefinition = !personWidgetDefinitionList.isEmpty() ?  personWidgetDefinitionList[0] : null
 
@@ -565,7 +588,7 @@ class PersonWidgetDefinitionService {
                 widgetDefinition { inList('id',groupFilteredIds) }
             }
             order("pwdPosition","asc")
-            cache(true)
+            cache(false)
         }
 
         return [success: true, personWidgetDefinitionList: pwdList.collect {

@@ -120,7 +120,6 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                     // Create modified widget store and bind to grid
                     grid.setStore(Ext.create('Ozone.data.UserStore', cmp.storeCfg));
                     var refreshPagingToolbar = function(operation) {
-                        cmp.refreshWidgetLaunchMenu();
                         if (operation.action == "destroy" || operation.action == "create") {
                             var ptb = grid.getBottomToolbar();
                             ptb.doRefresh();

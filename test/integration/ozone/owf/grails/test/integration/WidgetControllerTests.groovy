@@ -232,6 +232,45 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         //assertEquals '"Error during delete: The requested entity was not found Widget Definition 0c5435cf-4021-4f2a-ba69-dde451d12558 not found."', controller.response.contentAsString
         assertNotNull WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
     }
+    
+    void testExport() {
+        
+        loginAsUsernameAndRole('testAdmin', ERoleAuthority.ROLE_ADMIN.strVal)
+
+        createWidgetDefinitionForTest('Widget C','widgetC.gif','widgetCsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12551','widget-c.html','widget-c.json', 'com.example.widgetc')
+
+        def filename = 'test'
+        
+        controller = new WidgetController()
+        controller.widgetDefinitionService = widgetDefinitionService
+        controller.request.contentType = "text/json"
+
+        controller.params.id = '0c5435cf-4021-4f2a-ba69-dde451d12551'
+        controller.params.filename = filename
+        controller.export()
+        
+        def resp = controller.response
+        assertEquals "attachment; filename=" + filename + ".html", resp.getHeader("Content-disposition")
+        assertNotNull resp.getContentAsString()
+    }
+    
+    void testFailedExport() {
+        
+        loginAsUsernameAndRole('testAdmin', ERoleAuthority.ROLE_ADMIN.strVal)
+
+        def filename = 'test'
+        
+        controller = new WidgetController()
+        controller.widgetDefinitionService = widgetDefinitionService
+        controller.request.contentType = "text/json"
+
+        controller.params.id = '0c5435cf-4021-4f2a-ba69-dde451d12551'
+        controller.params.filename = filename
+        controller.export()
+        
+        def resp = JSON.parse(controller.response.contentAsString)
+        assertEquals false, resp.success
+    }
 
     /*void testDeleteWidgetDefinitionForUnauthorizedUser() {
         loginAsUsernameAndRole('testUser1', ERoleAuthority.ROLE_USER.strVal)

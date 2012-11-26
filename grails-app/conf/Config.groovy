@@ -316,7 +316,7 @@ uiperformance.bundles = [
         files: [
             'data/models/Stack',
             'data/stores/StackStore',
-            'components/admin/StackExportWindow',
+            'components/admin/ExportWindow',
             'components/admin/grid/StacksGrid',
             'components/admin/stack/StackDetailPanel',
             'components/admin/stack/StackManagementPanel'
@@ -418,6 +418,7 @@ uiperformance.bundles = [
         files: [
             '../js/data/models/WidgetDefinition',
             '../js/data/stores/AdminWidgetStore',
+            '../js/components/admin/ExportWindow',
             '../js/components/admin/grid/WidgetsGrid',
             '../js/components/admin/widget/DeleteWidgetsPanel',
             '../js/components/admin/widget/WidgetDetailPanel',
@@ -574,6 +575,8 @@ uiperformance.bundles = [
                         'data/stores/StateStore',
                         'data/models/Dashboard',
                         'data/stores/DashboardStore',
+                        'data/models/Stack',
+                        'data/stores/StackStore',
                         'data/ModelIdGenerator',
                         'data/models/WidgetDefinition',
                         'data/stores/WidgetStore',

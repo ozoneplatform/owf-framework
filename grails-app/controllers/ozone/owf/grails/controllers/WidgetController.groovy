@@ -180,4 +180,36 @@ class WidgetController extends BaseOwfRestController {
           log.info("Executed widgetDefinitionService: saveWidgetLoadTime in "+stopWatch);
       }
     }
+    
+    def export = {
+        def result
+        StopWatch stopWatch = null;
+        
+        if (log.isInfoEnabled()) {
+            stopWatch = new StopWatch();
+            stopWatch.start();
+            log.info("Executing widgetDefinitionService: export");
+        }
+        try {
+            def filename = params.filename ? params.filename : "widget_descriptor"
+
+            //Set content-disposition so browser is expecting a file
+            response.setHeader("Content-disposition", "attachment; filename=" + filename + ".html")
+
+            def widgetDescriptor = widgetDefinitionService.export(params)
+            response.outputStream << widgetDescriptor.newInputStream()
+        }
+        catch (Exception e) {
+            //Set content-disposition back to text to relay the error
+            response.setHeader("Content-disposition", "")
+
+            result = handleError(e)
+            renderResult(result)
+        }
+        
+        if (log.isInfoEnabled()) {
+            stopWatch.stop();
+            log.info("Executed widgetDefinitionService: export in " + stopWatch);
+        }
+    }
 }

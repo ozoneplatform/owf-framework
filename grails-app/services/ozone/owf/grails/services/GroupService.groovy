@@ -16,7 +16,8 @@ class GroupService {
     def dashboardService
     def domainMappingService
     def serviceModelService
-
+    def widgetDefinitionService
+    
     private static def addFilter(name, value, c) {
         c.with {
             switch (name) {
@@ -401,12 +402,14 @@ class GroupService {
                         domainMappingService.deleteMapping(group,RelationshipType.owns,dashboard)
                     }
 
-                    //todo handle cascade delete of user dashboards which are clones of the group dashboards
-
                     updatedDashboards << dashboard
                 }
             }
+            
             if (!updatedDashboards.isEmpty()) {
+                // Reconcile any widgets missing from the group that have been added by a dashboard.
+                widgetDefinitionService.reconcileGroupWidgetsFromDashboards(group)
+                
                 returnValue = updatedDashboards.collect{ serviceModelService.createServiceModel(it) }
             }
         }
@@ -473,8 +476,10 @@ class GroupService {
 
                 //delete all user mappings
                 def people = []
-                people += group.people
-                people.each { group.removeFromPeople(it) }
+                if (group.people != null) {
+                    people += group.people
+                }
+                people.each { group?.removeFromPeople(it) }
 
                 //delete group
                 group.delete(flush: true)

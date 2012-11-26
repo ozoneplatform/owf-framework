@@ -6,6 +6,7 @@ import ozone.owf.grails.AuditOWFWebRequestsLogger
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
 import ozone.owf.grails.domain.PersonWidgetDefinition
+import ozone.owf.grails.domain.Dashboard
 import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.Person
 import org.hibernate.CacheMode
@@ -20,7 +21,7 @@ class WidgetDefinitionService {
 
     def loggingService = new AuditOWFWebRequestsLogger()
     def accountService
-    def dashboardService
+    //def dashboardService
     def domainMappingService
     def serviceModelService
 
@@ -53,7 +54,11 @@ class WidgetDefinitionService {
             }
 
             //Reuse DashboardService's method to list the dashboards of the stack's default group
-            def dashboards = dashboardService.listDashboards(['group_id': stack.findStackDefaultGroup().id]).dashboardList
+            //def dashboards = dashboardService.listDashboards(['group_id': stack.findStackDefaultGroup().id]).dashboardList
+            def dashboards = domainMappingService.getMappings(stack.findStackDefaultGroup(),RelationshipType.owns,Dashboard.TYPE)?.collect{
+                Dashboard.get(it.destId)
+            }            
+            
             for(def i = 0; i < dashboards.size(); i++) {
                 //Get all the widgetGuids found in the layoutConfig
                 widgetGuids.addAll(inspectForWidgetGuids(JSON.parse(dashboards[i].layoutConfig)))
@@ -882,6 +887,29 @@ class WidgetDefinitionService {
         return [success: true, data: processedWidgetsIds]
     }
 
+    def export(params) {
+        // Only admins may export Widgets
+        ensureAdmin()
+
+        def widgetDefinition = WidgetDefinition.findByWidgetGuid(params.id)
+
+        def widgetData = getWidgetDescriptorJson(widgetDefinition)
+
+        //Get the empty descriptor with appropriate javascript
+        def dir = './lib/'
+        if(grails.util.GrailsUtil.environment != 'production') dir = './src/resources/'
+        def widgetDescriptorText = new File(dir + "empty_descriptor.html").text
+
+        widgetDescriptorText = widgetDescriptorText.replaceFirst("var data;", "var data = ${widgetData};")
+
+        def widgetDescriptor = new File("widget_descriptor.html")
+        def out = new FileOutputStream(widgetDescriptor)
+        out.write(widgetDescriptorText.getBytes("UTF-8"))
+        out.close()
+
+        return widgetDescriptor
+    }
+    
     public def getDirectRequiredIds(widgetDef) {
         getRequiredWidgetIds(ids: widgetDef.widgetGuid, noRecurse: true)
             .data
@@ -906,7 +934,7 @@ class WidgetDefinitionService {
 
     // Looks through the nested layoutConfig of a dashboard and grabs
     // all of its widgetGuids
-    private def inspectForWidgetGuids(layoutConfig) {
+    public def inspectForWidgetGuids(layoutConfig) {
         def widgetGuids = []
 
         def widgets = layoutConfig.widgets
@@ -920,6 +948,47 @@ class WidgetDefinitionService {
         }
 
         return widgetGuids
+    }
+    
+    private def getWidgetDescriptorJson(widgetDefinition) {
+        
+        def widgetData = [:]
+        //Get only the values required for a widget descriptor
+        widgetData.put("displayName", widgetDefinition.displayName)
+        widgetData.put("widgetUrl", widgetDefinition.widgetUrl)
+        widgetData.put("imageUrlSmall", widgetDefinition.imageUrlSmall)
+        widgetData.put("imageUrlLarge", widgetDefinition.imageUrlLarge)
+        widgetData.put("width", widgetDefinition.width)
+        widgetData.put("height", widgetDefinition.height)
+        widgetData.put("visible", widgetDefinition.visible)
+        widgetData.put("singleton", widgetDefinition.singleton)
+        widgetData.put("background", widgetDefinition.background)
+        widgetData.put("widgetTypes", widgetDefinition.widgetTypes?.name)
+
+        //Add non-required fields
+        widgetDefinition.descriptorUrl && widgetData.put("descriptorUrl", widgetDefinition.descriptorUrl)
+        widgetDefinition.universalName && widgetData.put("universalName", widgetDefinition.universalName)
+        widgetDefinition.description && widgetData.put("description", widgetDefinition.description)
+        widgetDefinition.widgetVersion && widgetData.put("widgetVersion", widgetDefinition.widgetVersion)
+
+        def tags = []
+        widgetDefinition.getTags().each { tags.push(it.tag.name) }
+        tags && widgetData.put("defaultTags", tags)
+
+        def intents = [:], sendIntents = [], receiveIntents = []
+        widgetDefinition.widgetDefinitionIntents.each {
+            def intent = [action: it.intent.action, dataTypes: it.dataTypes.dataType]
+            it.send && sendIntents.push(intent)
+            it.receive && receiveIntents.push(intent)
+        }
+        sendIntents && intents.put('send', sendIntents)
+        receiveIntents && intents.put('receive', receiveIntents)
+        intents && widgetData.put("intents", intents)
+
+        //Pretty print the JSON
+        widgetData = (widgetData as JSON).toString(true)
+
+        return widgetData
     }
     
     //TODO: refactor this out when we have time.  I don't like this logic here
@@ -968,6 +1037,40 @@ class WidgetDefinitionService {
     private def ensureAdmin() {
         if (!accountService.getLoggedInUserIsAdmin()) {
             throw new OwfException(message: "You must be an admin", exceptionType: OwfExceptionTypes.Authorization)
+        }
+    }
+    
+    public def reconcileGroupWidgetsFromDashboards(group, addOnly = true) {
+
+        // Get all dashboards for this group.
+        def dashboards = domainMappingService.getMappedObjects(group, RelationshipType.owns, Dashboard.TYPE)
+        def groupWidgets = domainMappingService.getMappedObjects(group, RelationshipType.owns, WidgetDefinition.TYPE)
+        def widgetGuids = []
+        
+        dashboards?.each{ dashboard ->
+            // For each dashboard get its list of widget guids.
+            def dashGuids = inspectForWidgetGuids(JSON.parse(dashboard.layoutConfig))
+            widgetGuids << dashGuids
+        }
+        widgetGuids = widgetGuids.flatten()
+        widgetGuids.unique()
+        
+        // Remove any group widgets that aren't in the current dashboard layouts if we're not in add-only mode.
+        if (!addOnly) {
+            groupWidgets?.each { groupWidget ->
+                if (!widgetGuids.contains(groupWidget.widgetGuid)) {
+                    domainMappingService.deleteMapping(group,RelationshipType.owns,groupWidget)
+                }
+            }
+        }
+        
+        // Loop over the widgetGuids.  if there's not already a mapping to that widget for this group, add it.
+        widgetGuids.each { widgetGuid ->
+            def widget = WidgetDefinition.findByWidgetGuid(widgetGuid,[cache:true])
+            def widgetMapping = domainMappingService.getMapping(group, RelationshipType.owns, widget)
+            if (widgetMapping.isEmpty()) {
+                domainMappingService.createMapping(group,RelationshipType.owns,widget)
+            }
         }
     }
 }
