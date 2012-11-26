@@ -419,7 +419,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         console.log('destroying dashboard switcher');
         
-        me.tearDownCircularFocus();
+        this.tearDownCircularFocus();
 
         // remove jQuery listeners
         $(this.el.dom).off();
