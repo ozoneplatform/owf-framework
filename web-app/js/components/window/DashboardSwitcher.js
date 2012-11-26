@@ -559,7 +559,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     },
 
     hideStackDashboards: function () {
-        this.$stackDashboards && this.$stackDashboards.slideToggle('fast');
+        this.$stackDashboards && this.$stackDashboards.slideUp('fast');
         //this.$stackDashboards && this.$stackDashboards.addClass('hide');
     },
 
@@ -647,7 +647,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 url: Ozone.util.contextPath() + '/dashboard/restore',
                 params: {
                     guid: dashboardGuid,
-                    isdefault: dashboardGuid == this.activeDashboard.guid
+                    isdefault: dashboardGuid == me.activeDashboard.guid
                 },
                 success: function(response, opts) {
                     var json = Ext.decode(response.responseText);
@@ -668,11 +668,10 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                     Ozone.Msg.alert('Dashboard Manager', "Error restoring dashboard.", function() {
                         Ext.defer(function() {
                             $dashboard[0].focus();
-                        }, 200, this);
-                    }, this, null, this.dashboardContainer.modalWindowManager);
+                        }, 200, me);
+                    }, me, null, me.dashboardContainer.modalWindowManager);
                     return;
-                },
-                scope: this
+                }
             });
         }, function () {
             evt.currentTarget.focus();
@@ -782,7 +781,16 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         console.log('delete dashboard', dashboard);
         
         if(dashboard.stack) {
-            this.warn('Users cannot remove individual dashboards from a stack. Please contact your administrator.');
+            this.warn('Users cannot remove individual dashboards from a stack. Please contact your administrator.', function () {
+                evt.currentTarget.focus();
+            });
+            return;
+        }
+
+        if(dashboard.groups && dashboard.groups.length > 0) {
+            this.warn('Users cannot remove dashboards assigned to a group. Please contact your administrator.', function () {
+                evt.currentTarget.focus();
+            });
             return;
         }
 

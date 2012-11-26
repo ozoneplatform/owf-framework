@@ -733,7 +733,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             widgetSwitcher = Ext.widget('widgetswitcher', {
                 id: widgetSwitcherId,
                 dashboardContainer: this,
-                dashboard: this.activeDashboard,
+                activeDashboard: this.activeDashboard,
                 widgetStore: this.widgetStore,
                 plugins: new Ozone.components.keys.HotKeyComponent(Ozone.components.keys.HotKeys.WIDGET_SWITCHER)
             });
@@ -743,7 +743,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             return;
         }
         widgetSwitcher.show();
-        widgetSwitcher.dashboard = this.activeDashboard;
+        widgetSwitcher.activeDashboard = this.activeDashboard;
         widgetSwitcher.setStore(this.activeDashboard.stateStore);
         widgetSwitcher.center();
     },
