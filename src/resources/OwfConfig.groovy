@@ -58,7 +58,7 @@ owf {
     //sets the autoSave interval for saving dashboards in milliseconds 900000 is 15 minutes
     autoSaveInterval = 900000
 
-    helpFileRegex = '^.*\\.(html|gsp|jsp|pdf|doc|docx|mov|mp4|swf|wmv)$'
+    helpFileRegex = '^.*\\.(htm|html|gsp|jsp|pdf|doc|docx|mov|mp4|wmv)$'
 
     //this value controls whether the OWF UI uses shims on floating elements, setting this to true will make
     //Applet/Flex have less zindex issues, but browser performance may suffer due to the additional shim frames being created

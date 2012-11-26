@@ -929,7 +929,7 @@ owf {
       //sets the autoSave interval for saving dashboards in milliseconds 900000 is 15 minutes
       autoSaveInterval = 900000
 
-      helpFileRegex = '^.*\\.(html|gsp|jsp|pdf|doc|docx|mov|mp4|swf|wmv)$'
+      helpFileRegex = '^.*\\.(htm|html|gsp|jsp|pdf|doc|docx|mov|mp4|wmv)$'
 
       useShims = false
 
