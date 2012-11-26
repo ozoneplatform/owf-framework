@@ -47,7 +47,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
             model = me.dashboardStore.getAt(i);
 
-            dashboard = model.data;
+            dashboard = Ext.clone(model.data);
             dashboard.model = model;
             dashboards[ dashboard.guid ] = dashboard;
 
