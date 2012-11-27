@@ -15,7 +15,7 @@ Ext.define('Ozone.data.Dashboard', {
         'description',
         'createdDate',
         'editedDate',
-        'stack',
+        { name: 'stack', defaultValue: null },
         { name: 'locked', type: 'boolean', defaultValue: false },
         { name: 'layoutConfig', defaultValue: null },
         { name: 'createdBy', model: 'User'},

@@ -1,12 +1,10 @@
 #dashboard-switcher {
 
     //width: auto !important;
-    width: 625px !important;
-    height: auto !important;
+    overflow: auto;
     padding: 0px;
 
     &-body {
-        height: auto;
         overflow: hidden;
         @include border-radius($dashboard-switcher-body-radius);
     }
@@ -35,7 +33,7 @@
         text-align:center;
         overflow: hidden;
         cursor: pointer;
-        min-width: $thumb-width;
+        min-width: $name-width;
         max-width: $name-width;
         
         .thumb-wrap {

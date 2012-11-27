@@ -52,7 +52,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             dashboards[ dashboard.guid ] = dashboard;
 
             stack = dashboard.stack;
-            console.log(dashboard, stack);
             if( stack ) {
                 if( stacks[ stack.id ] ) {
                     stacks[ stack.id ].dashboards.push( dashboard );
@@ -267,7 +266,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         
         me.on('afterrender', function (cmp) {
             me.tpl.overwrite( cmp.body, stackOrDashboards );
-            Ext.DomHelper.append( cmp.body, 
+            Ext.DomHelper.append( cmp.el, 
             '<ul class="actions">'+
                 '<li class="manage" tabindex="0" >Manage</li>'+
                 '<li class="create" tabindex="0" >+</li>'+
@@ -279,6 +278,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         me.dashboardStore.on('add', me.destroy, me);
 
         me.on('beforeclose', me.onClose, me);
+        me.on('show', me.updateWindowSize, me);
         me.on('show', me.initCircularFocus, me, {single: true});
         me.on('show', me.focusActiveDashboard, me);
     },
@@ -381,7 +381,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
     initCircularFocus: function () {
         var firstEl = this.body.first(),
-            addBtnEl = this.body.last().last();
+            addBtnEl = this.el.last().last();
 
         this.setupFocus(firstEl, addBtnEl);
     },
@@ -414,7 +414,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         // // remove datachanged event handler
         // this.dashboardStore.un('datachanged', this.cleanAndDestroy, this);
-
+        this.dashboardStore.un('add', this.destroy, this);
         console.log('destroying dashboard switcher');
         
         this.tearDownCircularFocus();
@@ -441,7 +441,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
     onDashboardClick: function (evt) {
         // evt.which == 1 => left mouse
-        if((evt.which !== 1 && evt.which !== Ext.EventObject.ENTER) || this._managing === true)
+        if((evt.type !== 'click' && evt.which !== Ext.EventObject.ENTER) || this._managing === true)
             return;
 
         var $clickedDashboard = $(evt.currentTarget),
@@ -460,13 +460,14 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
     onStackClick: function (evt) {
         // evt.which == 1 => left mousedown
-        if(evt.which === 1 || evt.which === undefined || evt.which === Ext.EventObject.ENTER) {
+        if(evt.type === 'click' || evt.which === Ext.EventObject.ENTER) {
             var me = this,
                 $ = jQuery,
                 $clickedStack = $(evt.currentTarget),
                 stack = me.getStack( $clickedStack );
 
             if( stack ) {
+                console.log('calling Toggle Stack');
                 me.toggleStack(stack, $clickedStack);
             }
             evt.preventDefault();
@@ -479,11 +480,14 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         if( me._lastExpandedStack ) {
             if( me._lastExpandedStack === stack ) {
-                me.hideStackDashboards();
-                me._lastExpandedStack = null;
+                me.hideStackDashboards().then(function() {
+                    me.$stackDashboards.remove();
+                    me._lastExpandedStack = null;
+                });
             }
             else {
-                me.$stackDashboards.slideUp('fast').promise().then(function () {
+                console.log('calling slide up on Stack');
+                me.hideStackDashboards().then(function () {
                     me.$stackDashboards.remove();
                     me.showStackDashboards(stack, $stack, dfd);
                 });
@@ -551,15 +555,29 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             left: left + 'px'
         });
         
-        this.$stackDashboards.slideDown('fast').promise().then(function () {
+        if(Ext.isIE7 || Ext.isIE8) {
+            this.$stackDashboards.show();
             dfd.resolve();
-        });
+        }
+        else {
+            this.$stackDashboards.slideDown('fast').promise().then(function () {
+                dfd.resolve();
+            });
+        }
+        
         this._lastExpandedStack = stack;
     },
 
     hideStackDashboards: function () {
-        this.$stackDashboards && this.$stackDashboards.slideUp('fast');
-        //this.$stackDashboards && this.$stackDashboards.addClass('hide');
+        if(Ext.isIE7 || Ext.isIE8) {
+            var dfd = $.Deferred();
+            this.$stackDashboards && this.$stackDashboards.hide();
+            dfd.resolve();
+            return dfd.promise();
+        }
+        else {
+            return this.$stackDashboards.slideUp('fast').promise();
+        }
     },
 
     onMouseOver: function (evt) {
@@ -786,34 +804,35 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             msg;
 
         console.log('delete dashboard', dashboard);
+
+        function focusEl () {
+            evt.currentTarget.focus();
+        }
         
         if(dashboard.stack) {
-            this.warn('Users cannot remove individual dashboards from a stack. Please contact your administrator.', function () {
-                evt.currentTarget.focus();
-            });
+            this.warn('Users cannot remove individual dashboards from a stack. Please contact your administrator.', focusEl, focusEl);
             return;
         }
 
         if(dashboard.groups && dashboard.groups.length > 0) {
-            this.warn('Users cannot remove dashboards assigned to a group. Please contact your administrator.', function () {
-                evt.currentTarget.focus();
-            });
+            this.warn('Users cannot remove dashboards assigned to a group. Please contact your administrator.', focusEl, focusEl);
             return;
         }
 
-        msg = 'Are you sure you want to permanently delete dashboard <span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span>?';
+        msg = 'This action will permanently delete <span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span>.';
 
         this.warn(msg, function () {
             me.dashboardStore.remove(dashboard.model);
             me.dashboardStore.save();
-
-            $dashboard.remove();
             me.notify('Delete Dashboard', '<span class="heading-bold">' + dashboard.name + '</span> deleted!');
 
             me._deletedStackOrDashboards.push(dashboard);
-        }, function () {
-            evt.currentTarget.focus();
-        });
+
+            var $prev = $dashboard.prev();
+            $dashboard.remove();
+            $prev.focus();
+
+        }, focusEl);
     },
 
     restoreStack: function (evt) {
@@ -830,10 +849,12 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         var me = this,
             $stack = this.getElByClassFromEvent(evt, 'stack'),
             stack = this.getStack($stack),
-            msg = 'Are you sure you want to permanently delete stack <span class="heading-bold">' 
-                    + Ext.htmlEncode(stack.name) + '</span> and its dashboards?';
+            msg = 'This action will permanently delete stack <span class="heading-bold">' 
+                    + Ext.htmlEncode(stack.name) + '</span> and its dashboards.';
 
-        console.log('delete stack', stack);
+        function focusEl () {
+            evt.currentTarget.focus();
+        }
 
         var stackGroups = stack.groups,
             userGroups = Ozone.config.user.groups,
@@ -857,7 +878,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         }
 
         if(groupAssignment) {
-            this.warn('Users in a group cannot remove stacks assigned to the group. Please contact your administrator.');
+            this.warn('Users in a group cannot remove stacks assigned to the group. Please contact your administrator.', focusEl, focusEl);
             return;
         }
 
@@ -868,12 +889,14 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             if( me._lastExpandedStack === stack) {
                 me.hideStackDashboards();
             }
+
+            var $prev = $stack.prev();
             $stack.remove();
+            $prev.focus();
             
             me._deletedStackOrDashboards.push(stack);
-        }, function () {
-            evt.currentTarget.focus();
-        });
+
+        }, focusEl);
     },
 
     warn: function (msg, okFn, cancelFn) {
@@ -957,16 +980,16 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     updateWindowSize: function() {
         var newWidth,
             newHeight,
-            item = this.view.getNode(0);
+            item = this.body.first().dom;
         
         if(!item)
             return;
-        
+
         var itemEl = Ext.get(item),
             windowEl = this.getEl(),
             widthMargin = itemEl.getMargin('lr'),
             heightMargin = itemEl.getMargin('tb'),
-            totalDashboards = this.view.getStore().getCount(),
+            totalDashboards = this.body.query('.dashboard, .stack').length,
             dashboardInRow = 0;
 
         this.dashboardItemWidth = itemEl.getWidth();
@@ -982,7 +1005,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             dashboardInRow = totalDashboards;
         }
 
-        newWidth = (this.dashboardItemWidth + widthMargin) * dashboardInRow;
+        newWidth = (this.dashboardItemWidth + widthMargin + 1) * dashboardInRow;
 
         if(totalDashboards > this.maxDashboardsWidth * this.maxDashboardsHeight) {
             // add 30 to accomodate for scrollbar
@@ -993,7 +1016,18 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         }
 
         //update the layout
-        this.view.doComponentLayout(newWidth, newHeight);
+        // this.el.setHeight(newHeight);
+        // this.el.setWidth(newWidth);
+        console.log('item width is ' + this.dashboardItemWidth);
+        console.log('dashboard in row ' + dashboardInRow)
+
+        this.el.setSize(newWidth + 30, newHeight);
+        
+        this.el.setStyle({
+            'max-height': ((this.dashboardItemHeight + heightMargin + 1) * this.maxDashboardsHeight) + 'px'
+        });
+
+        //this.view.doComponentLayout(newWidth, newHeight);
     },
 
     onClose: function() {
