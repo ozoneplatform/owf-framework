@@ -16,7 +16,7 @@ Ext.define('Ozone.components.SettingsWindow', {
     shadow: false,
     autoScroll: false,
     
-    minToolsInRow: 3,
+    minToolsInRow: 2,
     maxToolsInRow: 5,
     
     items: [],
@@ -26,7 +26,6 @@ Ext.define('Ozone.components.SettingsWindow', {
     store: Ext.create('Ext.data.Store', {
         fields: ['name', 'image', 'caption'],
         data: [
-            {name: 'Dashboards', image: 'themes/common/images/settings/DashboardsIcon.png'},
             {name: 'Themes', image: 'themes/common/images/settings/ThemeIcon.png'},
             {name: 'Widgets', image: 'themes/common/images/settings/WidgetsIcon.png'}
         ]
@@ -69,31 +68,9 @@ Ext.define('Ozone.components.SettingsWindow', {
             Ext.get(view.getNode(0)).focus();
         }, 100);
     },
-    
-    openDashboardMgr: function() {
-        var winId = "user-manage-dashboards";
-        var win = Ext.getCmp(winId);
-        if(win) {
-            win.show();
-            return;
-        }
-
-        Ext.create('Ozone.components.window.DashboardsManager', {
-            ownerCt: this.dashboardContainer,
-            dashboardContainer: this.dashboardContainer,
-            id: winId,
-            itemId: winId,
-            modal: true,
-            border: false,
-            bodyBorder: false
-        }).show();
-    },
 
     callBtnHandler: function(btnText, btn) {
         switch(btnText){
-            case 'Dashboards':
-                this.mngDashBtnHandler(btn);
-                break;
             case 'Themes':
                 this.themeBtnHandler(btn);
                 break;
@@ -106,28 +83,6 @@ Ext.define('Ozone.components.SettingsWindow', {
         //other window to prevent focus from sometimes
         //going to a button widget in FF 3.6
         this.close();
-    },
-
-    mngDashBtnHandler: function(btn) {
-        var activeDash = Ext.getCmp(this.dashboardContainer.activeDashboard.id);
-        if (activeDash) {
-            // activeDash.on({
-            //     serversave: {
-            //         fn: function(dash, success) {
-            //             if (success) {
-            //                 this.openDashboardMgr();
-            //             }
-            //         },
-            //         scope: this,
-            //         single: true
-            //     }
-            // });
-            if (activeDash.hasChanged) {
-                // Dashboard has changed, save before opening the dashboard manager
-                activeDash.saveToServer();
-            }
-            this.openDashboardMgr();
-        }
     },
 
     themeBtnHandler: function(btn) {
