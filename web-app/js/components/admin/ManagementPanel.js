@@ -100,20 +100,20 @@ Ext.define('Ozone.components.admin.ManagementPanel', {
     return cmp;
   },
     
-    //Can export a widget or stack definition of a given id
-    doExport: function(exportItem, id, name) {
+    //Can export a widget or stack descriptor
+    doExport: function(exportItem, record) {
         var me = this;
 
         var okFn = function(filename) {
             var exportFailed = function(errorMsg) {
-                var msg = 'The export of ' + exportItem + ' ' + Ext.htmlEncode(name) + ' failed.';
+                var msg = 'The export of ' + exportItem + ' ' + Ext.htmlEncode(record.get('name')) + ' failed.';
                 me.showAlert('Server Error!', errorMsg ? errorMsg : msg);
             }
 
             //Create hidden iframe to retrieve file without navigating widget or OWF on failure
             var iframe = document.createElement('iframe');
             iframe.id = 'exportIFrame';
-            iframe.src = Ozone.util.contextPath() + '/' + exportItem + '/export?id=' + id + '&filename=' + filename;
+            iframe.src = Ozone.util.contextPath() + '/' + exportItem + '/export?id=' + record.get('id') + '&filename=' + filename;
             iframe.style.display = "none";
 
             //Inspect body of hidden iframe after load for error message and display alert if found
@@ -146,9 +146,19 @@ Ext.define('Ozone.components.admin.ManagementPanel', {
             document.body.appendChild(iframe);
         }
 
+        //Get the filename of the item's descriptor url to prefill the filename
+        //field of the export window
+        var itemFilename = '',
+            url = record.get('descriptorUrl');
+        if(url) {
+            itemFilename = url.substring(url.lastIndexOf('/')+1, url.length);
+            itemFilename.indexOf('.') > -1 && (itemFilename = itemFilename.substring(0, itemFilename.lastIndexOf('.')));
+        }
+
         var win = Ext.widget('exportwindow', {
             focusOnClose: this.down(),
-            itemName: name,
+            itemName: record.get('name'),
+            itemFilename: itemFilename,
             okFn: okFn
         });
         win.show();

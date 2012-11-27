@@ -128,7 +128,7 @@ Ext.define('Ozone.components.admin.widget.WidgetManagementPanel', {
                             handler: function(button) {
                                 var records = me.down('#grid').getSelectionModel().getSelection();
                                 if(records && records.length === 1) {
-                                    me.doExport('widget', records[0].data.id, records[0].data.name);
+                                    me.doExport('widget', records[0]);
                                 }
                                 else if(records && records.length > 1) {
                                     me.showAlert('Error', 'You must select only one widget to export.');

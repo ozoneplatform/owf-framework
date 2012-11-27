@@ -75,6 +75,9 @@ Ext.define('Ozone.components.admin.ExportWindow', {
             var filename = me.down('#filename');
             var okBtn = me.down('#ok');
             var cancelBtn = me.down('#cancel');
+
+            //If a filename is given, use it in the filename field initially and enable ok button
+            me.itemFilename && filename.setValue(me.itemFilename) && okBtn.enable();
             
             form.on('fieldvaliditychange', function(form, t, isValid, eOpts) {
                 if (isValid) {

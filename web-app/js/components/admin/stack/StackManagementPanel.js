@@ -137,7 +137,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                             handler: function(button) {
                                 var records = me.gridStacks.getSelectionModel().getSelection();
                                 if(records && records.length === 1) {
-                                    me.doExport('stack', records[0].data.id, records[0].data.name);
+                                    me.doExport('stack', records[0]);
                                 }
                                 else if(records && records.length > 1) {
                                     me.showAlert('Error', 'You must select only one stack to export.');
