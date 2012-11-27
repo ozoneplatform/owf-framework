@@ -1489,6 +1489,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         // ---------------------------------------------------------------------------------
         // Update all dashboard-related components with newly-refreshed dashboardStore data.
         // ---------------------------------------------------------------------------------
+        var me = this;
 
         // Set default tab guid.
         var defaultTabGuid = storeRecords[0].get('guid');
@@ -1498,43 +1499,47 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         var dashPanel = this.getDashboardCardPanel();
         dashPanel.removeAll(true);
-
-        // Update various dashboard-related components.
-        for (var i1 = 0, len = storeRecords.length; i1 < len; i1++) {
-
-            var dsRecord = storeRecords[i1];
-
-            // Add dashboard object to local array.
-            this.dashboards.push(this.createDashboardConfig(dsRecord));
-
-            // Add dashboard to buffered card panel.
-            var addedDash = dashPanel.add(this.dashboards[i1]);
-
-            // Save default dashboard Guid and set active dashboard instance.
-            if (dsRecord.get('isdefault')) {
-                defaultTabGuid = dsRecord.get('guid');
-                this.activeDashboard = addedDash;
-                this.defaultDashboard = addedDash;
-            }
-
-        }
-        // activate dashboard
-        this._activateDashboard(defaultTabGuid); // Focus the default dashboard.
         
         this.destroyDashboardSwitcher();
+
+        // Without the timeout, updateDashboardsFromStore causes problems when dashboards are restored 
+        // because widget destruction is delayed by 100ms to prevent memory leaks.
+        // Because of the delay, widgets on a dashboard get rerendered while previous ones haven't been destroyed.
+        setTimeout(function () {
+            // Update various dashboard-related components.
+            for (var i1 = 0, len = storeRecords.length; i1 < len; i1++) {
+
+                var dsRecord = storeRecords[i1];
+
+                // Add dashboard object to local array.
+                me.dashboards.push(me.createDashboardConfig(dsRecord));
+
+                // Add dashboard to buffered card panel.
+                var addedDash = dashPanel.add(me.dashboards[i1]);
+
+                // Save default dashboard Guid and set active dashboard instance.
+                if (dsRecord.get('isdefault')) {
+                    defaultTabGuid = dsRecord.get('guid');
+                    me.activeDashboard = addedDash;
+                    me.defaultDashboard = addedDash;
+                }
+
+            }
+            // activate dashboard
+            me._activateDashboard(defaultTabGuid); // Focus the default dashboard.
+
+        }, 200);
     },
 
     reloadDashboards: function() {
+        // TODO improvment: only restored dashboards should be refresh and deleted dashboard be removed
         var me = this;
         me.dashboardStore.load({
-
             callback: function(records, options, success) {
                 if (success == true) {
-                    // update dashboards
-                    this.updateDashboardsFromStore(records, options, success);
+                    me.updateDashboardsFromStore(records, options, success);
                 }
-            },
-            scope: me
+            }
         });
     },
 

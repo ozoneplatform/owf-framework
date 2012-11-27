@@ -225,7 +225,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             },
             getToolTip: function (values) {
                 var str = 'data-qtip="' +
-                        '<p class=\'name\'>' + values.name + '<p/>' +
+                        '<h3 class=\'name\'>' + values.name + '</h3>' +
                         '<p class=\'tip-description\'>' + (values.description || 'No description found!') +'</p>';
 
                 return values.isStack ? str + '"':
@@ -311,11 +311,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             .on('keyup', '.stack', $.proxy(me.onStackClick, me))
             .on('keyup', '.dashboard', $.proxy(me.onDashboardClick, me))
             .on('focus', '.dashboard, .stack', function (evt) {
-                console.log('focus')
                 $(evt.currentTarget).addClass(me.selectedItemCls);
             })
             .on('blur', '.dashboard, .stack', function (evt) {
-                console.log('blur');
                 $(evt.currentTarget).removeClass(me.selectedItemCls);
             })
             .on('focus', '.dashboard-actions li, .stack-actions li', function (evt) {
@@ -481,7 +479,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         if( me._lastExpandedStack ) {
             if( me._lastExpandedStack === stack ) {
-                me.hideStackDashboards()
+                me.hideStackDashboards();
+                me._lastExpandedStack = null;
             }
             else {
                 me.$stackDashboards.slideUp('fast').promise().then(function () {
@@ -592,8 +591,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     },
 
     updateDashboardEl: function ($dashboard, dashboard) {
-        $(this.tpl.apply([dashboard])).insertBefore($dashboard);
+        var $el = $(this.tpl.apply([dashboard])).insertBefore($dashboard);
         $dashboard.remove();
+        $el.focus();
     },
 
     toggleManage: function (evt) {
@@ -654,10 +654,17 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                     if (json != null && json.data != null && json.data.length > 0) {
                         me.notify('Restore Dashboard', '<span class="heading-bold">' + dashboard.name + '</span> is restored successfully to its original state!');
 
-                        dashboard.description = json.data[0].description;
-                        dashboard.name = json.data[0].name;
+                        var name = json.data[0].name,
+                            description = json.data[0].description;
 
-                        me.updateDashboardEl($dashboard, dashboard)
+                        dashboard.model.set({
+                            'name': name,
+                            'description': description
+                        });
+                        dashboard.name = name;
+                        dashboard.description = name;
+
+                        me.updateDashboardEl($dashboard, dashboard);
                         
                         // TODO
                         // update name
@@ -1001,7 +1008,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             return;
         }
 
-        if(me._deletedStackOrDashboards.length > 0) {
+        if(me._deletedStackOrDashboards.length > 0 || me.reloadDashboards === true) {
             me.dashboardContainer.reloadDashboards();
         }
     }

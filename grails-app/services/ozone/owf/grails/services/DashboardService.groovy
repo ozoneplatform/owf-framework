@@ -652,7 +652,7 @@ class DashboardService extends BaseService {
 
         dashboard.layoutConfig = params.layoutConfig ?: dashboard.layoutConfig
         // If no stack is provided, set the stack to null.
-        dashboard.stack =  params.stack != null ? Stack.get(params.stack.id.toLong()) : null
+        // dashboard.stack =  params.stack != null ? Stack.get(params.stack.id.toLong()) : null
         dashboard.locked = params.locked instanceof Boolean ? params.locked : params.locked == "true"
 
         // TODO: Consider renaming the regenerateStateIds param.  This controls regenerating widget instance id's which are encapsulated in layout_config now instead of a state table.
@@ -730,7 +730,7 @@ class DashboardService extends BaseService {
                     args.regenerateStateIds = true
 
                     args.layoutConfig = groupDash.layoutConfig
-                    args.stack = (groupDash.stack != null) ? ['id': groupDash.stack.id] : null
+                    //args.stack = (groupDash.stack != null) ? ['id': groupDash.stack.id] : null
 
                     updateDashboard(args,accountService.getLoggedInUser(),dashboard)
                 }

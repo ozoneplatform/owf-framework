@@ -1470,6 +1470,7 @@ class DashboardServiceTests extends GroovyTestCase {
         assertNotNull result.dashboard
     }
     
+    /*
     void testUpdateWithStack() {
         //Create 3 Person Widget Definitions so the state objects match up.
         assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsA1())
@@ -1522,6 +1523,7 @@ class DashboardServiceTests extends GroovyTestCase {
         assertEquals newLayoutConfig, dashboard.layoutConfig
         assertEquals stackForUpdate.id, dashboard.stack.id
     }
+    */
 	
 	void testCloneNonexisting() {
 		buildJ(false)
