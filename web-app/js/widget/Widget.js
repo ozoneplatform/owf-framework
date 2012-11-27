@@ -774,6 +774,7 @@ OWF.DragAndDrop.onDrop(function(sender, msg) {
 
 	@example
 OWF.Launcher.launch({
+	universalName: <universal name of widget to launch>,  //universalName or guid maybe identify the widget to be launched
 	guid: 'guid_of_widget_to_launch',
 	launchOnlyIfClosed: true,	//if true will only launch the widget if it is not already opened.
 								//if it is opened then the widget will be brought to focus
