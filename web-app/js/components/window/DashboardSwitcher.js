@@ -298,7 +298,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         // // remove datachanged event handler
         // this.dashboardStore.un('datachanged', this.cleanAndDestroy, this);
         this.dashboardStore.un('add', this.destroy, this);
-        console.log('destroying dashboard switcher');
         
         this.tearDownCircularFocus();
 
@@ -350,7 +349,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 stack = me.getStack( $clickedStack );
 
             if( stack ) {
-                console.log('calling Toggle Stack');
                 me.toggleStack(stack, $clickedStack);
             }
             evt.preventDefault();
@@ -369,7 +367,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 });
             }
             else {
-                console.log('calling slide up on Stack');
                 me.hideStackDashboards().then(function () {
                     me.$stackDashboards.remove();
                     me.showStackDashboards(stack, $stack, dfd);
@@ -498,7 +495,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     },
 
     toggleManage: function (evt) {
-        console.log('manage');
         var $manageBtn;
 
         if(evt) {
@@ -541,9 +537,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             dashboard = this.getDashboard($dashboard),
             dashboardGuid = dashboard.guid;
 
-        console.log('restore dashboard', dashboardGuid);
-
-        this.warn('This action will restore dashboard ' + '<span class="heading-bold">' + dashboard.name + '</span> to its original state.', function () {
+        this.warn('This action will return the dashboard <span class="heading-bold">' + dashboard.name + '</span> to its current default state. If an administrator changed the dashboard after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
             Ext.Ajax.request({
                 url: Ozone.util.contextPath() + '/dashboard/restore',
                 params: {
@@ -600,8 +594,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         // reset dashboard model
         dashboard.model = dashboardModel;
 
-        console.log('share dashboard', dashboard.guid);
-
         // Stop unload event from firing long enough to submit form.
         // Have to do this because the form submit triggers the window's unload event
         // which causes competing requests.  (SEE OWF-4280)
@@ -629,8 +621,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     },
 
     createDashboard: function (evt) {
-        console.log('createDashboard');
-
         var me = this,
             createDashWindow = Ext.widget('createdashboardwindow', {
             itemId: 'createDashWindow',
@@ -656,8 +646,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         var me = this,
             $dashboard = this.getElByClassFromEvent(evt, 'dashboard'),
             dashboard = this.getDashboard($dashboard);
-
-        console.log('edit dashboard', dashboard.guid);
 
         var editDashWindow = Ext.widget('createdashboardwindow', {
             itemId: 'editDashWindow',
@@ -685,8 +673,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             $dashboard = this.getElByClassFromEvent(evt, 'dashboard'),
             dashboard = this.getDashboard($dashboard),
             msg;
-
-        console.log('delete dashboard', dashboard);
 
         function focusEl () {
             evt.currentTarget.focus();
