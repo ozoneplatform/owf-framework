@@ -382,7 +382,7 @@ class DashboardService extends BaseService {
         }
         if (oldDefault != null)
         {
-            update([name: oldDefault.name, guid: oldDefault.guid, locked: oldDefault.locked, personId: params.personId, stack: params.stack, isdefault: false, doNotEnsureDefault: true])
+            update([name: oldDefault.name, guid: oldDefault.guid, locked: oldDefault.locked, stack: oldDefault.stack, personId: params.personId, isdefault: false, doNotEnsureDefault: true])
         }
     }
 
