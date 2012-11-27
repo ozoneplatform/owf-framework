@@ -966,7 +966,6 @@ class WidgetDefinitionService {
         widgetData.put("widgetTypes", widgetDefinition.widgetTypes?.name)
 
         //Add non-required fields
-        widgetDefinition.descriptorUrl && widgetData.put("descriptorUrl", widgetDefinition.descriptorUrl)
         widgetDefinition.universalName && widgetData.put("universalName", widgetDefinition.universalName)
         widgetDefinition.description && widgetData.put("description", widgetDefinition.description)
         widgetDefinition.widgetVersion && widgetData.put("widgetVersion", widgetDefinition.widgetVersion)
