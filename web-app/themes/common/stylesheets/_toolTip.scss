@@ -1,0 +1,15 @@
+.ozonequicktip {
+    h3 {
+        font-size: 150%;
+        margin: 0 0 10px 0;
+    }
+
+    .x-tip-body {
+        padding: 0.5em;
+    }
+
+    p {
+        font-size: $owf-font-size;
+        line-height: 2em;
+    }
+}

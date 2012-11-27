@@ -222,16 +222,19 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             getName: function (values) {
                 return values.isStack ? 'stack' : 'dashboard';
             },
+            getPrettyTime: function (unformattedDate) {
+                return Ext.util.Format.date(new Date(unformattedDate), Ozone.config.lastLoginDateFormat);
+            },
             getToolTip: function (values) {
                 var str = 'data-qtip="' +
                         '<h3 class=\'name\'>' + values.name + '</h3>' +
                         '<p class=\'tip-description\'>' + (values.description || 'No description found!') +'</p>';
-
+                
                 return values.isStack ? str + '"':
                         str +
                         '<br><p class=\'group\'>Group: ' + ((values.groups && values.groups.length > 0) ? values.groups[0].name : 'None') + '<p/>' +
-                        '<p class=\'created-by\'>Created by: ' + values.createdDate + '<p/>' +
-                        '<p class=\'last-updated\'>Last Modified: ' + values.editedDate + '<p/>"';
+                        '<p class=\'created-by\'>Created by: ' + values.createdBy.userRealName + '<p/>' +
+                        '<p class=\'last-updated\'>Last Modified: ' + this.getPrettyTime(values.editedDate) + '<p/>"';
             },
             getActions: function (values) {
                 return values.isStack ? 
