@@ -23,13 +23,13 @@ Ext.define('Ozone.components.dashboarddesigner.BaseLayout', {
 		data: [
 			{
 				type: 'vbox',
-				displayName: 'Horizontal Rule',
+				displayName: 'Horizontal Divider',
 				image: 'images/dashboard-designer/vbox.png',
 				classes: ['top', 'bottom']
 			},
 			{
 				type: 'hbox',
-				displayName: 'Vertical Rule',
+				displayName: 'Vertical Divider',
 				image: 'images/dashboard-designer/hbox.png',
 				classes: ['left', 'right']
 			}

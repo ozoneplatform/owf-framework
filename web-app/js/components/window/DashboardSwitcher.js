@@ -543,7 +543,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         console.log('restore dashboard', dashboardGuid);
 
-        this.warn('Are you sure you want to restore dashboard ' + '<span class="heading-bold">' + dashboard.name + '</span>?', function () {
+        this.warn('This action will restore dashboard ' + '<span class="heading-bold">' + dashboard.name + '</span> to its original state.', function () {
             Ext.Ajax.request({
                 url: Ozone.util.contextPath() + '/dashboard/restore',
                 params: {
