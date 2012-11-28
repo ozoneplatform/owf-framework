@@ -208,7 +208,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                         change: {
                             fn: function(field) {
                                 me.handleChange(field);
-                                me.down('#stackUrl').setValue(Ext.htmlEncode(OWF.getContainerUrl() + '/' + this.getValue()));
+                                me.down('#stackUrl').setValue(Ext.htmlEncode(OWF.getContainerUrl() + '/#stack=' + this.getValue()));
                             }
                         }
                     }

@@ -540,6 +540,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         var hashData = Ext.util.History.getToken();
         var data = hashData ? Ext.urlDecode(hashData) : {};
         var activeDashboardGuid = data.guid;
+        var stackDashboards = [];
+        var stackContext = data.stack;
 
         if (this.dashboardStore.getCount() > 0) {
             for (var i = 0, len = this.dashboardStore.getCount(); i < len; i++) {
@@ -548,6 +550,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                 this.dashboards.push(this.createDashboardConfig(dashRecord));
                 this.originalDashboardStore.add(Ext.JSON.decode(Ext.JSON.encode(dashRecord.data)));
+                
+                // Build an array of dashboards that are in the supplied stack context
+                if (stackContext && dashRecord.data.stack && dashRecord.data.stack.stackContext == stackContext) {
+                    stackDashboards.push(this.createDashboardConfig(dashRecord));
+                }
 
                 if (activeDashboardGuid != null) {
                     if (dash.guid == activeDashboardGuid) {
@@ -561,23 +568,37 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             }
         }
 
-        //set activeDashboard
+        // Set active dashboard
         if (this.activeDashboard == null) {
-            if (this.defaultDashboard != null) {
-                this.activeDashboard = this.defaultDashboard;
-            }
-            else
-            if (this.dashboards.length > 0) {
-                //no default was found just pick the first dash
-                this.activeDashboard = this.dashboards[0];
-                this.defaultDashboard = this.activeDashboard;
-            }
-            else {
-                //no dashboards at all are found create a new one
-                this.activeDashboard = this.createDashboardConfig(this.createEmptyDashboard('desktop', true));
-                this.defaultDashboard = this.activeDashboard;
-                this.dashboards.push(this.activeDashboard);
-
+            // Couldn't find a dashboard based on guid
+            if (stackDashboards.length > 0) {
+                // If a stack context was supplied, set active dashboard to first dashboard in stack
+                this.activeDashboard = stackDashboards[0];
+                if (this.defaultDashboard) {
+                    // If a default dashboard exists and is part of the stack, activate that one
+                    for (var i = 0; i < stackDashboards.length; i++) {
+                        if (this.defaultDashboard.guid == stackDashboards[i].guid) {
+                            this.activeDashboard = stackDashboards[i];
+                            break;
+                        }
+                    }
+                }
+            } else {
+                if (this.defaultDashboard != null) {
+                    // Otherwise, set active dashboard to default dashboard
+                    this.activeDashboard = this.defaultDashboard;
+                } else {
+                    if (this.dashboards.length > 0) {
+                        // Otherwise, just pick the first dash
+                        this.activeDashboard = this.dashboards[0];
+                        this.defaultDashboard = this.activeDashboard;
+                    } else {
+                        // And if all else fails, create a new active dashboard
+                        this.activeDashboard = this.createDashboardConfig(this.createEmptyDashboard('desktop', true));
+                        this.defaultDashboard = this.activeDashboard;
+                        this.dashboards.push(this.activeDashboard);
+                    }
+                }
             }
         }
 
@@ -588,23 +609,24 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         //attach listener to change dashboard on # change
         Ext.util.History.on('change', function(hashData) {
             if (hashData != null) {
+                
                 var data = Ext.urlDecode(hashData);
                 if (data.guid != null && data.guid != 'notFound') {
-                    this._activateDashboard(data.guid);
+                    this._activateDashboard(data.guid, data.stack);
                 }
                 else
                 if (data.guid == 'notFound') {
                     //guid was bad
-                    this._activateDashboard(null);
+                    this._activateDashboard(null, data.stack);
                 }
                 else {
                     //no data specified on the hash -- pass empty string
-                    this._activateDashboard('');
+                    this._activateDashboard('', data.stack);
                 }
             }
             else {
                 //goto the default dashboard
-                this._activateDashboard(this.defaultDashboard.guid);
+                this._activateDashboard(this.defaultDashboard.guid, data.stack);
             }
         }, this);
 
@@ -615,7 +637,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             dashboardCardPanel.add(this.dashboards);
 
             this.activeDashboard = dashboardCardPanel.getComponent(this.activeDashboard.id);
-            this.activateDashboard(this.activeDashboard.id, true);
+            this.activateDashboard(this.activeDashboard.id, true, this.activeDashboard.stackContext);
             if (this.activeDashboard.configRecord.get('locked')) {
     			this.getBanner().disableLaunchMenu();
     		} else {
@@ -809,25 +831,27 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             viewportId: this.viewportId,
             name: dash.name,
             userId: this.user.id,
-            userName: this.user.displayName
+            userName: this.user.displayName,
+            stackContext: dash.stack ? dash.stack.stackContext : null
         };
     },
 
-    activateDashboard: function(guid, silent) {
+    activateDashboard: function(guid, silent, stackContext) {
         //set dashboard in history but disable events so we don't activate the dashboard twice
+        var params = new Object();
+        if (stackContext) { params.stack = stackContext; }
+        params.guid = guid;
         if (silent) {
             Ext.util.History.shutDown();
         }
-        Ext.util.History.add(Ext.urlEncode({
-            guid: guid
-        }));
+        Ext.util.History.add(Ext.urlEncode(params));
         if (silent) {
             Ext.util.History.startUp();
         }
     },
 
     //this function is private, do not call outside of this class - use activateDashboard instead
-    _activateDashboard: function(guid) {
+    _activateDashboard: function(guid, stackContext) {
         var dashboardCardPanel = this.getDashboardCardPanel();
         if (!dashboardCardPanel) {
             return;
@@ -844,29 +868,53 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 this.fireEvent(OWF.Events.Dashboard.CHANGED, guid);
                 this.setDefaultDashboard(guid);
             }
-        }
-        else {
-            if (guid == '') {
-                //no guid specified set to default
-                var defaultGuid = this.defaultDashboard.guid;
-                //set guid on hash back to previous guid
-                Ext.util.History.add(Ext.urlEncode({
-                    guid: defaultGuid
-                }));
+        } else {
+            var params = new Object();
+            if (stackContext) {
+                params.stack = stackContext;
+                var stackDashGuids = [];
+                if (this.dashboardStore.getCount() > 0) {
+                    for (var i = 0, len = this.dashboardStore.getCount(); i < len; i++) {
+                        var dashRecord = this.dashboardStore.getAt(i);
+
+                        // Build an array of dashboard guids that are in the supplied stack context
+                        if (stackContext && dashRecord.data.stack && dashRecord.data.stack.stackContext == stackContext) {
+                            stackDashGuids.push(dashRecord.data.guid);
+                        }
+                    }
+                }
+                if (stackDashGuids.length > 0) {
+                    // If a stack context was supplied, set active dashboard to first dashboard in stack
+                    params.guid = stackDashGuids[0];
+                    if (this.defaultDashboard) {
+                        // If a default dashboard exists and is part of the stack, activate that one
+                        for (var i = 0; i < stackDashGuids.length; i++) {
+                            if (this.defaultDashboard.guid == stackDashGuids[i]) {
+                                params.guid = stackDashGuids[i];
+                                break;
+                            }
+                        }
+                    }
+                }
             }
-            else {
-                var prevGuid = this.activeDashboard.guid;
-                //todo remove this defer when there are events on dashboards
-                Ext.defer(Ozone.Msg.alert, 100, this, 
-                    [Ozone.util.ErrorMessageString.invalidDashboard, this.activeDashboard.isdefault 
+            if (!params.guid) {
+                if (guid == '') {
+                    //no guid specified set to default
+                    var defaultGuid = this.defaultDashboard.guid;
+                    params.guid = defaultGuid;
+                } else {
+                    var prevGuid = this.activeDashboard.guid;
+                    params.guid = prevGuid;
+                    //todo remove this defer when there are events on dashboards
+                    Ext.defer(Ozone.Msg.alert, 100, this, 
+                        [Ozone.util.ErrorMessageString.invalidDashboard, this.activeDashboard.isdefault 
                         ? Ozone.util.ErrorMessageString.invalidDashboardMsg 
                         : Ozone.util.ErrorMessageString.invalidDashboardGotoDefaultMsg,
                         null, null, null, this.modalWindowManager]);
-
-                //set guid on hash back to previous guid
-                Ext.util.History.add(Ext.urlEncode({
-                    guid: prevGuid
-                }));
+                }
+            }
+            if (params.guid) {
+                Ext.util.History.add(Ext.urlEncode(params));
             }
         }
     },

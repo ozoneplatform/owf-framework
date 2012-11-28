@@ -59,7 +59,7 @@ Ext.define('Ozone.components.admin.stack.StackDetailPanel', {
                     // },
                     renderStackUrl: function(context) {
                         context = Ext.htmlEncode(context);
-                        var url = OWF.getContainerUrl() + '/' + context;
+                        var url = OWF.getContainerUrl() + '/#stack=' + context;
                         return '<a href="' + url + '" target="_top">' + url + '</a>';
                     }
                 }
