@@ -256,13 +256,11 @@ class WidgetDefinitionService {
                     rowCount()
                 }
             }
-
             serviceModelService.createServiceModel(w,[
                     totalUsers: userCount[0],
                     totalGroups: domainMappingService.countMappings(w, RelationshipType.owns, Group.TYPE, 'dest')
                 ])
         }
-        
         return [success:true, results: widgetDefinition.totalCount, data : processedWidgets]
     }
     
@@ -332,8 +330,20 @@ class WidgetDefinitionService {
                 throw new OwfException(message: 'WidgetDefinition ' + params.id + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
             }
         }
+        // if loaded from a stack descriptor and has universal name already in system, assume same widget
         else {
-            widgetDefinition = new WidgetDefinition()
+            if (params.stackDescriptor && !isNull(params.universalName)) {
+                widgetDefinition = WidgetDefinition.findWhere(universalName: params.universalName.trim())
+				if(widgetDefinition){
+					params.widgetGuid = widgetDefinition.widgetGuid
+				}
+				else {
+					widgetDefinition = new WidgetDefinition()
+				}
+            }
+			else {
+				widgetDefinition = new WidgetDefinition()
+			}
         }
     
         if (params.update_action == null || params.update_action == '') {
@@ -341,7 +351,7 @@ class WidgetDefinitionService {
             def newWidgetTypes = []
             if (params.widgetTypes != null) {
               newWidgetTypes = params.widgetTypes.collect {
-                  WidgetType.get(it.id)
+                    WidgetType.get(it.id)
               }
             }
             if (newWidgetTypes == null || newWidgetTypes.size() < 1) {
@@ -356,8 +366,8 @@ class WidgetDefinitionService {
 
             // Fail any with descriptor file and no universal id (null or blank) or
             // a universal name that is already used.
-            if (params.descriptorUrl && params.descriptorUrl.size() > 0) {
-                if (params.universalName && !canUseUniversalName(widgetDefinition, params.universalName)) {
+            if (!isNull(params.descriptorUrl) && params.descriptorUrl.size() > 0) {
+                if (!isNull(params.universalName) && !params.stackDescriptor && !canUseUniversalName(widgetDefinition, params.universalName)) {
                     throw new OwfException(message: 'Another widget uses ' + params.universalName + ' as its Universal Name. ' 
                         + 'Please select a unique Universal Name for this widget.', exceptionType: OwfExceptionTypes.GeneralServerError)
                 }
@@ -365,15 +375,15 @@ class WidgetDefinitionService {
             
             // Convert null or whitespace universal names to null.
             def newUniversalName = null;
-            if (params.universalName != null) {
+            if (!isNull(params.universalName)) {
                 newUniversalName = (params.universalName.size() == 0 || params.universalName.isAllWhitespace()) ? null : params.universalName.trim()
             }
             // set fields
             widgetDefinition.properties = [
-                universalName: (params.universalName != null) ? newUniversalName : widgetDefinition.universalName,
+                universalName: (!isNull(params.universalName)) ? newUniversalName : widgetDefinition.universalName,
                 widgetGuid: params.widgetGuid? params.widgetGuid : widgetDefinition.widgetGuid,
                 displayName: params.displayName ?: params.name ?: widgetDefinition.displayName,
-                description: params.description ?: params.description ?: widgetDefinition.description,
+                description: !isNull(params.description) ? params.description : widgetDefinition.description,
                 widgetUrl: params.widgetUrl ?: params.url ?: widgetDefinition.widgetUrl,
                 imageUrlSmall: params.imageUrlSmall ?: params.headerIcon ?: widgetDefinition.imageUrlSmall,
                 imageUrlLarge: params.imageUrlLarge ?: params.image ?: widgetDefinition.imageUrlLarge,
@@ -383,13 +393,14 @@ class WidgetDefinitionService {
                 singleton: (params.singleton != null)? params.singleton as Boolean : widgetDefinition.singleton,
                 visible: (params.visible != null)? params.visible as Boolean : widgetDefinition.visible,
                 background: (params.background != null)? params.background as Boolean : widgetDefinition.background,
-                descriptorUrl: params.descriptorUrl ?: widgetDefinition.descriptorUrl,
+                descriptorUrl: !isNull(params.descriptorUrl) ? params.descriptorUrl : widgetDefinition.descriptorUrl,
                 widgetTypes: newWidgetTypes
             ]
             //if (widgetDefinition.universalName == null) {
             //  widgetDefinition.universalName = widgetDefinition.widgetGuid
             //}
             widgetDefinition.save(flush: true,failOnError: true)
+
             if (params.directRequired != null) {
                 // delete and the recreate requirements
                 domainMappingService.deleteAllMappings(widgetDefinition, RelationshipType.requires, 'src')
@@ -1072,5 +1083,12 @@ class WidgetDefinitionService {
                 domainMappingService.createMapping(group,RelationshipType.owns,widget)
             }
         }
+    }
+
+    private def isNull(obj) {
+        if (obj == null) {
+            return true
+        }
+        else return obj.equals(null)
     }
 }

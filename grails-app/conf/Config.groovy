@@ -355,7 +355,8 @@ uiperformance.bundles = [
             '../js/components/admin/stack/StackEditDashboardsTab',
             '../js/components/admin/stack/StackEditGroupsTab',
             '../js/components/admin/stack/StackEditUsersTab',
-            '../js/components/admin/stack/StackEditWidgetsTab'
+            '../js/components/admin/stack/StackEditWidgetsTab',
+            '../js/util/error'
         ]
     ],
     [

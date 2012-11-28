@@ -1,6 +1,7 @@
 package ozone.owf.grails.services
 
 import grails.converters.JSON
+import org.codehaus.groovy.grails.web.json.JSONObject
 import org.hibernate.CacheMode
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
@@ -9,6 +10,8 @@ import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.domain.RelationshipType
+import ozone.owf.grails.domain.WidgetDefinition
+import ozone.owf.grails.domain.WidgetType
 
 class StackService {
 
@@ -197,7 +200,8 @@ class StackService {
                 name: params.name ?: stack.name,
                 description: params.description ?: stack.description,
                 stackContext: params.stackContext ?: stack.stackContext,
-                imageUrl: params.imageUrl ?: stack.imageUrl
+                imageUrl: params.imageUrl ?: stack.imageUrl,
+                descriptorUrl: params.descriptorUrl ?: stack.descriptorUrl
             ]
             
             stack.save(flush: true, failOnError: true)
@@ -408,6 +412,85 @@ class StackService {
         }
         
         return [success: true, data: stacks]
+    }
+
+    def importStack(params) {
+
+        //only admins may import stacks
+        ensureAdmin()
+
+        def stackParams = [:]
+        params.data = JSON.parse(params.data)
+        stackParams.name = params.data.name
+        stackParams.description = params.data.description
+        stackParams.stackContext = params.data.stackContext
+        stackParams.descriptorUrl = params.descriptorUrl
+
+        def s = createOrUpdate(stackParams)
+        def stack = Stack.findById(s.data[0].id)
+        def stackDefaultGroup = stack.findStackDefaultGroup()
+
+        // create widgets from stack descriptor json
+        def widgets = params.data.widgets
+		def oldToNewGuids = [:]
+        widgets.each {
+            def widget = WidgetDefinition.findByWidgetGuid(it.widgetGuid)
+
+            def tags = []
+            if (it.defaultTags && it.defaultTags.length() > 0) {
+                for (def i = 0 ; i < it.defaultTags.length() ; i++) {
+                    def name = it.defaultTags.get(i)
+                    if (name != '') {
+                        def tag = [:]
+                        tag.put('name', name)
+                        tag.put('visible', true)
+                        tag.put('position', -1)
+                        tag.put('editable', true)
+                        tags.push(new JSONObject(tag))
+                    }
+                }
+            }
+            if(!tags.isEmpty()){
+                it.tags = tags
+            }
+			def types = []
+			if(it.widgetTypes){
+				def type = WidgetType.findByName(it.widgetTypes[0])
+				def t = [:]
+				t.put("id", type.id)
+				t.put("name", type.name)
+				types.push(new JSONObject(t))
+				it.widgetTypes = types
+			}
+            it.stackDescriptor = true
+            if(widget) {
+                it.id = it.widgetGuid
+            }
+			def oldGuid = it.widgetGuid
+            widget = widgetDefinitionService.createOrUpdate(it)
+			if(!(oldGuid.equals(widget.data[0].id))){
+				oldToNewGuids[oldGuid] = widget.data[0].id
+			}
+        }
+
+        // create dashboards from stack descriptor json
+        def dashboards = params.data.dashboards
+	
+        dashboards.each {
+			def json = it.toString()
+			oldToNewGuids.each {old, changed ->
+				json = json.replace(old, changed)
+			}
+			it = new JSONObject(json)
+            it.isGroupDashboard = true
+            it.stack = stack
+            def dashboard = dashboardService.createOrUpdate(it).dashboard
+            domainMappingService.createMapping(stackDefaultGroup, RelationshipType.owns, dashboard)
+        }
+
+        //Update the uniqueWidgetCount of the stack
+        stack.uniqueWidgetCount = widgetDefinitionService.list([stack_id: stack.id]).results
+        stack.save(flush: true, failOnError: true)
     }
     
     def export(params) {

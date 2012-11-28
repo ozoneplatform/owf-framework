@@ -303,6 +303,10 @@ class UrlMappings {
             controller = "stack"
             action = "export"
         }
+        "/stack/import" {
+            controller = "stack"
+            action = "importStack"
+        }
         "/stack/$id?" {
             controller = "stack"
             action = UrlMappings.getAction
