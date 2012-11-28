@@ -583,6 +583,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                         }
                     }
                 }
+                this.defaultDashboard = this.activeDashboard;
             } else {
                 if (this.defaultDashboard != null) {
                     // Otherwise, set active dashboard to default dashboard
