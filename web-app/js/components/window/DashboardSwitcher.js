@@ -158,8 +158,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             me.bindEvents(cmp);
         });
 
-        me.dashboardStore.on('add', me.destroy, me);
-
         me.on('beforeclose', me.onClose, me);
         me.on('show', me.updateWindowSize, me);
         me.on('show', me.initCircularFocus, me, {single: true});
@@ -168,9 +166,10 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
     bindEvents: function () {
         var me = this,
-            $ = jQuery;
+            $ = jQuery,
+            $dom = $(me.el.dom);
 
-        $(me.el.dom)
+        $dom
             .on('click', '.dashboard', $.proxy(me.onDashboardClick, me))
             .on('click', '.stack', $.proxy(me.onStackClick, me))
             .on('click', '.manage', $.proxy(me.toggleManage, me))
@@ -183,6 +182,83 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             .on('click', '.dashboard .delete', $.proxy(me.deleteDashboard, me))
             .on('click', '.stack .restore', $.proxy(me.restoreStack, me))
             .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
+
+        var $draggedDashboard,
+            draggedDashboard,
+            direction,
+            dropLeftCls = 'x-view-drop-indicator-left',
+            dropRightCls = 'x-view-drop-indicator-right';
+
+        // disable selection while dragging
+        $dom
+            .attr('unselectable', 'on')
+            .css('user-select', 'none')
+            .on('selectstart', false);
+
+        // reorder dashboards
+        $dom.on('mousedown', '.dashboard', function (evt) {
+            $draggedDashboard = $(this);
+            draggedDashboard = me.getDashboard( $draggedDashboard );
+
+            $dom.on('mousemove.reorder', '.dashboard, .stack', function (evt) { 
+                var pageX = evt.pageX,      // The mouse position relative to the left edge of the document.
+                    pageY = evt.pageY,      // The mouse position relative to the top edge of the document.
+                    $el = $(this),
+                    offset = $el.offset(),  // The offset relative to the top left edge of the document.
+                    width = $el.outerWidth();
+
+                $el.removeClass(dropLeftCls + ' ' + dropRightCls);
+                
+                if( pageX <= offset.left + (width/2) ) {
+                    $el.addClass(dropLeftCls);
+                }
+                else {
+                    $el.addClass(dropRightCls);
+                }
+            });
+
+            $dom.on('mouseleave.reorder', '.dashboard, .stack', function (evt) {
+                $(this).removeClass(dropLeftCls + ' ' + dropRightCls);
+            });
+
+            // drop performed on a dashboard
+            $dom.on('mouseup.reorder', '.dashboard', function (evt) {
+                var $dashboard = $(this),
+                    dashboard = me.getDashboard( $dashboard ),
+                    index, store, record;
+                
+                // dropped on the same element
+                if($dashboard[0] === $draggedDashboard[0])
+                    return;
+
+                store = me.dashboardStore;
+                index = store.indexOf(dashboard.model);
+
+                if ( $dashboard.hasClass(dropLeftCls) ) {
+                    $dashboard.removeClass(dropLeftCls);
+                    $draggedDashboard.insertBefore( $dashboard );
+                }
+                else if ( $dashboard.hasClass(dropRightCls) ) {
+                    $dashboard.removeClass(dropRightCls);
+                    $draggedDashboard.insertAfter( $dashboard );
+                }
+
+                store.remove(draggedDashboard.model, true);
+                store.insert(index, draggedDashboard.model);
+
+                $draggedDashboard.focus();
+
+                me.reordered = true;
+            });
+
+            // cleanup on mouseup
+            $(document).on('mouseup.reorder', function (evt) {
+                $draggedDashboard =  null;
+                draggedDashboard = null;
+
+                $dom.off('.reorder');
+            });
+        });
 
         me.initKeyboardNav();
     },
@@ -857,6 +933,40 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             return;
         }
 
+        if (me.reordered) {
+            // Create array of views
+            var gridData = me.dashboardStore.data.items;
+            var viewsToUpdate = [];
+            var viewGuidsToDelete = [];
+        
+            for (var i = 0; i < gridData.length; i++) {
+                if (!gridData[i].data.removed) {
+                    viewsToUpdate.push({
+                        guid: gridData[i].data.guid,
+                        isdefault: gridData[i].data.isdefault,
+                        name: gridData[i].data.name.replace(new RegExp(Ozone.lang.regexLeadingTailingSpaceChars), '')
+                    });
+                } else {
+                    viewGuidsToDelete.push(gridData[i].data.guid);
+                }
+            }
+
+            // remove before close listener so that it doesn't get called
+            // when the window is closed from callback
+            me.un('beforeclose', me.onClose, me);
+
+            Ozone.pref.PrefServer.updateAndDeleteDashboards({
+                viewsToUpdate: viewsToUpdate,
+                viewGuidsToDelete: viewGuidsToDelete,
+                updateOrder: true,
+                onSuccess: function() {
+                    me.dashboardContainer.reloadDashboards();
+                },
+                onFailure: function() {
+                    me.dashboardContainer.reloadDashboards();
+                }
+            });
+        }
         if(me._deletedStackOrDashboards.length > 0 || me.reloadDashboards === true) {
             me.dashboardContainer.reloadDashboards();
         }

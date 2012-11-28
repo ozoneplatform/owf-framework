@@ -537,3 +537,17 @@ img.widget-drag-proxy {
         }
     }
 }
+
+// CSS for reordering widgets and dashboards
+.x-view-drop-indicator-left {
+    background-color: none;
+    background-image: theme-image($theme-name, 'launch-menu/drop-indicator-left.PNG');
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+.x-view-drop-indicator-right {
+    background-color: none;
+    background-image: theme-image($theme-name, 'launch-menu/drop-indicator-right.PNG');
+    background-repeat: no-repeat;
+    background-position: right center;
+}

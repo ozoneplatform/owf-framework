@@ -1565,6 +1565,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             json: json,
             saveAsNew: createOrUpdate == 'create' ? true : false,
             onSuccess: function(json) {
+                me.destroyDashboardSwitcher();
                 me.dashboardCreated(json);
                 success && success(json);
 
