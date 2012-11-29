@@ -52,6 +52,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             dashboards[ dashboard.guid ] = dashboard;
 
             stack = dashboard.stack;
+            console.log(i, ' => Dashboard name: ', dashboard.name, 'Stack: ', stack ? stack.name : 'none', ' Default: ', dashboard.isdefault);
             if( stack ) {
                 if( stacks[ stack.id ] ) {
                     stacks[ stack.id ].dashboards.push( dashboard );
@@ -183,8 +184,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             .on('click', '.stack .restore', $.proxy(me.restoreStack, me))
             .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
 
-        var $draggedDashboard,
-            draggedDashboard,
+        var $draggedItem,
+            draggedItem,
+            $draggedItemParent,
             direction,
             dropLeftCls = 'x-view-drop-indicator-left',
             dropRightCls = 'x-view-drop-indicator-right';
@@ -197,13 +199,20 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         // reorder dashboards
         $dom.on('mousedown', '.dashboard', function (evt) {
-            $draggedDashboard = $(this);
-            draggedDashboard = me.getDashboard( $draggedDashboard );
+            $draggedItem = $(this);
+            draggedItem = me.getDashboard( $draggedItem );
+            $draggedItemParent = $draggedItem.parent();
 
             $dom.on('mousemove.reorder', '.dashboard, .stack', function (evt) { 
+                var $el = $(this);
+
+                // only allow reordering if parents match and 
+                // prevent reordering stack dashboards outside of stack and vice versa.
+                if($draggedItemParent[0] !== $el.parent()[0])
+                    return;
+
                 var pageX = evt.pageX,      // The mouse position relative to the left edge of the document.
                     pageY = evt.pageY,      // The mouse position relative to the top edge of the document.
-                    $el = $(this),
                     offset = $el.offset(),  // The offset relative to the top left edge of the document.
                     width = $el.outerWidth();
 
@@ -223,38 +232,110 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
             // drop performed on a dashboard
             $dom.on('mouseup.reorder', '.dashboard', function (evt) {
-                var $dashboard = $(this),
-                    dashboard = me.getDashboard( $dashboard ),
+                var $targetItem = $(this),
+                    targetItem = me.getDashboard( $targetItem ),
                     index, store, record;
                 
                 // dropped on the same element
-                if($dashboard[0] === $draggedDashboard[0])
+                if($targetItem[0] === $draggedItem[0]) {
+                    evt.preventDefault();
+                    $targetItem.removeClass(dropLeftCls + ' ' + dropRightCls);
                     return;
+                }
 
                 store = me.dashboardStore;
-                index = store.indexOf(dashboard.model);
+                index = store.indexOf(targetItem.model);
 
-                if ( $dashboard.hasClass(dropLeftCls) ) {
-                    $dashboard.removeClass(dropLeftCls);
-                    $draggedDashboard.insertBefore( $dashboard );
+                if ( $targetItem.hasClass(dropLeftCls) ) {
+                    $targetItem.removeClass(dropLeftCls);
+                    $draggedItem.insertBefore( $targetItem );
                 }
-                else if ( $dashboard.hasClass(dropRightCls) ) {
-                    $dashboard.removeClass(dropRightCls);
-                    $draggedDashboard.insertAfter( $dashboard );
+                else if ( $targetItem.hasClass(dropRightCls) ) {
+                    $targetItem.removeClass(dropRightCls);
+                    $draggedItem.insertAfter( $targetItem );
+                    index++;
                 }
 
-                store.remove(draggedDashboard.model, true);
-                store.insert(index, draggedDashboard.model);
+                var currentIndex = store.indexOf(draggedItem.model);
+                // account for length changing after removal
+                if(currentIndex < index)
+                    index--;
 
-                $draggedDashboard.focus();
+                store.remove(draggedItem.model, true);
+                
+                console.log('Removing dragged item from index ', currentIndex);
+                for(var i = 0, len = me.dashboardStore.getCount(); i < len; i++) {
+                    model = me.dashboardStore.getAt(i);
 
+                    dashboard = Ext.clone(model.data);
+                    stack = dashboard.stack;
+                    console.log(i, ' => Dashboard name: ', dashboard.name, 'Stack: ', stack ? stack.name : 'none', ' Default: ', dashboard.isdefault);
+                }
+
+                console.log('Adding dragged item at index ', index);
+                store.insert(index, draggedItem.model);
+
+
+                for(var i = 0, len = me.dashboardStore.getCount(); i < len; i++) {
+                    model = me.dashboardStore.getAt(i);
+
+                    dashboard = Ext.clone(model.data);
+                    stack = dashboard.stack;
+                    console.log(i, ' => Dashboard name: ', dashboard.name, 'Stack: ', stack ? stack.name : 'none', ' Default: ', dashboard.isdefault);
+                }
+
+                $draggedItem.focus();
+                me.initCircularFocus();
+                me.reordered = true;
+            });
+            
+            // drop performed on a dashboard
+            $dom.on('mouseup.reorder', '.stack', function (evt) {
+                var $stack = $(this),
+                    stack = me.getStack( $stack ),
+                    index, store, record;
+                
+                // dropped on the same element
+                if($stack[0] === $draggedItem[0]) {
+                    evt.preventDefault();
+                    $stack.removeClass(dropLeftCls + ' ' + dropRightCls);
+                    return;
+                }
+
+                store = me.dashboardStore;
+
+                if ( $stack.hasClass(dropLeftCls) ) {
+                    $stack.removeClass(dropLeftCls);
+                    $draggedItem.insertBefore( $stack );
+
+                    index = store.indexOf(stack.dashboards[0].model);
+                }
+                else if ( $stack.hasClass(dropRightCls) ) {
+                    $stack.removeClass(dropRightCls);
+                    $draggedItem.insertAfter( $stack );
+
+                    index = store.indexOf(stack.dashboards[stack.dashboards.length-1].model);
+                    index++;
+                }
+
+                var currentIndex = store.indexOf(draggedItem.model);
+                // account for length changing after removal
+                if(currentIndex < index)
+                    index--;
+
+                console.log('Removing dragged item from index ', currentIndex);
+                store.remove(draggedItem.model, true);
+                console.log('Adding dragged item at index ', index);
+                store.insert(index, draggedItem.model);
+
+                me.initCircularFocus();
                 me.reordered = true;
             });
 
             // cleanup on mouseup
             $(document).on('mouseup.reorder', function (evt) {
-                $draggedDashboard =  null;
-                draggedDashboard = null;
+                $draggedItem =  null;
+                draggedItem = null;
 
                 $dom.off('.reorder');
             });
@@ -342,6 +423,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         var firstEl = this.body.first(),
             addBtnEl = this.el.last().last();
 
+        this.tearDownCircularFocus();
         this.setupFocus(firstEl, addBtnEl);
     },
 

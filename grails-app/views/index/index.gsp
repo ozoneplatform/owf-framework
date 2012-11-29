@@ -192,7 +192,7 @@
                 Ext.tip.QuickTipManager.init(true,{
                     xtype: 'ozonequicktip',
                     dismissDelay: 60000,
-                    showDelay: 1000,
+                    showDelay: 2000,
                     zIndexManager: tooltipManager
                 });
 

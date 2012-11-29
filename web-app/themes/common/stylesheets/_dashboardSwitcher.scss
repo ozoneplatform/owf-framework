@@ -101,6 +101,12 @@
         }
     }
 }
+
+[class^="icon-"],
+[class*=" icon-"] {
+    color: $dashboard-switcher-dashboard-text-color;
+}
+
 .icon-share {
     &:hover, &.hover {
         color: #5252FF;
