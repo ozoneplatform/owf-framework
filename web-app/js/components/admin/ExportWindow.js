@@ -41,8 +41,8 @@ Ext.define('Ozone.components.admin.ExportWindow', {
             items: [{
                 xtype: 'textfield',
                 itemId: 'filename',
-                fieldLabel: 'Filename',
-                labelWidth: 140,
+                fieldLabel: 'File Name',
+                labelWidth: 130,
                 allowBlank: false,
                 name: 'filename',
                 maxLength: 200,
