@@ -17,6 +17,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
 
     hideMenu: false,
     hideDelay: 100,
+    showDelay: 800,
 
     initComponent: function() {
         var me = this;
@@ -358,22 +359,28 @@ Ext.define('Ozone.components.button.UserMenuButton', {
             menuEl = me.userMenu.el;
 
         me.hideMenu = false;
-        if(me.hideTask) {
-            me.hideTask.cancel();
-        }
-
-        me.menuHidden = false;
         
-        /*
-         * if it is currently fading out, 
-         * stop it so that setVisible(false) 
-         * does not get called out of order
-         */
-        menuEl.stopAnimation(); 
+        if (!me.showTask) {
+            me.showTask = Ext.create('Ext.util.DelayedTask', function() {
+                if(me.hideTask) {
+                    me.hideTask.cancel();
+                }
 
-        menuEl.setVisible(true);
-        menuEl.alignTo(me.getEl(), "tr-br");
-        menuEl.fadeIn();
+                me.menuHidden = false;
+        
+                /*
+                 * if it is currently fading out, 
+                 * stop it so that setVisible(false) 
+                 * does not get called out of order
+                 */
+                menuEl.stopAnimation(); 
+
+                menuEl.setVisible(true);
+                menuEl.alignTo(me.getEl(), "tr-br");
+                menuEl.fadeIn();
+            });
+        }
+        me.showTask.delay(Ext.isNumber(me.showDelay) ? me.showDelay : 800, null);
     },
 
     hideUserMenu: function() {
@@ -384,6 +391,9 @@ Ext.define('Ozone.components.button.UserMenuButton', {
 
         if (!me.hideTask) {
             me.hideTask = Ext.create('Ext.util.DelayedTask', function() {
+                if(me.showTask) {
+                    me.showTask.cancel();
+                }
                 if (me.menuHidden) return; //already hidden
 
                 if(me.hideMenu === true && me.userMenu && me.userMenu.el) {
