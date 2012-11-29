@@ -444,6 +444,7 @@ uiperformance.bundles = [
             '../js/data/stores/AdminWidgetStore',
             '../js/data/models/WidgetType',
             '../js/data/stores/WidgetTypeStore',
+            '../js/components/admin/EditIntentWindow',
             '../js/components/admin/grid/IntentsGrid',
             '../js/components/admin/grid/GroupsGrid',
             '../js/components/admin/grid/UsersGrid',

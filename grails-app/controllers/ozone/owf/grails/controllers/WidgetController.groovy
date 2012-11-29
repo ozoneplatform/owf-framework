@@ -85,15 +85,15 @@ class WidgetController extends BaseOwfRestController {
         }
         try
         {
-            def result = widgetDefinitionService.createOrUpdate(params)		
+            def result = widgetDefinitionService.createOrUpdate(params)     
             jsonResult=[msg: result as JSON, status: 200]
         }
         catch (Exception e) {
             jsonResult = handleError(e)
         }
-		
-        renderResult(jsonResult,)
-		
+
+        renderResult(jsonResult)
+        
         if (log.isInfoEnabled()) {
             log.info("Executed widgetDefinitionService: createOrUpdate in "+stopWatch);
         }

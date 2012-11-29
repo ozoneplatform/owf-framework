@@ -364,6 +364,11 @@ class WidgetDefinitionService {
               }
             }
 
+            //Ensure parameters are String, if not set them to null
+            if(!(params.descriptorUrl instanceof String)) params.descriptorUrl = null;
+            if(!(params.universalName instanceof String)) params.universalName = null;
+            if(!(params.description instanceof String)) params.description = null;
+
             // Fail any with descriptor file and no universal id (null or blank) or
             // a universal name that is already used.
             if (!isNull(params.descriptorUrl) && params.descriptorUrl.size() > 0) {
@@ -389,7 +394,7 @@ class WidgetDefinitionService {
                 imageUrlLarge: params.imageUrlLarge ?: params.image ?: widgetDefinition.imageUrlLarge,
                 width: (params.width != null)? params.width as Integer : widgetDefinition.width,
                 height: (params.height != null)? params.height as Integer : widgetDefinition.height,
-                widgetVersion: params.containsKey('widgetVersion') ? params.widgetVersion : params.version,
+                widgetVersion: params.containsKey('widgetVersion') ? params.widgetVersion : params.version.toString(),
                 singleton: (params.singleton != null)? params.singleton as Boolean : widgetDefinition.singleton,
                 visible: (params.visible != null)? params.visible as Boolean : widgetDefinition.visible,
                 background: (params.background != null)? params.background as Boolean : widgetDefinition.background,
@@ -460,8 +465,16 @@ class WidgetDefinitionService {
                     //Add new widget definition intent
                     def newWidgetDefinitionIntent
                     if(i < lastSendIntent) {
-                        newWidgetDefinitionIntent = new WidgetDefinitionIntent(widgetDefinition: widgetDefinition, intent: newIntent, 
-                            dataTypes: intentDataTypes, send: true, receive: false)
+                        //Create a new sending widget definition intent if one doesn't already exist
+                        newWidgetDefinitionIntent = WidgetDefinitionIntent.createCriteria().get() {
+                            eq('widgetDefinition', widgetDefinition)
+                            eq('intent', newIntent)
+                            eq('send', true)
+                        }
+                        if(!newWidgetDefinitionIntent) {
+                            newWidgetDefinitionIntent = new WidgetDefinitionIntent(widgetDefinition: widgetDefinition, intent: newIntent, 
+                                dataTypes: intentDataTypes, send: true, receive: false)
+                        }
                     } else {
                         //Check if one of the send intents has the same widgetDefinition, intent, and dataTypes, if so reuse it
                         newWidgetDefinitionIntent = WidgetDefinitionIntent.createCriteria().get() {
@@ -473,8 +486,16 @@ class WidgetDefinitionService {
                             newWidgetDefinitionIntent.receive = true
                         }
                         else {
-                            newWidgetDefinitionIntent = new WidgetDefinitionIntent(widgetDefinition: widgetDefinition, intent: newIntent, 
-                                dataTypes: intentDataTypes, send: false, receive: true)
+                            //Create a new receiving widget definition intent if one doesn't already exist
+                            newWidgetDefinitionIntent = WidgetDefinitionIntent.createCriteria().get() {
+                                eq('widgetDefinition', widgetDefinition)
+                                eq('intent', newIntent)
+                                eq('receive', true)
+                            }
+                            if(!newWidgetDefinitionIntent) {
+                                newWidgetDefinitionIntent = new WidgetDefinitionIntent(widgetDefinition: widgetDefinition, intent: newIntent, 
+                                    dataTypes: intentDataTypes, send: false, receive: true)
+                            }
                         }
                     }
                     widgetDefinition.addToWidgetDefinitionIntents(newWidgetDefinitionIntent)

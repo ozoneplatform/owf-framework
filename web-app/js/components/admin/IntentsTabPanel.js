@@ -53,6 +53,36 @@ Ext.define('Ozone.components.admin.IntentsTabPanel', {
                         }
                     }
                 }]
+            },
+            {
+                xtype: 'toolbar',
+                itemId: 'tbDashboardsGridFtr',
+                dock: 'bottom',
+                ui: 'footer',
+                defaults: {
+                    minWidth: 80
+                },
+                items: [{
+                    xtype: 'button',
+                    text: 'Create',
+                    itemId: 'btnCreate',
+                    handler: this.onCreateOrEdit,
+                    scope: this
+                },
+                {
+                    xtype: 'button',
+                    text: 'Edit',
+                    itemId: 'btnEdit',
+                    handler: this.onCreateOrEdit,
+                    scope: this
+                },
+                {
+                    xtype: 'button',
+                    text: 'Delete',
+                    itemId: 'btnDelete',
+                    handler: this.onDelete,
+                    scope: this
+                }]
             }]
         });
         
@@ -76,6 +106,23 @@ Ext.define('Ozone.components.admin.IntentsTabPanel', {
         });
         
         this.on({
+            activate: {
+                fn: function(cmp) {
+                    var grid = cmp.getComponent('intentsGrid');
+                    if (grid) {
+                        grid.on({
+                            itemdblclick: {
+                                fn: function() {
+                                    var selectedIntent = this.getComponent('intentsGrid').getSelectionModel().getSelection()[0];
+                                    this.onCreateOrEdit(this.down('#btnEdit'));
+                                },
+                                scope: this
+                            }
+                        });
+                    }
+                },
+                single: true
+            },
         	afterrender: {
         		fn: function(cmp) {
         	        this.ownerCt.on({
@@ -132,7 +179,7 @@ Ext.define('Ozone.components.admin.IntentsTabPanel', {
         	               }
         	               
         	               // Update grid data
-        	               if (store) {        	   
+        	               if (store) {
         	                   store.loadData(storeData);
         	                   
         	                   //allow headers to be focused
@@ -193,6 +240,150 @@ Ext.define('Ozone.components.admin.IntentsTabPanel', {
         		scope: this
         	}
         });
+    },
+
+    onCreateOrEdit: function(btn, evt) {
+        var me = this;
+
+        var isEdit = false,
+            selectedIntent = null;
+
+        if(btn == me.down('#btnEdit')) {
+            isEdit = true;
+            //Get the intent to edit
+            selectedIntent = this.getComponent('intentsGrid').getSelectionModel().getSelection()[0];
+        }
+
+        if(!isEdit || (isEdit && selectedIntent)) {
+            evt && evt.stopPropagation();
+            Ext.create('Ozone.components.admin.EditIntentWindow', {
+                title: 'Create Intent',
+                action: isEdit ? selectedIntent.get('action') : null,
+                dataType: isEdit ? selectedIntent.get('dataType') : null,
+                send: isEdit ? selectedIntent.get('send') : null,
+                receive: isEdit ? selectedIntent.get('receive') : null,
+                width: Math.round(Ext.getBody().getViewSize().width * .9),
+                height: 260,
+                scope: this,
+                callback: function(values) {
+                    if (values != undefined) {
+                        var intent = {action: values.action, dataTypes: [values.dataType]},
+                            widget = me.ownerCt,
+                            record = widget.store.getById(widget.recordId),
+                            intents = record.get('intents');
+
+                        //If edit, remove the old intent first
+                        if(isEdit) {
+                            var oldIntent = {action: selectedIntent.get('action'), dataTypes: [selectedIntent.get('dataType')]};
+                            me.removeIntentFromArray(oldIntent, intents.send);
+                            me.removeIntentFromArray(oldIntent, intents.receive);
+                        }
+
+                        //If the new intent already exists remove it
+                        me.removeIntentFromArray(intent, intents.send);
+                        me.removeIntentFromArray(intent, intents.receive);
+
+                        //If action exists still, use the same case as it
+                        var getExistingAction = function(action, intentArray) {
+                            if(intentArray) {
+                                for(var i = 0; i < intentArray.length; i++) {
+                                    if(intentArray[i].action.toLowerCase() === intent.action.toLowerCase()) {
+                                        return intentArray[i].action;
+                                    }
+                                }
+                            }
+                            return action;
+                        }
+                        intent.action = getExistingAction(getExistingAction(intent.action, intents.send), intents.receive);
+
+                        //Add the new intent
+                        if(values.send) {
+                            !intents.send && (intents.send = [])
+                            intents.send.push(intent);
+                        }
+                        if(values.receive) {
+                            !intents.receive && (intents.receive = [])
+                            intents.receive.push(intent);
+                        }
+
+                        //Edit and save the widget definition record with the new intent
+                        record.beginEdit();
+                        record.set('intents', intents);
+                        record.setDirty();
+                        record.endEdit();
+
+                        widget.store.save();
+
+                        //Refresh the intents grid
+                        widget.fireEvent('recordupdated', {intents: intents});
+                        
+                        //Update the intents field of the properties tab
+                        widget.down('#widgeteditproperties').getComponent('intents').setValue(Ext.JSON.encode(intents));
+                    }
+                }
+            }).show();
+        }
+        else {
+            me.editPanel.showAlert("Error", "You must select an intent to edit.");
+        }
+    },
+
+    onDelete: function(btn, evt) {
+        var me = this,
+            selectedIntent = this.getComponent('intentsGrid').getSelectionModel().getSelection()[0];
+
+        if(selectedIntent) {
+            me.editPanel.showConfirmation('Delete Intent', 
+                'This action will permanently delete intent <b>' + Ext.htmlEncode(selectedIntent.get('action')) 
+                + '</b> with data type <b>' + Ext.htmlEncode(selectedIntent.get('dataType')) + '</b> from this widget.', 
+                function(btn, text, opts) {
+                    if (btn == 'ok') {
+                        var intent = {action: selectedIntent.get('action'), dataTypes: [selectedIntent.get('dataType')]},
+                            widget = me.ownerCt,
+                            record = widget.store.getById(widget.recordId),
+                            intents = record.get('intents');
+
+                        me.removeIntentFromArray(intent, intents.send);
+                        me.removeIntentFromArray(intent, intents.receive);
+
+                        //Edit and save the widget definition record with the intent removed
+                        record.beginEdit();
+                        record.set('intents', intents);
+                        record.setDirty();
+                        record.endEdit();
+
+                        widget.store.save();
+
+                        //Refresh the intents grid
+                        widget.fireEvent('recordupdated', {intents: intents});
+                        
+                        //Update the intents field of the properties tab
+                        widget.down('#widgeteditproperties').getComponent('intents').setValue(Ext.JSON.encode(intents));
+                    }
+                });
+        }
+        else {
+            me.editPanel.showAlert("Error", "You must select an intent to delete.");
+        }
+    },
+
+    //Looks through an array of intents for the given intent and removes it (case-insensitive)
+    removeIntentFromArray: function(intent, intentArray) {
+        if(intentArray) {
+            for(var i = 0; i < intentArray.length; i++) {
+                if(intentArray[i].action.toLowerCase() === intent.action.toLowerCase()) {
+                    if(intentArray[i].dataTypes) {
+                        var dataTypesArray = []
+                        for(var j = 0; j < intentArray[i].dataTypes.length; j++) {
+                            dataTypesArray.push(intentArray[i].dataTypes[j].toLowerCase());
+                        }
+                        if(Ext.Array.contains(dataTypesArray, intent.dataTypes[0].toLowerCase())) {
+                            Ext.Array.remove(intentArray, intentArray[i]);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
-    
 });

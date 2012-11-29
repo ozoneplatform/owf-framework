@@ -15,6 +15,10 @@ class IntentDataType implements Serializable {
 	
 	static hasMany = [intents: Intent, widgetDefinitionIntents: WidgetDefinitionIntent]
 
+    static constraints = {
+        dataType(nullable: false, maxSize: 256, unique: true)
+    }
+
 	static mapping = {
 		widgetDefinitions(lazy:true, cache: true)
 		intents(lazy:true, cache: true)
