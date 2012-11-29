@@ -404,8 +404,10 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         var $clickedDashboard = $(evt.currentTarget),
             dashboard = this.getDashboard( $clickedDashboard );
+            
+        var stackContext = dashboard.stack ? dashboard.stack.stackContext : null;
 
-        this.activateDashboard(dashboard.guid);
+        this.activateDashboard(dashboard.guid, stackContext);
         
         $clickedDashboard.addClass( this.selectedItemCls );
 
@@ -871,9 +873,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         });
     },
 
-    activateDashboard: function (guid) {
+    activateDashboard: function (guid, stackContext) {
         this.close();
-        this.dashboardContainer.activateDashboard(guid);
+        this.dashboardContainer.activateDashboard(guid, false, stackContext);
     },
 
     updateWindowSize: function() {
