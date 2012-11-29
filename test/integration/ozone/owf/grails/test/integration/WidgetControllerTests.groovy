@@ -4,7 +4,10 @@ import grails.converters.JSON;
 
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
+import ozone.owf.grails.domain.Intent
+import ozone.owf.grails.domain.IntentDataType
 import ozone.owf.grails.domain.WidgetDefinition
+import ozone.owf.grails.domain.WidgetDefinitionIntent
 import ozone.owf.grails.domain.ERoleAuthority
 import ozone.owf.grails.controllers.WidgetController
 
@@ -13,7 +16,7 @@ class WidgetControllerTests extends OWFGroovyTestCase {
     def widgetDefinitionService
     def controller
 	
-    void createWidgetDefinitionForTest() {
+    def createWidgetDefinitionForTest() {
         def widgetDefinition = WidgetDefinition.build(
             descriptorUrl : '../examples/fake-widgets/widget-c.json',
             displayName : 'Widget C',
@@ -26,9 +29,11 @@ class WidgetControllerTests extends OWFGroovyTestCase {
             widgetUrl : '../examples/fake-widgets/widget-c.html',
             width : 980
         )
+
+        return widgetDefinition
     }
 	
-    void createWidgetDefinitionForTest(widgetName, imageUrlLarge, imageUrlSml, guid, widgetUrl, descriptorUrl, universalName) {
+    def createWidgetDefinitionForTest(widgetName, imageUrlLarge, imageUrlSml, guid, widgetUrl, descriptorUrl, universalName) {
         def widgetDefinition = WidgetDefinition.build(
             descriptorUrl : '../examples/fake-widgets/' + descriptorUrl,
             displayName : widgetName,
@@ -41,6 +46,8 @@ class WidgetControllerTests extends OWFGroovyTestCase {
             widgetUrl : '../examples/fake-widgets/' + widgetUrl,
             width : 980
         )
+
+        return widgetDefinition
     }
 		
     void testShowForExistentWidgetDefinition() {
@@ -170,8 +177,19 @@ class WidgetControllerTests extends OWFGroovyTestCase {
 	
     void testUpdateWidgetDefinition() {
         loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
-        createWidgetDefinitionForTest('Widget C','widgetC.gif','widgetCsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12551','widget-c.html','widget-c.json', 'com.example.widgetc')
+        def widgetDefinition = createWidgetDefinitionForTest('Widget C','widgetC.gif','widgetCsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12551','widget-c.html','widget-c.json', 'com.example.widgetc')
 		
+        def intentDataType1 = IntentDataType.build(dataType: "Address")
+        def intentDataType2 = IntentDataType.build(dataType: "City")
+        def intentDataType3 = IntentDataType.build(dataType: "LongLat")
+
+        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(widgetDefinition, 
+            Intent.build(action: "Pan", dataTypes: [intentDataType1, intentDataType2]),
+            [intentDataType1, intentDataType2], true, false)
+        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(widgetDefinition, 
+            Intent.build(action: "Plot", dataTypes: [intentDataType2, intentDataType1, intentDataType3]),
+            [intentDataType1, intentDataType3], false, true)
+
         controller = new WidgetController()
         controller.widgetDefinitionService = widgetDefinitionService
         controller.request.contentType = "text/json"
@@ -185,6 +203,7 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         controller.params.imageUrlSmall = '../images/blue/icons/widgetContainer/widgetDsm.gif'
         controller.params.imageUrlLarge	= '../images/blue/icons/widgetIcons/widgetD.gif'
         controller.params.descriptorUrl = '../examples/fake-widgets/widget-d.json'
+        controller.params.intents = JSON.parse('{"send":[{"action":"Graph","dataTypes":["application/html"]}],"receive":[{"action":"View","dataTypes":["text/html"]}]}')
 		
         controller.createOrUpdate()
 
@@ -194,6 +213,7 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         assertEquals '../images/blue/icons/widgetContainer/widgetDsm.gif', JSON.parse(controller.response.contentAsString).data[0].value.headerIcon
         assertEquals '../images/blue/icons/widgetIcons/widgetD.gif', JSON.parse(controller.response.contentAsString).data[0].value.image
         assertEquals '../examples/fake-widgets/widget-d.json', JSON.parse(controller.response.contentAsString).data[0].value.descriptorUrl
+        assertEquals '{"send":[{"action":"Graph","dataTypes":["application/html"]}],"receive":[{"action":"View","dataTypes":["text/html"]}]}', JSON.parse(controller.response.contentAsString).data[0].value.intents.toString()
         assertNotSame 'Widget C', JSON.parse(controller.response.contentAsString).data[0].value.namespace
         assertNotSame '../examples/fake-widgets/widget-c.html', JSON.parse(controller.response.contentAsString).data[0].value.url
         assertNotSame '../images/blue/icons/widgetContainer/widgetCsm.gif', JSON.parse(controller.response.contentAsString).data[0].value.headerIcon
@@ -286,4 +306,16 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         assertEquals '"Error during delete: You are not authorized to access this entity. You are not authorized to delete widget definitions."', controller.response.contentAsString
         assertNotNull WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
     }*/
+
+    private def createWidgetDefinitionIntentForTest(widgetDefinition, intent, dataTypes, send, receive) {
+        def widgetDefinitionIntent = WidgetDefinitionIntent.build(
+            widgetDefinition : widgetDefinition,
+            intent : intent,
+            dataTypes : dataTypes,
+            send : send,
+            receive : receive)
+
+        widgetDefinitionIntent.save(flush:true)
+        return widgetDefinitionIntent
+    }
 }
