@@ -225,4 +225,69 @@ class StackControllerTests extends OWFGroovyTestCase {
         def resp = JSON.parse(stackController.response.contentAsString)
         assertEquals false, resp.success
     }
+	
+	void testImport() {
+		
+		loginAsUsernameAndRole('testAdmin', ERoleAuthority.ROLE_ADMIN.strVal)
+		
+		def widgetGuid = java.util.UUID.randomUUID()
+		def dashboardGuid = java.util.UUID.randomUUID()
+		def fileJson = """{
+		"widgets": [
+	      {
+	         "universalName": null,
+	         "visible": true,
+	         "defaultTags": [],
+	         "imageUrlSmall": "http://www.image.com/theimage.png",
+	         "imageUrlLarge": "http://www.image.com/theimage.png",
+	         "singleton": false,
+	         "width": 540,
+	         "widgetVersion": "1.0",
+	         "intents": {
+	            "send": [],
+	            "receive": []
+	         },
+	         "height": 440,
+	         "widgetUrl": "http://www.widget.com/widget1.html",
+	         "description": "This is my widget description",
+	         "background": false,
+	         "widgetTypes": ["standard"],
+	         "widgetGuid": "$widgetGuid",
+	         "displayName": "widget1",
+	         "descriptorUrl": null
+	      }],
+		"description": "This is my stack description.",
+		"name": "Stack1",
+		"stackContext": "stack1",
+		"dashboards": [{
+			"layoutConfig": {
+                    "xtype": "tabbedpane",
+                    "flex": 1,
+                    "height": "100%",
+                    "items": [],
+                    "paneType": "desktoppane",
+                    "widgets": [{
+                        "widgetGuid":"$widgetGuid"
+                    }],
+                    "defaultSettings": {}
+                },
+			"guid": "$dashboardGuid",
+	        "isdefault": false,
+	        "dashboardPosition": 5,
+	        "description": "This is a stack dashboard.",
+	        "name": "Stack Dash 1",
+	        "locked": false
+		}]
+		}"""
+
+		stackController = new StackController()
+		stackController.stackService = stackService
+		stackController.params.data = fileJson
+		stackController.params.descriptorUrl = "http://www.stack.com/descriptor.html"
+		
+		stackController.importStack()
+		
+		def resp = JSON.parse(stackController.response.contentAsString)
+		assertEquals 'Stack1', resp.name	
+	}
 }
