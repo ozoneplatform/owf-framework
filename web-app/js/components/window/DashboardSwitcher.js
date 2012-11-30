@@ -36,8 +36,11 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
     _deletedStackOrDashboards: null,
 
-    dropLeftCls: 'x-view-drop-indicator-left',
-    dropRightCls: 'x-view-drop-indicator-right',
+    DROP_LEFT_CLS: 'x-view-drop-indicator-left',
+    DROP_RIGHT_CLS: 'x-view-drop-indicator-right',
+
+
+    _previouslyFocusedStackOrDashboard : null,
     
     initComponent: function() {
 
@@ -192,7 +195,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         // drag and drop
         var $draggedItem,
-            $draggedItemParent;
+            $draggedItemParent,
+            $dragProxy;
 
         // disable selection while dragging
         $dom
@@ -205,10 +209,24 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             $draggedItem = $(this);
             $draggedItemParent = $draggedItem.parent();
 
+            $dragProxy = $draggedItem.clone().addClass('x-dd-drag-proxy dashboard-drag-proxy');
+            $('ul, .dashboard-name, .stack-name', $dragProxy).remove();
+            $(document.body).append($dragProxy);
+
             // prevent tooltips from showing while drag n drop
             $dom.on('mouseover.reorder', '.dashboard, .stack', function (evt) { 
                 evt.preventDefault();
                 evt.stopPropagation();
+            });
+
+            $(document).on('mousemove.reorder', function (evt) { 
+                var pageX = evt.pageX,      // The mouse position relative to the left edge of the document.
+                    pageY = evt.pageY;      // The mouse position relative to the top edge of the document.
+
+                $dragProxy.css({
+                    left: pageX + 15,
+                    top: pageY + 15
+                });
             });
 
             $dom.on('mousemove.reorder', '.dashboard, .stack', function (evt) { 
@@ -224,18 +242,18 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                     offset = $el.offset(),  // The offset relative to the top left edge of the document.
                     width = $el.outerWidth();
 
-                $el.removeClass(me.dropLeftCls + ' ' + me.dropRightCls);
+                $el.removeClass(me.DROP_LEFT_CLS + ' ' + me.DROP_RIGHT_CLS);
                 
                 if( pageX <= offset.left + (width/2) ) {
-                    $el.addClass(me.dropLeftCls);
+                    $el.addClass(me.DROP_LEFT_CLS);
                 }
                 else {
-                    $el.addClass(me.dropRightCls);
+                    $el.addClass(me.DROP_RIGHT_CLS);
                 }
             });
 
             $dom.on('mouseleave.reorder', '.dashboard, .stack', function (evt) {
-                $(this).removeClass(me.dropLeftCls + ' ' + me.dropRightCls);
+                $(this).removeClass(me.DROP_LEFT_CLS + ' ' + me.DROP_RIGHT_CLS);
             });
 
             // drop performed on a dashboard
@@ -252,7 +270,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             $(document).on('mouseup.reorder', function (evt) {
                 $draggedItem =  null;
                 $draggedItemParent = null;
+                $dragProxy.remove();
 
+                $(document).off('.reorder');
                 $dom.off('.reorder');
             });
         });
@@ -269,7 +289,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             if($prev.length === 0)
                 return;
 
-            $prev.addClass( me.dropLeftCls );
+            $prev.addClass( me.DROP_LEFT_CLS );
             $prev.hasClass('stack') ? me._dropOnStack($this, $prev) : me._dropOnDashboard($this, $prev);
         }
 
@@ -281,7 +301,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             if($next.length === 0)
                 return;
 
-            $next.addClass( me.dropRightCls );
+            $next.addClass( me.DROP_RIGHT_CLS );
             $next.hasClass('stack') ? me._dropOnStack($this, $next) : me._dropOnDashboard($this, $next);
         }
 
@@ -316,7 +336,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 $(evt.currentTarget).addClass(me.selectedItemCls);
             })
             .on('blur', '.dashboard, .stack', function (evt) {
-                $(evt.currentTarget).removeClass(me.selectedItemCls);
+                me._previouslyFocusedStackOrDashboard = $(evt.currentTarget).removeClass(me.selectedItemCls);
             })
             .on('focus', '.dashboard-actions li, .stack-actions li', function (evt) {
                 $(evt.currentTarget).addClass('hover');
@@ -389,19 +409,19 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         
         // dropped on the same element
         if($dashboard[0] === $draggedItem[0]) {
-            $dashboard.removeClass(me.dropLeftCls + ' ' + me.dropRightCls);
+            $dashboard.removeClass(me.DROP_LEFT_CLS + ' ' + me.DROP_RIGHT_CLS);
             return;
         }
 
-        var droppedLeft = $dashboard.hasClass(me.dropLeftCls);
+        var droppedLeft = $dashboard.hasClass(me.DROP_LEFT_CLS);
         var store = me.dashboardStore;
 
         if ( droppedLeft ) {
-            $dashboard.removeClass(me.dropLeftCls);
+            $dashboard.removeClass(me.DROP_LEFT_CLS);
             $draggedItem.insertBefore( $dashboard );
         }
         else {
-            $dashboard.removeClass(me.dropRightCls);
+            $dashboard.removeClass(me.DROP_RIGHT_CLS);
             $draggedItem.insertAfter( $dashboard );
         }
 
@@ -458,13 +478,13 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         
         // dropped on the same element
         if($stack[0] === $draggedItem[0]) {
-            $stack.removeClass(me.dropLeftCls + ' ' + me.dropRightCls);
+            $stack.removeClass(me.DROP_LEFT_CLS + ' ' + me.DROP_RIGHT_CLS);
             return;
         }
 
         store = me.dashboardStore;
 
-        var droppedLeft = $stack.hasClass(me.dropLeftCls);
+        var droppedLeft = $stack.hasClass(me.DROP_LEFT_CLS);
         var store = me.dashboardStore;
 
         // dropping dashboard on a stack
@@ -547,11 +567,11 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         }
 
         if ( droppedLeft ) {
-            $stack.removeClass(me.dropLeftCls);
+            $stack.removeClass(me.DROP_LEFT_CLS);
             $draggedItem.insertBefore( $stack );
         }
         else {
-            $stack.removeClass(me.dropRightCls);
+            $stack.removeClass(me.DROP_RIGHT_CLS);
             $draggedItem.insertAfter( $stack );
         }
 
@@ -791,6 +811,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             // add selected class to manage button
             $manageBtn && $manageBtn.addClass('selected');
             this._managing = true;
+            if(this._previouslyFocusedStackOrDashboard) {
+                this._previouslyFocusedStackOrDashboard.trigger('mouseover');
+            }
         }
     },
 
@@ -1117,9 +1140,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             newHeight = (this.dashboardItemHeight + heightMargin) * this.maxDashboardsHeight;
         }
 
-        this.el.setSize(newWidth + 30, newHeight);
+        this.body.setSize(newWidth + 30, newHeight);
         
-        this.el.setStyle({
+        this.body.setStyle({
             'max-height': ((this.dashboardItemHeight + heightMargin + 1) * this.maxDashboardsHeight) + 'px'
         });
     },

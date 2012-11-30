@@ -1,11 +1,16 @@
+[class^="icon-"],
+[class*=" icon-"] {
+    color: $dashboard-switcher-dashboard-text-color;
+}
+
 #dashboard-switcher {
 
-    //width: auto !important;
-    overflow: auto;
+    width: auto !important;
+    height: auto !important;
     padding: 0px;
 
     &-body {
-        overflow: hidden;
+        overflow: auto;
         @include border-radius($dashboard-switcher-body-radius);
     }
 
@@ -16,81 +21,13 @@
         height: 26px;
         width: 26px;
     }
-    .dashboard, .stack {
-        $thumb-width: 73px;
-        $name-width: 8.2em;
-
-        //For these elements, it is more useful
-        //to compute content width not overall box 
-        //width, since we are setting width based on
-        //its contents
-        @include box-sizing(content-box);
-
-        float: left;
-        margin: 10px;
-        padding: 15px 15px 0px 15px;
-        position: relative;
-        text-align:center;
-        overflow: hidden;
-        cursor: pointer;
-        min-width: $name-width;
-        max-width: $name-width;
-        
-        .thumb-wrap {
-            text-align: center;
-            white-space:nowrap;
-            margin-left:auto;
-            margin-right:auto;
-            width: $thumb-width;
-            .thumb {
-                text-align: center;
-                margin-left: auto;
-                margin-right: auto;
-                width: $thumb-width;
-                height: 70px;
-                background-repeat: no-repeat;
-                background-position: center center;
-                background-image: $dashboard-switcher-layout-default-icon;
-            }
-        }
-
-        &-name {
-            color: $dashboard-switcher-dashboard-text-color;
-            height: 3.25em;
-            width: $name-width;
-            margin-top: 2px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        &:hover {
-            background-color: $dashboard-switcher-dashboard-over-background-color !important;
-            border-color: $dashboard-switcher-dashboard-over-border-color !important;
-            .dashboard-name {
-                color: $dashboard-switcher-dashboard-over-text-color  !important;
-            }
-            @include border-top-radius($dashboard-switcher-body-radius);
-            @include border-bottom-radius($dashboard-switcher-body-radius);
-            
-        }
-
-        &-selected {
-            .dashboard-name {
-                color: $dashboard-switcher-dashboard-selected-text-color !important;
-                font-weight: bold;
-            }
-            .thumb {
-                background-image: $dashboard-switcher-layout-default-icon-over !important;
-            }
-        }
-    }
 
     ul.actions {
         clear: both;
         float: right;
         color: #fff;
         margin-right: 15px;
-
+        
         li {
             display: inline-block;
             padding: 5px 10px;
@@ -102,11 +39,78 @@
     }
 }
 
-[class^="icon-"],
-[class*=" icon-"] {
-    color: $dashboard-switcher-dashboard-text-color;
-}
+#dashboard-switcher .dashboard, #dashboard-switcher .stack, .dashboard-drag-proxy, .stack-drag-proxy {
+    $thumb-width: 73px;
+    $name-width: 8.2em;
 
+    //For these elements, it is more useful
+    //to compute content width not overall box 
+    //width, since we are setting width based on
+    //its contents
+    @include box-sizing(content-box);
+
+    float: left;
+    margin: 10px;
+    padding: 15px 15px 0px 15px;
+    position: relative;
+    text-align:center;
+    overflow: hidden;
+    cursor: pointer;
+    min-width: $name-width;
+    max-width: $name-width;
+    
+    .thumb-wrap {
+        text-align: center;
+        white-space:nowrap;
+        margin-left:auto;
+        margin-right:auto;
+        width: $thumb-width;
+        .thumb {
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            width: $thumb-width;
+            height: 70px;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-image: $dashboard-switcher-layout-default-icon;
+        }
+    }
+
+    &-name {
+        color: $dashboard-switcher-dashboard-text-color;
+        height: 3.25em;
+        width: $name-width;
+        margin-top: 2px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    &:hover {
+        background-color: $dashboard-switcher-dashboard-over-background-color !important;
+        border-color: $dashboard-switcher-dashboard-over-border-color !important;
+        .dashboard-name {
+            color: $dashboard-switcher-dashboard-over-text-color  !important;
+        }
+        @include border-top-radius($dashboard-switcher-body-radius);
+        @include border-bottom-radius($dashboard-switcher-body-radius);
+        
+    }
+
+    &-selected {
+        .dashboard-name {
+            color: $dashboard-switcher-dashboard-selected-text-color !important;
+            font-weight: bold;
+        }
+        .thumb {
+            background-image: $dashboard-switcher-layout-default-icon-over !important;
+        }
+    }
+}
+.dashboard-drag-proxy, .stack-drag-proxy {
+    float: none;
+    position: absolute;
+}
 .icon-share {
     &:hover, &.hover {
         color: #5252FF;
