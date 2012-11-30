@@ -198,12 +198,21 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             .on('selectstart', false);
 
         // reorder dashboards
-        $dom.on('mousedown', '.dashboard', function (evt) {
+        $dom.on('mousedown', '.dashboard, .stack', function (evt) {
             $draggedItem = $(this);
-            draggedItem = me.getDashboard( $draggedItem );
+            draggedItem = $draggedItem.hasClass('dashboard') ? me.getDashboard( $draggedItem ) : me.getStack( $draggedItem );
             $draggedItemParent = $draggedItem.parent();
 
+            // prevent tooltips from showing while drag n drop
+            $dom.on('mouseover.reorder', '.dashboard, .stack', function (evt) { 
+                evt.preventDefault();
+                evt.stopPropagation();
+            });
+
             $dom.on('mousemove.reorder', '.dashboard, .stack', function (evt) { 
+                evt.preventDefault();
+                evt.stopPropagation();
+
                 var $el = $(this);
 
                 // only allow reordering if parents match and 
@@ -232,56 +241,63 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
             // drop performed on a dashboard
             $dom.on('mouseup.reorder', '.dashboard', function (evt) {
-                var $targetItem = $(this),
-                    targetItem = me.getDashboard( $targetItem ),
-                    index, store, record;
+                var $dashboard = $(this),
+                    dashboard = me.getDashboard( $dashboard );
                 
                 // dropped on the same element
-                if($targetItem[0] === $draggedItem[0]) {
+                if($dashboard[0] === $draggedItem[0]) {
                     evt.preventDefault();
-                    $targetItem.removeClass(dropLeftCls + ' ' + dropRightCls);
+                    $dashboard.removeClass(dropLeftCls + ' ' + dropRightCls);
                     return;
                 }
 
-                store = me.dashboardStore;
-                index = store.indexOf(targetItem.model);
+                var droppedLeft = $dashboard.hasClass(dropLeftCls);
+                var store = me.dashboardStore;
 
-                if ( $targetItem.hasClass(dropLeftCls) ) {
-                    $targetItem.removeClass(dropLeftCls);
-                    $draggedItem.insertBefore( $targetItem );
+                if ( droppedLeft ) {
+                    $dashboard.removeClass(dropLeftCls);
+                    $draggedItem.insertBefore( $dashboard );
                 }
-                else if ( $targetItem.hasClass(dropRightCls) ) {
-                    $targetItem.removeClass(dropRightCls);
-                    $draggedItem.insertAfter( $targetItem );
-                    index++;
-                }
-
-                var currentIndex = store.indexOf(draggedItem.model);
-                // account for length changing after removal
-                if(currentIndex < index)
-                    index--;
-
-                store.remove(draggedItem.model, true);
-                
-                console.log('Removing dragged item from index ', currentIndex);
-                for(var i = 0, len = me.dashboardStore.getCount(); i < len; i++) {
-                    model = me.dashboardStore.getAt(i);
-
-                    dashboard = Ext.clone(model.data);
-                    stack = dashboard.stack;
-                    console.log(i, ' => Dashboard name: ', dashboard.name, 'Stack: ', stack ? stack.name : 'none', ' Default: ', dashboard.isdefault);
+                else {
+                    $dashboard.removeClass(dropRightCls);
+                    $draggedItem.insertAfter( $dashboard );
                 }
 
-                console.log('Adding dragged item at index ', index);
-                store.insert(index, draggedItem.model);
+                // dropping dashboard on a dashboard
+                if( $draggedItem.hasClass('dashboard') ) {
 
+                    store.remove(draggedItem.model, true);
 
-                for(var i = 0, len = me.dashboardStore.getCount(); i < len; i++) {
-                    model = me.dashboardStore.getAt(i);
+                    var index = store.indexOf(dashboard.model);
+                    
+                    if ( !droppedLeft ) {
+                        index++;
+                    }
 
-                    dashboard = Ext.clone(model.data);
-                    stack = dashboard.stack;
-                    console.log(i, ' => Dashboard name: ', dashboard.name, 'Stack: ', stack ? stack.name : 'none', ' Default: ', dashboard.isdefault);
+                    store.insert(index, draggedItem.model);
+
+                }
+                else {
+                    // dropping stack on a dashboard
+                    var stackDashboards = draggedItem.dashboards,
+                        stackDashboard;
+
+                    for(var i = 0, len = stackDashboards.length; i < len; i++) {
+                        stackDashboard = stackDashboards[i];
+                        store.remove(stackDashboard.model, true);
+                    }
+
+                    index = store.indexOf(dashboard.model);
+
+                    if ( !droppedLeft ) {
+                        index++;
+                    }
+                    
+                    for(var i = 0, len = stackDashboards.length; i < len; i++) {
+                        stackDashboard = stackDashboards[i];
+                        store.insert(index++, stackDashboard.model);
+                    }
+
                 }
 
                 $draggedItem.focus();
@@ -292,8 +308,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             // drop performed on a dashboard
             $dom.on('mouseup.reorder', '.stack', function (evt) {
                 var $stack = $(this),
-                    stack = me.getStack( $stack ),
-                    index, store, record;
+                    stack = me.getStack( $stack );
                 
                 // dropped on the same element
                 if($stack[0] === $draggedItem[0]) {
@@ -304,29 +319,92 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
                 store = me.dashboardStore;
 
-                if ( $stack.hasClass(dropLeftCls) ) {
+                var droppedLeft = $stack.hasClass(dropLeftCls);
+                var store = me.dashboardStore;
+
+                // dropping dashboard on a stack
+                if( $draggedItem.hasClass('dashboard') ) {
+                    
+                    store.remove(draggedItem.model, true);
+
+                    var index;
+                    if ( droppedLeft ) {
+                        index = store.indexOf(stack.dashboards[0].model);
+                    }
+                    else {
+
+                        var $next = $stack.next();
+
+                        if( $next.length === 1) {
+                            if( $next.hasClass('dashboard') ) {
+                                var nextDash = me.getDashboard( $next );
+                                index = store.indexOf(nextDash.model);
+                            }
+                            else {
+                                // next item is a stack
+                                // get the index of the first dashboard in the stack
+                                var nextStack = me.getStack( $next );
+                                index = store.indexOf(nextStack.dashboards[0].model);
+                            }
+                        }
+                        else {
+                            var lastStackDash = stack.dashboards[ stack.dashboards.length - 1 ];
+                            index = store.indexOf(lastStackDash.model);
+                            index++;
+                        }
+                    }
+
+                    store.insert(index, draggedItem.model);
+                }
+                else {
+                    // dropping stack on a stack
+                    var stackDashboards = draggedItem.dashboards,
+                        stackDashboard;
+
+                    for(var i = 0, len = stackDashboards.length; i < len; i++) {
+                        stackDashboard = stackDashboards[i];
+                        store.remove(stackDashboard.model, true);
+                    }
+
+                    if ( droppedLeft ) {
+                        index = store.indexOf(stack.dashboards[0].model);
+                    }
+                    else {
+                        var $next = $stack.next();
+
+                        if( $next.length === 1) {
+                            if( $next.hasClass('dashboard') ) {
+                                var nextDash = me.getDashboard( $next );
+                                index = store.indexOf(nextDash.model);
+                            }
+                            else {
+                                // next item is a stack
+                                // get the index of the first dashboard in the stack
+                                var nextStack = me.getStack( $next );
+                                index = store.indexOf(nextStack.dashboards[0].model);
+                            }
+                        }
+                        else {
+                            var lastStackDash = stack.dashboards[ stack.dashboards.length - 1 ];
+                            index = store.indexOf(lastStackDash.model);
+                            index++;
+                        }
+                    }
+
+                    for(var i = 0, len = stackDashboards.length; i < len; i++) {
+                        stackDashboard = stackDashboards[i];
+                        store.insert(index++, stackDashboard.model);
+                    }
+                }
+
+                if ( droppedLeft ) {
                     $stack.removeClass(dropLeftCls);
                     $draggedItem.insertBefore( $stack );
-
-                    index = store.indexOf(stack.dashboards[0].model);
                 }
-                else if ( $stack.hasClass(dropRightCls) ) {
+                else {
                     $stack.removeClass(dropRightCls);
                     $draggedItem.insertAfter( $stack );
-
-                    index = store.indexOf(stack.dashboards[stack.dashboards.length-1].model);
-                    index++;
                 }
-
-                var currentIndex = store.indexOf(draggedItem.model);
-                // account for length changing after removal
-                if(currentIndex < index)
-                    index--;
-
-                console.log('Removing dragged item from index ', currentIndex);
-                store.remove(draggedItem.model, true);
-                console.log('Adding dragged item at index ', index);
-                store.insert(index, draggedItem.model);
 
                 me.initCircularFocus();
                 me.reordered = true;
@@ -447,16 +525,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         }, 200);
     },
 
-    destroy: function (store) {
-        // // we don't want to destroy when records are removed
-        // if(store.removed.length > 0) {
-        //     return;
-        // }
-
-        // // remove datachanged event handler
-        // this.dashboardStore.un('datachanged', this.cleanAndDestroy, this);
-        this.dashboardStore.un('add', this.destroy, this);
-        
+    destroy: function () {
         this.tearDownCircularFocus();
 
         // remove jQuery listeners
