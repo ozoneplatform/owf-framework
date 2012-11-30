@@ -488,7 +488,9 @@ class StackService {
 			oldToNewGuids.each {old, changed ->
 				json = json.replace(old, changed)
 			}
+			json = json.replace(it.guid, java.util.UUID.randomUUID().toString())
 			it = new JSONObject(json)
+			changeWidgetInstanceIds(it.layoutConfig)
             it.isGroupDashboard = true
             it.stack = stack
             def dashboard = dashboardService.createOrUpdate(it).dashboard
@@ -499,6 +501,19 @@ class StackService {
         stack.uniqueWidgetCount = widgetDefinitionService.list([stack_id: stack.id]).results
         stack.save(flush: true, failOnError: true)
     }
+	
+	private def changeWidgetInstanceIds(layoutConfig) {
+		
+		def widgets = layoutConfig.widgets
+		for(def i = 0; i < widgets?.size(); i++) {
+			widgets[i].put("uniqueId", java.util.UUID.randomUUID().toString())
+		}
+		
+		def items = layoutConfig.items
+		for(def i = 0; i < items?.size(); i++) {
+			changeWidgetInstanceIds(items[i])
+		}
+	}
     
     def export(params) {
         
