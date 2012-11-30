@@ -21,7 +21,6 @@ class WidgetDefinitionService {
 
     def loggingService = new AuditOWFWebRequestsLogger()
     def accountService
-    //def dashboardService
     def domainMappingService
     def serviceModelService
 
@@ -53,8 +52,7 @@ class WidgetDefinitionService {
                 return [success: true, results: 0, data: []]
             }
 
-            //Reuse DashboardService's method to list the dashboards of the stack's default group
-            //def dashboards = dashboardService.listDashboards(['group_id': stack.findStackDefaultGroup().id]).dashboardList
+            // List the dashboards of the stack's default group
             def dashboards = domainMappingService.getMappings(stack.findStackDefaultGroup(),RelationshipType.owns,Dashboard.TYPE)?.collect{
                 Dashboard.get(it.destId)
             }            

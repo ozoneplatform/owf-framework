@@ -22,7 +22,7 @@ class DashboardService extends BaseService {
 
     def domainMappingService
     def serviceModelService
-    //def groupService
+    def widgetDefinitionService
     
     def addOrRemove(params) {
         def returnValue = [:]
@@ -681,7 +681,12 @@ class DashboardService extends BaseService {
                         // Get the actual group object.
                         def group = Group.get(it.srcId)
                         if (group != null) {
-                            widgetDefinitionService.reconcileWidgetsFromDashboards(group);
+                            if (dashboard.stack == null) {
+                                widgetDefinitionService.reconcileGroupWidgetsFromDashboards(group);
+                            }
+                            else {
+                                widgetDefinitionService.reconcileGroupWidgetsFromDashboards(group, false);
+                            }
                         }
                     }
                 }
