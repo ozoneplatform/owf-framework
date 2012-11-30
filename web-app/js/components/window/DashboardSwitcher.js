@@ -35,6 +35,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     selectedItemCls : 'dashboard-selected',
 
     _deletedStackOrDashboards: null,
+
+    dropLeftCls: 'x-view-drop-indicator-left',
+    dropRightCls: 'x-view-drop-indicator-right',
     
     initComponent: function() {
 
@@ -184,12 +187,12 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             .on('click', '.stack .restore', $.proxy(me.restoreStack, me))
             .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
 
+        me.initKeyboardNav();
+
+
+        // drag and drop
         var $draggedItem,
-            draggedItem,
-            $draggedItemParent,
-            direction,
-            dropLeftCls = 'x-view-drop-indicator-left',
-            dropRightCls = 'x-view-drop-indicator-right';
+            $draggedItemParent;
 
         // disable selection while dragging
         $dom
@@ -200,7 +203,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         // reorder dashboards
         $dom.on('mousedown', '.dashboard, .stack', function (evt) {
             $draggedItem = $(this);
-            draggedItem = $draggedItem.hasClass('dashboard') ? me.getDashboard( $draggedItem ) : me.getStack( $draggedItem );
             $draggedItemParent = $draggedItem.parent();
 
             // prevent tooltips from showing while drag n drop
@@ -210,9 +212,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             });
 
             $dom.on('mousemove.reorder', '.dashboard, .stack', function (evt) { 
-                evt.preventDefault();
-                evt.stopPropagation();
-
                 var $el = $(this);
 
                 // only allow reordering if parents match and 
@@ -225,209 +224,94 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                     offset = $el.offset(),  // The offset relative to the top left edge of the document.
                     width = $el.outerWidth();
 
-                $el.removeClass(dropLeftCls + ' ' + dropRightCls);
+                $el.removeClass(me.dropLeftCls + ' ' + me.dropRightCls);
                 
                 if( pageX <= offset.left + (width/2) ) {
-                    $el.addClass(dropLeftCls);
+                    $el.addClass(me.dropLeftCls);
                 }
                 else {
-                    $el.addClass(dropRightCls);
+                    $el.addClass(me.dropRightCls);
                 }
             });
 
             $dom.on('mouseleave.reorder', '.dashboard, .stack', function (evt) {
-                $(this).removeClass(dropLeftCls + ' ' + dropRightCls);
+                $(this).removeClass(me.dropLeftCls + ' ' + me.dropRightCls);
             });
 
             // drop performed on a dashboard
             $dom.on('mouseup.reorder', '.dashboard', function (evt) {
-                var $dashboard = $(this),
-                    dashboard = me.getDashboard( $dashboard );
-                
-                // dropped on the same element
-                if($dashboard[0] === $draggedItem[0]) {
-                    evt.preventDefault();
-                    $dashboard.removeClass(dropLeftCls + ' ' + dropRightCls);
-                    return;
-                }
-
-                var droppedLeft = $dashboard.hasClass(dropLeftCls);
-                var store = me.dashboardStore;
-
-                if ( droppedLeft ) {
-                    $dashboard.removeClass(dropLeftCls);
-                    $draggedItem.insertBefore( $dashboard );
-                }
-                else {
-                    $dashboard.removeClass(dropRightCls);
-                    $draggedItem.insertAfter( $dashboard );
-                }
-
-                // dropping dashboard on a dashboard
-                if( $draggedItem.hasClass('dashboard') ) {
-
-                    store.remove(draggedItem.model, true);
-
-                    var index = store.indexOf(dashboard.model);
-                    
-                    if ( !droppedLeft ) {
-                        index++;
-                    }
-
-                    store.insert(index, draggedItem.model);
-
-                }
-                else {
-                    // dropping stack on a dashboard
-                    var stackDashboards = draggedItem.dashboards,
-                        stackDashboard;
-
-                    for(var i = 0, len = stackDashboards.length; i < len; i++) {
-                        stackDashboard = stackDashboards[i];
-                        store.remove(stackDashboard.model, true);
-                    }
-
-                    index = store.indexOf(dashboard.model);
-
-                    if ( !droppedLeft ) {
-                        index++;
-                    }
-                    
-                    for(var i = 0, len = stackDashboards.length; i < len; i++) {
-                        stackDashboard = stackDashboards[i];
-                        store.insert(index++, stackDashboard.model);
-                    }
-
-                }
-
-                $draggedItem.focus();
-                me.initCircularFocus();
-                me.reordered = true;
+                me._dropOnDashboard($draggedItem, $(this));
             });
             
             // drop performed on a dashboard
             $dom.on('mouseup.reorder', '.stack', function (evt) {
-                var $stack = $(this),
-                    stack = me.getStack( $stack );
-                
-                // dropped on the same element
-                if($stack[0] === $draggedItem[0]) {
-                    evt.preventDefault();
-                    $stack.removeClass(dropLeftCls + ' ' + dropRightCls);
-                    return;
-                }
-
-                store = me.dashboardStore;
-
-                var droppedLeft = $stack.hasClass(dropLeftCls);
-                var store = me.dashboardStore;
-
-                // dropping dashboard on a stack
-                if( $draggedItem.hasClass('dashboard') ) {
-                    
-                    store.remove(draggedItem.model, true);
-
-                    var index;
-                    if ( droppedLeft ) {
-                        index = store.indexOf(stack.dashboards[0].model);
-                    }
-                    else {
-
-                        var $next = $stack.next();
-
-                        if( $next.length === 1) {
-                            if( $next.hasClass('dashboard') ) {
-                                var nextDash = me.getDashboard( $next );
-                                index = store.indexOf(nextDash.model);
-                            }
-                            else {
-                                // next item is a stack
-                                // get the index of the first dashboard in the stack
-                                var nextStack = me.getStack( $next );
-                                index = store.indexOf(nextStack.dashboards[0].model);
-                            }
-                        }
-                        else {
-                            var lastStackDash = stack.dashboards[ stack.dashboards.length - 1 ];
-                            index = store.indexOf(lastStackDash.model);
-                            index++;
-                        }
-                    }
-
-                    store.insert(index, draggedItem.model);
-                }
-                else {
-                    // dropping stack on a stack
-                    var stackDashboards = draggedItem.dashboards,
-                        stackDashboard;
-
-                    for(var i = 0, len = stackDashboards.length; i < len; i++) {
-                        stackDashboard = stackDashboards[i];
-                        store.remove(stackDashboard.model, true);
-                    }
-
-                    if ( droppedLeft ) {
-                        index = store.indexOf(stack.dashboards[0].model);
-                    }
-                    else {
-                        var $next = $stack.next();
-
-                        if( $next.length === 1) {
-                            if( $next.hasClass('dashboard') ) {
-                                var nextDash = me.getDashboard( $next );
-                                index = store.indexOf(nextDash.model);
-                            }
-                            else {
-                                // next item is a stack
-                                // get the index of the first dashboard in the stack
-                                var nextStack = me.getStack( $next );
-                                index = store.indexOf(nextStack.dashboards[0].model);
-                            }
-                        }
-                        else {
-                            var lastStackDash = stack.dashboards[ stack.dashboards.length - 1 ];
-                            index = store.indexOf(lastStackDash.model);
-                            index++;
-                        }
-                    }
-
-                    for(var i = 0, len = stackDashboards.length; i < len; i++) {
-                        stackDashboard = stackDashboards[i];
-                        store.insert(index++, stackDashboard.model);
-                    }
-                }
-
-                if ( droppedLeft ) {
-                    $stack.removeClass(dropLeftCls);
-                    $draggedItem.insertBefore( $stack );
-                }
-                else {
-                    $stack.removeClass(dropRightCls);
-                    $draggedItem.insertAfter( $stack );
-                }
-
-                me.initCircularFocus();
-                me.reordered = true;
+                me._dropOnStack($draggedItem, $(this));
             });
 
             // cleanup on mouseup
             $(document).on('mouseup.reorder', function (evt) {
                 $draggedItem =  null;
-                draggedItem = null;
+                $draggedItemParent = null;
 
                 $dom.off('.reorder');
             });
         });
-
-        me.initKeyboardNav();
     },
 
     initKeyboardNav: function () {
         var me = this;
 
+        function moveLeft () {
+            //move item left
+            var $this = $(this),
+                $prev = $this.prev();
+
+            if($prev.length === 0)
+                return;
+
+            $prev.addClass( me.dropLeftCls );
+            $prev.hasClass('stack') ? me._dropOnStack($this, $prev) : me._dropOnDashboard($this, $prev);
+        }
+
+        function moveRight () {
+            //move item right
+            var $this = $(this),
+                $next = $this.next();
+            
+            if($next.length === 0)
+                return;
+
+            $next.addClass( me.dropRightCls );
+            $next.hasClass('stack') ? me._dropOnStack($this, $next) : me._dropOnDashboard($this, $next);
+        }
+
         $(me.el.dom)
-            .on('keyup', '.stack', $.proxy(me.onStackClick, me))
-            .on('keyup', '.dashboard', $.proxy(me.onDashboardClick, me))
+            .on('keyup', '.stack', function (evt) {
+                if(evt.which === Ext.EventObject.ENTER) {
+                    me.onStackClick(evt);
+                }
+                //left bracket
+                else if (evt.which == 219) {
+                    moveLeft.call(this);
+                }
+                //right bracket
+                else if (evt.which == 221) {
+                    moveRight.call(this);
+                }
+            })
+            .on('keyup', '.dashboard', function (evt) {
+                if(evt.which === Ext.EventObject.ENTER) {
+                    me.onDashboardClick(evt);
+                }
+                //left bracket
+                else if (evt.which == 219) {
+                    moveLeft.call(this);
+                }
+                //right bracket
+                else if (evt.which == 221) {
+                    moveRight.call(this);
+                }
+            })
             .on('focus', '.dashboard, .stack', function (evt) {
                 $(evt.currentTarget).addClass(me.selectedItemCls);
             })
@@ -497,6 +381,185 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             });
     },
 
+
+    _dropOnDashboard: function ($draggedItem, $dashboard) {
+        var me = this,
+            dashboard = me.getDashboard( $dashboard ),
+            draggedItem;
+        
+        // dropped on the same element
+        if($dashboard[0] === $draggedItem[0]) {
+            $dashboard.removeClass(me.dropLeftCls + ' ' + me.dropRightCls);
+            return;
+        }
+
+        var droppedLeft = $dashboard.hasClass(me.dropLeftCls);
+        var store = me.dashboardStore;
+
+        if ( droppedLeft ) {
+            $dashboard.removeClass(me.dropLeftCls);
+            $draggedItem.insertBefore( $dashboard );
+        }
+        else {
+            $dashboard.removeClass(me.dropRightCls);
+            $draggedItem.insertAfter( $dashboard );
+        }
+
+        // dropping dashboard on a dashboard
+        if( $draggedItem.hasClass('dashboard') ) {
+            draggedItem = me.getDashboard( $draggedItem );
+
+            store.remove(draggedItem.model, true);
+
+            var index = store.indexOf(dashboard.model);
+            
+            if ( !droppedLeft ) {
+                index++;
+            }
+
+            store.insert(index, draggedItem.model);
+
+        }
+        else {
+            // dropping stack on a dashboard
+
+            draggedItem = me.getStack( $draggedItem );
+
+            var stackDashboards = draggedItem.dashboards,
+                stackDashboard;
+
+            for(var i = 0, len = stackDashboards.length; i < len; i++) {
+                stackDashboard = stackDashboards[i];
+                store.remove(stackDashboard.model, true);
+            }
+
+            index = store.indexOf(dashboard.model);
+
+            if ( !droppedLeft ) {
+                index++;
+            }
+            
+            for(var i = 0, len = stackDashboards.length; i < len; i++) {
+                stackDashboard = stackDashboards[i];
+                store.insert(index++, stackDashboard.model);
+            }
+
+        }
+
+        $draggedItem.focus();
+        me.initCircularFocus();
+        me.reordered = true;
+    },
+
+    _dropOnStack: function ($draggedItem, $stack) {
+        var me = this,
+            stack = me.getStack( $stack ),
+            draggedItem;
+        
+        // dropped on the same element
+        if($stack[0] === $draggedItem[0]) {
+            $stack.removeClass(me.dropLeftCls + ' ' + me.dropRightCls);
+            return;
+        }
+
+        store = me.dashboardStore;
+
+        var droppedLeft = $stack.hasClass(me.dropLeftCls);
+        var store = me.dashboardStore;
+
+        // dropping dashboard on a stack
+        if( $draggedItem.hasClass('dashboard') ) {
+
+            draggedItem = me.getDashboard( $draggedItem );
+            
+            store.remove(draggedItem.model, true);
+
+            var index;
+            if ( droppedLeft ) {
+                index = store.indexOf(stack.dashboards[0].model);
+            }
+            else {
+
+                var $next = $stack.next();
+
+                if( $next.length === 1) {
+                    if( $next.hasClass('dashboard') ) {
+                        var nextDash = me.getDashboard( $next );
+                        index = store.indexOf(nextDash.model);
+                    }
+                    else {
+                        // next item is a stack
+                        // get the index of the first dashboard in the stack
+                        var nextStack = me.getStack( $next );
+                        index = store.indexOf(nextStack.dashboards[0].model);
+                    }
+                }
+                else {
+                    var lastStackDash = stack.dashboards[ stack.dashboards.length - 1 ];
+                    index = store.indexOf(lastStackDash.model);
+                    index++;
+                }
+            }
+
+            store.insert(index, draggedItem.model);
+        }
+        else {
+            // dropping stack on a stack
+            draggedItem = me.getStack( $draggedItem );
+
+            var stackDashboards = draggedItem.dashboards,
+                stackDashboard;
+
+            for(var i = 0, len = stackDashboards.length; i < len; i++) {
+                stackDashboard = stackDashboards[i];
+                store.remove(stackDashboard.model, true);
+            }
+
+            if ( droppedLeft ) {
+                index = store.indexOf(stack.dashboards[0].model);
+            }
+            else {
+                var $next = $stack.next();
+
+                if( $next.length === 1) {
+                    if( $next.hasClass('dashboard') ) {
+                        var nextDash = me.getDashboard( $next );
+                        index = store.indexOf(nextDash.model);
+                    }
+                    else {
+                        // next item is a stack
+                        // get the index of the first dashboard in the stack
+                        var nextStack = me.getStack( $next );
+                        index = store.indexOf(nextStack.dashboards[0].model);
+                    }
+                }
+                else {
+                    var lastStackDash = stack.dashboards[ stack.dashboards.length - 1 ];
+                    index = store.indexOf(lastStackDash.model);
+                    index++;
+                }
+            }
+
+            for(var i = 0, len = stackDashboards.length; i < len; i++) {
+                stackDashboard = stackDashboards[i];
+                store.insert(index++, stackDashboard.model);
+            }
+        }
+
+        if ( droppedLeft ) {
+            $stack.removeClass(me.dropLeftCls);
+            $draggedItem.insertBefore( $stack );
+        }
+        else {
+            $stack.removeClass(me.dropRightCls);
+            $draggedItem.insertAfter( $stack );
+        }
+
+        $draggedItem.focus();
+        me.initCircularFocus();
+        me.reordered = true;
+    },
+
     initCircularFocus: function () {
         var firstEl = this.body.first(),
             addBtnEl = this.el.last().last();
@@ -522,17 +585,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         setTimeout(function () {
             selectedEl && selectedEl.focus();
-        }, 200);
-    },
-
-    destroy: function () {
-        this.tearDownCircularFocus();
-
-        // remove jQuery listeners
-        $(this.el.dom).off();
-
-        // destroy view so that it will be recreated when opened next setTimeout
-        return this.callParent();
+        }, 500);
     },
 
     getDashboard: function ($el) {
@@ -549,7 +602,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     },
 
     onDashboardClick: function (evt) {
-        // evt.which == 1 => left mouse
         if((evt.type !== 'click' && evt.which !== Ext.EventObject.ENTER) || this._managing === true)
             return;
 
@@ -789,9 +841,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                         dashboard.description = name;
 
                         me.updateDashboardEl($dashboard, dashboard);
-                        
-                        // TODO
-                        // update name
+
                         me.reloadDashboards = true;
                     }
                 },
@@ -1074,6 +1124,39 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         });
     },
 
+    saveDashboardOrder: function () {
+        var dfd = $.Deferred();
+        var gridData = this.dashboardStore.data.items;
+        var viewsToUpdate = [];
+        var viewGuidsToDelete = [];
+    
+        for (var i = 0; i < gridData.length; i++) {
+            if (!gridData[i].data.removed) {
+                viewsToUpdate.push({
+                    guid: gridData[i].data.guid,
+                    isdefault: gridData[i].data.isdefault,
+                    name: gridData[i].data.name.replace(new RegExp(Ozone.lang.regexLeadingTailingSpaceChars), '')
+                });
+            } else {
+                viewGuidsToDelete.push(gridData[i].data.guid);
+            }
+        }
+
+        Ozone.pref.PrefServer.updateAndDeleteDashboards({
+            viewsToUpdate: viewsToUpdate,
+            viewGuidsToDelete: viewGuidsToDelete,
+            updateOrder: true,
+            onSuccess: function() {
+                dfd.resolve();
+            },
+            onFailure: function() {
+                dfd.reject();
+            }
+        });
+
+        return dfd.promise();
+    },
+
     onClose: function() {
         var me = this;
 
@@ -1087,41 +1170,29 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         }
 
         if (me.reordered) {
-            // Create array of views
-            var gridData = me.dashboardStore.data.items;
-            var viewsToUpdate = [];
-            var viewGuidsToDelete = [];
-        
-            for (var i = 0; i < gridData.length; i++) {
-                if (!gridData[i].data.removed) {
-                    viewsToUpdate.push({
-                        guid: gridData[i].data.guid,
-                        isdefault: gridData[i].data.isdefault,
-                        name: gridData[i].data.name.replace(new RegExp(Ozone.lang.regexLeadingTailingSpaceChars), '')
-                    });
-                } else {
-                    viewGuidsToDelete.push(gridData[i].data.guid);
-                }
+            if(me.reloadDashboards) {
+                me.saveDashboardOrder().always(function () {
+                    me.dashboardContainer.reloadDashboards();
+                });
             }
-
-            // remove before close listener so that it doesn't get called
-            // when the window is closed from callback
-            me.un('beforeclose', me.onClose, me);
-
-            Ozone.pref.PrefServer.updateAndDeleteDashboards({
-                viewsToUpdate: viewsToUpdate,
-                viewGuidsToDelete: viewGuidsToDelete,
-                updateOrder: true,
-                onSuccess: function() {
+            else {
+                me.saveDashboardOrder().fail(function () {
                     me.dashboardContainer.reloadDashboards();
-                },
-                onFailure: function() {
-                    me.dashboardContainer.reloadDashboards();
-                }
-            });
+                });
+            }
         }
-        if(me._deletedStackOrDashboards.length > 0 || me.reloadDashboards === true) {
+        else if(me.reloadDashboards === true) {
             me.dashboardContainer.reloadDashboards();
         }
+    },
+
+    destroy: function () {
+        this.tearDownCircularFocus();
+
+        // remove jQuery listeners
+        $(this.el.dom).off();
+
+        // destroy view so that it will be recreated when opened next setTimeout
+        return this.callParent();
     }
 });
