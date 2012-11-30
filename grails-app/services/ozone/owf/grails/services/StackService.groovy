@@ -497,8 +497,11 @@ class StackService {
             domainMappingService.createMapping(stackDefaultGroup, RelationshipType.owns, dashboard)
         }
 
+		// Add any widgets to the stack's default group if not already there.
+		widgetDefinitionService.reconcileGroupWidgetsFromDashboards(stackDefaultGroup, false)
+		
         //Update the uniqueWidgetCount of the stack
-        stack.uniqueWidgetCount = widgetDefinitionService.list([stack_id: stack.id]).results
+        stack.uniqueWidgetCount = widgets.length()
         stack.save(flush: true, failOnError: true)
     }
 	
