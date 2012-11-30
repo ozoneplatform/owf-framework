@@ -15,6 +15,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
 
     logoutText: "Sign Out",
 
+    menuHidden: true,
     hideMenu: false,
     hideDelay: 100,
     showDelay: 800,
@@ -173,6 +174,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
 
 
         me.on('afterrender', me.onAfterRender, this);
+        me.on('click', me.onClick, this);
 
         me.callParent(arguments);
     },
@@ -274,6 +276,16 @@ Ext.define('Ozone.components.button.UserMenuButton', {
           }
         });
     },
+    
+    onClick: function() {
+        if (this.menuHidden) {
+            this.hideMenu = false;
+            this._showMenu();
+        } else {
+            this.hideMenu = true;
+            this._hideMenu();
+        }
+    },
 
     setupMenuNav: function() {
         var me = this,
@@ -362,22 +374,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
         
         if (!me.showTask) {
             me.showTask = Ext.create('Ext.util.DelayedTask', function() {
-                if(me.hideTask) {
-                    me.hideTask.cancel();
-                }
-
-                me.menuHidden = false;
-        
-                /*
-                 * if it is currently fading out, 
-                 * stop it so that setVisible(false) 
-                 * does not get called out of order
-                 */
-                menuEl.stopAnimation(); 
-
-                menuEl.setVisible(true);
-                menuEl.alignTo(me.getEl(), "tr-br");
-                menuEl.fadeIn();
+                me._showMenu();
             });
         }
         me.showTask.delay(Ext.isNumber(me.showDelay) ? me.showDelay : 800, null);
@@ -391,33 +388,61 @@ Ext.define('Ozone.components.button.UserMenuButton', {
 
         if (!me.hideTask) {
             me.hideTask = Ext.create('Ext.util.DelayedTask', function() {
-                if(me.showTask) {
-                    me.showTask.cancel();
-                }
-                if (me.menuHidden) return; //already hidden
-
-                if(me.hideMenu === true && me.userMenu && me.userMenu.el) {
-                    me.menuHidden = true;
-
-                    me.userMenu.el.fadeOut({
-                        listeners: {
-                            afteranimate: {
-                                fn: function() {
-                                    //don't want the hidden menu to have focus
-                                    if (me.userMenu.el.contains(document.activeElement))
-                                        document.activeElement.blur();
-
-                                    //set display: none after fade is finished
-                                    this.userMenu.el.setVisible(false);
-                                },
-                                scope: me
-                            }
-                        }
-                    });
-                }
+                me._hideMenu();
             });
         }
         me.hideTask.delay(Ext.isNumber(me.hideDelay) ? me.hideDelay : 100, null);
+    },
+    
+    _showMenu: function() {
+        var me = this,
+            menuEl = me.userMenu.el;
+            
+        if(me.hideTask) {
+            me.hideTask.cancel();
+        }
+
+        me.menuHidden = false;
+        
+        /*
+         * if it is currently fading out, 
+         * stop it so that setVisible(false) 
+         * does not get called out of order
+         */
+        menuEl.stopAnimation(); 
+
+        menuEl.setVisible(true);
+        menuEl.alignTo(me.getEl(), "tr-br");
+        menuEl.fadeIn();
+    },
+    
+    _hideMenu: function() {
+        var me = this;
+        
+        if(me.showTask) {
+            me.showTask.cancel();
+        }
+        if (me.menuHidden) return; //already hidden
+
+        if(me.hideMenu === true && me.userMenu && me.userMenu.el) {
+            me.menuHidden = true;
+
+            me.userMenu.el.fadeOut({
+                listeners: {
+                    afteranimate: {
+                        fn: function() {
+                            //don't want the hidden menu to have focus
+                            if (me.userMenu.el.contains(document.activeElement))
+                                document.activeElement.blur();
+
+                            //set display: none after fade is finished
+                            this.userMenu.el.setVisible(false);
+                        },
+                        scope: me
+                    }
+                }
+            });
+        }
     }
 
 });
