@@ -112,7 +112,7 @@ Ext.define('Ozone.components.pane.Pane', {
     clearWidgets: function(includeFloatingWidgets) {
         var items = this.stateStore.data.items;
         
-        for (var i = 0, len = items.length; i < len; i++) {
+        for (var i = items.length - 1; i >=0; i--) {
             var rec = items[i];
             var widget = Ext.getCmp(rec.get('uniqueId'));
             if(widget && includeFloatingWidgets !== false) {
