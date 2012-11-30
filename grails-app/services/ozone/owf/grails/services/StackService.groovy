@@ -408,13 +408,14 @@ class StackService {
                 }
             }
             
-            // Delete the stack.
-            stack?.delete()
-            
             // Delete the stacks's master dashboards.
             defaultDashboards?.each { dashboard ->
                 dashboard.delete()
             }
+            
+            // Delete the stack.
+            stack?.delete(flush: true, failOnError: true)
+      
         }
         
         return [success: true, data: stacks]
