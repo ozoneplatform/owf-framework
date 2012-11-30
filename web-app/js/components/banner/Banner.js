@@ -109,18 +109,25 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             Ozone.components.keys.KeyMap.reset();
         }
     },
-    openMarketplaceModalWindow: function() {
+    openMarketplaceModalWindow: function(btn, e) {
         if(this.hasMarketplaceButton) {
-            if(!this.mpModalWindow || this.mpModalWindow.isDestroyed) {
-                this.mpModalWindow = Ext.widget('marketplacewindow', {
-                    dashboardContainer: this.dashboardContainer
-                });
-            }
-            if(this.mpModalWindow.isVisible()) {
-                this.mpModalWindow.close();
-            }
-            else {
-                this.mpModalWindow.show();
+            if (this.marketplaceWidget) {
+                var keyboard = ('keyup' == e.type) ? true : false;
+                e.stopEvent();
+                this.dashboardContainer.launchWidgets(this.marketplaceWidget, keyboard);
+            } else {
+                if(!this.mpModalWindow || this.mpModalWindow.isDestroyed) {
+                    this.mpModalWindow = Ext.widget('marketplacewindow', {
+                        dashboardContainer: this.dashboardContainer
+                    });
+                }
+                
+                if(this.mpModalWindow.isVisible()) {
+                    this.mpModalWindow.close();
+                }
+                else {
+                    this.mpModalWindow.show();
+                }
             }
         }
         else {
@@ -161,7 +168,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
           this.helpWindow.show();
       }
     },
-
+    
     addKeyBindings: function() {
         Ozone.KeyMap.addBinding([
             Ext.apply(Ozone.components.keys.HotKeys.LAUNCH_MENU, {
@@ -783,7 +790,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         });
     },
 
-    addMarketplaceButton: function() {
+    addMarketplaceButton: function(widget) {
+        this.marketplaceWidget = widget;
         if(!this.hasMarketplaceButton) {
             var banner = this, popOutIndexModifier = 0;
             banner.insert(this.marketplaceButtonIndex + popOutIndexModifier, {xtype:'tbseparator',itemId:'mpSeparator'});

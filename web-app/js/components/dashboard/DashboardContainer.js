@@ -436,7 +436,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
             // if using keyboard, highlight first pane
             if( isUsingKeyboard === true ) {
-                document.activeElement.blur();
+                if (document.activeElement) document.activeElement.blur();
                 panes[0].focus();
             }
 
@@ -1792,6 +1792,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         // and find out if there are marketplace widgets
         var hasMpWidget = false;
         var hasMetricWidget = false;
+        var mpWidgets = [], mpWidget = null;
         var records = this.widgetStore.getRange();
         for (var i = 0; i < records.length; i++) {
             var newTitle = this.widgetNames[records[i].data.widgetGuid];
@@ -1800,6 +1801,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             }
             if (records[i].data.widgetTypes[0].name == 'marketplace') {
                 hasMpWidget = true;
+                mpWidgets.push(records[i]);
             }
             if (records[i].data.widgetTypes[0].name == 'metric') {
                 hasMetricWidget = true;
@@ -1810,7 +1812,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         if (hasMpWidget
 //              || (!!Ozone.config.marketplaceLocation)
                 ) {
-            this.getBanner().addMarketplaceButton();
+            if (mpWidgets.length == 1) { mpWidget = mpWidgets[0] }
+            this.getBanner().addMarketplaceButton(mpWidget);
         }
         else {
             this.getBanner().removeMarketplaceButton();
