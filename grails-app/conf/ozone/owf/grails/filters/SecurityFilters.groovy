@@ -541,25 +541,6 @@ class SecurityFilters {
             stackEdit = saveInstance(stackEdit)
             stackEdit.addTag('admin')
         }
-
-        def marketplaceApproval = WidgetDefinition.findByWidgetUrl('admin/MarketplaceApprovals.gsp',[cache:true]);
-        if (marketplaceApproval == null) {
-            id = generateId()
-            marketplaceApproval = new WidgetDefinition(
-                displayName: 'Approvals',
-                visible: true,
-                height: 440,
-                imageUrlLarge: 'themes/common/images/adm-tools/Approvals64.png',
-                imageUrlSmall: 'themes/common/images/adm-tools/Approvals24.png',
-                widgetGuid: id,
-                widgetUrl: 'admin/MarketplaceApprovals.gsp',
-                widgetVersion: '1.0',
-                width: 581
-            )
-            marketplaceApproval.addToWidgetTypes(adminWidgetType)
-            marketplaceApproval = saveInstance(marketplaceApproval)
-            marketplaceApproval.addTag('admin')
-        }
 		
         if (accountService.getLoggedInUserIsAdmin()) {
 
@@ -681,12 +662,6 @@ class SecurityFilters {
                 domainMappingService.createMapping(adminGroup, RelationshipType.owns, stackEdit);
             }
 			
-            mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, marketplaceApproval);
-            if (mapping[0] == null) {
-                // If none of the admin widgets exist yet, create them
-                domainMappingService.createMapping(adminGroup, RelationshipType.owns, marketplaceApproval);
-            }
-			
         } else {
             //User isn't an admin, remove them from the OWF Administrators group if they are in it
             def adminGroup = Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
@@ -707,8 +682,7 @@ class SecurityFilters {
         if (groupAdmin) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, groupAdmin)?.delete(flush: true);
         if (groupEdit) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, groupEdit)?.delete(flush: true);
         if (dashboardAdmin) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, dashboardAdmin)?.delete(flush: true);
-        if (dashboardEdit) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, dashboardEdit)?.delete(flush: true);
-        if (marketplaceApproval) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, marketplaceApproval)?.delete(flush: true);*/
+        if (dashboardEdit) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, dashboardEdit)?.delete(flush: true);*/
     }
     
     private loadUserData(user) {

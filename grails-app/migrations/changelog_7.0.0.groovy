@@ -239,4 +239,32 @@ databaseChangeLog = {
             where("group_widget=false")
         }
     }
+
+    changeSet(author: "owf", id: "7.0.0-30", context: "upgrade, 7.0.0, sampleData, 7.0.0-sampleData") {
+        comment("Remove the Widget Approvals widget definition and all of its user, group, intent, and widget type references")
+
+        delete(tableName: "domain_mapping") {
+            where(text="dest_id = (select id from widget_definition where widget_url='admin/MarketplaceApprovals.gsp') and  dest_type = 'widget_definition'")
+        }
+
+        delete(tableName: "person_widget_definition") {
+            where(text="widget_definition_id = (select id from widget_definition where widget_url='admin/MarketplaceApprovals.gsp')")
+        }
+
+        delete(tableName: "widget_definition_widget_types") {
+            where(text="widget_definition_id = (select id from widget_definition where widget_url='admin/MarketplaceApprovals.gsp')")
+        }
+        
+        delete(tableName: "widget_def_intent_data_types") {
+            where(text="widget_definition_intent_id in (select id from widget_def_intent where widget_definition_id = (select id from widget_definition where widget_url='admin/MarketplaceApprovals.gsp'))")
+        }
+
+        delete(tableName: "widget_def_intent") {
+            where(text="widget_definition_id = (select id from widget_definition where widget_url='admin/MarketplaceApprovals.gsp')")
+        }
+
+        delete(tableName: "widget_definition") {
+            where(text="widget_url='admin/MarketplaceApprovals.gsp'")
+        }
+    }
 }
