@@ -26,10 +26,11 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                                 '<div class="descriptorUrlTitle">{descriptorUrlTitle}</div><button class="descriptorUrlInfoIcon" ></button>' + 
                                 '</div>',
                     renderData: {
-                        descriptorUrlTitle: 'Create Stack from Descriptor'
+                        descriptorUrlTitle: 'Import Stack from Descriptor URL'
                     },
                     renderSelectors: {
-                        iconEl: '.descriptorUrlInfoIcon'
+                        iconEl: '.descriptorUrlInfoIcon',
+                        titleEl: '.descriptorUrlTitle'
                     },
                     listeners: {
                         afterrender: function(cmp){
@@ -69,7 +70,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     name: 'descriptorUrlInfoMsg',
                     cls: 'descriptorUrlInfoMsg',
                     hidden: true,
-                    html: 'Enter the URL of a Stack descriptor and click the Load button. This allows all pertinent Stack Information to be used in the creation of a Stack Definition.'
+                    html: 'Enter the URL of a Stack Descriptor and click the Load button. Stack data, including dashboard and widget definitions, is automatically retrieved from a Web-accessible location. To create the stack in OWF, click Apply.'
                 },
                 {
                     xtype: 'urlfield',
@@ -280,6 +281,10 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
             if(!descriptorUrl.getValue()) {
                 descriptorUrl.setValue(data.descriptorUrl).originalValue = data.descriptorUrl;
             }
+
+            //Update the descriptorUrlInfo title and help message for editing an existing widget
+            this.getComponent('descriptorUrlInfo').titleEl.dom.innerHTML = 'Update Stack from Descriptor URL';
+            this.getComponent('descriptorUrlInfoMsg').update('Click Load to update the stack. If the stack descriptor file changed since it was added to your instance of OWF, clicking Load will retrieve the latest stack data. To upload it to your OWF, click Apply.');
 
             if(data.descriptorUrl && this.getComponent('descriptorUrlErrorMsg').isHidden()) {
                 this.loadedFromDescriptor = true;

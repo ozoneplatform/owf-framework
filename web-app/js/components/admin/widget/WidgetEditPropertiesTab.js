@@ -32,10 +32,11 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
               				'<div class="descriptorUrlTitle">{descriptorUrlTitle}</div><button class="descriptorUrlInfoIcon" ></button>' + 
               			 '</div>',
               renderData: {
-        		  descriptorUrlTitle: 'Create Widget from Descriptor URL'
+        		  descriptorUrlTitle: 'Import Widget from Descriptor URL'
         	  },
               renderSelectors: {
-                  iconEl: '.descriptorUrlInfoIcon'
+                  iconEl: '.descriptorUrlInfoIcon',
+                  titleEl: '.descriptorUrlTitle'
               },
               listeners: {
             	  afterrender: function(cmp){
@@ -75,7 +76,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
         	  name: 'descriptorUrlInfoMsg',
         	  cls: 'descriptorUrlInfoMsg',
         	  hidden: true,
-        	  html: 'Enter the URL of a Widget Descriptor and click the Load button. This allows all pertinent Widget Information, including the Universal Name, to be used in the creation of a Widget Definition.'
+        	  html: 'Enter the URL of a Widget Descriptor and click the Load button. Widget data is automatically retrieved from a Web-accessible location. To create the Widget Definition in OWF, click Apply.'
           },
           {
               xtype: 'urlfield',
@@ -460,6 +461,10 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             var strIntents = Ext.JSON.encode(data.intents);
             intents.setValue(strIntents).originalValue = strIntents;
             this.setWidgetType();
+
+            //Update the descriptorUrlInfo title and help message for editing an existing widget
+            component.getComponent('descriptorUrlInfo').titleEl.dom.innerHTML = 'Update Widget from Descriptor URL';
+            component.getComponent('descriptorUrlInfoMsg').update('Click Load to update the widget. If the widget descriptor file changed since it was added to your instance of OWF, clicking Load will retrieve the latest widget data. To upload it to your OWF, click Apply.');
             
             // If we have a descriptor loaded without errors, disable the edit fields.
             if(data.descriptorUrl && component.getComponent('descriptorUrlErrorMsg').isHidden()) {
