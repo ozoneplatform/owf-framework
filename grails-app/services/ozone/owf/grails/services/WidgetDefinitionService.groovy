@@ -934,7 +934,7 @@ class WidgetDefinitionService {
         if(grails.util.GrailsUtil.environment != 'production') dir = './src/resources/'
         def widgetDescriptorText = new File(dir + "empty_descriptor.html").text
 
-        widgetDescriptorText = widgetDescriptorText.replaceFirst("var data;", "var data = ${widgetData};")
+        widgetDescriptorText = widgetDescriptorText.replaceFirst("var data;", java.util.regex.Matcher.quoteReplacement("var data = ${widgetData};"))
 
         def widgetDescriptor = new File("widget_descriptor.html")
         def out = new FileOutputStream(widgetDescriptor)
