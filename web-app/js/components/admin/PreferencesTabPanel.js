@@ -134,7 +134,7 @@ Ext.define('Ozone.components.admin.grid.PreferencesTabPanel', {
                     
                     // Set the title
                     if (comp.record) {
-                        var titleText = Ext.htmlEncode(comp.record.get('title')) || 'Preferences';
+                        var titleText = Ext.htmlEncode(Ext.util.Format.ellipsis(comp.record.get('title'), 25)) || 'Preferences';
                         lbl.setText(titleText);
                     }
                     

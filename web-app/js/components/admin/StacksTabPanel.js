@@ -126,7 +126,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                     
                     // Set the title
                     if (owner.record) {
-                        var titleText = Ext.htmlEncode(owner.record.get('title')) || 'Stacks';
+                        var titleText = Ext.htmlEncode(Ext.util.Format.ellipsis(owner.record.get('title'), 25)) || 'Stacks';
                         var title = cmp.getDockedItems('toolbar[dock="top"]')[0].getComponent('lblStacksGrid');
                         title.setText(titleText);
                     }

@@ -146,9 +146,9 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                     
                     // Set the title
                     if (comp.record) {
-                        var titleText = Ext.htmlEncode(comp.record.get('title'));
+                        var titleText = Ext.htmlEncode(Ext.util.Format.ellipsis(comp.record.get('title'), 25));
                         if(!titleText) {
-                            titleText = Ext.htmlEncode(comp.record.get('name')) || 'Widgets';
+                            titleText = Ext.htmlEncode(Ext.util.Format.ellipsis(comp.record.get('name'), 25)) || 'Widgets';
                         }
                         lbl.setText(titleText);
                     }

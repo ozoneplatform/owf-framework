@@ -169,9 +169,9 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                     
                     // Set the title
                     if (comp.record) {
-                        var titleText = Ext.htmlEncode(comp.record.get('title'));
+                        var titleText = Ext.htmlEncode(Ext.util.Format.ellipsis(comp.record.get('title'), 25));
                         if(!titleText) {
-                            titleText = Ext.htmlEncode(comp.record.get('name')) || 'Users';
+                            titleText = Ext.htmlEncode(Ext.util.Format.ellipsis(comp.record.get('name'), 25)) || 'Users';
                         }
                         var title = cmp.getDockedItems('toolbar[dock="top"]')[0].getComponent('usersHeaderLabel');
                         title.setText(titleText);

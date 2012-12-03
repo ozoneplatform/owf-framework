@@ -129,9 +129,9 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     
                     // Set the title
                     if (owner.record) {
-                        var titleText = Ext.htmlEncode(owner.record.get('title'));
+                        var titleText = Ext.htmlEncode(Ext.util.Format.ellipsis(owner.record.get('title'), 25));
                         if(!titleText) {
-                            titleText = Ext.htmlEncode(owner.record.get('name')) || 'Groups';
+                            titleText = Ext.htmlEncode(Ext.util.Format.ellipsis(owner.record.get('name'), 25)) || 'Groups';
                         }
                         var title = cmp.getDockedItems('toolbar[dock="top"]')[0].getComponent('lblGroupsGrid');
                         title.setText(titleText);

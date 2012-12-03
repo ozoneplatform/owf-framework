@@ -116,9 +116,9 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
 
                     // Set the title
                     if (cmp.ownerCt.record) {
-                        var titleText = Ext.htmlEncode(cmp.ownerCt.record.get('title'));
+                        var titleText = Ext.htmlEncode(Ext.util.Format.ellipsis(cmp.ownerCt.record.get('title'), 25));
                         if(!titleText) {
-                            titleText = Ext.htmlEncode(cmp.ownerCt.record.get('name')) || 'Dashboards';
+                            titleText = Ext.htmlEncode(Ext.util.Format.ellipsis(cmp.ownerCt.record.get('name'), 25)) || 'Dashboards';
                         }
                         var title = this.getDockedItems('toolbar[dock="top"]')[0].getComponent('lblDashboardsGrid');
                         title.setText(titleText);
