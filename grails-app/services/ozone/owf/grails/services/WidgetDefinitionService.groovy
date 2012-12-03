@@ -442,22 +442,27 @@ class WidgetDefinitionService {
                     def intent = allIntents[i]
                     def newIntent = Intent.findByAction(intent.action)
 
-                    def intentDataTypes = []
+                    def newIntentDataTypes = []
                     intent.dataTypes.collect() {
-                        intentDataTypes.push(IntentDataType.findByDataType(it) ?: new IntentDataType(dataType: it))
+                        newIntentDataTypes.push(IntentDataType.findByDataType(it) ?: new IntentDataType(dataType: it))
                     }
 
                     if(!newIntent) {
                         //Intent doesn't exist, create a new intent
-                        newIntent = new Intent(action: intent.action, dataTypes: intentDataTypes)
+                        newIntent = new Intent(action: intent.action, dataTypes: newIntentDataTypes)
                     }
 
+                    def existingDataTypes = []
+                    newIntent.dataTypes.each() { existingDataTypes.push(it.toString().toLowerCase()) }
+
                     //Add any data types to the intent that don't already exist
-                    for(intentDataType in intentDataTypes) {
-                        if(!newIntent.dataTypes.contains(intentDataType)) {
-                            newIntent.addToDataTypes(intentDataType)
+                    for(newIntentDataType in newIntentDataTypes) {
+                        if(!existingDataTypes.contains(newIntentDataType.toString().toLowerCase())) {
+                            newIntent.addToDataTypes(newIntentDataType)
+                            existingDataTypes.push(newIntentDataType.toString().toLowerCase())
                         }
                     }
+
                     newIntent.save()
 
                     //Add new widget definition intent
@@ -468,35 +473,34 @@ class WidgetDefinitionService {
                             eq('widgetDefinition', widgetDefinition)
                             eq('intent', newIntent)
                             eq('send', true)
+                            eq('receive', false)
                         }
                         if(!newWidgetDefinitionIntent) {
                             newWidgetDefinitionIntent = new WidgetDefinitionIntent(widgetDefinition: widgetDefinition, intent: newIntent, 
-                                dataTypes: intentDataTypes, send: true, receive: false)
+                                send: true, receive: false)
+                            widgetDefinition.addToWidgetDefinitionIntents(newWidgetDefinitionIntent)
                         }
                     } else {
-                        //Check if one of the send intents has the same widgetDefinition, intent, and dataTypes, if so reuse it
+                        //Create a new receiving widget definition intent if one doesn't already exist
                         newWidgetDefinitionIntent = WidgetDefinitionIntent.createCriteria().get() {
                             eq('widgetDefinition', widgetDefinition)
                             eq('intent', newIntent)
-                            eq('send', true)
+                            eq('receive', true)
+                            eq('send', false)
                         }
-                        if(newWidgetDefinitionIntent?.dataTypes as Set == intentDataTypes as Set) {
-                            newWidgetDefinitionIntent.receive = true
-                        }
-                        else {
-                            //Create a new receiving widget definition intent if one doesn't already exist
-                            newWidgetDefinitionIntent = WidgetDefinitionIntent.createCriteria().get() {
-                                eq('widgetDefinition', widgetDefinition)
-                                eq('intent', newIntent)
-                                eq('receive', true)
-                            }
-                            if(!newWidgetDefinitionIntent) {
-                                newWidgetDefinitionIntent = new WidgetDefinitionIntent(widgetDefinition: widgetDefinition, intent: newIntent, 
-                                    dataTypes: intentDataTypes, send: false, receive: true)
-                            }
+                        if(!newWidgetDefinitionIntent) {
+                            newWidgetDefinitionIntent = new WidgetDefinitionIntent(widgetDefinition: widgetDefinition, intent: newIntent, 
+                                send: false, receive: true)
+                            widgetDefinition.addToWidgetDefinitionIntents(newWidgetDefinitionIntent)
                         }
                     }
-                    widgetDefinition.addToWidgetDefinitionIntents(newWidgetDefinitionIntent)
+
+                    //Add any data types to the widget definition intent that don't already exist
+                    for(newIntentDataType in newIntentDataTypes) {
+                        if(!newWidgetDefinitionIntent.dataTypes?.contains(newIntentDataType)) {
+                            newWidgetDefinitionIntent.addToDataTypes(newIntentDataType)
+                        }
+                    }
 
                     newWidgetDefinitionIntent.save()
                     newIntent.save()

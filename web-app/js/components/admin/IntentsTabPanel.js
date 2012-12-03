@@ -367,19 +367,22 @@ Ext.define('Ozone.components.admin.IntentsTabPanel', {
         }
     },
 
-    //Looks through an array of intents for the given intent and removes it (case-insensitive)
+    //Looks through an array of intents for the given intent and data type and removes it (case-insensitive)
     removeIntentFromArray: function(intent, intentArray) {
         if(intentArray) {
             for(var i = 0; i < intentArray.length; i++) {
                 if(intentArray[i].action.toLowerCase() === intent.action.toLowerCase()) {
                     if(intentArray[i].dataTypes) {
-                        var dataTypesArray = []
                         for(var j = 0; j < intentArray[i].dataTypes.length; j++) {
-                            dataTypesArray.push(intentArray[i].dataTypes[j].toLowerCase());
-                        }
-                        if(Ext.Array.contains(dataTypesArray, intent.dataTypes[0].toLowerCase())) {
-                            Ext.Array.remove(intentArray, intentArray[i]);
-                            break;
+                            //If dataType found, remove it from the list of dataTypes
+                            if(intentArray[i].dataTypes[j].toLowerCase() == intent.dataTypes[0].toLowerCase()) {
+                                Ext.Array.remove(intentArray[i].dataTypes, intentArray[i].dataTypes[j]);
+                                //If dataType removed makes the dataTypes empty, remove the intent
+                                if(intentArray[i].dataTypes.length == 0) {
+                                    Ext.Array.remove(intentArray, intentArray[i]);
+                                }
+                                break;
+                            }
                         }
                     }
                 }
