@@ -25,7 +25,7 @@
     ul.actions {
         clear: both;
         float: right;
-        color: #fff;
+        color: $dashboard-switcher-dashboard-text-color;
         margin-right: 15px;
         
         li {
@@ -33,7 +33,8 @@
             padding: 5px 10px;
 
             &:hover, &.selected {
-                background: #000;
+                background: $dashboard-switcher-dashboard-over-background-color;
+                color: $dashboard-switcher-dashboard-over-text-color;
             }
         }
     }
@@ -104,6 +105,16 @@
         }
         .thumb {
             background-image: $dashboard-switcher-layout-default-icon-over !important;
+        }
+    }
+}
+#dashboard-switcher .stack, .stack-drag-proxy {
+    .thumb {
+        background-image: $dashboard-switcher-layout-stack-default-icon !important;
+    }
+    &.dashboard-selected {
+        .thumb {
+            background-image: $dashboard-switcher-layout-stack-default-icon-over !important;
         }
     }
 }
@@ -181,12 +192,12 @@
     top: -30px;
 
     .dashboards {
-        background: #000;
+        background: darken($dashboard-switcher-dashboard-background-color, 10%);
         overflow: hidden;
     }
 }
 .stack-dashboards-anchor-tip {
     position: relative;
     border-width: 20px;
-    border-bottom-color: #000;
+    border-bottom-color: darken($dashboard-switcher-dashboard-background-color, 10%);
 }
