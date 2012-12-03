@@ -229,6 +229,15 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 });
             });
 
+            $dom.one('mousemove.reorder', '.dashboard, .stack', function (evt) {
+                var $el = $(this);
+
+                // hide stack dashboards if dragging root stack or dashboard
+                if( !($el.parent().hasClass('dashboards')) ) {
+                    me.hideStackDashboards();
+                }
+            });
+
             $dom.on('mousemove.reorder', '.dashboard, .stack', function (evt) { 
                 var $el = $(this);
 
@@ -502,7 +511,12 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
                 var $next = $stack.next();
 
+                if($next.length === 1 && !$next.hasClass('dashboard') && !$next.hasClass('stack')) {
+                    $next = $next.next();
+                }
+
                 if( $next.length === 1) {
+
                     if( $next.hasClass('dashboard') ) {
                         var nextDash = me.getDashboard( $next );
                         index = store.indexOf(nextDash.model);
@@ -662,14 +676,10 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         if( me._lastExpandedStack ) {
             if( me._lastExpandedStack === stack ) {
-                me.hideStackDashboards().then(function() {
-                    me.$stackDashboards.remove();
-                    me._lastExpandedStack = null;
-                });
+                return me.hideStackDashboards();
             }
             else {
                 me.hideStackDashboards().then(function () {
-                    me.$stackDashboards.remove();
                     me.showStackDashboards(stack, $stack, dfd);
                 });
             }
@@ -750,14 +760,30 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     },
 
     hideStackDashboards: function () {
+        var me = this;
+        if(!this.$stackDashboards) {
+            var dfd = $.Deferred();
+            dfd.resolve();
+            return dfd.promise();
+        }
+
         if(Ext.isIE7 || Ext.isIE8) {
             var dfd = $.Deferred();
             this.$stackDashboards && this.$stackDashboards.hide();
             dfd.resolve();
+
+            this.$stackDashboards.remove();
+            this._lastExpandedStack = null;
+            
             return dfd.promise();
         }
         else {
-            return this.$stackDashboards.slideUp('fast').promise();
+            var promise = this.$stackDashboards.slideUp('fast').promise();
+            promise.then(function () {
+                me.$stackDashboards.remove();
+                me._lastExpandedStack = null;
+            });
+            return promise;
         }
     },
 
