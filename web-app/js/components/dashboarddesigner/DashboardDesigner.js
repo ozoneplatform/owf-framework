@@ -90,8 +90,7 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
             },
             {
                 xtype: 'dashboarddesignersidepanel',
-                dashboardDesigner: me,
-                width: 120
+                dashboardDesigner: me
             }
         ];
 

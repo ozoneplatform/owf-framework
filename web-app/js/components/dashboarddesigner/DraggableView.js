@@ -36,7 +36,6 @@ Ext.define('Ozone.components.dashboarddesigner.DraggableView', {
 			delegate: view.itemSelector,
 			trackMouse: true,
 			renderTo: view.el,
-			width: 100,
 			mouseOffset: [0,10],
 			listeners: {	
 				beforeshow: function updateTipBody(tip) {
