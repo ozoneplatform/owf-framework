@@ -200,24 +200,21 @@
 				            if (linkClicked && clickedDataIndex == 'company') {
 	                        	// Get selected rows
 	                        	var gridPanel = view.findParentByType('grid');
-	                        	var selectedRows = gridPanel.getSelectionModel().getSelection();
 	                        	var data = [];
 	                        	
-	                        	for (var i = 0; i < selectedRows.length; i++) {
-	                        		// Build HTML
-	                        		var companyTitle = record.data.symbol ? (record.data.company + "(" + record.data.symbol + ")") : record.data.company;
-	                        		var html = "<div class='company-profile'><div class='company'><h1>" + companyTitle + "</h1></div>" +
-	                        			"<div class='address1'>" + record.data.address + "</div>" +
-	                        			"<div class='address2'>" + record.data.city + ", " + record.data.state + "&nbsp;" + record.data.zip + "</div>" +
-	                        			"<div class='phone'>" + record.data.phone + "<br /><hr /></div>" +
-	                        			"<div class='profile'>" + record.data.profile + "</div>" +
-	                        			"</div>";
-	                        		
-	                        		data.push({
-				                    	id: record.data.symbol ? record.data.symbol : record.data.company,
-				                    	html: html
-	                        		});
-	                        	}
+                        		// Build HTML
+                        		var companyTitle = record.data.symbol ? (record.data.company + "(" + record.data.symbol + ")") : record.data.company;
+                        		var html = "<div class='company-profile'><div class='company'><h1>" + companyTitle + "</h1></div>" +
+                        			"<div class='address1'>" + record.data.address + "</div>" +
+                        			"<div class='address2'>" + record.data.city + ", " + record.data.state + "&nbsp;" + record.data.zip + "</div>" +
+                        			"<div class='phone'>" + record.data.phone + "<br /><hr /></div>" +
+                        			"<div class='profile'>" + record.data.profile + "</div>" +
+                        			"</div>";
+                        		
+                        		data.push({
+			                    	id: record.data.symbol ? record.data.symbol : record.data.company,
+			                    	html: html
+                        		});
 	                        	
 					            OWF.Intents.startActivity(
 					                {
