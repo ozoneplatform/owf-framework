@@ -58,7 +58,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             dashboards[ dashboard.guid ] = dashboard;
 
             stack = dashboard.stack;
-            console.log(i, ' => Dashboard name: ', dashboard.name, 'Stack: ', stack ? stack.name : 'none', ' Default: ', dashboard.isdefault);
+            //console.log(i, ' => Dashboard name: ', dashboard.name, 'Stack: ', stack ? stack.name : 'none', ' Default: ', dashboard.isdefault);
             if( stack ) {
                 if( stacks[ stack.id ] ) {
                     stacks[ stack.id ].dashboards.push( dashboard );
@@ -231,11 +231,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
             $dom.one('mousemove.reorder', '.dashboard, .stack', function (evt) {
                 var $el = $(this);
-
-                // hide stack dashboards if dragging root stack or dashboard
-                if( !($el.parent().hasClass('dashboards')) ) {
-                    me.hideStackDashboards();
-                }
+                me._hideStackDashboardsOnMove($el);
             });
 
             $dom.on('mousemove.reorder', '.dashboard, .stack', function (evt) { 
@@ -287,32 +283,65 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         });
     },
 
+    _hideStackDashboardsOnMove: function ($el) {
+        // hide stack dashboards if moving root stack or dashboard
+        if( !($el.parent().hasClass('dashboards')) ) {
+            this.hideStackDashboards();
+        }
+    },
+
     initKeyboardNav: function () {
         var me = this;
+
+        function move ($el, $moveToEl) {
+            $moveToEl.hasClass('stack') ? me._dropOnStack($el, $moveToEl) : me._dropOnDashboard($el, $moveToEl);
+        }
 
         function moveLeft () {
             //move item left
             var $this = $(this),
-                $prev = $this.prev();
+                $prev = $this.prev(),
+                promise;
+
+            if($prev.length === 1 && !$prev.hasClass('dashboard') && !$prev.hasClass('stack')) {
+                $prev = $prev.prev();
+            }
 
             if($prev.length === 0)
                 return;
 
             $prev.addClass( me.DROP_LEFT_CLS );
-            $prev.hasClass('stack') ? me._dropOnStack($this, $prev) : me._dropOnDashboard($this, $prev);
+
+            if(promise = me._hideStackDashboardsOnMove($this))
+                promise.then(function () {
+                    move($this, $prev);
+                })
+            else
+                move($this, $prev);
         }
 
         function moveRight () {
             //move item right
             var $this = $(this),
-                $next = $this.next();
+                $next = $this.next(),
+                promise;
             
+            if($next.length === 1 && !$next.hasClass('dashboard') && !$next.hasClass('stack')) {
+                $next = $next.next();
+            }
+
             if($next.length === 0)
                 return;
 
             $next.addClass( me.DROP_RIGHT_CLS );
-            $next.hasClass('stack') ? me._dropOnStack($this, $next) : me._dropOnDashboard($this, $next);
+            if(promise = me._hideStackDashboardsOnMove($this))
+                promise.then(function () {
+                    move($this, $next);
+                })
+            else
+                move($this, $next);
         }
+            
 
         $(me.el.dom)
             .on('keyup', '.stack', function (evt) {
