@@ -9,6 +9,8 @@ Ext.define('Ozone.components.dashboarddesigner.WorkingArea', {
         circularFocus: 'Ozone.components.focusable.CircularFocus'
     },
 
+    componentCls: 'droppable',
+
     initComponent: function() {
         this.on({
             paneselect: {

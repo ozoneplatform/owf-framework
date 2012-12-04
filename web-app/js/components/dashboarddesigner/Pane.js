@@ -8,7 +8,7 @@ Ext.define('Ozone.components.dashboarddesigner.Pane', {
     layout: {
         type: 'fit'
     },
-    componentCls: 'dashboarddesignerpane',
+    componentCls: 'dashboarddesignerpane droppable',
 
     paneType: null,
     

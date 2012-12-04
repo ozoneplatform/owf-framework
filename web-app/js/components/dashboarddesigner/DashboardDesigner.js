@@ -368,7 +368,7 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
             ddGroup: 'dashboard-designer',
 
             getTargetFromEvent: function(e) {
-                return e.getTarget('.dashboarddesignerpane') || e.getTarget('#dashboard-designer-working-area');
+                return e.getTarget('.droppable', 1);
             },
 
             // On entry into a target node, highlight that node.
