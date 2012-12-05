@@ -465,6 +465,12 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             //Update the descriptorUrlInfo title and help message for editing an existing widget
             component.getComponent('descriptorUrlInfo').titleEl.dom.innerHTML = 'Update Widget from Descriptor URL';
             component.getComponent('descriptorUrlInfoMsg').update('Click Load to update the widget. If the widget descriptor file changed since it was added to your instance of OWF, clicking Load will retrieve the latest widget data. To upload it to your OWF, click Apply.');
+
+            //Enable all the intent CRUD buttons
+            var intentsTab = component.ownerCt.down('#intents-tab');
+            intentsTab.down('#btnCreate').enable();
+            intentsTab.down('#btnEdit').enable();
+            intentsTab.down('#btnDelete').enable();
             
             // If we have a descriptor loaded without errors, disable the edit fields.
             if(data.descriptorUrl && component.getComponent('descriptorUrlErrorMsg').isHidden()) {

@@ -67,6 +67,7 @@ Ext.define('Ozone.components.admin.IntentsTabPanel', {
                     text: 'Create',
                     itemId: 'btnCreate',
                     handler: this.onCreateOrEdit,
+                    disabled: true,
                     scope: this
                 },
                 {
@@ -74,6 +75,7 @@ Ext.define('Ozone.components.admin.IntentsTabPanel', {
                     text: 'Edit',
                     itemId: 'btnEdit',
                     handler: this.onCreateOrEdit,
+                    disabled: true,
                     scope: this
                 },
                 {
@@ -81,6 +83,7 @@ Ext.define('Ozone.components.admin.IntentsTabPanel', {
                     text: 'Delete',
                     itemId: 'btnDelete',
                     handler: this.onDelete,
+                    disabled: true,
                     scope: this
                 }]
             }]

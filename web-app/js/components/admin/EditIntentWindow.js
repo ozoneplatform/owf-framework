@@ -204,6 +204,19 @@ Ext.define('Ozone.components.admin.EditIntentWindow', {
                         text: 'OK',
                         itemId: 'ok',
                         handler: function(button, e) {
+                            //Show validation on fields
+                            var textfields = this.query('textfield');
+                            for (var i = 0; i < textfields.length; i++) {
+                                var field = textfields[i];
+                                if (!Ext.isFunction(field)) {
+                                    field.isValid();
+                                    field.changed = true;
+                                    field.doComponentLayout();
+                                    if (field.getXType() == 'textfield') {
+                                        field.setValue(Ext.String.trim(field.getValue()));
+                                    }
+                                }
+                            }
                             var p = button.ownerCt.ownerCt;
                             this.submitValues = p.getComponent('form').getValues();
                             var fields = p.getComponent('form').getForm().getFields().items;
