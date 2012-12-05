@@ -1,0 +1,44 @@
+$bodyBackground: #444;
+$textColor: #efefef;
+
+$tableBackground: #777;
+$tableBackgroundAccent: #666;
+$tableBackgroundHover: #333;
+$tableBorder: #999;
+
+$inputBackground: #333;
+
+@import "compass_twitter_bootstrap";
+@import "common";
+
+.navbar {
+	@extend .navbar-inverse;
+}
+
+.btn {
+	@extend .btn-inverse;
+}
+
+.icon {
+	@extend .icon-white;
+}
+
+select,
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input {
+ 	color: #efefef;
+}

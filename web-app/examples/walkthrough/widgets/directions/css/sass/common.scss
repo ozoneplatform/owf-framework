@@ -1,0 +1,63 @@
+* {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+select,
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input {
+  	height: $baseLineHeight + 8px;
+}
+
+body {
+	padding: 5px;
+}
+
+input {
+	width: 100%;
+}
+
+.highlight-drop-zone {
+	background: rgba(82, 168, 236, 0.2) !important;
+}
+
+.lt-ie8 {
+	select,
+	textarea,
+	input[type="text"],
+	input[type="password"],
+	input[type="datetime"],
+	input[type="datetime-local"],
+	input[type="date"],
+	input[type="month"],
+	input[type="time"],
+	input[type="week"],
+	input[type="number"],
+	input[type="email"],
+	input[type="url"],
+	input[type="search"],
+	input[type="tel"],
+	input[type="color"],
+	.uneditable-input {
+	  	height: $baseLineHeight;
+	}
+
+	input {
+		width: 95%;
+	}
+}

@@ -1,0 +1,89 @@
+* {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+select,
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input {
+  height: $baseLineHeight + 8px;
+}
+
+.navbar-inner {
+	border-radius: 0px;
+	padding: 0 5px;
+}
+
+.address {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+#contact-form {
+	padding: 10px;
+}
+
+#contact-form input {
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.lt-ie8 {
+	select,
+	textarea,
+	input[type="text"],
+	input[type="password"],
+	input[type="datetime"],
+	input[type="datetime-local"],
+	input[type="date"],
+	input[type="month"],
+	input[type="time"],
+	input[type="week"],
+	input[type="number"],
+	input[type="email"],
+	input[type="url"],
+	input[type="search"],
+	input[type="tel"],
+	input[type="color"],
+	.uneditable-input {
+	  height: $baseLineHeight;
+	}
+
+	#contact-form input {
+		width: 90%;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
