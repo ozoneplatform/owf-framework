@@ -944,6 +944,12 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             dashboard = this.getDashboard($dashboard),
             dashboardModel = dashboard.model;
 
+        //If exporting the current dashboard, regenerate the json to ensure changes
+        //not yet pushed to the server are in the exported json
+        if(this.dashboardContainer.activeDashboard.configRecord.data.guid === dashboard.guid) {
+            dashboard = this.dashboardContainer.activeDashboard.getJson();
+        }
+
         // delete model before cloning to remove circular refs
         delete dashboard.model;
         var cloneDashboard = Ozone.util.cloneDashboard(dashboard, false, true);
