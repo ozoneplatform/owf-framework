@@ -3,11 +3,15 @@ var Ozone = Ozone || {};
 Ozone.eventing = Ozone.eventing || {};
 Ozone.eventing.priv = Ozone.eventing.priv || {};
 
-if (typeof JSON === 'undefined') {
-    JSON = gadgets.json;
-}
+// if (typeof JSON === 'undefined') {
+//     JSON = gadgets.json;
+// }
 
 (function (ozoneEventing) {
+
+    if (typeof JSON === 'undefined') {
+        var JSON = gadgets.json;
+    }
 
     //////////////////////////////////////////////////////////////////////////
     // private objects and functions
