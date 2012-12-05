@@ -350,7 +350,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             this.ddProxy = this.ddProxy || Ext.create('Ext.dd.StatusProxy', {
                 shadow: false
             });
-            this.ddProxy.update('<img src="' + this._widgetToMove.model.get('image') + '" />');
+            this.ddProxy.update('<img src="' + this._widgetToMove.model.get('image') + '" class="widget-drag-proxy"/>');
+
 
             //TODO: investigate why I have to call show, hide and show
             this.ddProxy.show();

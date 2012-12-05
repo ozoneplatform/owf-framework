@@ -478,4 +478,65 @@ databaseChangeLog = {
             column(name: "dest_type", value: "widget_definition")
         }
     }
+
+    changeSet(author: "owf", id: "7.0.0-41", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+        comment(text="allow identity inserts")
+        sql ( text = """
+            SET IDENTITY_INSERT [dbo].[dashboard] ON
+        """)
+    }
+
+    changeSet(author: "owf", id: "7.0.0-42", context: "sampleData, 7.0.0-sampleData") {
+        comment(text="Add Contacts Dashboards")
+        
+        insert(tableName: "dashboard") {
+            column(name: "id", valueNumeric: "323")
+            column(name: "version", valueNumeric: "0")
+            column(name: "isdefault", valueBoolean: "false")
+            column(name: "dashboard_position", valueNumeric: "0")
+            column(name: "altered_by_admin", valueBoolean: "false")
+            column(name: "guid", value: "7f2f6d45-263a-7aeb-d841-3637678ce559")
+//          column(name: "column_count", valueNumeric: "0")
+            column(name: "name", value: "Contacts")
+            column(name: "description", value: "This dashboard uses the Contacts Manager, Direction and Google Maps widgets.")
+//          column(name: "default_settings", value: "{}")
+            column(name: "layout_config", value: """{"xtype":"container","cls":"hbox ","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"accordionpane","cls":"left","htmlText":"25%","items":[],"widgets":[{"universalName":"org.owfgoss.owf.examples.ContactsManager","widgetGuid":"92448ba5-7f2b-982a-629e-9d621268b5e9","uniqueId":"208c64f4-14ed-b31b-98b1-15408cc1620e","dashboardGuid":"f935e19e-09a1-451e-8b3d-0fb77537da7d","paneGuid":"5c478b1d-ba1f-ef67-087c-c03b8dbc7bff","intentConfig":null,"launchData":null,"name":"Contacts Manager","active":false,"x":0,"y":34,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":1,"singleton":false,"floatingWidget":false,"height":448,"width":419},{"universalName":"org.owfgoss.owf.examples.GetDirections","widgetGuid":"302c35c9-9ed8-d0b6-251c-ea1ed4d0c86b","uniqueId":"1929bfaf-ed08-47f3-c231-cd2e9d59e341","dashboardGuid":"f935e19e-09a1-451e-8b3d-0fb77537da7d","paneGuid":"5c478b1d-ba1f-ef67-087c-c03b8dbc7bff","intentConfig":{},"launchData":null,"name":"Directions","active":false,"x":0,"y":482,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":2,"singleton":false,"floatingWidget":false,"height":447,"width":419}],"paneType":"accordionpane","defaultSettings":{"widgetStates":{"302c35c9-9ed8-d0b6-251c-ea1ed4d0c86b":{"timestamp":1354747263559},"d182002b-3de2-eb24-77be-95a7d08aa85b":{"timestamp":1354745224627},"92448ba5-7f2b-982a-629e-9d621268b5e9":{"timestamp":1354747263555}}},"flex":0.25},{"xtype":"dashboardsplitter"},{"xtype":"tabbedpane","cls":"right","htmlText":"75%","items":[],"paneType":"tabbedpane","widgets":[{"universalName":"org.owfgoss.owf.examples.GoogleMaps","widgetGuid":"d182002b-3de2-eb24-77be-95a7d08aa85b","uniqueId":"570f3364-e21a-8f96-d8e5-f61d81196ebc","dashboardGuid":"f935e19e-09a1-451e-8b3d-0fb77537da7d","paneGuid":"a25052e4-cd5d-51c0-a440-81327fc1d955","intentConfig":null,"launchData":null,"name":"Google Maps","active":true,"x":423,"y":62,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":1,"singleton":false,"floatingWidget":false,"height":867,"width":1257}],"defaultSettings":{"widgetStates":{"d182002b-3de2-eb24-77be-95a7d08aa85b":{"timestamp":1354747263599},"b87c4a3e-aa1e-499e-ba10-510f35388bb6":{"timestamp":1354746772856},"ec5435cf-4021-4f2a-ba69-dde451d12551":{"timestamp":1354746684155},"eb5435cf-4021-4f2a-ba69-dde451d12551":{"timestamp":1354746684154},"d6ce3375-6e89-45ab-a7be-b6cf3abb0e8c":{"timestamp":1354747222261},"eb81c029-a5b6-4107-885c-5e04b4770767":{"timestamp":1354747222264},"c3f3c8e0-e7aa-41c3-a655-aca3c940f828":{"timestamp":1354746826290}}},"flex":0.75}],"flex":1}""")
+        }
+    }
+
+    changeSet(author: "owf", id: "7.0.0-43", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+        comment(text="allow identity inserts")
+        sql ( text = """
+            SET IDENTITY_INSERT [dbo].[dashboard] OFF
+        """)
+    }
+
+    changeSet(author: "owf", id: "7.0.0-44", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+        comment(text="allow identity inserts")
+        sql ( text = """
+            SET IDENTITY_INSERT [dbo].[domain_mapping] ON
+        """)
+    }
+
+    changeSet(author: "owf", id: "7.0.0-45", context: "sampleData, 7.0.0-sampleData") {
+        comment(text="Assign Intents and Sample Dashboards to OWF Users group")
+
+        // Assign Intents Dashboard to OWF Users group
+        insert(tableName: "domain_mapping") {
+            column(name: "id", valueNumeric: "342")
+            column(name: "version", valueNumeric: "0")
+            column(name: "src_id", valueNumeric: "192")
+            column(name: "src_type", value: "group")
+            column(name: "relationship_type", value: "owns")
+            column(name: "dest_id", valueNumeric: "323")
+            column(name: "dest_type", value: "dashboard")
+        }
+    }
+
+    changeSet(author: "owf", id: "7.0.0-46", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+        comment(text="allow identity inserts")
+        sql ( text = """
+            SET IDENTITY_INSERT [dbo].[domain_mapping] OFF
+        """)
+    }
 }
