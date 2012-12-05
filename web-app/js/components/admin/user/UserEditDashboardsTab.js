@@ -156,7 +156,7 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
             }
         }).show();
     },
-    doEdit: function(button, e) {
+    doEdit: function(cmp, record, item, index, e) {
         var grid = this.getComponent('dashboardsgrid');
         var records = grid.getSelectedDashboards();
         var recId = this.ownerCt.recordId;

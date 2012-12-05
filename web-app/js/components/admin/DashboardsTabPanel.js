@@ -30,9 +30,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             border: false,
             listeners: {
               itemdblclick: {
-                fn: function() {
-                    this.doEdit();
-                },
+                fn: this.doEdit,
                 scope: this
               }
             }
@@ -163,12 +161,10 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             decodedResponse = Ext.JSON.decode(response);
         }
         catch (e) {
-            decodedResponse = {
-                errorMsg: response
-            };
+            decodedResponse = response;
         }
 
-        this.editPanel.showAlert('Server Error', 'Error during ' + operation.action + ': ' + errorMsg);
+        decodedResponse && this.editPanel.showAlert('Server Error', decodedResponse);
     },
 
     onAddClicked: function () {
@@ -200,7 +196,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
         win.show();
     },
     
-    doEdit: function(button, e) {
+    doEdit: function(cmp, record, item, index, e) {
         var grid = this.getComponent('dashboardsgrid');
         var records = grid.getSelectedDashboards();
         if (records && records.length > 0) {

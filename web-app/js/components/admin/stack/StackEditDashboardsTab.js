@@ -11,6 +11,8 @@ Ext.define('Ozone.components.admin.stack.StackEditDashboardsTab', {
     isGroupDashboard: true,
 
     initComponent: function () {
+        var me = this;
+
         Ext.applyIf(this, {
             layout: 'fit',
             itemId: 'tabDashboards',
@@ -70,6 +72,26 @@ Ext.define('Ozone.components.admin.stack.StackEditDashboardsTab', {
             }
             ]
         });
+
+        this.on({
+            activate: {
+                scope: me,
+                single: true,
+                fn: function(cmp, opts) {
+                    var grid = cmp.getComponent('dashboardsgrid');
+                    grid.view.addElListener('keypress', function(evt, target) {
+                        if(evt.getKey() == evt.ENTER) {
+                            var selModel = grid.getSelectionModel();
+                            grid.getStore().each(function(record) {
+                                if(selModel.isFocused(record)) {
+                                    me.doEdit(null, record);
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
     },
 
     onAddClicked: function () {
@@ -99,5 +121,74 @@ Ext.define('Ozone.components.admin.stack.StackEditDashboardsTab', {
             })
         });
         win.show();
+    },
+
+    doEdit: function(cmp, record, item, index, e) {
+        var me = this;
+        var recId = this.ownerCt.recordId;
+        var data = record ? record.data : record;
+        var jsonString = null;
+        if (data) {
+            jsonString = owfdojo.toJson(data, true);
+        }
+        
+        Ext.create('Ozone.components.admin.EditDashboardWindow', {
+            title: 'Dashboard Editor',
+            guid: data.guid ? data.guid : '',
+            name: data.name ? data.name : '',
+            description: data.description ? data.description : '',
+            definition: jsonString ? jsonString : '',
+            width: Ext.getBody().getViewSize().width * .9,
+            height: Ext.getBody().getViewSize().height * .9,
+            scope: this,
+            callback: function(values, button) {
+                if (values != undefined) {
+                    var oDefinition = Ext.decode(values.definition);
+                    if (oDefinition) {
+                        if (values.guid) {
+                            oDefinition.guid = values.guid;
+                        }
+                        if (values.name) {
+                            oDefinition.name = values.name;
+                        }
+                        if (values.description) {
+                            oDefinition.description = values.description;
+                        }
+                    }
+                    var store = Ext.StoreMgr.lookup({
+                        type: 'admindashboardstore'
+                    });
+                    store.proxy.extraParams.adminEnabled = true;
+                    store.proxy.extraParams.stack_id = recId;
+                    store.add(oDefinition);
+                    var record = store.data.items[0];
+                    record.phantom = true;
+                    
+                    store.on({
+                        write: {
+                            fn: function(store, operation, eOpts) {
+                                var grid = me.getComponent('dashboardsgrid');
+                                if (grid && grid.store) {
+                                    grid.store.load();
+                                }
+                            },
+                            scope: this
+                        }
+                    });
+                    
+                    if (store.proxy) {
+                        store.proxy.on({
+                            exception: {
+                                fn: this.onStoreException,
+                                scope: this,
+                                single: true
+                            }
+                        });
+                    }
+                    
+                    store.sync();
+                }
+            }
+        }).show();
     }
 });
