@@ -267,4 +267,215 @@ databaseChangeLog = {
             where(text="widget_url='admin/MarketplaceApprovals.gsp'")
         }
     }
+
+    changeSet(author: "owf", id: "7.0.0-31", context: "sampleData, 7.0.0-sampleData") {
+        comment(text="insert new sample data")
+        insert(tableName: "widget_definition") {
+            column(name: "id", valueNumeric: "181")
+            column(name: "version", valueNumeric: "0")
+            column(name: "visible", valueBoolean: "true")
+            column(name: "image_url_large", value: "examples/walkthrough/widgets/directions/img/logo.png")
+            column(name: "image_url_small", value: "examples/walkthrough/widgets/directions/img/logo.png")
+            column(name: "singleton", valueBoolean: "false")
+            column(name: "width", valueNumeric: "400")
+            column(name: "widget_version", value: "1.0")
+            column(name: "height", valueNumeric: "400")
+            column(name: "widget_url", value: "examples/walkthrough/widgets/directions")
+            column(name: "widget_guid", value: "302c35c9-9ed8-d0b6-251c-ea1ed4d0c86b")
+            column(name: "display_name", value: "Directions")
+            column(name: "background", valueBoolean: "false")
+            column(name: "universal_name", value: "org.owfgoss.owf.examples.GetDirections")
+            column(name: "description", value: "This widget allows user to get directions fron one place to another.")
+            column(name: "descriptor_url", value: "../examples/walkthrough/widgets/directions/descriptor/descriptor.html")
+        }
+        insert(tableName: "widget_definition") {
+            column(name: "id", valueNumeric: "182")
+            column(name: "version", valueNumeric: "0")
+            column(name: "visible", valueBoolean: "true")
+            column(name: "image_url_large", value: "examples/walkthrough/widgets/googlemaps/img/logo.png")
+            column(name: "image_url_small", value: "examples/walkthrough/widgets/googlemaps/img/logo.png")
+            column(name: "singleton", valueBoolean: "false")
+            column(name: "width", valueNumeric: "800")
+            column(name: "widget_version", value: "1.0")
+            column(name: "height", valueNumeric: "600")
+            column(name: "widget_url", value: "examples/walkthrough/widgets/googlemaps")
+            column(name: "widget_guid", value: "d182002b-3de2-eb24-77be-95a7d08aa85b")
+            column(name: "display_name", value: "Google Maps")
+            column(name: "background", valueBoolean: "false")
+            column(name: "universal_name", value: "org.owfgoss.owf.examples.GoogleMaps")
+            column(name: "description", value: "This widget displays markers or directions.")
+            column(name: "descriptor_url", value: "../examples/walkthrough/widgets/googlemaps/descriptor/descriptor.html")
+        }
+        insert(tableName: "widget_definition") {
+            column(name: "id", valueNumeric: "183")
+            column(name: "version", valueNumeric: "0")
+            column(name: "visible", valueBoolean: "true")
+            column(name: "image_url_large", value: "examples/walkthrough/widgets/contacts/img/logo.png")
+            column(name: "image_url_small", value: "examples/walkthrough/widgets/contacts/img/logo.png")
+            column(name: "singleton", valueBoolean: "false")
+            column(name: "width", valueNumeric: "400")
+            column(name: "widget_version", value: "1.0")
+            column(name: "height", valueNumeric: "400")
+            column(name: "widget_url", value: "examples/walkthrough/widgets/contacts")
+            column(name: "widget_guid", value: "92448ba5-7f2b-982a-629e-9d621268b5e9")
+            column(name: "display_name", value: "Contacts Manager")
+            column(name: "background", valueBoolean: "false")
+            column(name: "universal_name", value: "org.owfgoss.owf.examples.ContactsManager")
+            column(name: "description", value: "This widget allows users to manage their contacts.")
+            column(name: "descriptor_url", value: "../examples/walkthrough/widgets/contacts/descriptor/descriptor.html")
+        }
+    }
+    changeSet(author: "owf", id: "7.0.0-32", context: "sampleData, 7.0.0-sampleData") {
+        comment(text="insert new sample data")
+        insert(tableName: "widget_definition_widget_types") {
+            column(name: "widget_definition_id", valueNumeric: "181")
+            column(name: "widget_type_id", valueNumeric: "1")
+        }
+        insert(tableName: "widget_definition_widget_types") {
+            column(name: "widget_definition_id", valueNumeric: "182")
+            column(name: "widget_type_id", valueNumeric: "1")
+        }
+        insert(tableName: "widget_definition_widget_types") {
+            column(name: "widget_definition_id", valueNumeric: "183")
+            column(name: "widget_type_id", valueNumeric: "1")
+        }
+    }
+    changeSet(author: "owf", id: "7.0.0-33", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+        comment(text="allow identity inserts")
+      sql ( text = """
+        SET IDENTITY_INSERT [dbo].[intent] ON
+      """)
+    }
+    changeSet(author: "owf", id: "7.0.0-34", context: "sampleData, 7.0.0-sampleData") {
+        comment(text="insert new sample data")
+        // Create Intents
+        insert(tableName: "intent") {
+            column(name: "id", valueNumeric: "303")
+            column(name: "version", valueNumeric: "0")
+            column(name: "action", value: "plot")
+        }
+        insert(tableName: "intent") {
+            column(name: "id", valueNumeric: "304")
+            column(name: "version", valueNumeric: "0")
+            column(name: "action", value: "navigate")
+        }
+    }
+    changeSet(author: "owf", id: "7.0.0-35", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+        comment(text="allow identity inserts")
+      sql ( text = """
+        SET IDENTITY_INSERT [dbo].[intent] OFF
+      """)
+    }
+
+    changeSet(author: "owf", id: "7.0.0-36", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+        comment(text="allow identity inserts")
+      sql ( text = """
+        SET IDENTITY_INSERT [dbo].[intent_data_type] ON
+      """)
+    }
+    changeSet(author: "owf", id: "7.0.0-37", context: "sampleData, 7.0.0-sampleData") {
+        comment(text="insert new sample data")
+        // Map intents to data types
+        insert(tableName: "intent_data_type") {
+            column(name: "id", valueNumeric: "305")
+            column(name: "version", valueNumeric: "0")
+            column(name: "data_type", value: "application/vnd.owf.sample.addresses")
+        }
+        insert(tableName: "intent_data_type") {
+            column(name: "id", valueNumeric: "306")
+            column(name: "version", valueNumeric: "0")
+            column(name: "data_type", value: "application/vnd.owf.sample.address")
+        }
+        insert(tableName: "intent_data_types") {
+            column(name: "intent_data_type_id", valueNumeric: "306")
+            column(name: "intent_id", valueNumeric: "303")
+        }
+        insert(tableName: "intent_data_types") {
+            column(name: "intent_data_type_id", valueNumeric: "305")
+            column(name: "intent_id", valueNumeric: "304")
+        }
+        insert(tableName: "intent_data_types") {
+            column(name: "intent_data_type_id", valueNumeric: "306")
+            column(name: "intent_id", valueNumeric: "304")
+        }
+    }
+    changeSet(author: "owf", id: "7.0.0-38", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+        comment(text="allow identity inserts")
+      sql ( text = """
+        SET IDENTITY_INSERT [dbo].[intent_data_type] OFF
+      """)
+    }
+    changeSet(author: "owf", id: "7.0.0-39", context: "sampleData, 7.0.0-sampleData") {
+        comment(text="insert new sample data")
+        // Assign Intents to Intents Widgets
+        insert(tableName: "widget_def_intent") {
+            column(name: "id", valueNumeric: "309")
+            column(name: "version", valueNumeric: "0")
+            column(name: "receive", valueBoolean: "true")
+            column(name: "send", valueBoolean: "false")
+            column(name: "intent_id", valueNumeric: "303")
+            column(name: "widget_definition_id", valueNumeric: "182")
+        }
+        insert(tableName: "widget_def_intent") {
+            column(name: "id", valueNumeric: "310")
+            column(name: "version", valueNumeric: "0")
+            column(name: "receive", valueBoolean: "true")
+            column(name: "send", valueBoolean: "false")
+            column(name: "intent_id", valueNumeric: "304")
+            column(name: "widget_definition_id", valueNumeric: "182")
+        }
+        insert(tableName: "widget_def_intent") {
+            column(name: "id", valueNumeric: "311")
+            column(name: "version", valueNumeric: "0")
+            column(name: "receive", valueBoolean: "false")
+            column(name: "send", valueBoolean: "true")
+            column(name: "intent_id", valueNumeric: "304")
+            column(name: "widget_definition_id", valueNumeric: "181")
+        }
+        insert(tableName: "widget_def_intent_data_types") {
+            column(name: "intent_data_type_id", valueNumeric: "306")
+            column(name: "widget_definition_intent_id", valueNumeric: "309")
+        }
+        insert(tableName: "widget_def_intent_data_types") {
+            column(name: "intent_data_type_id", valueNumeric: "305")
+            column(name: "widget_definition_intent_id", valueNumeric: "310")
+        }
+        insert(tableName: "widget_def_intent_data_types") {
+            column(name: "intent_data_type_id", valueNumeric: "305")
+            column(name: "widget_definition_intent_id", valueNumeric: "311")
+        }
+    }
+
+    changeSet(author: "owf", id: "7.0.0.40", context: "sampleData, 7.0.0-sampleData") {
+        comment(text="insert new sample data")
+
+        // Assign Contacts Dashboard widgets to OWF Users group
+        insert(tableName: "domain_mapping") {
+            column(name: "id", valueNumeric: "339")
+            column(name: "version", valueNumeric: "0")
+            column(name: "src_id", valueNumeric: "192")
+            column(name: "src_type", value: "group")
+            column(name: "relationship_type", value: "owns")
+            column(name: "dest_id", valueNumeric: "181")
+            column(name: "dest_type", value: "widget_definition")
+        }
+        insert(tableName: "domain_mapping") {
+            column(name: "id", valueNumeric: "340")
+            column(name: "version", valueNumeric: "0")
+            column(name: "src_id", valueNumeric: "192")
+            column(name: "src_type", value: "group")
+            column(name: "relationship_type", value: "owns")
+            column(name: "dest_id", valueNumeric: "182")
+            column(name: "dest_type", value: "widget_definition")
+        }
+        insert(tableName: "domain_mapping") {
+            column(name: "id", valueNumeric: "341")
+            column(name: "version", valueNumeric: "0")
+            column(name: "src_id", valueNumeric: "192")
+            column(name: "src_type", value: "group")
+            column(name: "relationship_type", value: "owns")
+            column(name: "dest_id", valueNumeric: "183")
+            column(name: "dest_type", value: "widget_definition")
+        }
+    }
 }
