@@ -8,7 +8,7 @@ if(OWF.Util.isRunningInOWF()) {
             namespace: OWF.getInstanceId(),
             name: 'widgetstate',
             value: OWF.Util.toString( this.state ),
-            onSuccess: function () { console.log(arguments) },
+            onSuccess: function () { //console.log(arguments) },
             onFailure: function () {}
         });
     };

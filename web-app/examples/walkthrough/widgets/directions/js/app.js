@@ -41,22 +41,9 @@ $(document).ready(function () {
                     endAddress.val()
                 ],
                 function(dest) {
-                    console.log('navigate intent callback', arguments);
-
-                    dest[0].onReady(function  () {
-                        console.log('onWidgetReady');
-                    })
+                    //console.log('navigate intent callback', arguments);
                 }
             );
-        });
-
-
-
-        OWF.RPC.getWidgetProxy('{"id":"f182002b-b1df-acb4-6d32-f8936b29feda"}', function(widgetA) {
-            console.log(widgetA)
-            widgetA.onReady(function  () {
-                console.log('onWidgetReady');
-            });
         });
         
 
