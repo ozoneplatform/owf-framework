@@ -197,7 +197,8 @@ class WidgetController extends BaseOwfRestController {
             response.setHeader("Content-disposition", "attachment; filename=" + filename + ".html")
 
             def widgetDescriptor = widgetDefinitionService.export(params)
-            response.outputStream << widgetDescriptor.newInputStream()
+            response.outputStream.write(widgetDescriptor.getBytes("UTF-8"))
+            response.outputStream.flush()
         }
         catch (Exception e) {
             //Set content-disposition back to text to relay the error

@@ -104,7 +104,8 @@ class StackController extends BaseOwfRestController {
             response.setHeader("Content-disposition", "attachment; filename=" + filename + ".html")
 
             def stackDescriptor = stackService.export(params)
-            response.outputStream << stackDescriptor.newInputStream()
+            response.outputStream.write(stackDescriptor.getBytes("UTF-8"))
+            response.outputStream.flush()
         }
         catch (Exception e) {
             //Set content-disposition back to text to relay the error

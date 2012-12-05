@@ -591,14 +591,9 @@ class StackService {
         //Get the empty descriptor with appropriate javascript
         def dir = './lib/'
         if(grails.util.GrailsUtil.environment != 'production') dir = './src/resources/'
-        def stackDescriptorText = new File(dir + "empty_descriptor.html").text
+        def stackDescriptor = new File(dir + "empty_descriptor.html").text
 
-        stackDescriptorText = stackDescriptorText.replaceFirst("var data;", "var data = ${stackData};")
-
-        def stackDescriptor = new File("stack_descriptor.html")
-        def out = new FileOutputStream(stackDescriptor)
-        out.write(stackDescriptorText.getBytes("UTF-8"))
-        out.close()
+        stackDescriptor = stackDescriptor.replaceFirst("var data;", java.util.regex.Matcher.quoteReplacement("var data = ${stackData};"))
 
         return stackDescriptor
     }

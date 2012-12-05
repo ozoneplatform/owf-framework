@@ -932,14 +932,9 @@ class WidgetDefinitionService {
         //Get the empty descriptor with appropriate javascript
         def dir = './lib/'
         if(grails.util.GrailsUtil.environment != 'production') dir = './src/resources/'
-        def widgetDescriptorText = new File(dir + "empty_descriptor.html").text
+        def widgetDescriptor = new File(dir + "empty_descriptor.html").text
 
-        widgetDescriptorText = widgetDescriptorText.replaceFirst("var data;", java.util.regex.Matcher.quoteReplacement("var data = ${widgetData};"))
-
-        def widgetDescriptor = new File("widget_descriptor.html")
-        def out = new FileOutputStream(widgetDescriptor)
-        out.write(widgetDescriptorText.getBytes("UTF-8"))
-        out.close()
+        widgetDescriptor = widgetDescriptor.replaceFirst("var data;", java.util.regex.Matcher.quoteReplacement("var data = ${widgetData};"))
 
         return widgetDescriptor
     }
