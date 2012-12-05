@@ -13,7 +13,9 @@ class DashboardServiceModel extends AbstractServiceModel {
   List groups = []
   String description = ''
   String createdDate 
+  String prettyCreatedDate
   String editedDate
+  String prettyEditedDate
   PersonServiceModel createdBy
   String layoutConfig
   Boolean locked = false

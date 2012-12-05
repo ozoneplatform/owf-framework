@@ -25,6 +25,8 @@ import ozone.owf.grails.domain.WidgetDefinitionIntent
 import ozone.owf.grails.domain.WidgetType
 import ozone.owf.grails.domain.Stack
 
+import com.ocpsoft.pretty.time.PrettyTime
+
 /**
  *
  * @author ntabernero
@@ -43,7 +45,7 @@ class ServiceModelService {
 
             case Dashboard:
                 Dashboard domain = (Dashboard) obj
-
+                def prettytime = new PrettyTime()
                 model = new DashboardServiceModel(
                         name: domain.name,
                         guid: domain.guid,
@@ -56,7 +58,9 @@ class ServiceModelService {
                         description: domain.description,
 
                         createdDate: OWFDate.standardShortDateDisplay(domain.createdDate),
+                        prettyCreatedDate: domain.createdDate != null ? prettytime.format(domain.createdDate) : '',
                         editedDate: OWFDate.standardShortDateDisplay(domain.editedDate),
+                        prettyEditedDate: domain.editedDate != null ? prettytime.format(domain.editedDate) : '',
                         createdBy: createServiceModel(domain.createdBy),
                         layoutConfig: domain.layoutConfig,
                         stack: createServiceModel(domain.stack)

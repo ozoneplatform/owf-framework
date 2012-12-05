@@ -1,7 +1,6 @@
 Ext.define('Ozone.components.admin.AdminEditorAddWindow', {
     extend: 'Ext.window.Window',
     alias: ['widget.admineditoraddwindow', 'widget.AdminEditorAddWindow'],
-
     mixins: {
       widget: 'Ozone.components.focusable.CircularFocus'
     },
@@ -16,6 +15,8 @@ Ext.define('Ozone.components.admin.AdminEditorAddWindow', {
     border: false,
     minWidth: 250,
     minHeight: 200,
+    detailsAutoOpen: true,
+    pnlDashboardDetail: null,
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -24,7 +25,7 @@ Ext.define('Ozone.components.admin.AdminEditorAddWindow', {
         xtype: 'panel',
         itemId: 'admineditoraddpanel',
         cls: 'admineditoraddpanel',
-        layout: 'fit',
+        layout: 'border',
         flex: 1,
         dockedItems: [{
             xtype: 'toolbar',
@@ -71,7 +72,75 @@ Ext.define('Ozone.components.admin.AdminEditorAddWindow', {
                 }
             }), 'top');
 
-            me.down('#admineditoraddpanel').add(me.grid);
+            if (me.addType === "Dashboard") {
+                var adminEditorAddPanel = me.down('#admineditoraddpanel');
+                me.pnlDashboardDetail = Ext.create('Ozone.components.admin.dashboard.DashboardDetailPanel', {
+                    layout: {
+                        type: 'fit',
+                        align: 'stretch'
+                    },
+                    region: 'east',
+                    preventHeader: true,
+                    collapseMode: 'mini',
+                    collapsible: true,
+                    collapsed: true,
+                    split: true,
+                    border: false,
+                    width: 266
+                });
+                Ext.apply(me.grid, {region: 'center'});
+                adminEditorAddPanel.add(me.grid);
+                adminEditorAddPanel.add(me.pnlDashboardDetail);
+                
+                // Setup eventing for the dashboard detail panel.
+                me.relayEvents(me.grid, ['datachanged', 'select', 'deselect']);
+//                me.grid.store.on(
+//                    'load',
+//                    function(thisStore, records, options){
+//                        if ((this.pnlDashboardDetail != null ) && 
+//                           (!this.pnlDashboardDetail.collapsed) && 
+//                            (this.pnlDashboardDetail.loadedRecord != null)){
+//                            for(var idx=0; idx < records.length; idx++){
+//                                if(records[idx].id == this.pnlDashboardDetail.loadedRecord.id){
+//                                    this.pnlDashboardDetail.loadData(records[idx]);
+//                                    break;
+//                                }
+//                            }
+//                        }
+//                    },
+//                    this
+//                );
+                
+                me.on(
+                    'datachanged',
+                    function(store, opts) {
+                          //collapse and clear detail panel if the store is refreshed
+                          if (this.pnlDashboardDetail != null ) {
+                            this.pnlDashboardDetail.collapse();
+                            this.pnlDashboardDetail.removeData();
+                          }
+
+                          //refresh launch menu
+                          if (!this.disableLaunchMenuRefresh) {
+                            this.refreshWidgetLaunchMenu();
+                          }
+                    },
+                    this
+                );
+            
+                me.on(
+                    'select',
+                    function(rowModel, record, index, opts) {
+                        this.pnlDashboardDetail.loadData(record);
+                        if (this.pnlDashboardDetail.collapsed && this.detailsAutoOpen) {this.pnlDashboardDetail.expand();}
+                    },
+                    this
+                );
+            }
+            else {
+                Ext.apply(me.grid, {region: 'center'});
+                me.down('#admineditoraddpanel').add(me.grid);
+            }  
         });
 
         me.on('afterrender', function() {

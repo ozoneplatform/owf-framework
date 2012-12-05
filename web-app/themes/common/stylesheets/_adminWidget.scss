@@ -344,6 +344,20 @@ div.detail-info {
         font-weight: bold;
     }
     
+    .detail-icon-block {
+        position: absolute;
+        height: 48px;
+        width: 48px;
+        left: 0px;
+        right: 0px;
+    }
+    
+    .detail-info-block {
+        position: absolute;
+        left: 52px;
+        right: 0px;
+    }
+    
     .detail-header-block {
       //width:400px;
     }
