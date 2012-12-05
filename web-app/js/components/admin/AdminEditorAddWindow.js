@@ -94,22 +94,6 @@ Ext.define('Ozone.components.admin.AdminEditorAddWindow', {
                 
                 // Setup eventing for the dashboard detail panel.
                 me.relayEvents(me.grid, ['datachanged', 'select', 'deselect']);
-//                me.grid.store.on(
-//                    'load',
-//                    function(thisStore, records, options){
-//                        if ((this.pnlDashboardDetail != null ) && 
-//                           (!this.pnlDashboardDetail.collapsed) && 
-//                            (this.pnlDashboardDetail.loadedRecord != null)){
-//                            for(var idx=0; idx < records.length; idx++){
-//                                if(records[idx].id == this.pnlDashboardDetail.loadedRecord.id){
-//                                    this.pnlDashboardDetail.loadData(records[idx]);
-//                                    break;
-//                                }
-//                            }
-//                        }
-//                    },
-//                    this
-//                );
                 
                 me.on(
                     'datachanged',
