@@ -20,6 +20,7 @@ Ext.define('Ozone.components.widget.WidgetPortlet', {
 	 */
 	getState: function() {
 		var o = {
+            universalName: this.universalName,
 			widgetGuid: ((this.widgetGuid != null) && (this.widgetGuid != 'undefined')) ? this.widgetGuid : '',
 			dashboardGuid: this.dashboardGuid,
 			paneGuid: this.paneGuid,

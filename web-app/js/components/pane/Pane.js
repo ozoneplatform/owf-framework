@@ -308,6 +308,7 @@ Ext.define('Ozone.components.pane.Pane', {
             paneGuid: me.paneGuid,
             dashboardGuid: me.dashboard.id,
             uniqueId: instanceId,
+            universalName: model.get('universalName'),
             widgetGuid: model.get('widgetGuid'),
 
             widgetStateContainer: this.widgetStateContainer,

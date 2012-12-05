@@ -62,6 +62,7 @@ Ext.define('Ozone.components.widget.WidgetPanel', {
     stateEvents: ['resize', 'collapse', 'expand', 'activate', 'deactivate', 'minimize', 'maximize', 'titlechange'],
     getState: function() {
         var o = {
+            universalName: this.universalName,
             widgetGuid: this.widgetGuid,
             uniqueId: this.uniqueId,
             dashboardGuid: this.dashboardGuid,

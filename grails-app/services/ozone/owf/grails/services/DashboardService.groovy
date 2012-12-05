@@ -423,6 +423,26 @@ class DashboardService extends BaseService {
         def maxPosition = (queryReturn[0] != null)? queryReturn[0] : -1
         maxPosition++
 
+        def universalNameToOldGuidMap = [:]
+        //Get a map between each widget's universalName and widgetGuid in the layoutConfig
+        params.layoutConfig && params.layoutConfig instanceof String && getUniversalNameToGuidMap(universalNameToOldGuidMap, JSON.parse(params.layoutConfig))
+
+        //If map isn't empty update all the widgetGuid's base on their universalName to
+        //ensure that an imported dashboard maintains widgets that exist
+        if(!universalNameToOldGuidMap.isEmpty()) {
+            //Get all the widgets that match the universalNames given in the layoutConfig
+            def universalNameMatches = WidgetDefinition.withCriteria({
+                'in'("universalName", universalNameToOldGuidMap.keySet())
+            })
+
+            //For each widget replace its old guid with the current guid in the layoutConfig, using universalName to identify them
+            universalNameMatches.each() { widget ->
+                if(universalNameToOldGuidMap[widget.universalName] != widget.widgetGuid) {
+                    params.layoutConfig = params.layoutConfig.replace(universalNameToOldGuidMap[widget.universalName], widget.widgetGuid)
+                }
+            }
+        }
+
         def dashboard = new Dashboard(
                 name: params.name,
                 guid: (params.cloned)? ((Dashboard.findByGuid(params.guid) != null)? java.util.UUID.randomUUID().toString() : params.guid) : params.guid,
@@ -966,6 +986,22 @@ class DashboardService extends BaseService {
         }
         else {
             cfg?.items?.each { removeLaunchData(it); }
+        }
+    }
+
+    //Generates a map between the universalName and wigetGuid of all widgets in a dashboard's layoutConfig
+    private def getUniversalNameToGuidMap(universalNameToGuidMap, layoutConfig) {
+        def widgets = layoutConfig.widgets
+        for(def i = 0; i < widgets?.size(); i++) {
+            if(widgets[i].universalName instanceof String) {
+                universalNameToGuidMap[widgets[i].universalName] = widgets[i].widgetGuid
+            }
+        }
+
+        def items = layoutConfig.items
+        for(def i = 0; i < items?.size(); i++) {
+            //Nested layoutConfig inside this pane, repeat the loop with it
+            getUniversalNameToGuidMap(universalNameToGuidMap, items[i])
         }
     }
 

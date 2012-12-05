@@ -190,6 +190,7 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
     getState: function(){
 
         var o = {
+            universalName: this.universalName,
             widgetGuid: this.widgetGuid,
             uniqueId: this.uniqueId,
             dashboardGuid: this.dashboardGuid,
