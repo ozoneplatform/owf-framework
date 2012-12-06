@@ -367,13 +367,10 @@ class WidgetDefinitionService {
             if(!(params.universalName instanceof String)) params.universalName = null;
             if(!(params.description instanceof String)) params.description = null;
 
-            // Fail any with descriptor file and no universal id (null or blank) or
-            // a universal name that is already used.
-            if (!isNull(params.descriptorUrl) && params.descriptorUrl.size() > 0) {
-                if (!isNull(params.universalName) && !params.stackDescriptor && !canUseUniversalName(widgetDefinition, params.universalName)) {
-                    throw new OwfException(message: 'Another widget uses ' + params.universalName + ' as its Universal Name. ' 
-                        + 'Please select a unique Universal Name for this widget.', exceptionType: OwfExceptionTypes.GeneralServerError)
-                }
+            //Fail if universalName is already in use by another widget and this isn't from a stackDescriptor
+            if (!isNull(params.universalName) && !params.stackDescriptor && !canUseUniversalName(widgetDefinition, params.universalName)) {
+                throw new OwfException(message: 'Another widget uses ' + params.universalName + ' as its Universal Name. ' 
+                    + 'Please select a unique Universal Name for this widget.', exceptionType: OwfExceptionTypes.GeneralServerError)
             }
             
             // Convert null or whitespace universal names to null.

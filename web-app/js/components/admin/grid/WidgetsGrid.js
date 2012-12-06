@@ -35,7 +35,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsGrid', {
           sortable: true,
           hidden: true,
           renderer:  function(value, metaData, record, rowIndex, columnIndex, store, view) {
-            return  '<div class="grid-text">' + value ? value : '' +'</div>';
+            return  '<div class="grid-text">' + value ? Ext.htmlEncode(value) : '' +'</div>';
           }
         },
         {

@@ -51,7 +51,7 @@ Ext.define('Ozone.components.admin.widget.WidgetDetailPanel', {
 			'</div>',
 			'<div class="detail-block">',
 			'<div><span class="detail-label">Description:</span> {description:htmlEncode}</div>',
-			'<div><span class="detail-label">Universal Name:</span> {universalName}</div>',
+			'<div><span class="detail-label">Universal Name:</span> {universalName:htmlEncode}</div>',
 			'<div><span class="detail-label">Default Tags:</span> {tags:this.renderTags}</div>',
 			'<div><span class="detail-label">Single Instance:</span> {singleton}</div>',
 			'<div><span class="detail-label">Visible:</span> {definitionVisible}</div>',

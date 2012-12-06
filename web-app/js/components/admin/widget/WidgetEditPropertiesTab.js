@@ -123,14 +123,9 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
         	    	  cls: 'manualEntryLinkBtn',
         	    	  handler: function(btn) {
 		        		  var field = this.getComponent('descriptorUrl');
-		        		  var universalName = this.getComponent('universalName');
-                          var description_dsp = this.getComponent('description_dsp');
 		        		  field.setValue("");
 		        		  // Show all major properties.
         	    		  this.showProperties(true);
-        	    		  // Explicitly hide the Universal ID in manual entry mode.
-        	    		  universalName.hide();
-                          description_dsp.hide();
                           this.getComponent('descriptorUrlErrorMsg').hide();
         	    	  },
         	    	  scope: this
@@ -223,13 +218,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             fieldLabel: 'Description'
           },
           {
-            xtype: 'displayfield',
-            itemId: 'description_dsp',
-            name: 'description_dsp',
-            fieldLabel: 'Description',
-            hidden: true
-          },
-          {
             xtype: 'textfield',
             name: 'version',
             itemId: 'version',
@@ -241,7 +229,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             fieldLabel: 'Version'
           },
           {
-            xtype: 'displayfield',
+            xtype: 'textfield',
             name: 'universalName',
             itemId: 'universalName',
             hidden: true,
@@ -413,7 +401,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
 			var widgetGuid = component.getComponent('widgetGuid'),
 			    name = component.getComponent('name'),
 			    description = component.getComponent('description'),
-                            description_dsp = component.getComponent('description_dsp'),
 				version = component.getComponent('version'),
 				universalName = component.getComponent('universalName'),
 				guid = component.getComponent('guid'),
@@ -441,7 +428,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             widgetGuid.setValue(newGuid).originalValue = newGuid;
             name.setValue(data.name).originalValue = data.name;
             description.setValue(data.description).originalValue = data.description;
-            description_dsp.setValue(Ext.String.htmlEncode(data.description));
             version.setValue(data.version).originalValue = data.version;
             universalName.setValue(data.universalName).originalValue = data.universalName;
             guid.setValue(newGuid).originalValue = newGuid;
@@ -471,17 +457,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             intentsTab.down('#btnCreate').enable();
             intentsTab.down('#btnEdit').enable();
             intentsTab.down('#btnDelete').enable();
-            
-            // If we have a descriptor loaded without errors, disable the edit fields.
-            if(data.descriptorUrl && component.getComponent('descriptorUrlErrorMsg').isHidden()) {
-            	this.loadedFromDescriptor = true;
-            	this.disablePropertiesFields();
-                description.hide();
-            }
-            else {
-                universalName.hide();
-                description_dsp.hide();
-            }
             this.getForm().isValid();
         }
       	
@@ -542,7 +517,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
 			var widgetGuid = component.getComponent('widgetGuid'),
 			    name = component.getComponent('name'),
 			    description = component.getComponent('description'),
-                description_dsp = component.getComponent('description_dsp'),
 				version = component.getComponent('version'),
 				universalName = component.getComponent('universalName'),
 				guid = component.getComponent('guid'),
@@ -575,7 +549,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             // Set the description values
             name.setValue(Ext.String.trim(data.displayName));
             description.setValue(Ext.String.trim(data.description || ""));
-            description_dsp.setValue(Ext.String.htmlEncode(Ext.String.trim(data.description || "")));
             version.setValue(Ext.String.trim(data.widgetVersion || ""));
             universalName.setValue(Ext.htmlEncode(data.universalName) || "");
             url.setValue(Ext.String.trim(data.widgetUrl));
@@ -599,11 +572,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             	typeId = this.widgetTypeStore.getAt(this.widgetTypeStore.find('name',typeId)).get('id');
             }
             this.getComponent('_types').setValue(typeId);
-            
-            // Disable properties fields
-            this.disablePropertiesFields();
-            
-            description.hide();
             
             // Set title because incoming json won't have this value
             data.title = Ext.String.trim(data.displayName);
@@ -631,7 +599,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
 			manualEntryTitle = component.getComponent('manualEntryTitle'),
 			name = component.getComponent('name'),
 			description = component.getComponent('description'),
-            description_dsp = component.getComponent('description_dsp'),
 			version = component.getComponent('version'),
 			universalName = component.getComponent('universalName'),
 			guid = component.getComponent('guid'),
@@ -656,7 +623,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
         	manualEntryTitle.show();
             name.show();
             description.show();
-            description_dsp.show();
             version.show();
             universalName.show();
             guid.show();
@@ -675,7 +641,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
         	manualEntryTitle.hide();
             name.hide();
             description.hide();
-            description_dsp.hide();
             version.hide();
             universalName.hide();
             guid.hide();
@@ -826,28 +791,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                 }
             }
         }
-    },
-    disablePropertiesFields: function() {
-    	var formFields = ['widgetGuid', 'name', 'description', 'description_dsp', 'version', 'universalName', 
-    	                  'guid', 'url', 'headerIcon', 'image', 'width',
-    	                  'height', '_tags', 'singleton', 'visible', 
-    	                  'background', '_types'];
-		var manualEntryTitle = this.getComponent('manualEntryTitle');
-		manualEntryTitle.update('Widget Description');
-		
-		for (var i = 0; i < formFields.length; i++) {
-			var fieldname = formFields[i];
-			var field = this.getComponent(fieldname);
-	        field.changed = true;
-	        field.doComponentLayout();
-	        field.setReadOnly(true);
-	        field.addCls('x-item-readOnly');
-	        if (Ext.isEmpty(field.getValue())) {
-	        	field.addCls('x-item-hidden-field');
-	        } else {
-	        	field.removeCls('x-item-hidden-field');
-	        }
-		}
     },
     generateNewGuid: function() {
     	return guid.util.guid();
