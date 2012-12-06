@@ -21,7 +21,7 @@ Ext.define('Ozone.components.window.WidgetSwitcher', {
         //the ordering of these calls is important
         this.close();
 
-        this.dashboard.activateWidget(record.data.uniqueId, true, true);
+        this.activeDashboard.activateWidget(record.data.uniqueId, true, true);
 
         if(!record.data.background) {
             Ext.getCmp(record.data.uniqueId).focus(false, false, true, true);
@@ -145,8 +145,7 @@ Ext.define('Ozone.components.window.WidgetSwitcher', {
                     compiled: true,
 
                     getIcon: function(xindex, values) {
-                        //console.log(values);
-                        var icon = me.dashboard.widgetStore.getById(values.widgetGuid).data.image;
+                        var icon = me.activeDashboard.widgetStore.getById(values.widgetGuid).data.image;
                         return icon;
                     }
                 }
@@ -199,10 +198,10 @@ Ext.define('Ozone.components.window.WidgetSwitcher', {
             html: '<i>' + Ext.htmlEncode(record.get('name')) + '</i>' 
                 + Ozone.layout.DialogMessages.closeBackgroundWidgetWarning,
             width: 400,
-            dashboardContainer: me.dashboard.dashboardContainer,
+            dashboardContainer: me.activeDashboard.dashboardContainer,
             okFn: function() {
                 var paneStore = Ext.getCmp(record.get('paneGuid')).stateStore,
-                    dashboardStore = me.dashboard.stateStore;
+                    dashboardStore = me.activeDashboard.stateStore;
 
                 // find the record in pane store matching id of widget switcher record
                 // this is needed because stores aren't same
