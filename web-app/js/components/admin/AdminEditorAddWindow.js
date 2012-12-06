@@ -174,6 +174,7 @@ Ext.define('Ozone.components.admin.AdminEditorAddWindow', {
                     }
                     if (recordsToAdd.length > 0) {
                         me.existingItemsStore.insert(0, recordsToAdd);
+                        if (me.existingItemsStore.reorder) { me.existingItemsStore.reorder(); }
                         me.existingItemsStore.save();
                     }
                 }

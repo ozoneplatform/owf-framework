@@ -60,8 +60,33 @@ Ext.define('Ozone.components.admin.stack.StackEditDashboardsTab', {
                     this.onAddClicked();
                 },
                 scope: this
-            },
-            {
+            }, {
+                xtype: 'splitbutton',
+                text: 'Move Up',
+                itemId: 'btnMoveUp',
+                handler: function() {
+                    this.moveUp();
+                },
+                scope: this,
+                menu: {
+                    xtype: 'menu',
+                    plain: true,
+                    hideMode: 'display',
+                    defaults: {
+                        minWidth: this.minButtonWidth
+                    },
+                    items: [
+                        {
+                            xtype: 'owfmenuitem',
+                            text: 'Move Down',
+                            handler: function(button, event) {
+                                this.moveDown();
+                            },
+                            scope: this
+                        }
+                    ]
+                }
+            }, {
                 xtype: 'button',
                 text: 'Remove',
                 itemId: 'btnRemove',
@@ -190,5 +215,28 @@ Ext.define('Ozone.components.admin.stack.StackEditDashboardsTab', {
                 }
             }
         }).show();
+    },
+    
+    doDelete: function(button, e) {
+        var grid = this.getComponent('dashboardsgrid');
+        var store = grid.getStore();
+        var records = grid.getSelectedDashboards();
+        if (records && records.length > 0) {
+            store.remove(records);
+            if (store.reorder) { store.reorder(); }
+            store.save();
+        } else {
+            this.editPanel.showAlert("Error", "You must select at least one dashboard to remove.");
+        }
+    },
+    
+    moveUp: function() {
+        var grid = this.getComponent('dashboardsgrid');
+        if (grid) { grid.doMoveRow('up'); }
+    },
+    
+    moveDown: function() {
+        var grid = this.getComponent('dashboardsgrid');
+        if (grid) { grid.doMoveRow('down'); }
     }
 });

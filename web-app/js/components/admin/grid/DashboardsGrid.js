@@ -3,6 +3,7 @@ Ext.define('Ozone.components.admin.grid.DashboardsGrid', {
   alias: ['widget.dashboardsgrid'],
   quickSearchFields: ['name'],
   plugins: new Ozone.components.focusable.FocusableGridPanel(),
+  mixins: ['Ozone.components.WidgetAlerts'],
 
   cls: 'grid-dashboard',
 
@@ -184,6 +185,85 @@ Ext.define('Ozone.components.admin.grid.DashboardsGrid', {
       this.reconfigure(store, cols);
       var pgtb = this.getBottomToolbar();
       if (pgtb) { pgtb.bindStore(store); }
-  }
+  },
+  
+    doMoveRow: function(direction) {
+        
+        var dashboards = this.getSelectedDashboards();
+
+        if (dashboards && dashboards.length > 0) {
+            
+            var store = this.store;
+            
+            dashboards.sort(function(a,b) {
+                return a.get('dashboardPosition') - b.get('dashboardPosition');
+            });
+            
+            if ('up' === direction) {
+                var firstPosition = 1;
+                for (var i = 0; i < dashboards.length; i++) {
+                    if (dashboards[i].get('dashboardPosition') === firstPosition) {
+                        firstPosition++;
+                    } else {
+                        var origPos = dashboards[i].get('dashboardPosition'), newPos = origPos - 1;
+                        store.each(function(rec) {
+                            var pos = rec.get('dashboardPosition')
+                            if (pos) {
+                                if (pos == newPos) {
+                                    rec.set('dashboardPosition', origPos);
+                                } else if (pos == origPos) {
+                                    rec.set('dashboardPosition', newPos);
+                                }
+                            }
+                        })
+                    }
+                }
+            } else {
+                var lastPosition = store.getCount();
+                for (var i = dashboards.length - 1; i >= 0; i--) {
+                    if (dashboards[i].get('dashboardPosition') === lastPosition) {
+                        lastPosition--;
+                    } else {
+                        var origPos = dashboards[i].get('dashboardPosition'), newPos = origPos + 1;
+                        store.each(function(rec) {
+                            var pos = rec.get('dashboardPosition')
+                            if (pos) {
+                                if (pos == origPos) {
+                                    rec.set('dashboardPosition', newPos);
+                                } else if (pos == newPos) {
+                                    rec.set('dashboardPosition', origPos);
+                                }
+                            }
+                        })
+                        //dashboards[i].set('dashboardPosition', dashboards[i].get('dashboardPosition') + 1);
+                    }
+                }
+            }
+            
+            //If records were updated, sync, refresh, and reselect rows
+            
+            if (store.getUpdatedRecords().length) {
+                store.sync();
+
+                store.on('write', function() {
+                    this.refresh();
+                }, this, {
+                    single: true
+                });
+
+                //After the store is loaded, reselect the selected stacks
+                store.on('load', function(store, records, successful, operation) {
+                    for (var i = 0; i < dashboards.length; i++) {
+                        this.getSelectionModel().select(store.indexOfId(dashboards[i].get('id')), true);
+                    }
+                }, this, {
+                    single: true
+                });
+            }
+        }
+        else {
+            this.showAlert('Error', 'You must select at least one dashboard to move.');
+        }
+    }
 
 });
