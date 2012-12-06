@@ -145,4 +145,29 @@ class StackController extends BaseOwfRestController {
             log.info("Executed stackService: import in " + stopWatch);
         }
     }
+	
+	def restore = {
+		def jsonResult
+		StopWatch stopWatch = null;
+		
+		if (log.isInfoEnabled()) {
+			stopWatch = new StopWatch();
+			stopWatch.start();
+			log.info("Executing stackService: restore");
+		}
+		try {
+			def result = stackService.restore(params)
+			jsonResult = [msg: result as JSON, status: 200]
+		}
+		catch (Exception e) {
+			jsonResult = handleError(e)
+		}
+		
+		renderResult(jsonResult)
+		
+		if (log.isInfoEnabled()) {
+			stopWatch.stop();
+			log.info("Executed stackService: restore in " + stopWatch);
+		}
+	}
 }

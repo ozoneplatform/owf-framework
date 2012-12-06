@@ -307,6 +307,10 @@ class UrlMappings {
             controller = "stack"
             action = "importStack"
         }
+		"/stack/restore/$id?" {
+			controller = "stack"
+			action = "restore"
+		}
         "/stack/$id?" {
             controller = "stack"
             action = UrlMappings.getAction

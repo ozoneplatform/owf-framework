@@ -336,6 +336,22 @@ class StackService {
 
         return returnValue
     }
+	
+	def restore(params) {
+		def stack = Stack.findById(params.id)
+		
+		if (stack == null) {
+			throw new OwfException(message:'Stack ' + params.guid + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
+		}
+		def user = accountService.getLoggedInUser()
+		def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
+		userStackDashboards?.each { userStackDashboard ->
+			
+			dashboardService.restore([
+				guid: userStackDashboard.guid
+			])
+		}
+	}
     
     def deleteUserStack(stackIds) {
         
