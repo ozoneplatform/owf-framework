@@ -8,7 +8,9 @@ if(OWF.Util.isRunningInOWF()) {
             namespace: OWF.getInstanceId(),
             name: 'widgetstate',
             value: OWF.Util.toString( this.state ),
-            onSuccess: function () { //console.log(arguments) },
+            onSuccess: function () {
+                //console.log(arguments) 
+            },
             onFailure: function () {}
         });
     };
@@ -171,6 +173,12 @@ if(OWF.Util.isRunningInOWF()) {
                     });
 
                 }
+                else if(event === 'activate') {
+                    Map.el.style.display = 'block';
+                }
+                else if(event === 'hide') {
+                    Map.el.style.display = 'none';
+                }
             }
         });
 
@@ -180,16 +188,11 @@ if(OWF.Util.isRunningInOWF()) {
             events: ['beforeclose']
         });
 
-        OWF.RPC.registerFunctions([
-            {
-                name: 'add',
-                fn: function() {}
-            },
-            {
-                name: 'multiply',
-                fn: function() {}
-            }
-        ]);
+        // listen for  activate and hide events so that we can
+        // hide map object to fix a bug in Google Maps
+        widgetState.addStateEventListeners({
+            events: ['activate', 'hide']
+        });
         
         OWF.notifyWidgetReady();
 
