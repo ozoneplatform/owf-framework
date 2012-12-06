@@ -6,6 +6,7 @@ Ext.define('Ozone.data.Dashboard', {
         'guid',
         {name:'id', mapping: 'guid'},
         { name: 'isdefault', type: 'boolean', defaultValue: false },
+        { name: 'dashboardPosition', type: 'int' },
         'EDashboardLayoutList',
         'name',
         { name: 'state', defaultValue: [] },
