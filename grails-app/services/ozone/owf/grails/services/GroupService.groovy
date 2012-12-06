@@ -232,6 +232,7 @@ class GroupService {
                     dashConfig.guid = java.util.UUID.randomUUID().toString()
 
                     dashConfig.isdefault = dash.isdefault
+                    dashConfig.dashboardPosition = it.dashboardPosition
                     dashConfig.name = dash.name
                     dashConfig.description = dash.description
                     dashConfig.locked = dash.locked
@@ -244,7 +245,6 @@ class GroupService {
                     dashConfig.isGroupDashboard = params.isGroupDashboard  ?: false
 
                     newGroupDashboards << dashboardService.create(dashConfig).dashboard
-
                 }
             }
 

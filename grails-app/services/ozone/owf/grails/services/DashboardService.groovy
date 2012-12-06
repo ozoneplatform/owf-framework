@@ -447,7 +447,7 @@ class DashboardService extends BaseService {
                 name: params.name,
                 guid: (params.cloned)? ((Dashboard.findByGuid(params.guid) != null)? java.util.UUID.randomUUID().toString() : params.guid) : params.guid,
                 isdefault: convertStringToBool(params.isdefault),
-                dashboardPosition:maxPosition,
+                dashboardPosition: params.dashboardPosition ?: maxPosition,
                 description: JSONObject.NULL.equals(params.description) ? null : params.description,
                 layoutConfig: params.layoutConfig.toString() ?: "",
                 stack: params.stack != null ? Stack.get(params.stack.id.toLong()) : null,

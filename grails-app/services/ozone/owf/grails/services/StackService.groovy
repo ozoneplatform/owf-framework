@@ -298,7 +298,7 @@ class StackService {
                             updatedDashboards << dashboard
                         }
                         else if (params.update_action == 'add') {
-                            dashboardsToCopy << dashboard
+                            dashboardsToCopy << it
                         }
                     }
                 }

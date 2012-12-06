@@ -6,6 +6,7 @@ class DashboardServiceModel extends AbstractServiceModel {
   String name
   String guid
   Boolean isdefault
+  Integer dashboardPosition
   PersonServiceModel user
   String alteredByAdmin
   String EDashboardLayoutList = EDashboardLayout.listAsStrings()
