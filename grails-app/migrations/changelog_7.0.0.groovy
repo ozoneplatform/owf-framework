@@ -268,7 +268,14 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.0.0-31", context: "sampleData, 7.0.0-sampleData") {
+    changeSet(author: "owf", id: "7.0.0-31", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+        comment(text="allow identity inserts")
+      sql ( text = """
+        SET IDENTITY_INSERT [dbo].[widget_definition] ON
+      """)
+    }
+
+    changeSet(author: "owf", id: "7.0.0-32", context: "sampleData, 7.0.0-sampleData") {
         comment(text="insert new sample data")
         insert(tableName: "widget_definition") {
             column(name: "id", valueNumeric: "181")
@@ -325,7 +332,7 @@ databaseChangeLog = {
             column(name: "descriptor_url", value: "../examples/walkthrough/widgets/contacts/descriptor/descriptor.html")
         }
     }
-    changeSet(author: "owf", id: "7.0.0-32", context: "sampleData, 7.0.0-sampleData") {
+    changeSet(author: "owf", id: "7.0.0-33", context: "sampleData, 7.0.0-sampleData") {
         comment(text="insert new sample data")
         insert(tableName: "widget_definition_widget_types") {
             column(name: "widget_definition_id", valueNumeric: "181")
@@ -340,13 +347,21 @@ databaseChangeLog = {
             column(name: "widget_type_id", valueNumeric: "1")
         }
     }
-    changeSet(author: "owf", id: "7.0.0-33", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+
+    changeSet(author: "owf", id: "6.0.0-34", context: "sampleData, 6.0.0-sampleData", dbms:"mssql") {
+        comment(text="allow identity inserts")
+      sql ( text = """
+        SET IDENTITY_INSERT [dbo].[widget_definition] OFF
+      """)
+    }
+
+    changeSet(author: "owf", id: "7.0.0-35", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
         comment(text="allow identity inserts")
       sql ( text = """
         SET IDENTITY_INSERT [dbo].[intent] ON
       """)
     }
-    changeSet(author: "owf", id: "7.0.0-34", context: "sampleData, 7.0.0-sampleData") {
+    changeSet(author: "owf", id: "7.0.0-36", context: "sampleData, 7.0.0-sampleData") {
         comment(text="insert new sample data")
         // Create Intents
         insert(tableName: "intent") {
@@ -360,20 +375,20 @@ databaseChangeLog = {
             column(name: "action", value: "navigate")
         }
     }
-    changeSet(author: "owf", id: "7.0.0-35", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+    changeSet(author: "owf", id: "7.0.0-37", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
         comment(text="allow identity inserts")
       sql ( text = """
         SET IDENTITY_INSERT [dbo].[intent] OFF
       """)
     }
 
-    changeSet(author: "owf", id: "7.0.0-36", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+    changeSet(author: "owf", id: "7.0.0-38", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
         comment(text="allow identity inserts")
       sql ( text = """
         SET IDENTITY_INSERT [dbo].[intent_data_type] ON
       """)
     }
-    changeSet(author: "owf", id: "7.0.0-37", context: "sampleData, 7.0.0-sampleData") {
+    changeSet(author: "owf", id: "7.0.0-39", context: "sampleData, 7.0.0-sampleData") {
         comment(text="insert new sample data")
         // Map intents to data types
         insert(tableName: "intent_data_type") {
@@ -399,13 +414,13 @@ databaseChangeLog = {
             column(name: "intent_id", valueNumeric: "304")
         }
     }
-    changeSet(author: "owf", id: "7.0.0-38", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+    changeSet(author: "owf", id: "7.0.0-40", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
         comment(text="allow identity inserts")
       sql ( text = """
         SET IDENTITY_INSERT [dbo].[intent_data_type] OFF
       """)
     }
-    changeSet(author: "owf", id: "7.0.0-39", context: "sampleData, 7.0.0-sampleData") {
+    changeSet(author: "owf", id: "7.0.0-41", context: "sampleData, 7.0.0-sampleData") {
         comment(text="insert new sample data")
         // Assign Intents to Intents Widgets
         insert(tableName: "widget_def_intent") {
@@ -446,7 +461,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.0.0.40", context: "sampleData, 7.0.0-sampleData") {
+    changeSet(author: "owf", id: "7.0.0-42", context: "sampleData, 7.0.0-sampleData") {
         comment(text="insert new sample data")
 
         // Assign Contacts Dashboard widgets to OWF Users group
@@ -479,14 +494,14 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.0.0-41", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+    changeSet(author: "owf", id: "7.0.0-43", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
         comment(text="allow identity inserts")
         sql ( text = """
             SET IDENTITY_INSERT [dbo].[dashboard] ON
         """)
     }
 
-    changeSet(author: "owf", id: "7.0.0-42", context: "sampleData, 7.0.0-sampleData") {
+    changeSet(author: "owf", id: "7.0.0-44", context: "sampleData, 7.0.0-sampleData") {
         comment(text="Add Contacts Dashboards")
         
         insert(tableName: "dashboard") {
@@ -504,21 +519,21 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.0.0-43", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+    changeSet(author: "owf", id: "7.0.0-45", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
         comment(text="allow identity inserts")
         sql ( text = """
             SET IDENTITY_INSERT [dbo].[dashboard] OFF
         """)
     }
 
-    changeSet(author: "owf", id: "7.0.0-44", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+    changeSet(author: "owf", id: "7.0.0-46", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
         comment(text="allow identity inserts")
         sql ( text = """
             SET IDENTITY_INSERT [dbo].[domain_mapping] ON
         """)
     }
 
-    changeSet(author: "owf", id: "7.0.0-45", context: "sampleData, 7.0.0-sampleData") {
+    changeSet(author: "owf", id: "7.0.0-47", context: "sampleData, 7.0.0-sampleData") {
         comment(text="Assign Intents and Sample Dashboards to OWF Users group")
 
         // Assign Intents Dashboard to OWF Users group
@@ -533,7 +548,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.0.0-46", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+    changeSet(author: "owf", id: "7.0.0-48", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
         comment(text="allow identity inserts")
         sql ( text = """
             SET IDENTITY_INSERT [dbo].[domain_mapping] OFF
