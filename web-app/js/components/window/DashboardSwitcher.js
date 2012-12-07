@@ -849,6 +849,12 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         $dashboard.remove();
         $el.focus();
     },
+    
+    updateStackDashboardsEl: function (stack) {
+    	if(this.$stackDashboards) {
+    		this.$stackDashboards.children('.dashboards').html( this.tpl.applyTemplate( stack.dashboards ) )
+    	}
+    },
 
     toggleManage: function (evt) {
         var $manageBtn;
@@ -906,7 +912,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 success: function(response, opts) {
                     var json = Ext.decode(response.responseText);
                     if (json != null && json.data != null && json.data.length > 0) {
-                        me.notify('Restore Dashboard', '<span class="heading-bold">' + dashboard.name + '</span> is restored successfully to its original state!');
+                        me.notify('Restore Dashboard', '<span class="heading-bold">' + dashboard.name + '</span> is restored successfully to its default state!');
 
                         var name = json.data[0].name,
                             description = json.data[0].description;
@@ -1069,10 +1075,53 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
     restoreStack: function (evt) {
         evt.stopPropagation();
-        var $stack = this.getElByClassFromEvent(evt, 'stack'),
+        var me = this,
+        	$stack = this.getElByClassFromEvent(evt, 'stack'),
             stack = this.getStack($stack);
-
-        console.log('restore stack', stack.id);
+        
+        this.warn('This action will return the stack <span class="heading-bold">' + stack.name + '</span> to its current default state. If an administrator changed any dashboard in the stack after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
+            Ext.Ajax.request({
+                url: Ozone.util.contextPath() + '/stack/restore',
+                params: {
+                    id: stack.id
+                },
+                success: function(response, opts) {
+                    var json = Ext.decode(response.responseText);
+                    
+                    if (json != null && json.updatedDashboards != null && json.updatedDashboards.length > 0) {
+                        me.notify('Restore Stack', '<span class="heading-bold">' + stack.name + '</span> is restored successfully to its default state!');
+                        
+                        var dashboards = stack.dashboards;
+                        for(var i = 0; i < dashboards.length; i++) {
+                        	for(var j = 0; j < json.updatedDashboards.length; j++) {
+                        		var dash = json.updatedDashboards[j];
+                        		if(dash.guid == dashboards[i].guid) {
+                        			dashboards[i].model.set({
+                                        'name': dash.name,
+                                        'description': dash.description
+                                    });
+                                    dashboards[i].name = dash.name;
+                                    dashboards[i].description = dash.description;
+                        		}
+                        	}
+                        }
+                        
+                        me.updateStackDashboardsEl(stack);
+                        me.reloadDashboards = true;
+                    }
+                },
+                failure: function(response, opts) {
+                    Ozone.Msg.alert('Dashboard Manager', "Error restoring stack.", function() {
+                        Ext.defer(function() {
+                            $stack[0].focus();
+                        }, 200, me);
+                    }, me, null, me.dashboardContainer.modalWindowManager);
+                    return;
+                }
+            });
+        }, function () {
+            evt.currentTarget.focus();
+        });
     },
 
     deleteStack: function (evt) {

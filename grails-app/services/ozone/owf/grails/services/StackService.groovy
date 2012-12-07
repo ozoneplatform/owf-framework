@@ -345,12 +345,18 @@ class StackService {
 		}
 		def user = accountService.getLoggedInUser()
 		def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
+		def updatedDashboards = []
 		userStackDashboards?.each { userStackDashboard ->
 			
-			dashboardService.restore([
-				guid: userStackDashboard.guid
-			])
+			updatedDashboards.push(dashboardService.restore([
+					guid: userStackDashboard.guid
+				]).data[0])
 		}
+		
+		def stackDefaultGroup = stack.findStackDefaultGroup()
+		def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
+		
+		return [success:true, updatedDashboards: updatedDashboards]
 	}
     
     def deleteUserStack(stackIds) {
