@@ -1310,7 +1310,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             var deferredSendIntentListener = null;
             var noWidgetLaunchListener = null;
 
+            var dashboardContainer = this;
             var widgetLaunchListener = {
+                beforewidgetlaunch: {
+                    fn:function (pane, model) {
+                        var data = { intents: true };
+                        model.set('launchData',gadgets.json.stringify(data));
+                    }
+                }, 
                 afterwidgetlaunch:{
                     fn:function (widget, model, wasAlreadyLaunched) {
                         var id = widget.uniqueId;
@@ -1373,6 +1380,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                         //a widget has been launched unhook our noWidgetLaunchListener
                         launchMenu.un(noWidgetLaunchListener);
+                        
+                        // remove the listener when finished because when launching new widgets in this pane
+                        // the beforewidgetlaunch will continue to be hit if you don't.
+                        dashboardContainer.un(widgetLaunchListener);
                     },
                     scope:this,
                     single:true
