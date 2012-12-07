@@ -1108,6 +1108,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                         
                         me.updateStackDashboardsEl(stack);
                         me.reloadDashboards = true;
+                        $stack.focus();
                     }
                 },
                 failure: function(response, opts) {
