@@ -1,7 +1,12 @@
 <html>
 <head>
-    <link href="../../../js-lib/ext-4.0.7/resources/css/ext-all.css" rel="stylesheet" type="text/css">
-    <link href="../../../css/dragAndDrop.css" rel="stylesheet" type="text/css">
+    <g:if test="${params.themeName != null && params.themeName != ''}">
+        <link rel='stylesheet' type='text/css' href='../../../themes/${params.themeName.encodeAsHTML()}.theme/css/${params.themeName.encodeAsHTML()}.css' />
+    </g:if>
+    <g:else>
+        <link href="../../../js-lib/ext-4.0.7/resources/css/ext-all.css" rel="stylesheet" type="text/css">
+        <link href="../../../css/dragAndDrop.css" rel="stylesheet" type="text/css">
+    </g:else>
 
     <script type="text/javascript" src="../../../js-lib/ext-4.0.7/ext-all-debug.js"></script>
     <p:javascript src="owf-widget" pathToRoot="../../../" />

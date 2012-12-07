@@ -1,8 +1,14 @@
 <html>
     <head>
         <title>Channel Shouter</title>
-        <link href="../../../css/widgetContents.css" rel="stylesheet" type="text/css">
-        <link href="../../../css/dragAndDrop.css" rel="stylesheet" type="text/css">
+        <g:if test="${params.themeName != null && params.themeName != ''}">
+            <link rel='stylesheet' type='text/css' href='../../../themes/${params.themeName.encodeAsHTML()}.theme/css/${params.themeName.encodeAsHTML()}.css' />
+        </g:if>
+        <g:else>
+            <link href="../../../js-lib/ext-4.0.7/resources/css/ext-all.css" rel="stylesheet" type="text/css">
+            <link href="../../../css/dragAndDrop.css" rel="stylesheet" type="text/css">
+        </g:else>
+        
         <script type="text/javascript" src="../../../js-lib/ext-4.0.7/ext-all-debug.js"></script>
         <p:javascript src="owf-widget" pathToRoot="../../../" />
         <script type="text/javascript">
@@ -92,14 +98,14 @@
             });
         </script>
      </head>
-    <body class="examplesBody">
+    <body class="x-panel-body-default">
         <!-- begin changed jee -->
         <div class="innerContent">
             <div class="chanName">
                 <script>
                     document.write(ShouterStrings.channel);
                 </script>
-                <input type="text" id="InputChannel" class="widgetFormInput" />
+                <input type="text" id="InputChannel" class="widgetFormInput" size="16"/>
                 <span id="dragSource">
                   <img src="../../../images/widget-icons/ChannelShouter.png"  height="16" width="16" style="vertical-align:middle" alt="Enter a Channel Name and then Drag me"/>
                 </span>
@@ -113,7 +119,7 @@
                 <textarea rows="5" id="InputMessage" class="widgetFormInput"></textarea>
             </div>
             <br/>
-            <input type="submit" id='submitButton' value="" onClick="shout();" class="ozoneButton" style="float:left;"/>
+            <input type="submit" id='submitButton' value="" class="x-btn-default-small x-panel-body-default" onClick="shout();" style="float:left;"/>
             <script>
                 document.getElementById('submitButton').value = ShouterStrings.broadcast;
             </script>
