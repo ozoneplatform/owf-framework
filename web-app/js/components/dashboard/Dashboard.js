@@ -167,8 +167,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         var me = this,
             pane,
             allWidgetsDeferreds = [];
-
-        OWF.Mask.show();
+        
         this.panes = this.query('pane');
 
         // launch previously opened widgets
@@ -182,7 +181,10 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
         $.when(allWidgetsDeferreds).then(function() {
             me.fireEvent(OWF.Events.Dashboard.COMPLETE_RENDER, me);
-            OWF.Mask.hide();
+            if(OWF.Mask) {
+                OWF.Mask.hide();
+                OWF.Mask = null;
+            }
 
             //      loop through dashboard stateStore and validate intentConfig
             //      check intentConfig and remove any widgets that don't exist
@@ -834,10 +836,41 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         } else {
             banner.enableLaunchMenu();
         }
+
+        // hide all widgets to fire hide events on Widget State
+        var items = this.stateStore.data.items;
+
+        for (var i = 0, len = items.length; i < len; i++) {
+            var rec = items[i],
+                uniqueId = rec.get('uniqueId'),
+                cmp = Ext.getCmp(uniqueId);
+
+            //cmp.show();
+            //cmp.fireEvent('show');
+            var onShow;
+            if(onShow = cmp['on_show']) {
+                onShow();
+            }
+        }
     },
 
     onDeActivate: function(cmp){
         this.saveToServer();
+        // hide all widgets to fire hide events on Widget State
+        var items = this.stateStore.data.items;
+
+        for (var i = 0, len = items.length; i < len; i++) {
+            var rec = items[i],
+                uniqueId = rec.get('uniqueId'),
+                cmp = Ext.getCmp(uniqueId);
+
+            //cmp.hide();
+            //cmp.fireEvent('hide');
+            var onHide;
+            if(onHide = cmp['on_hide']) {
+                onHide();
+            }
+        }
     },
 
     getJson: function() {

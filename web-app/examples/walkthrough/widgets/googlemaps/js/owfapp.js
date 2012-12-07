@@ -173,7 +173,7 @@ if(OWF.Util.isRunningInOWF()) {
                     });
 
                 }
-                else if(event === 'activate') {
+                else if(event === 'activate' || event === 'show') {
                     Map.el.style.display = 'block';
                 }
                 else if(event === 'hide') {
@@ -191,7 +191,7 @@ if(OWF.Util.isRunningInOWF()) {
         // listen for  activate and hide events so that we can
         // hide map object to fix a bug in Google Maps
         widgetState.addStateEventListeners({
-            events: ['activate', 'hide']
+            events: ['activate', 'hide', 'show']
         });
         
         OWF.notifyWidgetReady();
