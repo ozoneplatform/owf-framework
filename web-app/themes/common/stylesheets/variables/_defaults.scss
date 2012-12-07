@@ -87,9 +87,9 @@ $owf-top-border-radius: 5px !default;
 $owf-bottom-border-radius: 5px !default;
 $warning-color: #ff0000 !default;
 
-$owf_dashboard_default_background_image_small: theme-image($theme-name, 'admin/DefaultLayout_Base_Metal_Square_Default_24x24.png') !default;
+$owf_dashboard_default_background_image_small: theme-image($theme-name, 'dashboard-grids/DashboardIcon24.png') !default;
 //LARGE - 48x48
-$owf_dashboard_default_background_image_large: theme-image($theme-name, 'admin/DefaultLayout_Base_Metal_Square_Default_48x48.png') !default;
+$owf_dashboard_default_background_image_large: theme-image($theme-name, 'dashboard-grids/DashboardIcon48.png') !default;
 
 $owf-tool-width: 15px !default;
 $owf-tool-height: 15px !default;
