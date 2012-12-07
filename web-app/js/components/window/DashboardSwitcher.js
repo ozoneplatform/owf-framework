@@ -158,8 +158,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             me.tpl.overwrite( cmp.body, stackOrDashboards );
             Ext.DomHelper.append( cmp.el, 
             '<ul class="actions">'+
-                '<li class="manage" tabindex="0" >Manage</li>'+
-                '<li class="create" tabindex="0" >+</li>'+
+                '<li class="manage" tabindex="0" data-qtitle="Manage" data-qtip="Activates the Share, Restore, Edit and Delete manager buttons.">Manage</li>'+
+                '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-qtip="Name, describe and design a new dashboard.">+</li>'+
             '</ul>');
 
             me.bindEvents(cmp);
@@ -1048,12 +1048,12 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         }
         
         if(dashboard.stack) {
-            this.warn('Users cannot remove individual dashboards from a stack. Please contact your administrator.', focusEl, focusEl);
+            this.warn('Users cannot remove individual dashboards from a stack. Please contact your administrator.', focusEl);
             return;
         }
 
         if(dashboard.groups && dashboard.groups.length > 0) {
-            this.warn('Users cannot remove dashboards assigned to a group. Please contact your administrator.', focusEl, focusEl);
+            this.warn('Users cannot remove dashboards assigned to a group. Please contact your administrator.', focusEl);
             return;
         }
 
@@ -1159,7 +1159,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         }
 
         if(groupAssignment) {
-            this.warn('Users in a group cannot remove stacks assigned to the group. Please contact your administrator.', focusEl, focusEl);
+            this.warn('Users in a group cannot remove stacks assigned to the group. Please contact your administrator.', focusEl);
             return;
         }
 
@@ -1188,7 +1188,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             width: 250,
             dashboardContainer: this.dashboardContainer,
             okFn: okFn,
-            cancelFn: cancelFn
+            cancelFn: cancelFn,
+            showCancelButton: !!cancelFn
         }).show();
     },
 
