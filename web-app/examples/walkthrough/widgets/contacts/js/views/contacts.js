@@ -96,7 +96,7 @@
             OWF.ready(function () {
 
                 OWF.Launcher.launch({
-                    universalName: 'org.owfgoss.owf.examples.GoogleMapsExample',
+                    universalName: 'org.owfgoss.owf.examples.GoogleMaps',
                     launchOnlyIfClosed: true,
                     data: model
                 }, function (result) {
