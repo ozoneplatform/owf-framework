@@ -578,4 +578,10 @@ databaseChangeLog = {
             SET IDENTITY_INSERT [dbo].[domain_mapping] OFF
         """)
     }
+
+    changeSet(author: "owf", id: "7.0.0-53", context: "create, upgrade, 7.0.0") {
+        comment("Expand a dashboard's description field to 4000 to match Marketplace")
+
+        modifyDataType(tableName: "dashboard", columnName: "description", newDataType: "varchar(4000)")
+    }
 }

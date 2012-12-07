@@ -39,6 +39,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             allowBlank: false,
             maxLength: 200,
             value: '',
+            enforceMaxLength: true
             listeners: {
                 blur: function(field){
                     // Remove leading and tailing spaces
@@ -57,7 +58,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             labelSeparator: '',
             labelWidth: undefined,
             value: '',
-            maxLength: 255,
+            maxLength: 4000,
             enforceMaxLength: true
         };
 
