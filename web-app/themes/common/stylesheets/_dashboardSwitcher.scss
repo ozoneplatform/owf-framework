@@ -40,7 +40,7 @@
     }
 }
 
-#dashboard-switcher .dashboard, #dashboard-switcher .stack, .dashboard-drag-proxy, .stack-drag-proxy {
+#dashboard-switcher .dashboard, #dashboard-switcher .stack, .stack.drag-proxy, .dashboard.drag-proxy {
     $thumb-width: 73px;
     $name-width: 8.2em;
 
@@ -108,7 +108,7 @@
         }
     }
 }
-#dashboard-switcher .stack, .stack-drag-proxy {
+#dashboard-switcher .stack, .stack.drag-proxy {
     .thumb {
         background-image: $dashboard-switcher-layout-stack-default-icon !important;
     }
@@ -118,7 +118,8 @@
         }
     }
 }
-.dashboard-drag-proxy, .stack-drag-proxy {
+
+.stack.drag-proxy, .dashboard.drag-proxy {
     float: none;
     position: absolute;
 }

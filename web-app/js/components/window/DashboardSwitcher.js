@@ -110,7 +110,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 return values.isStack ? 'stack' : 'dashboard';
             },
             getPrettyTime: function (unformattedDate) {
-                return Ext.util.Format.date(new Date(unformattedDate), Ozone.config.lastLoginDateFormat);
+                return unformattedDate ? Ext.util.Format.date(new Date(unformattedDate), Ozone.config.lastLoginDateFormat) : '';
             },
             getToolTip: function (values) {
                 var str = 'data-qtip="' +
@@ -120,7 +120,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 return values.isStack ? str + '"':
                         str +
                         '<br><p class=\'group\'>Group: ' + ((values.groups && values.groups.length > 0) ? values.groups[0].name : 'None') + '<p/>' +
-                        '<p class=\'created-by\'>Created by: ' + values.createdBy.userRealName + '<p/>' +
+                        '<p class=\'created-by\'>Created by: ' + (values.createdBy.userRealName || '') + '<p/>' +
                         '<p class=\'last-updated\'>Last Modified: ' + this.getPrettyTime(values.editedDate) + '<p/>"';
             },
             getActions: function (values) {
@@ -209,7 +209,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             $draggedItem = $(this);
             $draggedItemParent = $draggedItem.parent();
 
-            $dragProxy = $draggedItem.clone().addClass('x-dd-drag-proxy dashboard-drag-proxy');
+            $dragProxy = $draggedItem.clone().addClass('x-dd-drag-proxy drag-proxy');
             $('ul, .dashboard-name, .stack-name', $dragProxy).remove();
             $(document.body).append($dragProxy);
 
@@ -1253,7 +1253,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         this.body.setSize(newWidth + 30, newHeight);
         
         this.body.setStyle({
-            'max-height': ((this.dashboardItemHeight + heightMargin + 1) * this.maxDashboardsHeight) + 'px'
+            'max-height': ((this.dashboardItemHeight + heightMargin + 1) * this.maxDashboardsHeight) + 40 + 'px'
         });
     },
 
