@@ -810,4 +810,67 @@ databaseChangeLog = {
             where("guid = '54949b5d-f0ee-4347-811e-2522a1bf96fe'")
         }
     }
+
+    changeSet(author: "owf", id: "7.0.0-64", context: "sampleData, 7.0.0-sampleData") {
+        comment(text="Remove Preferences, Color Client, Color Server, Widget Chrome, Event Monitor, and Nearly Empty widgets.")
+
+        delete(tableName: "person_widget_definition") {
+            where("widget_definition_id = (select id from widget_definition where widget_url = 'examples/walkthrough/widgets/Preferences.gsp')")
+        }
+        delete(tableName: "person_widget_definition") {
+            where("widget_definition_id = (select id from widget_definition where widget_url = 'examples/walkthrough/widgets/ColorClient.gsp')")
+        }
+        delete(tableName: "person_widget_definition") {
+            where("widget_definition_id = (select id from widget_definition where widget_url = 'examples/walkthrough/widgets/ColorServer.gsp')")
+        }
+        delete(tableName: "person_widget_definition") {
+            where("widget_definition_id = (select id from widget_definition where widget_url = 'examples/walkthrough/widgets/WidgetChrome.gsp')")
+        }
+        delete(tableName: "person_widget_definition") {
+            where("widget_definition_id = (select id from widget_definition where widget_url = 'examples/walkthrough/widgets/EventMonitor.html')")
+        }
+        delete(tableName: "person_widget_definition") {
+            where("widget_definition_id = (select id from widget_definition where widget_url = 'examples/walkthrough/widgets/NearlyEmptyWidget.html')")
+        }
+
+
+        delete(tableName: "widget_definition_widget_types") {
+            where("widget_definition_id = (select id from widget_definition where widget_url = 'examples/walkthrough/widgets/Preferences.gsp')")
+        }
+        delete(tableName: "widget_definition_widget_types") {
+            where("widget_definition_id = (select id from widget_definition where widget_url = 'examples/walkthrough/widgets/ColorClient.gsp')")
+        }
+        delete(tableName: "widget_definition_widget_types") {
+            where("widget_definition_id = (select id from widget_definition where widget_url = 'examples/walkthrough/widgets/ColorServer.gsp')")
+        }
+        delete(tableName: "widget_definition_widget_types") {
+            where("widget_definition_id = (select id from widget_definition where widget_url = 'examples/walkthrough/widgets/WidgetChrome.gsp')")
+        }
+        delete(tableName: "widget_definition_widget_types") {
+            where("widget_definition_id = (select id from widget_definition where widget_url = 'examples/walkthrough/widgets/EventMonitor.html')")
+        }
+        delete(tableName: "widget_definition_widget_types") {
+            where("widget_definition_id = (select id from widget_definition where widget_url = 'examples/walkthrough/widgets/NearlyEmptyWidget.html')")
+        }
+
+
+        delete(tableName: "widget_definition") {
+            where("widget_url = 'examples/walkthrough/widgets/Preferences.gsp'")
+        }
+        delete(tableName: "widget_definition") {
+            where("widget_url = 'examples/walkthrough/widgets/ColorClient.gsp'")
+        }
+        delete(tableName: "widget_definition") {
+            where("widget_url = 'examples/walkthrough/widgets/ColorServer.gsp'")
+        }
+        delete(tableName: "widget_definition") {
+            where("widget_url = 'examples/walkthrough/widgets/WidgetChrome.gsp'")
+        }
+        delete(tableName: "widget_definition") {
+            where("widget_url = 'examples/walkthrough/widgets/EventMonitor.html'")
+        }
+        delete(tableName: "widget_definition") {
+            where("widget_url = 'examples/walkthrough/widgets/NearlyEmptyWidget.html'")
+        }
+    }
 }
