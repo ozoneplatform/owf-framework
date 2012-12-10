@@ -84,19 +84,22 @@ Ext.define('Ozone.components.admin.IntentsGrid', {
     return this.getDockedItems('toolbar[dock="top"]')[0];
   },
 
-  applyFilter: function(filterText, fields) {
-	  this.clearFilters();
-	  if (filterText) {
-	      var filters = [];
-	      for (var i = 0; i < fields.length; i++) {
-	        filters.push({
-	          property: fields[i],
-	          value: filterText,
-	          anyMatch: true
-	        });
-	      }
-		  this.store.filter(filters);
-	  }
+  applyFilter: function(filterText) {
+      this.clearFilters();
+      if (filterText) {
+        filterText = filterText.toLowerCase();
+        this.store.filter({
+            filterFn: function(item) {
+                if(item.get('action').toLowerCase().indexOf(filterText) !== -1) {
+                    return true;
+                }
+                if(item.get('dataType').toLowerCase().indexOf(filterText) !== -1) {
+                    return true;
+                }
+                return false;
+            }
+        });
+      }
   },
 
   clearFilters: function() {

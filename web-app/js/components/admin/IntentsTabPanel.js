@@ -46,7 +46,7 @@ Ext.define('Ozone.components.admin.IntentsTabPanel', {
                                     if (!value)
                                         grid.clearFilters();
                                     else
-                                        grid.applyFilter(value, ['dataType']);
+                                        grid.applyFilter(value);
                                 }
                             },
                             scope: this
