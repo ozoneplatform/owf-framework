@@ -64,6 +64,11 @@ class DashboardService extends BaseService {
 
     private def processGroupDashboards(groups,user) {
         def privateGroupDashboardToGroupsMap = [:]
+        
+        def maxPosition = 0
+        if (user != null) {
+            maxPosition = getMaxDashboardPosition(user)
+        }
 
         //loop through group dashboards
         domainMappingService.getBulkMappings(groups,RelationshipType.owns,Dashboard.TYPE).each { dm ->
@@ -84,6 +89,7 @@ class DashboardService extends BaseService {
                         args.guid = java.util.UUID.randomUUID().toString()
 
                         args.isdefault = groupDash.isdefault
+                        args.dashboardPosition = maxPosition + (groupDash.dashboardPosition ?: 0)
                         args.name = groupDash.name
                         args.description = groupDash.description
                         args.locked = groupDash.locked
@@ -413,6 +419,7 @@ class DashboardService extends BaseService {
             }
         }
         
+        /*
         def queryReturn
         if(!person) {
             queryReturn = Dashboard.executeQuery("SELECT MAX(d.dashboardPosition) AS retVal FROM Dashboard d WHERE d.user = null")
@@ -420,7 +427,8 @@ class DashboardService extends BaseService {
         else {
             queryReturn = Dashboard.executeQuery("SELECT MAX(d.dashboardPosition) AS retVal FROM Dashboard d WHERE d.user = ?", [person])
         }
-        def maxPosition = (queryReturn[0] != null)? queryReturn[0] : -1
+        */
+        def maxPosition = getMaxDashboardPosition(person)
         maxPosition++
 
         def universalNameToOldGuidMap = [:]
@@ -1003,6 +1011,17 @@ class DashboardService extends BaseService {
             //Nested layoutConfig inside this pane, repeat the loop with it
             getUniversalNameToGuidMap(universalNameToGuidMap, items[i])
         }
+    }
+    
+    private def getMaxDashboardPosition(person) {
+        def queryReturn
+        if(!person) {
+            queryReturn = Dashboard.executeQuery("SELECT MAX(d.dashboardPosition) AS retVal FROM Dashboard d WHERE d.user = null")
+        }
+        else {
+            queryReturn = Dashboard.executeQuery("SELECT MAX(d.dashboardPosition) AS retVal FROM Dashboard d WHERE d.user = ?", [person])
+        }
+        return (queryReturn[0] != null)? queryReturn[0] : -1
     }
 
 }
