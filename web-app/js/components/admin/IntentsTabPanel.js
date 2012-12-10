@@ -116,8 +116,11 @@ Ext.define('Ozone.components.admin.IntentsTabPanel', {
                         grid.on({
                             itemdblclick: {
                                 fn: function() {
-                                    var selectedIntent = this.getComponent('intentsGrid').getSelectionModel().getSelection()[0];
-                                    this.onCreateOrEdit(this.down('#btnEdit'));
+                                    var editBtn = this.down('#btnEdit');
+                                    if(!editBtn.isDisabled()) {
+                                        var selectedIntent = this.getComponent('intentsGrid').getSelectionModel().getSelection()[0];
+                                        this.onCreateOrEdit(editBtn);
+                                    }
                                 },
                                 scope: this
                             }
