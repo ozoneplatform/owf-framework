@@ -584,4 +584,230 @@ databaseChangeLog = {
 
         modifyDataType(tableName: "dashboard", columnName: "description", newDataType: "varchar(4000)")
     }
+
+    changeSet(author: "owf", id: "7.0.0-54", context: "sampleData, 7.0.0-sampleData", dbms:"hsqldb, mysql, mssql") {
+        comment(text="Create Investments stack and its default group.")
+
+        insert(tableName: "stack") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "name", value: "Investments")
+            column(name: "description", value: "Sample stack containing dashboards with example investment widgets.")
+            column(name: "stack_context", value: "investments")
+        }
+
+        insert(tableName: "owf_group") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "automatic", valueBoolean: "false")
+            column(name: "name", value: "ce86a612-c355-486e-9c9e-5252553cc58f")
+            column(name: "status", value: "active")
+            column(name: "stack_default", valueBoolean: "true")
+        }
+
+        sql (text = """
+            insert into stack_groups (stack_id, group_id) values ((select id from stack where stack_context = 'investments'), (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'));
+        """)
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-54", context: "sampleData, 7.0.0-sampleData", dbms: "oracle") {
+        comment(text="Create Investments stack and its default group.")
+        sql (text = """
+            insert into stack (id, version, name, description, stack_context) values (hibernate_sequence.nextval, 0, 'Investments', 'Sample stack containing dashboards with example investment widgets.', 'investments');
+        """)
+
+        sql (text = """
+            insert into owf_group (id, version, automatic, name, status, stack_default) values (hibernate_sequence.nextval, 0, 0, 'ce86a612-c355-486e-9c9e-5252553cc58f', 'active', 1);
+        """)
+
+        sql (text = """
+            insert into stack_groups (stack_id, group_id) values ((select id from stack where stack_context = 'investments'), (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'));
+        """)
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-54", context: "sampleData, 7.0.0-sampleData", dbms: "postgresql") {
+        comment(text="Create Investments stack and its default group.")
+        sql (text = """
+            insert into stack (id, version, name, description, stack_context) values (nextval('hibernate_sequence'), 0, 'Investments', 'Sample stack containing dashboards with example investment widgets.', 'investments');
+        """)
+
+        sql (text = """
+            insert into owf_group (id, version, automatic, name, status, stack_default) values (nextval('hibernate_sequence'), 0, false, 'ce86a612-c355-486e-9c9e-5252553cc58f', 'active', true);
+        """)
+
+        sql (text = """
+            insert into stack_groups (stack_id, group_id) values ((select id from stack where stack_context = 'investments'), (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'));
+        """)
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-55", context: "sampleData, 7.0.0-sampleData") {
+        comment(text="Add Investments stack to the OWF Users group.")
+        sql (text = """
+            insert into stack_groups (stack_id, group_id) values ((select id from stack where stack_context = 'investments'), (select id from owf_group where name = 'OWF Users'));
+        """)
+    }
+
+    changeSet(author: "owf", id: "7.0.0-56", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+        comment(text="allow identity inserts")
+        sql ( text = """
+            SET IDENTITY_INSERT [dbo].[domain_mapping] ON
+        """)
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-57", context: "sampleData, 7.0.0-sampleData") {
+        comment(text="Rename the Widget Intents dashboard to Watch List and add it to the Investments stack.")
+
+        // Remove Widget Intents Dashboard from OWF Users group and add it to the default stack
+        sql (text = """
+            update domain_mapping set src_id = (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f') where dest_id = 320;
+        """)
+
+        // Rename to Watch List
+        update(tableName: "dashboard") {
+            column(name: "name", value: "Watch List")
+            where("guid = '3f59855b-d93e-dc03-c6ba-f4c33ea0177f'")
+        }
+
+        // Update stack_id on the Watch List dashboard
+        sql (text = """
+            update dashboard set stack_id = (select id from stack where stack_context = 'investments') where guid='3f59855b-d93e-dc03-c6ba-f4c33ea0177f';
+        """)
+    }
+
+    changeSet(author: "owf", id: "7.0.0-58", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+        comment(text="allow identity inserts")
+        sql ( text = """
+            SET IDENTITY_INSERT [dbo].[domain_mapping] OFF
+        """)
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-59", context: "sampleData, 7.0.0-sampleData") {
+        comment(text="Add the Contacts dashboard to the Investments stack.")
+
+        // Update stack_id on the Contacts dashboard
+        sql (text = """
+            update dashboard set stack_id = (select id from stack where stack_context = 'investments') where id = 323;
+        """)
+
+        // Update stack's unique widget count
+        update(tableName: "stack") {
+            column(name: "unique_widget_count", valueNumeric: "6")
+            where("stack_context = 'investments'")
+        }
+    }
+
+    changeSet(author: "owf", id: "7.0.0-60", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+        comment(text="allow identity inserts")
+        sql ( text = """
+            SET IDENTITY_INSERT [dbo].[domain_mapping] ON
+        """)
+    }
+
+    changeSet(author: "owf", id: "7.0.0-61", context: "sampleData, 7.0.0-sampleData", dbms:"hsqldb, mysql, mssql") {
+        comment(text="Add Widget Intents and Contacts dashboards' widgets to Investments stack.")
+
+        // Add the widgets in Watch List dashboard to the Investments stack
+        sql (text = """
+            insert into domain_mapping (id, version, src_id, src_type, relationship_type, dest_id, dest_type) values (343, 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 178, 'widget_definition');
+            insert into domain_mapping (id, version, src_id, src_type, relationship_type, dest_id, dest_type) values (344, 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 179, 'widget_definition');
+            insert into domain_mapping (id, version, src_id, src_type, relationship_type, dest_id, dest_type) values (345, 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 180, 'widget_definition');
+        """)
+
+        // Add the widgets in Contacts dashboard to the Investments stack
+        sql (text = """
+            insert into domain_mapping (id, version, src_id, src_type, relationship_type, dest_id, dest_type) values (346, 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 181, 'widget_definition');
+            insert into domain_mapping (id, version, src_id, src_type, relationship_type, dest_id, dest_type) values (347, 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 182, 'widget_definition');
+            insert into domain_mapping (id, version, src_id, src_type, relationship_type, dest_id, dest_type) values (348, 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 183, 'widget_definition');
+        """)
+
+        // Update stack's unique widget count
+        update(tableName: "stack") {
+            column(name: "unique_widget_count", valueNumeric: "6")
+            where("stack_context = 'investments'")
+        }
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-61", context: "sampleData, 7.0.0-sampleData", dbms: "oracle") {
+        comment(text="Add Widget Intents and Contacts dashboards' widgets to Investments stack.")
+
+        // Set sequence to a higher number that's not used
+        dropSequence(sequenceName: "hibernate_sequence")
+        createSequence(sequenceName: "hibernate_sequence", startValue:"700")
+
+        // Add the widgets in Watch List dashboard to the Investments stack
+        sql (text = """
+            insert into domain_mapping VALUES (hibernate_sequence.nextval, 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 178, 'widget_definition');
+            insert into domain_mapping VALUES (hibernate_sequence.nextval, 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 179, 'widget_definition');
+            insert into domain_mapping VALUES (hibernate_sequence.nextval, 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 180, 'widget_definition');
+        """)
+
+        // Add the widgets in Contacts dashboard to the Investments stack
+        sql (text = """
+            insert into domain_mapping VALUES (hibernate_sequence.nextval, 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 181, 'widget_definition');
+            insert into domain_mapping VALUES (hibernate_sequence.nextval, 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 182, 'widget_definition');
+            insert into domain_mapping VALUES (hibernate_sequence.nextval, 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 183, 'widget_definition');
+        """)
+
+        // Update stack's unique widget count
+        update(tableName: "stack") {
+            column(name: "unique_widget_count", valueNumeric: "6")
+            where("stack_context = 'investments'")
+        }
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-61", context: "sampleData, 7.0.0-sampleData", dbms: "postgresql") {
+        comment(text="Add Widget Intents and Contacts dashboards' widgets to Investments stack.")
+
+        // Set sequence to a higher number that's not used
+        dropSequence(sequenceName: "hibernate_sequence")
+        createSequence(sequenceName: "hibernate_sequence", startValue:"700")
+
+        // Add the widgets in Watch List dashboard to the Investments stack
+        sql (text = """
+            insert into domain_mapping VALUES (nextval('hibernate_sequence'), 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 178, 'widget_definition');
+            insert into domain_mapping VALUES (nextval('hibernate_sequence'), 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 179, 'widget_definition');
+            insert into domain_mapping VALUES (nextval('hibernate_sequence'), 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 180, 'widget_definition');
+        """)
+
+        // Add the widgets in Contacts dashboard to the Investments stack
+        sql (text = """
+            insert into domain_mapping VALUES (nextval('hibernate_sequence'), 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 181, 'widget_definition');
+            insert into domain_mapping VALUES (nextval('hibernate_sequence'), 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 182, 'widget_definition');
+            insert into domain_mapping VALUES (nextval('hibernate_sequence'), 0, (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'), 'group', 'owns', 183, 'widget_definition');
+        """)
+
+        // Update stack's unique widget count
+        update(tableName: "stack") {
+            column(name: "unique_widget_count", valueNumeric: "6")
+            where("stack_context = 'investments'")
+        }
+    }
+
+    changeSet(author: "owf", id: "7.0.0-62", context: "sampleData, 7.0.0-sampleData", dbms:"mssql") {
+        comment(text="allow identity inserts")
+        sql ( text = """
+            SET IDENTITY_INSERT [dbo].[domain_mapping] OFF
+        """)
+    }
+
+    changeSet(author: "owf", id: "7.0.0-63", context: "sampleData, 7.0.0-sampleData") {
+        comment(text="Reorder the dashboards so they appear Sample dashboard, Investments stack, and then Administration dashboard.")
+
+        // Set Watch List dashboard to not be the default so Sample dashboard can be first
+        update(tableName: "dashboard") {
+            column(name: "isdefault", valueBoolean: false)
+            where("guid = '3f59855b-d93e-dc03-c6ba-f4c33ea0177f'")
+        }
+
+        update(tableName: "dashboard") {
+            column(name: "dashboard_position", valueNumeric: "1")
+            where("guid = '3f59855b-d93e-dc03-c6ba-f4c33ea0177f'")
+        }
+        update(tableName: "dashboard") {
+            column(name: "dashboard_position", valueNumeric: "2")
+            where("guid = '7f2f6d45-263a-7aeb-d841-3637678ce559'")
+        }
+        update(tableName: "dashboard") {
+            column(name: "dashboard_position", valueNumeric: "3")
+            where("guid = '54949b5d-f0ee-4347-811e-2522a1bf96fe'")
+        }
+    }
 }
