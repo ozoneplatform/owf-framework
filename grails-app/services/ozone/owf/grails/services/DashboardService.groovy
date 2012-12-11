@@ -69,6 +69,7 @@ class DashboardService extends BaseService {
         if (user != null) {
             maxPosition = getMaxDashboardPosition(user)
         }
+        if (maxPosition < 0) maxPosition = 0;
 
         //loop through group dashboards
         domainMappingService.getBulkMappings(groups,RelationshipType.owns,Dashboard.TYPE).each { dm ->
