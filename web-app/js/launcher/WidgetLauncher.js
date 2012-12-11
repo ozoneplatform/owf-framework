@@ -50,6 +50,7 @@ Ozone.launcher = Ozone.launcher ? Ozone.launcher : {};
        * widgetLauncher.launchWidget({
        *     universalName: <universal name of widget to launch>,  //universalName or guid maybe identify the widget to be launched
        *     guid: <guid of widget to launch>,
+       *     title: <title to replace the widgets title> the title will only be changed if the widget is opened.
        *     launchOnlyIfClosed: true, //if true will only launch the widget if it is not already opened.
        *                               //if it is opened then the widget will be restored
        *     data: dataString  //initial launch config data to be passed to a widget only if the widget is opened.  this must be a string

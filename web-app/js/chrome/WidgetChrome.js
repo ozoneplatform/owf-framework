@@ -415,7 +415,7 @@ Ozone.chrome.WidgetChrome = function(config) {
       },
      
     
-    /**
+      /**
      * @description Lists all buttons that have been added to the widget chrome.
      * @param {Object} cfg config object see below for properties
      * @param {Function} cfg.callback The function which receives the results.
@@ -434,7 +434,7 @@ Ozone.chrome.WidgetChrome = function(config) {
      *     }
      *   });
      */
-    listHeaderButtons: function(cfg) {
+      listHeaderButtons: function(cfg) {
       var data = {
         action: 'listHeaderMenus',
         type: 'button'
@@ -928,7 +928,63 @@ Ozone.chrome.WidgetChrome = function(config) {
         };
         var jsonString = gadgets.json.stringify(data);
         gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
-      }
+      },
+
+       /**
+         * @description Gets the Widget's Title from the Chrome
+         * @param {Object} cfg config object see below for properties
+         * @param {Function} cfg.callback The function which receives the results.
+         *
+         * @example
+         *    //this.wc is an already instantiated WidgetChrome obj
+         *    this.wc.getTitle({
+         *     callback: function(msg) {
+         *         //msg will always be a json string
+         *         var res = Ozone.util.parseJson(msg);
+         *         if (res.success) {
+         *
+         *           //do something with title
+         *           // res.title
+         *         }
+         *     }
+         *   });
+         */
+       getTitle: function(cfg) {
+         var data = {
+            action: 'getTitle'
+          };
+         var jsonString = gadgets.json.stringify(data);
+         gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+       },
+
+        /**
+          * @description Sets the Widget's Title in the Chrome
+          * @param {Object} cfg config object see below for properties
+          * @param {Function} cfg.callback The function which receives the results.
+          *
+          * @example
+          *    //this.wc is an already instantiated WidgetChrome obj
+          *    this.wc.setTitle({
+          *     title: 'new title',
+          *     callback: function(msg) {
+          *         //msg will always be a json string
+          *         var res = Ozone.util.parseJson(msg);
+          *         if (res.success) {
+          *           //get title back for confirmation
+          *           // res.title
+          *
+          *         }
+          *     }
+          *   });
+          */
+        setTitle: function(cfg) {
+          var data = {
+             action: 'setTitle',
+             title: cfg.title
+           };
+          var jsonString = gadgets.json.stringify(data);
+          gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        }
 
     };
 

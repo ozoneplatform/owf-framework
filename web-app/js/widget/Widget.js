@@ -362,7 +362,9 @@ OWF = window.OWF ? window.OWF : {};
 		// Chrome API
 		function initChrome() {
 			for(var i = 0, 
-				methods = ['addHeaderButtons', 'addHeaderMenus', 'insertHeaderButtons', 'insertHeaderMenus', 'isModified', 'listHeaderButtons', 'listHeaderMenus', 'removeHeaderButtons', 'removeHeaderMenus', 'updateHeaderButtons', 'updateHeaderMenus'] ; i < methods.length ; i++) {
+				methods = ['addHeaderButtons', 'addHeaderMenus', 'insertHeaderButtons', 'insertHeaderMenus',
+                    'isModified', 'listHeaderButtons', 'listHeaderMenus', 'removeHeaderButtons', 'removeHeaderMenus',
+                    'updateHeaderButtons', 'updateHeaderMenus', 'getTitle', 'setTitle'] ; i < methods.length ; i++) {
 				OWF.Chrome[ methods[i] ] = chromeController[ methods[i] ];
 			}
 		}
@@ -1386,6 +1388,50 @@ OWF.Chrome.listHeaderMenus({
 	}
 });
 	*/
+
+/**
+  *
+  *	@name getTitle
+  * @methodOf OWF.Chrome
+  * @description Gets the Widget's Title from the Chrome
+  * @param {Object} cfg config object see below for properties
+  * @param {Function} cfg.callback The function which receives the results.
+  *
+  * @example
+  *    OWF.Chrome.getTitle({
+  *     callback: function(msg) {
+  *         //msg will always be a json string
+  *         var res = Ozone.util.parseJson(msg);
+  *         if (res.success) {
+  *
+  *           //do something with title
+  *           // res.title
+  *         }
+  *     }
+  *   });
+  */
+
+/**
+  *	@name setTitle
+  * @methodOf OWF.Chrome
+  * @description Sets the Widget's Title in the Chrome
+  * @param {Object} cfg config object see below for properties
+  * @param {Function} cfg.callback The function which receives the results.
+  *
+  * @example
+  *    OWF.Chrome..setTitle({
+  *     title: 'new title',
+  *     callback: function(msg) {
+  *         //msg will always be a json string
+  *         var res = Ozone.util.parseJson(msg);
+  *         if (res.success) {
+  *           //get title back for confirmation
+  *           // res.title
+  *
+  *         }
+  *     }
+  *   });
+  */
 
 // --------------------------------------------------------------------------------------------------
 // ------------------- Preferences ------------------------------------------------------------------

@@ -451,7 +451,12 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             }
         }
         else {
-                    
+
+            //check if we need to change the widget's name
+            if (launchConfig.title != null) {
+                specifiedWidget.data.name = launchConfig.title;
+            }
+
             // Determine which pane widget was last opened in
             if(!pane.isXType('fitpane')) {
                 if (this.panes && this.panes.length > 1) {

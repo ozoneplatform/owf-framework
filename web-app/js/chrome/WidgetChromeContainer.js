@@ -345,6 +345,35 @@ Ozone.chrome.WidgetChromeContainer = function(config) {
 	  }
   };
 
+  var getTitle = function(sender) {
+      var returnValue = {success:false};
+      //parse out widgetid from sender
+      var widgetCfg = Ozone.util.parseJson(sender);
+      if (widgetCfg != null ) {
+        var cmp = Ext.getCmp(widgetCfg.id);
+        if (cmp != null) {
+          returnValue.success = true;
+          returnValue.title = cmp.title;
+        }
+      }
+      return gadgets.json.stringify(returnValue);
+  };
+
+  var setTitle = function(sender,data) {
+      var returnValue = {success:false};
+      //parse out widgetid from sender
+      var widgetCfg = Ozone.util.parseJson(sender);
+      if (widgetCfg != null ) {
+        var cmp = Ext.getCmp(widgetCfg.id);
+        if (cmp != null && cmp.setTitle != null) {
+          returnValue.success = true;
+          cmp.setTitle(data.title);
+          returnValue.title = cmp.title;
+        }
+      }
+      return gadgets.json.stringify(returnValue);
+  };
+
   if (config != null && config.eventingContainer != null) {
     this.eventingContainer = config.eventingContainer;
     this.eventingContainer.registerHandler(this.channelName, function(sender, msg) {
@@ -386,6 +415,12 @@ Ozone.chrome.WidgetChromeContainer = function(config) {
             break;
         case 'listHeaderMenus' :
             returnValue = handleList(sender,data);
+            break;
+        case 'getTitle' :
+            returnValue = getTitle(sender,data);
+            break;
+        case 'setTitle' :
+            returnValue = setTitle(sender,data);
             break;
         default:
       }

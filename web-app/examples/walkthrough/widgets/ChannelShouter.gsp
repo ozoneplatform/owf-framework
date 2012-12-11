@@ -22,7 +22,7 @@
             var scope = this;
             shoutInit = owfdojo.hitch(this, function () {
 
-/***************** UNCOMMENT TO AUTO-LAUNCH CHANNEL LISTENER ************************                       
+/***************** UNCOMMENT TO AUTO-LAUNCH CHANNEL LISTENER ************************
                 OWF.Preferences.findWidgets({
                     searchParams: {
                         widgetName: 'Channel Listener'
@@ -63,10 +63,11 @@
                             message: message
                         };
                         var dataString = OWF.Util.toString(data);
-/***************** UNCOMMENT TO AUTO-LAUNCH CHANNEL LISTENER ************************                       
+/***************** UNCOMMENT TO AUTO-LAUNCH CHANNEL LISTENER ************************
                         OWF.Launcher.launch({
                             guid: scope.guid,
                             launchOnlyIfClosed: true,
+                            title: 'Channel Listener Launched',
                             data: dataString
                         }, function(response) {
 

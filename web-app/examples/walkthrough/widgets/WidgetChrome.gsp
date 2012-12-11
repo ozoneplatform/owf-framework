@@ -251,7 +251,50 @@
 									msgBox.textField.maxWidth = msgBox.width - 30;
 									msgBox.textField.doComponentLayout();
 								}
-							}
+							},
+                            {
+                               text: 'Get Title',
+                               handler: function() {
+                                 OWF.Chrome.getTitle({
+                                     callback: function(msg) {
+                                         //msg will always be a json string
+                                         var res = Ozone.util.parseJson(msg);
+                                         if (res.success) {
+                                             var alert = Ext.Msg.show({
+                                                 title: 'Get Title',
+                                                 msg: res.title,
+                                                 buttons: Ext.Msg.OK,
+                                                 closable: false,
+                                                 modal: true
+                                             });
+                                         }
+                                     }
+                                 });
+                               }
+                            },
+                            {
+                               text: 'Set Title',
+                               handler: function() {
+                                   var msgBox = Ext.Msg.prompt('Set Title', 'Title: ', function (btn, text) {
+                                       if (btn == 'ok') {
+                                           OWF.Chrome.setTitle({
+                                               title: text,
+                                               callback: function (msg) {
+                                                   //msg will always be a json string
+//                                                   var res = Ozone.util.parseJson(msg);
+//                                                   if (res.success) {
+//                                                   }
+                                               }
+                                           });
+
+                                       }
+                                   });
+                                   //Fix for IE7 where the textfield extends beyond the messagebox
+                                   msgBox.textField.maxWidth = msgBox.width - 30;
+                                   msgBox.textField.doComponentLayout();
+
+                               }
+                            }
 						]
 					}
 				]
