@@ -14,14 +14,6 @@
         @include border-radius($dashboard-switcher-body-radius);
     }
 
-    .dashboard-switcher-header-icon {
-        background-image: $dashboard-switcher-header-icon;
-        background-repeat: no-repeat;
-        background-position: center center;
-        height: 26px;
-        width: 26px;
-    }
-
     ul.actions {
         clear: both;
         float: right;
@@ -201,4 +193,29 @@
     position: relative;
     border-width: 20px;
     border-bottom-color: darken($dashboard-switcher-dashboard-background-color, 10%);
+}
+
+.ozonequicktip {
+    .dashboard-tooltip-content {
+        padding: 1.25em;
+    }
+
+    label {
+        color: $dashboard-switcher-tooltip-label-color;
+    }
+
+    h3 {
+        color: $dashboard-switcher-tooltip-heading-color;
+        font-size: 1.5em;
+        margin: 0 0 1.25em 0;
+    }
+
+    p {
+        font-size: $owf-font-size;
+        line-height: 1.5em;
+    }
+
+    .tip-description {
+        line-height: (14/12);
+    }
 }

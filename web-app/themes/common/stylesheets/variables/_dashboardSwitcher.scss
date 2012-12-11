@@ -16,13 +16,11 @@ $dashboard-switcher-dashboard-text-color: getHighContrastColor($dashboard-switch
 $dashboard-switcher-dashboard-over-text-color: getHighContrastColor($dashboard-switcher-dashboard-over-background-color) !default;
 $dashboard-switcher-dashboard-selected-text-color: getHighContrastColor($dashboard-switcher-dashboard-selected-background-color) !default;
 
-$dashboard-switcher-dashboard-groups-text-color: #9ac558 !default;
-$dashboard-switcher-dashboard-groups-over-text-color: #9ac558 !default;
-$dashboard-switcher-dashboard-groups-selected-text-color: #9ac558 !default;
-
-$dashboard-switcher-header-icon: theme-image($theme-name,'banner/dashboards.png') !default;
 $dashboard-switcher-layout-default-icon: theme-image($theme-name, 'dashboardswitcher/DefaultDashboard.png') !default;
 $dashboard-switcher-layout-default-icon-over: theme-image($theme-name, 'dashboardswitcher/DefaultDashboard_Color.png') !default;
 
 $dashboard-switcher-layout-stack-default-icon: theme-image($theme-name, 'dashboardswitcher/StacksIcon.png') !default;
 $dashboard-switcher-layout-stack-default-icon-over: theme-image($theme-name, 'dashboardswitcher/StacksIcon_Color.png') !default;
+
+$dashboard-switcher-tooltip-heading-color: #acd2ed !default;
+$dashboard-switcher-tooltip-label-color: #ababab !default;

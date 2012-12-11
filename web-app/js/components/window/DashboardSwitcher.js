@@ -113,15 +113,15 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 return unformattedDate ? Ext.util.Format.date(new Date(unformattedDate), Ozone.config.lastLoginDateFormat) : '';
             },
             getToolTip: function (values) {
-                var str = 'data-qtip="' +
+                var str = 'data-qtip="<div class=\'dashboard-tooltip-content\'>' +
                         '<h3 class=\'name\'>' + Ext.htmlEncode(values.name) + '</h3>' +
                         '<p class=\'tip-description\'>' + Ext.htmlEncode((values.description || 'No description found!')) +'</p>';
                 
-                return values.isStack ? str + '"':
+                return values.isStack ? str + '</div>"':
                         str +
-                        '<br><p class=\'group\'>Group: ' + ((values.groups && values.groups.length > 0) ? values.groups[0].name : 'None') + '<p/>' +
-                        '<p class=\'created-by\'>Created by: ' + (values.createdBy.userRealName || '') + '<p/>' +
-                        '<p class=\'last-updated\'>Last Modified: ' + this.getPrettyTime(values.editedDate) + '<p/>"';
+                        '<br><p class=\'group\'><label>Group: </label>' + ((values.groups && values.groups.length > 0) ? values.groups[0].name : 'None') + '</p>' +
+                        '<p class=\'created-by\'><label>Created by: </label>' + (values.createdBy.userRealName || '') + '</p>' +
+                        '<p class=\'last-updated\'><label>Last Modified: </label>' + this.getPrettyTime(values.editedDate) + '</p></div>"';
             },
             getActions: function (values) {
                 return values.isStack ? 
