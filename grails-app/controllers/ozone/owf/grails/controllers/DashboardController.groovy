@@ -150,7 +150,7 @@ class DashboardController extends BaseOwfRestController {
                         args['name'] = it.name
                         args['guid'] = it.guid
                         args['isdefault'] = it.isdefault
-                        args['dashboardPosition'] = it.dashboardPosition
+                        //args['dashboardPosition'] = it.dashboardPosition
                         
                         if (params.user_id != null && params.user_id != '') {
                             args['personId'] = params.user_id
@@ -160,6 +160,11 @@ class DashboardController extends BaseOwfRestController {
                         args['layoutConfig'] = it.layoutConfig?.toString();
 
                         args['isGroupDashboard'] = params.isGroupDashboard ? params.isGroupDashboard?.toString()?.toBoolean() : false
+                        if (args['isGroupDashboard']) {
+                            args['dashboardPosition'] = 1;
+                        } else {
+                            args['dashboardPosition'] = it.dashboardPosition;
+                        }
                         args['adminEnabled'] = params.adminEnabled ? params.adminEnabled?.toString()?.toBoolean() : false
 
                         //tell service to recreate state ids
