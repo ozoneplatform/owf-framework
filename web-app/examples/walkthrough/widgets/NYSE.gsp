@@ -155,7 +155,7 @@
 	        return '<span class="company-profile">' + value + '</span>';
 	    }
 
-	// create the Grid
+        // create the Grid
         var sm = new Ext.selection.CheckboxModel({
             checkOnly: true
         });	 
@@ -193,15 +193,13 @@
 				    listeners: {
 				        cellclick: function (view, cell, cellIndex, record, row, rowIndex, e) {
 				
-				            var linkClicked = (e.target.tagName == 'A');
-				            var clickedDataIndex =
-				                view.panel.headerCt.getHeaderAtIndex(cellIndex).dataIndex;
+				            var linkClicked = (e.target.tagName == 'A'),
+                                clickedDataIndex = view.panel.headerCt.getHeaderAtIndex(cellIndex).dataIndex;
 				
 				            if (linkClicked && clickedDataIndex == 'company') {
-	                        	// Get selected rows
-	                        	var gridPanel = view.findParentByType('grid');
-	                        	var data = [];
-	                        	
+                                // Flag so the view doesn't auto-select the first row on focus
+                                view.disableFocusSelect = true;
+
                         		// Build HTML
                         		var companyTitle = record.data.symbol ? (record.data.company + "(" + record.data.symbol + ")") : record.data.company;
                         		var html = "<div class='company-profile'><div class='company'><h1>" + companyTitle + "</h1></div>" +
@@ -211,6 +209,7 @@
                         			"<div class='profile'>" + record.data.profile + "</div>" +
                         			"</div>";
                         		
+                                var data = [];
                         		data.push({
 			                    	id: record.data.symbol ? record.data.symbol : record.data.company,
 			                    	html: html
