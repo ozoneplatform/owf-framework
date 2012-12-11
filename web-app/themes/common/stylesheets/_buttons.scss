@@ -2,6 +2,10 @@
 // ================== Small Button
 // ===============================
 
+.x-btn-text-color {
+    color: getButtonTextColor($default_button_theme) !important;
+}
+
 .x-btn-default-toolbar-small, .x-btn-default-small {
     @include owf-button-background($default_button_theme);
     .x-btn-inner {

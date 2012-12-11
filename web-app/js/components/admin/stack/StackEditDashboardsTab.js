@@ -48,48 +48,41 @@ Ext.define('Ozone.components.admin.stack.StackEditDashboardsTab', {
             itemId: 'tbDashboardsGridFtr',
             dock: 'bottom',
             ui: 'footer',
-            defaults: {
-                minWidth: 80
-            },
             items: [
             {
                 xtype: 'button',
+                tooltip: 'Move Up',
+                tooltipType: 'title',
+                itemId: 'btnMoveUp',
+                iconCls: 'x-btn-text-color icon-arrow-up',
+                handler: function() {
+                    this.moveUp();
+                },
+                scope: this
+            }, {
+                xtype: 'button',
+                tooltip: 'Move Down',
+                tooltipType: 'title',
+                itemId: 'btnMoveDown',
+                iconCls: 'x-btn-text-color icon-arrow-down',
+                handler: function() {
+                    this.moveDown();
+                },
+                scope: this
+            }, {
+                xtype: 'button',
                 text: 'Add',
                 itemId: 'btnAdd',
+                minWidth: 80,
                 handler: function() {
                     this.onAddClicked();
                 },
                 scope: this
             }, {
-                xtype: 'splitbutton',
-                text: 'Move Up',
-                itemId: 'btnMoveUp',
-                handler: function() {
-                    this.moveUp();
-                },
-                scope: this,
-                menu: {
-                    xtype: 'menu',
-                    plain: true,
-                    hideMode: 'display',
-                    defaults: {
-                        minWidth: this.minButtonWidth
-                    },
-                    items: [
-                        {
-                            xtype: 'owfmenuitem',
-                            text: 'Move Down',
-                            handler: function(button, event) {
-                                this.moveDown();
-                            },
-                            scope: this
-                        }
-                    ]
-                }
-            }, {
                 xtype: 'button',
                 text: 'Remove',
                 itemId: 'btnRemove',
+                minWidth: 80,
                 handler: function() {
                     this.doDelete();
                 },
