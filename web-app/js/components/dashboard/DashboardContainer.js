@@ -1545,7 +1545,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         this.destroyDashboardSwitcher();
     },
 
-    updateDashboardsFromStore: function(storeRecords, callbackOptions, loadSuccess) {
+    updateDashboardsFromStore: function(storeRecords, callbackOptions, loadSuccess, dashboardGuidToActivate) {
 
         // ---------------------------------------------------------------------------------
         // Update all dashboard-related components with newly-refreshed dashboardStore data.
@@ -1587,7 +1587,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
             }
             // activate dashboard
-            me._activateDashboard(defaultTabGuid); // Focus the default dashboard.
+            me._activateDashboard(dashboardGuidToActivate || defaultTabGuid); // Focus the default dashboard.
 
         }, 200);
     },

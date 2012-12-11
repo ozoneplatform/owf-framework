@@ -460,8 +460,7 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
                 me.dashboardContainer.dashboardStore.load({
                     callback: function(records, options, success) {
                         if (success == true) {
-                            me.dashboardContainer.updateDashboardsFromStore(records, options, success);
-                            me.dashboardContainer.activateDashboard(me.dashboard.getGuid());
+                            me.dashboardContainer.updateDashboardsFromStore(records, options, success, me.dashboard.getGuid());
                         }
                     },
                     scope: me
