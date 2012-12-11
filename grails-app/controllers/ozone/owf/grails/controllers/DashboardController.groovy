@@ -150,7 +150,6 @@ class DashboardController extends BaseOwfRestController {
                         args['name'] = it.name
                         args['guid'] = it.guid
                         args['isdefault'] = it.isdefault
-                        //args['dashboardPosition'] = it.dashboardPosition
                         
                         if (params.user_id != null && params.user_id != '') {
                             args['personId'] = params.user_id
