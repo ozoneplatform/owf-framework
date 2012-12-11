@@ -95,7 +95,6 @@ class DashboardService extends BaseService {
                         args.locked = groupDash.locked
                         args.layoutConfig = groupDash.layoutConfig
                         args.stack = groupDash.stack
-                        args.dashboardPosition = groupDash.dashboardPosition
                         
                         def privateDash = deepClone(args,user.id)
 
