@@ -152,7 +152,7 @@ Ozone.layout.tooltipString = {
     metricWindowTitle:		    	'Metric (Alt+Shift+R)',
     metricWindowContent:      		'This button opens the Metric window, where widgets that monitor OWF and widget statistics are located.',
 	settingsTitle:					'Settings (Alt+Shift+S)',
-	settingsContent:				'This button opens the Settings window, exposing users to functionality for customizing their dashboards, theme, and widgets. ',
+	settingsContent:				'This button opens the Settings window, allowing users to customize their widgets or change themes.',
 	adminToolsTitle:				'Administration (Alt+Shift+A)',
 	adminToolsContent:				'This button opens the Administration window, exposing administrators to functionality for managing groups, dashboards, widgets, and users.',
 	helpTitle:						'Help (Alt+Shift+H)',
