@@ -118,7 +118,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                         str +
                         '<br><p class=\'group\'><label>Group: </label>' + ((values.groups && values.groups.length > 0) ? values.groups[0].name : 'None') + '</p>' +
                         '<p class=\'created-by\'><label>Created by: </label>' + (values.createdBy.userRealName || '') + '</p>' +
-                        '<p class=\'last-updated\'><label>Last Modified: </label>' + values.prettyEditedDate || '' + '</p></div>"';
+                        '<p class=\'last-updated\'><label>Last Modified: </label>' + (values.prettyEditedDate || '') + '</p></div>"';
             },
             getActions: function (values) {
                 return values.isStack ? 

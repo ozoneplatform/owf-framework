@@ -15,8 +15,9 @@
     }
 
     ul.actions {
-        clear: both;
-        float: right;
+        // clear: both;
+        // float: right;
+        text-align: right;
         color: $dashboard-switcher-dashboard-text-color;
         margin-right: 15px;
         
@@ -151,10 +152,10 @@
         -webkit-animation-delay: 1s;
 }
 
-.x-ie78 {
+.x-ie7 {
     #dashboard-switcher {
         ul.actions li{
-            display: inline;
+            zoom: 1; display: inline;
         }
     }
     .dashboard-actions, .stack-actions {
