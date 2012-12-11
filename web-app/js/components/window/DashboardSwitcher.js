@@ -1024,7 +1024,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             listeners: {
                 cancel: function () {
                     me.show();
-                    evt.currentTarget.focus();
+                    $dashboard.focus();
                 }
             }
        }).show();
