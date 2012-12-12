@@ -1053,4 +1053,28 @@ databaseChangeLog = {
             where("dest_id = 171 AND dest_type = 'widget_definition'")
         }
     }
+    
+    changeSet(author: "owf", id: "7.0.0-74", context: "sampleData, 7.0.0-sampleData", dbms: "mysql, postgresql, oracle, hsqldb") {
+        comment(text="Remove Contacts dashboard from OWF Users group and add it to the default stack.")
+
+        sql (text = """
+            update domain_mapping set src_id = (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f') where dest_id = 323;
+        """)
+    }
+    
+    changeSet(author: "owf", id: "7.0.0-74", context: "sampleData, 7.0.0-sampleData", dbms: "mssql") {
+        comment(text="Remove Contacts dashboard from OWF Users group and add it to the default stack.")
+
+        sql ( text = """
+            SET IDENTITY_INSERT [dbo].[domain_mapping] ON
+        """)
+
+        sql (text = """
+            update domain_mapping set src_id = (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f') where dest_id = 323;
+        """)
+
+        sql ( text = """
+            SET IDENTITY_INSERT [dbo].[domain_mapping] OFF
+        """)
+    }
 }
