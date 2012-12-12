@@ -352,12 +352,35 @@ class StackService {
 					guid: userStackDashboard.guid
 				]).data[0])
 		}
+                
+                reorderUserDashboards(params)
 		
 		def stackDefaultGroup = stack.findStackDefaultGroup()
 		def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
 		
 		return [success:true, updatedDashboards: updatedDashboards]
 	}
+        
+    def reorderUserDashboards(params) {
+        def stack = Stack.findById(params.id)
+        def user = accountService.getLoggedInUser()
+        def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack, [sort:'dashboardPosition', order:'asc'])
+        if (userStackDashboards?.size > 0) {
+            def firstPos = userStackDashboards[0].dashboardPosition
+            userStackDashboards?.each { userStackDashboard ->
+                def groupDashboardMappings = domainMappingService.getMappings(userStackDashboard, RelationshipType.cloneOf, Dashboard.TYPE)
+                if (groupDashboardMappings[0] != null) {
+                    def groupDash = Dashboard.get(groupDashboardMappings[0].destId)
+                    if (groupDash != null) {
+                        def args = [:]
+                        args.guid = userStackDashboard.guid
+                        args.dashboardPosition = firstPos + groupDash?.dashboardPosition - 1
+                        dashboardService.updateDashboard(args, user, userStackDashboard)
+                    }
+                }
+            }
+        }
+    }
     
     def deleteUserStack(stackIds) {
         
