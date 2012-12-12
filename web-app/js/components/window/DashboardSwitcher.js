@@ -111,20 +111,23 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             },
             getToolTip: function (values) {
                 var str = 'data-qtip="<div class=\'dashboard-tooltip-content\'>' +
-                        '<h3 class=\'name\'>' + Ext.htmlEncode(values.name) + '</h3>' +
-                        '<p class=\'tip-description\'>' + Ext.htmlEncode((values.description || 'No description found!')) +'</p>';
+                        '<h3 class=\'name\'>' + Ext.htmlEncode(values.name) + '</h3>';
+
+                values.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(values.description) +'</p><br>');
                 
                 return values.isStack ? str + '</div>"':
                         str +
-                        '<br><p class=\'group\'><label>Group: </label>' + ((values.groups && values.groups.length > 0) ? values.groups[0].name : 'None') + '</p>' +
+                        '<p class=\'group\'><label>Group: </label>' + ((values.groups && values.groups.length > 0) ? values.groups[0].name : 'None') + '</p>' +
                         '<p class=\'created-by\'><label>Created by: </label>' + (values.createdBy.userRealName || '') + '</p>' +
                         '<p class=\'last-updated\'><label>Last Modified: </label>' + (values.prettyEditedDate || '') + '</p></div>"';
             },
             getActions: function (values) {
                 return values.isStack ? 
                         '<ul class="stack-actions hide">'+
+                            '<li></li>'+
                             '<li class="restore icon-refresh" tabindex="0" data-qtip="Restore"></li>'+
                             '<li class="delete icon-remove" tabindex="0" data-qtip="Delete"></li>'+
+                            '<li></li>'+
                         '</ul>' :
                         '<ul class="dashboard-actions hide">'+
                             '<li class="share icon-share" tabindex="0" data-qtip="Share"></li>'+
@@ -1223,7 +1226,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             windowEl = this.getEl(),
             widthMargin = itemEl.getMargin('lr'),
             heightMargin = itemEl.getMargin('tb'),
-            totalDashboards = this.body.query('.dashboard, .stack').length,
+            totalDashboards = this.body.query('> .dashboard, > .stack').length,
             dashboardInRow = 0;
 
         this.dashboardItemWidth = itemEl.getWidth();

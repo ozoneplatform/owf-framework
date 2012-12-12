@@ -116,27 +116,28 @@
     float: none;
     position: absolute;
 }
+
 .icon-share {
     &:hover, &.hover {
-        color: #6ba6dd;
+        color: $dashboard-switcher-share-color;
     }
 }
 
 .icon-refresh {
     &:hover, &.hover {
-        color: #ffcc44;
+        color: $dashboard-switcher-restore-color;
     }
 }
 
 .icon-edit {
     &:hover, &.hover {
-        color: #99d460;
+        color: $dashboard-switcher-edit-color;
     }
 }
 
 .icon-remove {
     &:hover, &.hover {
-        color: #b3292d;
+        color: $dashboard-switcher-delete-color;
     }
 }
 
@@ -165,14 +166,9 @@
             }
     }
 }
-.dashboard-actions {
+.dashboard-actions, .stack-actions {
     li {
         width: 25%;
-    }
-}
-.stack-actions {
-    li {
-        width: 50%;
     }
 }
 
