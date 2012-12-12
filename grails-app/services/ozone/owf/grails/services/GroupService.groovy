@@ -4,6 +4,7 @@ import ozone.owf.grails.OwfExceptionTypes
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.Person
+import ozone.owf.grails.domain.Stack
 import grails.converters.JSON
 import ozone.owf.grails.domain.WidgetDefinition
 import org.hibernate.CacheMode
@@ -160,8 +161,17 @@ class GroupService {
                     }
                     projections { rowCount() }
                 }
+                
+                def stackCount = Stack.withCriteria {
+                    cacheMode(CacheMode.GET)
+                    groups {
+                        eq('id', g.id)
+                    }
+                    projections { rowCount() }
+                }
 
                 serviceModelService.createServiceModel(g,[
+                            totalStacks: stackCount[0],
                             totalUsers: userCount[0],
                             totalWidgets: domainMappingService.countMappings(g, RelationshipType.owns, WidgetDefinition.TYPE)
                         ])
@@ -437,6 +447,7 @@ class GroupService {
         }
         else {
             returnValue = serviceModelService.createServiceModel(group,[
+                        totalStacks: group?.stacks?.size(),
                         totalUsers: group?.people?.size(),
                         totalWidgets: domainMappingService.countMappings(group, RelationshipType.owns, WidgetDefinition.TYPE)
                     ])

@@ -5,162 +5,159 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 	<style type="text/css">
-	<!--
+            
+html {
+    overflow: hidden;
+}
 
-    html {
-        overflow: hidden;        
-    }
+html, body {
+	margin:0;
+	padding:0;
+	border:0;
+	outline:0;
+	font-weight:inherit;
+	font-style:inherit;
+	font-size:100%;
+	font-family:inherit;
+	vertical-align:baseline;
+        height: 100%;
+        width: 100%;
+}
 
-	html, body, div, span, h1, h2, h3, p, a, img, ul, li, fieldset, form, label, legend {
-		margin:0;
-		padding:0;
-		border:0;
-		outline:0;
-		font-weight:inherit;
-		font-style:inherit;
-		font-size:100%;
-		font-family:inherit;
-		vertical-align:baseline;
-	}
-	
-	/* browser default font-size is 16px which is too big so we make it 16px x 62.5% = 10px */
-	body {
-		font:normal 400 62.5%/1.0 Arial,Verdana,Helvetica,sans-serif;
-		min-width:960px;
-		background:#000;
-		color:#333;
-	}
-	
-	div#outer {
-		width: 430px;
-		position:absolute;
-		top:270px;
-		left:50%;
-		margin-bottom: 50px;
-		margin-left: -215px;
-		margin-right: auto;
-		padding: 0px;
-		border:0px;
-	}
-	div#main {
-		margin-left: 0%;
-		margin-top: 1px;
-		padding: 0px;
-	}
-	div#outerTop {
-		width: 430px;
-		height:90px;
-		position:absolute;
-		top:170px;
-		left:50%;
-		margin-bottom: 50px;
-		margin-left: -215px;
-		margin-right: auto;
-		padding: 0px;
-		border:0px;
-		-moz-opacity:0.5;
-		opacity:.50;
-		filter:alpha(opacity=50);
-		background-color:#000000;
-	}
-	
-	div#mainTop {
-		margin-left: 0%;
-		margin-top: 1px;
-		padding: 10px;
-	}
-	
-	div#msgTop {
-		width: 430px;
-		height:90px;
-		margin-top: 0px;
-		position:absolute;
-		top:180px;
-		left:50%;
-		margin-bottom: 50px;
-		margin-left: -215px;
-		margin-right: auto;
-		padding: 0px;
-		border:0px;
-	}
+:focus {
+	outline:0;
+}
 
-	.container {
-	 	width: expression((document.body.clientWidth < 822)? "820px" : "auto"); /* min-width for IE6 */
-		min-width: 800px; /* min-width for all standards-compliant browsers */
-	}
-	
-	.hdr {
-		width:100%;
-		background:#1547ac url(./themes/common/images/logout/wfHdrBkg.png) repeat-x 0 0;
-		height:73px;
-		position:relative;
-		top:0;
-		left:0;
-	}
-	
-	.left {
-		float:left;
-		display: inline;
-		white-space:nowrap;
-	}
-	
-	.logoLeft {
-		float:left;
-		width:73px;
-		display: inline;
-		white-space:nowrap;
-	}
-	
-	#content {
-		clear:both;
-		padding:0;
-		margin:0;
-	}
-	
-	#logoutMsgHdr {
-		color:#ffffff;	
-		font-weight:bold;
-		font-size:12px;
-		padding:5px 0 0 15px;
-	}
-	
-	#logoutMsg {
-		color:#ffffff;	
-		font-weight:normal;
-		font-size:12px;
-		padding:15px;
-	}
-	
-	body {
-		font-family:Arial, Verdana, Helvetica, sans-serif;
-		font-size: 62%;
-		padding: 0;
-		margin: 0;
-		background:#1547ac url(./themes/common/images/logout/wfBigBG.jpg) repeat 0 0;
-	}
+ul {
+	list-style:none;
+	font-size:1.1em;
+	padding:0 0 18px 40px;
+}
+
+/* browser default font-size is 16px which is too big so we make it 16px x 62.5% = 10px */
+body {
+	font:normal 400 62.5%/1.0 Arial,Verdana,Helvetica,sans-serif;
+	min-width:960px;
+	background:#000;
+	color:#333;
+}
+
+/* CONTENT --------------------------------- */
+#content {
+	padding:0;
+	margin:0;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        height: 250px;
+        width: 450px;
+        overflow: auto;
+        margin-top: -125px;
+        margin-left: -225px;
+}
+
+/* MESSAGES --------------------------------- */
+.info, .success {
+	clear:both;
+	margin:18px 0;
+	padding:20px 20px 20px 100px;
+	font-size:10px;
+        background-color: white;
+}
+
+.success {
+	border:2px solid #000;
+	/*background:#dfa url(../images/confirm.gif) no-repeat 20px 18px;*/
+	color:#000000;
+}
+
+#content .errors h2, #content .success h2 {
+	font-family:Arial,Verdana,Helvetica,sans-serif;
+	font-size:18px;
+	line-height:48px;
+	font-weight:400;
+	margin:0 18px 0 0;
+	padding:0;
+}
+
+#content .success h2 {
+	color:#000 !important;
+        font-weight: bold;
+}
+
+/* begin new styles  -----------------------------------------------------------------------------------------------*/
+
+#background.mozilla {
+        background-image: url('themes/a_default.theme/images/stripes_rpt.png'),-moz-radial-gradient(white, #e6e7e8);
+        background-position: center center,center center;
+        background-repeat: repeat,no-repeat,no-repeat;
+}
+
+#background.chrome {
+        background-image: url('themes/a_default.theme/images/stripes_rpt.png'),-webkit-radial-gradient(white, #e6e7e8);
+        background-position: center center,center center;
+        background-repeat: repeat,no-repeat,no-repeat;
+}
+
+#background.ie {
+        background-color: #f6f6f7;
+}
+
+#background.ie #mainpanel {
+        background: url('themes/a_default.theme/images/stripes_rpt.png') repeat center center;
+        height: 100%;
+        width: 100%;
+}
+
 	
 	</style>
-
-	<link rel="icon" type="image/png" href="./themes/common/images/logout/wfIcon.png" />
 </head>
 
-<body id="cas">
-<div class="container">
-  <div class="hdr">
-    <div class="left">
-      <div class="logoLeft"><img src="./themes/common/images/logout/wfLogoNoOffice.png" width="269" height="73" /></div>
-    </div>
-  </div>
-</div>
+<%
+        String ua = request.getHeader( "User-Agent" );
+        boolean isFirefox = ( ua != null && ua.indexOf( "Firefox/" ) != -1 );
+        boolean isIE = ( ua != null && ua.indexOf( "MSIE" ) != -1 );
+        response.setHeader( "Vary", "User-Agent" );
+    %>
 
-<div id="content">
-  <div id="outerTop">
-    <div id="mainTop"> </div>
-  </div>
-  <div id="msgTop">
-    <div id="logoutMsgHdr">Logged Out</div>
-    <div id="logoutMsg">You must close your browser to complete the sign out process.</div>
-  </div>
-</div>
+    <% if( isFirefox ){ %>
+    <body id="background" class="mozilla">
+    <% } else if( isIE ){ %>
+    <body id="background" class="ie">
+        <div id="mainpanel">
+    <% } else { %>
+    <body id="background" class="chrome">
+    <% } %>
+    
+        <div class="container">
+          <div class="hdr">
+            <div class="left">
+              <div class="logoLeft"></div>
+            </div>
+          </div>
+        </div>
+
+    <% if( isIE ){ %>
+        </div>
+    <% } %>
+    
+		<div id="content">
+
+
+		<div id="msg" class="success">
+			<h2>Logout successful</h2>
+
+			<p>You have successfully logged out. Please enter your User ID and Password to login again.</p>
+			<p>For security reasons, exit your web browser.</p>
+			
+			
+			
+		</div>
+		</div>
+    <% if( isIE ){ %>
+        </div>
+    <% } %>
+	</body>
+
 </body>
 </html>
