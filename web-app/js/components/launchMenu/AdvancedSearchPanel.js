@@ -463,7 +463,7 @@ Ext.define('Ozone.components.launchMenu.AdvancedSearchPanel', {
             var groups = this.widgetStore.getAt(i).get('groups');
             if (groups != null && groups.length > 0) {
                 for (var j = 0, jlen = groups.length ; j < jlen ; j++) {
-                  if (this.groupStore.findExact('id',groups[j].id) < 0) {
+                  if (this.groupStore.findExact('id',groups[j].id) < 0  && !groups[j].stackDefault) {
                       this.groupStore.add(groups[j]);
                   }
                 }

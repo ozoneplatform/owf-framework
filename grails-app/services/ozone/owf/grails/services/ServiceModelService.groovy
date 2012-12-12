@@ -109,6 +109,7 @@ class ServiceModelService {
                         description: domain.description,
                         email: domain.email,
                         automatic: domain.automatic,
+                        stackDefault: domain.stackDefault,
                         totalUsers: params.totalUsers ? params.totalUsers : 0,
                         totalWidgets: params.totalWidgets ? params.totalWidgets : 0,
                         totalStacks: params.totalStacks ? params.totalStacks : 0,

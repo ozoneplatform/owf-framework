@@ -8,6 +8,7 @@ class GroupServiceModel extends AbstractServiceModel {
   String displayName
   String email
   Boolean automatic = false
+  Boolean stackDefault = false
   String status
   Integer totalWidgets = 0
   Integer totalUsers = 0

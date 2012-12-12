@@ -9,6 +9,7 @@ Ext.define('Ozone.data.Group', {
         { name: 'totalUsers', type: 'int' },
         { name: 'totalStacks', type: 'int' },
         { name: 'automatic', type: 'boolean' },
+        { name: 'stackDefault', type: 'boolean' },
         { name: 'status', type: 'string' },
         { name: 'displayName', type: 'string' },
         { name: 'email', type: 'string'},
