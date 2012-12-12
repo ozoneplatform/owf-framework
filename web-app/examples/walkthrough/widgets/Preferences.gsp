@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         <link href="../../../css/widgetContents.css" rel="stylesheet" type="text/css">

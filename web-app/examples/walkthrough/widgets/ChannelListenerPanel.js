@@ -15,7 +15,7 @@ Ext.define('Ozone.data.ActiveLogModel', {
 });
 
 Ext.define('Ozone.components.ChannelListenerPanel', {
-  extend: 'Ext.panel.Panel',
+  extend: 'Ext.Viewport',
   alias: ['widget.channellistenerpanel', 'widget.Ozone.components.ChannelListenerPanel'],
 
   cls: 'channelListenerPanel',

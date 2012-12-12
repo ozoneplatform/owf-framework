@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <g:if test="${params.themeName != null && params.themeName != ''}">

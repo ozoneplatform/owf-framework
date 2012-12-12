@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	<head>
 	<title>Channel Listener</title>
@@ -50,16 +51,7 @@
 				//init quicktips
 				Ext.tip.QuickTipManager.init();
 
-				var viewport = new Ext.Viewport({
-					layout: {
-						type: 'fit'
-					},
-					items: [
-						{
-							xtype: 'channellistenerpanel'
-						}
-					]
-				});
+                var viewport = Ext.widget('Ozone.components.ChannelListenerPanel');
 			});
 		});
 	</script>
