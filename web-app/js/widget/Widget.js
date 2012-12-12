@@ -776,11 +776,13 @@ OWF.DragAndDrop.onDrop(function(sender, msg) {
 
 	@example
 OWF.Launcher.launch({
-	universalName: <universal name of widget to launch>,  //universalName or guid maybe identify the widget to be launched
-	guid: 'guid_of_widget_to_launch',
-	launchOnlyIfClosed: true,	//if true will only launch the widget if it is not already opened.
-								//if it is opened then the widget will be brought to focus
-	data: dataString			//initial launch data to be passed to a widget only if the widget is opened. This must be a string.
+    universalName: <universal name of widget to launch>,  //universalName or guid maybe identify the widget to be launched
+    guid: 'guid_of_widget_to_launch',
+    title: 'title to replace the widget title' the title will only be changed if the widget is opened.
+    regex: optional regex used to replace the previous title with the new value of title
+    launchOnlyIfClosed: true,   //if true will only launch the widget if it is not already opened.
+                                //if it is opened then the widget will be brought to focus
+    data: dataString            //initial launch data to be passed to a widget only if the widget is opened. This must be a string.
 }, callback);
  */
 
@@ -1416,6 +1418,7 @@ OWF.Chrome.listHeaderMenus({
   * @methodOf OWF.Chrome
   * @description Sets the Widget's Title in the Chrome
   * @param {Object} cfg config object see below for properties
+  * @param {String} cfg.title The string which will replace the widget title
   * @param {Function} cfg.callback The function which receives the results.
   *
   * @example

@@ -960,6 +960,7 @@ Ozone.chrome.WidgetChrome = function(config) {
         /**
           * @description Sets the Widget's Title in the Chrome
           * @param {Object} cfg config object see below for properties
+          * @param {String} cfg.title The string which will replace the widget title
           * @param {Function} cfg.callback The function which receives the results.
           *
           * @example

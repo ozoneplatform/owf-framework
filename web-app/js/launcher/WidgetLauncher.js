@@ -48,9 +48,9 @@ Ozone.launcher = Ozone.launcher ? Ozone.launcher : {};
        * };
        * var dataString = Ozone.util.toString(data);
        * widgetLauncher.launchWidget({
-       *     universalName: <universal name of widget to launch>,  //universalName or guid maybe identify the widget to be launched
-       *     guid: <guid of widget to launch>,
-       *     title: <title to replace the widgets title> the title will only be changed if the widget is opened.
+       *     universalName: 'universal name of widget to launch',  //universalName or guid maybe identify the widget to be launched
+       *     guid: 'guid of widget to launch',
+       *     title: 'title to replace the widgets title' the title will only be changed if the widget is opened.
        *     regex: optional regex used to replace the previous title with the new value of title
        *     launchOnlyIfClosed: true, //if true will only launch the widget if it is not already opened.
        *                               //if it is opened then the widget will be restored
