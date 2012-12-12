@@ -701,12 +701,10 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
               }
           }
 
-          //If descriptor url was successfully loaded save it, otherwise set blank
+          //If descriptor url was successfully loaded save it, otherwise ignore it so we don't change
+          //the record's previous value.
           if(panel.loadedDecriptorUrl) {
               formValues['descriptorUrl'] = panel.loadedDecriptorUrl;
-          }
-          else {
-              formValues['descriptorUrl'] = "";
           }
           
           if (widget.store.data.length > 0) {
