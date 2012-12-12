@@ -172,7 +172,7 @@
         <copy  file="${widget.samples.dir}/silverlight-widget/silverlight-widget.zip" todir="${staging.dir}/samples" />
     </target>
 
-    <target name="stage-extras" depends="compile-themes">
+    <target name="stage-extras">
         <mkdir dir="${tomcat.dir}" />
         <mkdir dir="${staging.dir}/etc/override" />
         <mkdir dir="${staging.dir}/owf-security" />
