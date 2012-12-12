@@ -303,28 +303,51 @@ class SecurityFilters {
                 def maxPosition = 0
                 newUser.personWidgetDefinitions.each{ pwd ->
                     def users = [[id:personInDB.id]]
-                    log.info 'Adding widgets for new USER!!!!$$$'
+                    log.info 'Adding DEFAULT_USER widgets to new user'
 
                     personWidgetDefinitionService.bulkAssignForSingleWidgetDefinitionMultipleUsers(pwd.widgetDefinition.widgetGuid,users,[])
                 }
+
                 def dashBoards = Dashboard.findAllByUser(newUser, [cache:true])
                 def args = [checkedTargets: personInDB.id]
                 dashBoards.each{ db ->
-                    log.info 'Adding dashboard for new USER!!!!$$$'
+                    log.info 'Adding DEFAULT_USER dashboards to new user'
 
-                    args.guid = db.guid
-                    args.isdefault = db.isdefault
-                    args.name = db.name
-                    args.description = db.description
-                    args.locked = db.locked
-                    args.layoutConfig = db.layoutConfig
+                    //Skip if dashboard belongs to a stack, it will be added as a result
+                    //of adding the user to the stack next
+                    if(!db.stack) {
+                        args.guid = db.guid
+                        args.isdefault = db.isdefault
+                        args.name = db.name
+                        args.description = db.description
+                        args.locked = db.locked
+                        args.layoutConfig = db.layoutConfig
 
-                    administrationService.cloneDashboards(args)
+                        administrationService.cloneDashboards(args)
+                    }
                 }
+
+                //Get all stack default groups DEFAULT_USER is in
+                def stackDefaultGroups = Group.withCriteria(uniqueResult: true){
+                    eq('stackDefault', true)
+                    people {
+                        eq('id', newUser.id)
+                    }
+                }
+                args = [checkedTargets: personInDB.id]
+                stackDefaultGroups.each{ stackDefaultGroup ->
+                    log.info 'Adding DEFAULT_USER stacks to new user'
+
+                    //Add the new user to the stack's default group
+                    stackDefaultGroup.addToPeople(personInDB)
+                    stackDefaultGroup.save(flush: true, failOnError: true)
+                }
+
                 def preferences = Preference.findAllByUser(newUser, [cache:true])
                 args = [checkedTargets: personInDB.id]
                 preferences.each{ pref ->
-                    log.info 'Adding preference for new USER!!!!$$$'
+                    log.info 'Adding DEFAULT_USER preferences to new user'
+
                     args.namespace = pref.namespace
                     args.path = pref.path
                     args.value = pref.value
@@ -332,7 +355,7 @@ class SecurityFilters {
                 }
             }
             else {
-                log.info 'No need to copy default dashboards and prefs, newUser or personInDb is null'
+                log.info 'No need to copy default dashboards, stacks, prefs and widgets, newUser or personInDb is null'
             }
         } catch(Exception e)
         {
