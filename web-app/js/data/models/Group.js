@@ -7,6 +7,7 @@ Ext.define('Ozone.data.Group', {
         { name: 'description', type: 'string' },
         { name: 'totalWidgets', type: 'int' },
         { name: 'totalUsers', type: 'int' },
+        { name: 'totalStacks', type: 'int' },
         { name: 'automatic', type: 'boolean' },
         { name: 'status', type: 'string' },
         { name: 'displayName', type: 'string' },

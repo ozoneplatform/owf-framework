@@ -35,6 +35,14 @@ Ext.define('Ozone.components.admin.GroupsGrid', {
             renderer: function(value, metaData, record, rowIndex, colIndex, store) {
                 return this.renderCell(value, metaData, record);
             }
+        }, {
+            header: 'Stacks',
+            dataIndex: 'totalStacks',
+            flex: 1,
+            sortable: false,
+            renderer: function(value, metaData, record, rowIndex, colIndex, store) {
+                return this.renderCell(value, metaData, record);
+            }
         }
     ],
     defaultPageSize: 50,

@@ -20,7 +20,7 @@ Ext.define('Ozone.data.GroupStore', {
                 update: '/group',
                 destroy: '/group'
             },
-            fields: ['id', 'name', 'description', 'totalWidgets', 'totalUsers', 'automatic', 'status', 'displayName', 'email'],
+            fields: ['id', 'name', 'description', 'totalWidgets', 'totalUsers', 'totalStacks', 'automatic', 'status', 'displayName', 'email'],
             autoDestroy: true
         });
     	

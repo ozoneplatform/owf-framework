@@ -111,6 +111,7 @@ class ServiceModelService {
                         automatic: domain.automatic,
                         totalUsers: params.totalUsers ? params.totalUsers : 0,
                         totalWidgets: params.totalWidgets ? params.totalWidgets : 0,
+                        totalStacks: params.totalStacks ? params.totalStacks : 0,
                         status: domain.status
                         )
                 break
