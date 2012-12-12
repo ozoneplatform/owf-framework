@@ -48,7 +48,6 @@
     <target name="-resolve" description="--> Retrieve dependencies with ivy" depends="_init-ivy">
         <ivy:settings file="${build.base.dir}/${ivysettings.file}" id='ivy.settings' />
         <ivy:resolve settingsRef='ivy.settings'/>
-        <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact]-[revision].[ext]" conf="compressjs" settingsRef='ivy.settings'/>
         <mkdir dir="${work.dir}" />
         <ivy:retrieve pattern="${work.dir}/[conf]/[artifact]-[revision].[ext]" conf="jsdoc" settingsRef='ivy.settings'/>
     </target>
@@ -57,12 +56,6 @@
     </target>
     <target name="-init" depends="-resolve,buildInfo">
         <mkdir dir="${staging.dir}" />
-        <path id="compressor.classpath">
-            <fileset dir="${lib.dir}/compressjs" includes="*.jar" />
-        </path>
-
-        <tstamp/>
-        <taskdef name="yuicompress" classname="owf.ant.YUICompressTask" classpathref="compressor.classpath" />
         <taskdef name="jsdoctoolkit" classname="uk.co.darrenhurley.ant.tasks.JsDocToolkit">
             <classpath>
                 <pathelement path="${work.dir}/jsdoc/jsdoctoolkit-ant-task-1.0.jar" />
@@ -165,50 +158,6 @@
             </fileset>
         </delete>
         <grails script="clean" preargs="${offline.arg}" />
-    </target>
-
-    <target name="compile-themes">
-
-        <!-- Note that this only compiles themes that are in the war. It does not
-             compile themes that are in the external themes directory.  That will
-             need to be done manually.  (By default there are no external themes) -->
-
-        <uptodate property="compile-themes-in-war.uptodate" >
-            <srcfiles dir="${basedir}/web-app/themes" excludes="**/images/**,**/css/**,**/.sass-cache/**" />
-
-            <!-- Look for any source file that is newer than any css file. TODO: make this
-                 so that we do not need to hard-code the theme names -->
-            <compositemapper>
-                <mergemapper to="${basedir}/web-app/themes/a_default.theme/css/a_default.css" />
-                <mergemapper to="${basedir}/web-app/themes/accessibility-bow.theme/css/accessibility-bow.css" />
-                <mergemapper to="${basedir}/web-app/themes/accessibility-wob.theme/css/accessibility-wob.css" />
-                <mergemapper to="${basedir}/web-app/themes/large-text.theme/css/large-text.css" />
-            </compositemapper>
-        </uptodate>
-
-        <antcall target="_compile-themes-in-war" />
-
-        <!-- make sure sass-cache folders are deleted -->
-        <delete includeemptydirs="true" failonerror="false">
-            <fileset dir="${basedir}/web-app/themes" >
-                <include name="**/.sass-cache/**"/>
-            </fileset>
-        </delete>
-    </target>
-
-    <!-- Only recompile if compile-themes.uptodate is not set.
-         This prevents compilation from happening mulitple times
-         per build -->
-    <target name="_compile-themes-in-war" unless="compile-themes-in-war.uptodate">
-        <exec executable="cmd" dir="${basedir}/web-app/themes" failonerror="true" osfamily="windows">
-            <arg value="/c" />
-            <arg value="compile_all_themes.bat" />
-            <arg value="--force" />
-        </exec>
-        <exec executable="sh" dir="${basedir}/web-app/themes" failonerror="true" osfamily="unix">
-            <arg value="compile_all_themes.sh" />
-            <arg value="--force" />
-        </exec>
     </target>
 
     <target name="stage-samples" depends="zip-widgets" >
@@ -369,7 +318,7 @@
           target: war
          ================================= -->
 
-    <target name="war" depends="test,jsdoc,about,compress_js,compile-themes" description="--> Creates a WAR of a Grails application">
+    <target name="war" depends="test,jsdoc,about,compress_js" description="--> Creates a WAR of a Grails application">
         <grails script="war" preargs="${offline.arg}"/>
     </target>
 

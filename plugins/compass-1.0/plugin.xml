@@ -1,0 +1,11 @@
+<plugin name='compass' version='1.0' grailsVersion='1.3.7 &gt; *'>
+  <author></author>
+  <authorEmail></authorEmail>
+  <title>Compass Utilities</title>
+  <description>\
+Plugin to run compass scripts
+</description>
+  <documentation>http://example.com/does-not-exist</documentation>
+  <resources />
+  <dependencies />
+</plugin>
