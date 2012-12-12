@@ -174,7 +174,7 @@ Ext.define('Ozone.components.admin.widget.WidgetDetailPanel', {
               var records = view.getSelectionModel().getSelection();
               if (records && records.length > 0) {
                 for (var i = 0; i < records.length; i++) {
-                  this.doEdit(records[i].data.id);
+                  this.doEdit(records[i].data.id, records[i].data.name);
                 }
               }
               else {
@@ -278,13 +278,15 @@ Ext.define('Ozone.components.admin.widget.WidgetDetailPanel', {
     }
   },
 
-  doEdit: function(id) {
+  doEdit: function(id, title) {
     var dataString = Ozone.util.toString({
       id: id,
       copyFlag: false
     });
 
     OWF.Launcher.launch({
+      title: '$1 - ' + title,
+      titleRegex: /(.*)/,
       guid: this.guid_EditCopyWidget,
       launchOnlyIfClosed: false,
       data: dataString

@@ -114,7 +114,7 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
                     var records = me.gridGroups.getSelectionModel().getSelection();
                     if (records && records.length > 0) {
                         for (var i = 0; i < records.length; i++) {
-                            me.doEdit(records[i].data.id);
+                            me.doEdit(records[i].data.id, records[i].data.displayName);
                         }
                     } else {
                         me.showAlert('Error', 'You must select at least one group to edit.');
@@ -201,7 +201,7 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
         this.on(
              'itemdblclick',
              function(view, record, item, index, evt, opts) {
-                 this.doEdit(record.data.id);
+                 this.doEdit(record.data.id, record.data.displayName);
              },
              this
          );
@@ -210,7 +210,7 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
             switch(evt.getKey()) {
                 case evt.SPACE:
                 case evt.ENTER:
-                    this.doEdit(record.data.id);
+                    this.doEdit(record.data.id, record.data.displayName);
             }
         }, this);
 
@@ -248,13 +248,15 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
         }
     },
     
-    doEdit: function(id) {
+    doEdit: function(id, title) {
         var dataString = Ozone.util.toString({
             id: id,
             copyFlag: false
         });
         
         OWF.Launcher.launch({
+            title: '$1 - ' + title,
+            titleRegex: /(.*)/,
             guid: this.guid_EditCopyWidget,
             launchOnlyIfClosed: false,
             data: dataString

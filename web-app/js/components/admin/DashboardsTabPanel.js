@@ -210,6 +210,8 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
 
                 OWF.Launcher.launch({
                     guid: this.guid_DashboardEditCopyWidget,
+                    title: '$1 - ' + records[i].get('name'),
+                    titleRegex: /(.*)/,
                     launchOnlyIfClosed: false,
                     data: dataString
                 }, this.launchFailedHandler);

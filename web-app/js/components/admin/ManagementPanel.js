@@ -28,7 +28,7 @@ Ext.define('Ozone.components.admin.ManagementPanel', {
         }, this.launchFailureHandler);
     },
 
-  doEdit: function(id) {
+  doEdit: function(id, title) {
     var dataString = Ozone.util.toString({
       id: id,
       copyFlag: false
@@ -36,6 +36,8 @@ Ext.define('Ozone.components.admin.ManagementPanel', {
 
     OWF.Launcher.launch({
       guid: this.guid_EditCopyWidget,
+      title: '$1 - ' + title,
+      titleRegex: /(.*)/,
       launchOnlyIfClosed: false,
       data: dataString
     }, this.launchFailureHandler);

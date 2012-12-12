@@ -452,9 +452,29 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         }
         else {
 
+            //make a copy so we don't alter the widgetdef if we change the title
+            specifiedWidget = specifiedWidget.copy();
+
             //check if we need to change the widget's name
             if (launchConfig.title != null) {
-                specifiedWidget.data.name = launchConfig.title;
+                //regex was not used simply replace the title
+                if (launchConfig.titleRegex == null) {
+                    specifiedWidget.data.name = launchConfig.title;
+                }
+                else {
+                    //check if a regex string by using a regex
+                    var matches = launchConfig.titleRegex.match(/^\/(.*)\/(.*)$/);
+
+                    //there are 2 capture groups so if the above regex matches
+                    //matches[0] will be the full string
+                    //matches[1] will be the titleRegex pattern
+                    //matches[2] will be any flags
+                    if (matches != null && matches[1] != '') {
+                        //use regex string to alter the title
+                        specifiedWidget.data.name = specifiedWidget.data.name.replace(
+                            new RegExp(matches[1],matches[2]),launchConfig.title);
+                    }
+                }
             }
 
             // Determine which pane widget was last opened in

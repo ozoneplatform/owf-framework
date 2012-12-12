@@ -51,6 +51,7 @@ Ozone.launcher = Ozone.launcher ? Ozone.launcher : {};
        *     universalName: <universal name of widget to launch>,  //universalName or guid maybe identify the widget to be launched
        *     guid: <guid of widget to launch>,
        *     title: <title to replace the widgets title> the title will only be changed if the widget is opened.
+       *     regex: optional regex used to replace the previous title with the new value of title
        *     launchOnlyIfClosed: true, //if true will only launch the widget if it is not already opened.
        *                               //if it is opened then the widget will be restored
        *     data: dataString  //initial launch config data to be passed to a widget only if the widget is opened.  this must be a string
@@ -59,6 +60,11 @@ Ozone.launcher = Ozone.launcher ? Ozone.launcher : {};
        */
         launchWidget: function(config,callback) {
             //send message to launch a widget
+
+            if (config.titleRegex != null && config.titleRegex instanceof RegExp) {
+                config.titleRegex = config.titleRegex.toString();
+            }
+
             var jsonString = gadgets.json.stringify(config);
             gadgets.rpc.call('..', launchChannelName, callback, OWF.getIframeId(), jsonString);
         }

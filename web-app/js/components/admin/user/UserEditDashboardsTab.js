@@ -169,7 +169,7 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
             }
             
             Ext.create('Ozone.components.admin.EditDashboardWindow', {
-                title: 'Dashboard Editor',
+                title: 'Dashboard Editor - ' + data.name ? data.name : '',
                 guid: data.guid ? data.guid : '',
                 name: data.name ? data.name : '',
                 description: data.description ? data.description : '',

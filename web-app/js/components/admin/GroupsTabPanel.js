@@ -166,7 +166,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                                     var records = grid.getSelectionModel().getSelection();
                                     if (records && records.length > 0) {
                                         for (var i = 0; i < records.length; i++) {
-                                            cmp.doEdit(records[i].data.id);
+                                            cmp.doEdit(records[i].data.id, records[i].data.displayName);
                                         }
                                     }
                                     else {
@@ -224,7 +224,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
         });
         win.show();
     },
-    doEdit: function(id) {
+    doEdit: function(id, title) {
         var self = this;
         var dataString = Ozone.util.toString({
             id: id,
@@ -233,6 +233,8 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
 
         OWF.Launcher.launch({
             guid: this.guid_EditCopyWidget,
+            title: '$1 - ' + title,
+            titleRegex: /(.*)/,
             launchOnlyIfClosed: false,
             data: dataString
         }, function(response) {

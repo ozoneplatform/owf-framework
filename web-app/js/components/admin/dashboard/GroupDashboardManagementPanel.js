@@ -267,6 +267,8 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
 		        });
 		        
 		        OWF.Launcher.launch({
+                    title: '$1 - ' + records[i].get('name'),
+                    titleRegex: /(.*)/,
 		            guid: this.guid_EditCopyWidget,
 		            launchOnlyIfClosed: false,
 		            data: dataString

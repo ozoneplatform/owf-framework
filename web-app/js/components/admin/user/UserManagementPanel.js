@@ -118,7 +118,7 @@ Ext.define('Ozone.components.admin.user.UserManagementPanel', {
 							if(records && records.length>0) {
 			                    for(var i = 0; i < records.length; ++i)
 			                    {
-			                        this.doEdit(records[i].data.id);
+			                        this.doEdit(records[i].data.id, records[i].data.userRealName);
 			                    }
 							}
 							else {
@@ -219,7 +219,7 @@ Ext.define('Ozone.components.admin.user.UserManagementPanel', {
 									var records = grid.getSelectionModel().getSelection();
 									if(records && records.length>0) {
 										for (var i = 0; i<records.length; i++) {
-											this.doEdit(records[i].data.id);
+                                            this.doEdit(records[i].data.id, records[i].data.userRealName);
 										}
 									}
 									else {
@@ -234,7 +234,7 @@ Ext.define('Ozone.components.admin.user.UserManagementPanel', {
                                     switch(evt.getKey()) {
                                         case evt.SPACE:
                                         case evt.ENTER:
-                                            this.doEdit(record.data.id);
+                                            this.doEdit(record.data.id, record.data.userRealName);
                                     }
                                 }
                             }

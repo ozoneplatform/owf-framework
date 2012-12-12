@@ -155,7 +155,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                     var records = grid.getSelectionModel().getSelection();
                                     if (records && records.length > 0) {
                                         for (var i = 0; i < records.length; i++) {
-                                            cmp.doEdit(records[i].data.id);
+                                            cmp.doEdit(records[i].data.id, records[i].data.name);
                                         }
                                     }
                                     else {
@@ -213,7 +213,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
         });
         win.show();
     },
-    doEdit: function(id) {
+    doEdit: function(id, title) {
         var self = this;
         var dataString = Ozone.util.toString({
             id: id,
@@ -221,6 +221,8 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
         });
 
         OWF.Launcher.launch({
+            title: '$1 - ' + title,
+            titleRegex: /(.*)/,
             guid: this.guid_EditCopyWidget,
             launchOnlyIfClosed: false,
             data: dataString
