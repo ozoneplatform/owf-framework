@@ -73,7 +73,7 @@ $user-menu-pressed-icon: theme-image($theme-name, 'banner/user_menu.png') !defau
 
 $user-menu-button-border-color: black !default;
 
-$user-menu-background-color: rgba(#222222, 0.9) !default;
+$user-menu-background-color: rgba(#222222, 1) !default; //Set to opaque to fix OWF-7260
 //$user-menu-item-over-background-color: #15191c !default;
 $user-menu-item-over-background-color: black !default;
 $user-menu-text-color: #eeeeee !default;

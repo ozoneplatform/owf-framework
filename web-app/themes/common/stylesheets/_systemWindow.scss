@@ -18,8 +18,6 @@
 );
 
 .x-window-system-window {
-    @include opacity($dashboard-switcher-opacity);
-
     //@include border-radius($dashboard-switcher-body-radius);
     .x-window-header {
         @include border-top-radius($dashboard-switcher-body-radius);

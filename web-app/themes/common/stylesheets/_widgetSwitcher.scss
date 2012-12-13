@@ -18,8 +18,6 @@
 );
 
 #widget-switcher {
-    @include opacity($widget-switcher-opacity);
-    
     &, &-body {
         @include border-radius($widget-switcher-body-radius);
     }
