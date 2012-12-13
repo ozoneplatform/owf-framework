@@ -2,6 +2,7 @@
 <%@ page import="org.springframework.security.core.AuthenticationException" %>
 <%@ page import="org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter" %>
 <%@ page import="java.lang.String" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 
 <html>
 <head>
@@ -144,7 +145,7 @@
   </div>
   <div id="msgTop">
     <div id="logoutMsgHdr">Login via CAS failed!</div>
-    <div id="logoutMsg">Your CAS credentials were rejected.<br/><br/> Reason: <%= ((AuthenticationException) session.getAttribute(AbstractAuthenticationProcessingFilter.SPRING_SECURITY_LAST_EXCEPTION_KEY)) %></div>
+    <div id="logoutMsg">Your CAS credentials were rejected.<br/><br/> Reason: <% out.println(StringEscapeUtils.escapeHtml(((AuthenticationException) session.getAttribute(AbstractAuthenticationProcessingFilter.SPRING_SECURITY_LAST_EXCEPTION_KEY)).toString())); %></div>
   </div>
 </div>
 
