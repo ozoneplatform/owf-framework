@@ -222,7 +222,9 @@ class StackControllerTests extends OWFGroovyTestCase {
 
         stackController.export()
         
-        def resp = JSON.parse(stackController.response.contentAsString)
+        println("EXPORT STACK IS " + stackController.response.contentAsString)
+        
+        def resp = JSON.parse(stackController.response.contentAsString.decodeHTML())
         assertEquals false, resp.success
     }
 	

@@ -288,7 +288,7 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         controller.params.filename = filename
         controller.export()
         
-        def resp = JSON.parse(controller.response.contentAsString)
+        def resp = JSON.parse(controller.response.contentAsString.decodeHTML())
         assertEquals false, resp.success
     }
 
