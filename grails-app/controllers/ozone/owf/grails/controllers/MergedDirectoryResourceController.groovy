@@ -38,7 +38,7 @@ class MergedDirectoryResourceController {
         }
         else
             render(status: 404, 
-             text: "Resource not found: ${params.urlRoot}${params.subPath}")
+             text: "Resource not found: ${params.urlRoot}${params.subPath}".encodeAsHTML())
     }
 
 }
