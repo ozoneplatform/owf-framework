@@ -37,7 +37,7 @@ class BaseOwfRestController {
             success(false)
             errorMsg(e.message)
         }
-        return [msg: sw.toString(), status: 500]
+        return [msg: sw.toString()?.encodeAsHTML(), status: 500]
     }
     protected def handleError(OwfException owe) {
         if ('INFO' == owe.logLevel) {
