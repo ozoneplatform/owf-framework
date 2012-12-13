@@ -82,6 +82,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     enableKeyEvents: true,
                     preventMark: true,
                     emptyText: 'https://mycompany.com/stack/descriptor.html',
+                    usePlaceholderIfAvailable: false,
                     value: '',
                     rawValue: '',
                     anchor: '100%',

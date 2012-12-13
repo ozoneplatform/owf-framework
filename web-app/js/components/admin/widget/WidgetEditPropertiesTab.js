@@ -88,6 +88,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
               enableKeyEvents: true,
               preventMark: true,
               emptyText: 'https://mycompany.com/widget/descriptor.html',
+              usePlaceholderIfAvailable: false,
               value: '',
               rawValue: '',
               anchor: '100%',
@@ -205,6 +206,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             blankText: Ozone.layout.DialogMessages.widgetDefinition_displayNameField_blankText,
             maxLength: 256,
             emptyText: 'MyWidget',
+            usePlaceholderIfAvailable: false,
             fieldLabel: Ozone.util.createRequiredLabel('Name')
           },
           {
@@ -215,6 +217,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             allowBlank: true,
             maxLength: 4000,
             emptyText: 'Describe the widget',
+            usePlaceholderIfAvailable: false,
             fieldLabel: 'Description'
           },
           {
@@ -226,6 +229,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             blankText: Ozone.layout.DialogMessages.widgetDefinition_widgetVersionField_blankText,
             maxLength: 256,
             emptyText: '1.0',
+            usePlaceholderIfAvailable: false,
             fieldLabel: 'Version'
           },
           {
@@ -235,6 +239,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             hidden: true,
             allowBlank: true,
             emptyText: 'MyWidget.mycompany.com',
+            usePlaceholderIfAvailable: false,
             fieldLabel: 'Universal Name'
           },
           {
@@ -254,6 +259,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             blankText: Ozone.layout.DialogMessages.widgetDefinition_widgetUrlField_blankText,
             fieldLabel: Ozone.util.createRequiredLabel('URL'),
             emptyText: 'https://mycompany.com/widget/MyWidget.html',
+            usePlaceholderIfAvailable: false,
             maxLength: 2083
           },
           {
@@ -265,6 +271,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             blankText: Ozone.layout.DialogMessages.widgetDefinition_imageUrlSmallField_blankText,
             maxLength: 2083,
             emptyText: 'https://mycompany.com/widget/images/containerIcon.png',
+            usePlaceholderIfAvailable: false,
             fieldLabel: Ozone.util.createRequiredLabel('Container Icon URL')
           },
           {
@@ -276,6 +283,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             blankText: Ozone.layout.DialogMessages.widgetDefinition_imageLargeUrlField_blankText,
             maxLength: 2083,
             emptyText: 'https://mycompany.com/widget/images/launchMenuIcon.png',
+            usePlaceholderIfAvailable: false,
             fieldLabel: Ozone.util.createRequiredLabel('Launch Menu Icon URL')
           },
           {
@@ -308,6 +316,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             itemId: '_tags',
             hidden: true,
             emptyText: 'geo, map, tracking',
+            usePlaceholderIfAvailable: false,
             fieldLabel: 'Default Tags'
           },
           {

@@ -1,13 +1,20 @@
 //this fixes a bug where if one enters same text as the emptyText the field will be considered empty
 //the text will be grayed out the field will report an error if is required or must be not blank
 Ext.override(Ext.form.field.Text, {
+    
+    supportsPlaceholder: false,
+    usePlaceholderIfAvailable: true,
+    
 
   initEvents:function () {
     var me = this,
         el = me.inputEl;
 
     this.callOverridden();
-    if (!Ext.supports.Placeholder) {
+    if (me.usePlaceholderIfAvailable) {
+        me.supportsPlaceholder = Ext.supports.Placeholder
+    }
+    if (!me.supportsPlaceholder) {
       me.mon(el, 'keydown', function (e) {
         if (!e.isSpecialKey()) {
           me.firstKeyPressed = true;
@@ -34,11 +41,11 @@ Ext.override(Ext.form.field.Text, {
           emptyText = me.emptyText,
           isEmpty;
 
-      if (emptyText && !Ext.supports.Placeholder && me.placeholderUsed && inputEl.dom.value == emptyText) {
+      if (emptyText && !me.supportsPlaceholder && me.placeholderUsed && inputEl.dom.value == emptyText) {
           me.setRawValue('');
           isEmpty = true;
           inputEl.removeCls(me.emptyCls);
-      } else if (Ext.supports.Placeholder) {
+      } else if (me.supportsPlaceholder) {
           me.inputEl.removeCls(me.emptyCls);
       }
       if (me.selectOnFocus || isEmpty) {
@@ -89,7 +96,7 @@ Ext.override(Ext.form.field.Text, {
       if (me.rendered && emptyText) {
           isEmpty = inputEl.dom.value.length < 1;
 
-          if (Ext.supports.Placeholder) {
+          if (me.supportsPlaceholder) {
               me.inputEl.dom.placeholder = emptyText;
           } else if (isEmpty) {
               me.setRawValue(emptyText);
@@ -125,7 +132,7 @@ Ext.override(Ext.form.field.Text, {
           }
       }
 
-      if (value.length < 1 || (!Ext.supports.Placeholder && me.placeholderUsed)) {
+      if (value.length < 1 || (!me.supportsPlaceholder && me.placeholderUsed)) {
           if (!allowBlank) {
               errors.push(me.blankText);
           }
@@ -156,7 +163,7 @@ Ext.override(Ext.form.field.Text, {
   getRawValue: function() {
       var me = this,
           v = me.callParent();
-      if (v === me.emptyText && me.placeholderUsed && !Ext.supports.Placeholder) {
+      if (v === me.emptyText && me.placeholderUsed && !me.supportsPlaceholder) {
           v = '';
       }
       return v;
