@@ -10,6 +10,7 @@ import ozone.owf.grails.services.AutoLoginAccountService
 
 class StackServiceTests extends GroovyTestCase {
     def accountService
+    def dashboardService
     def stackService
     def stackIds = []
     def userDashboard 
@@ -30,6 +31,7 @@ class StackServiceTests extends GroovyTestCase {
         accountService = acctService
         stackService.accountService = acctService
         stackService.groupService.accountService = acctService
+        dashboardService.accountService = acctService
 
         def stack1 = Stack.build(name: 'Stack One', description: 'Stack One description', stackContext: 'one', 
             imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
@@ -204,5 +206,54 @@ class StackServiceTests extends GroovyTestCase {
         assertTrue ret.success
         //Check user was removed from stack both ways
         assertEquals 0, stackService.list(["id": "${stackIds[0]}"]).data.totalDashboards[0]
+    }
+    
+    void testRestore() {
+        
+        // add userDashboard to stack
+        def addDash = stackService.createOrUpdate([
+            "_method": "PUT",
+            "data": """[{
+                id: ${userDashboard.id},
+                guid: ${userDashboard.guid}
+            }]""",
+            "stack_id": stackIds[0],
+            "tab": "dashboards",
+            "update_action": "add"
+        ])
+        
+        // add user to the stack
+        def addUser = stackService.createOrUpdate([
+            "_method": "PUT",
+            "data": """[{
+                id: ${personId}
+            }]""",
+            "stack_id": stackIds[0],
+            "tab": "users",
+            "update_action": "add"
+        ])
+        
+        // delete previous user dashboard to ensure only one will return from list in next step
+        dashboardService.delete([
+            dashboard: Dashboard.findByGuid(userDashboard.guid)
+        ])
+        
+        // user dashboard instance created
+        def dashboards = dashboardService.list([:])
+        
+        // there should only be the newly created user instance
+        assertEquals 1, dashboards.count
+        
+        def dash = dashboards.dashboardList[0]
+        
+        // edit the user instance and ensure it was changed
+        dashboardService.update(["guid": dash.guid, "name": "Test Dashboard Edited"])
+        assertEquals "Test Dashboard Edited", Dashboard.findByGuid(dash.guid).name
+        
+        // restore stack which reverts user instance and test its success
+        def ret = stackService.restore(["id": stackIds[0]])
+        assertTrue ret.success
+        assertEquals ret.updatedDashboards[0].name, "Test Dashboard"
+        
     }
 }
