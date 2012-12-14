@@ -14,7 +14,7 @@
       <TestFragmentController guiclass="TestFragmentControllerGui" testclass="TestFragmentController" testname="Update Stack Test Fragment" enabled="true"/>
       <hashTree>
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="true">
-          <stringProp name="IfController.condition">${__javaScript(${__V(stack${stack_num})} != null)}</stringProp>
+          <stringProp name="IfController.condition">${__javaScript(${__V(stack${stack_num}_id)} != null)}</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
           <boolProp name="IfController.useExpression">true</boolProp>
         </IfController>
@@ -30,8 +30,8 @@
                   <stringProp name="Argument.name">_method</stringProp>
                 </elementProp>
                 <elementProp name="data" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                  <stringProp name="Argument.value">${__V(stack${stack_num})}</stringProp>
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">[{&quot;id&quot;:${__V(stack${stack_num}_id)},&quot;name&quot;:&quot;updatedTitle&quot;,&quot;description&quot;:&quot;updatedDescription&quot;,&quot;stackContext&quot;:&quot;updatedContext${__V(stack${stack_num}_id)}&quot;,&quot;descriptorUrl&quot;:&quot;updatedDescriptorUrl&quot;}]</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                   <stringProp name="Argument.name">data</stringProp>
@@ -58,6 +58,10 @@
             <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
               <collectionProp name="Asserion.test_strings">
                 <stringProp name="-547797305">&quot;success&quot;:true</stringProp>
+                <stringProp name="2046242440">&quot;name&quot;:&quot;updatedTitle&quot;</stringProp>
+                <stringProp name="663223313">&quot;description&quot;:&quot;updatedDescription&quot;</stringProp>
+                <stringProp name="1061558179">&quot;stackContext&quot;:&quot;updatedContext${__V(stack${stack_num}_id)}&quot;</stringProp>
+                <stringProp name="203752017">&quot;descriptorUrl&quot;:&quot;updatedDescriptorUrl&quot;</stringProp>
               </collectionProp>
               <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
               <boolProp name="Assertion.assume_success">false</boolProp>

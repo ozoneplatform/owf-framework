@@ -1739,6 +1739,16 @@ vars.put(&apos;widgetsToUpdate&apos;, widgetsToUpdate);</stringProp>
                         </collectionProp>
                       </ModuleController>
                       <hashTree/>
+                      <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include Send Widget Load Time Module" enabled="true">
+                        <collectionProp name="ModuleController.node_path">
+                          <stringProp name="-1227702913">WorkBench</stringProp>
+                          <stringProp name="-1872384936">Scenario 1 Test Plan</stringProp>
+                          <stringProp name="977251861">Test Fragments</stringProp>
+                          <stringProp name="-182467168">Included Fragments and Components</stringProp>
+                          <stringProp name="291492328">Include Send Widget Load Time Component</stringProp>
+                        </collectionProp>
+                      </ModuleController>
+                      <hashTree/>
                       <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Add Delay for Selecting a Widget to Add From Marketplace" enabled="true">
                         <intProp name="ActionProcessor.action">1</intProp>
                         <intProp name="ActionProcessor.target">0</intProp>
@@ -1746,8 +1756,8 @@ vars.put(&apos;widgetsToUpdate&apos;, widgetsToUpdate);</stringProp>
                       </TestAction>
                       <hashTree>
                         <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
-                          <stringProp name="ConstantTimer.delay">5000</stringProp>
-                          <stringProp name="RandomTimer.range">60000</stringProp>
+                          <stringProp name="ConstantTimer.delay">10000</stringProp>
+                          <stringProp name="RandomTimer.range">80000</stringProp>
                         </UniformRandomTimer>
                         <hashTree/>
                       </hashTree>
@@ -1785,16 +1795,6 @@ vars.put(&apos;widgetsToUpdate&apos;, widgetsToUpdate);</stringProp>
                           <stringProp name="977251861">Test Fragments</stringProp>
                           <stringProp name="-182467168">Included Fragments and Components</stringProp>
                           <stringProp name="-1193209011">Include Add Marketplace Widget Component</stringProp>
-                        </collectionProp>
-                      </ModuleController>
-                      <hashTree/>
-                      <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include List Widgets Module" enabled="true">
-                        <collectionProp name="ModuleController.node_path">
-                          <stringProp name="-1227702913">WorkBench</stringProp>
-                          <stringProp name="-1872384936">Scenario 1 Test Plan</stringProp>
-                          <stringProp name="977251861">Test Fragments</stringProp>
-                          <stringProp name="-182467168">Included Fragments and Components</stringProp>
-                          <stringProp name="1758189634">Include List Widgets Component</stringProp>
                         </collectionProp>
                       </ModuleController>
                       <hashTree/>
@@ -1865,15 +1865,15 @@ when you open the Dashboard Settings window, and again after you create a new da
                         </UserParameters>
                         <hashTree/>
                       </hashTree>
-                      <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Add Delay for Naming and Describing Dashboard" enabled="true">
+                      <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Add Delay for Naming, Describing, and Designing Dashboard" enabled="true">
                         <intProp name="ActionProcessor.action">1</intProp>
                         <intProp name="ActionProcessor.target">0</intProp>
                         <stringProp name="ActionProcessor.duration">0</stringProp>
                       </TestAction>
                       <hashTree>
                         <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
-                          <stringProp name="ConstantTimer.delay">4000</stringProp>
-                          <stringProp name="RandomTimer.range">15000</stringProp>
+                          <stringProp name="ConstantTimer.delay">8000</stringProp>
+                          <stringProp name="RandomTimer.range">30000</stringProp>
                         </UniformRandomTimer>
                         <hashTree/>
                       </hashTree>
@@ -1887,64 +1887,6 @@ when you open the Dashboard Settings window, and again after you create a new da
                         </collectionProp>
                       </ModuleController>
                       <hashTree/>
-                      <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Add Delay for Designing Dashboard" enabled="true">
-                        <intProp name="ActionProcessor.action">1</intProp>
-                        <intProp name="ActionProcessor.target">0</intProp>
-                        <stringProp name="ActionProcessor.duration">0</stringProp>
-                      </TestAction>
-                      <hashTree>
-                        <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
-                          <stringProp name="ConstantTimer.delay">10000</stringProp>
-                          <stringProp name="RandomTimer.range">30000</stringProp>
-                        </UniformRandomTimer>
-                        <hashTree/>
-                      </hashTree>
-                      <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Save Dashboard Request" enabled="true">
-                        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-                          <collectionProp name="Arguments.arguments">
-                            <elementProp name="_method" elementType="HTTPArgument">
-                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                              <stringProp name="Argument.value">PUT</stringProp>
-                              <stringProp name="Argument.metadata">=</stringProp>
-                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                              <stringProp name="Argument.name">_method</stringProp>
-                            </elementProp>
-                          </collectionProp>
-                        </elementProp>
-                        <stringProp name="HTTPSampler.domain"></stringProp>
-                        <stringProp name="HTTPSampler.port"></stringProp>
-                        <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-                        <stringProp name="HTTPSampler.response_timeout"></stringProp>
-                        <stringProp name="HTTPSampler.protocol"></stringProp>
-                        <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                        <stringProp name="HTTPSampler.path">owf/prefs/dashboard/${guid}</stringProp>
-                        <stringProp name="HTTPSampler.method">POST</stringProp>
-                        <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-                        <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-                        <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-                        <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-                        <stringProp name="HTTPSampler.implementation">Java</stringProp>
-                        <boolProp name="HTTPSampler.monitor">false</boolProp>
-                        <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-                        <stringProp name="TestPlan.comments">Run twice because there are two calls to it as of version 5.0.0-ALPHA-SPRINT3 Build Date: May 4 2012 Build Number: 2712, once
-when you open the Dashboard Settings window, and again after you create a new dashboard.</stringProp>
-                      </HTTPSamplerProxy>
-                      <hashTree>
-                        <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
-                          <collectionProp name="UserParameters.names">
-                            <stringProp name="3184265">guid</stringProp>
-                            <stringProp name="-698852517">dashboard_num</stringProp>
-                          </collectionProp>
-                          <collectionProp name="UserParameters.thread_values">
-                            <collectionProp name="1112762720">
-                              <stringProp name="1343063667">${__V(dashboardGuid_${__Random(1,${dashboardGuid_matchNr})})}</stringProp>
-                              <stringProp name="-565891426">${__Random(0,99999999999999)}</stringProp>
-                            </collectionProp>
-                          </collectionProp>
-                          <boolProp name="UserParameters.per_iteration">false</boolProp>
-                        </UserParameters>
-                        <hashTree/>
-                      </hashTree>
                     </hashTree>
                   </hashTree>
                 </hashTree>
@@ -2231,15 +2173,6 @@ vars.put(&apos;widgetsToUpdate&apos;, widgetsToUpdate);</stringProp>
                           <stringProp name="977251861">Test Fragments</stringProp>
                           <stringProp name="-182467168">Included Fragments and Components</stringProp>
                           <stringProp name="1908335378">Include Update Dashboard Component</stringProp>
-                        </collectionProp>
-                      </ModuleController>
-                      <hashTree/>
-                      <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include Exit Requests Module" enabled="true">
-                        <collectionProp name="ModuleController.node_path">
-                          <stringProp name="-1227702913">WorkBench</stringProp>
-                          <stringProp name="-1872384936">Scenario 1 Test Plan</stringProp>
-                          <stringProp name="977251861">Test Fragments</stringProp>
-                          <stringProp name="480410758">Exit Requests</stringProp>
                         </collectionProp>
                       </ModuleController>
                       <hashTree/>

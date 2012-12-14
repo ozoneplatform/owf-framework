@@ -59,9 +59,9 @@
           </ResponseAssertion>
           <hashTree/>
           <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Regular Expression Extractor" enabled="true">
-            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.refname">stack${stack_num}</stringProp>
-            <stringProp name="RegexExtractor.regex">&quot;data&quot;:(\[.+\])</stringProp>
+            <stringProp name="RegexExtractor.useHeaders">unescaped</stringProp>
+            <stringProp name="RegexExtractor.refname">stack${stack_num}_id</stringProp>
+            <stringProp name="RegexExtractor.regex">&quot;id&quot;:(.*?),</stringProp>
             <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.default">null</stringProp>
             <stringProp name="RegexExtractor.match_number">1</stringProp>

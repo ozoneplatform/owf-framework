@@ -37,7 +37,6 @@
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="1925484081">&quot;displayName&quot;:&quot;${userName}&quot;</stringProp>
-              <stringProp name="295624256">Ozone.config.webContextPath = &apos;/owf&apos;;</stringProp>
             </collectionProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
