@@ -948,7 +948,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         evt.stopPropagation();
 
         var $dashboard = this.getElByClassFromEvent(evt, 'dashboard'),
-            dashboard = this.getDashboard($dashboard),
+            dashboardGuid = this.getDashboard($dashboard).guid,
+            dashboardIndex = this.dashboardContainer.dashboardStore.find('guid', dashboardGuid),
+            dashboard = this.dashboardContainer.dashboardStore.getAt(dashboardIndex).data,
             dashboardModel = dashboard.model;
 
         //If exporting the current dashboard, regenerate the json to ensure changes
