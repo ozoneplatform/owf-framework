@@ -471,6 +471,9 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
         else {
             me.dashboard.set('layoutConfig', dashboardLayoutConfig);
             me.dashboard.set('locked', me.locked);
+            // Clear out the stack association on newly created dashboards.  At this time, fresh dashboard
+            // instances should be unassigned to a stack including the case where we are copying from an existing dashboard.
+            me.dashboard.set('stack', null);
             me.dashboardContainer.saveDashboard(me.dashboard.data, 'create', function() {
 
                 // activate new dashboard
