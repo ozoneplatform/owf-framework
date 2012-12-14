@@ -1066,6 +1066,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             me.notify('Delete Dashboard', '<span class="heading-bold">' + dashboard.name + '</span> deleted!');
 
             me._deletedStackOrDashboards.push(dashboard);
+            me.reloadDashboards = true;
 
             var $prev = $dashboard.prev();
             $dashboard.remove();
@@ -1178,6 +1179,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             $prev.focus();
             
             me._deletedStackOrDashboards.push(stack);
+            me.reloadDashboards = true;
 
         }, focusEl);
     },
