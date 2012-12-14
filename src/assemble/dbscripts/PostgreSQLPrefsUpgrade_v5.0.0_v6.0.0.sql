@@ -283,7 +283,7 @@ begin
         param := owfBuildExtParamString('buttonId', button_id);
         config := config || param || ',';
     else
-        config := concat(config, '"buttonId":"",');
+        config := config || '"buttonId":"",';
     end if;
     if (button_opened = true) then
         config := config || '"buttonOpened":true,';
