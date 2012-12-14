@@ -787,7 +787,7 @@ OWF.Launcher.launch({
  */
 
 /**
-	Retrieves initial launch data for this widget if it is opened by another widget.
+	Retrieves initial launch data for this widget if it is opened by another widget.  If launched via an intent, it will return the JSON string { intents: true }.
 	@name getLaunchData
 	@methodOf OWF.Launcher
 

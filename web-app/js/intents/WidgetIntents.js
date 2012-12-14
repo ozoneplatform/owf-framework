@@ -18,7 +18,7 @@ OWF = window.OWF ? window.OWF : {};
         return /** @lends OWF.Intents */ {
 
             /**
-             * Starts an Intent.  This will send the intent and data to one or more widgets.
+             * Starts an Intent.  This will send the intent and data to one or more widgets.  If this launches a widget, it sets the launch data to the JSON string { intents: true }.
              * @param {Object} intent Object representing the Intent
              * @param {String} intent.action Name of the Intent
              * @param {String} intent.dataType Describes the data that will be sent with the intent.  It is recommended
