@@ -64,6 +64,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                     stacks[ stack.id ].dashboards.push( dashboard );
                 }
                 else {
+                    stack = Ext.clone(stack);
                     stack.isStack = true;
                     stack.dashboards = [ dashboard ];
 
