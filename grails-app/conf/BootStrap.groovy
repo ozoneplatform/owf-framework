@@ -173,9 +173,6 @@ class BootStrap {
             def clearCacheEvery = ((grailsApplication.config?.perfTest?.clearCacheEvery && enabled) ? grailsApplication.config.perfTest?.clearCacheEvery : 10);
             log.info 'clearCacheEvery: ' + clearCacheEvery
 
-            def createRequiredWidgets = ((grailsApplication.config?.perfTest?.createRequiredWidgets) ? grailsApplication.config.perfTest?.createRequiredWidgets : false);
-            log.info 'createRequiredWidgets: ' + createRequiredWidgets
-
             def createSampleWidgets = ((grailsApplication.config?.perfTest?.createSampleWidgets) ? grailsApplication.config.perfTest?.createSampleWidgets : false);
             log.info 'createSampleWidgets: ' + createSampleWidgets
 
@@ -231,12 +228,6 @@ class BootStrap {
             loadPreferences(numPreferences, clearCacheEvery)
             sessionFactory.currentSession.clear()
 
-            //create test required widget relationshipts
-            if (grailsApplication.config?.perfTest?.createRequiredWidgets) {
-                assignRequiredWidgets()
-                sessionFactory.currentSession.clear()
-            }
-
             //create sample widgetdefs
             if (grailsApplication.config?.perfTest?.createSampleWidgets) {
                 loadAndAssignSampleWidgetDefinitions(sampleWidgetBaseUrl, 10)
@@ -266,10 +257,10 @@ class BootStrap {
             saveInstance(new WidgetDefinition(
                     displayName: 'Test Widget '+i,
                     height: 440,
-                    imageUrlLarge: 'themes/common/images/widget-icons/NearlyEmpty.png',
-                    imageUrlSmall: 'themes/common/images/widget-icons/NearlyEmpty.png',
+                    imageUrlLarge: 'themes/common/images/widget-icons/HTMLViewer.png',
+                    imageUrlSmall: 'themes/common/images/widget-icons/HTMLViewer.png',
                     widgetGuid: id,
-                    widgetUrl: 'examples/walkthrough/widgets/NearlyEmptyWidget.html',
+                    widgetUrl: 'examples/walkthrough/widgets/HTMLViewer.gsp',
                     widgetVersion: '1.0',
                     widgetTypes: [standard],
                     width: 540
@@ -693,24 +684,6 @@ class BootStrap {
         adminRole.people += admins
         saveInstance(adminRole)
     }
-
-    private assignRequiredWidgets() {
-        def nearlyEmpty = WidgetDefinition.findByWidgetGuid('bc5435cf-4021-4f2a-ba69-dde451d12551', [cache: true])
-        def widgetA     = WidgetDefinition.findByWidgetGuid('ea5435cf-4021-4f2a-ba69-dde451d12551', [cache: true])
-        def widgetB     = WidgetDefinition.findByWidgetGuid('fb5435cf-4021-4f2a-ba69-dde451d12551', [cache: true])
-        def widgetC     = WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551', [cache: true])
-        def widgetD     = WidgetDefinition.findByWidgetGuid('1d5435cf-4021-4f2a-ba69-dde451d12551', [cache: true])
-        def widgetOne   = WidgetDefinition.findByWidgetGuid('d6543ccf-4021-4f2a-ba69-dde451d12551', [cache: true])
-        def widgetTwo   = WidgetDefinition.findByWidgetGuid('e65431cf-4021-4f2a-ba69-dde451d12551', [cache: true])
-        
-        domainMappingService.createMapping(nearlyEmpty, RelationshipType.requires, widgetA)
-        domainMappingService.createMapping(nearlyEmpty, RelationshipType.requires, widgetB)
-        domainMappingService.createMapping(widgetA,     RelationshipType.requires, widgetC)
-        domainMappingService.createMapping(widgetA,     RelationshipType.requires, widgetD)
-        domainMappingService.createMapping(widgetB,     RelationshipType.requires, widgetOne)
-        domainMappingService.createMapping(widgetB,     RelationshipType.requires, widgetTwo)
-        domainMappingService.createMapping(widgetC,     RelationshipType.requires, widgetB)
-    }
     
     private loadDashboards(int numDashboards, int numDashboardsWidgets, int clearCacheEvery) {
 
@@ -815,6 +788,8 @@ class BootStrap {
 
                 //Add a random group widget to the dashboard
                 randomWidget = allWidgets[rand.nextInt(allWidgets.size())]
+
+                domainMappingService.createMapping(group, RelationshipType.owns, randomWidget)
 
                 widgets += '"widgetGuid":"' + randomWidget.widgetGuid + '","x":' + xyPos + ',"y":' + xyPos +
                     ',"uniqueId":"' + generateId() + '","name":"' + randomWidget.displayName + '","paneGuid":"' +
