@@ -732,7 +732,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         // get last element in the clikced stack's row
         var numItemsInRow = Math.round( parentWidth / clickedStackElWidth ),
-            totalItems = this.stackOrDashboards.length,
+            totalItems = $(me.body.dom).children('.dashboard, .stack').length,
             clickedStackIndex = $clickedStack.index() + 1;
 
         if( clickedStackIndex === totalItems || (clickedStackIndex % numItemsInRow) === 0 ) {
