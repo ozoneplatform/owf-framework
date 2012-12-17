@@ -79,9 +79,16 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
                 var compId = -1;
                 // Create modified widget store and bind to grid
                 grid.setStore(Ext.create('Ozone.data.stores.AdminDashboardStore', cmp.storeCfg));
+                var refreshPagingToolbar = function(operation) {
+                    if (operation.action == "destroy" || operation.action == "create") {
+                        var ptb = grid.getBottomToolbar();
+                        ptb.doRefresh();
+                    }
+                };
+                grid.store.proxy.callback = refreshPagingToolbar;
 
                 grid.store.on('write', function(store, action, result, records, rs) {
-                    //Refresh whatever manager lauched this editor widget
+                    //Refresh whatever manager launched this editor widget
                     OWF.Eventing.publish(this.ownerCt.channel, {
                         action: action,
                         domain: this.ownerCt.domain,
