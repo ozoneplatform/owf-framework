@@ -462,10 +462,8 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
 	                        	}
 	                        });
 	                    },me),
-	                    onFailure: function (errorMsg){
-	                        me.editPanel.showAlert("Error", "Error while " +
-	                            "creating stack: " + 
-	                            errorMsg);
+	                    onFailure: function (msg){
+	                        me.editPanel.showAlert("Server Error!", Ext.JSON.decode(msg).errorMsg);
 	                    },
 	                    content : {
 	                        data: Ext.encode(me.descriptorData),
