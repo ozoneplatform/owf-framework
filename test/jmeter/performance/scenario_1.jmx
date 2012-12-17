@@ -672,19 +672,19 @@ NOTE: The values of these variables must add up to 100.</stringProp>
           </elementProp>
           <elementProp name="secondDelay" elementType="Argument">
             <stringProp name="Argument.name">secondDelay</stringProp>
-            <stringProp name="Argument.value">800</stringProp>
+            <stringProp name="Argument.value">900</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc">How long to delay the second group of users logging in. (ms)</stringProp>
           </elementProp>
           <elementProp name="thirdDelay" elementType="Argument">
             <stringProp name="Argument.name">thirdDelay</stringProp>
-            <stringProp name="Argument.value">1000</stringProp>
+            <stringProp name="Argument.value">1100</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc">How long to delay the third group of users logging in. (ms)</stringProp>
           </elementProp>
           <elementProp name="fourthDelay" elementType="Argument">
             <stringProp name="Argument.name">fourthDelay</stringProp>
-            <stringProp name="Argument.value">1200</stringProp>
+            <stringProp name="Argument.value">1300</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc">How long to delay the fourth group of users logging in. (ms)</stringProp>
           </elementProp>

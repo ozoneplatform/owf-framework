@@ -37,12 +37,6 @@ every HTTP request sent during the tests
             <stringProp name="Argument.value">${__P(numUsers, 100)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="threadTimeToFail" elementType="Argument">
-            <stringProp name="Argument.name">threadTimeToFail</stringProp>
-            <stringProp name="Argument.value">${__P(threadTimeToFail, 3000)}</stringProp>
-            <stringProp name="Argument.desc">The amount of time in milliseconds to put into the duration assertion of each thread. If the thread takes longer, it will fail.</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
           <elementProp name="hostName" elementType="Argument">
             <stringProp name="Argument.name">hostName</stringProp>
             <stringProp name="Argument.value">${__P(hostName, perfowfapp01.goss.owfgoss.org)}</stringProp>
@@ -130,12 +124,22 @@ jmeter -n -t perf_get_dashboards.jmx -l results.txt -JloopsPerUser=3 -JapproxTim
           </elementProp>
           <elementProp name="timePerExistingUserLogin" elementType="Argument">
             <stringProp name="Argument.name">timePerExistingUserLogin</stringProp>
-            <stringProp name="Argument.value">100</stringProp>
+            <stringProp name="Argument.value">800</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="timePerUserLogout" elementType="Argument">
             <stringProp name="Argument.name">timePerUserLogout</stringProp>
             <stringProp name="Argument.value">15</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="newUserTimeToFail" elementType="Argument">
+            <stringProp name="Argument.name">newUserTimeToFail</stringProp>
+            <stringProp name="Argument.value">${__P(threadTimeToFail, 6000)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="existingUserTimeToFail" elementType="Argument">
+            <stringProp name="Argument.name">existingUserTimeToFail</stringProp>
+            <stringProp name="Argument.value">${__P(threadTimeToFail, 10000)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -279,13 +283,6 @@ to ensure the users have enough time to log in.</stringProp>
                 <stringProp name="ConstantTimer.delay">${__jexl2(${__threadNum()} * ${timePerNewUserLogin})}</stringProp>
               </ConstantTimer>
               <hashTree/>
-              <DebugPostProcessor guiclass="TestBeanGUI" testclass="DebugPostProcessor" testname="Debug PostProcessor" enabled="true">
-                <boolProp name="displayJMeterProperties">false</boolProp>
-                <boolProp name="displayJMeterVariables">true</boolProp>
-                <boolProp name="displaySamplerProperties">false</boolProp>
-                <boolProp name="displaySystemProperties">false</boolProp>
-              </DebugPostProcessor>
-              <hashTree/>
             </hashTree>
             <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="New User Login Aggregate Report" enabled="true">
               <boolProp name="ResultCollector.error_logging">false</boolProp>
@@ -321,7 +318,7 @@ to ensure the users have enough time to log in.</stringProp>
             <hashTree/>
           </hashTree>
           <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Authentication Duration Assertion" enabled="true">
-            <stringProp name="DurationAssertion.duration">${threadTimeToFail}</stringProp>
+            <stringProp name="DurationAssertion.duration">${newUserTimeToFail}</stringProp>
           </DurationAssertion>
           <hashTree/>
         </hashTree>
@@ -570,20 +567,15 @@ to ensure the users have enough time to log in.</stringProp>
             <hashTree/>
           </hashTree>
           <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Authentication Duration Assertion" enabled="true">
-            <stringProp name="DurationAssertion.duration">${threadTimeToFail}</stringProp>
+            <stringProp name="DurationAssertion.duration">${existingUserTimeToFail}</stringProp>
           </DurationAssertion>
           <hashTree/>
         </hashTree>
         <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Existing User Logout" enabled="true"/>
         <hashTree>
-          <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Module Controller" enabled="true">
-            <collectionProp name="ModuleController.node_path">
-              <stringProp name="-1227702913">WorkBench</stringProp>
-              <stringProp name="764597751">Test Plan</stringProp>
-              <stringProp name="-613153035">New User Account Setup Thread</stringProp>
-              <stringProp name="1701771487">New User Logout</stringProp>
-            </collectionProp>
-          </ModuleController>
+          <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Include Logout Test Fragement" enabled="true">
+            <stringProp name="IncludeController.includepath">fragments/logout.jmx</stringProp>
+          </IncludeController>
           <hashTree/>
           <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
             <stringProp name="ConstantTimer.delay">${__jexl2(${__threadNum()} * ${timePerUserLogout})}</stringProp>

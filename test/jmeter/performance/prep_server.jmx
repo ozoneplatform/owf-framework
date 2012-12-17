@@ -346,7 +346,7 @@ to ensure the users have enough time to log in.</stringProp>
           <hashTree/>
         </hashTree>
         <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
-          <stringProp name="ConstantTimer.delay">${__jexl2(${__threadNum()} * 200)}</stringProp>
+          <stringProp name="ConstantTimer.delay">${__jexl2(${__threadNum()} * 800)}</stringProp>
         </ConstantTimer>
         <hashTree/>
         <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Logout" enabled="true"/>
