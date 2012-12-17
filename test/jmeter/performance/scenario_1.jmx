@@ -678,13 +678,13 @@ NOTE: The values of these variables must add up to 100.</stringProp>
           </elementProp>
           <elementProp name="thirdDelay" elementType="Argument">
             <stringProp name="Argument.name">thirdDelay</stringProp>
-            <stringProp name="Argument.value">1100</stringProp>
+            <stringProp name="Argument.value">1200</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc">How long to delay the third group of users logging in. (ms)</stringProp>
           </elementProp>
           <elementProp name="fourthDelay" elementType="Argument">
             <stringProp name="Argument.name">fourthDelay</stringProp>
-            <stringProp name="Argument.value">1300</stringProp>
+            <stringProp name="Argument.value">1500</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc">How long to delay the fourth group of users logging in. (ms)</stringProp>
           </elementProp>
@@ -696,7 +696,7 @@ NOTE: The values of these variables must add up to 100.</stringProp>
           </elementProp>
           <elementProp name="secondMax" elementType="Argument">
             <stringProp name="Argument.name">secondMax</stringProp>
-            <stringProp name="Argument.value">225</stringProp>
+            <stringProp name="Argument.value">200</stringProp>
             <stringProp name="Argument.desc">Max thread number to include in the first group (total threads in second = secondMax - firstMax)..</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
@@ -3006,8 +3006,8 @@ threadDelay = [threadNumber] * [fourthGroupDelay] - [firstGroupMaxThread] * [sec
                 <stringProp name="1940636102">activeWidgetsCount</stringProp>
               </collectionProp>
               <collectionProp name="UserParameters.thread_values">
-                <collectionProp name="-1589220549">
-                  <stringProp name="-731379805">${__Random(1,8)}</stringProp>
+                <collectionProp name="-1561734096">
+                  <stringProp name="-731383649">${__Random(1,4)}</stringProp>
                 </collectionProp>
               </collectionProp>
               <boolProp name="UserParameters.per_iteration">false</boolProp>
