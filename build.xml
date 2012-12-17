@@ -644,10 +644,10 @@
         <if>
             <os family="windows"/>
             <then>
-                <grails script="-Dgrails.env=with_${db.type} dbm-update-sql" args="${basedir}/src/assemble/dbscripts/${db.name}${sql.upgrade.file.suffix} &quot;--contexts=${app.base.version},upgradeScriptGenOnly&quot;" />
+                <grails script="-Dgrails.env=with_${db.type} dbm-update-sql" args="${basedir}/src/assemble/dbscripts/${db.name}${sql.upgrade.file.suffix} &quot;--contexts=${app.base.version}&quot;" />
             </then>
             <else>
-                <grails script="-Dgrails.env=with_${db.type} dbm-update-sql" args="${basedir}/src/assemble/dbscripts/${db.name}${sql.upgrade.file.suffix} --contexts=${app.base.version},upgradeScriptGenOnly" />
+                <grails script="-Dgrails.env=with_${db.type} dbm-update-sql" args="${basedir}/src/assemble/dbscripts/${db.name}${sql.upgrade.file.suffix} --contexts=${app.base.version}" />
             </else>
         </if>
 
