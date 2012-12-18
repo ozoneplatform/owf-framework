@@ -462,13 +462,14 @@
     </target>
 
     <target name="stage-owf">
-        <ivy:retrieve pattern="${staging.dir}/[artifact]-[revision].[ext]" type="zip" conf="bundle" />
+	<!-- <ivy:retrieve pattern="${staging.dir}/[artifact]-[revision].[ext]" type="zip" conf="bundle" />  -->
 
         <copy file="${basedir}/target/${app.name}-${app.version}.war" tofile="${tomcat.dir}/webapps/owf.war" />
         <copy file="${staging.dir}/owf-security-project-${owf.security.rev}.zip" tofile="${staging.dir}/owf-security/owf-security-project.zip" />
         <unzip src="${staging.dir}/owf-security-extras-${owf.security.rev}.zip" dest="${staging.dir}" />
         <antcall target='stage-extras' />
-        <copy file="${build.base.dir}/license.txt"  tofile="${staging.dir}/license.txt"/>
+        <copy file="LICENSE.txt"  tofile="${staging.dir}/LICENSE.txt"/>
+	<copy file="COPYRIGHT.txt" tofile="${staging.dir}/COPYRIGHT.txt" />
     </target>
 
     <target  name="post-bundle-cleanup" >
