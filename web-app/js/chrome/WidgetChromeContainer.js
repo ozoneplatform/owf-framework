@@ -65,18 +65,20 @@ Ozone.chrome.WidgetChromeContainer = function(config) {
     },
     secureButton = function(btnConfig) {
         //only support these properties.  This minimizes the risk of security problems
-        var item = secureProperties(items[i], ['itemId', 'xtype', 'type', 'icon', 'text']);
-        item.tooltip = secureProperties(items[i].tooltip, ['title', 'text']);
+        var item = secureProperties(btnConfig, ['itemId', 'xtype', 'type', 'icon', 'text']);
+        item.tooltip = secureProperties(btnConfig.tooltip, ['title', 'text']);
 
         return item;
     },
     secureMenu = function(menuConfig) {
         //secure this item
-        var retval = secureProperties(menu, ['itemId', 'parentId', 'icon', 'text']);
+        var retval = secureProperties(menuConfig, ['itemId', 'parentId', 'icon', 'text']);
 
         //secure sub-menu
-        if (menuItem.menu) 
-          retval.menu = Ext.Array.map(menuItem.menu, secureMenu);
+        if (menuConfig.menu) {
+          retval.menu = {};
+          retval.menu.items = Ext.Array.map(menuConfig.menu.items, secureMenu);
+        }
 
         return retval;
     };
