@@ -1729,6 +1729,16 @@ vars.put(&apos;widgetsToUpdate&apos;, widgetsToUpdate);</stringProp>
                       <boolProp name="TransactionController.includeTimers">false</boolProp>
                     </TransactionController>
                     <hashTree>
+                      <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include Send Metric Module" enabled="true">
+                        <collectionProp name="ModuleController.node_path">
+                          <stringProp name="-1227702913">WorkBench</stringProp>
+                          <stringProp name="-1872384936">Scenario 1 Test Plan</stringProp>
+                          <stringProp name="977251861">Test Fragments</stringProp>
+                          <stringProp name="-182467168">Included Fragments and Components</stringProp>
+                          <stringProp name="524233325">Include Send Metric Component</stringProp>
+                        </collectionProp>
+                      </ModuleController>
+                      <hashTree/>
                       <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Include Send Widget Load Time Module" enabled="true">
                         <collectionProp name="ModuleController.node_path">
                           <stringProp name="-1227702913">WorkBench</stringProp>

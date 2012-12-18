@@ -389,7 +389,7 @@ class WidgetDefinitionService {
                 imageUrlLarge: params.imageUrlLarge ?: params.image ?: widgetDefinition.imageUrlLarge,
                 width: (params.width != null)? params.width as Integer : widgetDefinition.width,
                 height: (params.height != null)? params.height as Integer : widgetDefinition.height,
-                widgetVersion: params.containsKey('widgetVersion') ? params.widgetVersion : params.version.toString(),
+                widgetVersion: params.containsKey('widgetVersion') ? (!isNull(params.widgetVersion) ? params.widgetVersion : widgetDefinition.widgetVersion) : params.version.toString(),
                 singleton: (params.singleton != null)? params.singleton as Boolean : widgetDefinition.singleton,
                 visible: (params.visible != null)? params.visible as Boolean : widgetDefinition.visible,
                 background: (params.background != null)? params.background as Boolean : widgetDefinition.background,
