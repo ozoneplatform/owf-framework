@@ -525,7 +525,6 @@ Ext.define('Ozone.layout.CreateViewContainer', {
     },
 
     cancel: function () {
-        Ext.getCmp(this.winId).fireEvent('cancel');
         this.close();
     },
 

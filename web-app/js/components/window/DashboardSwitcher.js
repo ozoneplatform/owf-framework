@@ -1009,15 +1009,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             createDashWindow = Ext.widget('createdashboardwindow', {
             itemId: 'createDashWindow',
             dashboardContainer: me.dashboardContainer,
-            ownerCt: me.dashboardContainer,
-            listeners: {
-                cancel: function () {
-                    me.show();
-                    setTimeout(function () {
-                        evt.currentTarget.focus();
-                    }, 10);
-                }
-            }
+            ownerCt: me.dashboardContainer
         });
 
         createDashWindow.show();
@@ -1038,13 +1030,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             dashboardContainer: this.dashboardContainer,
             ownerCt: this.dashboardContainer,
             hideViewSelectRadio: true,
-            existingDashboardRecord: dashboard.model,
-            listeners: {
-                cancel: function () {
-                    me.show();
-                    $dashboard.focus();
-                }
-            }
+            existingDashboardRecord: dashboard.model
        }).show();
 
        this.close();
