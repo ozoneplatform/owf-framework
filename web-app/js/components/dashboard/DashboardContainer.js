@@ -773,6 +773,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     showDashboardSwitcher: function() {
+        // force dashboard save before showing dashboard switcher
+        this.activeDashboard.saveToServer(false, true);
+        
         var dashboardSwitcherId = 'dashboard-switcher', dashboardSwitcher = Ext.getCmp(dashboardSwitcherId);
 
         if (!dashboardSwitcher) {
