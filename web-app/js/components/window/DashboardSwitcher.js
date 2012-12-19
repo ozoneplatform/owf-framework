@@ -267,7 +267,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 me._dropOnDashboard($draggedItem, $(this));
             });
             
-            // drop performed on a dashboard
+            // drop performed on a stack
             $dom.on('mouseup.reorder', '.stack', function (evt) {
                 me._dropOnStack($draggedItem, $(this));
             });
@@ -453,7 +453,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         }
 
         var droppedLeft = $dashboard.hasClass(me.DROP_LEFT_CLS);
-        var store = me.dashboardStore;
+        var store = me.dashboardStore, newIndex, oldIndex;
+
+        oldIndex = $draggedItem.index();
 
         if ( droppedLeft ) {
             $dashboard.removeClass(me.DROP_LEFT_CLS);
@@ -463,6 +465,10 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             $dashboard.removeClass(me.DROP_RIGHT_CLS);
             $draggedItem.insertAfter( $dashboard );
         }
+
+        newIndex = $draggedItem.index();
+
+        //console.log(oldIndex, newIndex);
 
         // dropping dashboard on a dashboard
         if( $draggedItem.hasClass('dashboard') ) {
@@ -477,6 +483,12 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             }
 
             store.insert(index, draggedItem.model);
+
+            // if stack, reorder internal cache as well.
+            if(draggedItem.stack) {
+                var stack = me.stacks[draggedItem.stack.id];
+                stack.dashboards.splice(newIndex, 0, stack.dashboards.splice(oldIndex, 1)[0]);
+            }
 
         }
         else {
