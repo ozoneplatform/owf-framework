@@ -112,9 +112,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             },
             getToolTip: function (values) {
                 var str = 'data-qtip="<div class=\'dashboard-tooltip-content\'>' +
-                        '<h3 class=\'name\'>' + Ext.htmlEncode(values.name) + '</h3>';
+                        '<h3 class=\'name\'>' + Ext.htmlEncode(Ext.htmlEncode(values.name)) + '</h3>';
 
-                values.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(values.description) +'</p><br>');
+                values.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(values.description)) +'</p><br>');
                 
                 return values.isStack ? str + '</div>"':
                         str +
