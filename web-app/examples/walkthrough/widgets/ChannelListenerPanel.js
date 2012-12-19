@@ -340,7 +340,12 @@ Ext.define('Ozone.components.ChannelListenerPanel', {
         fn: function(cmp) {
           var launchConfig = OWF.Launcher.getLaunchData();
           if (launchConfig != null) {
-            var data = OWF.Util.parseJson(launchConfig);
+    		var data = launchConfig;
+        	try {
+                data = OWF.Util.parseJson(launchConfig);
+        	} catch(e) {
+        		// do nothing
+        	}
             if (data != null) {
               this.subscribeToChannel(data.channel);
               this.addToGrid(null, data.message, data.channel);
