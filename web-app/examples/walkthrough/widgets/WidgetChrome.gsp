@@ -158,7 +158,7 @@
 														text: 'Alert',
 														itemId:'alert',
 														tooltip:  {
-															text: '<b>Alert!</b>'
+															text: 'Alert!'
 														},
 														handler: function(sender, data) {
 															Ext.Msg.alert('Alert', 'Alert Button Pressed');

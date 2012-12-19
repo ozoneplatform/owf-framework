@@ -1,0 +1,33 @@
+OZONE Widget Framework (OWF)
+
+Portions of this software were developed under contract to the U.S. Government, and are made available pursuant to the DFARS clauses cited below.
+
+Copyright 2009-2012, Next Century Corporation.
+The U.S. Government has Unlimited Rights in this computer software pursuant to
+the clause DFARS 252.227-7014 of contract no. H98230-07-C-0614. Any
+reproduction of this computer software, or portions thereof, marked with this
+legend must also reproduce these markings.
+
+Copyright 2009-2010, Texeltek Inc.
+The U.S. Government has Unlimited Rights in this computer software pursuant to
+the clause DFARS 252.227-7014 of contract no. H98230-07-C-0046. Any
+reproduction of this computer software, or portions thereof, marked with this
+legend must also reproduce these markings.
+
+This product further may include software developed by other individuals, entities, or agencies.  These groups have granted rights to the OWFGOSS Board to apply that code in the OWF or Marketplace code baselines, without further claim or copyright.
+
+The product further references the following libraries or capabilities which are NOT included as part of this copyright statement, and are hereby listed with their license terms.
+* Ext JS, developed by Sencha, licensed under GNU General Public License, Version 3, http://www.gnu.org/licenses/gpl.html 
+* Grails and its supporting capabilities, including Groovy, Hibernate, and Spring.  Available at grails.org, licensed Apache License, Version 2.0, http://grails.org/License
+* YUI Compressor Javascript/CSS compressor , http://yuilibrary.com/license/ (based on BSD license)
+* Dojo cross-domain library, Dojo BSD License, http://dojotoolkit.org/license
+* Shindig messaging library, http://shindig.apache.org/, Apache License, Version 2.0, http://www.apache.org/licenses/
+* JQuery Ajax/eventing library, http://jquery.com, based on MIT License, https://raw.github.com/jquery/jquery/master/MIT-LICENSE.txt
+* Spring Security jars, licensed under Apache License, Version 2, http://www.apache.org/licenses/ 
+* log4javascript logging library, http://log4javascript.org,  Apache License, Version 2.0, http://www.apache.org/licenses/
+* stubconsole logging utility, http://getfirebug.com/firebug/firebugx.js, Firebug BSD License, http://fbug.googlecode.com/svn/trunk/license.txt
+* UXMedia, Ext Flash / Flex components, see http://code.google.com/p/uxmedia.  GNU General Public License, Version 3, http://www.gnu.org/licenses/gpl.html 
+
+
+
+

@@ -53,16 +53,6 @@ Ext.define('Ozone.components.admin.grid.DashboardsGrid', {
             var dashboardLayout = record.get('layout'); //current dashboard layout string
             var iconClass = "grid-dashboard-default-icon-layout";
             
-            // if(dashboardLayout && dashboardLayoutList){
-            //     if(dashboardLayoutList.indexOf(dashboardLayout) != -1){
-            //         iconClass = "grid-dashboard-icon-layout-" + dashboardLayout;
-            //     }
-            // }
-            
-            // var retVal = '<div class="grid-dashboard-title-box"><div class="grid-dashboard-icon ' + iconClass +'"></div>';
-            // retVal += '<div class="grid-dashboard-title">' + title + '</div>';
-            // retVal += '</div>';
-
             return  '<p class="grid-dashboard-title '+ iconClass + '">' + Ext.htmlEncode(title) + '</p>';
           }
         },
@@ -235,7 +225,6 @@ Ext.define('Ozone.components.admin.grid.DashboardsGrid', {
                                 }
                             }
                         })
-                        //dashboards[i].set('dashboardPosition', dashboards[i].get('dashboardPosition') + 1);
                     }
                 }
             }

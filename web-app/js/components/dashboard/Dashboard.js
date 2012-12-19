@@ -892,7 +892,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             //cmp.hide();
             //cmp.fireEvent('hide');
             var onHide;
-            if(onHide = cmp['on_hide']) {
+            if(cmp && (onHide = cmp['on_hide'])) {
                 onHide();
             }
         }

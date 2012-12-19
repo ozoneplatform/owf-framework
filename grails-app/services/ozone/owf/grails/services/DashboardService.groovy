@@ -420,15 +420,6 @@ class DashboardService extends BaseService {
             }
         }
         
-        /*
-        def queryReturn
-        if(!person) {
-            queryReturn = Dashboard.executeQuery("SELECT MAX(d.dashboardPosition) AS retVal FROM Dashboard d WHERE d.user = null")
-        }
-        else {
-            queryReturn = Dashboard.executeQuery("SELECT MAX(d.dashboardPosition) AS retVal FROM Dashboard d WHERE d.user = ?", [person])
-        }
-        */
         def maxPosition = getMaxDashboardPosition(person)
         maxPosition++
 
