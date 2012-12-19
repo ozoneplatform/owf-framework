@@ -97,7 +97,7 @@ Ext.define('Ozone.components.panel.WidgetHeader', {
 //                self.returnFocus = (titleCmp.getEl().dom === document.activeElement);
 
                 var editor = Ext.create('Ext.Editor', {
-                    updateEl: true,
+                    updateEl: false,
                     width: titleCmp.getWidth(),
                     height: titleCmp.getHeight(),
                     parentEl: titleCmp.getEl(),
@@ -139,15 +139,8 @@ Ext.define('Ozone.components.panel.WidgetHeader', {
                 editor.startEdit(titleCmp.textEl, Ext.htmlDecode(me.title));
                 editor.alignTo(self.iconCmp, 'l-r');
                 editor.on('complete', function(editor, value, startValue, options) {
-                    //Set the ghostPanel title
-                    if(self.ownerCt.ghostPanel) {
-                        self.ownerCt.ghostPanel.setTitle(Ext.htmlEncode(value));
-                    }
                     //Set the title of the header component to the encoded title
-                    self.ownerCt.setTitle(Ext.htmlEncode(value));
-
-                    //Keep the actual title property to the unencoded title
-                    self.ownerCt.title = value;
+                    self.ownerCt.setTitle(value);
 
                     editor.clearListeners();
                     editor.destroy();
@@ -177,12 +170,12 @@ Ext.define('Ozone.components.panel.WidgetHeader', {
                     textEl: '.' + me.baseCls + '-text'
                 },
                 listeners: {
-                    resize: {
-                        fn: function(cmp, adjWidth, adjHeight) {
-                          this.setTitle(this.title);
-                        },
-                        scope: this
-                    },
+//                    resize: {
+//                        fn: function(cmp, adjWidth, adjHeight) {
+//                          this.setTitle(this.title);
+//                        },
+//                        scope: this
+//                    },
                     afterrender: {
                         fn: function(cmp) {
                             var preventFocus = false;
@@ -337,121 +330,20 @@ Ext.define('Ozone.components.panel.WidgetHeader', {
         }
     },
 
-    adjustTitle: function(title,adjWidth) {
-
-        var decodedTitle = Ext.htmlDecode(title);
-
-        //Store all the indexes of < and > so they can be restored and replace
-        // all occurrences with _ to facilitate width calculation (can't have HTML)
-        var lessThanIndexes = [];
-        var greaterThanIndexes = [];
-        var tempTitle = Ext.htmlDecode(title);
-        var pos = decodedTitle.indexOf('<');
-        if(pos > -1) {
-            tempTitle = tempTitle.replace(/</g, "_");
-            while(pos > -1) {
-                lessThanIndexes.push(pos);
-                pos = decodedTitle.indexOf('<', pos + 1);
-            }
-        }
-        pos = decodedTitle.indexOf('>');
-        if(pos > -1) {
-            tempTitle = tempTitle.replace(/>/g, "_");
-            while(pos > -1) {
-                greaterThanIndexes.push(pos);
-                pos = decodedTitle.indexOf('>', pos + 1);
-            }
-        }
-
-        var textEl = this.titleCmp.textEl;
-        var titleWidth = textEl.getTextWidth(tempTitle);
-
-        var avaliableWidth = adjWidth != null ? adjWidth : this.titleCmp.getWidth();
-        var stdCharWidth = textEl.getTextWidth('.');
-        if (titleWidth > avaliableWidth) {
-            var diffCharWidth = titleWidth - avaliableWidth;
-            var diffChars = 0;
-
-            if (stdCharWidth > 0) {
-                diffChars = Math.ceil(diffCharWidth / stdCharWidth) + 2;
-            }
-            var maxChars = tempTitle.length - diffChars;
-            var shortTitle = Ext.util.Format.ellipsis(tempTitle, maxChars > 12 ? maxChars : 12);
-
-            //Add < and > back into the short title
-            for(var i = 0; i < greaterThanIndexes.length && greaterThanIndexes.length > 0; i++) {
-                //If index is at the elipsis, break
-                if(greaterThanIndexes[i] >= shortTitle.length - 3) {
-                    break;
-                }
-                shortTitle = shortTitle.substring(0, greaterThanIndexes[i]) + ">"
-                        + shortTitle.substring(greaterThanIndexes[i] + 1);
-            }
-            for(var i = 0; i < lessThanIndexes.length && lessThanIndexes.length > 0; i++) {
-                //If index is at the elipsis, break
-                if(lessThanIndexes[i] >= shortTitle.length - 3) {
-                    break;
-                }
-                shortTitle = shortTitle.substring(0, lessThanIndexes[i]) + "<"
-                        + shortTitle.substring(lessThanIndexes[i] + 1);
-            }
-
-            return Ext.htmlEncode(shortTitle);
-        }
-        else if (titleWidth <= avaliableWidth) {
-            return this.title;
-        }
-    },
-
     /**
-     * Sets the title of the header.
+     * Sets the title of the header. Disables HTML since the
+     * title may come from outside sources, such as the Chrome API
      * @param {String} title The title to be set
      */
     setTitle: function(title) {
-        var me = this;
-        if (me.rendered) {
-            if (me.titleCmp.rendered) {
-                if (me.titleCmp.surface) {
-                    me.title = title || '';
-                    var sprite = me.titleCmp.surface.items.items[0],
-                        surface = me.titleCmp.surface;
+        title = Ext.htmlEncode(title);
 
-                    surface.remove(sprite);
-                    me.textConfig.type = 'text';
-                    me.textConfig.text = title;
-                    sprite = surface.add(me.textConfig);
-                    sprite.setAttributes({
-                        rotate: {
-                            degrees: 90
-                        }
-                    }, true);
-                    me.titleCmp.autoSizeSurface();
-                } else {
-                    me.title = title || '&#160;';
-                    me.titleCmp.textEl.update(this.adjustTitle(me.title));
-                }
-                
-                //update tooltip
-                this.setTooltip({
-                    text: me.title
-                });
-            } else {
-                me.titleCmp.on({
-                    render: function() {
-                        me.setTitle(title);
-                    },
-                    single: true
-                });
-            }
-        } else {
-            me.on({
-                render: function() {
-                    me.layout.layout();
-                    me.setTitle(title);
-                },
-                single: true
-            });
-        }
+        this.callParent([title]);
+
+        //update tooltip
+        this.setTooltip({
+            text: title
+        });
     },
 
     // @private

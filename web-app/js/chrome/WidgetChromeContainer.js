@@ -46,8 +46,46 @@ Ozone.chrome.WidgetChromeContainer = function(config) {
   };
 
   //private
+
+    /**
+     * Returns an object containing only the properties listed in propList.
+     * Also htmlEncode all properties on the returned object
+     */
+    var secureProperties = function (obj, propList) {
+        var retval = {};
+        
+        if (obj === undefined) return;
+
+        for (var i = 0; i < propList.length; i++) {
+            if (obj[propList[i]])
+                retval[propList[i]] = Ext.htmlEncode(obj[propList[i]]);
+        }
+
+        return retval;
+    },
+    secureButton = function(btnConfig) {
+        //only support these properties.  This minimizes the risk of security problems
+        var item = secureProperties(btnConfig, ['itemId', 'xtype', 'type', 'icon', 'text']);
+        item.tooltip = secureProperties(btnConfig.tooltip, ['title', 'text']);
+
+        return item;
+    },
+    secureMenu = function(menuConfig) {
+        //secure this item
+        var retval = secureProperties(menuConfig, ['itemId', 'parentId', 'icon', 'text']);
+
+        //secure sub-menu
+        if (menuConfig.menu) {
+          retval.menu = {};
+          retval.menu.items = Ext.Array.map(menuConfig.menu.items, secureMenu);
+        }
+
+        return retval;
+    };
+
   var handleAdd = function(sender,data) {
-    var returnValue = {success:false};
+    var returnValue = {success:false},
+        item;
 
     //parse out widgetid from sender
     var widgetCfg = Ozone.util.parseJson(sender);
@@ -60,8 +98,9 @@ Ozone.chrome.WidgetChromeContainer = function(config) {
 	      		  items = [data.items];
 		      }
               for (var i = 0 ; i < items.length ; i++) {
-                  var item = Ext.apply({},items[i]);
                   if (data.type === 'button') {
+
+                      item = secureButton(items[i]);
 	                  item.handler = function() {
 	                    //call click handler
 	                    var jsonString = gadgets.json.stringify({itemId:this.itemId});
@@ -75,6 +114,9 @@ Ozone.chrome.WidgetChromeContainer = function(config) {
 	                  cmp.addTool(item);
 	                  cmp.headerModified = true;
                   } else if (data.type === 'menu') {
+                      item = secureMenu(items[i]);
+                      
+
               		  scope.registerChromeMenuHandlers(item, sender);
                       addMenuCloseHandler(item);
                       var menuBar = cmp.getDockedComponent("menuBar");
@@ -120,7 +162,8 @@ Ozone.chrome.WidgetChromeContainer = function(config) {
     return gadgets.json.stringify(returnValue);
   };
   var handleInsert = function(sender, data) {
-    var returnValue = {success:false};
+    var returnValue = {success:false},
+        item;
 
     //parse out widgetid from sender
     var widgetCfg = Ozone.util.parseJson(sender);
@@ -135,17 +178,20 @@ Ozone.chrome.WidgetChromeContainer = function(config) {
 	            items = [data.items];
 	          }
 	          for (var i = 0; i < items.length; i++) {
-                  var item = Ext.apply({},items[i]);
 	              if (data.type === 'button') {
+
+                      item = secureButton(items[i]);
 	            	  item.handler = function() {
-		              //call click handler
-		              var jsonString = gadgets.json.stringify({itemId:this.itemId});
-		              gadgets.rpc.call(sender, scope.channelName, null, '..', jsonString);
-		            };
+		                //call click handler
+		                var jsonString = gadgets.json.stringify({itemId:this.itemId});
+		                gadgets.rpc.call(sender, scope.channelName, null, '..', jsonString);
+		              };
 		
-		            cmp.insertTool(item, data.pos + i);
-		            cmp.headerModified = true;
+		              cmp.insertTool(item, data.pos + i);
+		              cmp.headerModified = true;
 	              } else if (data.type === 'menu') {
+                      item = secureMenu(items[0]);
+
               		  scope.registerChromeMenuHandlers(item, sender);
                       addMenuCloseHandler(item);
                       var menuBar = cmp.getDockedComponent("menuBar");
@@ -191,7 +237,8 @@ Ozone.chrome.WidgetChromeContainer = function(config) {
   };
 
   var handleUpdate = function(sender,data) {
-    var returnValue = {success:false};
+    var returnValue = {success:false},
+        item;
 
     var widgetCfg = Ozone.util.parseJson(sender);
     if (widgetCfg != null ) {
@@ -203,8 +250,9 @@ Ozone.chrome.WidgetChromeContainer = function(config) {
           items = [data.items];
         }
         for (var i = 0; i < items.length; i++) {
-            var item = Ext.apply({},items[i]);
             if (data.type === 'button') {
+
+              item = secureButton(items[0]);
           	  item.handler = function() {
 	              //call click handler
 	              var jsonString = gadgets.json.stringify({itemId:this.itemId});
@@ -214,6 +262,8 @@ Ozone.chrome.WidgetChromeContainer = function(config) {
 	            cmp.updateTool(item);
 	            cmp.headerModified = true;
             } else if (data.type === 'menu') {
+                item = secureMenu(items[0]);
+
         		scope.registerChromeMenuHandlers(item, sender);
                 addMenuCloseHandler(item);
                 var menuBar = cmp.getDockedComponent("menuBar");

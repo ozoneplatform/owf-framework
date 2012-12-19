@@ -3016,8 +3016,8 @@ threadDelay = [threadNumber] * [fourthGroupDelay] - [firstGroupMaxThread] * [sec
                 <stringProp name="1940636102">activeWidgetsCount</stringProp>
               </collectionProp>
               <collectionProp name="UserParameters.thread_values">
-                <collectionProp name="-1561734096">
-                  <stringProp name="-731383649">${__Random(1,4)}</stringProp>
+                <collectionProp name="942176438">
+                  <stringProp name="-732308131">${__Random(0,3)}</stringProp>
                 </collectionProp>
               </collectionProp>
               <boolProp name="UserParameters.per_iteration">false</boolProp>

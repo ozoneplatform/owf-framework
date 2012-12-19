@@ -23,6 +23,11 @@
 		    font-weight: bold;
 	    }
 	}
+
+    .x-panel-header-text, .x-window-header-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 .inactive {
