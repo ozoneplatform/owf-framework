@@ -806,16 +806,15 @@ environments {
         perfTest.numAdmins = 5              // The number of administrators
         perfTest.numUsers = 995             // The number of non-admin users
         perfTest.numGroups = 50             // The number of groups
-        perfTest.numGroupsPerUser = 3       // The number of groups each user is assigned to
-        perfTest.numWidgetsInGroups = 5     // The number of widgets assigned to each group
-        perfTest.numWidgetsPerUser = 10     // The number of widgets assigned to each user
+        perfTest.numGroupsPerUser = 1       // The number of groups each user is assigned to
+        perfTest.numWidgetsInGroups = 0     // The number of widgets assigned to each group
+        perfTest.numWidgetsPerUser = 5      // The number of widgets assigned to each user
         perfTest.numPreferences = 50        // The number of preferences per user
         perfTest.numWidgets = 500           // The number of unique widget definitions
-        perfTest.numStacks = 5             // The number of stacks
+        perfTest.numStacks = 5              // The number of stacks
         perfTest.numStacksPerUser = 2       // The number of stacks per user
         perfTest.numStackDashboards = 2     // The number of dashboards each stack will get assigned to them
 
-        perfTest.createRequiredWidgets = false
         perfTest.createSampleWidgets = false
         perfTest.sampleWidgetBaseUrl = 'https://127.0.0.1:8443/owf/sampleWidgets/'
 
