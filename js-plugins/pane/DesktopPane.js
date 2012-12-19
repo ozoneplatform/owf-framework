@@ -3,7 +3,7 @@ Ext.define('Ozone.plugins.pane.DesktopPane', {
 
     init: function(cmp) {
         
-        // this.callParent(arguments);
+        this.callParent(arguments);
         // console.log('Desktop pane external plugin');
 
     }

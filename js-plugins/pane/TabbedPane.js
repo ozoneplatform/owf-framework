@@ -3,7 +3,7 @@ Ext.define('Ozone.plugins.pane.TabbedPane', {
 
     init: function(cmp) {
         
-        // this.callParent(arguments);
+        this.callParent(arguments);
         // console.log('Tabbed pane external plugin');
 
     }

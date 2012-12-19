@@ -3,7 +3,7 @@ Ext.define('Ozone.plugins.pane.AccordionPane', {
 
     init: function(cmp) {
         
-        // this.callParent(arguments);
+        this.callParent(arguments);
         // console.log('Accordion pane external plugin');
 
     }
