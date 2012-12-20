@@ -1475,7 +1475,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                                 //extra info
                                 frameId:iframeCmp.id,
                                 widgetGuid:rec.widgetGuid,
-                                widgetName:widgetDef.name
+                                widgetName:widgetDef.name,
+                                universalName: widgetDef.universalName
                             });
                         }
                     }

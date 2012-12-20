@@ -257,6 +257,7 @@ OWF = window.OWF ? window.OWF : {};
 				widgetGuid: 'widget guid of the widget',<br>
 				url: 'url of the widget',<br>
 				name: 'name of the widget'<br>
+                universalName: 'universal name of the widget'<br>
 			}<br>
 			@example
 			OWF.getOpenedWidgets(function(openedWidgets) {
