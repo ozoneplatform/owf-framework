@@ -224,14 +224,16 @@ Ext.define('Ozone.components.admin.AdminEditorAddWindow', {
 
         //Use TextMetrics to get the pixel width of the title
         var textMetrics = new Ext.util.TextMetrics();
-        var titleWidth = textMetrics.getWidth(title);
+        var safeTitle = Ext.htmlEncode(title);
+        var titleWidth = textMetrics.getWidth(safeTitle);
 
         //If the title's pixel width is too large for the window, decrease it
         //by 5 characters until its pixel width fits
         while(titleWidth > ((vpSize.width * .8))) {
             charLimit -= 5;
             title = Ext.util.Format.ellipsis(title, charLimit);
-            titleWidth = textMetrics.getWidth(title);
+            safeTitle = Ext.htmlEncode(title);
+            titleWidth = textMetrics.getWidth(safeTitle);
         }
 
         textMetrics.destroy();
