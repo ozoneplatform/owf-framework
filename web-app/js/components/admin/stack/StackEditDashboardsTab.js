@@ -151,7 +151,7 @@ Ext.define('Ozone.components.admin.stack.StackEditDashboardsTab', {
         }
         
         Ext.create('Ozone.components.admin.EditDashboardWindow', {
-            title: 'Dashboard Editor - ' + data.name ? data.name : '',
+            title: 'Dashboard Editor - ' + data.name ? Ext.htmlEncode(data.name) : '',
             guid: data.guid ? data.guid : '',
             name: data.name ? data.name : '',
             description: data.description ? data.description : '',
