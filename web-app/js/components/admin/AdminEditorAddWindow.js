@@ -224,7 +224,7 @@ Ext.define('Ozone.components.admin.AdminEditorAddWindow', {
 
         //Use TextMetrics to get the pixel width of the title
         var textMetrics = new Ext.util.TextMetrics();
-        var safeTitle = Ext.htmlEncode(title);
+        var safeTitle = Ext.htmlEncode(title);  // Fix for Chrome.  TextMetrics appears to render title which may cause XSS issue
         var titleWidth = textMetrics.getWidth(safeTitle);
 
         //If the title's pixel width is too large for the window, decrease it
@@ -232,7 +232,7 @@ Ext.define('Ozone.components.admin.AdminEditorAddWindow', {
         while(titleWidth > ((vpSize.width * .8))) {
             charLimit -= 5;
             title = Ext.util.Format.ellipsis(title, charLimit);
-            safeTitle = Ext.htmlEncode(title);
+            safeTitle = Ext.htmlEncode(title);  // Fix for Chrome.  TextMetrics appears to render title which may cause XSS issue
             titleWidth = textMetrics.getWidth(safeTitle);
         }
 
