@@ -915,7 +915,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             dashboard = this.getDashboard($dashboard),
             dashboardGuid = dashboard.guid;
 
-        this.warn('This action will return the dashboard <span class="heading-bold">' + dashboard.name + '</span> to its current default state. If an administrator changed the dashboard after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
+        this.warn('This action will return the dashboard <span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> to its current default state. If an administrator changed the dashboard after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
             Ext.Ajax.request({
                 url: Ozone.util.contextPath() + '/dashboard/restore',
                 params: {
@@ -925,7 +925,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 success: function(response, opts) {
                     var json = Ext.decode(response.responseText);
                     if (json != null && json.data != null && json.data.length > 0) {
-                        me.notify('Restore Dashboard', '<span class="heading-bold">' + dashboard.name + '</span> is restored successfully to its default state!');
+                        me.notify('Restore Dashboard', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> is restored successfully to its default state!');
 
                         var name = json.data[0].name,
                             description = json.data[0].description;
@@ -1063,7 +1063,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         this.warn(msg, function () {
             me.dashboardStore.remove(dashboard.model);
             me.dashboardStore.save();
-            me.notify('Delete Dashboard', '<span class="heading-bold">' + dashboard.name + '</span> deleted!');
+            me.notify('Delete Dashboard', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> deleted!');
 
             me._deletedStackOrDashboards.push(dashboard);
             me.reloadDashboards = true;
@@ -1081,7 +1081,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         	$stack = this.getElByClassFromEvent(evt, 'stack'),
             stack = this.getStack($stack);
         
-        this.warn('This action will return the stack <span class="heading-bold">' + stack.name + '</span> to its current default state. If an administrator changed any dashboard in the stack after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
+        this.warn('This action will return the stack <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any dashboard in the stack after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
             Ext.Ajax.request({
                 url: Ozone.util.contextPath() + '/stack/restore',
                 params: {
@@ -1091,7 +1091,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                     var json = Ext.decode(response.responseText);
                     
                     if (json != null && json.updatedDashboards != null && json.updatedDashboards.length > 0) {
-                        me.notify('Restore Stack', '<span class="heading-bold">' + stack.name + '</span> is restored successfully to its default state!');
+                        me.notify('Restore Stack', '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is restored successfully to its default state!');
                         
                         var dashboards = stack.dashboards;
                         for(var i = 0; i < dashboards.length; i++) {
