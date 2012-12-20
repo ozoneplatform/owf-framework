@@ -73,7 +73,7 @@ Ext.define('Ozone.components.admin.dashboard.DashboardDetailPanel', {
                         var retVal = '';
                         if (!stack && groups && groups.length > 0) {
                             for (var i = -1; ++i < groups.length;) {
-                                retVal += groups[i].name + ', ';
+                                retVal += Ext.htmlEncode(groups[i].name) + ', ';
                             }
                             retVal = retVal.substring(0, retVal.length - 2);
                         }
