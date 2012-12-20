@@ -116,12 +116,31 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
                 values.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(values.description)) +'</p><br>');
                 
-                return values.isStack ? str + '</div>"':
-                        str +
-                        '<p class=\'group\'><label>Group: </label>' + ((values.groups && values.groups.length > 0) ? values.groups[0].name : 'None') + '</p>' +
-                        '<p class=\'created-by\'><label>Created by: </label>' + (values.createdBy.userRealName || '') + '</p>' +
-                        '<p class=\'last-updated\'><label>Last Modified: </label>' + (values.prettyEditedDate || '') + '</p></div>"';
+                if (values.isStack) {
+                    return str + '</div>"';
+                }
+                else { 
+                    // If we have groups, display a groups listing in the tooltip.
+                    if (values.groups && values.groups.length > 0) {
+                        var groupStr = '';
+                        for (var i = -1; ++i < values.groups.length;) {
+                            // Only display groups that are not stack defaults.
+                            if (!values.groups[i].stackDefault) {
+                                groupStr += Ext.htmlEncode(Ext.htmlEncode(values.groups[i].name)) + ', ';
+                            }                           
+                        }
+                        // Include the group listing only if there are groups to list.
+                        if (groupStr.length > 0) {
+                            str = str + '<p class=\'group\'><label>Group(s): </label>';
+                            groupStr = groupStr.substring(0, groupStr.length - 2);
+                            str = str + groupStr + '</p>';
+                        }
+                    } 
+                    return str + '<p class=\'created-by\'><label>Created by: </label>' + (values.createdBy.userRealName || '') + '</p>' +
+                           '<p class=\'last-updated\'><label>Last Modified: </label>' + (values.prettyEditedDate || '') + '</p></div>"';
+                }
             },
+            
             getActions: function (values) {
                 return values.isStack ? 
                         '<ul class="stack-actions hide">'+
