@@ -1558,6 +1558,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         // Set default tab guid.
         var defaultTabGuid = storeRecords[0].get('guid');
+        var stack = storeRecords[0].get('stack');
+        var stackContext = stack ? stack.stackContext : null;
 
         // Clear 'this.dashboards' array.
         this.dashboards.length = 0;
@@ -1585,6 +1587,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 // Save default dashboard Guid and set active dashboard instance.
                 if (dsRecord.get('isdefault')) {
                     defaultTabGuid = dsRecord.get('guid');
+                    stack = dsRecord.get('stack');
+                    stackContext = stack ? stack.stackContext : null;
                     me.activeDashboard = addedDash;
                     me.defaultDashboard = addedDash;
                 }
@@ -1592,6 +1596,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             }
             // activate dashboard
             me._activateDashboard(dashboardGuidToActivate || defaultTabGuid); // Focus the default dashboard.
+            me.activateDashboard(dashboardGuidToActivate || defaultTabGuid, true, stackContext);
 
         }, 200);
     },

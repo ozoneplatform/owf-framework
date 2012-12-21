@@ -67,6 +67,8 @@ Ext.apply(Ext.History, {
   shutDown: function() {
     if (this.task != null) {
       Ext.TaskManager.stop(this.task);
+      this.currentToken = null;
+      this.hiddenField.value = null;
     }
   }
 
