@@ -1,14 +1,14 @@
 <project xmlns:ivy="antlib:org.apache.ivy.ant" name="owf-server" default="bundle" basedir=".">
 
     <property file="${basedir}/application.properties" />
-    <import file="${owf.build.module}-${owf.build.rev}/server-base.xml" optional="true"/>
-
+    <import file="build-base.xml" optional="true"/>
+    
     <property name="lib.dir" value="${basedir}/lib" />
     <property name="work.dir" value="${basedir}/work" />
     <property name="jstoolkit.dir" value="${work.dir}/jsdoc/jsdoc_toolkit-2.3.2/jsdoc-toolkit" />
     <property name="staging.dir" value="staging" />
     <property name="tomcat.dir" value="${staging.dir}/apache-tomcat-${tomcat.ver}" />
-    <property name="build.base.dir" value="${owf.build.module}-${owf.build.rev}" />
+    <property name="build.base.dir" value="${basedir}" />
     <property name="widget.samples.dir" value="${basedir}/sample-widgets" />
 
     <condition property="offline.arg" value="-DOFFLINE_REPO=${offline_repo}"  else="" >
@@ -33,13 +33,8 @@
         <os family="windows" />
     </condition>
 
-    <available file="${owf.build.module}-${owf.build.rev}/build-base.xml" property="build-base.available" />
-    <target name="init-build" unless="build-base.available" >
-        <mkdir dir="${owf.build.module}-${owf.build.rev}" />
-        <get src="https://www.owfgoss.org/svn/repos/ozone/ivy-repo/no-namespace/${owf.build.org}/${owf.build.module}/zips/${owf.build.module}-${owf.build.rev}.zip"
-             dest="${owf.build.module}-${owf.build.rev}/${owf.build.module}-${owf.build.rev}.zip"
-             username="owf-build" password="0wf-bu1!d" />
-        <unzip src="${owf.build.module}-${owf.build.rev}/${owf.build.module}-${owf.build.rev}.zip" dest="${owf.build.module}-${owf.build.rev}" />
+    <!--available file="${owf.build.module}-${owf.build.rev}/build-base.xml" property="build-base.available" /-->
+    <target name="init-build" >
         <ant dir="." target="init-ivy" inheritall="false" />
     </target>
     <!-- =================================
@@ -474,8 +469,16 @@
 
     <target  name="post-bundle-cleanup" >
         <delete file="${staging.dir}/cas-server-extras-${cas.server.rev}.zip" />
+    	<delete file="${staging.dir}/cas-server-owf-${cas.server.rev}.war" />
         <delete file="${staging.dir}/owf-security-extras-${owf.security.rev}.zip" />
         <delete file="${staging.dir}/owf-security-project-${owf.security.rev}.zip" />
+    	<delete file="${staging.dir}/owf-security-${owf.security.rev}.jar" />
+    	<delete>
+    	    <fileset dir="${staging.dir}" includes="*.zip"/>
+    	</delete>
+    	<delete>
+            <fileset dir="${staging.dir}" includes="*.jar"/>
+        </delete>
     </target>
 
     <target name="release" depends="_init-ivy,bundle">
