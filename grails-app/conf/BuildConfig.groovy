@@ -168,7 +168,7 @@ grails.project.dependency.resolution = {
         }
       else{
           //println "OWF USING LOCAL REPO"
-            resolver createIvySvnResolver()
+           // resolver createIvySvnResolver()
         }
     }
     dependencies {
