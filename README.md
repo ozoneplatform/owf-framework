@@ -16,7 +16,7 @@ The Ozone Widget Framework (OWF) is a web application for composing other lightw
 For Version 7 of OWF, the front-end user interface uses ExtJS, and the back-end uses Grails.  User preferences are stored in a relational database - anything supported by Hibernate.  Authentication of users is a modular function provided by Spring Security.  There is a re-factoring effort planned for 2013 to improve performance  modularity and maintainability, which is expected to eliminate the dependency on Grails and ExtJS.
  
 ## Browser Support
-Numbered releases are tested on IE7, IE8, IE9, Firefox 3.7 and the latest public version of Firefox.  Some of the developers use Safari or Chrome, so generally it works well with those browsers also.
+Numbered releases are tested on IE7, IE8, IE9, Firefox 3.6 and the latest public version of Firefox.  Some of the developers use Safari or Chrome, so generally it works well with those browsers also.
  
 ## Copyrights
 > Software (c) 2012 [Next Century Corporation](http://www.nextcentury.com/ "Next Century")
