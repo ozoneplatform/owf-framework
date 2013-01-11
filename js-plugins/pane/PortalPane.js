@@ -3,7 +3,7 @@ Ext.define('Ozone.plugins.pane.PortalPane', {
 
     init: function(cmp) {
         
-        // this.callParent(arguments);
+        this.callParent(arguments);
         // console.log('Portal pane external plugin');
 
     }

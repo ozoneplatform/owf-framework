@@ -3,7 +3,7 @@ Ext.define('Ozone.plugins.pane.FitPane', {
 
     init: function(cmp) {
         
-        // this.callParent(arguments);
+        this.callParent(arguments);
         // console.log('Fit pane external plugin');
 
     }
