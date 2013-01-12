@@ -68,7 +68,7 @@ class HelpService {
     if (internalFile) { recurseFiles(internalFile, dirMap) }
 
     data.sort { a, b ->
-      a.leaf != b.leaf ? a.leaf <=> b.leaf : a.name <=> b.name
+      a.leaf != b.leaf ? a.leaf <=> b.leaf : a.text <=> b.text
     }
 
     data
