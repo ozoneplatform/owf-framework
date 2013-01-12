@@ -67,8 +67,10 @@ class HelpService {
     if (externalFile) { recurseFiles(externalFile, dirMap) }
     if (internalFile) { recurseFiles(internalFile, dirMap) }
 
-    data.sort { a, b ->
-      a.leaf != b.leaf ? a.leaf <=> b.leaf : a.text <=> b.text
+    dirMap.each {path, fileList ->
+      fileList.sort { a, b ->
+        a.leaf != b.leaf ? a.leaf <=> b.leaf : a.text <=> b.text
+      }
     }
 
     data
