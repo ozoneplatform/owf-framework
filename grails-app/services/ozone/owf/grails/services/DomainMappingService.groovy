@@ -184,7 +184,11 @@ class DomainMappingService {
 
                 //filter by ids from mapping table
                 if (!ids.isEmpty()) {
-                    inList('id', ids)
+                    or {
+                        for (def i = 0; i < ids.size(); i++)
+                            eq('id', ids[i])
+                    }
+                    //inList('id', ids)
                 }
 
                 //filter by specified fields
@@ -253,7 +257,11 @@ class DomainMappingService {
 
                 //filter by ids from mapping table
                 if (!ids.isEmpty())
-                    inList('id', ids)
+                    or {
+                        for (def i = 0; i < ids.size(); i++)
+                            eq('id', ids[i])
+                    }
+                    //inList('id', ids)
 
                 //filter by specified fields
                 params?.filters?.each {
