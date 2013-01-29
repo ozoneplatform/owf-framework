@@ -805,8 +805,8 @@ environments {
         perfTest.numDashboardsWidgets = 5   // The number of widgets on each dashboard
         perfTest.numAdmins = 5              // The number of administrators
         perfTest.numUsers = 1005            // The number of non-admin users
-        perfTest.numGroups = 50             // The number of groups
-        perfTest.numGroupsPerUser = 1       // The number of groups each user is assigned to
+        perfTest.numGroups = 2             // The number of groups
+        perfTest.numGroupsPerUser = 2       // The number of groups each user is assigned to
         perfTest.numWidgetsInGroups = 0     // The number of widgets assigned to each group
         perfTest.numWidgetsPerUser = 5      // The number of widgets assigned to each user
         perfTest.numPreferences = 50        // The number of preferences per user
