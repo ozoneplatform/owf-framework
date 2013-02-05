@@ -21,7 +21,9 @@ class StackService {
     def domainMappingService
     def groupService
     def widgetDefinitionService
-    
+
+    def grailsApplication
+
     private static def addFilter(name, value, c) {
         c.with {
             switch (name) {
@@ -633,10 +635,17 @@ class StackService {
         //Pretty print the JSON
         stackData = (stackData as JSON).toString(true)
 
-        //Get the empty descriptor with appropriate javascript
-        def dir = './lib/'
-        if(grails.util.GrailsUtil.environment != 'production') dir = './src/resources/'
-        def stackDescriptor = new File(dir + "empty_descriptor.html").text
+        // Get the empty descriptor with appropriate JavaScript
+        def stackDescriptor
+
+        if (grails.util.GrailsUtil.environment != 'production') {
+            stackDescriptor = new File('./src/resources/empty_descriptor.html').text
+        } else {
+            // Search classpath since different servlet containers can store
+            // files in any number of places
+            def resource = grailsApplication.mainContext.getResource('classpath:empty_descriptor.html')
+            stackDescriptor = resource.getFile().text
+        }
 
         stackDescriptor = stackDescriptor.replaceFirst("var data;", java.util.regex.Matcher.quoteReplacement("var data = ${stackData};"))
 

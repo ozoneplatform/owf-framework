@@ -926,16 +926,23 @@ class WidgetDefinitionService {
 
         def widgetData = getWidgetDescriptorJson(widgetDefinition)
 
-        //Get the empty descriptor with appropriate javascript
-        def dir = './lib/'
-        if(grails.util.GrailsUtil.environment != 'production') dir = './src/resources/'
-        def widgetDescriptor = new File(dir + "empty_descriptor.html").text
+        // Get the empty descriptor with appropriate JavaScript
+        def widgetDescriptor
+
+        if (grails.util.GrailsUtil.environment != 'production') {
+            widgetDescriptor = new File('./src/resources/empty_descriptor.html').text
+        } else {
+            // Search classpath since different servlet containers can store
+            // files in any number of places
+            def resource = grailsApplication.mainContext.getResource('classpath:empty_descriptor.html')
+            widgetDescriptor = resource.getFile().text
+        }
 
         widgetDescriptor = widgetDescriptor.replaceFirst("var data;", java.util.regex.Matcher.quoteReplacement("var data = ${widgetData};"))
 
         return widgetDescriptor
     }
-    
+
     public def getDirectRequiredIds(widgetDef) {
         getRequiredWidgetIds(ids: widgetDef.widgetGuid, noRecurse: true)
             .data
