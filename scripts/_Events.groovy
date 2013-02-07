@@ -101,6 +101,11 @@ eventCreateWarStart = { name, stagingDir ->
       }
 
   println "finished making owf-all.jar"
+
+  // Copy descriptor template into war stage in such a way that it will
+  // always be in the CLASSPATH when deployed
+  ant.copy(file: "${basedir}/src/resources/empty_descriptor.html",
+           todir: "${stagingDir}/WEB-INF/classes")
 }
 
 //eventConfigureJetty = { server ->
