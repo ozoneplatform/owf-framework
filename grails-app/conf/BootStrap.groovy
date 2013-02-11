@@ -31,6 +31,7 @@ class BootStrap {
     def grailsApplication
     def sessionFactory
     def domainMappingService
+    def dashboardService
     
     def init = {servletContext ->
 
@@ -232,6 +233,11 @@ class BootStrap {
             if (grailsApplication.config?.perfTest?.createSampleWidgets) {
                 loadAndAssignSampleWidgetDefinitions(sampleWidgetBaseUrl, 10)
                 sessionFactory.currentSession.clear()
+            }
+
+            Person.list().each {
+                log.info "Calling listDashboards for user ${it}"
+                dashboardService.listDashboards([ user_id: it.id ])
             }
             sessionFactory.currentSession.clear()
 
