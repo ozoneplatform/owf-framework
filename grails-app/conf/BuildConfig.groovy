@@ -131,7 +131,9 @@ def warExcludes = [
                     'WEB-INF/lib/core-3.1.1.jar',
                     'WEB-INF/lib/log4j-1.2.9.jar',
                     'WEB-INF/lib/spring-expression-3.0.1.RELEASE.jar',
-                    'plugins/**'
+                    'plugins/**',
+
+                    '**/.gitignore'
 
 ]
 grails.war.resources = { stagingDir ->
