@@ -11,6 +11,9 @@ Ozone.config = ${conf};
 //add in contextPath
 Ozone.config.webContextPath = window.location.pathname;
 
+// fixes 'Error: Illegal Operator !=' error in IE
+Ozone.config.webContextPath = Ozone.config.webContextPath.replace(/\;jsessionid=.*/g,'');
+
 if(Ozone.config.webContextPath.charAt(Ozone.config.webContextPath.length - 1) === '/') {
     Ozone.config.webContextPath = Ozone.config.webContextPath.substr(0,Ozone.config.webContextPath.length - 1);
 }
