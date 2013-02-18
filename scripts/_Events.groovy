@@ -89,6 +89,7 @@ eventCreateWarStart = { name, stagingDir ->
           exclude(name:"**/gsp_*.*")
           exclude(name:"**/*.properties")
           exclude(name:"**/*.xml")
+          exclude(name:"**/.gitignore")
         }
       }
 
