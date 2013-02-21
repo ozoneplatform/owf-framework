@@ -49,21 +49,39 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         Ozone.util.Transport.send({
             url: marketplaceUrl + "/relationship/getOWFRequiredItems",
             method: "POST",
-            content : {
+            content: {
                 id: widgetId
             },
             onSuccess: function(jsonData) {
-                var widgetListJson = [],
-                    data = jsonData.data;
+                var widgetListJson = [], data = jsonData.data;
 
                 for (var i = 0, len = data.length; i < len; i++) {
                     var serviceItem = data[i];
-                    widgetListJson.push( Ext.JSON.encode(self.createOwfWidgetJson(serviceItem, widgetId)) );
+
+                    var customFields = {};
+                    Ext.Array.each(serviceItem.customFields, function(field, index, list) {
+                        customFields[field.name] = field.value;
+                    });
+                    if (serviceItem.types.title === 'Dashboard') {
+                        if (customFields.dashboardDefinition) {
+                            Ozone.pref.PrefServer.createOrUpdateDashboard({
+                                json: JSON.parse(customFields.dashboardDefinition),
+                                onSuccess: function(dashboard) {}
+                            });
+                        }
+                    } else {
+                        widgetListJson.push(Ext.JSON.encode(self.createOwfWidgetJson(serviceItem, widgetId)));
+                    }
                 }
-                
-                self.submitWidgetList(Ext.JSON.encode(widgetListJson));
+
+                if (widgetListJson.length > 0) {
+                    // MP Synchronization
+                    // Added the URL of the Marketplace we're looking at to the
+                    // JSON we send to the widget controller.
+                    self.submitWidgetList(Ext.JSON.encode(widgetListJson), marketplaceUrl);
+                }
             },
-            onFailure: function (json){
+            onFailure: function(json) {
                 Ext.Msg.alert("Error", "Error has occurred while adding widgets from Marketplace");
             }
         });
@@ -122,11 +140,15 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         return approvalTag;
     },
 
-    submitWidgetList: function(widgetList) {
+    // MP Synchronization
+    // Added the URL of the Marketplace we're looking at to the JSON we send to
+    // the widget controller.
+    submitWidgetList: function(widgetList, mpUrl) {
         return owfdojo.xhrPost({
             url:Ozone.util.contextPath() + '/widget/',
             sync:true,
             content:{
+                marketplaceUrl: mpUrl,
                 addExternalWidgetsToUser:true,
                 widgets:widgetList
             },

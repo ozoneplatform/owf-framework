@@ -143,31 +143,23 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
     },
     
     addWidget: function() {
-		var approvalTag = {};
+        var approvalTag = [];
         var widgetsJSON = [];
         var directRequired = [];
         var requiredListings = this.requiredListings;
         var parentWidget = this.parentWidget;
 
-        if (Ozone.config.enablePendingApprovalWidgetTagGroup) {
-            approvalTag = {
-                name: Ozone.config.carousel.pendingApprovalTagGroupName, 
-                visible:true, 
-                position: -1, 
-                editable: false
-            };
+        var indivCategoryTag;
+        for ( var tgs = 0; tgs < parentWidget.categories.length; tgs++) {
+            indivCategoryTag = {
+                name : parentWidget.categories[tgs].title,
+                visible : true,
+                position : -1,
+                editable : true
+            }
+            approvalTag.push(indivCategoryTag)
         }
-        else {
-            var dt = new Date();
-            var dateString = Ext.Date.format(dt, 'Y-m-d');
-            approvalTag = {
-                name: Ozone.config.carousel.approvedTagGroupName+' on '+dateString, 
-                visible:true, 
-                position: -1, 
-                editable: true
-            };
-        }
-        
+
         if (parentWidget.requires) {
         for (var i = 0; i < parentWidget.requires.length; i++) {
         	directRequired.push(parentWidget.requires[i].uuid);
@@ -185,7 +177,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
             widgetUrl: parentWidget.launchUrl,
             width: 200,
             widgetVersion: parentWidget.versionName,
-            tags: Ext.JSON.encode([approvalTag]),
+            tags: Ext.JSON.encode(approvalTag),
             singleton: parentWidget.owfProperties && parentWidget.owfProperties != "" ? parentWidget.owfProperties.singleton : false,
             visible: parentWidget.owfProperties && parentWidget.owfProperties != "" ? parentWidget.owfProperties.visibleInLaunch : true,
             isSelected: true,
@@ -216,7 +208,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
                     widgetUrl: requiredListings[i].launchUrl,
                     width: 200,
                     widgetVersion: requiredListings[i].versionName,
-                    tags: Ext.JSON.encode([approvalTag]),
+                    tags: Ext.JSON.encode(approvalTag),
                     singleton: requiredListings[i].owfProperties ? requiredListings[i].owfProperties.singleton : false,
                     visible: requiredListings[i].owfProperties ? requiredListings[i].owfProperties.visibleInLaunch : true,
                     background: false
@@ -361,7 +353,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
         	                        },
         	                        load: function(response, ioArgs) {
         	                            var cp = Ext.getCmp('launchMenuPanel');
-        	                            cp.widgetStore.load();
+        	                            if (cp) cp.widgetStore.load();
                 	                    alertWin.close();
         	                        },
         	                        error: function(response, ioArgs) {
@@ -414,7 +406,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
                 },
                 load: function(response, ioArgs) {
                     var cp = Ext.getCmp('launchMenuPanel');
-                    cp.widgetStore.load();
+                    if (cp) cp.widgetStore.load();
                 },
                 error: function(response, ioArgs) {
                     Ozone.Msg.alert(Ozone.layout.DialogMessages.error, Ozone.layout.DialogMessages.marketplaceWindow_AddWidget, null, null, {
