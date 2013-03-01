@@ -1,9 +1,9 @@
-// MP Synchronization
+// OZP-476: MP Synchronization
 // This class was added to ease the initial merge pain of adding this functionality
 // to the WidgetDefinitionService, which is the primary user of this particular service.
 // We'd also need to consider the MarketplaceController, which was introduced for
 // similar reasons (avoiding merge issues). Entirely possible that we'd want to eliminate
-// this class and fold it's function back into the WidgetDefinitionService; similar may
+// this class and fold its function back into the WidgetDefinitionService; similar may
 // also apply to the controller class.
 package ozone.owf.grails.services
 
@@ -198,7 +198,7 @@ class MarketplaceService extends BaseService {
         // marketplaces to check for the GUID.  Those can be found by looking in widget definitions
         // for marketplace type listings and getting the URLs.
         def setMpUrls = new HashSet()
-        if (mpSourceUrl && config.mpSyncTrustProvidedUrl) {
+        if (mpSourceUrl && config.owf.mpSyncTrustProvidedUrl) {
             setMpUrls.add(mpSourceUrl)
         } else {
             WidgetType.findByName('marketplace').collect { tpe ->
@@ -229,7 +229,7 @@ class MarketplaceService extends BaseService {
         keyStream.close()
 
         def factory = new SSLSocketFactory(keyStore, keyStorePw, trustStore)
-        if (config.mpSyncTrustAll) {
+        if (config.owf.mpSyncTrustAll) {
             def trustAllCerts = new TrustStrategy() {
                 boolean isTrusted(X509Certificate[] chain, String authType) {
                     return true
@@ -241,7 +241,7 @@ class MarketplaceService extends BaseService {
 
         setMpUrls.find { mpUrl ->
             // Check each configured marketplace and stop when we get a match.
-            def port = 443
+            def port
             try {
                 def u = new URL(mpUrl)
                 if (u.getPort() > -1) {
@@ -258,6 +258,7 @@ class MarketplaceService extends BaseService {
                 def get = new HttpGet(mpUrl + "/public/descriptor/${guid}")
                 def response = client.execute(get)
                 def header = response.entity?.contentType
+
                 if (header?.value.contains("json")) {
                     log.info "Received JSON response from MP (${mpUrl}); success"
                     def handler = new BasicResponseHandler()
