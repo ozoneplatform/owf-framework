@@ -75,7 +75,7 @@ owfLocation=$(to_absolute_path ${owfLocation})
 #Check to see if its a regular file (not a directory)
 if [ -f "$owfLocation" ]; then
     #Extract OWF into a temporary dir
-    owfDir=$(mktemp -d owf.xxx)
+    owfDir=$(mktemp -d owf.XXX)
     pushd "$owfDir" >/dev/null
 
     if [[ $- == *x* ]]; then 
