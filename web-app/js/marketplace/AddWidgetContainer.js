@@ -75,7 +75,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 }
 
                 if (widgetListJson.length > 0) {
-                    // MP Synchronization
+                    // OZP-476: MP Synchronization
                     // Added the URL of the Marketplace we're looking at to the
                     // JSON we send to the widget controller.
                     self.submitWidgetList(Ext.JSON.encode(widgetListJson), marketplaceUrl);
@@ -140,7 +140,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         return approvalTag;
     },
 
-    // MP Synchronization
+    // OZP-476: MP Synchronization
     // Added the URL of the Marketplace we're looking at to the JSON we send to
     // the widget controller.
     submitWidgetList: function(widgetList, mpUrl) {

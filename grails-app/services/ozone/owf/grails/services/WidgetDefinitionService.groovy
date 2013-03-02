@@ -679,7 +679,7 @@ class WidgetDefinitionService {
         def tagLinks = null
         def usedMpPath = false
 
-        // MP Synchronization
+        // OZP-476: MP Synchronization
         // Since we're allowing system-system synchronization (OMP -> OWF, OMP -> OMP) this
         // doesn't necessarily apply any more. We don't require a user to be an admin just
         // to update a listing from a well-known location.
@@ -706,7 +706,7 @@ class WidgetDefinitionService {
 
             widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache:true])
             if (widgetDefinition == null) {
-                // MP Synchronization
+                // OZP-476: MP Synchronization
                 // The default is to fetch a widget from a well-known MP.  If we can't do that
                 // or if the fetch fails, then fall back to the original behavior, which reads
                 // the supplied JavaScript and creates a widget from that.
@@ -725,7 +725,7 @@ class WidgetDefinitionService {
                     log.debug("Importing from the JSON provided to us, since marketplace failed")
                     setWidgets.addAll(marketplaceService.addListingsToDatabase([obj]))
                 }
-                // MP Synchronization
+                // OZP-476: MP Synchronization
                 // See comments on the MarketplaceService regarding what functionality should/could
                 // be moved back into this service.
                 widgetDefinition = setWidgets.find {it.widgetGuid == obj.widgetGuid}
@@ -757,7 +757,7 @@ class WidgetDefinitionService {
                         "\n    on definition: " + obj.toString() + "\n    when trying to save mapping " + mapping.toString(),
                         exceptionType: OwfExceptionTypes.Database)
                 }
-                // MP Synchronization
+                // OZP-476: MP Synchronization
                 // The following block of code is functionally contained within the
                 // MarketplaceService.addListingsToDatabase call.  However, to support
                 // Marketplaces based on an older baseline, we bracket with the
@@ -773,7 +773,7 @@ class WidgetDefinitionService {
             }
         }
 
-        // MP Synchronization
+        // OZP-476: MP Synchronization
         // The following block of code is functionally contained within the
         // MarketplaceService.addListingsToDatabase call. As with the tags,
         // we support an older marketplace baseline by bracketing the call

@@ -149,6 +149,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
         var requiredListings = this.requiredListings;
         var parentWidget = this.parentWidget;
 
+        // OZP-476: MP Synchronization
         var indivCategoryTag;
         for ( var tgs = 0; tgs < parentWidget.categories.length; tgs++) {
             indivCategoryTag = {
@@ -161,11 +162,11 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
         }
 
         if (parentWidget.requires) {
-        for (var i = 0; i < parentWidget.requires.length; i++) {
-        	directRequired.push(parentWidget.requires[i].uuid);
+            for (var i = 0; i < parentWidget.requires.length; i++) {
+                directRequired.push(parentWidget.requires[i].uuid);
+            }
         }
-        }
-        
+
         // Add parent widget
         var json = {
             displayName: parentWidget.title,
@@ -187,9 +188,9 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
     		json.directRequired = Ext.JSON.encode(directRequired);
     	}
     	widgetsJSON.push(Ext.JSON.encode(json));
-        
+
     	if (requiredListings && requiredListings.length > 0) {
-        	
+
         	// Add required widgets
             for (var i = 0; i < requiredListings.length; i++) {
             	directRequired = [];
