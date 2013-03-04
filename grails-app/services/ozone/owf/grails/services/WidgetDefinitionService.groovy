@@ -23,6 +23,7 @@ class WidgetDefinitionService {
     def accountService
     def domainMappingService
     def serviceModelService
+    def marketplaceService
 
     def grailsApplication
 
@@ -671,20 +672,27 @@ class WidgetDefinitionService {
     }
     
     def addExternalWidgetsToUser(params) {
-        def user = null
+        def mpSourceUrl = params.marketplaceUrl ?: "${grailsApplication.config.owf.marketplaceLocation}"
+        def user = accountService.getLoggedInUser()
         def widgetDefinition = null
         def mapping = null
         def tagLinks = null
-        
-        user = accountService.getLoggedInUser()
-        if (params.userId != null) {
-            ensureAdmin()
-            user = Person.findById(params.userId)
-            if (user == null) {
-                throw new OwfException( message:'Invalid userId',
-                    exceptionType: OwfExceptionTypes.Validation)
-            }
-        }
+        def usedMpPath = false
+
+        // OZP-476: MP Synchronization
+        // Since we're allowing system-system synchronization (OMP -> OWF, OMP -> OMP) this
+        // doesn't necessarily apply any more. We don't require a user to be an admin just
+        // to update a listing from a well-known location.
+        //
+        //user = accountService.getLoggedInUser()
+        //if (params.userId != null) {
+        //    ensureAdmin()
+        //    user = Person.findById(params.userId)
+        //    if (user == null) {
+        //        throw new OwfException(	message:'Invalid userId',
+        //            exceptionType: OwfExceptionTypes.Validation)
+        //    }
+        //}
 
         //add widgets to db also add pwd mappings to current user
         def widgetDefinitions = []
@@ -695,36 +703,40 @@ class WidgetDefinitionService {
                 throw new OwfException( message:'WidgetGuid must be provided',
                     exceptionType: OwfExceptionTypes.Validation)
             }
-            
+
             widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache:true])
             if (widgetDefinition == null) {
-                widgetDefinition = new WidgetDefinition(
-                    displayName: obj.displayName,
-                    description: obj.description,
-                    height: obj.height as Integer,
-                    imageUrlLarge: obj.imageUrlLarge,
-                    imageUrlSmall: obj.imageUrlSmall,
-                    universalName: obj.universalName,
-                    widgetGuid: obj.widgetGuid,
-                    widgetUrl: obj.widgetUrl,
-                    widgetVersion: obj.widgetVersion,
-                    width: obj.width as Integer,
-                    singleton: obj.singleton,
-                    visible: obj.visible,
-                    background: obj.background,
-                        descriptorUrl: obj.descriptorUrl,
-                    widgetTypes: [WidgetType.findByName('standard')]
-                )
-                
-                widgetDefinition.save(flush: true, failOnError: true)
+                // OZP-476: MP Synchronization
+                // The default is to fetch a widget from a well-known MP.  If we can't do that
+                // or if the fetch fails, then fall back to the original behavior, which reads
+                // the supplied JavaScript and creates a widget from that.
+                def setWidgets = new HashSet()
+                try {
+                    log.debug("Widget not found locally, building from marketplace with guid=${obj.widgetGuid} and mpUrl=${mpSourceUrl}")
+                    setWidgets.addAll(marketplaceService.addListingsToDatabase(marketplaceService.buildWidgetListFromMarketplace(obj.widgetGuid, mpSourceUrl)))
+                    log.debug("Found ${setWidgets.size()} widgets ${setWidgets.collect {it.toString()}} from the ${mpSourceUrl}")
+                    usedMpPath = true
+                } catch (Exception e) {
+                    log.error "addExternalWidgetsToUser: unable to build widget list from Marketplace, message -> ${e.getMessage()}", e
+                }
+
+                if (setWidgets.isEmpty()) {
+                    // If set is empty, then call to MP failed.  Fallback path.
+                    log.debug("Importing from the JSON provided to us, since marketplace failed")
+                    setWidgets.addAll(marketplaceService.addListingsToDatabase([obj]))
+                }
+                // OZP-476: MP Synchronization
+                // See comments on the MarketplaceService regarding what functionality should/could
+                // be moved back into this service.
+                widgetDefinition = setWidgets.find {it.widgetGuid == obj.widgetGuid}
             }
             widgetDefinitions.push(widgetDefinition)
-            
+
             def queryReturn = PersonWidgetDefinition.executeQuery("SELECT MAX(pwd.pwdPosition) AS retVal FROM PersonWidgetDefinition pwd WHERE pwd.person = ?", [user])
             def maxPosition = (queryReturn[0] != null)? queryReturn[0] : -1
             maxPosition++
 
-            mapping = PersonWidgetDefinition.findByPersonAndWidgetDefinition(user, widgetDefinition);
+            mapping = PersonWidgetDefinition.findByPersonAndWidgetDefinition(user, widgetDefinition)
             if (mapping == null && (obj.isSelected || !grailsApplication.config.owf.enablePendingApprovalWidgetTagGroup)) {
                 mapping = new PersonWidgetDefinition(
                     person: user,
@@ -733,46 +745,62 @@ class WidgetDefinitionService {
                     disabled: grailsApplication.config.owf.enablePendingApprovalWidgetTagGroup,
                     pwdPosition: maxPosition
                 )
-                
-                if (mapping.hasErrors()){
+
+                if (mapping.hasErrors()) {
                     throw new OwfException( message:'A fatal validation error occurred during the creation of the person widget definition. Params: ' + params.toString() + ' Validation Errors: ' + mapping.errors.toString(),
                         exceptionType: OwfExceptionTypes.Validation)
                 }
-                
+
                 if (!mapping.save(flush: true)) {
-                    throw new OwfException(message: 'A fatal error occurred while trying to save the person widget definition. Params: ' + params.toString(),
+                    throw new OwfException(
+                        message: 'A fatal error occurred while trying to save the person widget definition. Params: ' + params.toString() +
+                        "\n    on definition: " + obj.toString() + "\n    when trying to save mapping " + mapping.toString(),
                         exceptionType: OwfExceptionTypes.Database)
                 }
-            
-                if (obj.tags) {
-                    def tags = JSON.parse(obj.tags)
-                    tags.each {
-                        mapping.addTag(it.name, it.visible, it.position, it.editable)
+                // OZP-476: MP Synchronization
+                // The following block of code is functionally contained within the
+                // MarketplaceService.addListingsToDatabase call.  However, to support
+                // Marketplaces based on an older baseline, we bracket with the
+                // usedMpPath.
+                if (!usedMpPath) {
+                    if (obj.tags) {
+                        def tags = JSON.parse(obj.tags)
+                        tags.each {
+                            mapping.addTag(it.name, it.visible, it.position, it.editable)
+                        }
                     }
                 }
             }
         }
-        
+
+        // OZP-476: MP Synchronization
+        // The following block of code is functionally contained within the
+        // MarketplaceService.addListingsToDatabase call. As with the tags,
+        // we support an older marketplace baseline by bracketing the call
+        // with the usedMpPath.
+        //
         // Add requirements after all widgets have been added
-        params.widgets?.each {          
-            def obj = JSON.parse(it)
-            if (obj.directRequired != null) {
-                // delete and the recreate requirements
-                widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache:true])
-                domainMappingService.deleteAllMappings(widgetDefinition, RelationshipType.requires, 'src')
-                
-                def requiredArr = JSON.parse(obj.directRequired)
-                requiredArr.each {
-                    def requiredWidget = WidgetDefinition.findByWidgetGuid(it, [cache:true])
-                    if (requiredWidget != null) {
-                        domainMappingService.createMapping(widgetDefinition, RelationshipType.requires, requiredWidget)
+        if (!usedMpPath) {
+            params.widgets?.each {
+                def obj = JSON.parse(it)
+                if (obj.directRequired != null) {
+                    // delete and the recreate requirements
+                    widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache:true])
+                    domainMappingService.deleteAllMappings(widgetDefinition, RelationshipType.requires, 'src')
+
+                    def requiredArr = JSON.parse(obj.directRequired)
+                    requiredArr.each {
+                        def requiredWidget = WidgetDefinition.findByWidgetGuid(it, [cache:true])
+                        if (requiredWidget != null) {
+                            domainMappingService.createMapping(widgetDefinition, RelationshipType.requires, requiredWidget)
+                        }
                     }
                 }
             }
         }
         return [success: true, data: widgetDefinitions]
     }
-    
+
     def delete(params){
         
         ensureAdmin()

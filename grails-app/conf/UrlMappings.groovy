@@ -449,6 +449,10 @@ class UrlMappings {
                 }
             }
         }
+        "/marketplace/sync/$guid" {
+            controller = 'marketplace'
+            action = 'retrieveFromMarketplace'
+        }
         "500"(controller: 'error')
     }
 }

@@ -935,6 +935,19 @@ owf {
 
       useShims = false
 
+      // OZP-476: Marketplace (MP) Synchronization
+      // Added to support server-server communication. Suggest setting this
+      // true in development environment where the target MP server has a
+      // self-signed cert or similar.
+      mpSyncTrustAll = false
+
+      // MP Synchronization
+      // Added to allow or disallow the trusting of a supplied MP URL.
+      // Enable this only when you know that the MP which serves listing
+      // information is trustworthy or you could open Ozone to a deliberate
+      // "poisoning" of the widget definitions.
+      mpSyncTrustProvidedUrl = false
+
       //use to specify whether or not to show test features
       // isTestMode = "true"
       // dynamicLaunchOnlyIfClosed = "true"
