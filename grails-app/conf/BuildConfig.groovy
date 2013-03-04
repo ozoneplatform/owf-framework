@@ -216,6 +216,8 @@ grails.project.dependency.resolution = {
         compile('org.apache.httpcomponents:httpcore:4.1.1', 'org.apache.httpcomponents:httpclient:4.1.1')
         runtime('org.apache.httpcomponents:httpcore:4.1.1', 'org.apache.httpcomponents:httpclient:4.1.1')
 
+        //need ant for createWebBundles.jar
+        runtime 'org.apache.ant:ant:1.7.0'
     }
 
 }
