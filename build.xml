@@ -10,6 +10,7 @@
     <property name="tomcat.dir" value="${staging.dir}/apache-tomcat-${tomcat.ver}" />
     <property name="build.base.dir" value="${basedir}" />
     <property name="widget.samples.dir" value="${basedir}/sample-widgets" />
+    <property name="temp.dir" value="${basedir}/temp" />
 
     <condition property="offline.arg" value="-DOFFLINE_REPO=${offline_repo}"  else="" >
         <isset property="offline_repo" />
