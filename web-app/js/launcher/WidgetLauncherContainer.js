@@ -41,8 +41,19 @@ Ozone.launcher.WidgetLauncherContainer.prototype = {
     window_manager = this.windowManager;
 
     if (window_manager != null) {
-
-      returnValue = window_manager.launchWidgetInstance(sender, cfg);
+    	var isOkToLaunch = true;
+        Ozone.util.hasAccess({
+      	  	widgetId: cfg.guid, 
+      	  	accessLevel: cfg.accessLevel, 
+      	  	senderId: sender.id,
+      	  	callback: function(response) {
+      	  		if (!response.hasAccess) {
+      	    		// don't send data
+      	    		cfg.data = null;
+      	  		}
+      		    returnValue = window_manager.launchWidgetInstance(sender, cfg);
+      	  	}
+        });
     }
     else {
       throw {

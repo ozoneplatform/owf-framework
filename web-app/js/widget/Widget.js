@@ -20,7 +20,7 @@ OWF = window.OWF ? window.OWF : {};
 		dragAndDropController,
 		launchingController,
 		chromeController;
-
+	
 	owfdojo.mixin(OWF, /** @lends OWF */ {
 
 		/**
@@ -101,6 +101,14 @@ OWF = window.OWF ? window.OWF : {};
 		 */
 		Lang: Ozone.lang,
 		
+		/**
+		 * 
+		 *
+		 * @namespace
+		 * @name OWF.Audit
+		 */
+		Audit: Ozone.audit,
+
 		Version: Ozone.version,
 
 		/**
@@ -370,6 +378,14 @@ OWF = window.OWF ? window.OWF : {};
 			}
 		}
 
+		// Audit API
+		function initAudit() {
+			for(var i in Ozone.audit) {
+				if(typeof Ozone.audit[ i ] === 'function')
+					OWF.Audit[ i ] = Ozone.audit[ i ];
+			}
+		}
+
 		eventingController = Ozone.eventing.Widget.getInstance(function() {
 
 			dragAndDropController = Ozone.dragAndDrop.WidgetDragAndDrop.getInstance({
@@ -396,6 +412,13 @@ OWF = window.OWF ? window.OWF : {};
 			}
 
 		});
+
+		Ozone.config = Ozone.config ? Ozone.config : {};
+		Ozone.config.dataguard = Ozone.config.dataguard ? Ozone.config.dataguard : {};
+		Ozone.config.dataguard.allowMessagesWithoutAccessLevel = widget.allowMessagesWithoutAccessLevel;
+		Ozone.config.dataguard.auditAllMessages = widget.auditAllMessages;
+		Ozone.config.dataguard.restrictMessages = widget.restrictMessages;
+		Ozone.config.dataguard.accessLevelCacheTimeout = widget.accessLevelCacheTimeout;
 
 	};
 

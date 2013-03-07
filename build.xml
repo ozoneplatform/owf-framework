@@ -359,6 +359,14 @@
         <grails script="Compile" preargs="${offline.arg}"/>
     </target>
 
+    <target name="compileAccess" description="--->Compile data guard access capability">
+        <delete dir="${temp.dir}"/>
+        <mkdir dir="${temp.dir}"/>
+        <javac srcdir="${basedir}/src/java/custom/access" destdir="${temp.dir}"/>
+        <jar jarfile="${lib.dir}/access-1.0.jar" basedir="${temp.dir}"/>
+        <delete dir="${temp.dir}"/>
+    </target>
+
     <!-- =================================
           target: war
          ================================= -->

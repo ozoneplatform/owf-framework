@@ -236,7 +236,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
     },
 
     launchFailedHandler: function(response) {
-        if (response.error) {
+        if (response && response.error) {
             this.showAlert('Launch Error', 'Stack Editor Launch Failed: ' + response.message);
         }
     },

@@ -227,7 +227,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
             launchOnlyIfClosed: false,
             data: dataString
         }, function(response) {
-            if (response.error) {
+            if (response && response.error) {
                 self.editPanel.showAlert('Launch Error', 'Stack Editor Launch Failed: ' + response.message);
             }
         });

@@ -46,6 +46,7 @@ OWF = window.OWF ? window.OWF : {};
              */
             startActivity:function (intent, data, handler, dest) {
                 var destIds = [];
+        		var accessLevel = data.accessLevel;
 
                 //pull destIds from any proxies passed in
                 if (dest != null) {
@@ -78,7 +79,7 @@ OWF = window.OWF ? window.OWF : {};
                                             if (widgets.length == destWidgetIds.length) {
                                                 handler(widgets);
                                             }
-                                        });
+                                        }, accessLevel);
                                     }
 
                                 }

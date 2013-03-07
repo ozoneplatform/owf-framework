@@ -198,7 +198,7 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
      *           Ozone.eventing.MyMapWidget.plot(1.1,2.2);
      *        }
      */
-    function importWidget(widgetId, ready) {
+    function importWidget(widgetId, ready, accessLevel) {
         // assume JSON
         if(widgetId.charAt(0) === '{') {
             widgetId = OWF.Util.parseJson(widgetId).id;
@@ -218,7 +218,16 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
 
         var id = getIdFromWindowName();
         var srcWidgetIframeId = '{\"id\":\"' + id + '\"}';
-        gadgets.rpc.call("..", 'GET_FUNCTIONS', processFunctionsFromContainer, widgetId, srcWidgetIframeId);
+        Ozone.util.hasAccess({
+      	  	widgetId: widgetId, 
+      	  	accessLevel: accessLevel, 
+      	  	senderId: OWF.getWidgetGuid(),
+      	  	callback: function(response) {
+      	  		if (response.hasAccess) {
+      	  			gadgets.rpc.call("..", 'GET_FUNCTIONS', processFunctionsFromContainer, widgetId, srcWidgetIframeId);
+      	  		}
+      	  	}
+        });
         return proxy;
     }
 

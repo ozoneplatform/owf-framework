@@ -235,7 +235,7 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
     },
     
     onLaunchFailed: function(response) {
-        if (response.error) {
+        if (response && response.error) {
             this.showAlert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
         }
     },

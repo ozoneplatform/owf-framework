@@ -49,6 +49,7 @@
 		Ext.onReady(function() {
 			OWF.ready(function(){
 				//init quicktips
+				Ext.Loader.setConfig({enabled: true});
 				Ext.tip.QuickTipManager.init();
 
                 var viewport = Ext.widget('Ozone.components.ChannelListenerPanel');

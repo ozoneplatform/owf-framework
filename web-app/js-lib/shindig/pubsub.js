@@ -43,8 +43,8 @@ gadgets.pubsub = (function() {
      * @param {string} channel Channel name.
      * @param {string} message Message to publish.
      */
-    publish: function(channel, message, dest) {
-      gadgets.rpc.call('..', 'pubsub', null, 'publish', channel, message, dest);
+    publish: function(channel, message, dest, accessLevel) {
+      gadgets.rpc.call('..', 'pubsub', null, 'publish', channel, message, dest, accessLevel);
     },
 
     /**

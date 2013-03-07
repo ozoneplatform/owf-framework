@@ -232,7 +232,7 @@ Ozone.dragAndDrop.WidgetDragAndDropContainer.prototype = {
     }
 
     //actually send data
-    this.eventingContainer.publish(this.dropReceiveDataName, this.dragDropData,sender);
+    this.eventingContainer.publish(this.dropReceiveDataName, this.dragDropData,sender, null, this.dragDropData.accessLevel);
     // Publish event to let widgets know that the mouse button was released
     this.eventingContainer.publish(this.dragStopInContainerName, null);
 

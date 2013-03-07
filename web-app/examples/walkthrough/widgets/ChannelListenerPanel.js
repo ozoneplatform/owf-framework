@@ -173,6 +173,8 @@ Ext.define('Ozone.components.ChannelListenerPanel', {
                     });
                     OWF.DragAndDrop.onDrop(function(msg) {
                       this.subscribeToChannel(msg.dragDropData);
+                      cmp.dragging = false;
+                      cmp.getView().removeCls('ddOver');
                     }, this);
 
                     var view = cmp.getView();
@@ -338,6 +340,13 @@ Ext.define('Ozone.components.ChannelListenerPanel', {
     this.on({
       afterrender: {
         fn: function(cmp) {
+          OWF.RPC.registerFunctions([
+               {
+                   name: 'addToGrid',
+                   fn:  this.addToGrid,
+                   scope: this
+               }
+          ]);
           var launchConfig = OWF.Launcher.getLaunchData();
           if (launchConfig != null) {
     		var data = launchConfig;
@@ -368,7 +377,6 @@ Ext.define('Ozone.components.ChannelListenerPanel', {
       var channelName = text;
       activeChannelGrid.getStore().insert(0, {channel:Ext.htmlEncode(text)});
       OWF.Eventing.subscribe(channelName, owfdojo.hitch(this, this.addToGrid));
-
     }
 
   },

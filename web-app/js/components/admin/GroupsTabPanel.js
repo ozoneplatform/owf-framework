@@ -238,7 +238,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
             launchOnlyIfClosed: false,
             data: dataString
         }, function(response) {
-            if (response.error) {
+            if (response && response.error) {
                 self.editPanel.showAlert('Launch Error', 'Group Editor Launch Failed: ' + response.message);
             }
         });

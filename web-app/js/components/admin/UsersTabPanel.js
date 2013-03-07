@@ -242,7 +242,7 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
             launchOnlyIfClosed: false,
             data: dataString
         }, function(response) {
-            if (response.error) {
+            if (response && response.error) {
                 this.editPanel.showAlert('Launch Error', 'User Editor Launch Failed: ' + response.message);
             }
         });

@@ -362,12 +362,13 @@ Ozone.eventing.Widget.prototype = {
      * @param {String} [dest] The id of a particular destination.  Defaults to null which sends to all
      *                 subscribers on the channel.  See <a href="#getWidgetId">Ozone.eventing.Widget.getWidgetId</a>
      *                 for a description of the id.
+     * @param {String} accessLevel The minimum access level a widget must have to receive the message.
      * @example
      * this.widgetEventingController = Ozone.eventing.Widget.getInstance();
      * this.widgetEventingController.publish("ClockChannel", currentTimeString);
      */
-    publish : function(channelName, message, dest) {
-        gadgets.pubsub.publish(channelName, message, dest);
+    publish : function(channelName, message, dest, accessLevel) {
+        gadgets.pubsub.publish(channelName, message, dest, accessLevel);
         return this;
     }
 };

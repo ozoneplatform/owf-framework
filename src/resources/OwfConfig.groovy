@@ -99,6 +99,24 @@ owf {
     //truststorePath = System.properties['javax.net.ssl.trustStore']
     //timeout = 1800000
   }
+
+  dataguard {
+    // Option to restrict messages between widgets based on access levels.
+    // If this option is set to false, all other dataguard options are ignored.
+    restrictMessages = true
+
+    // Option to audit all messages between widgets, not just failed messages.
+    // restrictMessages must be set to true
+    auditAllMessages = false
+
+    // Option to allow widgets to send messages without specifying their access level.
+    // restrictMessages must be set to true
+    allowMessagesWithoutAccessLevel = true
+
+    // The amount of time (in milliseconds) to cache a widget's access level.
+    // restrictMessages must be set to true
+    accessLevelCacheTimeout = 3600000
+  }
 }
 
 

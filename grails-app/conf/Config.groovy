@@ -136,6 +136,7 @@ uiperformance.bundles = [
 
         files: [
             '../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed',
+            'audit/Audit',
             'util/pageload',
             'util/version',
             'util/util',
@@ -188,6 +189,7 @@ uiperformance.bundles = [
             '../js-lib/shindig/rpc',
             '../js-lib/shindig/pubsub',
             'ux/menu/Item',
+            'audit/Audit',
             'util/version',
             'util/log',
             'util/pageload',
@@ -527,6 +529,7 @@ uiperformance.bundles = [
                         'ux/MessageBoxPlus',
                         'ux/OWFVtypes',
                         '../js-lib/log4javascript/log4javascript',
+            			'audit/Audit',
                         'util/version',
                         'util/util',
                         'util/widget_utils',
@@ -981,6 +984,23 @@ owf {
         cssImports = []
     }
 
+  	dataguard {
+	  	// Option to restrict messages between widgets based on access levels.
+	  	// If this option is set to false, all other dataguard options are ignored.
+	  	restrictMessages = true
+	  	
+	  	// Option to audit all messages between widgets, not just failed messages.
+	  	// restrictMessages must be set to true
+	  	auditAllMessages = false
+	  	
+	  	// Option to allow widgets to send messages without specifying their access level.
+	  	// restrictMessages must be set to true
+	  	allowMessagesWithoutAccessLevel = true
+	  	
+	  	// The amount of time (in milliseconds) to cache a widget's access level.
+	  	// restrictMessages must be set to true
+	  	accessLevelCacheTimeout = 3600000
+  	}
 }
 
 // log4j configuration : see log4j.xml

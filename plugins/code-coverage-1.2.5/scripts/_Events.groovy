@@ -132,10 +132,15 @@ def replaceClosureNames(artefacts) {
 def replaceClosureNamesInXmlReports(artefacts) {
     def xml = new File("${coverageReportDir}/coverage.xml")
     if (xml.exists()) {
-        def p = new XmlParser()
-        p.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-        def parser = p.parse(xml)
-
+		def entityResolver = { publicId,systemId -> 
+			if(systemId.endsWith(".dtd"))
+				return new org.xml.sax.InputSource(new StringReader(" "))
+			else
+				return null
+		} as org.xml.sax.EntityResolver
+		
+        def parser = new XmlParser(entityResolver: entityResolver).parse(xml)
+		
         artefacts?.each {artefact ->
             def closures = [:]
             artefact.reference.propertyDescriptors.each {propertyDescriptor ->

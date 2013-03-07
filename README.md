@@ -15,6 +15,58 @@ The Ozone Widget Framework (OWF) is a web application for composing other lightw
 ## Technology components
 For Version 7 of OWF, the front-end user interface uses ExtJS, and the back-end uses Grails.  User preferences are stored in a relational database - anything supported by Hibernate.  Authentication of users is a modular function provided by Spring Security.  There is a re-factoring effort planned for 2013 to improve performance  modularity and maintainability, which is expected to eliminate the dependency on Grails and ExtJS.
  
+### Secured Messaging
+The eventing, drag-and-drop, launching, rpc, and intents APIs have been modified to enforce secured messaging. This is achieved by requiring the sending widgets to pass along an accessLevel parameter as part of the payload when using any of these APIs.
+
+#### Eventing Example
+OWF.Eventing.publish(channel, message, null, accessLevel);
+ 
+#### RPC Example
+OWF.RPC.getWidgetProxy(widgetId, function(widget) {
+	var sender = Ozone.util.toString({
+		"id": OWF.getInstanceId()
+	});
+	widget.addToGrid(sender, message, channel);
+}, accessLevel);
+ 
+#### Drag and Drop Example
+OWF.DragAndDrop.startDrag({
+	dragDropLabel: Ext.String.htmlEncode(data),
+	dragDropData: data,
+	accessLevel: accessLevel
+});
+ 
+#### Launching Example
+OWF.Launcher.launch({
+	guid: scope.guid,
+	launchOnlyIfClosed: true,
+	data: dataString,
+	accessLevel: accessLevel
+}, function(response) {
+	//check if the widgetLaunch call failed
+	if (response.error) {
+		//display error message
+	}
+});
+ 
+#### Intents Example
+OWF.Intents.startActivity(
+	{
+		action:'View',
+		dataType: 'text/html'
+	},
+	{
+		data: data,
+		accessLevel: accessLevel
+	},
+	function (dest) {
+		//dest is an array of destination widget proxies
+		if (dest.length <= 0) {
+			// alert('Intent was canceled');
+		}
+	}					                
+);
+ 
 ## Browser Support
 Numbered releases are tested on IE7, IE8, IE9, Firefox 3.6 and the latest public version of Firefox.  Some of the developers use Safari or Chrome, so generally it works well with those browsers also.
  
@@ -43,6 +95,7 @@ Released under the [Apache License, Version 2.](http://www.apache.org/licenses/L
 OWF started as a project at a single US Government agency, but developed into a collaborative project spanning multiple federal agencies.  Overall project direction is managed by "The OWF Government Open Source Software Board"; i.e. what features should the core team work on next, what patches should get accepted, etc.  Gov't agencies wishing to be represented on the board should check http://owfgoss.org for more details.  Membership on the board is currently limited to Government agencies that are using OWF and have demonstrated willingness to invest their own energy and resources into developing it as a shared resource of the community.  At this time, the board is not considering membership for entities that are not US Government Agencies, but we would be willing to discuss proposals.
  
 ### Contributions
+
 #### Non-Government
 Contributions to the baseline project from outside the US Federal Government should be submitted as a pull request to the core project on GitHub.  Before patches will be accepted by the core project, contributors have a signed Contributor License Agreement on file with the core team.  If you or your company wish your copyright in your contribution to be annotated in the project documentation (such as this README), then your pull request should include that annotation.
  

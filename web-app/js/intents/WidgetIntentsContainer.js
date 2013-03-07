@@ -30,7 +30,7 @@ OWF = window.OWF ? window.OWF : {};
          * @param intent
          */
         function route(sender, intent, data, dest) {
-            var returnValue = undefined;
+            var returnValue = undefined;            
             var container = {
                 send: OWF.IntentsContainer.send,
                 addListener: OWF.IntentsContainer.addListener,
@@ -180,18 +180,45 @@ OWF = window.OWF ? window.OWF : {};
             send:function (sender, intent, data, handler, dest) {
 
                 var destWidgetIds = [].concat(dest);
-                var count = 0;
-                for (var i = 0; i < destWidgetIds.length; i++) {
-                    //check if the dest widget has registered for the intent, if so then send
-                    if (widgetIntentMap[destWidgetIds[i]] != null && widgetIntentMap[destWidgetIds[i]][owfdojo.toJson(intent)]) {
-                        Ozone.eventing.Container.send(destWidgetIds[i], INTENTS_SERVICE_NAME, handler, sender, intent, data);
-                        count++;
-                    }
-//                    else {
-//                      console.log('Error, attempting to send an intent to a widget that did not register for it');
-//                    }
+                var sentIds = {};
+                var successCount = 0;
+                
+                //check if the dest widget has registered for the intent, if so then send
+                function sendIntent(index, ids, successCount) {
+                	var destWidgetId = ids[index];
+                	if (destWidgetId) {
+		              	var widgetId = Ozone.util.parseJson(destWidgetId).id;
+		              	if (widgetIntentMap[destWidgetId] != null && 
+		                   		widgetIntentMap[destWidgetId][owfdojo.toJson(intent)] &&
+		                   		!sentIds[widgetId]) {
+		              	  
+		              		sentIds[widgetId] = true;
+		              		Ozone.util.hasAccess({
+		              			widgetId: widgetId, 
+		                  	  	accessLevel: data.accessLevel, 
+		                  	  	senderId: Ozone.util.parseJson(sender).id,
+		                  	  	callback: function(response) {
+		                  	  		if (response.hasAccess) {
+		    	                        Ozone.eventing.Container.send(destWidgetId, INTENTS_SERVICE_NAME, handler, sender, intent, data);
+		    	                        successCount++;
+		                  	  		}
+		                  	  		index++;
+		                  	  		
+		                  	  		if (index < ids.length) {
+		                  	  			sendIntent(index, ids, successCount);
+		                  	  		}
+		                  	  	}
+		              		});
+		                }
+                	}
                 }
-                return count == destWidgetIds.length;
+                
+      	  		sendIntent(0, destWidgetIds, successCount);
+                
+      	  		// TO DO: This still needs to be reworked because Ozone.util.hasAccess is asynchronous
+      	  		// so successCount will always be 0 here (since asynchrounous calls won't finish before
+      	  		// this line is reached).
+                return successCount == destWidgetIds.length;
             },
 
             addListener:function (event, handler, scope, single) {

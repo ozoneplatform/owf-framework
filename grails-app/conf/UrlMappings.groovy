@@ -453,6 +453,14 @@ class UrlMappings {
             controller = 'marketplace'
             action = 'retrieveFromMarketplace'
         }
+        "/audit" {
+            controller='audit'
+            action='logMessage'
+        }
+        "/access" {
+            controller='access'
+            action='checkAccess'
+        }
         "500"(controller: 'error')
     }
 }

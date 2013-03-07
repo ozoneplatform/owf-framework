@@ -272,7 +272,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
 
     //send message to start dragging for other widgets - unsubscribe so we don't repeat onstartdrag
     this.widgetEventingController.unsubscribe(this.dragStartName);
-    this.widgetEventingController.publish(this.dragStartName, dragStartCfg);
+    this.widgetEventingController.publish(this.dragStartName, dragStartCfg, null, dragStartCfg.accessLevel);
     this.widgetEventingController.subscribe(this.dragStartName, owfdojo.hitch(this, this.onStartDrag));
 
     //send data to container
@@ -287,38 +287,47 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
    */
   onStartDrag : function(sender, msg) {
 
-    this.dragging = true;
-
-    this.dragStartData = msg;
-
-    if (owfdojo.isFunction(this.callbacks[this.dragStart])) {
-      //execute callback if false is returned don't continue
-      if (this.callbacks[this.dragStart](sender,msg) === false) {
-        this.dragging = false;
-        return;
+	  this.dragging = true;
+	  this.dragStartData = msg;
+        
+	  if (owfdojo.isFunction(this.callbacks[this.dragStart])) {
+		  var scope = this;
+		  var senderId = Ozone.util.parseJson(sender);
+		  Ozone.util.hasAccess({
+			  widgetId: OWF.getWidgetGuid(), 
+			  accessLevel: msg.accessLevel, 
+			  senderId: senderId.id,
+			  callback: function(response) {
+				  if (response.hasAccess) {
+					  //execute callback if false is returned don't continue
+					  if (scope.callbacks[scope.dragStart](sender,msg) === false) {
+						  scope.dragging = false;
+					  }
+				  }
+			  }
+		  });
+	  }
+  
+      //prevent IE bug where text is dragged instead of the node
+      if (owfdojo.isIE) {
+        document.onselectstart = function() {
+          return false;
+        };
+        document.ondragstart = function () {
+          return false;
+        };
       }
-    }
 
-    //prevent IE bug where text is dragged instead of the node
-    if (owfdojo.isIE) {
-      document.onselectstart = function() {
-        return false;
-      };
-      document.ondragstart = function () {
-        return false;
-      };
-    }
+      this.dragIndicatorText = msg.dragDropLabel;
+      this.dragIndicatorTextNode.innerHTML = this.dragIndicatorText;
 
-    this.dragIndicatorText = msg.dragDropLabel;
-    this.dragIndicatorTextNode.innerHTML = this.dragIndicatorText;
-
-    //hook mouse move and mouse up
-    if (this.listeners.onmousemove == null) {
-      this.listeners.onmousemove = owfdojo.connect(document, 'onmousemove', this, this.mouseMove);
-    }
-    if (this.listeners.onmouseup == null) {
-      this.listeners.onmouseup = owfdojo.connect(document, 'onmouseup', this, this.mouseUp);
-    }
+      //hook mouse move and mouse up
+      if (this.listeners.onmousemove == null) {
+      	this.listeners.onmousemove = owfdojo.connect(document, 'onmousemove', this, this.mouseMove);
+      }
+      if (this.listeners.onmouseup == null) {
+      	this.listeners.onmouseup = owfdojo.connect(document, 'onmouseup', this, this.mouseUp);
+      }
   },
 
   /**
@@ -468,7 +477,18 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
     this.setDropEnabled(false);
 
     if (owfdojo.isFunction(this.callbacks[this.dragStop])) {
-      this.callbacks[this.dragStop](this.dropTarget);
+  	  var scope = this;
+	  var senderId = Ozone.util.parseJson(sender);
+	  Ozone.util.hasAccess({
+		  widgetId: OWF.getWidgetGuid(), 
+		  accessLevel: msg.accessLevel, 
+		  senderId: senderId.id,
+		  callback: function(response) {
+			  if (response.hasAccess) {
+				  scope.callbacks[scope.dragStop](scope.dropTarget);
+			  }
+		  }
+	  });
     }
   },
 
@@ -477,66 +497,66 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
    */
   mouseUp : function (e, fake) {
     if (this.dragging === true) {
-      this.dragging = false;
-
-      //prevent IE bug where text is dragged instead of the node
-      if (owfdojo.isIE) {
-        document.onselectstart = function() {
-          return true;
-        };
-        document.ondragstart = function () {
-          return true;
-        };
-      }
-
-      owfdojo.style(this.dragIndicator, {
-        display: 'none'
-      });
-
-      if(this.getFlashWidgetId()) {
-
-          var clientWidth = null;
-          var clientHeight = null;
-          if (owfdojo.isIE) {
-              clientWidth = document.body.clientWidth;
-              clientHeight = document.body.clientHeight;
-          }
-          else {
-              clientWidth = window.innerWidth;
-              clientHeight = window.innerHeight;
-          }
-
-          if((e.clientX < 0 || e.clientX > clientWidth || 
-                e.clientY < 0 || e.clientY > clientHeight
-                || Ozone.Widget.getDashboardLayout() === 'tabbed')
-                && fake !== true) {
-              
-              gadgets.rpc.call('..', '_fake_mouse_up', null, {
-                  sender: this.widgetEventingController.getWidgetId(),
-                  pageX: e.pageX,
-                  pageY: e.pageY,
-                  screenX: e.screenX,
-                  screenY: e.screenY
-              });
-              return;
-          }
-      }
-
-      //disconnect listeners
-      for (l in this.listeners) {
-        owfdojo.disconnect(this.listeners[l]);
-        this.listeners[l] = null;
-      }
-
-      //save dropzone info
-      this.dropTarget = e.target;
-
-      //send message
-      this.widgetEventingController.publish(this.dragStopInWidgetName, this.widgetEventingController.getWidgetId());
-
-  //    if (owfdojo.isFunction(this.callbacks[this.dragStop])) {
-  //      this.callbacks[this.dragStop](this.dropTarget);
-  //    }
+	      this.dragging = false;
+	
+	      //prevent IE bug where text is dragged instead of the node
+	      if (owfdojo.isIE) {
+	        document.onselectstart = function() {
+	          return true;
+	        };
+	        document.ondragstart = function () {
+	          return true;
+	        };
+	      }
+	
+	      owfdojo.style(this.dragIndicator, {
+	        display: 'none'
+	      });
+	
+	      if(this.getFlashWidgetId()) {
+	
+	          var clientWidth = null;
+	          var clientHeight = null;
+	          if (owfdojo.isIE) {
+	              clientWidth = document.body.clientWidth;
+	              clientHeight = document.body.clientHeight;
+	          }
+	          else {
+	              clientWidth = window.innerWidth;
+	              clientHeight = window.innerHeight;
+	          }
+	
+	          if((e.clientX < 0 || e.clientX > clientWidth || 
+	                e.clientY < 0 || e.clientY > clientHeight
+	                || Ozone.Widget.getDashboardLayout() === 'tabbed')
+	                && fake !== true) {
+	              
+	              gadgets.rpc.call('..', '_fake_mouse_up', null, {
+	                  sender: this.widgetEventingController.getWidgetId(),
+	                  pageX: e.pageX,
+	                  pageY: e.pageY,
+	                  screenX: e.screenX,
+	                  screenY: e.screenY
+	              });
+	              return;
+	          }
+	      }
+	
+	      //disconnect listeners
+	      for (l in this.listeners) {
+	        owfdojo.disconnect(this.listeners[l]);
+	        this.listeners[l] = null;
+	      }
+	
+	      //save dropzone info
+	      this.dropTarget = e.target;
+	
+	      //send message
+	      this.widgetEventingController.publish(this.dragStopInWidgetName, this.widgetEventingController.getWidgetId(), null, this.dragStartData.accessLevel);
+	
+	      if (owfdojo.isFunction(this.callbacks[this.dragStop])) {
+	        this.callbacks[this.dragStop](this.dropTarget);
+	      }
       }
   },
 
@@ -545,7 +565,8 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
    */
   dropReceiveData : function (sender, msg, channel) {
 
-    //only if the mouse is over a drop zone
+    // only if the mouse is over a drop zone and this widget has the 
+	// access level to receive the data being sent
     if (this.dropEnabledFlag) {
       if (this.dropTarget) {
         msg.dropTarget = this.dropTarget;
@@ -735,9 +756,21 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
    */
   setDropEnabled : function(dropEnabled) {
     if (dropEnabled) {
-      this.dropEnabledFlag = true;
-      owfdojo.removeClass(this.dragIndicator, 'ddBoxCannotDrop');
-      owfdojo.addClass(this.dragIndicator, 'ddBoxCanDrop');
+      var scope = this;
+  	  var data = this.getDragStartData();
+  	  var senderId = Ozone.util.parseJson(data.dragSourceId);
+      Ozone.util.hasAccess({
+    	  widgetId: OWF.getWidgetGuid(), 
+    	  accessLevel: data.accessLevel, 
+    	  senderId: senderId.id,
+    	  callback: function(response) {
+    		  scope.dropEnabledFlag = response.hasAccess;
+    	      if (scope.dropEnabledFlag) {
+    		      owfdojo.removeClass(scope.dragIndicator, 'ddBoxCannotDrop');
+    		      owfdojo.addClass(scope.dragIndicator, 'ddBoxCanDrop');
+    	      }
+    	  }
+      });
     }
     else {
       this.dropEnabledFlag = false;

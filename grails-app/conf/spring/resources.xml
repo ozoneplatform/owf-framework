@@ -6,5 +6,8 @@
 
     <import resource="classpath*:*OWFsecurityContext*.xml" />
     <import resource="classpath*:OwfConfig.xml" />
-    
+
+    <bean id="customAccessChecker" class="custom.access.CustomAccessChecker">
+
+    </bean>
 </beans>

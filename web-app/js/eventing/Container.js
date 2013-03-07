@@ -8,6 +8,8 @@ var Ozone = Ozone ? Ozone : {};
  * @namespace
  */
 Ozone.eventing = Ozone.eventing ? Ozone.eventing : {};
+Ozone.config = Ozone.config ? Ozone.config : {};
+Ozone.config.dataguard = Ozone.config.dataguard ? Ozone.config.dataguard : {};
 
 (function (window, document, undefined) {
 
@@ -113,7 +115,7 @@ Ozone.eventing = Ozone.eventing ? Ozone.eventing : {};
                 gadgets.pubsubrouter.init(function (id) {
                     return id;
                 }, {
-                    onRoute:function (sender, subscriber, channel, message) {
+                    onRoute:function (sender, subscriber, channel, message, accessLevel) {
                         var returnValue = true;
 
                         //execute any callbacks if any return false then stop the message
@@ -285,7 +287,11 @@ Ozone.eventing = Ozone.eventing ? Ozone.eventing : {};
                     url:url,
                     guid:widget.widgetGuid,
                     version:widget.version || 1,
-                    locked: isLocked || false
+                    locked: isLocked || false,
+                    restrictMessages:Ozone.config.dataguard.restrictMessages,
+                    allowMessagesWithoutAccessLevel:Ozone.config.dataguard.allowMessagesWithoutAccessLevel,
+                    auditAllMessages:Ozone.config.dataguard.auditAllMessages,
+                    accessLevelCacheTimeout: Ozone.config.dataguard.accessLevelCacheTimeout
                 };
 
                 if (launchData) {

@@ -22,18 +22,16 @@
             var scope = this;
             shoutInit = owfdojo.hitch(this, function () {
 
-/***************** UNCOMMENT TO AUTO-LAUNCH CHANNEL LISTENER ************************
-                OWF.Preferences.findWidgets({
-                    searchParams: {
-                        widgetName: 'Channel Listener'
-                    },
-                    onSuccess:function(result) {
-                        scope.guid = result[0].id;
-                    },
-                    onFailure:function(err) {
-                    } 
-                });
-*************************************************************************************/
+	            OWF.Preferences.findWidgets({
+	                searchParams: {
+	                    widgetName: 'Channel Listener'
+	                },
+	                onSuccess:function(result) {
+	                    scope.guid = result[0].id;
+	                },
+	                onFailure:function(err) {
+	                } 
+	            });
 
                 //add handler to text field for dragging
                 owfdojo.connect(document.getElementById('dragSource'), 'onmousedown', this, function(e) {
@@ -42,11 +40,12 @@
                     if (data != null && data != '') {
                         OWF.DragAndDrop.startDrag({
                             dragDropLabel: Ext.String.htmlEncode(data),
-                            dragDropData: data
+                            dragDropData: data,
+                            accessLevel: "4"
                         });
                     }
                 });
-
+                
             });
 
             shout = owfdojo.hitch(this, function () {
@@ -56,37 +55,53 @@
 
                 if (channel != null && channel != '') {
 
-                    OWF.Eventing.publish(channel, message, null, accessLevel);
+	                OWF.getOpenedWidgets(function(widgetList) {
+	                	var widgetId;
+	                    if (widgetList != null) {
+	                        var found = false;
+	                        for (var i = 0; i < widgetList.length; i++) {
+	                            if (widgetList[i].widgetGuid == scope.guid) {
+	                                widgetId = widgetList[i].id;
+	                                break;
+	                            }
+	                        }
+	                        if (widgetId) {
+	                            OWF.RPC.getWidgetProxy(widgetId, function(widget) {
+	                            	var sender = Ozone.util.toString({
+	                            		"id": OWF.getInstanceId()
+									});
+	                                widget.addToGrid(sender, message, channel);
+	                            }, accessLevel);
+	                        } else {
+			                    if (scope.guid != null && typeof scope.guid == 'string') {
+			                        var data = {
+			                            channel: channel,
+			                            message: message
+			                        };
+			                        var dataString = OWF.Util.toString(data);
 
-                    if (scope.guid != null && typeof scope.guid == 'string') {
-                        var data = {
-                            channel: channel,
-                            message: message
-                        };
-                        var dataString = OWF.Util.toString(data);
-/***************** UNCOMMENT TO AUTO-LAUNCH CHANNEL LISTENER ************************
-                        OWF.Launcher.launch({
-                            guid: scope.guid,
-                            launchOnlyIfClosed: true,
-                            title: 'Channel Listener Launched',
-                            data: dataString
-                        }, function(response) {
-
-                            //check if the widgetLaunch call failed
-                            if (response && response.error) {
-                                //display error message
-                            }
-                        });
-*************************************************************************************/
-                    }
+			                        OWF.Launcher.launch({
+			                            guid: scope.guid,
+			                            launchOnlyIfClosed: true,
+			                            data: dataString,
+			                            accessLevel: accessLevel
+			                        }, function(response) {
+			                            //check if the widgetLaunch call failed
+			                            if (response && response.error) {
+			                                //display error message
+			                            }
+			                        });
+			                    }
+	                        }
+	                    }
+	                });
                 }
             });
             
             ShouterStrings = {
                 channel: 'Channel: ',
                 message: 'Message: ',
-                broadcast: 'Broadcast',
-                accessLevel: 'Access Level:'
+                broadcast: 'Broadcast'
             };
 
             var lang = Ozone.lang.getLanguage();
@@ -100,6 +115,7 @@
             owfdojo.ready(function() {
                 OWF.ready(shoutInit);
             });
+            
         </script>
      </head>
     <body class="x-panel-body-default">
@@ -115,12 +131,11 @@
                 </span>
                 <br /><br />
                 <script>
-                    document.write(ShouterStrings.accessLevel);
+                    document.write("Message Access Level:");
                 </script>
                 <input type="text" id="AccessLevel" class="widgetFormInput" size="16"/>
             </div>
-            <br/>
-            <br/>
+            <br/><br/>
             <div class="msgName">
                 <script>
                     document.write(ShouterStrings.message);

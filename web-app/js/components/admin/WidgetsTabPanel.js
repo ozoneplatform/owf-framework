@@ -238,7 +238,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
             launchOnlyIfClosed: false,
             data: dataString
         }, function(response) {
-            if (response.error) {
+            if (response && response.error) {
                 me.editPanel.showAlert('Launch Error', 'Widget Editor Launch Failed: ' + response.message);
             }
         });

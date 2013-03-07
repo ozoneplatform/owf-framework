@@ -36,8 +36,8 @@ gadgets.pubsubrouter = (function() {
   var onPublish;
   var onRoute;
   var containerListeners = {};
-
-  function router(command, channel, message, dest) {
+  
+  function router(command, channel, message, dest, accessLevel) {
     var gadgetId = this.f;
     var sender = gadgetIdToSpecUrl(gadgetId);
     if (sender) {
@@ -63,7 +63,7 @@ gadgets.pubsubrouter = (function() {
           }
         break;
       case 'publish':
-        if (onPublish && onPublish(gadgetId, channel, message)) {
+        if (onPublish && onPublish(gadgetId, channel, message, accessLevel)) {
           break;
         }
         var channelSubscribers = subscribers[channel];
@@ -71,11 +71,30 @@ gadgets.pubsubrouter = (function() {
           for (var subscriber in channelSubscribers) {
           // Check for the subscriber iframe.  It's possible the iframe
           // was removed from the dom and is no longer accessable
-          if (document.getElementById(subscriber) != null){
-              if (onRoute && !onRoute(sender, subscriber, channel, message)
-                          && (dest == null || subscriber == dest)) {   
-                    gadgets.rpc.call(subscriber, 'pubsub', null, channel, sender, message);
-              }
+          if (document.getElementById(subscriber) != null) {
+        	  // Only continue if the receiving widget has the correct access level
+        	  var widgetId = Ozone.util.parseJson(subscriber).id;
+        	  var senderId = null;
+        	  try {
+        		  senderId = Ozone.util.parseJson(sender).id;
+        	  } catch(e) {
+        		  // Do nothing...probably sent from container
+        	  }
+        	  
+        	  Ozone.util.hasAccess({
+            	  	widgetId: widgetId, 
+            	  	accessLevel: accessLevel, 
+            	  	channel: channel,
+            	  	senderId: senderId,
+            	  	callback: function(response) {
+            	  		if (response.hasAccess) {
+            	  			if (onRoute && !onRoute(sender, subscriber, channel, message)
+    	                          && (dest == null || subscriber == dest)) {   
+            	  				gadgets.rpc.call(subscriber, 'pubsub', null, channel, sender, message);
+            	  			}
+            	  		}
+            	  	}
+              });
           }
           // .. is a special term for the container
           else if (subscriber == '..' && (dest == null || subscriber == dest)) {
@@ -131,8 +150,8 @@ gadgets.pubsubrouter = (function() {
       gadgetIdToSpecUrl = gadgetIdToSpecUrlHandler;
       gadgets.rpc.register('pubsub', router);
     },
-    publish : function(channel, message, dest) {
-      router.call({f:'..'},'publish',channel,message, dest);
+    publish : function(channel, message, dest, accessLevel) {
+      router.call({f:'..'},'publish',channel,message, dest, accessLevel);
     },
     subscribe : function(channel, handler) {
       containerListeners[channel] = handler;

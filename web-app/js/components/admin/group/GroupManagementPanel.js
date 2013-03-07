@@ -243,7 +243,7 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
     },
 
     launchFailedHandler: function(response) {
-        if (response.error) {
+        if (response && response.error) {
             this.showAlert('Launch Error', 'Group Editor Launch Failed: ' + response.message);
         }
     },

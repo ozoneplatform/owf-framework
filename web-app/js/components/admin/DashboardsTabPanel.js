@@ -157,7 +157,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
     },
 
     launchFailedHandler: function(response) {
-        if (response.error) {
+        if (response && response.error) {
             this.editPanel.showAlert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
         }
     },

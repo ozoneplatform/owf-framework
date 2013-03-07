@@ -298,7 +298,8 @@
 				                    dataType:'application/vnd.owf.sample.price'
 				                },
 				                {
-				                    data: data
+				                    data: data,
+				                    accessLevel: "2"
 				                },
                                 function (dest) {
                                   //dest is an array of destination widget proxies

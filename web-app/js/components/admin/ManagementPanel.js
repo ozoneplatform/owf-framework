@@ -15,7 +15,7 @@ Ext.define('Ozone.components.admin.ManagementPanel', {
   },
 
   launchFailureHandler: function(response) {
-      if (response.error) {
+      if (response && response.error) {
           this.showAlert('Error', 'Widget Launch Failed: ' + response.message);
       }
   },
