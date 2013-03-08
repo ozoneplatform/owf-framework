@@ -30,90 +30,86 @@ Ozone.dragAndDrop = Ozone.dragAndDrop ? Ozone.dragAndDrop : {};
  */
 Ozone.dragAndDrop.WidgetDragAndDrop = function(cfg) {
 
-    this.listeners = {};
-    this.callbacks = {};
-    this.dragging = false;
-    this.dropEnabledFlag = false;
-    this.dropZoneHandlers = [];
+  this.listeners = {};
+  this.callbacks = {};
+  this.dragging = false;
+  this.dropEnabledFlag = false;
+  this.dropZoneHandlers = [];
 
-    cfg = cfg || {};
+  cfg = cfg || {};
 
-    //set initial drag text
-    this.dragIndicatorText = cfg.dragIndicatorText ? cfg.dragIndicatorText : 'Dragging Data';
+  //set initial drag text
+  this.dragIndicatorText = cfg.dragIndicatorText ? cfg.dragIndicatorText : 'Dragging Data';
 
-    if (cfg.callbacks != null && owfdojo.isObject(cfg.callbacks)) {
-      owfdojo.mixin(this.callbacks, cfg.callbacks)
+  if (cfg.callbacks != null && owfdojo.isObject(cfg.callbacks)) {
+    owfdojo.mixin(this.callbacks, cfg.callbacks)
+  }
+
+  //create drag indicator
+  this.dragIndicator = this.createDragIndicator();
+  this.dragIndicatorTextNode = owfdojo.query('span.ddText', this.dragIndicator)[0];
+
+  this.widgetEventingController = cfg.widgetEventingController || Ozone.eventing.Widget.instance;
+
+  if (cfg.keepMouseListenersAttached === undefined && owfdojo.isIE) {
+    cfg.keepMouseListenersAttached = true;
+  }
+
+  if (cfg.autoInit || cfg.autoInit === undefined) {
+    this.init(cfg);
+  }
+
+  function fireMouseEvent(el, type, msg) {
+    var evt;
+    if (document.createEvent) {
+      evt = document.createEvent('MouseEvents');
+      evt.initMouseEvent(type, true, true, window, 1,
+      msg.screenX, msg.screenY, msg.pageX, msg.pageY,
+      false, false, false, false, null, null);
+      el.dispatchEvent(evt);
+    } else if (document.createEventObject) {
+      evt = document.createEventObject();
+      el.fireEvent('on' + type, evt);
+    }
+  }
+
+  gadgets.rpc.register('_fire_mouse_move', owfdojo.hitch(this, function(msg) {
+
+    var el = document.elementFromPoint(msg.pageX, msg.pageY);
+
+    if (this.getFlashWidgetId()) {
+      if (msg.sender !== this.widgetEventingController.getWidgetId()) {
+        Ozone.util.getFlashApp().dispatchExternalMouseEvent(msg.pageX, msg.pageY);
+      }
+      this.mouseMove(msg, true);
+    } else {
+      if (!arguments.callee.lastEl) {
+        arguments.callee.lastEl = el;
+        fireMouseEvent(el, 'mouseover', msg);
+      } else if (arguments.callee.lastEl !== el) {
+        //console.log('lastEl ', arguments.callee.lastEl);
+        //console.log('el ', el);
+        fireMouseEvent(arguments.callee.lastEl, 'mouseout', msg);
+        fireMouseEvent(el, 'mouseover', msg);
+        arguments.callee.lastEl = el;
+      }
+
+      fireMouseEvent(el, 'mousemove', msg);
     }
 
-    //create drag indicator
-    this.dragIndicator = this.createDragIndicator();
-    this.dragIndicatorTextNode = owfdojo.query('span.ddText', this.dragIndicator)[0];
+  }));
 
-    this.widgetEventingController = cfg.widgetEventingController || Ozone.eventing.Widget.instance;
-
-    if (cfg.keepMouseListenersAttached === undefined && owfdojo.isIE) {
-        cfg.keepMouseListenersAttached = true;
+  gadgets.rpc.register('_fire_mouse_up', owfdojo.hitch(this, function(msg) {
+    var el = document.elementFromPoint(msg.pageX, msg.pageY);
+    if (el && el.nodeName === 'OBJECT') {
+      this.mouseUp(msg, true);
+    } else {
+      fireMouseEvent(el, 'mouseup', msg);
     }
+  }));
 
-    if (cfg.autoInit || cfg.autoInit === undefined) {
-        this.init(cfg);
-    }
-
-    function fireMouseEvent(el, type, msg) {
-        var evt;
-        if(document.createEvent) {
-            evt = document.createEvent('MouseEvents');
-            evt.initMouseEvent(type, true, true, window, 1, 
-                msg.screenX, msg.screenY, msg.pageX, msg.pageY, 
-                false, false, false, false, null, null
-            );
-            el.dispatchEvent(evt);
-        } else if( document.createEventObject ) {
-            evt = document.createEventObject();
-            el.fireEvent('on' + type, evt);
-        }
-    }
-
-    gadgets.rpc.register('_fire_mouse_move', owfdojo.hitch(this, function(msg) {
-
-        var el = document.elementFromPoint(msg.pageX, msg.pageY);
-
-        if(this.getFlashWidgetId()) {
-            if(msg.sender !== this.widgetEventingController.getWidgetId()) {
-                Ozone.util.getFlashApp().dispatchExternalMouseEvent(msg.pageX, msg.pageY);
-            }
-            this.mouseMove(msg, true);
-        }
-        else {
-            if(!arguments.callee.lastEl) {
-                arguments.callee.lastEl = el;
-                fireMouseEvent(el, 'mouseover', msg);
-            }
-            else if(arguments.callee.lastEl !== el) {
-                //console.log('lastEl ', arguments.callee.lastEl);
-                //console.log('el ', el);
-                fireMouseEvent(arguments.callee.lastEl, 'mouseout', msg);
-                fireMouseEvent(el, 'mouseover', msg);
-                arguments.callee.lastEl = el;
-            }
-
-            fireMouseEvent(el, 'mousemove', msg);
-        }
-
-    }));
-
-    gadgets.rpc.register('_fire_mouse_up', owfdojo.hitch(this, function(msg) {
-        var el = document.elementFromPoint(msg.pageX, msg.pageY);
-        if(el && el.nodeName === 'OBJECT') {
-            this.mouseUp(msg, true);
-        }
-        else {
-            fireMouseEvent(el, 'mouseup', msg);
-        }
-    }));
-
-    Ozone.dragAndDrop.WidgetDragAndDrop.instance = this;
-    return this;
+  Ozone.dragAndDrop.WidgetDragAndDrop.instance = this;
+  return this;
 };
 
 Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
@@ -192,7 +188,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
    * @param {Object} [cfg] config object
    * @see <a href="#constructor">constructor</a>
    */
-  init : function (cfg) {
+  init: function(cfg) {
     cfg = cfg || {};
 
     //subscribe to channels
@@ -217,14 +213,15 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
   /**
    * @private
    */
-  createDragIndicator: function () {
+  createDragIndicator: function() {
     return owfdojo.create('span', {
       className: 'ddBox ddBoxCannotDrop',
-      style: {display: 'none'},
+      style: {
+        display: 'none'
+      },
       innerHTML: '<span class="ddText">' + this.dragIndicatorText + '</span>'
     },
-    owfdojo.body()
-    );
+    owfdojo.body());
   },
 
   /**
@@ -253,7 +250,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
    *      }
    *  });
    */
-  doStartDrag : function (cfg) {
+  doStartDrag: function(cfg) {
 
     var dragStartCfg = {
       dragSourceId: this.widgetEventingController.getWidgetId()
@@ -263,12 +260,12 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
 
     //allow caller to pass extra properties to dragStart
     //be sure to not send the dragDropData
-    owfdojo.mixin(dragStartCfg,cfg);
+    owfdojo.mixin(dragStartCfg, cfg);
     delete dragStartCfg.dragDropData;
     delete dragStartCfg.dragZone;
 
     //start drag
-    this.onStartDrag(this.widgetEventingController.getWidgetId(),dragStartCfg);
+    this.onStartDrag(this.widgetEventingController.getWidgetId(), dragStartCfg);
 
     //send message to start dragging for other widgets - unsubscribe so we don't repeat onstartdrag
     this.widgetEventingController.unsubscribe(this.dragStartName);
@@ -278,62 +275,62 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
     //send data to container
     this.widgetEventingController.publish(this.dragSendDataName, owfdojo.mixin({
       dragSourceId: this.widgetEventingController.getWidgetId()
-    },cfg),'..');
+    }, cfg), '..');
 
   },
 
   /**
    * @private
    */
-  onStartDrag : function(sender, msg) {
+  onStartDrag: function(sender, msg) {
 
-	  this.dragging = true;
-	  this.dragStartData = msg;
-        
-	  if (owfdojo.isFunction(this.callbacks[this.dragStart])) {
-		  var scope = this;
-		  var senderId = Ozone.util.parseJson(sender);
-		  Ozone.util.hasAccess({
-			  widgetId: OWF.getWidgetGuid(), 
-			  accessLevel: msg.accessLevel, 
-			  senderId: senderId.id,
-			  callback: function(response) {
-				  if (response.hasAccess) {
-					  //execute callback if false is returned don't continue
-					  if (scope.callbacks[scope.dragStart](sender,msg) === false) {
-						  scope.dragging = false;
-					  }
-				  }
-			  }
-		  });
-	  }
-  
-      //prevent IE bug where text is dragged instead of the node
-      if (owfdojo.isIE) {
-        document.onselectstart = function() {
-          return false;
-        };
-        document.ondragstart = function () {
-          return false;
-        };
-      }
+    this.dragging = true;
+    this.dragStartData = msg;
 
-      this.dragIndicatorText = msg.dragDropLabel;
-      this.dragIndicatorTextNode.innerHTML = this.dragIndicatorText;
+    if (owfdojo.isFunction(this.callbacks[this.dragStart])) {
+      var scope = this;
+      var senderId = Ozone.util.parseJson(sender);
+      Ozone.util.hasAccess({
+        widgetId: OWF.getWidgetGuid(),
+        accessLevel: msg.accessLevel,
+        senderId: senderId.id,
+        callback: function(response) {
+          if (response.hasAccess) {
+            //execute callback if false is returned don't continue
+            if (scope.callbacks[scope.dragStart](sender, msg) === false) {
+              scope.dragging = false;
+            }
+          }
+        }
+      });
+    }
 
-      //hook mouse move and mouse up
-      if (this.listeners.onmousemove == null) {
-      	this.listeners.onmousemove = owfdojo.connect(document, 'onmousemove', this, this.mouseMove);
-      }
-      if (this.listeners.onmouseup == null) {
-      	this.listeners.onmouseup = owfdojo.connect(document, 'onmouseup', this, this.mouseUp);
-      }
+    //prevent IE bug where text is dragged instead of the node
+    if (owfdojo.isIE) {
+      document.onselectstart = function() {
+        return false;
+      };
+      document.ondragstart = function() {
+        return false;
+      };
+    }
+
+    this.dragIndicatorText = msg.dragDropLabel;
+    this.dragIndicatorTextNode.innerHTML = this.dragIndicatorText;
+
+    //hook mouse move and mouse up
+    if (this.listeners.onmousemove == null) {
+      this.listeners.onmousemove = owfdojo.connect(document, 'onmousemove', this, this.mouseMove);
+    }
+    if (this.listeners.onmouseup == null) {
+      this.listeners.onmouseup = owfdojo.connect(document, 'onmouseup', this, this.mouseUp);
+    }
   },
 
   /**
    * @private
    */
-  onDragOut : function(sender, msg) {
+  onDragOut: function(sender, msg) {
     owfdojo.style(this.dragIndicator, {
       display: 'none'
     });
@@ -342,124 +339,117 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
   /**
    * @private
    */
-  getMouseCoordinates: function (e) {
+  getMouseCoordinates: function(e) {
     var returnValue = null;
     if (e.pageX || e.pageY) {
       returnValue = {
-        x : e.pageX,
-        y : e.pageY
+        x: e.pageX,
+        y: e.pageY
       };
-    }
-    else {
+    } else {
       returnValue = {
-        x : e.clientX + document.body.scrollLeft - document.body.clientLeft,
-        y : e.clientY + document.body.scrollTop - document.body.clientTop
+        x: e.clientX + document.body.scrollLeft - document.body.clientLeft,
+        y: e.clientY + document.body.scrollTop - document.body.clientTop
       };
     }
     return returnValue;
   },
 
-    /**
-    * @private
-    */
-    mouseMove : function (e, fake) {
-        //only show the indicator if we are currenlty dragging
-        if (this.dragging === true) {
+  /**
+   * @private
+   */
+  mouseMove: function(e, fake) {
+    //only show the indicator if we are currenlty dragging
+    if (this.dragging === true) {
 
-            // if this is a flex widget, event is not faked and current dashboard layout is tabbed, fake 
-            // mouse events as soon as the drag starts
-            if(this.getFlashWidgetId() && fake !== true && Ozone.Widget.getDashboardLayout() === 'tabbed') {
-                 gadgets.rpc.call('..', '_fake_mouse_move', null, {
-                    sender: this.widgetEventingController.getWidgetId(),
-                    pageX: e.pageX,
-                    pageY: e.pageY,
-                    screenX: e.screenX,
-                    screenY: e.screenY
-                });
-                return;
-            }
+      // if this is a flex widget, event is not faked and current dashboard layout is tabbed, fake 
+      // mouse events as soon as the drag starts
+      if (this.getFlashWidgetId() && fake !== true && Ozone.Widget.getDashboardLayout() === 'tabbed') {
+        gadgets.rpc.call('..', '_fake_mouse_move', null, {
+          sender: this.widgetEventingController.getWidgetId(),
+          pageX: e.pageX,
+          pageY: e.pageY,
+          screenX: e.screenX,
+          screenY: e.screenY
+        });
+        return;
+      }
 
-            var clientWidth = null;
-            var clientHeight = null;
-            var mousePosition = this.getMouseCoordinates(e);
-            var leftWidth = mousePosition.x;
-            var topHeight = mousePosition.y;
+      var clientWidth = null;
+      var clientHeight = null;
+      var mousePosition = this.getMouseCoordinates(e);
+      var leftWidth = mousePosition.x;
+      var topHeight = mousePosition.y;
 
-            // Hide the drag indicator box while we move it
-            owfdojo.style(this.dragIndicator, {
-                display: 'none'
-            });
+      // Hide the drag indicator box while we move it
+      owfdojo.style(this.dragIndicator, {
+        display: 'none'
+      });
 
-            if (e === undefined) {
-                e = window.event;
-            }
+      if (e === undefined) {
+        e = window.event;
+      }
 
-            if (owfdojo.isIE) {
-                clientWidth = document.body.clientWidth;
-                clientHeight = document.body.clientHeight;
-            }
-            else {
-                clientWidth = window.innerWidth;
-                clientHeight = window.innerHeight;
-            }
+      if (owfdojo.isIE) {
+        clientWidth = document.body.clientWidth;
+        clientHeight = document.body.clientHeight;
+      } else {
+        clientWidth = window.innerWidth;
+        clientHeight = window.innerHeight;
+      }
 
-            if((owfdojo.isFF && owfdojo.isFF >= 4) || this.getFlashWidgetId()) {
+      if ((owfdojo.isFF && owfdojo.isFF >= 4) || this.getFlashWidgetId()) {
 
-                if(e.clientX < 0 || e.clientX > clientWidth || 
-                    e.clientY < 0 || e.clientY > clientHeight) {
+        if (e.clientX < 0 || e.clientX > clientWidth || e.clientY < 0 || e.clientY > clientHeight) {
 
-                    // set variable on function to keep track if we faked an event
-                    // so that we can fake mouseout later when mouseover the current widget
-                    if(!arguments.callee._fakeEventCounter)
-                        arguments.callee._fakeEventCounter = 1;
-                    else
-                        arguments.callee._fakeEventCounter += 1;
-                    
-                    gadgets.rpc.call('..', '_fake_mouse_move', null, {
-                        sender: this.widgetEventingController.getWidgetId(),
-                        pageX: e.pageX,
-                        pageY: e.pageY,
-                        screenX: e.screenX,
-                        screenY: e.screenY
-                    });
-                    return;
-                }
-                else if( arguments.callee._fakeEventCounter ) {
-                    // we had faked a mousemove event before
-                    // now fake mouseout event on the container
-                    arguments.callee._fakeEventCounter = null;
-                    gadgets.rpc.call('..', '_fake_mouse_out');
-                }
-            }
+          // set variable on function to keep track if we faked an event
+          // so that we can fake mouseout later when mouseover the current widget
+          if (!arguments.callee._fakeEventCounter) arguments.callee._fakeEventCounter = 1;
+          else arguments.callee._fakeEventCounter += 1;
 
-            // flipping mechanism when the cursor reaches the right or bottom edge of the widget
-            this.dragIndicator.style.top = topHeight + 19 + "px";
-
-            var rightLimit = clientWidth - 100;
-            if ((leftWidth < clientWidth) && (leftWidth > rightLimit)) {
-                this.dragIndicator.style.left = leftWidth - 88 + "px";
-            }
-            else {
-                this.dragIndicator.style.left = leftWidth + 12 + "px";
-            }
-            var bottomLimit = clientHeight - 40;
-            if ((topHeight > bottomLimit) && (topHeight < clientHeight)) {
-                this.dragIndicator.style.top = topHeight - 30 + "px";
-            }
-
-            // set text on indicator
-            this.dragIndicatorTextNode.innerHTML = this.dragIndicatorText;
-            owfdojo.style(this.dragIndicator, {
-                display: 'block'
-            });
-
+          gadgets.rpc.call('..', '_fake_mouse_move', null, {
+            sender: this.widgetEventingController.getWidgetId(),
+            pageX: e.pageX,
+            pageY: e.pageY,
+            screenX: e.screenX,
+            screenY: e.screenY
+          });
+          return;
+        } else if (arguments.callee._fakeEventCounter) {
+          // we had faked a mousemove event before
+          // now fake mouseout event on the container
+          arguments.callee._fakeEventCounter = null;
+          gadgets.rpc.call('..', '_fake_mouse_out');
         }
-    },
+      }
+
+      // flipping mechanism when the cursor reaches the right or bottom edge of the widget
+      this.dragIndicator.style.top = topHeight + 19 + "px";
+
+      var rightLimit = clientWidth - 100;
+      if ((leftWidth < clientWidth) && (leftWidth > rightLimit)) {
+        this.dragIndicator.style.left = leftWidth - 88 + "px";
+      } else {
+        this.dragIndicator.style.left = leftWidth + 12 + "px";
+      }
+      var bottomLimit = clientHeight - 40;
+      if ((topHeight > bottomLimit) && (topHeight < clientHeight)) {
+        this.dragIndicator.style.top = topHeight - 30 + "px";
+      }
+
+      // set text on indicator
+      this.dragIndicatorTextNode.innerHTML = this.dragIndicatorText;
+      owfdojo.style(this.dragIndicator, {
+        display: 'block'
+      });
+
+    }
+  },
 
   /**
    * @private
    */
-  onDragStopInContainer : function(sender, msg) {
+  onDragStopInContainer: function(sender, msg) {
     owfdojo.style(this.dragIndicator, {
       display: 'none'
     });
@@ -477,96 +467,92 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
     this.setDropEnabled(false);
 
     if (owfdojo.isFunction(this.callbacks[this.dragStop])) {
-  	  var scope = this;
-	  var senderId = Ozone.util.parseJson(sender);
-	  Ozone.util.hasAccess({
-		  widgetId: OWF.getWidgetGuid(), 
-		  accessLevel: msg.accessLevel, 
-		  senderId: senderId.id,
-		  callback: function(response) {
-			  if (response.hasAccess) {
-				  scope.callbacks[scope.dragStop](scope.dropTarget);
-			  }
-		  }
-	  });
+      var scope = this;
+      var senderId = Ozone.util.parseJson(sender);
+      Ozone.util.hasAccess({
+        widgetId: OWF.getWidgetGuid(),
+        accessLevel: msg.accessLevel,
+        senderId: senderId.id,
+        callback: function(response) {
+          if (response.hasAccess) {
+            scope.callbacks[scope.dragStop](scope.dropTarget);
+          }
+        }
+      });
     }
   },
 
   /**
    * @private
    */
-  mouseUp : function (e, fake) {
+  mouseUp: function(e, fake) {
     if (this.dragging === true) {
-	      this.dragging = false;
-	
-	      //prevent IE bug where text is dragged instead of the node
-	      if (owfdojo.isIE) {
-	        document.onselectstart = function() {
-	          return true;
-	        };
-	        document.ondragstart = function () {
-	          return true;
-	        };
-	      }
-	
-	      owfdojo.style(this.dragIndicator, {
-	        display: 'none'
-	      });
-	
-	      if(this.getFlashWidgetId()) {
-	
-	          var clientWidth = null;
-	          var clientHeight = null;
-	          if (owfdojo.isIE) {
-	              clientWidth = document.body.clientWidth;
-	              clientHeight = document.body.clientHeight;
-	          }
-	          else {
-	              clientWidth = window.innerWidth;
-	              clientHeight = window.innerHeight;
-	          }
-	
-	          if((e.clientX < 0 || e.clientX > clientWidth || 
-	                e.clientY < 0 || e.clientY > clientHeight
-	                || Ozone.Widget.getDashboardLayout() === 'tabbed')
-	                && fake !== true) {
-	              
-	              gadgets.rpc.call('..', '_fake_mouse_up', null, {
-	                  sender: this.widgetEventingController.getWidgetId(),
-	                  pageX: e.pageX,
-	                  pageY: e.pageY,
-	                  screenX: e.screenX,
-	                  screenY: e.screenY
-	              });
-	              return;
-	          }
-	      }
-	
-	      //disconnect listeners
-	      for (l in this.listeners) {
-	        owfdojo.disconnect(this.listeners[l]);
-	        this.listeners[l] = null;
-	      }
-	
-	      //save dropzone info
-	      this.dropTarget = e.target;
-	
-	      //send message
-	      this.widgetEventingController.publish(this.dragStopInWidgetName, this.widgetEventingController.getWidgetId(), null, this.dragStartData.accessLevel);
-	
-	      if (owfdojo.isFunction(this.callbacks[this.dragStop])) {
-	        this.callbacks[this.dragStop](this.dropTarget);
-	      }
+      this.dragging = false;
+
+      //prevent IE bug where text is dragged instead of the node
+      if (owfdojo.isIE) {
+        document.onselectstart = function() {
+          return true;
+        };
+        document.ondragstart = function() {
+          return true;
+        };
       }
+
+      owfdojo.style(this.dragIndicator, {
+        display: 'none'
+      });
+
+      if (this.getFlashWidgetId()) {
+
+        var clientWidth = null;
+        var clientHeight = null;
+        if (owfdojo.isIE) {
+          clientWidth = document.body.clientWidth;
+          clientHeight = document.body.clientHeight;
+        } else {
+          clientWidth = window.innerWidth;
+          clientHeight = window.innerHeight;
+        }
+
+        if ((e.clientX < 0 || e.clientX > clientWidth || e.clientY < 0 || e.clientY > clientHeight || Ozone.Widget.getDashboardLayout() === 'tabbed') && fake !== true) {
+
+          gadgets.rpc.call('..', '_fake_mouse_up', null, {
+            sender: this.widgetEventingController.getWidgetId(),
+            pageX: e.pageX,
+            pageY: e.pageY,
+            screenX: e.screenX,
+            screenY: e.screenY
+          });
+          return;
+        }
+      }
+
+      //disconnect listeners
+      for (l in this.listeners) {
+        owfdojo.disconnect(this.listeners[l]);
+        this.listeners[l] = null;
+      }
+
+      //save dropzone info
+      this.dropTarget = e.target;
+
+      //send message
+      this.widgetEventingController.publish(this.dragStopInWidgetName, this.widgetEventingController.getWidgetId(), null, this.dragStartData.accessLevel);
+
+      if (owfdojo.isFunction(this.callbacks[this.dragStop])) {
+        this.callbacks[this.dragStop](this.dropTarget);
+      }
+    }
   },
 
   /**
    * @private
    */
-  dropReceiveData : function (sender, msg, channel) {
+  dropReceiveData: function(sender, msg, channel) {
 
     // only if the mouse is over a drop zone and this widget has the 
-	// access level to receive the data being sent
+    // access level to receive the data being sent
     if (this.dropEnabledFlag) {
       if (this.dropTarget) {
         msg.dropTarget = this.dropTarget;
@@ -575,11 +561,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
         for (var i = 0; i < this.dropZoneHandlers.length; i++) {
           //match either on id or class or is target node a child of the dropZone
           //also make sure the dropZone is not the same as the dragZone
-          if (((this.dropTarget.id == this.dropZoneHandlers[i].id && this.dropTarget.id != null)
-                  || (owfdojo.hasClass(this.dropTarget, this.dropZoneHandlers[i].className))
-                  || (owfdojo.isDescendant(this.dropTarget, this.dropZoneHandlers[i].dropZone)))
-                  && this.dragZone != this.dropZoneHandlers[i].dropZone
-                  ) {
+          if (((this.dropTarget.id == this.dropZoneHandlers[i].id && this.dropTarget.id != null) || (owfdojo.hasClass(this.dropTarget, this.dropZoneHandlers[i].className)) || (owfdojo.isDescendant(this.dropTarget, this.dropZoneHandlers[i].dropZone))) && this.dragZone != this.dropZoneHandlers[i].dropZone) {
             this.dropZoneHandlers[i].handler(msg);
           }
         }
@@ -629,15 +611,14 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
    *      this.subscribeToChannel(msg.dragDropData);
    *   }));
    */
-  addCallback : function(eventName, cb) {
+  addCallback: function(eventName, cb) {
 
     if (this.callbacks[eventName] == null) {
       //put dummy function in
       this.callbacks[eventName] = cb;
-    }
-    else {
+    } else {
       //callback already exists chain the subsequent callbacks to the first
-      owfdojo.connect(this.callbacks,eventName,cb);
+      owfdojo.connect(this.callbacks, eventName, cb);
     }
   },
   /**
@@ -712,27 +693,29 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
    *
    */
   addDropZoneHandler: function(cfg) {
-    this.dropZoneHandlers.push(cfg)
+    this.dropZoneHandlers.push(cfg);
   },
   /**
    * @description returns whether the a drop is enabled (this is only true when the mouse is over a drop zone)
    */
-  getDropEnabled : function() {
+  getDropEnabled: function() {
     return this.dropEnabledFlag;
   },
 
   /**
    * @description returns whether a drag is in progress
    */
-  isDragging : function() {
+  isDragging: function() {
     return this.dragging;
   },
 
   /**
    * @description returns data sent when a drag was started
    */
-  getDragStartData : function() {
-    return owfdojo.mixin(this.dragStartData,{dragZone:this.dragZone});
+  getDragStartData: function() {
+    return owfdojo.mixin(this.dragStartData, {
+      dragZone: this.dragZone
+    });
   },
 
   /**
@@ -754,25 +737,24 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
    *    }
    *  },this);
    */
-  setDropEnabled : function(dropEnabled) {
+  setDropEnabled: function(dropEnabled) {
     if (dropEnabled) {
       var scope = this;
-  	  var data = this.getDragStartData();
-  	  var senderId = Ozone.util.parseJson(data.dragSourceId);
+      var data = this.getDragStartData();
+      var senderId = Ozone.util.parseJson(data.dragSourceId);
       Ozone.util.hasAccess({
-    	  widgetId: OWF.getWidgetGuid(), 
-    	  accessLevel: data.accessLevel, 
-    	  senderId: senderId.id,
-    	  callback: function(response) {
-    		  scope.dropEnabledFlag = response.hasAccess;
-    	      if (scope.dropEnabledFlag) {
-    		      owfdojo.removeClass(scope.dragIndicator, 'ddBoxCannotDrop');
-    		      owfdojo.addClass(scope.dragIndicator, 'ddBoxCanDrop');
-    	      }
-    	  }
+        widgetId: OWF.getWidgetGuid(),
+        accessLevel: data.accessLevel,
+        senderId: senderId.id,
+        callback: function(response) {
+          scope.dropEnabledFlag = response.hasAccess;
+          if (scope.dropEnabledFlag) {
+            owfdojo.removeClass(scope.dragIndicator, 'ddBoxCannotDrop');
+            owfdojo.addClass(scope.dragIndicator, 'ddBoxCanDrop');
+          }
+        }
       });
-    }
-    else {
+    } else {
       this.dropEnabledFlag = false;
       owfdojo.removeClass(this.dragIndicator, 'ddBoxCanDrop');
       owfdojo.addClass(this.dragIndicator, 'ddBoxCannotDrop');
@@ -811,4 +793,3 @@ Ozone.dragAndDrop.WidgetDragAndDrop.getInstance = function(cfg) {
   }
   return owfdojo.mixin(Ozone.dragAndDrop.WidgetDragAndDrop.instance, cfg);
 };
-
