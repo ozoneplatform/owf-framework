@@ -48,8 +48,8 @@ class MarketplaceController extends BaseOwfRestController {
                     statusMessage = params.guid
                     statusCode = 200
                 } else {
-                    statusMessage = "Failed to read descriptor with GUID "
-                        + "${params.guid} from configured marketplaces"
+                    statusMessage = "Failed to read descriptor with GUID" +
+                        " ${params.guid} from configured marketplaces"
                     log.error("MP Sync: ${statusMessage}")
                 }
             }
