@@ -42,7 +42,8 @@
                     if (data != null && data != '') {
                         OWF.DragAndDrop.startDrag({
                             dragDropLabel: Ext.String.htmlEncode(data),
-                            dragDropData: data
+                            dragDropData: data,
+                            accessLevel: document.getElementById('AccessLevel').value
                         });
                     }
                 });
