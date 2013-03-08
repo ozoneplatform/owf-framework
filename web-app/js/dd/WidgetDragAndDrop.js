@@ -468,17 +468,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
 
     if (owfdojo.isFunction(this.callbacks[this.dragStop])) {
       var scope = this;
-      var senderId = Ozone.util.parseJson(sender);
-      Ozone.util.hasAccess({
-        widgetId: OWF.getWidgetGuid(),
-        accessLevel: msg.accessLevel,
-        senderId: senderId.id,
-        callback: function(response) {
-          if (response.hasAccess) {
-            scope.callbacks[scope.dragStop](scope.dropTarget);
-          }
-        }
-      });
+      this.callbacks[this.dragStop](this.dropTarget);
     }
   },
 
@@ -741,6 +731,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
     if (dropEnabled) {
       var scope = this;
       var data = this.getDragStartData();
+
       var senderId = Ozone.util.parseJson(data.dragSourceId);
       Ozone.util.hasAccess({
         widgetId: OWF.getWidgetGuid(),
