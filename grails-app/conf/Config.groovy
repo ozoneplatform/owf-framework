@@ -936,6 +936,12 @@ owf {
       useShims = false
 
       // OZP-476: Marketplace (MP) Synchronization
+      // Set true to allow sync from MP to cause a new widget to be created
+      // in OWF if it does not already exist. Said widget will initially
+      // have no users or groups associated with it.
+      mpSyncAutoCreateWidget = false
+
+      // MP Synchronization
       // Added to support server-server communication. Suggest setting this
       // true in development environment where the target MP server has a
       // self-signed cert or similar.
