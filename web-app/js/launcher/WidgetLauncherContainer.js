@@ -55,7 +55,6 @@ Ozone.launcher.WidgetLauncherContainer.prototype = {
           if (window_manager != null) {
             returnValue = window_manager.launchWidgetInstance(sender, cfg);
             rpc.callback(returnValue);
-            console.log("set returnValue: ", returnValue);
           } else {
             throw {
               name :'WidgetLauncherContainerException',
