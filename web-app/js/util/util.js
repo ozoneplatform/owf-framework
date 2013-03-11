@@ -534,7 +534,7 @@ Ozone.util.hasAccess = function(cfg) {
             });
         
         if (cfg.callback) {
-			callback({
+			cfg.callback({
 				widgetId: widgetId,
 				accessLevel: accessLevel,
 				hasAccess: false

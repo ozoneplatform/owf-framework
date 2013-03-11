@@ -417,7 +417,26 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         }
         this.callParent(arguments);
     },
-       
+
+    /**
+    * @description Finds a widget from the widgetStore either by guid or universalName
+    * @param JSON object specifying the widget guid/universalName
+    * @returns widget instance
+    */
+    findWidget: function(launchConfig) {
+        //find the widget with the specified guid
+        if (launchConfig.guid != null) {
+            return this.widgetStore.getById(launchConfig.guid);
+        }
+        //find the widget with universalName
+        else if (launchConfig.universalName != null){
+            var index = this.widgetStore.findExact('universalName',launchConfig.universalName);
+            if (index > -1) {
+                return this.widgetStore.getAt(index);
+            }
+        }
+    },
+
     /**
     * @description Launches a widget instance based on the specified widget guid.
     * @member Ozone.layout.AccordionWindowManager
@@ -429,17 +448,19 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             specifiedWidget = null,
             responseObj,
             pane = Ext.getCmp(sender.id).pane;
-                        
+
         //find the widget with the specified guid
-        if (launchConfig.guid != null) {
-            specifiedWidget = this.widgetStore.getById(launchConfig.guid);
-        }
-        else if (launchConfig.universalName != null){
-            var index = this.widgetStore.findExact('universalName',launchConfig.universalName);
-            if (index > -1) {
-                specifiedWidget = this.widgetStore.getAt(index);
-            }
-        }
+        // if (launchConfig.guid != null) {
+        //     specifiedWidget = this.widgetStore.getById(launchConfig.guid);
+        // }
+        // else if (launchConfig.universalName != null){
+        //     var index = this.widgetStore.findExact('universalName',launchConfig.universalName);
+        //     if (index > -1) {
+        //         specifiedWidget = this.widgetStore.getAt(index);
+        //     }
+        // }
+
+        specifiedWidget = this.findWidget(launchConfig);
 
         // If the specified widget wasn't found return failure and error message
         if (specifiedWidget == null) {
