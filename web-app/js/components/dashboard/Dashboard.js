@@ -449,17 +449,6 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             responseObj,
             pane = Ext.getCmp(sender.id).pane;
 
-        //find the widget with the specified guid
-        // if (launchConfig.guid != null) {
-        //     specifiedWidget = this.widgetStore.getById(launchConfig.guid);
-        // }
-        // else if (launchConfig.universalName != null){
-        //     var index = this.widgetStore.findExact('universalName',launchConfig.universalName);
-        //     if (index > -1) {
-        //         specifiedWidget = this.widgetStore.getAt(index);
-        //     }
-        // }
-
         specifiedWidget = this.findWidget(launchConfig);
 
         // If the specified widget wasn't found return failure and error message
