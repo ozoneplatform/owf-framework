@@ -415,10 +415,17 @@ OWF = window.OWF ? window.OWF : {};
 
 		Ozone.config = Ozone.config ? Ozone.config : {};
 		Ozone.config.dataguard = Ozone.config.dataguard ? Ozone.config.dataguard : {};
-		Ozone.config.dataguard.allowMessagesWithoutAccessLevel = widget.allowMessagesWithoutAccessLevel;
-		Ozone.config.dataguard.auditAllMessages = widget.auditAllMessages;
-		Ozone.config.dataguard.restrictMessages = widget.restrictMessages;
-		Ozone.config.dataguard.accessLevelCacheTimeout = widget.accessLevelCacheTimeout;
+
+		Ozone.util.Transport.send({
+			url: OWF.getContainerUrl() + '/access/getConfig',
+			method: 'GET',
+			onSuccess: function(response) {
+				Ozone.config.dataguard.allowMessagesWithoutAccessLevel = response.allowMessagesWithoutAccessLevel;
+				Ozone.config.dataguard.auditAllMessages = response.auditAllMessages;
+				Ozone.config.dataguard.restrictMessages = response.restrictMessages;
+				Ozone.config.dataguard.accessLevelCacheTimeout = response.accessLevelCacheTimeout;
+			}
+		});
 
 	};
 
