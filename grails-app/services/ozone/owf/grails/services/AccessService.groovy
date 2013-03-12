@@ -13,8 +13,6 @@ class AccessService {
     
     def checkAccess(def params) {
     	def username = accountService.getLoggedInUsername()
-        println "Within Access Service"
-        println "Listing info passed in via params: " + params.widgetId
         def widgetId = params.widgetId
     	def receivingWidget = WidgetDefinition.findByWidgetGuid(widgetId)
 
