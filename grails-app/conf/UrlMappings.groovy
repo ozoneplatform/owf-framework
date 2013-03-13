@@ -457,6 +457,10 @@ class UrlMappings {
             controller='audit'
             action='logMessage'
         }
+        "/access/getConfig" {
+            controller='access'
+            action='getConfiguration'
+        }
         "/access" {
             controller='access'
             action='checkAccess'

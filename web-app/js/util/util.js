@@ -23,38 +23,34 @@ Ozone.widgetAccesses = Ozone.widgetAccesses || {};
  * @throws "Not a valid URL" if the parameter is not a valid url
  */
 Ozone.util.isUrlLocal = function(url) {
-	var loc = window.location,
-		a = document.createElement('a');
-	a.href=url;
-	
-	return a.hostname == loc.hostname &&
-		a.port == loc.port &&
-		a.protocol === loc.protocol;
-//    var webContextPath = Ozone.util.contextPath();
-//
-//    //append last '/' this value should never be null
-//    if (webContextPath != '' && webContextPath != null) {
-//        webContextPath += '/';
-//    }
-//
-//    //this regex matches urls against the configured webcontext path https://<contextPath>/.....
-//    //only one match is possible since this regex matches from the start of the string
-//    var regex = new RegExp("^(https?:)//([^/:]+):?(.*)" + webContextPath);
-//    var server = url.match(regex);
-//
-//    //check if this might be a relative url 
-//    if (!server) {
-//        if (url.match(new RegExp('^https?:\/\/'))) {
-//            return false;
-//        }
-//        else {
-//            return true;
-//        }
-//    }
-//
-//    var port = window.location.port || ( window.location.protocol === "https:" ? "443" : "80" )
-//
-//    return window.location.protocol === server[1] && window.location.hostname === server[2] && port === server[3]
+
+    var webContextPath = Ozone.util.contextPath();
+
+    //append last '/' this value should never be null
+    if (webContextPath != '' && webContextPath != null) {
+        webContextPath += '/';
+    }
+
+    //this regex matches urls against the configured webcontext path https://<contextPath>/.....
+    //only one match is possible since this regex matches from the start of the string
+    var regex = new RegExp("^(https?:)//([^/:]+):?(.*)" + webContextPath);
+    var server = url.match(regex);
+
+    //check if this might be a relative url 
+    if (!server) {
+        if (url.match(new RegExp('^https?:\/\/'))) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    var port = window.location.port;// || ( window.location.protocol === "https:" ? "443" : "80" )
+
+    //todo need to find a better way of checking same domain requests
+    // see if solution posted here works: http://stackoverflow.com/questions/9404793/check-if-same-origin-policy-applies
+    return window.location.protocol === server[1] && window.location.hostname === server[2] && port === server[3]
 };
 
 /**

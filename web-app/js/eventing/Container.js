@@ -287,11 +287,7 @@ Ozone.config.dataguard = Ozone.config.dataguard ? Ozone.config.dataguard : {};
                     url:url,
                     guid:widget.widgetGuid,
                     version:widget.version || 1,
-                    locked: isLocked || false,
-                    restrictMessages:Ozone.config.dataguard.restrictMessages,
-                    allowMessagesWithoutAccessLevel:Ozone.config.dataguard.allowMessagesWithoutAccessLevel,
-                    auditAllMessages:Ozone.config.dataguard.auditAllMessages,
-                    accessLevelCacheTimeout: Ozone.config.dataguard.accessLevelCacheTimeout
+                    locked: isLocked || false
                 };
 
                 if (launchData) {
