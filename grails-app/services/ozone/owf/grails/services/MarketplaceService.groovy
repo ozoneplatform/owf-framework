@@ -1,9 +1,10 @@
 // OZP-476: MP Synchronization
-// This class was added to ease the initial merge pain of adding this functionality
-// to the WidgetDefinitionService, which is the primary user of this particular service.
-// We'd also need to consider the MarketplaceController, which was introduced for
-// similar reasons (avoiding merge issues). Entirely possible that we'd want to eliminate
-// this class and fold its function back into the WidgetDefinitionService; similar may
+// This class was added to ease the initial merge pain of adding this
+// functionality to the WidgetDefinitionService, which is the primary user
+// of this particular service. We'd also need to consider the
+// MarketplaceController, which was introduced for similar reasons (avoiding
+// merge issues). Entirely possible that we'd want to eliminate this class
+// and fold its function back into the WidgetDefinitionService; similar may
 // also apply to the controller class.
 package ozone.owf.grails.services
 
@@ -38,16 +39,29 @@ class MarketplaceService extends BaseService {
 
         def updatedWidgets=stMarketplaceJson.collect { obj ->
             def widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache:true])
-            if(widgetDefinition == null) {
+
+            if (widgetDefinition == null) {
                 println "Creating new widget definition for ${obj.widgetGuid}"
                 widgetDefinition=new WidgetDefinition()
+
+                // For backwards compatibility set GUID as Universal Name by
+                // default only when widget was not already in OWF.
+                // Marketplace 7.0 still does NOT provide Universal Name.
+                widgetDefinition.universalName = obj.widgetGuid
             }
+
             widgetDefinition.displayName = obj.displayName
             widgetDefinition.description = obj.description
             widgetDefinition.height = obj.height as Integer
             widgetDefinition.imageUrlLarge = obj.imageUrlLarge
             widgetDefinition.imageUrlSmall = obj.imageUrlSmall
-            widgetDefinition.universalName = obj.universalName ?: obj.widgetGuid
+
+            // Marketplace may not provide Universal Name. Keep value that
+            // is already in OWF unless explicitly provided by MP.
+            if (obj.universalName) {
+                widgetDefinition.universalName = obj.universalName
+            }
+
             widgetDefinition.widgetGuid = obj.widgetGuid
             widgetDefinition.widgetUrl = obj.widgetUrl
             widgetDefinition.widgetVersion = obj.widgetVersion
@@ -73,7 +87,12 @@ class MarketplaceService extends BaseService {
                     widgetDefinition.addTag(tagName, true, -1, true)
             }
 
-            if(obj.intents) {
+            // Marketplace may not be configured to provide intents. In such
+            // a case the send and receive lists are empty. DO NOT overwrite
+            // intents that are already in OWF if MP is not providing them.
+            if (obj.intents &&
+                ((obj.intents.send && obj.intents.send.size() > 0) ||
+                 (obj.intents.receive && obj.intents.receive.size() > 0))) {
                 // Structure of the intents field (forgive the bastardized BNF/schema mix)
                 //   send: [ $intent ]
                 //   receive: [ $intent ]
@@ -86,7 +105,7 @@ class MarketplaceService extends BaseService {
                 //    - Unique by the dataType field.
                 //    - An expensive string.
                 // Intent object 
-                //    - Unique by "action".  
+                //    - Unique by "action".
                 //    - Relationships to ALL IntentDataType that any widget, anywhere has associated with that action.
                 // WidgetDefinitionIntent object
                 //    - Owned by the WidgetDefinition
@@ -98,7 +117,7 @@ class MarketplaceService extends BaseService {
                 //    - Has a collection of WidgetDefinitionIntent objects
 
                 // Enjoy the ride...
-                // 
+                //
 
                 // wipe the slate clean, this ain't no PATCH action
                 WidgetDefinitionIntent.findAllByWidgetDefinition(widgetDefinition).collect() {
@@ -296,5 +315,4 @@ class MarketplaceService extends BaseService {
             return null
         }
     }
-
 }
