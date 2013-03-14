@@ -307,7 +307,20 @@ OWF = window.OWF ? window.OWF : {};
 		// RPC/Directed Eventing API
 		function initRPC() {
 			OWF.RPC.registerFunctions = Ozone.eventing.registerFunctions;
-			OWF.RPC.getWidgetProxy = Ozone.eventing.importWidget;
+			
+			OWF.RPC.getWidgetProxy = function(widgetId, ready, accessLevel) {
+				Ozone.util.hasAccess( {
+					widgetId: widgetId,
+					accessLevel: accessLevel,
+					senderId: OWF.getWidgetGuid(),
+					callback: function(response) {
+						if (response.hasAccess)
+							return Ozone.eventing.importWidget(widgetId, ready)
+					}
+				});				
+			}
+
+			
 			OWF.RPC.handleDirectMessage = function(fn) {
 				if(typeof fn !== 'function') {
 					throw 'Error: fn must be a function';
