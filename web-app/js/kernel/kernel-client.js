@@ -218,16 +218,20 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
 
         var id = getIdFromWindowName();
         var srcWidgetIframeId = '{\"id\":\"' + id + '\"}';
-        Ozone.util.hasAccess({
-      	  	widgetId: widgetId, 
-      	  	accessLevel: accessLevel, 
-      	  	senderId: OWF.getWidgetGuid(),
-      	  	callback: function(response) {
-      	  		if (response.hasAccess) {
-      	  			gadgets.rpc.call("..", 'GET_FUNCTIONS', processFunctionsFromContainer, widgetId, srcWidgetIframeId);
-      	  		}
-      	  	}
-        });
+        // Ozone.util.hasAccess({
+      	 //  	widgetId: widgetId, 
+      	 //  	accessLevel: accessLevel, 
+      	 //  	senderId: OWF.getWidgetGuid(),
+      	 //  	callback: function(response) {
+      	 //  		if (response.hasAccess) {
+      	 //  			gadgets.rpc.call("..", 'GET_FUNCTIONS', processFunctionsFromContainer, widgetId, srcWidgetIframeId);
+      	 //  		}
+      	 //  	}
+        // });
+
+        gadgets.rpc.call("..", 'GET_FUNCTIONS', processFunctionsFromContainer, widgetId, srcWidgetIframeId);
+                
+
         return proxy;
     }
 
