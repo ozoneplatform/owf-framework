@@ -36,6 +36,8 @@ Ozone.config.loginCookieName = ${Environment.current == Environment.DEVELOPMENT 
 
 Ozone.config.prefsLocation = window.location.protocol + "//" + window.location.host + window.location.pathname + "prefs";
 
+Ozone.config.prefsLocation = Ozone.config.prefsLocation.replace(/\;jsessionid=.*/g,'');
+
 //for consistency add the properties onto the new OWF namespace
 var OWF  = OWF || {};
 OWF.config = Ozone.config;
