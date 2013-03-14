@@ -15,57 +15,6 @@ The Ozone Widget Framework (OWF) is a web application for composing other lightw
 ## Technology components
 For Version 7 of OWF, the front-end user interface uses ExtJS, and the back-end uses Grails.  User preferences are stored in a relational database - anything supported by Hibernate.  Authentication of users is a modular function provided by Spring Security.  There is a re-factoring effort planned for 2013 to improve performance  modularity and maintainability, which is expected to eliminate the dependency on Grails and ExtJS.
  
-### Secured Messaging
-The eventing, drag-and-drop, launching, rpc, and intents APIs have been modified to enforce secured messaging. This is achieved by requiring the sending widgets to pass along an accessLevel parameter as part of the payload when using any of these APIs.
-
-#### Eventing Example
-OWF.Eventing.publish(channel, message, null, accessLevel);
- 
-#### RPC Example
-OWF.RPC.getWidgetProxy(widgetId, function(widget) {
-	var sender = Ozone.util.toString({
-		"id": OWF.getInstanceId()
-	});
-	widget.addToGrid(sender, message, channel);
-}, accessLevel);
- 
-#### Drag and Drop Example
-OWF.DragAndDrop.startDrag({
-	dragDropLabel: Ext.String.htmlEncode(data),
-	dragDropData: data,
-	accessLevel: accessLevel
-});
- 
-#### Launching Example
-OWF.Launcher.launch({
-	guid: scope.guid,
-	launchOnlyIfClosed: true,
-	data: dataString,
-	accessLevel: accessLevel
-}, function(response) {
-	//check if the widgetLaunch call failed
-	if (response.error) {
-		//display error message
-	}
-});
- 
-#### Intents Example
-OWF.Intents.startActivity(
-	{
-		action:'View',
-		dataType: 'text/html'
-	},
-	{
-		data: data,
-		accessLevel: accessLevel
-	},
-	function (dest) {
-		//dest is an array of destination widget proxies
-		if (dest.length <= 0) {
-			// alert('Intent was canceled');
-		}
-	}					                
-);
  
 ## Browser Support
 Numbered releases are tested on IE7, IE8, IE9, Firefox 3.6 and the latest public version of Firefox.  Some of the developers use Safari or Chrome, so generally it works well with those browsers also.
