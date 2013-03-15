@@ -570,7 +570,12 @@ Ozone.util.hasAccess = function(cfg) {
 	if (!accessLevel) {
 		if (!senderId || !Ozone.config.dataguard.allowMessagesWithoutAccessLevel) {
 			Ozone.audit.log({
-				message: "Widget with id " + widgetId + " could not receive data because no access level was provided."
+				message: "Widget with id " + widgetId + " could not receive data because no access level was provided.",
+                accessOutcomeGood: false,
+                outcomeCategory: Ozone.util.hasAccess.outcomeCategories.noLevelGiven,
+                sendingWidget: senderId,
+                receivingWidget: widgetId
+
 			});
 			callback({
 				widgetId: widgetId,
@@ -584,6 +589,8 @@ Ozone.util.hasAccess = function(cfg) {
 	function checkAccess(widgetId, accessLevel, channel, senderId, callback) {
 		// Check cache
 		var accessLevelCacheId = accessLevel ? accessLevel.toUpperCase() : senderId;
+        var accessLevelFormatted = accessLevel ? accessLevel : "UNSPECIFIED ACCESS LEVEL";
+
 		if (Ozone.widgetAccesses[widgetId] && Ozone.widgetAccesses[widgetId][accessLevelCacheId]) {
 			// Make sure timestamp is less than 1 hour old
 			var accessLevelTimestamp = Ozone.widgetAccesses[widgetId][accessLevelCacheId].timestamp.getTime();
@@ -594,11 +601,20 @@ Ozone.util.hasAccess = function(cfg) {
 	        	// Log failed access
 	    	    if (!hasAccess) {
 	    			Ozone.audit.log({
-	    				message: "Widget with id " + widgetId + " does not have sufficient privileges to access " + (accessLevel ? accessLevel : "UNSPECIFIED ACCESS LEVEL") + " data."    				
+	    				message: "Widget with id " + widgetId + " does not have sufficient privileges to access " + accessLevelFormatted + " data.",    				
+                        accessOutcomeGood: false,
+                        outcomeCategory: Ozone.util.hasAccess.outcomeCategories.insufficient,
+                        accessLevel: accessLevelFormatted,
+                        sendingWidget: senderId,
+                        receivingWidget: widgetId
 	    			});
 	    	    } else if (Ozone.config.dataguard.auditAllMessages || !accessLevel) {
 	    			Ozone.audit.log({
-	    				message: "Widget with id " + widgetId + " received message with access level " + (accessLevel ? accessLevel : "UNSPECIFIED ACCESS LEVEL") + " data."    				
+	    				message: "Widget with id " + widgetId + " received message with access level " + accessLevelFormatted + " data.",    				
+                        accessOutcomeGood: true,
+                        accessLevel: accessLevelFormatted,
+                        sendingWidget: senderId,
+                        receivingWidget: widgetId                        
 	    			});
 	    	    }
 				
@@ -626,11 +642,20 @@ Ozone.util.hasAccess = function(cfg) {
 	        	// Log failed access
 	    	    if (!hasAccess) {
 	    			Ozone.audit.log({
-	    				message: "Widget with id " + widgetId + " does not have sufficient privileges to access " + (accessLevel ? accessLevel : "UNSPECIFIED ACCESS LEVEL") + " data."    				
+	    				message: "Widget with id " + widgetId + " does not have sufficient privileges to access " + accessLevelFormatted + " data.",    				
+                        accessOutcomeGood: false,
+                        outcomeCategory: Ozone.util.hasAccess.outcomeCategories.insufficient,
+                        accessLevel: accessLevelFormatted,
+                        sendingWidget: senderId,
+                        receivingWidget: widgetId                        
 	    			});
 	    	    } else if (Ozone.config.dataguard.auditAllMessages || !accessLevel) {
 	    			Ozone.audit.log({
-	    				message: "Widget with id " + widgetId + " received message with access level " + (accessLevel ? accessLevel : "UNSPECIFIED ACCESS LEVEL") + " data."    				
+	    				message: "Widget with id " + widgetId + " received message with access level " + accessLevelFormatted + " data.",
+                        accessOutcomeGood: true,
+                        accessLevel: accessLevelFormatted,                        
+                    	sendingWidget: senderId,
+                        receivingWidget: widgetId
 	    			});
 	    	    }
 	    	    
@@ -642,7 +667,13 @@ Ozone.util.hasAccess = function(cfg) {
 	        },
 	        onFailure: function(response) {
 				Ozone.audit.log({
-					message: "Failed to determine whether Widget with id " + widgetId + " has sufficient privileges to access " + (accessLevel ? accessLevel : "UNSPECIFIED ACCESS LEVEL") + " data."    				
+					message: "Failed to determine whether Widget with id " + widgetId + " has sufficient privileges to access " + accessLevelFormatted + " data.",
+                    accessOutcomeGood: false,
+                    outcomeCategory: Ozone.util.hasAccess.outcomeCategories.noLevelGiven,
+                    accessLevel: accessLevelFormatted,
+                    sendingWidget: senderId,
+                    receivingWidget: widgetId                        
+
 				});
 
 		        if (response == undefined || response == null) response = "";
@@ -689,5 +720,7 @@ Ozone.util.hasAccess = function(cfg) {
 		checkAccess(widgetId, accessLevel, channel, senderId, callback);
 	}
 };
+
+Ozone.util.hasAccess.outcomeCategories = { noLevelGiven: "NOT_SPECIFIED", insufficient: "INSUFFICIENT_ACCESS" };
 
 

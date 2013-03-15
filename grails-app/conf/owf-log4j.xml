@@ -78,15 +78,38 @@
         <param name="ConversionPattern" value="%d{dd MMM yyyy HH:mm:ss,SSS z} %m%n" />
       </layout>
     </appender>
+
+  	<appender name="ozone-audit-dataGuard-log" class="org.apache.log4j.CompositeRollingAppender">
+      <param name="RollingStyle" value="3" />
+      <param name="StaticLogFileName" value="false" />
+      <param name="File" value="logs/auditDataGuard.log" />
+      <param name="CountDirection" value="1" />
+      <param name="MaxFileSize" value="100MB" />
+      <param name="MaxSizeRollBackups" value="-1" />
+      <param name="DatePattern" value="'.'yyyy-MM-dd" />
+      <param name="Encoding" value="UTF-8" />
+      <layout class="org.apache.log4j.PatternLayout">
+        <param name="ConversionPattern" value="%p %d{dd MMM yyyy HH:mm:ss,SSS z} %m%n" />
+      </layout>
+    </appender>
   
     <appender name="ozone-async-audit" class="org.apache.log4j.AsyncAppender">
       <appender-ref ref="ozone-audit-log" />
+    </appender>
+
+    <appender name="ozone-async-dataGuard-audit" class="org.apache.log4j.AsyncAppender">
+      <appender-ref ref="ozone-audit-dataGuard-log" />
     </appender>
 
 	<logger name="AuditOWFWebRequestsLogger" additivity="false">
 		<level value="error" />
 		<appender-ref ref="ozone-async" />
 	</logger>
+
+    <logger name="ozone.owf.grails.service.AuditService" additivity="false">
+    	<level value="info" />
+    	<appender-ref ref="ozone-async-dataGuard-audit" />
+    </logger>
 
     <!-- For security logging, set this log level to "info". -->
     <logger name="ozone.securitysample.authentication.audit.SecurityAuditLogger" additivity="false">
