@@ -43,11 +43,6 @@ class MarketplaceService extends BaseService {
             if (widgetDefinition == null) {
                 println "Creating new widget definition for ${obj.widgetGuid}"
                 widgetDefinition=new WidgetDefinition()
-
-                // For backwards compatibility set GUID as Universal Name by
-                // default only when widget was not already in OWF.
-                // Marketplace 7.0 still does NOT provide Universal Name.
-                widgetDefinition.universalName = obj.widgetGuid
             }
 
             widgetDefinition.displayName = obj.displayName
@@ -57,7 +52,7 @@ class MarketplaceService extends BaseService {
             widgetDefinition.imageUrlSmall = obj.imageUrlSmall
 
             // Marketplace may not provide Universal Name. Keep value that
-            // is already in OWF unless explicitly provided by MP.
+            // is already in OWF (or null) unless explicitly provided.
             if (obj.universalName) {
                 widgetDefinition.universalName = obj.universalName
             }
