@@ -25,23 +25,27 @@ class AuditService {
 
         def logMessage = "Sender: [" + sendingWidget + "], Receiver: [" + receivingWidget + "], accessLevel: [" + accessLevel + "]"
         if (outcomeGood) {
+            logger.info(logMessage)
+
 //            println "Logging good here..." 
 //            println "Log message: " + logMessage
-            if (logger.isInfoEnabled()) {
-                logger.info(logMessage)        
-            } else {
-//                println "Info's not on for this logger"
-            }
+//             if (logger.isInfoEnabled()) {
+//                 
+//             } else {
+// //                println "Info's not on for this logger"
+//             }
             
         } else {
-//            println "Logging fail here..."
-//            println "Log message: " + logMessage
             logMessage = logMessage + ", [" + outcomeCategory + "]"
-            if (logger.isErrorEnabled()) {
-                logger.error(logMessage)
-            } else {
-//                println "Error's not on for this logger..."
-            }
+            logger.error(logMessage)
+// //            println "Logging fail here..."
+// //            println "Log message: " + logMessage
+//             logMessage = logMessage + ", [" + outcomeCategory + "]"
+//             if (logger.isErrorEnabled()) {
+//                 logger.error(logMessage)
+//             } else {
+// //                println "Error's not on for this logger..."
+//             }
         }
         
         return [success:true, data:[message: logMessage]]
