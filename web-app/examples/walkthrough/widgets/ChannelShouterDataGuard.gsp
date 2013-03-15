@@ -42,7 +42,8 @@
                     if (data != null && data != '') {
                         OWF.DragAndDrop.startDrag({
                             dragDropLabel: Ext.String.htmlEncode(data),
-                            dragDropData: data
+                            dragDropData: data,
+                            accessLevel: document.getElementById('AccessLevel').value
                         });
                     }
                 });
@@ -52,10 +53,11 @@
             shout = owfdojo.hitch(this, function () {
                 var channel = document.getElementById('InputChannel').value;
                 var message = document.getElementById('InputMessage').value;
+                var accessLevel = document.getElementById('AccessLevel').value;
 
                 if (channel != null && channel != '') {
 
-                    OWF.Eventing.publish(channel, message);
+                    OWF.Eventing.publish(channel, message, null, accessLevel);
 
                     if (scope.guid != null && typeof scope.guid == 'string') {
                         var data = {
@@ -72,7 +74,7 @@
                         }, function(response) {
 
                             //check if the widgetLaunch call failed
-                            if (response.error) {
+                            if (response && response.error) {
                                 //display error message
                             }
                         });
@@ -84,7 +86,8 @@
             ShouterStrings = {
                 channel: 'Channel: ',
                 message: 'Message: ',
-                broadcast: 'Broadcast'
+                broadcast: 'Broadcast',
+                accessLevel: 'Access Level:'
             };
 
             var lang = Ozone.lang.getLanguage();
@@ -111,6 +114,11 @@
                 <span id="dragSource">
                   <img src="../../../images/widget-icons/ChannelShouter.png"  height="16" width="16" style="vertical-align:middle" alt="Enter a Channel Name and then Drag me"/>
                 </span>
+                <br /><br />
+                <script>
+                    document.write(ShouterStrings.accessLevel);
+                </script>
+                <input type="text" id="AccessLevel" class="widgetFormInput" size="16"/>
             </div>
             <br/>
             <br/>
