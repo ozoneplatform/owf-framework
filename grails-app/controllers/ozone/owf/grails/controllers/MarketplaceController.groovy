@@ -27,31 +27,36 @@ class MarketplaceController extends BaseOwfRestController {
         def statusMessage = "GUID ${params.guid} not found"
 
         if (params.guid) {
-            // Prevent a new widget from being automatically added from MP
-            if (!config.owf.mpSyncAutoCreateWidget &&
-                null == WidgetDefinition.findByWidgetGuid(params.guid, [cache:true])) {
-                    statusMessage += ". Automatic creation is disabled."
-                    log.error("MP Sync: ${statusMessage}")
-            } else {
-                // One item of interest. Since we don't have a really good
-                // way to determine the URL of the marketplace that
-                // triggering the update, we actually give the service a
-                // null URL. No matter as the service will, in turn, look
-                // into the current marketplaces configured in OWF and grab
-                // the URLs for each returning the first match it finds for
-                // the GUID among all the MPs.
-                stMarketplaceJson.addAll(marketplaceService.buildWidgetListFromMarketplace(params.guid))
-
-                if (!stMarketplaceJson.isEmpty()) {
-                    marketplaceService.addListingsToDatabase(stMarketplaceJson)
-                    statusKey = 'updatedGuid'
-                    statusMessage = params.guid
-                    statusCode = 200
+            if (config.owf.mpSync.enabled) {
+                // Prevent a new widget from being automatically added from MP
+                if (!config.owf.mpSync.autoCreateWidget &&
+                    null == WidgetDefinition.findByWidgetGuid(params.guid, [cache:true])) {
+                        statusMessage += ". Automatic creation is disabled."
+                        log.error("MP Sync: ${statusMessage}")
                 } else {
-                    statusMessage = "Failed to read descriptor with GUID" +
-                        " ${params.guid} from configured marketplaces"
-                    log.error("MP Sync: ${statusMessage}")
+                    // One item of interest. Since we don't have a really good
+                    // way to determine the URL of the marketplace that
+                    // triggering the update, we actually give the service a
+                    // null URL. No matter as the service will, in turn, look
+                    // into the current marketplaces configured in OWF and grab
+                    // the URLs for each returning the first match it finds for
+                    // the GUID among all the MPs.
+                    stMarketplaceJson.addAll(marketplaceService.buildWidgetListFromMarketplace(params.guid))
+
+                    if (!stMarketplaceJson.isEmpty()) {
+                        marketplaceService.addListingsToDatabase(stMarketplaceJson)
+                        statusKey = 'updatedGuid'
+                        statusMessage = params.guid
+                        statusCode = 200
+                    } else {
+                        statusMessage = "Failed to read descriptor with GUID" +
+                            " ${params.guid} from configured marketplaces"
+                        log.error("MP Sync: ${statusMessage}")
+                    }
                 }
+            } else {
+                statusMessage = "Marketplace sync is disabled"
+                log.error("MP Sync: Got GUID ${params.guid} but sync is disabled")
             }
         }
 

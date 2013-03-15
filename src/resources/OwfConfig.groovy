@@ -64,11 +64,6 @@ owf {
     //Applet/Flex have less zindex issues, but browser performance may suffer due to the additional shim frames being created
     useShims = false
 
-    // OZP-476: Marketplace (MP) Synchronization
-    // Allow sync request from MP to cause a new widget to be created in OWF
-    // if it does not already exist
-    mpSyncAutoCreateWidget = false
-
   //Locations for the optional external themes and help directories.
   //Default: 'themes', 'help', and 'js-plugins' directories on the classpath.
   //Can be configured to an arbitrary file path.  The following
@@ -122,6 +117,16 @@ owf {
     // restrictMessages must be set to true
     accessLevelCacheTimeout = 3600000
   }
+
+    // OZP-476: Marketplace (MP) Synchronization
+    mpSync {
+        // Process listing change notifications from Marketplace(s)
+        enabled = false
+
+        // Change notification from MP will cause a new widget to be created
+        // in OWF if it does not already exist
+        autoCreateWidget = false
+    }
 }
 
 

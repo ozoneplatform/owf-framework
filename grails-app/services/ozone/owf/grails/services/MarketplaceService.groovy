@@ -212,7 +212,7 @@ class MarketplaceService extends BaseService {
         // marketplaces to check for the GUID.  Those can be found by looking in widget definitions
         // for marketplace type listings and getting the URLs.
         def setMpUrls = new HashSet()
-        if (mpSourceUrl && config.owf.mpSyncTrustProvidedUrl) {
+        if (mpSourceUrl && config.owf.mpSync.trustProvidedUrl) {
             setMpUrls.add(mpSourceUrl)
         } else {
             WidgetType.findByName('marketplace').collect { tpe ->
@@ -243,7 +243,7 @@ class MarketplaceService extends BaseService {
         keyStream.close()
 
         def factory = new SSLSocketFactory(keyStore, keyStorePw, trustStore)
-        if (config.owf.mpSyncTrustAll) {
+        if (config.owf.mpSync.trustAllCerts) {
             def trustAllCerts = new TrustStrategy() {
                 boolean isTrusted(X509Certificate[] chain, String authType) {
                     return true
