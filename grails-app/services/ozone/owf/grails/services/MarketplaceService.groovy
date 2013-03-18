@@ -41,7 +41,10 @@ class MarketplaceService extends BaseService {
             def widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache:true])
 
             if (widgetDefinition == null) {
-                println "Creating new widget definition for ${obj.widgetGuid}"
+                if (grails.util.GrailsUtil.environment != 'test') {
+                    log.info "Creating new widget definition for ${obj.widgetGuid}"
+                }
+
                 widgetDefinition=new WidgetDefinition()
             }
 
@@ -278,8 +281,7 @@ class MarketplaceService extends BaseService {
                     def handler = new BasicResponseHandler()
                     def strJson = handler.handleResponse(response)
                     ompObj = JSON.parse(strJson)
-                }
-                else {
+                } else {
                     log.warn "Received non-parseable response from MP, content type -> ${response.entity.contentType}"
                 }
             } catch (IOException ioE) {
