@@ -31,8 +31,10 @@ class MarketplaceController extends BaseOwfRestController {
                 // Prevent a new widget from being automatically added from MP
                 if (!config.owf.mpSync.autoCreateWidget &&
                     null == WidgetDefinition.findByWidgetGuid(params.guid, [cache:true])) {
+                        statusKey = 'updateDisabled'
                         statusMessage += ". Automatic creation is disabled."
-                        log.error("MP Sync: ${statusMessage}")
+                        statusCode = 200
+                        log.info("MP Sync: ${statusMessage}")
                 } else {
                     // One item of interest. Since we don't have a really good
                     // way to determine the URL of the marketplace that
