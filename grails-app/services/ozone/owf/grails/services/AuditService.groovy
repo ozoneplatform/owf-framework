@@ -11,7 +11,6 @@ class AuditService {
     static Logger logger = Logger.getLogger('ozone.owf.grails.services.AuditService')
         
     def logMessage(def params) {
-//        println " ####  within Audit service"
         def username = accountService.getLoggedInUsername()
         def requestTime = OWFDate.format(new Date())
 
@@ -21,31 +20,12 @@ class AuditService {
         def outcomeCategory = params.outcomeCategory
         def outcomeGood = params.boolean('accessOutcomeGood')
 
-//        println "outcome: " + outcomeGood
-
         def logMessage = "Sender: [" + sendingWidget + "], Receiver: [" + receivingWidget + "], accessLevel: [" + accessLevel + "]"
         if (outcomeGood) {
             logger.info(logMessage)
-
-//            println "Logging good here..." 
-//            println "Log message: " + logMessage
-//             if (logger.isInfoEnabled()) {
-//                 
-//             } else {
-// //                println "Info's not on for this logger"
-//             }
-            
         } else {
             logMessage = logMessage + ", [" + outcomeCategory + "]"
             logger.error(logMessage)
-// //            println "Logging fail here..."
-// //            println "Log message: " + logMessage
-//             logMessage = logMessage + ", [" + outcomeCategory + "]"
-//             if (logger.isErrorEnabled()) {
-//                 logger.error(logMessage)
-//             } else {
-// //                println "Error's not on for this logger..."
-//             }
         }
         
         return [success:true, data:[message: logMessage]]
