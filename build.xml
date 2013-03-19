@@ -430,10 +430,10 @@
         	<zipfileset dir="${staging.dir}" includes="**/*.sh" filemode="744" />
         </zip>
         <!-- copy owf bundle to the released name-->
-        <copy file="${staging.dir}/${app.name}-bundle.zip" tofile="${staging.dir}/${app.base.prefix}-bundle-${app.base.majorVersion}-${app.base.sprint}.zip" />
+        <copy file="${staging.dir}/${app.name}-bundle.zip" tofile="${staging.dir}/${app.base.prefix}-bundle-${app.base.version}-${app.base.sprint}.zip" />
 
         <!-- create owf help bundle -->
-        <zip destfile="${staging.dir}/${app.base.prefix}-help-${app.base.majorVersion}-${app.base.sprint}.zip" >
+        <zip destfile="${staging.dir}/${app.base.prefix}-help-${app.base.version}-${app.base.sprint}.zip" >
             <zipfileset dir="${staging.dir}" includes="help/**" />
         </zip>
 
@@ -446,7 +446,7 @@
     </target>
 
     <target name="bundle-sample-widgets" depends="stage-samples">
-        <zip destfile="${staging.dir}/${app.base.prefix}-sample-widgets-${app.base.majorVersion}-${app.base.sprint}.zip" >
+        <zip destfile="${staging.dir}/${app.base.prefix}-sample-widgets-${app.base.version}-${app.base.sprint}.zip" >
             <zipfileset dir="${staging.dir}/samples"/>
         </zip>
     </target>
@@ -459,7 +459,7 @@
                 <include name="test-widgets/**/*.war" />
             </fileset>
         </copy>
-        <zip destfile="${staging.dir}/${app.base.prefix}-test-widgets-${app.base.majorVersion}-${app.base.sprint}.zip" >
+        <zip destfile="${staging.dir}/${app.base.prefix}-test-widgets-${app.base.version}-${app.base.sprint}.zip" >
             <zipfileset dir="${staging.dir}/owf-test-widgets"/>
         </zip>
     </target>
