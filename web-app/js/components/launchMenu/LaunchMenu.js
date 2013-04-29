@@ -314,6 +314,7 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                                 {
                                     xtype: 'slider',
                                     itemId: 'iconSlider',
+                                    id: 'iconSlider',
                                     cls: 'iconSlider',
                                     value: 64,
                                     flex: 1,
@@ -372,6 +373,13 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
 
                                             me.view.setItemSize(sizeObj);
 
+                                        },
+                                        afterrender: function () {
+                                            Ext.tip.QuickTipManager.register({
+                                                target: 'iconSlider',
+                                                title: 'Resize Icons',
+                                                text: 'Use this slider to resize the widget icons'
+                                            });
                                         },
                                         scope: this
                                     }
