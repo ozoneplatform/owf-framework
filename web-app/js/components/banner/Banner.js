@@ -339,26 +339,32 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 },
                 handler: this.openHelpWindow,
                 scope: this
-            }, '-',
-            // popout button
-            {
-                xtype: 'button',
-                id: 'popOutBannerBtn',
-                cls: 'popOutBannerBtn ',
-                iconCls: 'popOutBannerBtnIcon',
-                iconAlign: 'top',
-                scale: 'banner-large',
-                width: 10,
-                text: null,
-                tooltip: {
-                    title: Ozone.layout.tooltipString.bannerUndockTitle,
-                    text: Ozone.layout.tooltipString.bannerUndockContent,
-                    width: 280,
-                    maxWidth: 280
-                },
-                handler: this.popOutDockedBanner,
-                scope: this
-            },
+            }, '-'
+       ]);
+       if(Ozone.config.bannerPopoutEnabled){
+	       me.items.push([
+	            // popout button
+	            {
+	                xtype: 'button',
+	                id: 'popOutBannerBtn',
+	                cls: 'popOutBannerBtn ',
+	                iconCls: 'popOutBannerBtnIcon',
+	                iconAlign: 'top',
+	                scale: 'banner-large',
+	                width: 10,
+	                text: null,
+	                tooltip: {
+	                    title: Ozone.layout.tooltipString.bannerUndockTitle,
+	                    text: Ozone.layout.tooltipString.bannerUndockContent,
+	                    width: 280,
+	                    maxWidth: 280
+	                },
+	                handler: this.popOutDockedBanner,
+	                scope: this
+	            }
+	       ]);
+       }
+       me.items.push([     
             {
               xtype: 'component',
               itemId: 'logoImg',
@@ -462,28 +468,30 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
               this.getComponent('adminBtn').cloneConfig(), '-'
           );
         }
-
-        popOutButtons.push(
-            this.getComponent('helpBtn').cloneConfig(), '-',
-            {
-                xtype: 'button',
-                id: 'popInBannerBtn',
-                cls: 'popInBannerBtn',
-                iconCls: 'popInBannerBtnIcon',
-                iconAlign: 'top',
-                scale: 'banner-large',
-                width: 10,
-                text: null,
-                tooltip: {
-                    title: Ozone.layout.tooltipString.bannerDockTitle,
-                    text: Ozone.layout.tooltipString.bannerDockContent,
-                    width: 200,
-                    maxWidth: 200
-                },
-                handler: this.dockPopOutBanner,
-                scope: this
-            }
-        );
+        
+        if(Ozone.config.bannerPopoutEnabled){
+	        popOutButtons.push(
+	            this.getComponent('helpBtn').cloneConfig(), '-',
+	            {
+	                xtype: 'button',
+	                id: 'popInBannerBtn',
+	                cls: 'popInBannerBtn',
+	                iconCls: 'popInBannerBtnIcon',
+	                iconAlign: 'top',
+	                scale: 'banner-large',
+	                width: 10,
+	                text: null,
+	                tooltip: {
+	                    title: Ozone.layout.tooltipString.bannerDockTitle,
+	                    text: Ozone.layout.tooltipString.bannerDockContent,
+	                    width: 200,
+	                    maxWidth: 200
+	                },
+	                handler: this.dockPopOutBanner,
+	                scope: this
+	            }
+	        );
+        }
 
         me.popOutToolbar = Ext.create("Ext.toolbar.Toolbar", {
             id: 'popOutBanner',
