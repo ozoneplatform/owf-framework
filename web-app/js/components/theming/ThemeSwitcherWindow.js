@@ -64,6 +64,7 @@ Ext.define('Ozone.components.theming.ThemeSwitcherWindow', {
 //            iconCls: 'cancelBtnIcon',
             scope: this,
             handler: function() {
+            	this.showConfirmation = false
                 this.close();
             }
         });
