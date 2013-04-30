@@ -64,7 +64,7 @@ Ext.define('Ozone.components.theming.ThemeSwitcherWindow', {
 //            iconCls: 'cancelBtnIcon',
             scope: this,
             handler: function() {
-            	this.showConfirmation = false
+            	this.showConfirmation = false;
                 this.close();
             }
         });
@@ -181,8 +181,10 @@ Ext.define('Ozone.components.theming.ThemeSwitcherWindow', {
     	    		 return true;
     	    	 } else {
     	    		 var switcher = Ext.getCmp('themeSwitcher')
-    	    		 switcher.showConfirmation = false;
-    	    		 switcher.close();
+    	    		 if(switcher != undefined) {
+    	    			 switcher.showConfirmation = false;
+    	    			 switcher.close();
+    	    		 }
     	    	 }
     	     }
     	});
