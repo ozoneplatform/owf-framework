@@ -87,6 +87,7 @@ Ext.define('Ozone.components.theming.ThemeSwitcherWindow', {
         ];
 
       this.on('afterrender', function(cmp) {
+    	  var me = this;
             var view = cmp.getComponent('theme-browser-view'),
                 store = view.getStore();
 
@@ -95,8 +96,8 @@ Ext.define('Ozone.components.theming.ThemeSwitcherWindow', {
             //after the store loads, automatically select
             //the current theme
             store.on('load', function(store) {
-                this.previousTheme = store.find('name', Ozone.config.currentTheme.themeName);
-                record = this.previousTheme;
+                me.previousTheme = store.find('name', Ozone.config.currentTheme.themeName);
+                record = me.previousTheme;
                 this.select(record);
             }, view);
 
@@ -128,7 +129,9 @@ Ext.define('Ozone.components.theming.ThemeSwitcherWindow', {
         if (selected) {
         	if(this.selectedTheme == null) {
         		this.showConfirmation = false;
-        	} else if(this.previousTheme != selected) {
+        	} else if (this.previousTheme == selected.index) {
+        		this.showConfirmation = false;	
+        	}else if(this.previousTheme != selected.index) {
         		this.showConfirmation = true;
         	}
             this.selectedTheme = selected;
