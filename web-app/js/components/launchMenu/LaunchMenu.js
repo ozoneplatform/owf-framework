@@ -378,7 +378,8 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                                             Ext.tip.QuickTipManager.register({
                                                 target: 'iconSlider',
                                                 title: 'Resize Icons',
-                                                text: 'Use this slider to resize the widget icons below.'
+                                                text: 'Use this slider to resize the widget icons below.',
+                                                width: 250
                                             });
                                         },
                                         scope: this
