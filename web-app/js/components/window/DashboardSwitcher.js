@@ -189,6 +189,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         me.on('show', me.updateWindowSize, me);
         me.on('show', me.initCircularFocus, me, {single: true});
         me.on('show', me.focusActiveDashboard, me);
+        me.mon(me.dashboardContainer, OWF.Events.Dashboard.CHANGED, me.onDashboardChanged, me);
     },
 
     bindEvents: function () {
@@ -706,14 +707,19 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         var stackContext = dashboard.stack ? dashboard.stack.stackContext : null;
 
         this.activateDashboard(dashboard.guid, stackContext);
-        
-        $clickedDashboard.addClass( this.selectedItemCls );
+    },
 
-        if( this._$lastClickedDashboard ) {
-            this._$lastClickedDashboard.removeClass( this.selectedItemCls );
+    onDashboardChanged: function() {
+        var activeDashboardId = this.dashboardContainer.activeDashboard.id,
+            $selectedDashboard = $('#dashboard'+activeDashboardId);
+
+        $selectedDashboard.addClass( this.selectedItemCls );
+
+        if( this._$lastSelectedDashboard ) {
+            this._$lastSelectedDashboard.removeClass( this.selectedItemCls );
         }
 
-        this._$lastClickedDashboard = $clickedDashboard;
+        this._$lastSelectedDashboard = $selectedDashboard;
     },
 
     onStackClick: function (evt) {
