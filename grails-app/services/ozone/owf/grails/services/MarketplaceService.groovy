@@ -68,10 +68,24 @@ class MarketplaceService extends BaseService {
             widgetDefinition.visible = obj.widgetUrl.isAllWhitespace() ? false : obj.visible
             widgetDefinition.background = obj.background
             widgetDefinition.descriptorUrl = obj.descriptorUrl
-            widgetDefinition.widgetTypes = [
-                WidgetType.findByName('standard')
-            ]
             widgetDefinition.save(flush: true, failOnError: true)
+
+            if (obj.widgetTypes) {
+                // for each widget type T in the listing from MP, add the corresponding OWF widget
+                // type to widgetTypes or add standard if there's no corresponding type.
+                widgetDefinition.widgetTypes = []
+
+                obj.widgetTypes.each { String widgetTypeFromMP ->
+                    def typeFound = WidgetType.findByName(widgetTypeFromMP)
+                    if (typeFound) {
+                        widgetDefinition.widgetTypes << typeFound
+                    } else {
+                        widgetDefinition.widgetTypes << WidgetType.standard
+                    }
+                }
+            } else {
+                widgetDefinition.widgetTypes = [ WidgetType.standard ]
+            }
 
             // Delete any existing tags.  Not a good bulk method for doing this, though
             // could possibly use the setTags() method.

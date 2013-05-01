@@ -107,7 +107,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             isSelected: widgetId == serviceItem.id, // true if this is the widget the user selected and not a dependent widget
             height: 200,
             width: 200,
-            isExtAjaxFormat: true
+            isExtAjaxFormat: true,
+            widgetTypes: [serviceItem.owfProperties.owfWidgetType]
 //            ,
 //            tags: Ext.JSON.encode([this.createApprovalTag()])
         };

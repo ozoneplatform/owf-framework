@@ -17,4 +17,8 @@ class WidgetType implements Serializable {
 	static mapping = {
 		widgetDefinitions (lazy:true, cache: true)
 	}
+
+    static WidgetType getStandard() {
+        return findByName('standard')
+    }
 }

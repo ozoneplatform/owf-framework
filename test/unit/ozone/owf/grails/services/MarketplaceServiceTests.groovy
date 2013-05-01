@@ -17,8 +17,6 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         def domainMappingServiceMockClass= mockFor(DomainMappingService)
         domainMappingServiceMockClass.demand.deleteAllMappings(0..9999) { a,b,c -> [] }
         marketplaceService.domainMappingService= domainMappingServiceMockClass.createMock()
-        
-
 
         // Stub out taggable.  Kinda annoying
         WidgetDefinition.metaClass.mockTags = []
@@ -28,16 +26,18 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         WidgetDefinition.metaClass.removeTag={ name -> delegate.mockTags.remove(name)}
         WidgetDefinition.metaClass.addTag={name, visible, position, editable -> delegate.mockTags << name}
         
-        // Mock out the various domains we'll use
+        // Mock out the various widget types available
         mockDomain(WidgetType,[
             new WidgetType(name:"standard"),
             new WidgetType(name:"marketplace"),
             new WidgetType(name:"metric"),
+            new WidgetType(name:"admin"),
         ])
         
         mockDomain(WidgetDefinitionIntent)
         mockDomain(Intent)
         mockDomain(IntentDataType)
+        mockDomain(WidgetDefinition)
     }
 
     protected void tearDown() {
@@ -61,7 +61,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         "directRequired" :[],
         "defaultTags" : ["tag"],
         "intents":{"send":[],"receive":[]},
-        "widgetTypes":["Widget"]
+        "widgetTypes":["standard"]
     }
     '''
     def singleWidgetWithIntentsJson='''
@@ -86,39 +86,72 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
             ],"receive":[
                 {"action":"receive","dataTypes":["text/plain","text/html"]}
             ]},
-        "widgetTypes":["Widget"]
+        "widgetTypes":["metric"]
     }
     '''
+
+    def widgetWithInterestingWidgetTypesJSON='''
+    {
+        "displayName":"testWidgetTypes",
+        "description":"descriptionIntents",
+        "imageUrlLarge":"largeImageIntents",
+        "imageUrlSmall":"smallImageIntents",
+        "widgetGuid":"086ca7a6-5c53-438c-99f2-f7820638fc6e",
+        "widgetUrl":"http://Intents.com",
+        "widgetVersion":"1",
+        "singleton":false,
+        "visible":true,
+        "background":false,
+        "height":200,
+        "width":300,
+        "directRequired" :[],
+        "defaultTags" : ["tag"],
+        "intents":
+            {"send":[
+                {"action":"send","dataTypes":["text/plain","text/html"]}
+            ],"receive":[
+                {"action":"receive","dataTypes":["text/plain","text/html"]}
+            ]},
+        "widgetTypes":["admin", "marketplace", "metric", "nonexistent"]
+    }
+    '''
+
     def singleSimpleWidget=new JSONArray("[${singleSimpleWidgetJson}]")
     def singleWidgetWithIntents=new JSONArray("[${singleWidgetWithIntentsJson}]")
     def withAndWithoutIntents=new JSONArray("[${singleSimpleWidgetJson},${singleWidgetWithIntentsJson}]")
+    def widgetWithInterestingWidgetTypes = new JSONArray("[${widgetWithInterestingWidgetTypesJSON}]")
 
     // just make sure that it actually parses a basic widget
     void testSimplestWidget() {
-        mockDomain(WidgetDefinition)
-        
-        def widgets=marketplaceService.addListingsToDatabase(singleSimpleWidget);
-        assertEquals 1,widgets.size()
-        assertEquals "name",widgets[0].displayName
-        assertEquals "description",widgets[0].description
-        assertEquals "largeImage",widgets[0].imageUrlLarge
-        assertEquals "smallImage",widgets[0].imageUrlSmall
-        assertEquals "086ca7a6-5c53-438c-99f2-f7820638fc6f",widgets[0].widgetGuid
-        assertEquals "http://wikipedia.com",widgets[0].widgetUrl
-        assertEquals "1",widgets[0].widgetVersion
-        assertEquals false,widgets[0].singleton
-        assertEquals true,widgets[0].visible
-        assertEquals false,widgets[0].background
-        assertEquals 200,widgets[0].height
-        assertEquals 300,widgets[0].width
+
+        def widgets = marketplaceService.addListingsToDatabase(singleSimpleWidget);
+        def resultWidget = widgets[0]
+        assert 1,widgets.size()
+        assert "name" == resultWidget.displayName
+        assert "description" == resultWidget.description
+        assert "largeImage" == resultWidget.imageUrlLarge
+        assert "smallImage" == resultWidget.imageUrlSmall
+        assert "086ca7a6-5c53-438c-99f2-f7820638fc6f" == resultWidget.widgetGuid
+        assert "http://wikipedia.com" == resultWidget.widgetUrl
+        assert "1" == resultWidget.widgetVersion
+        assert !resultWidget.singleton
+        assert resultWidget.visible
+        assert !resultWidget.background
+        assert 200 == resultWidget.height
+        assert 300 == resultWidget.width
+
+        def typesList = resultWidget.widgetTypes as List
+
+        assert typesList.size() == 1
+        assert 'standard' == typesList[0].name
     }
 
     void testProcessesIntentsOnOneWidget() {
-        mockDomain(WidgetDefinition)
-        def widgets=marketplaceService.addListingsToDatabase(singleWidgetWithIntents);
-        assertEquals 2,widgets[0].widgetDefinitionIntents.size()
+        def resultWidget = marketplaceService.addListingsToDatabase(singleWidgetWithIntents)[0];
+
+        assertEquals 2,resultWidget.widgetDefinitionIntents.size()
         boolean hasSend=false,hasReceive=false
-        widgets[0].widgetDefinitionIntents.each {
+        resultWidget.widgetDefinitionIntents.each {
             if(it.intent.action == "send") {
                 hasSend=true
             } else if(it.intent.action == "receive") {
@@ -133,14 +166,29 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         }
         assertTrue "Definition should contain send intents",hasSend
         assertTrue "Definition should contain receive intents",hasReceive
+
+        def typesList = resultWidget.widgetTypes as List
+
+        assert typesList.size() == 1
+        assert 'metric' == typesList[0].name
     }
+
     void testMultipleWidgets() {
-        mockDomain(WidgetDefinition)
-        
+
         def widgets=marketplaceService.addListingsToDatabase(withAndWithoutIntents);
         assertEquals 2,widgets.size()
         assertEquals "name",widgets[0].displayName
         assertEquals "nameIntents",widgets[1].displayName
     }
 
+    void testAllWidgetTypesProperlyConverted() {
+        def resultWidget = marketplaceService.addListingsToDatabase(widgetWithInterestingWidgetTypes)[0];
+
+        def typeNamesList = ((resultWidget.widgetTypes as List).sort{WidgetType type -> type.name})*.name
+
+        println (typeNamesList.join(', '))
+
+        assert 4 == typeNamesList.size()
+        assert ['admin', 'marketplace', 'metric', 'standard']
+    }
 }
