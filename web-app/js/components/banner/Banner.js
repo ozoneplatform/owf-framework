@@ -112,39 +112,17 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     openMarketplaceModalWindow: function(btn, e) {
         var me = this;
         if(this.hasMarketplaceButton) {
+            if(!this.mpModalWindow || this.mpModalWindow.isDestroyed) {
+                this.mpModalWindow = Ext.widget('marketplacewindow', {
+                    dashboardContainer: this.dashboardContainer
+                });
+            }
+
             if (this.marketplaceWidget) {
                 var keyboard = ('keyup' == e.type) ? true : false;
                 e.stopEvent();
-                var dashboardStore = this.dashboardContainer.dashboardStore;
-                var dashboardInd = dashboardStore.findExact('name', 'Marketplace');
-                var dashboard;
-                if (dashboardInd >= 0) {
-                    dashboard = dashboardStore.getAt(dashboardInd);
-                    if (dashboard.data.guid != me.dashboardContainer.activeDashboard.guid) {
-                        me.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() { me.dashboardContainer.launchWidgets(me.marketplaceWidget, keyboard);  }, undefined, {single: true});
-                        me.dashboardContainer.activateDashboard(dashboard.data.guid);
-                    } else {
-                        me.dashboardContainer.launchWidgets(me.marketplaceWidget, keyboard);
-                    }
-                } else {
-                    dashboard = Ext.create('Ozone.data.Dashboard', {
-                                            "name": "Marketplace"
-                                        });
-                    me.dashboardContainer.saveDashboard(dashboard.data, 'create', function() {
-
-                        // activate new dashboard
-                        var guid = dashboard.get('guid');
-                        me.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() { me.dashboardContainer.launchWidgets(me.marketplaceWidget, keyboard);  }, undefined, {single: true});
-                        me.dashboardContainer.activateDashboard(guid);
-                    });
-                }
+                this.mpModalWindow.launchMarketplaceWidget(this.marketplaceWidget, keyboard);
             } else {
-                if(!this.mpModalWindow || this.mpModalWindow.isDestroyed) {
-                    this.mpModalWindow = Ext.widget('marketplacewindow', {
-                        dashboardContainer: this.dashboardContainer
-                    });
-                }
-                
                 if(this.mpModalWindow.isVisible()) {
                     this.mpModalWindow.close();
                 }
