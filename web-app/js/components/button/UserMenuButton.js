@@ -214,6 +214,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
 
     onAfterRender: function(cmp) {
         var clickables;
+        var me = this;
 //        var keymap;
         
         cmp.userMenu.el = Ext.get(cmp.userMenu.append(Ext.getBody(), cmp.items));
@@ -261,20 +262,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
 //            this.destroy();
 //        }, keymap);
 
-        cmp.setupMenuNav();
-
-        Ext.widget('tooltip',{
-          id: 'prevLoginToolTip',
-          target: Ext.get('prevLogin'),
-          html: 'Previous Sign In ' + this.formatLoginDate(this.user.prevLogin),
-          listeners: {
-            show: {
-              fn: function(cmp, opts) {
-                cmp.setZIndex(100000001);
-              }
-            }
-          }
-        });
+        cmp.setupMenuNav();        
     },
     
     onClick: function() {
