@@ -238,37 +238,9 @@ class MarketplaceService extends BaseService {
                 }
             }
         }
-
-        // Some initial setup pertaining to getting certs ready for
-        // use (presuming SSL mutual handshake between servers).
-        // Here is where the Grails REST plugin would really come to
-        // the rescue -- the elimination of so much boilerplate.
         def ompObj
-        def keyStoreFileName = System.properties['javax.net.ssl.keyStore']
-        def keyStorePw = System.properties['javax.net.ssl.keyStorePassword']
-        def keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
-        def trustStoreFileName = System.properties['javax.net.ssl.trustStore']
-        def trustStorePw = System.properties['javax.net.ssl.trustStorePassword']
-        def trustStore = KeyStore.getInstance(KeyStore.getDefaultType())
 
-        def trustStream = new FileInputStream(new File(trustStoreFileName))
-        trustStore.load(trustStream, trustStorePw.toCharArray())
-        trustStream.close()
-
-        def keyStream = new FileInputStream(new File(keyStoreFileName))
-        keyStore.load(keyStream, keyStorePw.toCharArray())
-        keyStream.close()
-
-        def factory = new SSLSocketFactory(keyStore, keyStorePw, trustStore)
-        if (config.owf.mpSync.trustAllCerts) {
-            def trustAllCerts = new TrustStrategy() {
-                boolean isTrusted(X509Certificate[] chain, String authType) {
-                    return true
-                }
-            }
-            factory = new SSLSocketFactory(trustAllCerts, new AllowAllHostnameVerifier())
-            log.warn "getObjectListingFromMarketplace: trusting all SSL hosts and certificates"
-        }
+        def socketFactory = createSocketFactory();
 
         setMpUrls.find { mpUrl ->
             // Check each configured marketplace and stop when we get a match.
@@ -283,7 +255,7 @@ class MarketplaceService extends BaseService {
             def client = new DefaultHttpClient()
             try {
                 // More simplification to be gained here using the Grails REST plugin.
-                def sch = new Scheme("https", port?:443 as int, factory)
+                def sch = new Scheme("https", port?:443 as int, socketFactory)
                 client.getConnectionManager().getSchemeRegistry().register(sch)
 
                 def get = new HttpGet(mpUrl + "/public/descriptor/${guid}")
@@ -325,5 +297,40 @@ class MarketplaceService extends BaseService {
         else {
             return null
         }
+    }
+
+    private SSLSocketFactory createSocketFactory()
+    {
+        // Some initial setup pertaining to getting certs ready for
+        // use (presuming SSL mutual handshake between servers).
+        // Here is where the Grails REST plugin would really come to
+        // the rescue -- the elimination of so much boilerplate.
+        def keyStoreFileName = System.properties['javax.net.ssl.keyStore']
+        def keyStorePw = System.properties['javax.net.ssl.keyStorePassword']
+        def keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
+        def trustStoreFileName = System.properties['javax.net.ssl.trustStore']
+        def trustStorePw = System.properties['javax.net.ssl.trustStorePassword']
+        def trustStore = KeyStore.getInstance(KeyStore.getDefaultType())
+
+        def trustStream = new FileInputStream(new File(trustStoreFileName))
+        trustStore.load(trustStream, trustStorePw.toCharArray())
+        trustStream.close()
+
+        def keyStream = new FileInputStream(new File(keyStoreFileName))
+        keyStore.load(keyStream, keyStorePw.toCharArray())
+        keyStream.close()
+
+        def factory = new SSLSocketFactory(keyStore, keyStorePw, trustStore)
+        if (config.owf.mpSync.trustAllCerts) {
+            def trustAllCerts = new TrustStrategy() {
+                boolean isTrusted(X509Certificate[] chain, String authType) {
+                    return true
+                }
+            }
+            factory = new SSLSocketFactory(trustAllCerts, new AllowAllHostnameVerifier())
+            log.warn "getObjectListingFromMarketplace: trusting all SSL hosts and certificates"
+        }
+
+        return factory
     }
 }
