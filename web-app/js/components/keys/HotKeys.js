@@ -42,7 +42,7 @@ Ozone.components.keys.MoveHotKeys = Ozone.components.keys.MoveHotKeys || {};
         exclusive: true
     };
 
-    k.LAUNCH_MENU = { key: 'L'.charCodeAt(0) };
+    k.LAUNCH_MENU = { key: 'F'.charCodeAt(0) };
 
     k.HELP = {
         key: 'H'.charCodeAt(0),
