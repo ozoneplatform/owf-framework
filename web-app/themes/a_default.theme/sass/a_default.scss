@@ -42,16 +42,16 @@ body {
     cursor: default; // for IE8
     background-attachment:fixed;
     background-position: center center, center center;
-    background-repeat: repeat, no-repeat, no-repeat;
+    background-repeat: no-repeat, repeat, no-repeat;
 }
 
 #owf-body.x-gecko { /* > ensures IE doesn't see this block */
-    background-image: $stripe-img-path, $watermark-img-path,
+    background-image: $watermark-img-path, $stripe-img-path,
         -moz-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
 }
 
 #owf-body.x-webkit {
-    background-image: $stripe-img-path, $watermark-img-path,
+    background-image: $watermark-img-path, $stripe-img-path,
         -webkit-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
 }
 
@@ -59,10 +59,10 @@ body {
  * linear background gradient for IE
  */
 #owf-body.x-ie {
-    background: $body-background-gradient-end $watermark-img-path no-repeat center center;
+    background:  $stripe-img-path repeat center;
     background-attachment:fixed;
     #mainPanel {
-        background: $stripe-img-path repeat center center;
+        background: $watermark-img-path no-repeat center;
     }
 }
 
