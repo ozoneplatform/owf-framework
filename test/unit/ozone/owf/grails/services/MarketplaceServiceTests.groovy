@@ -31,7 +31,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
             new WidgetType(name:"standard"),
             new WidgetType(name:"marketplace"),
             new WidgetType(name:"metric"),
-            new WidgetType(name:"admin"),
+            new WidgetType(name:"administration"),
         ])
         
         mockDomain(WidgetDefinitionIntent)
@@ -112,7 +112,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
             ],"receive":[
                 {"action":"receive","dataTypes":["text/plain","text/html"]}
             ]},
-        "widgetTypes":["admin", "marketplace", "metric", "nonexistent"]
+        "widgetTypes":["administration", "marketplace", "metric", "nonexistent"]
     }
     '''
 
@@ -189,6 +189,6 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         println (typeNamesList.join(', '))
 
         assert 4 == typeNamesList.size()
-        assert ['admin', 'marketplace', 'metric', 'standard']
+        assert ['administration', 'marketplace', 'metric', 'standard']
     }
 }
