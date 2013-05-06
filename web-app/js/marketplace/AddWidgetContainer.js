@@ -40,11 +40,11 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
     addWidget:function (config) {
         var widgetsJSON = config.widgetsJSON;
-        this.processMarketplaceWidgetData(widgetsJSON.baseUrl, widgetsJSON.itemId);
+        this.processMarketplaceWidgetData(widgetsJSON.baseUrl, widgetsJSON.itemId, widgetsJSON.doLaunch);
         return widgetsJSON.itemId
     },
 
-    processMarketplaceWidgetData: function(marketplaceUrl, widgetId) {
+    processMarketplaceWidgetData: function(marketplaceUrl, widgetId, doLaunch) {
         var self = this;
         Ozone.util.Transport.send({
             url: marketplaceUrl + "/relationship/getOWFRequiredItems",
@@ -78,7 +78,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     // OZP-476: MP Synchronization
                     // Added the URL of the Marketplace we're looking at to the
                     // JSON we send to the widget controller.
-                    self.submitWidgetList(Ext.JSON.encode(widgetListJson), marketplaceUrl);
+                    self.submitWidgetList(Ext.JSON.encode(widgetListJson), marketplaceUrl, doLaunch);
                 }
             },
             onFailure: function(json) {
@@ -144,7 +144,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
     // OZP-476: MP Synchronization
     // Added the URL of the Marketplace we're looking at to the JSON we send to
     // the widget controller.
-    submitWidgetList: function(widgetList, mpUrl) {
+    submitWidgetList: function(widgetList, mpUrl, doLaunch) {
         return owfdojo.xhrPost({
             url:Ozone.util.contextPath() + '/widget/',
             sync:true,
@@ -168,6 +168,31 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     sticker: false,
                     icon: false
                 });
+                if (doLaunch) {
+                    console.log("Launch the widget");
+//                    Ozone.eventing.Widget.widgetRelayURL = Ozone.util.getContainerRelay();
+
+                    var widgetListObj = Ext.JSON.decode(widgetList);
+
+                    var item = Ext.JSON.decode(widgetListObj[0]);
+                    var widgetGuid = item.widgetGuid;
+
+                    Ozone.pref.PrefServer.getDefaultDashboard ({onSuccess: function(dashboard) {
+                        console.log(dashboard);
+                    }});
+
+
+//                    var widgetDefs = Ozone.components.dashboard.DashboardContainer.widgetStore.queryBy (function (record,id) {
+//                        return record.data.widgetGuid = widgetGuid;
+//                    });
+//                    scope.selectPane(true).then(function(pane,e) {
+//                        scope.activeDashboard.launchWidgets(pane, null, e, {
+//                            widgetModel: widgetDefs
+//                        })
+//                    }) ;
+
+
+                }
             },
             error:function (response, ioArgs) {
                 Ozone.Msg.alert(Ozone.layout.DialogMessages.error, Ozone.layout.DialogMessages.marketplaceWindow_AddWidget, null, null, {
