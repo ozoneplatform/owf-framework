@@ -265,7 +265,7 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
                         items: [{
                         	icon: "themes/common/images/clear.png",
                         	iconCls: 'launch_delete_grid_icon',
-        	                tooltip: 'launch_delete_tooltip',
+        	                //tooltip: 'launch_delete_tooltip',
         	                handler: function(grid, rowIndex, colIndex) {
         	                	var record = grid.getStore().getAt(rowIndex);
         	                	console.log('delete');
