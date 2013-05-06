@@ -217,13 +217,19 @@
     }
 
     .widgetviewcontainer {
-      .title {
-        font-weight: normal;
-        font-size: $widget-launcher-view-title-font-size;
-        color: $widget-launcher-widget-title-color;
-        padding: 10px;
-
-      }
+	    .title {
+	        font-weight: normal;
+	        font-size: $widget-launcher-view-title-font-size;
+	        color: $widget-launcher-widget-title-color;
+	        padding: 10px;
+	
+	    }
+      
+      	.launch_delete_grid_icon {
+			display: none;
+			padding: 0 5px 0 5px;
+			cursor: pointer;
+    	}
     }
 
     .info-panel {
