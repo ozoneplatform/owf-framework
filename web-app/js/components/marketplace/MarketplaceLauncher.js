@@ -7,11 +7,12 @@ Ext.define('Ozone.components.marketplace.MarketplaceLauncher', {
     marketplaceWidget: null,
     keyboard: null,
     multipleMarketplaces: null,
+    mpDashboardName: "Apps Mall",
 
     gotoMarketplace: function(marketplaceWidget, keyboard) {
         var me = this;
         var dashboardStore = me.dashboardContainer.dashboardStore;
-        var dashboardInd = dashboardStore.findExact('name', 'Marketplace');
+        var dashboardInd = dashboardStore.findExact('name', this.mpDashboardName);
         me.dashboard = (dashboardInd >=0 ) && dashboardStore.getAt(dashboardInd);
         if (marketplaceWidget) {
             // If we know which marketplace to go to, just go there
@@ -77,7 +78,7 @@ Ext.define('Ozone.components.marketplace.MarketplaceLauncher', {
     createMarketplaceDashboardAndLaunch: function() {
         var me = this;
         me.dashboard = Ext.create('Ozone.data.Dashboard', {
-            name: "Marketplace",
+            name: this.mpDashboardName,
             layoutConfig : {
                 xtype: 'container',
                 flex: 1,
