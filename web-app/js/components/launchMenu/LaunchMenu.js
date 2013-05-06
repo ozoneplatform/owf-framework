@@ -151,57 +151,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                 type: 'vbox',
                 align: 'stretch'
             },
-            dockedItems: [
-                {
-                    xtype: 'toolbar',
-                    dock: 'left',
-                    itemId: 'advSearchBtnToolbar',
-                    cls: 'advSearchBtnToolbar',
-                    layout: {
-                        type: 'vbox',
-                        align: 'stretchmax',
-                        pack: 'center',
-                        clearInnerCtOnLayout: true
-
-                    },
-                    listeners: {
-                        afterlayout: {
-                            fn: function(cmp) {
-                                //ext toolbars auto subscribe to the FocusManager in afterrender
-                                //we need to unsubscribe after that
-                                Ext.FocusManager.unsubscribe(cmp);
-                            },
-                            scope: this
-                        }
-                    },
-                    items: [
-                        {
-                            xtype: 'button',
-                            itemId: 'advSearchBtn',
-                            cls: 'advSearchBtn',
-                            iconCls: 'advSearchBtnIcon',
-                            enableToggle: true,
-                            toggleHandler: function (b, state) {
-                                //toggle the searchpanel
-                                this.openOrCloseAdvancedSearch(state);
-
-                                //focus the text box if this button was pressed or clicked
-                                if (state) {
-                                    var searchbox = this.searchPanel.down('#searchbox');
-                                    var searchBoxDom = searchbox.getFocusEl().dom;
-
-//                                    this.tearDownCircularFocus();
-//
-                                    searchBoxDom.focus();
-//
-//                                    this.setupCircularFocus();
-                                }
-                            },
-                            scope: this
-                        }
-                    ]
-                }
-            ],
             items: [
                 //infopanel
                 {
@@ -457,18 +406,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                         ptype: 'instancevariablizer',
                         container: me
                     }
-                },
-                {
-                    xtype: 'carousel',
-                    region: 'south',
-                    id: 'launchMenu-carousel',
-                    itemId: 'carousel',
-                    height: 96,
-                    store: me.favStore,
-                    plugins: {
-                        ptype: 'instancevariablizer',
-                        container: me
-                    }
                 }
             ]
         });
@@ -495,124 +432,10 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
 //                    }
 //                });
 
-        me.carousel.on('render', function (cmp) {
-            var v = cmp.down('#carouselView');
-
-            //create a dropzone for the carousel view that allows widgts to be saved as favs
-            var dropZone = new Ext.dd.DropZone(cmp.getEl(), {
-                ddGroup: 'widgets',
-//                containerScroll: true,
-
-                getTargetFromEvent: function(e) {
-                    return e.getTarget(v.itemSelector);
-                },
-
-                // On entry into a target node
-                onNodeEnter : function(target, dd, e, data) {
-                },
-
-                // On exit from a target node
-                onNodeOut : function(target, dd, e, data) {
-                    Ext.fly(target).removeCls(['drag-cls', 'x-view-drop-indicator-right', 'x-view-drop-indicator-left']);
-                    /*index = v.indexOf(target);
-                     record = v.store.getAt(index);
-
-                     v.store.remove(data.data);
-                     v.store.insert(data.origIdx, data.data);
-                     v.refresh();*/
-
-                },
-
-                onNodeOver : function(target, dd, e, data) {
-                    var pt = v.getDropPoint(e, target, dd);
-                    if (pt == 'before') {
-                        Ext.fly(target).replaceCls('x-view-drop-indicator-right', 'x-view-drop-indicator-left');
-                    }
-                    else {
-                        Ext.fly(target).replaceCls('x-view-drop-indicator-left', 'x-view-drop-indicator-right');
-                    }
-                    return Ext.dd.DropZone.prototype.dropAllowed;
-                },
-
-                onNodeDrop : function(target, dd, e, data) {
-                    //figure out which side of the target widget the new widget is to be added at
-                    var pt = v.getDropPoint(e, target, dd);
-
-                    //check if the origin view is the same as the target view
-                    if (v == data.view) {
-                        //if so remove the widget being dragged
-                        data.sourceStore.remove(data.widgetModel);
-                    }
-
-                    //check if the widget being dragged is in the dest view's store
-                    var existingWidgetIndex = v.store.findExact('widgetGuid',data.widgetModel.get('widgetGuid'));
-                    if (existingWidgetIndex > -1) {
-                        //remove it if found
-                        v.store.removeAt(existingWidgetIndex);
-                    }
-
-                    //now determine where to insert the new widget based on the target of the drag
-                    var targetIndex = v.indexOf(target);
-                    var record = v.store.getAt(targetIndex);
-
-
-//                    data.lastIdx = index;
-
-                    //if the drop point is after the target widget(the widget being hovered over) then increment the index
-                    //so the dropped widget appears after the target widget
-                    if (pt == 'after') {
-                        targetIndex++;
-                    }
-                    v.store.insert(targetIndex, [data.widgetModel]);
-                    //v.refresh();
-
-                    data.view.fireEvent('drag', v, record, target, targetIndex, e);
-                    return true;
-                },
-
-                onContainerOver: function (source, e, data) {
-                    return Ext.dd.DropZone.prototype.dropAllowed;
-
-                },
-                onContainerDrop: function (source, e, data) {
-                    me.carousel.addWidget(data.widgetModel);
-//                    me.saveLauncherState();
-                }
-            });
-
-            //attach itemkeydown listener to remove favs
-            v.on({
-                itemkeydown: {
-                    fn: function (view, record, item, index, evt, eOpts) {
-                        if (evt.getKey() == evt.D
-                                || evt.getKey() == evt.DELETE
-                                ) {
-                            view.store.remove(record);
-
-                            //set focus to appropriate item after delete
-                            if (view.store.getCount() > 0) {
-                                view.selModel.select(0);
-                            }
-                            else {
-                                me.el.focus();
-                            }
-                        }
-                    },
-                    scope: this
-                }
-            });
-        });
-
         this.on({
             render: {
                 fn: function(cmp){
                     me.createSidePanel();
-                },
-                scope: this
-            },
-            afterrender: {
-                fn: function(cmp) {
-                    this.setupCircularFocus();
                 },
                 scope: this
             },
@@ -703,9 +526,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                             this.searchPanel.search();
 
                             this.searchPanel.refresh();
-
-                            //close adv search
-                            this.openOrCloseAdvancedSearch(false,true);
                         }
                         this.refreshOpenedWidgets();
                         this.loadLauncherState();
@@ -1096,55 +916,57 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     },
 
     openOrCloseAdvancedSearch: function (open, disableRefresh) {
-        var me = this;
-
-        if (!me.searchPanel) {
-            me.createSidePanel();
-        }
-        else {
-            if (open) {
-                me.searchPanel.show();
-                this.searchPanel.alignTo(this, 'tr-tl', [0, 10]);
-            }
-            else {
-                me.searchPanel.hide();
-            }
-        }
-
-        var button = this.down('#advSearchBtn');
-        button.toggle(open, true);
-
-        var searchbox = this.down('#searchbox');
-
-        if (open) {
-            //todo remove this in favor of using the pressedCls
-            button.removeCls("advSearchBtn");
-            button.addCls("advSearchBtn-clicked");
-
-            //if the user has searched, clear the box reload the store
-            if (searchbox.getValue() != '') {
-                searchbox.reset();
-
-                //this will cause the widgetStore to reload and clear any search
-                if (!disableRefresh) {
-                  searchbox.onClear();
-                }
-            }
-            searchbox.disable();
-        }
-        else {
-            //todo remove this in favor of using the pressedCls
-            button.removeCls("advSearchBtn-clicked");
-            button.addCls("advSearchBtn");
-
-            searchbox.enable();
-
-            //clear adv search and reset the data
-            me.searchPanel.clearAllFilters();
-            if (!disableRefresh) {
-              me.searchPanel.search();
-            }
-        }
+    	//never show the advance search window
+    	
+//        var me = this;
+//
+//        if (!me.searchPanel) {
+//            me.createSidePanel();
+//        }
+//        else {
+//            if (open) {
+//                me.searchPanel.show();
+//                this.searchPanel.alignTo(this, 'tr-tl', [0, 10]);
+//            }
+//            else {
+//                me.searchPanel.hide();
+//            }
+//        }
+//
+//        var button = this.down('#advSearchBtn');
+//        button.toggle(open, true);
+//
+//        var searchbox = this.down('#searchbox');
+//
+//        if (open) {
+//            //todo remove this in favor of using the pressedCls
+//            button.removeCls("advSearchBtn");
+//            button.addCls("advSearchBtn-clicked");
+//
+//            //if the user has searched, clear the box reload the store
+//            if (searchbox.getValue() != '') {
+//                searchbox.reset();
+//
+//                //this will cause the widgetStore to reload and clear any search
+//                if (!disableRefresh) {
+//                  searchbox.onClear();
+//                }
+//            }
+//            searchbox.disable();
+//        }
+//        else {
+//            //todo remove this in favor of using the pressedCls
+//            button.removeCls("advSearchBtn-clicked");
+//            button.addCls("advSearchBtn");
+//
+//            searchbox.enable();
+//
+//            //clear adv search and reset the data
+//            me.searchPanel.clearAllFilters();
+//            if (!disableRefresh) {
+//              me.searchPanel.search();
+//            }
+//        }
 
     },
 
@@ -1204,17 +1026,12 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     },
 
     onClose: function () {
-        //close adv search
-        this.openOrCloseAdvancedSearch(false,true);
-
         this.saveLauncherState();
 
         //clear all stores
         this.widgetStore.removeAll();
         this.openedWidgetStore.removeAll();
         this.favStore.removeAll();
-
-        this.carousel.cleanUpScrollerTasks();
 
         //remove window unload handler
         Ext.EventManager.un(window, 'beforeunload', this.saveLauncherStateSync, this);
