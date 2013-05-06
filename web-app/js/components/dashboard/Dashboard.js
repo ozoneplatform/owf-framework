@@ -514,27 +514,19 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             launchConfig.guid = specifiedWidget.data.widgetGuid;
 
             if (launchConfig.launchOnlyIfClosed) {
-                // Cycle through all widget instances
-                for (var i=0, len=this.stateStore.getCount(); i<len; i++) {
-                    var stateWidget = this.stateStore.getAt(i);
-
-                    if (stateWidget !=null && stateWidget.get('widgetGuid') == launchConfig.guid) {
-                        launchWidget = stateWidget;
-
-                        if (!specifiedWidget.get('background')) {
-                            this.handleAlreadyLaunchedWidget(stateWidget.data);
-                        }
-                        
-                        // Return failure, error message, and the uniqueId of the widget instance
-                        responseObj = {
-                            error: false,
-                            newWidgetLaunched: false,
-                            message: "An instance of the specified widget already exists.",
-                            uniqueId: stateWidget.get('uniqueId')
-                        };
-
-                        break;
+                launchWidget = this.findWidgetInstance(launchConfig.guid);
+                if (launchWidget) {
+                    if (!specifiedWidget.get('background')) {
+                        this.handleAlreadyLaunchedWidget(launchWidget.data);
                     }
+
+                    // Return failure, error message, and the uniqueId of the widget instance
+                    responseObj = {
+                        error: false,
+                        newWidgetLaunched: false,
+                        message: "An instance of the specified widget already exists.",
+                        uniqueId: launchWidget.get('uniqueId')
+                    };
                 }
             }
 
@@ -802,6 +794,17 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         delete state.launchData;
         return state;
      },
+
+    /**
+     * @description Returns the launched instance of the specified widget, if there is one
+     * @param widgetGuid Id of the widget definition
+     * @returns the widget that was launched from the specified definition, or null if there is none
+     */
+    findWidgetInstance: function(widgetGuid) {
+        var index = this.stateStore.findExact('widgetGuid', widgetGuid);
+        var widget = (index > -1) ? this.stateStore.getAt(index) : null;
+        return widget;
+    },
 
     /**
     * @description Removes the specified window configuration from state.

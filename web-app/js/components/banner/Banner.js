@@ -126,6 +126,9 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             }
             else {
                 this.dashboardContainer.activateDashboard(this.marketplacePreviousDashboard.guid);
+                // This will be called as part of the previous dashboard change, but not if the previous
+                // dashboard was the Marketplace dashboard, so call it here just to be safe.
+                this.clearMarketplaceToggle();
             }
         }
         else {
