@@ -148,7 +148,7 @@ Ozone.layout.tooltipString = {
 	dashboardSwitcherTitle:			'Switcher (Alt+Shift+C)',
 	dashboardSwitcherContent:		'This button opens or closes the Switcher, allowing users to switch between their dashboards.',
 	marketplaceWindowTitle:			'Apps Mall (Alt+Shift+M)',
-	marketplaceWindowContent:		'This button opens the Apps Mall window, allowing users to discover widgets in Apps Mall and add them to their OWF instance.',
+	marketplaceWindowContent:		'This button opens the Apps Mall window, allowing users to discover widgets in Apps Mall and add them to their Favorites menu.',
     metricWindowTitle:		    	'Metric (Alt+Shift+R)',
     metricWindowContent:      		'This button opens the Metric window, where widgets that monitor OWF and widget statistics are located.',
 	settingsTitle:					'Settings (Alt+Shift+S)',
