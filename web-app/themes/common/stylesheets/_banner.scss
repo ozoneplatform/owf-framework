@@ -167,6 +167,10 @@
     @include owf-background-gradient($banner-button-over-background);
 }
 
+.x-btn-default-toolbar-banner-large-selected {
+    @include owf-background-gradient($banner-button-over-background);
+}
+
 .dashMenuBtn {
     .dashMenuBtnIcon {
         background-image: $dashboard-icon;

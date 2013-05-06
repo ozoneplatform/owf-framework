@@ -111,30 +111,45 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     },
     openMarketplaceModalWindow: function(btn, e) {
         var me = this;
-        if(this.hasMarketplaceButton) {
-            if(!this.mpModalWindow || this.mpModalWindow.isDestroyed) {
-                this.mpModalWindow = Ext.widget('marketplacewindow', {
-                    dashboardContainer: this.dashboardContainer
-                });
-            }
-
-            if (this.marketplaceWidget) {
-                var keyboard = ('keyup' == e.type) ? true : false;
-                e.stopEvent();
-                this.mpModalWindow.launchMarketplaceWidget(this.marketplaceWidget, keyboard);
-            } else {
-                if(this.mpModalWindow.isVisible()) {
-                    this.mpModalWindow.close();
+        this.buttonSelectedCls = 'x-btn-default-toolbar-banner-large-selected';
+        if (this.hasMarketplaceButton) {
+            if (!this.marketplaceToggle) {
+                this.marketplacePreviousDashboard = this.dashboardContainer.activeDashboard;
+                if (this.marketplaceWidget) {
+                    var keyboard = ('keyup' == e.type) ? true : false;
+                    e.stopEvent();
+                    this.getMarketplaceLauncher().gotoMarketplace(this.marketplaceWidget, keyboard);
                 }
                 else {
-                    this.mpModalWindow.show();
+                    this.getMarketplaceLauncher().gotoMarketplace(this.marketplaceWidget, null);
                 }
+            }
+            else {
+                this.dashboardContainer.activateDashboard(this.marketplacePreviousDashboard.guid);
             }
         }
         else {
             //Reset to enable all hotkeys since show wasn't executed
             Ozone.components.keys.KeyMap.reset();
         }
+    },
+    getMarketplaceLauncher: function() {
+        if (!this.mpLauncher) {
+            this.mpLauncher = Ext.create('Ozone.components.marketplace.MarketplaceLauncher', {
+                 dashboardContainer: this.dashboardContainer
+            });
+            this.mpLauncher.addListener('marketplacelaunched', this.setMarketplaceToggle, this);
+            this.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, this.clearMarketplaceToggle, this);
+        }
+        return this.mpLauncher;
+    },
+    clearMarketplaceToggle: function() {
+        this.marketplaceToggle = false;
+        this.getComponent('marketBtn').removeCls(this.buttonSelectedCls);
+    },
+    setMarketplaceToggle: function() {
+        this.marketplaceToggle = true;
+        this.getComponent('marketBtn').addCls(this.buttonSelectedCls);
     },
     openMetricWindow: function() {
         if(this.hasMetricButton) {

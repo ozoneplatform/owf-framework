@@ -15,6 +15,7 @@
     modalAutoClose: true,
     shadow: false,
     autoScroll: false,
+    callback: false,
     
     minToolsInRow: 3,
     maxToolsInRow: 5,
@@ -83,46 +84,9 @@
 
     callBtnHandler: function(btnText, btn, isKeyPress) {
         this.close();
-        this.launchMarketplaceWidget(this.store.getAt(this.store.find('name', btnText)), isKeyPress);
+        this.callback(this.store.getAt(this.store.find('name', btnText)), isKeyPress);
     },
 
-     launchMarketplaceWidget: function(marketplaceWidget, keyboard) {
-         var me = this;
-         var dashboardStore = me.dashboardContainer.dashboardStore;
-         var dashboardInd = dashboardStore.findExact('name', 'Marketplace');
-         var dashboard;
-         if (dashboardInd >= 0) {
-             dashboard = dashboardStore.getAt(dashboardInd);
-             if (dashboard.data.guid != me.dashboardContainer.activeDashboard.guid) {
-                 // Go to the Marketplace dashboard and launch the Marketplace widget (this is a no-op if the widget is already running
-                 me.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() { me.dashboardContainer.launchWidgets(marketplaceWidget, keyboard);  }, undefined, {single: true});
-                 me.dashboardContainer.activateDashboard(dashboard.data.guid);
-             } else {
-                 // If we're already on the right dashboard, just launch the Marketplace widget
-                 me.dashboardContainer.launchWidgets(marketplaceWidget, keyboard);
-             }
-         } else {
-             // If the Marketplace dashboard doesn't exist, create it and then launch the Marketplace widget
-             dashboard = Ext.create('Ozone.data.Dashboard', {
-                 name: "Marketplace",
-                 layoutConfig : {
-                     xtype: 'container',
-                     flex: 1,
-                     height: '100%',
-                     items: [],
-                     paneType: 'fitpane',
-                     widgets: []
-                 }
-             });
-             me.dashboardContainer.saveDashboard(dashboard.data, 'create', function() {
-
-             var guid = dashboard.get('guid');
-             me.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() { me.dashboardContainer.launchWidgets(marketplaceWidget, keyboard);  }, undefined, {single: true});
-             me.dashboardContainer.activateDashboard(guid);
-             });
-         }
-     },
-    
     updateWindowSize: function(item) {
         var toolWidth, newWidth, tool;
         
