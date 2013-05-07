@@ -24,6 +24,13 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
        itemId: 'launch'
    },
 
+   removeBtnCfg: {
+       xtype: 'button',
+       text: 'Remove',
+       cls: 'launch-btn remove-btn',
+       itemId: 'remove'
+   },
+   
    initComponent: function () {
         var me = this;
 
@@ -185,7 +192,8 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                                         }
                                     }
                                 },
-                               me.launchBtnCfg
+                               me.launchBtnCfg,
+                               me.removeBtnCfg
                             ]
                         },
                         {
@@ -606,6 +614,33 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
         }, this);
     },
 
+    //Changes the widget visibility to false so it will not show in the fav menu
+    removeWidget: function(record){
+
+    	var widgetsToUpdate = [];
+        widgetsToUpdate.push({
+            guid: record.get('widgetGuid'),
+            visible: false,
+            tags: []
+        });
+          	
+        var widgetStore = this.widgetStore;
+        var me = this;
+        Ozone.pref.PrefServer.updateAndDeleteWidgets({
+            widgetsToUpdate:widgetsToUpdate,
+            widgetGuidsToDelete:[], 
+            updateOrder:false,
+            onSuccess:function(){
+            	widgetStore.remove(record);
+            	var dashboardContainerRecord = me.dashboardContainer.widgetStore.findRecord("widgetGuid", record.get('widgetGuid'));
+            	dashboardContainerRecord.set("visible", false);
+                me.updateInfoPanel(null, false, true);
+            }, 
+            onFailure:function(){  	
+            }
+        });
+    },
+    
     // launches the widget
     launchWidget: function (record, evt, eOpts) {
 
@@ -668,21 +703,26 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
      */
     updateInfoPanel: function (record, showRemoveFavorites, disableLaunchButton, showIntentCheckBox, intentCheckBoxValue) {
         var me = this,
-            infoPanel = me.down("#infoPanel"),
-            infoCenter = infoPanel.getComponent('infoCenter'),
-            imagePanel = infoPanel.getComponent('imagePanel'),
-            launchBtn = imagePanel.getComponent('launch'),
-            htmlPanel = infoPanel.down('#htmlPanel'),
-            intentCheckBox = infoPanel.down('#intentCheckBox'),
-            image = imagePanel.getComponent('widgetImg'),
-           launchBtnHandler = function (button, evt) {
-               me.launchWidget(record, evt);
-           };
+        infoPanel = me.down("#infoPanel"),
+        infoCenter = infoPanel.getComponent('infoCenter'),
+        imagePanel = infoPanel.getComponent('imagePanel'),
+        launchBtn = imagePanel.getComponent('launch'),
+        htmlPanel = infoPanel.down('#htmlPanel'),
+        intentCheckBox = infoPanel.down('#intentCheckBox'),
+        image = imagePanel.getComponent('widgetImg'),
+        
+        launchBtnHandler = function (button, evt) {
+           me.launchWidget(record, evt);
+        };
 
+        removeBtnHandler = function (button, evt) {
+            me.removeWidget(record);
+        };
+            
         //remove launchBtn so it can be updated
-       if (launchBtn) {
+        if (launchBtn) {
            imagePanel.remove(launchBtn);
-       }
+        }
 
         if (record == null) {
             record = Ext.create('Ozone.data.WidgetDefinition', {
@@ -729,13 +769,19 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
         }
 
        var launchButton = Ext.apply({}, me.launchBtnCfg);
+       var removeButton = Ext.apply({}, me.removeBtnCfg);
        if (disableLaunchButton) {
            launchButton.disabled = true;
+           removeButton.disabled = true;
        }
 
        imagePanel.add(Ext.applyIf({
            handler: launchBtnHandler
        }, launchButton));
+       
+       imagePanel.add(Ext.applyIf({
+           handler: removeBtnHandler
+       }, removeButton));
     },
 
     // populates the info panel with the widget's icon and description
