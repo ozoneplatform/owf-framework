@@ -169,7 +169,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     var item = Ext.JSON.decode(widgetListObj[0]);
                     var widgetGuid = item.widgetGuid;
 
-                    var dashboardContainer = Ext.getCmp('mainPanel') ;
+                    var dashboardContainer = widgetLauncher.dashboardContainer ;
                     var widgetDefs = dashboardContainer.widgetStore.queryBy(function(record,id) {
                         return record.data.widgetGuid == widgetGuid;
                     });
