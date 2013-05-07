@@ -59,7 +59,7 @@ body {
  * linear background gradient for IE
  */
 #owf-body.x-ie {
-    background:  $stripe-img-path repeat center;
+    background: $body-background-gradient-end $stripe-img-path repeat repeat center center;
     background-attachment:fixed;
     #mainPanel {
         background: $watermark-img-path no-repeat center;

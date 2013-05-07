@@ -203,67 +203,77 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
                             }
                         }
                     },
-                    columns:[
-                        {
-                            header:'Icon',
-                            renderer:function (val, metaData, record, rowIndex, colIndex, store, view) {
-                                //todo consolidate references to this image
-                                var defaultIcon = 'themes/common/images/settings/WidgetsIcon.png';
+                    columns:[{
+                        header:'Icon',
+                        renderer:function (val, metaData, record, rowIndex, colIndex, store, view) {
+                            //todo consolidate references to this image
+                            var defaultIcon = 'themes/common/images/settings/WidgetsIcon.png';
 
-                                var icon = null;
-                                if (val != null) {
-                                    icon = encodeURI(val);
-                                }
-                                else {
-                                    //if the val is null then get the image directly from the record
-                                    //if this record is from a statestore it will lookup the right widgetdef
-                                    //and return the image
-                                    icon = encodeURI(record.get('image'));
-                                }
+                            var icon = null;
+                            if (val != null) {
+                                icon = encodeURI(val);
+                            } else {
+                                //if the val is null then get the image directly from the record
+                                //if this record is from a statestore it will lookup the right widgetdef
+                                //and return the image
+                                icon = encodeURI(record.get('image'));
+                            }
 
 
-                                //todo remove this hardcoded style
-                                return '<img onerror="this.src = \''+defaultIcon+'\'" src="' + icon + '" style="width: 24px;height: 24px">';
-                            },
-                            dataIndex:'image',
-                            flex:0,
-                            width:45,
-                            sortable:false
+                            //todo remove this hardcoded style
+                            return '<img onerror="this.src = \''+defaultIcon+'\'" src="' + icon + '" style="width: 24px;height: 24px">';
                         },
-                        {
-                            header:'Name',
-                            dataIndex:'name',
-                            renderer:function (val) {
-                                return Ext.htmlEncode(val);
-                            },
-                            flex:0,
-                            width:200
+                        dataIndex:'image',
+                        flex:0,
+                        width:45,
+                        sortable:false
+                    },{
+                        header:'Name',
+                        dataIndex:'name',
+                        renderer:function (val) {
+                            return Ext.htmlEncode(val);
                         },
-                        {
-                            header:'Tags',
-                            sortable: false,
-                            renderer:function (val, metaData, record) {
-                                var tagList = '';
-                                if (val == null) {
-                                     var rec = me.widgetStore.getById(record.get('uniqueId'));
-                                     val = rec.get('tags');
+                        flex:0,
+                        width:200
+                    },{
+                        header:'Tags',
+                        sortable: false,
+                        renderer:function (val, metaData, record) {
+                            var tagList = '';
+                            if (val == null) {
+                                 var rec = me.widgetStore.getById(record.get('uniqueId'));
+                                 val = rec.get('tags');
+                            }
+                            
+                            for (var i = 0; i < val.length; i++) {
+                                var tag = (val[i]).name;
+                                if (i == val.length - 1) {
+                                    tagList += tag;
+                                } else {
+                                    tagList += tag + ",";
                                 }
-                                for (var i = 0; i < val.length; i++) {
-                                    var tag = (val[i]).name;
-                                    if (i == val.length - 1) {
-                                        tagList += tag;
-                                    }
-                                    else {
-                                        tagList += tag + ",";
-                                    }
 
-                                }
-                                return Ext.htmlEncode(tagList);
-                            },
-                            dataIndex:'tags',
-                            flex:1
-                        }
-                    ],
+                            }
+                            return Ext.htmlEncode(tagList);
+                        },
+                        dataIndex:'tags',
+                        flex:1
+                    },{
+                    	xtype:'actioncolumn',
+                        width:20,
+                        menuDisabled: true,
+                        items: [{
+                        	icon: "themes/common/images/clear.png",
+                        	iconCls: 'launch_delete_grid_icon',
+        	                //tooltip: 'launch_delete_tooltip',
+        	                handler: function(grid, rowIndex, colIndex) {
+        	                	var record = grid.getStore().getAt(rowIndex);
+        	                	console.log('delete');
+        	                	
+        	                	//delete somehow
+        	                }
+                        }]
+                    }],
                     listeners:{
                         render:{
                             fn:function (grid) {
@@ -340,7 +350,17 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
                                 }
                             },
                             scope:this
-                        }
+                        },
+                        'itemmouseenter': function(view, record, item, index, e, eOpts ) {
+                			jQuery(item).find(".launch_edit_grid_icon").show();
+                			jQuery(item).find(".launch_delete_grid_icon").show();
+                		},
+
+                		'itemmouseleave': function(view, record, item, index, e, eOpts ) {
+                			jQuery(item).find(".launch_edit_grid_icon").hide();
+                			jQuery(item).find(".launch_delete_grid_icon").hide();
+                		}
+
                     }
                 }
             ]

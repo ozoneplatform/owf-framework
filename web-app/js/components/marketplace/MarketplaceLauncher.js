@@ -7,11 +7,12 @@ Ext.define('Ozone.components.marketplace.MarketplaceLauncher', {
     marketplaceWidget: null,
     keyboard: null,
     multipleMarketplaces: null,
+    mpDashboardName: "Apps Mall",
 
     gotoMarketplace: function(marketplaceWidget, keyboard) {
         var me = this;
         var dashboardStore = me.dashboardContainer.dashboardStore;
-        var dashboardInd = dashboardStore.findExact('name', 'Marketplace');
+        var dashboardInd = dashboardStore.findExact('name', this.mpDashboardName);
         me.dashboard = (dashboardInd >=0 ) && dashboardStore.getAt(dashboardInd);
         if (marketplaceWidget) {
             // If we know which marketplace to go to, just go there
@@ -52,26 +53,32 @@ Ext.define('Ozone.components.marketplace.MarketplaceLauncher', {
          var me = this;
          if (me.dashboard.data.guid == me.dashboardContainer.activeDashboard.guid) {
              // If we're already on the right dashboard, just launch the Marketplace widget
-             me.dashboardContainer.launchWidgets(me.marketplaceWidget, me.keyboard);
-             me.fireEvent('marketplacelaunched');
+             me.launchMarketplaceOnActiveDashboard();
          } else {
-             me.launchMarketplaceAfterDashboardChange();
+             me.launchMarketplaceAfterDashboardChanges();
              me.dashboardContainer.activateDashboard(me.dashboard.data.guid);
          }
      },
 
-    launchMarketplaceAfterDashboardChange: function() {
-        var me = this;
-        me.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
-            me.dashboardContainer.launchWidgets(me.marketplaceWidget, me.keyboard);
-            me.fireEvent('marketplacelaunched');
-        }, undefined, {single: true});
+    launchMarketplaceAfterDashboardChanges: function() {
+        this.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED,
+            this.launchMarketplaceOnActiveDashboard, this, {single: true});
+    },
+
+    launchMarketplaceOnActiveDashboard: function() {
+        var widget = this.dashboardContainer.activeDashboard.findWidgetInstance(this.marketplaceWidget.data.widgetGuid);
+        if (widget) {
+            this.dashboardContainer.activeDashboard.activateWidget(widget.data.uniqueId);
+        } else {
+            this.dashboardContainer.launchWidgets(this.marketplaceWidget, this.keyboard);
+        }
+        this.fireEvent('marketplacelaunched');
     },
 
     createMarketplaceDashboardAndLaunch: function() {
         var me = this;
         me.dashboard = Ext.create('Ozone.data.Dashboard', {
-            name: "Marketplace",
+            name: this.mpDashboardName,
             layoutConfig : {
                 xtype: 'container',
                 flex: 1,
@@ -89,7 +96,7 @@ Ext.define('Ozone.components.marketplace.MarketplaceLauncher', {
         me.dashboardContainer.dashboardStore.load({
              callback: function(records, options, success) {
                  if (success == true) {
-                     me.launchMarketplaceAfterDashboardChange();
+                     me.launchMarketplaceAfterDashboardChanges();
                      me.dashboardContainer.updateDashboardsFromStore(records, options, success, me.dashboard.data.guid);
                  }
              }

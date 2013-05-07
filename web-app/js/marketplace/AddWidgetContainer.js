@@ -40,11 +40,11 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
     addWidget:function (config) {
         var widgetsJSON = config.widgetsJSON;
-        this.processMarketplaceWidgetData(widgetsJSON.baseUrl, widgetsJSON.itemId);
+        this.processMarketplaceWidgetData(widgetsJSON.baseUrl, widgetsJSON.itemId, widgetsJSON.doLaunch);
         return widgetsJSON.itemId
     },
 
-    processMarketplaceWidgetData: function(marketplaceUrl, widgetId) {
+    processMarketplaceWidgetData: function(marketplaceUrl, widgetId, doLaunch) {
         var self = this;
         Ozone.util.Transport.send({
             url: marketplaceUrl + "/relationship/getOWFRequiredItems",
@@ -78,7 +78,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     // OZP-476: MP Synchronization
                     // Added the URL of the Marketplace we're looking at to the
                     // JSON we send to the widget controller.
-                    self.submitWidgetList(Ext.JSON.encode(widgetListJson), marketplaceUrl);
+                    self.submitWidgetList(Ext.JSON.encode(widgetListJson), marketplaceUrl, doLaunch);
                 }
             },
             onFailure: function(json) {
@@ -144,7 +144,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
     // OZP-476: MP Synchronization
     // Added the URL of the Marketplace we're looking at to the JSON we send to
     // the widget controller.
-    submitWidgetList: function(widgetList, mpUrl) {
+    submitWidgetList: function(widgetList, mpUrl, doLaunch) {
         return owfdojo.xhrPost({
             url:Ozone.util.contextPath() + '/widget/',
             sync:true,
@@ -154,13 +154,43 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 widgets:widgetList
             },
             load:function (response, ioArgs) {
+
                 var widgetLauncher = Ext.getCmp('widget-launcher');
                 widgetLauncher.loadLauncherState();
 
                 var stack_bottomright = {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25};
+
+                // AML-2924 - This will display the dashboard switcher and add a listener to launch the widget
+                // This probably should be refactored
+                var notifyText;
+
+                if (doLaunch) {
+                    var widgetListObj = Ext.JSON.decode(widgetList);
+                    var item = Ext.JSON.decode(widgetListObj[0]);
+                    var widgetGuid = item.widgetGuid;
+
+                    var dashboardContainer = Ext.getCmp('mainPanel') ;
+                    var widgetDefs = dashboardContainer.widgetStore.queryBy(function(record,id) {
+                        return record.data.widgetGuid == widgetGuid;
+                    });
+                    if (widgetDefs && widgetDefs.getCount() > 0)  {
+                        var widgetDef = widgetDefs.get(0);
+                        dashboardContainer.showDashboardSwitcher();
+                        dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
+                            dashboardContainer.launchWidgets(widgetDef, true);
+                        }, dashboardContainer, {delay:3000, single:true});
+
+                    }
+                    notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;
+                }  else {
+                    notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddSuccessful;
+                }
+
+                // End AML-2924
+
                 $.pnotify({
                     title: Ozone.layout.DialogMessages.added,
-                    text: Ozone.layout.DialogMessages.marketplaceWindow_AddSuccessful,
+                    text: notifyText,
                     type: 'success',
                     addclass: "stack-bottomright",
                     stack: stack_bottomright,
@@ -168,6 +198,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     sticker: false,
                     icon: false
                 });
+
             },
             error:function (response, ioArgs) {
                 Ozone.Msg.alert(Ozone.layout.DialogMessages.error, Ozone.layout.DialogMessages.marketplaceWindow_AddWidget, null, null, {
