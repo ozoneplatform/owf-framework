@@ -947,16 +947,17 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                     },
                     scope: this
                 },
-                show: {
+                /*show: {
                     fn: function (cmp) {
                         cmp.alignTo(this, 'tr-tl', [0, 10]);
                     },
                     scope: this
-                }
+                }*/
             }
         });
         this.searchPanel.show();
-        this.searchPanel.alignTo(this, 'tr-tl', [0, 10]);
+        this.searchPanel.hide();
+        //this.searchPanel.alignTo(this, 'tr-tl', [0, 10]);
 
         //this.setActive(true);
     },

@@ -224,12 +224,14 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
                             return '<img onerror="this.src = \''+defaultIcon+'\'" src="' + icon + '" style="width: 24px;height: 24px">';
                         },
                         dataIndex:'image',
+                        menuDisabled: true,
                         flex:0,
                         width:45,
                         sortable:false
                     },{
                         header:'Name',
                         dataIndex:'name',
+                        menuDisabled: true,
                         renderer:function (val) {
                             return Ext.htmlEncode(val);
                         },
@@ -238,6 +240,7 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
                     },{
                         header:'Tags',
                         sortable: false,
+                        menuDisabled: true,
                         renderer:function (val, metaData, record) {
                             var tagList = '';
                             if (val == null) {
@@ -258,21 +261,6 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
                         },
                         dataIndex:'tags',
                         flex:1
-                    },{
-                    	xtype:'actioncolumn',
-                        width:20,
-                        menuDisabled: true,
-                        items: [{
-                        	icon: "themes/common/images/clear.png",
-                        	iconCls: 'launch_delete_grid_icon',
-        	                //tooltip: 'launch_delete_tooltip',
-        	                handler: function(grid, rowIndex, colIndex) {
-        	                	var record = grid.getStore().getAt(rowIndex);
-        	                	console.log('delete');
-        	                	
-        	                	//delete somehow
-        	                }
-                        }]
                     }],
                     listeners:{
                         render:{
