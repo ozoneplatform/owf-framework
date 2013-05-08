@@ -707,6 +707,7 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
         infoCenter = infoPanel.getComponent('infoCenter'),
         imagePanel = infoPanel.getComponent('imagePanel'),
         launchBtn = imagePanel.getComponent('launch'),
+        removeBtn = imagePanel.getComponent('remove'),
         htmlPanel = infoPanel.down('#htmlPanel'),
         intentCheckBox = infoPanel.down('#intentCheckBox'),
         image = imagePanel.getComponent('widgetImg'),
@@ -722,6 +723,10 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
         //remove launchBtn so it can be updated
         if (launchBtn) {
            imagePanel.remove(launchBtn);
+        }
+        
+        if (removeBtn) {
+        	imagePanel.remove(removeBtn);
         }
 
         if (record == null) {
