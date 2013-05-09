@@ -160,44 +160,97 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
                 var stack_bottomright = {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25};
 
-                // AML-2924 - This will display the dashboard switcher and add a listener to launch the widget
-                // This probably should be refactored
-                var notifyText;
+                // AML-2924 - This will display the dashboard switcher and add a listener to launch the widget if
+                // requested
 
-                if (doLaunch) {
-                    var widgetListObj = Ext.JSON.decode(widgetList);
-                    var item = Ext.JSON.decode(widgetListObj[0]);
-                    var widgetGuid = item.widgetGuid;
 
-                    var dashboardContainer = widgetLauncher.dashboardContainer ;
-                    var widgetDefs = dashboardContainer.widgetStore.queryBy(function(record,id) {
-                        return record.data.widgetGuid == widgetGuid;
+                var result = Ext.JSON.decode(response),
+                    notifyText;
+
+                if (result.success) {
+                    var widgetGuid = result.data[0].widgetGuid,
+                        dashboardContainer = widgetLauncher.dashboardContainer,
+                        widgetDefs;
+
+                    dashboardContainer.widgetStore.on({
+                        // Have to load the store first. Add a listener so we can work with the newly loaded store
+                        load: {
+                            fn: function(store, records, success, operation, eOpts) {
+
+                                // Get the widget definition
+                                widgetDefs = dashboardContainer.widgetStore.queryBy(function(record,id) {
+                                    return record.data.widgetGuid == widgetGuid;
+                                });
+
+                                // The widget is in the store
+                                if (widgetDefs && widgetDefs.getCount() > 0)  {
+
+                                    // If the widget is to be launched
+                                    if (doLaunch) {
+
+                                        // It will be the first item if there is more than one (the remaining are required items)
+                                        var widgetDef = widgetDefs.get(0);
+                                        // Show the switcher
+                                        dashboardContainer.showDashboardSwitcher();
+                                        // Add a listener so we can launch the widget if the user picks a different dashboard
+                                        dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
+                                            dashboardContainer.launchWidgets(widgetDef, true);
+                                        }, dashboardContainer, {delay:2000, single:true});
+
+                                        notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;
+
+                                    }  else {
+
+                                        notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddSuccessful
+                                    }
+
+
+                                }  else {
+
+                                    // Failure message
+                                    notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddWidget;
+                                }
+                                //Display the message
+
+                                $.pnotify({
+                                    title: Ozone.layout.DialogMessages.added,
+                                    text: notifyText,
+                                    type: 'success',
+                                    addclass: "stack-bottomright",
+                                    stack: stack_bottomright,
+                                    history: false,
+                                    sticker: false,
+                                    icon: false
+                                });
+                            } ,
+                            scope: this,
+                            single: true
+                        }
+                    })
+
+                    dashboardContainer.widgetStore.load();
+
+                }   else {
+                    notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddWidget;
+                    $.pnotify({
+                        title: Ozone.layout.DialogMessages.added,
+                        text: notifyText,
+                        type: 'success',
+                        addclass: "stack-bottomright",
+                        stack: stack_bottomright,
+                        history: false,
+                        sticker: false,
+                        icon: false
                     });
-                    if (widgetDefs && widgetDefs.getCount() > 0)  {
-                        var widgetDef = widgetDefs.get(0);
-                        dashboardContainer.showDashboardSwitcher();
-                        dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
-                            dashboardContainer.launchWidgets(widgetDef, true);
-                        }, dashboardContainer, {delay:3000, single:true});
 
-                    }
-                    notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;
-                }  else {
-                    notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddSuccessful;
                 }
+
+
+
 
                 // End AML-2924
 
-                $.pnotify({
-                    title: Ozone.layout.DialogMessages.added,
-                    text: notifyText,
-                    type: 'success',
-                    addclass: "stack-bottomright",
-                    stack: stack_bottomright,
-                    history: false,
-                    sticker: false,
-                    icon: false
-                });
+
 
             },
             error:function (response, ioArgs) {
