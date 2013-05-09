@@ -617,23 +617,19 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     //Changes the widget visibility to false so it will not show in the fav menu
     removeWidget: function(record){
 
-    	var widgetsToUpdate = [];
-        widgetsToUpdate.push({
-            guid: record.get('widgetGuid'),
-            visible: false,
-            tags: []
-        });
+    	var widgetsToDelete = [];
+        widgetsToDelete.push(record.get('widgetGuid'));
           	
         var widgetStore = this.widgetStore;
         var me = this;
         Ozone.pref.PrefServer.updateAndDeleteWidgets({
-            widgetsToUpdate:widgetsToUpdate,
-            widgetGuidsToDelete:[], 
+            widgetsToUpdate:[],
+            widgetGuidsToDelete:widgetsToDelete, 
             updateOrder:false,
             onSuccess:function(){
             	widgetStore.remove(record);
             	var dashboardContainerRecord = me.dashboardContainer.widgetStore.findRecord("widgetGuid", record.get('widgetGuid'));
-            	dashboardContainerRecord.set("visible", false);
+            	me.dashboardContainer.widgetStore.remove(dashboardContainerRecord);
                 me.updateInfoPanel(null, false, true);
             }, 
             onFailure:function(){  	
