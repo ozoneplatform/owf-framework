@@ -951,8 +951,8 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                         cmp.setSize(document.body.clientWidth * 0.15, document.body.clientHeight * 0.65);
                     },
                     scope: this
-                },
-                /*show: {
+                }/*,
+                show: {
                     fn: function (cmp) {
                         cmp.alignTo(this, 'tr-tl', [0, 10]);
                     },
