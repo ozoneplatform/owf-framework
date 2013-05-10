@@ -53,10 +53,11 @@
     padding: 0px;
     border-color: black;
 
+    // old class for logo. Now is background image for .x-box-inner
     .logo-img {
         text-align: center;
         height: $banner-button-icon-size;
-        background-image: theme-background-image($theme-name, 'banner/logo.png');
+        //background-image: theme-background-image($theme-name, 'banner/logo.png');
         background: none;
         //background-position: center;
         //background-repeat: no-repeat;
