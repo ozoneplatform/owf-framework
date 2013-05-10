@@ -387,9 +387,13 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             {
               xtype: 'component',
               itemId: 'logoImg',
-              flex: 1,
+              flex: 6.75,
               cls: 'logo-img'
             },
+            {
+                xtype: 'component',
+                flex: 1
+            },            
             // user menu button
             {
                 xtype: 'usermenubutton',
