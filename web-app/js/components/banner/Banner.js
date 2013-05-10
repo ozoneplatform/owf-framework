@@ -383,7 +383,10 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 	            }
 	       ]);
        }
-       me.items.push([     
+       me.items.push([
+
+            // The logo image is now provided by css on the inner box div (x-box-inner) of the
+            // banner toolbar. The next two configs remain for spacing
             {
               xtype: 'component',
               itemId: 'logoImg',
@@ -393,7 +396,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             {
                 xtype: 'component',
                 flex: 1
-            },            
+            },
             // user menu button
             {
                 xtype: 'usermenubutton',

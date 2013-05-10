@@ -24,6 +24,29 @@
     }
 }
 
+//// Use full banner image when window is 800 px or greater
+@media (min-width: 58em)  {
+  html {
+  .banner {
+    .x-box-inner {
+      background-image: theme-background-image($theme-name, 'banner/logo.png');
+    }
+
+  }  }
+}
+
+// Use mini image when window is less than 800 px
+@media (max-width: 58em)  {
+  html {
+  .banner {
+    .x-box-inner {
+      background-image: theme-background-image($theme-name, 'banner/logo-mini.png');
+    }
+
+  }
+  }
+}
+
 .banner {
     @include owf-background-gradient($banner-background);
     border-width: 1px 0 1px 0;
@@ -34,9 +57,22 @@
         text-align: center;
         height: $banner-button-icon-size;
         background-image: theme-background-image($theme-name, 'banner/logo.png');
+        background: none;
+        //background-position: center;
+        //background-repeat: no-repeat;
+    }
+
+    // This will cause the ext component to use the logo as the background image for the inner div of
+    // the banner
+    .x-box-inner {
+
+        height: $banner-button-icon-size;
+        //background-image: theme-background-image($theme-name, 'banner/logo.png');
         background-position: center;
         background-repeat: no-repeat;
+
     }
+
 
     //in here to increase specificity
     .bannerBtn {
