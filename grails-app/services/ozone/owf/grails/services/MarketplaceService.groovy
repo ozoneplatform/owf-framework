@@ -25,161 +25,40 @@ import org.apache.http.impl.client.DefaultHttpClient
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 import ozone.owf.grails.domain.*
+import org.springframework.context.ApplicationContext
+import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
+import org.codehaus.groovy.grails.commons.GrailsApplication
+import org.codehaus.groovy.grails.commons.spring.GrailsApplicationContext
+import org.springframework.context.ApplicationContextAware
 
-class MarketplaceService extends BaseService {
+class MarketplaceService extends BaseService implements ApplicationContextAware {
 
     def config = ConfigurationHolder.config
     def domainMappingService
+
+    // We can't use the stackService directly because it creates a circular dependency (StackService -> WidgetDefinitionService -> MarketplaceService)
+    // So instead get a reference to the applicationContext and look it up as needed.
+    def applicationContext
+    void setApplicationContext(org.springframework.context.ApplicationContext applicationContext) throws org.springframework.beans.BeansException {
+        this.applicationContext = applicationContext
+    }
 
     // Performs some of the function of addExternalWidgetsToUser, found in the
     // WidgetDefinitionService.
     def addListingsToDatabase(stMarketplaceJson) {
         // The set could be greater than one in length because widgets do have
         // dependencies.
-
+        //log.info("addListingsToDatabase")
+        def stackService = applicationContext.getBean('stackService')
         def updatedWidgets=stMarketplaceJson.collect { obj ->
-            def widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache:true])
-
-            if (widgetDefinition == null) {
-                if (grails.util.GrailsUtil.environment != 'test') {
-                    log.info "Creating new widget definition for ${obj.widgetGuid}"
-                }
-
-                widgetDefinition=new WidgetDefinition()
+            if (obj?.widgetGuid) {
+                return addWidgetToDatabase(obj)
+            } else if (obj?.stackContext) {
+                //log.info("Hey, found a stack: ${stMarketplaceJson}")
+                return stackService.importStack([ data: obj.toString() ])
             }
-
-            widgetDefinition.displayName = obj.displayName
-            widgetDefinition.description = obj.description
-            widgetDefinition.height = obj.height as Integer
-            widgetDefinition.imageUrlLarge = obj.imageUrlLarge
-            widgetDefinition.imageUrlSmall = obj.imageUrlSmall
-
-            // Marketplace may not provide Universal Name. Keep value that
-            // is already in OWF (or null) unless explicitly provided.
-            if (obj.universalName) {
-                widgetDefinition.universalName = obj.universalName
-            }
-
-            widgetDefinition.widgetGuid = obj.widgetGuid
-            widgetDefinition.widgetUrl = obj.widgetUrl
-            widgetDefinition.widgetVersion = obj.widgetVersion
-            widgetDefinition.width = obj.width as Integer
-            widgetDefinition.singleton = obj.singleton
-            widgetDefinition.visible = obj.widgetUrl.isAllWhitespace() ? false : obj.visible
-            widgetDefinition.background = obj.background
-            widgetDefinition.descriptorUrl = obj.descriptorUrl
-            widgetDefinition.save(flush: true, failOnError: true)
-
-            if (obj.widgetTypes) {
-                // for each widget type T in the listing from MP, add the corresponding OWF widget
-                // type to widgetTypes or add standard if there's no corresponding type.
-                widgetDefinition.widgetTypes = []
-
-                obj.widgetTypes.each { String widgetTypeFromMP ->
-                    def typeFound = WidgetType.findByName(widgetTypeFromMP)
-                    if (typeFound) {
-                        widgetDefinition.widgetTypes << typeFound
-                    } else {
-                        widgetDefinition.widgetTypes << WidgetType.standard
-                    }
-                }
-            } else {
-                widgetDefinition.widgetTypes = [ WidgetType.standard ]
-            }
-
-            // Delete any existing tags.  Not a good bulk method for doing this, though
-            // could possibly use the setTags() method.
-            widgetDefinition.getTags().each { tagLinkRecord ->
-                widgetDefinition.removeTag(tagLinkRecord.tag.name)
-            }
-
-            // It will be a JSONObject if we've fetched from a Marketplace. If we're
-            // supporting the older OMP baseline, obj will be a WidgetDefinition object.
-            obj.defaultTags?.each { tagName ->
-                    widgetDefinition.addTag(tagName, true, -1, true)
-            }
-
-            // Marketplace may not be configured to provide intents. In such
-            // a case the send and receive lists are empty. DO NOT overwrite
-            // intents that are already in OWF if MP is not providing them.
-            if (obj.intents &&
-                ((obj.intents.send && obj.intents.send.size() > 0) ||
-                 (obj.intents.receive && obj.intents.receive.size() > 0))) {
-                // Structure of the intents field (forgive the bastardized BNF/schema mix)
-                //   send: [ $intent ]
-                //   receive: [ $intent ]
-                //  where
-                //   $intent => [ {action: $action, dataTypes: [$dataType]}]
-                //  and $action and $dataType are strings
-
-                // The post-conditions that seem to be needed to successfully add an intent to a WidgetDefinition
-                // IntentDataType
-                //    - Unique by the dataType field.
-                //    - An expensive string.
-                // Intent object 
-                //    - Unique by "action".
-                //    - Relationships to ALL IntentDataType that any widget, anywhere has associated with that action.
-                // WidgetDefinitionIntent object
-                //    - Owned by the WidgetDefinition
-                //    - Points to an Intent
-                //    - Gets the action from the Intent, but has it's own collection of IntentDataType
-                //    - Has send and receive flags, but they seem to be mutually exclusive.  Not sure if it's a hard
-                //      constraint, but I can't find anyplace where one is built with both flags set the same way
-                // WidgetDefinition
-                //    - Has a collection of WidgetDefinitionIntent objects
-
-                // Enjoy the ride...
-                //
-
-                // wipe the slate clean, this ain't no PATCH action
-                WidgetDefinitionIntent.findAllByWidgetDefinition(widgetDefinition).collect() {
-                    def intent = it.intent
-                    intent.removeFromWidgetDefinitionIntents(it)
-                    widgetDefinition.removeFromWidgetDefinitionIntents(it)
-                    intent.save()
-                    widgetDefinition.save()
-                    it.delete()
-                }
-                // This helper takes a $intent and makes the Intent object consistent with it
-                def addIntent={ intent,isSend,isReceive ->
-                    // We're going to need the IntentDataTypes for multiple actions, below
-                    def allIntentDataTypes = intent.dataTypes.collect() {
-                        IntentDataType.findByDataType(it) ?: new IntentDataType(dataType: it)
-                    }
-                    // Patch together the Intent object
-                    def intentModel=Intent.findByAction(intent.action)
-                    if(!intentModel) {
-                        // If it's a new one, we can just assign it all of the data types.
-                        intentModel=new Intent(action: intent.action, dataTypes: allIntentDataTypes)
-                    } else {
-                        // According to the GORM reference docs, a hasMany relationship is a set
-                        // So this *should* eliminate duplicates.
-                        intentModel.dataTypes.addAll(allIntentDataTypes)
-                    }
-                    // Shouldn't be needed, in theory, it's too much effort to figure out if
-                    // cascading saves is set up properly
-                    intentModel.save()
-
-                    // First two post conditions have been met, now for the actual WidgetDefinition
-                    // Since we cleared them out to start with, we don't have to
-                    def newWidgetDefinitionIntent = new WidgetDefinitionIntent(
-                        widgetDefinition: widgetDefinition, 
-                        intent: intentModel,
-                        send: isSend,
-                        receive: isReceive,
-                        dataTypes: allIntentDataTypes
-                    )
-                    widgetDefinition.addToWidgetDefinitionIntents(newWidgetDefinitionIntent)
-                }
-
-                // Now use the helper twice, once for send, once for receive
-                obj.intents.receive?.each { addIntent(it,false,true) }
-                obj.intents.send?.each { addIntent(it, true,false) }
-            }
-
-            widgetDefinition.save(flush:true)
-            return widgetDefinition
         }
+
         // Yes, re-reading the set.  We need to add requirements after all widgets have been added
         stMarketplaceJson.each { obj ->
             // Same comment as before: this only applies to an updated OMP baseline which
@@ -202,6 +81,150 @@ class MarketplaceService extends BaseService {
             }
         }
         return updatedWidgets
+    }
+
+    def addWidgetToDatabase(obj) {
+        def widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache:true])
+
+        if (widgetDefinition == null) {
+            if (grails.util.GrailsUtil.environment != 'test') {
+                log.info "Creating new widget definition for ${obj.widgetGuid}"
+            }
+
+            widgetDefinition=new WidgetDefinition()
+        }
+
+        widgetDefinition.displayName = obj.displayName
+        widgetDefinition.description = obj.description
+        widgetDefinition.height = obj.height as Integer
+        widgetDefinition.imageUrlLarge = obj.imageUrlLarge
+        widgetDefinition.imageUrlSmall = obj.imageUrlSmall
+
+        // Marketplace may not provide Universal Name. Keep value that
+        // is already in OWF (or null) unless explicitly provided.
+        if (obj.universalName) {
+            widgetDefinition.universalName = obj.universalName
+        }
+
+        widgetDefinition.widgetGuid = obj.widgetGuid
+        widgetDefinition.widgetUrl = obj.widgetUrl
+        widgetDefinition.widgetVersion = obj.widgetVersion
+        widgetDefinition.width = obj.width as Integer
+        widgetDefinition.singleton = obj.singleton
+        widgetDefinition.visible = obj.widgetUrl.isAllWhitespace() ? false : obj.visible
+        widgetDefinition.background = obj.background
+        widgetDefinition.descriptorUrl = obj.descriptorUrl
+        widgetDefinition.save(flush: true, failOnError: true)
+
+        if (obj.widgetTypes) {
+            // for each widget type T in the listing from MP, add the corresponding OWF widget
+            // type to widgetTypes or add standard if there's no corresponding type.
+            widgetDefinition.widgetTypes = []
+
+            obj.widgetTypes.each { String widgetTypeFromMP ->
+                def typeFound = WidgetType.findByName(widgetTypeFromMP)
+                if (typeFound) {
+                    widgetDefinition.widgetTypes << typeFound
+                } else {
+                    widgetDefinition.widgetTypes << WidgetType.standard
+                }
+            }
+        } else {
+            widgetDefinition.widgetTypes = [ WidgetType.standard ]
+        }
+
+        // Delete any existing tags.  Not a good bulk method for doing this, though
+        // could possibly use the setTags() method.
+        widgetDefinition.getTags().each { tagLinkRecord ->
+            widgetDefinition.removeTag(tagLinkRecord.tag.name)
+        }
+
+        // It will be a JSONObject if we've fetched from a Marketplace. If we're
+        // supporting the older OMP baseline, obj will be a WidgetDefinition object.
+        obj.defaultTags?.each { tagName ->
+                widgetDefinition.addTag(tagName, true, -1, true)
+        }
+
+        // Marketplace may not be configured to provide intents. In such
+        // a case the send and receive lists are empty. DO NOT overwrite
+        // intents that are already in OWF if MP is not providing them.
+        if (obj.intents &&
+            ((obj.intents.send && obj.intents.send.size() > 0) ||
+             (obj.intents.receive && obj.intents.receive.size() > 0))) {
+            // Structure of the intents field (forgive the bastardized BNF/schema mix)
+            //   send: [ $intent ]
+            //   receive: [ $intent ]
+            //  where
+            //   $intent => [ {action: $action, dataTypes: [$dataType]}]
+            //  and $action and $dataType are strings
+
+            // The post-conditions that seem to be needed to successfully add an intent to a WidgetDefinition
+            // IntentDataType
+            //    - Unique by the dataType field.
+            //    - An expensive string.
+            // Intent object
+            //    - Unique by "action".
+            //    - Relationships to ALL IntentDataType that any widget, anywhere has associated with that action.
+            // WidgetDefinitionIntent object
+            //    - Owned by the WidgetDefinition
+            //    - Points to an Intent
+            //    - Gets the action from the Intent, but has it's own collection of IntentDataType
+            //    - Has send and receive flags, but they seem to be mutually exclusive.  Not sure if it's a hard
+            //      constraint, but I can't find anyplace where one is built with both flags set the same way
+            // WidgetDefinition
+            //    - Has a collection of WidgetDefinitionIntent objects
+
+            // Enjoy the ride...
+            //
+
+            // wipe the slate clean, this ain't no PATCH action
+            WidgetDefinitionIntent.findAllByWidgetDefinition(widgetDefinition).collect() {
+                def intent = it.intent
+                intent.removeFromWidgetDefinitionIntents(it)
+                widgetDefinition.removeFromWidgetDefinitionIntents(it)
+                intent.save()
+                widgetDefinition.save()
+                it.delete()
+            }
+            // This helper takes a $intent and makes the Intent object consistent with it
+            def addIntent={ intent,isSend,isReceive ->
+                // We're going to need the IntentDataTypes for multiple actions, below
+                def allIntentDataTypes = intent.dataTypes.collect() {
+                    IntentDataType.findByDataType(it) ?: new IntentDataType(dataType: it)
+                }
+                // Patch together the Intent object
+                def intentModel=Intent.findByAction(intent.action)
+                if(!intentModel) {
+                    // If it's a new one, we can just assign it all of the data types.
+                    intentModel=new Intent(action: intent.action, dataTypes: allIntentDataTypes)
+                } else {
+                    // According to the GORM reference docs, a hasMany relationship is a set
+                    // So this *should* eliminate duplicates.
+                    intentModel.dataTypes.addAll(allIntentDataTypes)
+                }
+                // Shouldn't be needed, in theory, it's too much effort to figure out if
+                // cascading saves is set up properly
+                intentModel.save()
+
+                // First two post conditions have been met, now for the actual WidgetDefinition
+                // Since we cleared them out to start with, we don't have to
+                def newWidgetDefinitionIntent = new WidgetDefinitionIntent(
+                    widgetDefinition: widgetDefinition,
+                    intent: intentModel,
+                    send: isSend,
+                    receive: isReceive,
+                    dataTypes: allIntentDataTypes
+                )
+                widgetDefinition.addToWidgetDefinitionIntents(newWidgetDefinitionIntent)
+            }
+
+            // Now use the helper twice, once for send, once for receive
+            obj.intents.receive?.each { addIntent(it,false,true) }
+            obj.intents.send?.each { addIntent(it, true,false) }
+        }
+
+        widgetDefinition.save(flush:true)
+        return widgetDefinition
     }
 
     // We allow for widgets to mutually refer to one another, which would normally result in

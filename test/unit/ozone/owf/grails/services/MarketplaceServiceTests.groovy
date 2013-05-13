@@ -1,15 +1,16 @@
 package ozone.owf.grails.services
 
 import grails.test.*
-import grails.test.mixin.*
 
 import org.codehaus.groovy.grails.web.json.JSONArray
 
 import ozone.owf.grails.domain.*
 import grails.converters.JSON
+import org.springframework.context.ApplicationContext
 
 class MarketplaceServiceTests extends GrailsUnitTestCase {
     MarketplaceService marketplaceService
+    def stackServiceMockClass
 
     protected void setUp() {
         super.setUp()
@@ -17,6 +18,11 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         def domainMappingServiceMockClass= mockFor(DomainMappingService)
         domainMappingServiceMockClass.demand.deleteAllMappings(0..9999) { a,b,c -> [] }
         marketplaceService.domainMappingService= domainMappingServiceMockClass.createMock()
+
+        stackServiceMockClass = mockFor(StackService)
+        def applicationContextMockClass = mockFor(ApplicationContext)
+        applicationContextMockClass.demand.getBean(0..9999) { name -> (name == "stackService") ? stackServiceMockClass.createMock() : null}
+        marketplaceService.applicationContext = applicationContextMockClass.createMock()
 
         // Stub out taggable.  Kinda annoying
         WidgetDefinition.metaClass.mockTags = []
@@ -115,11 +121,37 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         "widgetTypes":["administration", "marketplace", "metric", "nonexistent"]
     }
     '''
+    def singleSimpleStackJson='''
+    {
+        "name": "Me",
+        "stackContext": "myveryown",
+        "description": "My description",
+        "widgets": [],
+        "dashboards": [{
+            "guid": "739961c3-8900-442b-94e0-88ec1bc89e22",
+            "layoutConfig": {
+                "widgets": [],
+                "defaultSettings": {},
+                "height": "100%",
+                "items": [],
+                "xtype": "tabbedpane",
+                "flex": 1,
+                "paneType": "tabbedpane"
+            },
+            "isdefault": true,
+            "dashboardPosition": 1,
+            "description": "The flash",
+            "name":"Dash",
+            "locked":false
+        }]
+    }
+    '''
 
     def singleSimpleWidget=new JSONArray("[${singleSimpleWidgetJson}]")
     def singleWidgetWithIntents=new JSONArray("[${singleWidgetWithIntentsJson}]")
     def withAndWithoutIntents=new JSONArray("[${singleSimpleWidgetJson},${singleWidgetWithIntentsJson}]")
     def widgetWithInterestingWidgetTypes = new JSONArray("[${widgetWithInterestingWidgetTypesJSON}]")
+    def singleSimpleStack=new JSONArray("[${singleSimpleStackJson}]")
 
     // just make sure that it actually parses a basic widget
     void testSimplestWidget() {
@@ -190,5 +222,16 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
 
         assert 4 == typeNamesList.size()
         assert ['administration', 'marketplace', 'metric', 'standard']
+    }
+
+    // just make sure that it recognizes a stack and passes it to the StackService
+    void testSimplestStack() {
+        stackServiceMockClass.demand.importStack{params ->
+            assertEquals([ data: singleSimpleStack[0].toString()], params)
+        }
+
+        marketplaceService.addListingsToDatabase(singleSimpleStack);
+
+        stackServiceMockClass.verify()
     }
 }
