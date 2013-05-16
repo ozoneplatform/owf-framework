@@ -13,7 +13,7 @@ import ozone.owf.grails.domain.ERoleAuthority
  * Time: 10:24 AM
  * To change this template use File | Settings | File Templates.
  */
-class MarketplaceServiceTests extends GroovyTestCase {
+class MarketplaceServiceTests extends OWFGroovyTestCase {
     def marketplaceService
     def stackService
     def dashboardService
@@ -22,17 +22,6 @@ class MarketplaceServiceTests extends GroovyTestCase {
 
     protected void setUp() {
         super.setUp()
-
-        def acctService = new AutoLoginAccountService()
-        def person = Person.build(username:'testUserMarketplaceServiceTesting', userRealName: 'foo', enabled:true)
-        person.save()
-        acctService.autoAccountName = 'testUserMarketplaceServiceTesting'
-        acctService.autoRoles = [ERoleAuthority.ROLE_ADMIN.strVal]
-        stackService.accountService = acctService
-        dashboardService.accountService = acctService
-        personWidgetDefinitionService.accountService = acctService
-        widgetDefinitionService.accountService = acctService
-
     }
 
     protected void tearDown() {
@@ -67,6 +56,7 @@ class MarketplaceServiceTests extends GroovyTestCase {
         '''
         def singleSimpleStack=new JSONArray("[${singleSimpleStackJson}]")
 
+        loginAsAdmin()
         def listings = marketplaceService.addListingsToDatabase(singleSimpleStack)
         def stack = listings[0]
         assertNotNull(stack)
