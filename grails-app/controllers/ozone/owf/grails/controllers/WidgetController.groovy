@@ -2,10 +2,7 @@ package ozone.owf.grails.controllers
 
 import grails.converters.JSON
 import org.apache.commons.lang.time.StopWatch
-import org.codehaus.groovy.grails.web.json.JSONArray
 import ozone.owf.grails.OwfException
-import ozone.owf.grails.domain.Person
-import ozone.owf.grails.OwfExceptionTypes
 
 class WidgetController extends BaseOwfRestController {
 	
@@ -13,6 +10,7 @@ class WidgetController extends BaseOwfRestController {
     def widgetDefinitionService
     def administrationService
     def personWidgetDefinitionService
+    def marketplaceService
 
     def modelName = 'widgetDefinition'
 	
@@ -85,7 +83,12 @@ class WidgetController extends BaseOwfRestController {
         }
         try
         {
-            def result = widgetDefinitionService.createOrUpdate(params)     
+            def result
+            if (params?.addExternalWidgetsToUser) {
+                result = marketplaceService.addExternalWidgetsToUser(params)
+            } else {
+                result = widgetDefinitionService.createOrUpdate(params)
+            }
             jsonResult=[msg: result as JSON, status: 200]
         }
         catch (Exception e) {

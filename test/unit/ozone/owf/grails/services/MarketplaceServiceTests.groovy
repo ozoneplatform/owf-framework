@@ -20,9 +20,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         marketplaceService.domainMappingService= domainMappingServiceMockClass.createMock()
 
         stackServiceMockClass = mockFor(StackService)
-        def applicationContextMockClass = mockFor(ApplicationContext)
-        applicationContextMockClass.demand.getBean(0..9999) { name -> (name == "stackService") ? stackServiceMockClass.createMock() : null}
-        marketplaceService.applicationContext = applicationContextMockClass.createMock()
+        marketplaceService.stackService = stackServiceMockClass.createMock()
 
         // Stub out taggable.  Kinda annoying
         WidgetDefinition.metaClass.mockTags = []

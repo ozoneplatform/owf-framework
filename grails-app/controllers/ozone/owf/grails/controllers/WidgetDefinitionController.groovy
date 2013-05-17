@@ -8,6 +8,7 @@ class WidgetDefinitionController extends BaseOwfRestController {
 	
     def accountService
     def widgetDefinitionService
+    def marketplaceService
 	
     def modelName = 'widgetDefinition'
 	
@@ -103,7 +104,12 @@ class WidgetDefinitionController extends BaseOwfRestController {
             log.info("Executing widgetDefinitionService: createOrUpdate");
         }
         try {
-            def result = widgetDefinitionService.createOrUpdate(params)
+            def result
+            if (params?.addExternalWidgetsToUser) {
+                result = marketplaceService.addExternalWidgetsToUser(params)
+            } else {
+                result = widgetDefinitionService.createOrUpdate(params)
+            }
             jsonResult = [msg: getJsonResult(result, modelName, params), status: 200]
         }
         catch (Exception e) {
