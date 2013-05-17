@@ -108,7 +108,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             height: 200,
             width: 200,
             isExtAjaxFormat: true,
-            widgetTypes: [serviceItem.owfProperties.owfWidgetType]
+            //FIXME this ternary is a hack for AML-3148
+            widgetTypes: [(serviceItem.types.title == "Web Apps" ? "fullscreen" : serviceItem.owfProperties.owfWidgetType)]
 //            ,
 //            tags: Ext.JSON.encode([this.createApprovalTag()])
         };
@@ -190,15 +191,54 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
                                         // It will be the first item if there is more than one (the remaining are required items)
                                         var widgetDef = widgetDefs.get(0);
-                                        // Show the switcher
-                                        dashboardContainer.showDashboardSwitcher();
-                                        // Add a listener so we can launch the widget if the user picks a different dashboard
-                                        dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
-                                            dashboardContainer.launchWidgets(widgetDef, true);
-                                        }, dashboardContainer, {delay:2000, single:true});
-
-                                        notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;
-
+                                        
+                                        console.log(widgetDef);
+                                        if(widgetDef.data.widgetTypes[0].name == "fullscreen") {
+                                        	var me = this;
+                                        	
+                                        	/*var dashboardStore = dashboardContainer.dashboardStore;
+                                    		dashboardStore.filterBy(function(record, id) {
+                                    			console.log(record.data.name + "    " + widgetDef.data.name);
+                                    			return (record.data.name == widgetDef.data.name);
+                                    		});
+                                    		console.log(dashboardStore);
+                                            me.dashboard = (dashboardInd >=0 ) && dashboardStore.getAt(dashboardInd);*/
+                                        	
+                                        	if(false) {
+                                        		
+                                        		//TODO switch to dashboard
+                                        		//TODO verify open item; close all if others;
+                                        		//TODO verify layout
+                                        		//TODO open this one if needed
+                                        	} else {
+                                        		me.dashboard = Ext.create('Ozone.data.Dashboard', {
+	                                                name: widgetDef.data.title,
+	                                                layoutConfig : {
+	                                                    xtype: 'container',
+	                                                    flex: 1,
+	                                                    height: '100%',
+	                                                    items: [],
+	                                                    paneType: 'fitpane',
+	                                                    widgets: [widgetDef.data]
+	                                                },
+	                                                locked:true
+	                                        		
+	                                            });
+	                                        	
+	                                        	dashboardContainer.saveDashboard(me.dashboard.data, 'create', function() {
+	                                            	dashboardContainer.activateDashboard(me.dashboard.data.guid);
+	                                            });
+                                        	}
+                                        } else {
+	                                        // Show the switcher
+	                                        dashboardContainer.showDashboardSwitcher();
+	                                        // Add a listener so we can launch the widget if the user picks a different dashboard
+	                                        dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
+	                                            dashboardContainer.launchWidgets(widgetDef, true);
+	                                        }, dashboardContainer, {delay:2000, single:true});
+	
+	                                        notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;
+                                        }
                                     }  else {
 
                                         notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddSuccessful

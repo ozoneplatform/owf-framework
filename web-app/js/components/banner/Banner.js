@@ -119,19 +119,16 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                     var keyboard = ('keyup' == e.type) ? true : false;
                     e.stopEvent();
                     this.getMarketplaceLauncher().gotoMarketplace(this.marketplaceWidget, keyboard);
-                }
-                else {
+                } else {
                     this.getMarketplaceLauncher().gotoMarketplace(this.marketplaceWidget, null);
                 }
-            }
-            else {
+            } else {
                 this.dashboardContainer.activateDashboard(this.marketplacePreviousDashboard.guid);
                 // This will be called as part of the previous dashboard change, but not if the previous
                 // dashboard was the Marketplace dashboard, so call it here just to be safe.
                 this.clearMarketplaceToggle();
             }
-        }
-        else {
+        } else {
             //Reset to enable all hotkeys since show wasn't executed
             Ozone.components.keys.KeyMap.reset();
         }
