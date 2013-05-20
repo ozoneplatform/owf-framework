@@ -60,7 +60,17 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             url: Ozone.util.contextPath() + "/marketplace/sync/" + stackUuid,
             method: "GET",
             onSuccess: function(jsonData) {
-
+                var stack_bottomright = {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25};
+                $.pnotify({
+                    title: Ozone.layout.DialogMessages.added,
+                    text: "The stack was successfully added. An administrator will have to give you permission to use it before it will appear in your dashboard.",
+                    type: 'success',
+                    addclass: "stack-bottomright",
+                    stack: stack_bottomright,
+                    history: false,
+                    sticker: false,
+                    icon: false
+                });
             }
         });
     },
