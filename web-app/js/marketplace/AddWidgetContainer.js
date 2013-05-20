@@ -141,7 +141,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             //FIXME this ternary is a hack for AML-3148
             singleton: (serviceItem.types.title == "Web Apps" ? false : serviceItem.owfProperties.singleton),
             //FIXME this ternary is a hack for AML-3148
-            visible: (serviceItem.types.title == "Web Apps" ? false : erviceItem.owfProperties.visibleInLaunch),
+            visible: (serviceItem.types.title == "Web Apps" ? false : serviceItem.owfProperties.visibleInLaunch),
             //FIXME this ternary is a hack for AML-3148
             background: (serviceItem.types.title == "Web Apps" ? false : serviceItem.owfProperties.background),
             isSelected: widgetId == serviceItem.id, // true if this is the widget the user selected and not a dependent widget
