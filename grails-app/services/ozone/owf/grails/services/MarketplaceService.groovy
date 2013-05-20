@@ -40,6 +40,7 @@ class MarketplaceService extends BaseService {
     def grailsApplication
     def accountService
     def stackService
+    def widgetDefinitionService
 
     // Performs some of the function of addExternalWidgetsToUser, found in the
     // WidgetDefinitionService.
@@ -81,6 +82,7 @@ class MarketplaceService extends BaseService {
 
     def addWidgetToDatabase(obj) {
         def widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache:true])
+        boolean universalNameIsChanged = true
 
         if (widgetDefinition == null) {
             if (grails.util.GrailsUtil.environment != 'test') {
@@ -89,6 +91,9 @@ class MarketplaceService extends BaseService {
 
             widgetDefinition=new WidgetDefinition()
         }
+        else {
+            universalNameIsChanged = obj.universalName && obj.universalName != widgetDefinition.universalName
+        }
 
         widgetDefinition.displayName = obj.displayName
         widgetDefinition.description = obj.description
@@ -96,11 +101,11 @@ class MarketplaceService extends BaseService {
         widgetDefinition.imageUrlLarge = obj.imageUrlLarge
         widgetDefinition.imageUrlSmall = obj.imageUrlSmall
 
-        // Marketplace may not provide Universal Name. Keep value that
-        // is already in OWF (or null) unless explicitly provided.
-        if (obj.universalName) {
-            widgetDefinition.universalName = obj.universalName
+        if (universalNameIsChanged && !widgetDefinitionService.canUseUniversalName(widgetDefinition, obj.universalName)) {
+            throw new OwfException(message: 'Another widget uses ' + obj.universalName + ' as its Universal Name. '
+                    + 'Please select a unique Universal Name for this widget.', exceptionType: OwfExceptionTypes.Validation_UniqueConstraint)
         }
+        widgetDefinition.universalName = obj.universalName
 
         widgetDefinition.widgetGuid = obj.widgetGuid
         widgetDefinition.widgetUrl = obj.widgetUrl
