@@ -40,30 +40,11 @@ body {
     height: 100%;
     outline: 0 none;
     cursor: default; // for IE8
+    background-color: #050b13;
     background-attachment:fixed;
     background-position: center center, center center;
     background-repeat: no-repeat, repeat, no-repeat;
-}
-
-#owf-body.x-gecko { /* > ensures IE doesn't see this block */
-    background-image: $watermark-img-path, $stripe-img-path,
-        -moz-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
-}
-
-#owf-body.x-webkit {
-    background-image: $watermark-img-path, $stripe-img-path,
-        -webkit-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
-}
-
-/*
- * linear background gradient for IE
- */
-#owf-body.x-ie {
-    background: $body-background-gradient-end $stripe-img-path repeat repeat center center;
-    background-attachment:fixed;
-    #mainPanel {
-        background: $watermark-img-path no-repeat center;
-    }
+    background-image: theme-image($theme-name, 'ic-bg.png');
 }
 
 //admin widget
@@ -203,17 +184,13 @@ $toolbar-separator-color: #a0a9ad;
 // ======================== Banner 
 // ===============================
 
-.x-gecko .banner, { 
-    //custom background to include stripe image in addition
-    //to gradient. This has to be after the imports so it doesn't
-    //get overridden
-    background-image: theme-image($theme-name, 'banner/banner_stripes.png'),
-        -moz-linear-gradient(#55656D, #2A2A2A);
+.banner {
+    filter: none !important;
+    background-image: theme-image($theme-name, 'banner/banner-bg.png');
 }
 
-.x-webkit .banner {
-    background-image: theme-image($theme-name, 'banner/banner_stripes.png'),
-        -webkit-linear-gradient(#55656D, #2A2A2A);
+.x-ie #userMenuBtn {
+    background-color: #253551 !important;
 }
 
 // ===============================
@@ -260,7 +237,7 @@ $close-button-width: 19px;
         height: $owf-tool-height;
 
         img {
-            background-image: theme-background-image($theme-name, 'tools/inactive-tool-sprites.gif');
+            background-image: theme-image($theme-name, 'tools/inactive-tool-sprites.gif');
         }
     }
     .x-tool .x-tool-close {
