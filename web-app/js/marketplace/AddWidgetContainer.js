@@ -12,6 +12,7 @@ Ozone.marketplace = Ozone.marketplace || {};
 Ozone.marketplace.AddWidgetContainer = function (eventingContainer) {
 
     this.addWidgetChannelName = "_ADD_WIDGET_CHANNEL";
+    this.addStackChannelName = "_ADD_STACK_CHANNEL";
     this.windowManager = null;
 
     if (eventingContainer != null) {
@@ -26,6 +27,14 @@ Ozone.marketplace.AddWidgetContainer = function (eventingContainer) {
             // Must return a value for the callback function to be invoked on the client side.
             return scope.addWidget(cfg);
         });
+        this.eventingContainer.registerHandler(this.addStackChannelName, function (sender, msg) {
+
+            //msg will always be a json string
+            var cfg = Ozone.util.parseJson(msg);
+
+            // Must return a value for the callback function to be invoked on the client side.
+            return scope.addStack(cfg);
+        });
     }
     else {
         throw {
@@ -37,6 +46,24 @@ Ozone.marketplace.AddWidgetContainer = function (eventingContainer) {
 };
 
 Ozone.marketplace.AddWidgetContainer.prototype = {
+
+    addStack:function (config) {
+        var stackJSON = config.widgetsJSON;
+        this.processMarketplaceStackData(stackJSON.itemUuid);
+        return stackJSON.itemId
+    },
+
+    processMarketplaceStackData: function(stackUuid) {
+        var self = this;
+
+        Ozone.util.Transport.send({
+            url: Ozone.util.contextPath() + "/marketplace/sync/" + stackUuid,
+            method: "GET",
+            onSuccess: function(jsonData) {
+
+            }
+        });
+    },
 
     addWidget:function (config) {
         var widgetsJSON = config.widgetsJSON;
