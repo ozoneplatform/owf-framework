@@ -105,8 +105,9 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             visible: serviceItem.owfProperties.visibleInLaunch,
             background: serviceItem.owfProperties.background,
             isSelected: widgetId == serviceItem.id, // true if this is the widget the user selected and not a dependent widget
-            height: 200,
-            width: 200,
+            height: serviceItem.owfProperties.height,
+            width: serviceItem.owfProperties.width,
+            universalName: serviceItem.owfProperties.universalName,
             isExtAjaxFormat: true,
             //FIXME this ternary is a hack for AML-3148
             widgetTypes: [(serviceItem.types.title == "Web Apps" ? "fullscreen" : serviceItem.owfProperties.owfWidgetType)]
