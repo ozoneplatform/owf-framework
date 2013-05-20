@@ -101,19 +101,27 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             widgetGuid: serviceItem.uuid,
             widgetUrl: serviceItem.launchUrl,
             widgetVersion: serviceItem.versionName,
-            singleton:serviceItem.owfProperties.singleton,
-            visible: serviceItem.owfProperties.visibleInLaunch,
-            background: serviceItem.owfProperties.background,
+            //FIXME this ternary is a hack for AML-3148
+            singleton: (serviceItem.types.title == "Web Apps" ? false : serviceItem.owfProperties.singleton),
+            //FIXME this ternary is a hack for AML-3148
+            visible: (serviceItem.types.title == "Web Apps" ? false : erviceItem.owfProperties.visibleInLaunch),
+            //FIXME this ternary is a hack for AML-3148
+            background: (serviceItem.types.title == "Web Apps" ? false : serviceItem.owfProperties.background),
             isSelected: widgetId == serviceItem.id, // true if this is the widget the user selected and not a dependent widget
-            height: serviceItem.owfProperties.height,
-            width: serviceItem.owfProperties.width,
-            universalName: serviceItem.owfProperties.universalName,
+            //FIXME this ternary is a hack for AML-3148
+            height: (serviceItem.types.title == "Web Apps" ? 200 : serviceItem.owfProperties.height),
+            //FIXME this ternary is a hack for AML-3148
+            width: (serviceItem.types.title == "Web Apps" ? 200 : serviceItem.owfProperties.width),
+            //FIXME this ternary is a hack for AML-3148
+            universalName: (serviceItem.types.title == "Web Apps" ? "" : serviceItem.owfProperties.universalName),
             isExtAjaxFormat: true,
             //FIXME this ternary is a hack for AML-3148
             widgetTypes: [(serviceItem.types.title == "Web Apps" ? "fullscreen" : serviceItem.owfProperties.owfWidgetType)]
-//            ,
-//            tags: Ext.JSON.encode([this.createApprovalTag()])
+//                ,
+//                tags: Ext.JSON.encode([this.createApprovalTag()])
         };
+        
+        
         if (directRequired.length > 0) {
             widgetJson.directRequired = Ext.JSON.encode(directRequired);
         }
