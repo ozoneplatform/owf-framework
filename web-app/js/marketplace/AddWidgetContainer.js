@@ -238,24 +238,27 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                                         // It will be the first item if there is more than one (the remaining are required items)
                                         var widgetDef = widgetDefs.get(0);
                                         
-                                        console.log(widgetDef);
                                         if(widgetDef.data.widgetTypes[0].name == "fullscreen") {
                                         	var me = this;
                                         	
-                                        	/*var dashboardStore = dashboardContainer.dashboardStore;
-                                    		dashboardStore.filterBy(function(record, id) {
-                                    			console.log(record.data.name + "    " + widgetDef.data.name);
-                                    			return (record.data.name == widgetDef.data.name);
-                                    		});
-                                    		console.log(dashboardStore);
-                                            me.dashboard = (dashboardInd >=0 ) && dashboardStore.getAt(dashboardInd);*/
+                                        	var dashboardStore = dashboardContainer.dashboardStore;
                                         	
-                                        	if(false) {
+                                        	var tmpDashboard = null
+                                        	for(var storeCount = 0; storeCount < dashboardStore.getCount(); storeCount++) {
+                                        		tmpDashboard = dashboardStore.getAt(storeCount);
                                         		
-                                        		//TODO switch to dashboard
-                                        		//TODO verify open item; close all if others;
-                                        		//TODO verify layout
-                                        		//TODO open this one if needed
+                                        		if(tmpDashboard.data.name == widgetDef.data.title) {
+                                        			if(tmpDashboard.data.locked == true) {
+                                        				if(tmpDashboard.data.layoutConfig.widgets[0] && 
+                                        					tmpDashboard.data.layoutConfig.widgets[0].widgetGuid == widgetDef.data.widgetGuid) {
+                                        					me.dashboard = tmpDashboard;
+                                        				}
+                                        			}
+                                        		}
+                                        	}
+                                        	
+                                        	if(me.dashboard) {
+                                        		dashboardContainer.activateDashboard(me.dashboard.data.guid);
                                         	} else {
                                         		me.dashboard = Ext.create('Ozone.data.Dashboard', {
 	                                                name: widgetDef.data.title,
