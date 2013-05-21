@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext
 class MarketplaceServiceTests extends GrailsUnitTestCase {
     MarketplaceService marketplaceService
     def stackServiceMockClass
+    def widgetDefinitionServiceMockClass
 
     protected void setUp() {
         super.setUp()
@@ -21,6 +22,10 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
 
         stackServiceMockClass = mockFor(StackService)
         marketplaceService.stackService = stackServiceMockClass.createMock()
+
+        widgetDefinitionServiceMockClass = mockFor(WidgetDefinitionService)
+        marketplaceService.widgetDefinitionService = widgetDefinitionServiceMockClass.createMock()
+
 
         // Stub out taggable.  Kinda annoying
         WidgetDefinition.metaClass.mockTags = []
@@ -153,6 +158,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
 
     // just make sure that it actually parses a basic widget
     void testSimplestWidget() {
+        widgetDefinitionServiceMockClass.demand.canUseUniversalName(0..1) { a,b -> true}
 
         def widgets = marketplaceService.addListingsToDatabase(singleSimpleWidget);
         def resultWidget = widgets[0]
@@ -177,6 +183,8 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
     }
 
     void testProcessesIntentsOnOneWidget() {
+        widgetDefinitionServiceMockClass.demand.canUseUniversalName(0..1) { a,b -> true}
+
         def resultWidget = marketplaceService.addListingsToDatabase(singleWidgetWithIntents)[0];
 
         assertEquals 2,resultWidget.widgetDefinitionIntents.size()
@@ -204,6 +212,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
     }
 
     void testMultipleWidgets() {
+        widgetDefinitionServiceMockClass.demand.canUseUniversalName(0..2) { a,b -> true}
 
         def widgets=marketplaceService.addListingsToDatabase(withAndWithoutIntents);
         assertEquals 2,widgets.size()
@@ -212,6 +221,8 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
     }
 
     void testAllWidgetTypesProperlyConverted() {
+        widgetDefinitionServiceMockClass.demand.canUseUniversalName(0..1) { a,b -> true}
+
         def resultWidget = marketplaceService.addListingsToDatabase(widgetWithInterestingWidgetTypes)[0];
 
         def typeNamesList = ((resultWidget.widgetTypes as List).sort{WidgetType type -> type.name})*.name
