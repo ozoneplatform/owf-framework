@@ -84,31 +84,11 @@ $carousel-widget-selected-border-color: $owfblue3;
     height: 100%;
     outline: 0 none;
     cursor: default; // for IE8
+    background-color: #050b13;
     background-attachment:fixed;
-    background-position: center center;
-    background-repeat: repeat, no-repeat, no-repeat;
-}
-
-#owf-body.x-gecko { /* > ensures IE doesn't see this block */
-    background-image: $stripe-img-path, $watermark-img-path,
-        -moz-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
-}
-
-#owf-body.x-webkit {
-    background-image: $stripe-img-path, $watermark-img-path,
-        -webkit-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
-}
-
-/*
- * linear background gradient for IE
- */
-#owf-body.x-ie {
-    
-    background: $body-background-gradient-end $watermark-img-path no-repeat center center;
-    background-attachment:fixed;
-    #mainPanel {
-        background: $stripe-img-path repeat center center;
-    }
+    background-position: center center, center center;
+    background-repeat: no-repeat, repeat, no-repeat;
+    background-image: theme-image($theme-name, 'wallpapers/ic-bg.png');
 }
 
 //admin widget
