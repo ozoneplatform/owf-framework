@@ -776,13 +776,19 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
            removeButton.disabled = true;
        }
 
-       imagePanel.add(Ext.applyIf({
+       launchButton = imagePanel.add(Ext.applyIf({
            handler: launchBtnHandler
        }, launchButton));
        
-       imagePanel.add(Ext.applyIf({
+       removeButton = imagePanel.add(Ext.applyIf({
            handler: removeBtnHandler
        }, removeButton));
+       
+       //in IE7, Ext seems to be manually setting the button widths to
+       //the smallest reasonable size for some reason.  We want the widths to
+       //be handled in css however, so we clear the explicit width
+       launchButton.getEl().setWidth('');
+       removeButton.getEl().setWidth('');
     },
 
     // populates the info panel with the widget's icon and description
