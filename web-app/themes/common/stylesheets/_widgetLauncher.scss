@@ -257,6 +257,10 @@
         .image-panel {
             min-width: 96px;
             max-width: 6em;
+
+            .x-panel-body {
+                border-width: 0;
+            }
         }
     
         .widget-icon {
