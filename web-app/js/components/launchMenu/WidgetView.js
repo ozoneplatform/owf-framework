@@ -37,6 +37,7 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
             }
         });
 
+        var me = this;
 
         Ext.apply(this, {
             layout:{
@@ -238,29 +239,14 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
                         flex:0,
                         width:200
                     },{
-                        header:'Tags',
+                        header:'Description',
                         sortable: false,
                         menuDisabled: true,
+                        dataIndex:'description',
+                        flex:1,
                         renderer:function (val, metaData, record) {
-                            var tagList = '';
-                            if (val == null) {
-                                 var rec = me.widgetStore.getById(record.get('uniqueId'));
-                                 val = rec.get('tags');
-                            }
-                            
-                            for (var i = 0; i < val.length; i++) {
-                                var tag = (val[i]).name;
-                                if (i == val.length - 1) {
-                                    tagList += tag;
-                                } else {
-                                    tagList += tag + ",";
-                                }
-
-                            }
-                            return Ext.htmlEncode(tagList);
-                        },
-                        dataIndex:'tags',
-                        flex:1
+                            return me.getShortDescription(record);
+                        }
                     }],
                     listeners:{
                         render:{
@@ -309,6 +295,22 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
                         },
                         itemclick:{
                             fn:function (view, record, elem, index, event, eOpts) {
+                                var target = Ext.get(event.target),
+                                    parent = target.parent(),
+                                    gridPanel = view.up('gridpanel');
+
+                                if(target.is('.show_more')) {
+                                    parent.addCls('showing_more');
+                                    parent.update(me.getFullDescription(record));
+                                    gridPanel.showVerticalScroller();
+                                }
+                                else if(target.is('.show_less')) {
+                                    parent.removeCls('showing_more');
+                                    parent.update(me.getShortDescription(record));
+                                    gridPanel.hideVerticalScroller();
+                                    gridPanel.showVerticalScroller();
+                                }
+
                                 Ext.apply(record.data,{
                                   alreadyOpenedWidget: this.alreadyOpenedWidget
                                 });
@@ -358,5 +360,34 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
 
         this.addEvents(['itemclick', 'itemdblclick', 'itemkeydown', 'selectionchange']);
         this.enableBubble(['itemclick', 'itemdblclick', 'itemkeydown', 'selectionchange']);
+    },
+    getShortDescription: function(record) {
+        var description = record.get('description') || '';
+
+        if(description && description.length > 60) {
+            description = '<i class="icon-caret-right show_more"></i>' + '<span class="description">' + Ext.htmlEncode(description.substr(0, 57)) + '<span/>';
+        }
+        else {
+            description = '<span class="icon-caret-gap"></span>' + '<span class="description">' + description+ '<span/>';
+        }
+        return description;
+    },
+
+    getFullDescription: function(record) {
+        return ('<i class="icon-caret-down show_less"></i>  ' + '<span class="description">' + record.get('description')) + '<span/>';
     }
+
+    // getShortDescription: function(record) {
+    //     var description = record.get('description');
+
+    //     if(description && description.length > 60) {
+    //         description = Ext.htmlEncode(description.substr(0, 57)) + '<a class="ellipsis show_more">...</a>';
+    //     }
+    //     return description;
+    // },
+
+    // getFullDescription: function(record) {
+    //     return (record.get('description') + '<a class="show_less"><i class="icon-reply"></i> Less</a>');
+    // }
+
 });

@@ -556,8 +556,6 @@
                     border-style: $panel-body-border-style;
                     border-width: 0 1px 0 0;
 
-                    vertical-align: middle;
-
                     .x-grid-cell-inner {
                         padding: 3px;
                         //padding-left: 10px;
@@ -610,11 +608,25 @@
         }
 
         .x-grid-row-focused .x-grid-cell {
-            font-weight: bold;
+            font-weight: normal;
             background-color: $widget-launcher-grid-row-cell-focus-background-color ;
             .x-grid-cell-inner {
                 color: $widget-launcher-grid-row-cell-focus-color;
             }
+        }
+
+        i {
+            font-size: 1.167em;
+            color: inherit;
+        }
+
+        .description {
+            padding-left: 5px;
+        }
+
+        .icon-caret-gap {
+            display: inline-block;
+            width: $owf-font-size/2.4;
         }
     }
 
@@ -655,3 +667,20 @@
 #widget-launcher-body .x-box-inner > :last-child {
     @include border-bottom-radius($widget-launcher-body-radius);
 }
+
+.show_more, .show_less {
+    cursor: pointer;
+    color: red;
+
+    i {
+        color: inherit;
+    }
+}
+
+.showing_more {
+    overflow: visible !important;
+    -o-text-overflow: clip !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+}
+
