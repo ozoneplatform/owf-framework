@@ -359,7 +359,7 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                         return Ext.util.Format.htmlEncode(value);
                     }
                 },
-                {
+                /*{
                     xtype:'textcolumn',
                     menuDisabled: true,
                     text: '<span class="gridHdr">Tags</span>',
@@ -389,7 +389,7 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                         }
                         return Ext.util.Format.htmlEncode(value);  
                     }
-                },
+                },*/
                 {
                     xtype:'checkcolumn',
                     itemId: 'showCheckColumn',
