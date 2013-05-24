@@ -7,7 +7,8 @@ OWF.Events = {
 	},
 	Dashboard: {
 		COMPLETE_RENDER: 'dashboardCompleteRender',
-		CHANGED: 'dashboardChanged'
+		CHANGED: 'dashboardChanged',
+        SELECTED: 'dashboardSelected'
 	},
 	Banner: {
 		DOCKED: 'docked',

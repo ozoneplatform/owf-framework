@@ -257,6 +257,10 @@
         .image-panel {
             min-width: 96px;
             max-width: 6em;
+
+            .x-panel-body {
+                border-width: 0;
+            }
         }
     
         .widget-icon {
@@ -270,6 +274,7 @@
             display: block;
             margin-left: auto;
             margin-right: auto;
+            width: 98%; //98% to leave room for borders in IE7
             margin-top: 3px;
             text-align: center;
         }
