@@ -41,7 +41,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
 
     _previouslyFocusedStackOrDashboard : null,
-    
+
     initComponent: function() {
 
         var me = this,
@@ -1353,7 +1353,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         this.tearDownCircularFocus();
 
         // remove jQuery listeners
-        $(this.el.dom).off();
+        if (this.el && this.el.dom) {
+            $(this.el.dom).off();
+        }
 
         // destroy view so that it will be recreated when opened next setTimeout
         return this.callParent();
