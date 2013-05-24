@@ -294,28 +294,7 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
                             scope:this
                         },
                         itemclick:{
-                            fn:function (view, record, elem, index, event, eOpts) {
-                                var target = Ext.get(event.target),
-                                    parent = target.parent(),
-                                    gridPanel = view.up('gridpanel');
-
-                                if(target.is('.show_more')) {
-                                    parent.addCls('showing_more');
-                                    parent.update(me.getFullDescription(record));
-                                    gridPanel.showVerticalScroller();
-                                }
-                                else if(target.is('.show_less')) {
-                                    parent.removeCls('showing_more');
-                                    parent.update(me.getShortDescription(record));
-                                    gridPanel.hideVerticalScroller();
-                                    gridPanel.showVerticalScroller();
-                                }
-
-                                Ext.apply(record.data,{
-                                  alreadyOpenedWidget: this.alreadyOpenedWidget
-                                });
-                                this.fireEvent('itemclick', view, record, elem, index, event, eOpts);
-                            },
+                            fn: this.handleItemClick,
                             scope:this
                         },
                         itemdblclick:{
@@ -361,6 +340,30 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
         this.addEvents(['itemclick', 'itemdblclick', 'itemkeydown', 'selectionchange']);
         this.enableBubble(['itemclick', 'itemdblclick', 'itemkeydown', 'selectionchange']);
     },
+
+    handleItemClick: function (view, record, elem, index, event, eOpts) {
+        var target = Ext.get(event.target),
+            parent = target.parent(),
+            gridPanel = view.up('gridpanel');
+
+        if(target.is('.show_more')) {
+            parent.addCls('showing_more');
+            parent.update(this.getFullDescription(record));
+            gridPanel.showVerticalScroller();
+        }
+        else if(target.is('.show_less')) {
+            parent.removeCls('showing_more');
+            parent.update(this.getShortDescription(record));
+            gridPanel.hideVerticalScroller();
+            gridPanel.showVerticalScroller();
+        }
+
+        Ext.apply(record.data,{
+          alreadyOpenedWidget: this.alreadyOpenedWidget
+        });
+        this.fireEvent('itemclick', view, record, elem, index, event, eOpts);
+    },
+
     getShortDescription: function(record) {
         var description = record.get('description') || '';
 
@@ -376,18 +379,5 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
     getFullDescription: function(record) {
         return ('<i class="icon-caret-down show_less"></i>  ' + '<span class="description">' + record.get('description')) + '<span/>';
     }
-
-    // getShortDescription: function(record) {
-    //     var description = record.get('description');
-
-    //     if(description && description.length > 60) {
-    //         description = Ext.htmlEncode(description.substr(0, 57)) + '<a class="ellipsis show_more">...</a>';
-    //     }
-    //     return description;
-    // },
-
-    // getFullDescription: function(record) {
-    //     return (record.get('description') + '<a class="show_less"><i class="icon-reply"></i> Less</a>');
-    // }
 
 });
