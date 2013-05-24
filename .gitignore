@@ -4,6 +4,7 @@
 /stacktrace.log
 /test/reports
 /logs
+/grails.log
 
 # older plugin install locations
 # /plugins
@@ -14,12 +15,12 @@
 /staging
 /build-base*
 #/src
-/target
+target
 /build.number
 /cobertura.ser
 /lib
 /work
-/web-app/js-min
+js-min
 /js-plugins/*.gz.js
 /bin
 /target-eclipse
@@ -28,6 +29,16 @@
 /prodDb.bak
 *.sass-cache
 *.css
+web-app/WEB-INF/grails-app
+test-widgets/html-widgets/src/main/webapp/images/dragAndDrop/
+test-widgets/html-widgets/src/main/webapp/js-lib/
+test-widgets/html-widgets/src/main/webapp/js/
+test-widgets/standalone-container/src/main/webapp/js-min/
+/src/assemble/docs/jsdoc/
+*.zip
+owf-widget-debug.js
+owf-widget-min.js
+owf-widget-min.gz.js
 
 # OS generated files #
 .DS_Store
@@ -52,3 +63,4 @@ Thumbs.db
 /*.iml
 /*.iws
 /*.ipr
+atlassian-ide-plugin.xml
