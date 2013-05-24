@@ -1573,7 +1573,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         this.destroyDashboardSwitcher();
     },
 
-    updateDashboardsFromStore: function(storeRecords, callbackOptions, loadSuccess, dashboardGuidToActivate) {
+    /**
+     * @param dashboardActivationCallback A callback that is fired when this function completes
+     */
+    updateDashboardsFromStore: function(storeRecords, callbackOptions, loadSuccess, dashboardGuidToActivate, dashboardActivationCallback) {
 
         // ---------------------------------------------------------------------------------
         // Update all dashboard-related components with newly-refreshed dashboardStore data.
@@ -1622,6 +1625,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             me._activateDashboard(dashboardGuidToActivate || defaultTabGuid); // Focus the default dashboard.
             me.activateDashboard(dashboardGuidToActivate || defaultTabGuid, true, stackContext);
 
+            dashboardActivationCallback();
         }, 200);
     },
 
@@ -1638,10 +1642,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         me.dashboardStore.load({
             callback: function(records, options, success) {
                 if (success == true) {
-                    me.updateDashboardsFromStore(records, options, success);
+                    me.updateDashboardsFromStore(records, options, success, null, function() {
+                        callback(success);
+                    });
                 }
-
-                callback(success);
             }
         });
     },
@@ -1891,7 +1895,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         //retrieve all groups associated with dashboards and stacks to which this
         //user has access
-        function getAllDashboardGroups() {
+        //@param getIds set to true to get a list of ids instead of names
+        function getAllDashboardGroups(getIds) {
             //flatten the array and remove duplicates
             return Ext.Array.unique(Ext.Array.flatten(
 
@@ -1903,13 +1908,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                         groups = dash.get('groups') || [];
                     
                     //get the name from a group
-                    function getGroupName(group) {
-                        return group.name;
+                    function getGroupValue(group) {
+                        return group[getIds ? 'id' : 'name'];
                     }
 
                     //get names of dashboard groups and stack groups
-                    return Ext.Array.map(groups, getGroupName)
-                        .concat(Ext.Array.map(stackGroups, getGroupName));
+                    return Ext.Array.map(groups, getGroupValue)
+                        .concat(Ext.Array.map(stackGroups, getGroupValue));
                 })
             ));
         }
@@ -1918,6 +1923,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         //some other place to receive AdminChannel info, care will need to be taken
         //not to override this listener
         OWF.Container.Eventing.subscribe('AdminChannel', function(sender, msg) {
+
+            //stack or group dashboard editor used to assign to a user or group
             if (Ext.Array.contains(['Stack', 'Dashboard'], msg.domain)) {
                 var records = msg.action.resultSet.records,
                     userGroups = getAllDashboardGroups(),
@@ -1949,6 +1956,21 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     me.dashboardsNeedRefresh = true;
                 }
             }
+
+            ////User editor used to assign a dashboard or stack
+            //else if (msg.domain === 'User') {
+                //if (msg.action.params.user_id === Ozone.config.user.id && //is it the current user
+                        //(msg.action.request.url.indexOf('dashboard') === 1 || //is it a dashboard? ('tab' is not available in the case)
+                         //msg.action.params.tab === 'stacks')) { //is it a stack
+                    //me.dashboardsNeedRefresh = true;
+                //}
+            //}
+            //else if (msg.domain === 'Group') {
+                //if (Ext.Array.contains(getAllDashboardGroups(true), msg.action.params.group_id) && //a group that we care about was modified
+                        //Ext.Array.contains(['dashboards', 'stacks'], msg.action.params.tab)) {   //a dashboard or stack was added or removed from the group
+                    //me.dashboardsNeedRefresh = true;
+                //}
+            //}
         });
     }
 });
