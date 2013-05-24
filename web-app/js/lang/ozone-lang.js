@@ -408,7 +408,9 @@ Ozone.layout.DialogMessages = {
     dashboardLockWarning: 'Locking this dashboard disables the Launch Menu. New widgets cannot be launched or added to this layout. Do you still want to lock this dashboard?',
     dashboardLockAlertTitle: 'Locked Dashboard',
     dashboardLockAlert: 'This dashboard is locked. Widgets cannot be added or removed from a locked dashboard.',
-    closeBackgroundWidgetWarning: ' is a background widget. You won’t see it on your screen because it runs behind the scenes.<br/><br/>To close the widget, click OK.'
+    closeBackgroundWidgetWarning: ' is a background widget. You won’t see it on your screen because it runs behind the scenes.<br/><br/>To close the widget, click OK.',
+    launchWidgetTitle: 'Launch Widget',
+    launchWidgetAlert: 'Choose the dashboard you want the widget to be launched on.'
 };
 
 Ozone.layout.ThemeSwitcherWindowConstants = {

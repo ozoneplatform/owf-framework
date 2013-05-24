@@ -853,6 +853,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         if (silent) {
             Ext.util.History.startUp();
         }
+        this.fireEvent(OWF.Events.Dashboard.SELECTED, guid);
     },
 
     //this function is private, do not call outside of this class - use activateDashboard instead
