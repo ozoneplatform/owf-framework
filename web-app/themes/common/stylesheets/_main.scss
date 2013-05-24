@@ -356,6 +356,11 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
     }
 }
 
+.marketplace_animate_listing {
+    position: absolute;
+    z-index: 1000000000;
+}
+
 .x-ie {
     #mainPanel { 
         .accordion_region {

@@ -20,20 +20,12 @@ Ozone.marketplace.AddWidgetContainer = function (eventingContainer) {
         //register on add widget channel
         var scope = this;
         this.eventingContainer.registerHandler(this.addWidgetChannelName, function (sender, msg) {
-
-            //msg will always be a json string
-            var cfg = Ozone.util.parseJson(msg);
-
             // Must return a value for the callback function to be invoked on the client side.
-            return scope.addWidget(cfg);
+            return scope.addWidget(Ozone.util.parseJson(sender), Ozone.util.parseJson(msg));
         });
         this.eventingContainer.registerHandler(this.addStackChannelName, function (sender, msg) {
-
-            //msg will always be a json string
-            var cfg = Ozone.util.parseJson(msg);
-
             // Must return a value for the callback function to be invoked on the client side.
-            return scope.addStack(cfg);
+            return scope.addStack(Ozone.util.parseJson(msg));
         });
     }
     else {
@@ -75,13 +67,46 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         });
     },
 
-    addWidget:function (config) {
-        var widgetsJSON = config.widgetsJSON;
-        this.processMarketplaceWidgetData(widgetsJSON.baseUrl, widgetsJSON.itemId, widgetsJSON.doLaunch);
-        return widgetsJSON.itemId
+    addWidget:function (sender, config) {
+        var widgetsJSON = config,
+            id = config.data.id,
+            doLaunch = config.doLaunch;
+        this.processMarketplaceWidgetData(config.baseUrl, id, doLaunch, function() {
+            if(!doLaunch) {
+                var widget = Ext.getCmp(sender.id),
+                    widgetOffsets = widget.el.getOffsetsTo(Ext.getBody()),
+                    imgHTML = ['<img class="marketplace_animate_listing" src="', config.data.URL,
+                        '" style="',
+                        ';width:', config.data.width, 'px',
+                        ';height:', config.data.height, 'px',
+                        ';left:', (config.data.left + widgetOffsets[0]), 'px',
+                        ';top:', (config.data.top + widgetOffsets[1]), 'px',
+                        ';">'
+                    ].join(''),
+                    img = Ext.DomHelper.insertHtml('beforeEnd', Ext.getBody().dom, imgHTML),
+                    $img = jQuery(img);
+                
+                $img.animate({
+                    top: 0,
+                    left: 0,
+                    width: 32,
+                    height: 32
+                }, {
+                    duration: 1000,
+                    specialEasing: {
+                        top: 'linear',
+                        left: 'easeInCubic'
+                    },
+                    complete: function() {
+                        $img.remove();
+                    }
+                });
+            }
+        });
+        return id;
     },
 
-    processMarketplaceWidgetData: function(marketplaceUrl, widgetId, doLaunch) {
+    processMarketplaceWidgetData: function(marketplaceUrl, widgetId, doLaunch, callback) {
         var self = this;
         Ozone.util.Transport.send({
             url: marketplaceUrl + "/relationship/getOWFRequiredItems",
@@ -111,6 +136,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     }
                 }
 
+                callback();
+
                 if (widgetListJson.length > 0) {
                     // OZP-476: MP Synchronization
                     // Added the URL of the Marketplace we're looking at to the
@@ -119,6 +146,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 }
             },
             onFailure: function(json) {
+                debugger;
                 Ext.Msg.alert("Error", "Error has occurred while adding widgets from Marketplace");
             }
         });

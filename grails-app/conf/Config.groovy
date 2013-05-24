@@ -474,6 +474,7 @@ uiperformance.bundles = [
                         '../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed',
                         '../js-lib/ext-4.0.7/ext-all-debug',
                         '../js-lib/jquery/jquery-1.8.0',
+                        '../js-lib/jquery/jquery.easing.1.3',
                         '../js-lib/pnotify-1.2.0/jquery.pnotify',
                         '../js-lib/stubconsole',
                         '../js-plugins/Banner',
