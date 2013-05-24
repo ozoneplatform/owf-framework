@@ -561,6 +561,10 @@
                         //padding-left: 10px;
                     }
                 }
+                
+                i {
+                    color: $widget-launcher-grid-row-cell-color;
+                }
             }
             .x-grid-row-alt {
                 .x-grid-cell-special {
@@ -613,11 +617,13 @@
             .x-grid-cell-inner {
                 color: $widget-launcher-grid-row-cell-focus-color;
             }
+            i {
+                color: $widget-launcher-grid-row-cell-focus-color;
+            }
         }
 
         i {
             font-size: 1.167em;
-            color: inherit;
         }
 
         .description {
@@ -670,11 +676,6 @@
 
 .show_more, .show_less {
     cursor: pointer;
-    color: red;
-
-    i {
-        color: inherit;
-    }
 }
 
 .showing_more {
