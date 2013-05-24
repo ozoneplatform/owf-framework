@@ -672,10 +672,14 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         // active dashboard must be in a stack
         // expand the stack, then focus the active dashboard
         if(selectedEl.length === 0) {
-            var stackId = this.activeDashboard.configRecord.get('stack').id;
-            this.toggleStack(this.stacks[stackId], $('#stack'+stackId)).then(function () {
-                me.focusActiveDashboard();
-            });
+            var stackId = this.activeDashboard.configRecord.get('stack').id,
+                stack = this.stacks[stackId];
+
+            if (stack) {
+                this.toggleStack(this.stacks[stackId], $('#stack'+stackId)).then(function () {
+                    me.focusActiveDashboard();
+                });
+            }
             return;
         }
 

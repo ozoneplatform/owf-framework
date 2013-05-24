@@ -1573,10 +1573,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         this.destroyDashboardSwitcher();
     },
 
-    /**
-     * @param dashboardActivationCallback A callback that is fired when this function completes
-     */
-    updateDashboardsFromStore: function(storeRecords, callbackOptions, loadSuccess, dashboardGuidToActivate, dashboardActivationCallback) {
+    updateDashboardsFromStore: function(storeRecords, callbackOptions, loadSuccess, dashboardGuidToActivate) {
 
         // ---------------------------------------------------------------------------------
         // Update all dashboard-related components with newly-refreshed dashboardStore data.
@@ -1624,8 +1621,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             // activate dashboard
             me._activateDashboard(dashboardGuidToActivate || defaultTabGuid); // Focus the default dashboard.
             me.activateDashboard(dashboardGuidToActivate || defaultTabGuid, true, stackContext);
-
-            dashboardActivationCallback();
         }, 200);
     },
 
@@ -1642,10 +1637,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         me.dashboardStore.load({
             callback: function(records, options, success) {
                 if (success == true) {
-                    me.updateDashboardsFromStore(records, options, success, null, function() {
-                        callback(success);
-                    });
+                    me.updateDashboardsFromStore(records, options, success);
                 }
+                callback(success);
             }
         });
     },
