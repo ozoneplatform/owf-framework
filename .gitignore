@@ -9,7 +9,6 @@
 # /plugins
 /web-app/plugins
 /web-app/WEB-INF/classes
-/web-app/WEB-INF/grails-app
 
 # "temporary" files
 /staging
