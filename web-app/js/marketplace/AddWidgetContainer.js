@@ -14,14 +14,18 @@ Ozone.marketplace.AddWidgetContainer = function (eventingContainer) {
     this.addWidgetChannelName = "_ADD_WIDGET_CHANNEL";
     this.addStackChannelName = "_ADD_STACK_CHANNEL";
     this.windowManager = null;
+    this.ANIMATION_DURATION = 1000;
 
     if (eventingContainer != null) {
         this.eventingContainer = eventingContainer;
         //register on add widget channel
         var scope = this;
         this.eventingContainer.registerHandler(this.addWidgetChannelName, function (sender, msg) {
-            // Must return a value for the callback function to be invoked on the client side.
-            return scope.addWidget(Ozone.util.parseJson(sender), Ozone.util.parseJson(msg));
+            var me = this;
+
+            return scope.addWidget(Ozone.util.parseJson(sender), Ozone.util.parseJson(msg), function (result) {
+                me.callback && me.callback(result);
+            });
         });
         this.eventingContainer.registerHandler(this.addStackChannelName, function (sender, msg) {
             // Must return a value for the callback function to be invoked on the client side.
@@ -67,43 +71,50 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         });
     },
 
-    addWidget:function (sender, config) {
-        var widgetsJSON = config,
+    addWidget:function (sender, config, callback) {
+        var me = this,
+            widgetsJSON = config,
             id = config.data.id,
-            doLaunch = config.doLaunch;
+            doLaunch = config.doLaunch,
+            imageInfo = config.data.image;
+
         this.processMarketplaceWidgetData(config.baseUrl, id, doLaunch, function() {
-            if(!doLaunch) {
-                var widget = Ext.getCmp(sender.id),
-                    widgetOffsets = widget.el.getOffsetsTo(Ext.getBody()),
-                    imgHTML = ['<img class="marketplace_animate_listing" src="', config.data.URL,
-                        '" style="',
-                        ';width:', config.data.width, 'px',
-                        ';height:', config.data.height, 'px',
-                        ';left:', (config.data.left + widgetOffsets[0]), 'px',
-                        ';top:', (config.data.top + widgetOffsets[1]), 'px',
-                        ';">'
-                    ].join(''),
-                    img = Ext.DomHelper.insertHtml('beforeEnd', Ext.getBody().dom, imgHTML),
-                    $img = jQuery(img);
-                
-                $img.animate({
-                    top: 0,
-                    left: 0,
-                    width: 32,
-                    height: 32
-                }, {
-                    duration: 1000,
-                    specialEasing: {
-                        top: 'linear',
-                        left: 'easeInCubic'
-                    },
-                    complete: function() {
-                        $img.remove();
-                    }
-                });
-            }
+            var widget = Ext.getCmp(sender.id),
+                widgetOffsets = widget.el.getOffsetsTo(Ext.getBody()),
+                imgHTML = ['<img class="marketplace_animate_listing" src="', imageInfo.URL,
+                    '" style="',
+                    ';width:', imageInfo.width, 'px',
+                    ';height:', imageInfo.height, 'px',
+                    ';left:', (imageInfo.left + widgetOffsets[0]), 'px',
+                    ';top:', (imageInfo.top + widgetOffsets[1]), 'px',
+                    ';">'
+                ].join(''),
+                img = Ext.DomHelper.insertHtml('beforeEnd', Ext.getBody().dom, imgHTML),
+                $img = jQuery(img),
+                target = Ext.getCmp('launchMenuBtn').btnEl;
+            
+            $img.animate({
+                top: 0,
+                left: 0,
+                width: target.getWidth(),
+                height: target.getHeight()
+            }, {
+                duration: me.ANIMATION_DURATION,
+                specialEasing: {
+                    top: 'linear',
+                    left: 'easeInQuad'
+                },
+                complete: function() {
+                    $img.remove();
+
+                    target.frame(Ext.util.CSS.getRule('.x-focus').style.borderColor, 2);
+                    
+                    setTimeout(function () {
+                        callback(id);
+                    }, 0);
+                }
+            });
         });
-        return id;
     },
 
     processMarketplaceWidgetData: function(marketplaceUrl, widgetId, doLaunch, callback) {
