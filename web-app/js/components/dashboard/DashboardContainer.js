@@ -46,6 +46,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             stackModels = {},
             dashboard, stack, model;
 
+        this.loadMask = Ext.create('Ozone.mask.LoadMask', Ext.getBody(), {
+            zIndexManager: this.modalWindowManager
+        });
+
         this.stackStore = Ext.create('Ozone.data.StackStore', {});
 
         for(var i = 0, len = this.dashboardStore.getCount(); i < len; i++) {
@@ -803,8 +807,12 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
             dashboardSwitcher.activeDashboard = activeDashboard;
             dashboardSwitcher.show().center();
+
+            me.loadMask.hide();
         }
-        
+
+        me.loadMask.show();
+
         // force dashboard save before showing dashboard switcher
         me.activeDashboard.saveToServer(false, true);
 
