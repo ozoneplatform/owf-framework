@@ -31,7 +31,7 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
        cls: 'launch-btn remove-btn',
        itemId: 'remove'
    },
-   
+
    initComponent: function () {
         var me = this;
 
@@ -618,11 +618,11 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     //Changes the widget visibility to false so it will not show in the fav menu
     removeWidget: function(record){
 
-    	var widgetsToDelete = [];
+        var widgetsToDelete = [];
         var widgetGuid = record.get('widgetGuid');
         this.closeWidget(widgetGuid);
         widgetsToDelete.push(widgetGuid);
-          	
+
         var widgetStore = this.widgetStore;
         var me = this;
         Ozone.pref.PrefServer.updateAndDeleteWidgets({
@@ -630,9 +630,9 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
             widgetGuidsToDelete:widgetsToDelete, 
             updateOrder:false,
             onSuccess:function(){
-            	widgetStore.remove(record);
-            	var dashboardContainerRecord = me.dashboardContainer.widgetStore.findRecord("widgetGuid", record.get('widgetGuid'));
-            	me.dashboardContainer.widgetStore.remove(dashboardContainerRecord);
+                widgetStore.remove(record);
+                var dashboardContainerRecord = me.dashboardContainer.widgetStore.findRecord("widgetGuid", record.get('widgetGuid'));
+                me.dashboardContainer.widgetStore.remove(dashboardContainerRecord);
                 me.updateInfoPanel(null, false, true);
             }, 
             onFailure:function(){  	
@@ -659,7 +659,7 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
             });
         }
     },
-    
+
     // launches the widget
     launchWidget: function (record, evt, eOpts) {
         var dashboardContainer = this.dashboardContainer,
@@ -731,7 +731,7 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
         htmlPanel = infoPanel.down('#htmlPanel'),
         intentCheckBox = infoPanel.down('#intentCheckBox'),
         image = imagePanel.getComponent('widgetImg'),
-        
+
         launchBtnHandler = function (button, evt) {
            me.launchWidget(record, evt);
         };
@@ -739,16 +739,14 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
         removeBtnHandler = function (button, evt) {
             me.removeWidget(record);
         };
-        
 
-            
         //remove launchBtn so it can be updated
         if (launchBtn) {
            imagePanel.remove(launchBtn);
         }
-        
+
         if (removeBtn) {
-        	imagePanel.remove(removeBtn);
+            imagePanel.remove(removeBtn);
         }
 
         if (record == null) {
@@ -805,11 +803,11 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
        launchButton = imagePanel.add(Ext.applyIf({
            handler: launchBtnHandler
        }, launchButton));
-       
+
        removeButton = imagePanel.add(Ext.applyIf({
            handler: removeBtnHandler
        }, removeButton));
-       
+
        //in IE7, Ext seems to be manually setting the button widths to
        //the smallest reasonable size for some reason.  We want the widths to
        //be handled in css however, so we clear the explicit width
@@ -996,8 +994,8 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     },
 
     openOrCloseAdvancedSearch: function (open, disableRefresh) {
-    	//never show the advance search window
-    	
+        //never show the advance search window
+
 //        var me = this;
 //
 //        if (!me.searchPanel) {
