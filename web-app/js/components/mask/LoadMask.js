@@ -1,7 +1,7 @@
 /**
  * A custom global load mask for OWF
  */
-Ext.define('Ozone.mask.LoadMask', { 
+Ext.define('Ozone.components.mask.LoadMask', { 
     extend: 'Ext.LoadMask',
 
     alias: 'ozoneloadmask',

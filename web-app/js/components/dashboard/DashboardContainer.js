@@ -46,7 +46,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             stackModels = {},
             dashboard, stack, model;
 
-        this.loadMask = Ext.create('Ozone.mask.LoadMask', Ext.getBody(), {
+        this.loadMask = Ext.create('Ozone.components.mask.LoadMask', Ext.getBody(), {
             zIndexManager: this.modalWindowManager
         });
 
