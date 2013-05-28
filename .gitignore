@@ -28,6 +28,7 @@
 /prodDb.bak
 *.sass-cache
 *.css
+/src/assemble/docs/jsdoc
 
 # OS generated files #
 .DS_Store
