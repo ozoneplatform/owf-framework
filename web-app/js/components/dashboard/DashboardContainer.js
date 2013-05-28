@@ -1256,6 +1256,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             //dont load the launchMenu's widgetStore, this disables the searchPanel from causing a load as well
             launchMenu.disableWidgetStoreLoading(true);
 
+            //Don't show the Dashboard Switcher to allow the user to select a dashboard
+            launchMenu.disableDashboardSelection = true;
+
             //reload main widgetStore to retreive new data
             this.widgetStore.load({
                 scope: this,

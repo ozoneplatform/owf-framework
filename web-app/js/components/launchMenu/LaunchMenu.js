@@ -16,6 +16,7 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     mouseDownCounter: 0,
 
     dontLoadWidgetStore: false,
+    disableDashboardSelection: false,
 
    launchBtnCfg: {
        xtype: 'button',
@@ -652,30 +653,41 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                     null, null, null, dashboardContainer.modalWindowManager);
             }
             else {
-                // Show the switcher for user to choose a dashboard to launch on
-                dashboardContainer.showDashboardSwitcher();
+                //Dashboard selection is disabled for launching via intents because
+                //widget communication currently must stay on the same dashboard
+                if(this.disableDashboardSelection) {
+                    record.data.alreadyOpenedWidget ?
+                        dashboardContainer.activeDashboard.handleAlreadyLaunchedWidget(record.data) :
+                        dashboardContainer.launchWidgets(widgetDef, true);
+                    //Revert to default behavior
+                    this.disableDashboardSelection = false;
+                }
+                else {
+                    // Show the switcher for user to choose a dashboard to launch on
+                    dashboardContainer.showDashboardSwitcher();
 
-                // TODO: Remove this listener if the user cancels dashboard selection (OP-419)
-                dashboardContainer.addListener(OWF.Events.Dashboard.SELECTED, function(dashboardGuid) {
-                    //If a different dashboard is selected add 2 second delay for render
-                    var delay = dashboardGuid !== dashboardContainer.activeDashboard.id ? 2000 : 0,
-                        launchWidget = function() {
-                            dashboardContainer.launchWidgets(widgetDef, true);
-                        };
-                    setTimeout(launchWidget, delay);
-                }, dashboardContainer, {single:true});
+                    // TODO: Remove this listener if the user cancels dashboard selection (OP-419)
+                    dashboardContainer.addListener(OWF.Events.Dashboard.SELECTED, function(dashboardGuid) {
+                        //If a different dashboard is selected add 2 second delay for render
+                        var delay = dashboardGuid !== dashboardContainer.activeDashboard.id ? 2000 : 0,
+                            launchWidget = function() {
+                                dashboardContainer.launchWidgets(widgetDef, true);
+                            };
+                        setTimeout(launchWidget, delay);
+                    }, dashboardContainer, {single:true});
 
-                // Show a notification with instructions for selecting a dashboard
-                $.pnotify({
-                    title: Ozone.layout.DialogMessages.launchWidgetTitle,
-                    text: Ozone.layout.DialogMessages.launchWidgetAlert,
-                    type: 'success',
-                    addclass: "stack-bottomright",
-                    stack: {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25},
-                    history: false,
-                    sticker: false,
-                    icon: false
-                });
+                    // Show a notification with instructions for selecting a dashboard
+                    $.pnotify({
+                        title: Ozone.layout.DialogMessages.launchWidgetTitle,
+                        text: Ozone.layout.DialogMessages.launchWidgetAlert,
+                        type: 'success',
+                        addclass: "stack-bottomright",
+                        stack: {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25},
+                        history: false,
+                        sticker: false,
+                        icon: false
+                    });
+                }
             }
         }
 
