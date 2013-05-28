@@ -140,14 +140,12 @@ Ozone.util.Transport.send = function(cfg) {
             },
             error: function(response, ioArgs) {
                 if (response.dojoType=='cancel') { return; }
-                // FF2 kills all AJAX requests when you refresh. When this happens, it sets the status code to 0
-                if (response.status != 0 ){
-                    if (cfg.ignoredErrorCodes != null && cfg.ignoredErrorCodes.length > 0 && owfdojo.indexOf(cfg.ignoredErrorCodes,response.status) > -1){
-                        cfg.onSuccess({});
-                    }
-                    else {
-                        cfg.onFailure(response.responseText, response.status);
-                    }
+                if (cfg.ignoredErrorCodes != null && cfg.ignoredErrorCodes.length > 0 && 
+                        owfdojo.indexOf(cfg.ignoredErrorCodes,response.status) > -1){
+                    cfg.onSuccess({});
+                }
+                else {
+                    cfg.onFailure(response.responseText, response.status);
                 }
             }
         }, hasBody);
