@@ -510,6 +510,7 @@ uiperformance.bundles = [
                         'events/Events',
                         'components/util/History',
                         'components/util/InstanceVariablizer',
+                        'components/mask/LoadMask',
                         'components/keys/HotKeys',
                         'components/keys/KeyMap',
                         'components/keys/MoveKeyMap',
