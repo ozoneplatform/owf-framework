@@ -9,10 +9,6 @@
 package ozone.owf.grails.services
 
 import grails.converters.JSON
-
-import java.security.KeyStore
-import java.security.cert.X509Certificate
-
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.HttpResponseException
 import org.apache.http.client.methods.HttpGet
@@ -23,15 +19,12 @@ import org.apache.http.conn.ssl.TrustStrategy
 import org.apache.http.impl.client.BasicResponseHandler
 import org.apache.http.impl.client.DefaultHttpClient
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
-
-import ozone.owf.grails.domain.*
-import org.springframework.context.ApplicationContext
-import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
-import org.codehaus.groovy.grails.commons.GrailsApplication
-import org.codehaus.groovy.grails.commons.spring.GrailsApplicationContext
-import org.springframework.context.ApplicationContextAware
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
+import ozone.owf.grails.domain.*
+
+import java.security.KeyStore
+import java.security.cert.X509Certificate
 
 class MarketplaceService extends BaseService {
 
@@ -48,11 +41,11 @@ class MarketplaceService extends BaseService {
         // The set could be greater than one in length because widgets do have
         // dependencies.
         //log.info("addListingsToDatabase")
-        def updatedWidgets=stMarketplaceJson.collect { obj ->
+        def updatedWidgets = stMarketplaceJson.collect { obj ->
             if (obj?.widgetGuid) {
                 return addWidgetToDatabase(obj)
             } else if (obj?.stackContext) {
-                return stackService.importStack([ data: obj.toString() ])
+                return stackService.importStack([data: obj.toString()])
             }
         }
 
@@ -63,14 +56,14 @@ class MarketplaceService extends BaseService {
             // WidgetDefinition.
             if (obj instanceof Map && obj.containsKey("directRequired")) {
                 // delete and the recreate requirements
-                def widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache:true])
+                def widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache: true])
                 domainMappingService.deleteAllMappings(widgetDefinition, RelationshipType.requires, 'src')
 
                 obj.directRequired.each {
                     if (log.isDebugEnabled()) {
                         log.debug "obj.directRequired.each.it -> ${it}"
                     }
-                    def requiredWidget = WidgetDefinition.findByWidgetGuid(it, [cache:true])
+                    def requiredWidget = WidgetDefinition.findByWidgetGuid(it, [cache: true])
                     if (requiredWidget != null) {
                         domainMappingService.createMapping(widgetDefinition, RelationshipType.requires, requiredWidget)
                     }
@@ -81,41 +74,39 @@ class MarketplaceService extends BaseService {
     }
 
     def addWidgetToDatabase(obj) {
-        def widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache:true])
-        boolean universalNameIsChanged = true
+        def widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache: true])
 
         if (widgetDefinition == null) {
-            if (grails.util.GrailsUtil.environment != 'test') {
+            if (grails.util.GrailsUtil.environment != 'test')
                 log.info "Creating new widget definition for ${obj.widgetGuid}"
-            }
 
-            widgetDefinition=new WidgetDefinition()
-        }
-        else {
-            universalNameIsChanged = obj.universalName && obj.universalName != widgetDefinition.universalName
+            widgetDefinition = new WidgetDefinition()
         }
 
-        widgetDefinition.displayName = obj.displayName
-        widgetDefinition.description = obj.description
-        widgetDefinition.height = obj.height as Integer
-        widgetDefinition.imageUrlLarge = obj.imageUrlLarge
-        widgetDefinition.imageUrlSmall = obj.imageUrlSmall
+        boolean universalNameIsChanged = !obj.isNull("universalName") && obj.universalName != widgetDefinition.universalName
 
         if (universalNameIsChanged && !widgetDefinitionService.canUseUniversalName(widgetDefinition, obj.universalName)) {
             throw new OwfException(message: 'Another widget uses ' + obj.universalName + ' as its Universal Name. '
                     + 'Please select a unique Universal Name for this widget.', exceptionType: OwfExceptionTypes.Validation_UniqueConstraint)
         }
-        widgetDefinition.universalName = obj.universalName
 
-        widgetDefinition.widgetGuid = obj.widgetGuid
-        widgetDefinition.widgetUrl = obj.widgetUrl
-        widgetDefinition.widgetVersion = obj.widgetVersion
-        widgetDefinition.width = obj.width as Integer
-        widgetDefinition.singleton = obj.singleton
-        widgetDefinition.visible = obj.widgetUrl.isAllWhitespace() ? false : obj.visible
-        widgetDefinition.background = obj.background
-        widgetDefinition.descriptorUrl = obj.descriptorUrl
-        widgetDefinition.save(flush: true, failOnError: true)
+        widgetDefinition.with {
+            displayName = obj.displayName
+            description = obj.description
+            height = obj.height as Integer
+            imageUrlLarge = obj.imageUrlLarge
+            imageUrlSmall = obj.imageUrlSmall
+            universalName = obj.universalName
+            widgetGuid = obj.widgetGuid
+            widgetUrl = obj.widgetUrl
+            widgetVersion = obj.widgetVersion
+            width = obj.width as Integer
+            singleton = obj.singleton
+            visible = obj.widgetUrl.isAllWhitespace() ? false : obj.visible
+            background = obj.background
+            descriptorUrl = obj.descriptorUrl
+            save(flush: true, failOnError: true)
+        }
 
         if (obj.widgetTypes) {
             // for each widget type T in the listing from MP, add the corresponding OWF widget
@@ -131,7 +122,7 @@ class MarketplaceService extends BaseService {
                 }
             }
         } else {
-            widgetDefinition.widgetTypes = [ WidgetType.standard ]
+            widgetDefinition.widgetTypes = [WidgetType.standard]
         }
 
         // Delete any existing tags.  Not a good bulk method for doing this, though
@@ -143,15 +134,15 @@ class MarketplaceService extends BaseService {
         // It will be a JSONObject if we've fetched from a Marketplace. If we're
         // supporting the older OMP baseline, obj will be a WidgetDefinition object.
         obj.defaultTags?.each { tagName ->
-                widgetDefinition.addTag(tagName, true, -1, true)
+            widgetDefinition.addTag(tagName, true, -1, true)
         }
 
         // Marketplace may not be configured to provide intents. In such
         // a case the send and receive lists are empty. DO NOT overwrite
         // intents that are already in OWF if MP is not providing them.
         if (obj.intents &&
-            ((obj.intents.send && obj.intents.send.size() > 0) ||
-             (obj.intents.receive && obj.intents.receive.size() > 0))) {
+                ((obj.intents.send && obj.intents.send.size() > 0) ||
+                        (obj.intents.receive && obj.intents.receive.size() > 0))) {
             // Structure of the intents field (forgive the bastardized BNF/schema mix)
             //   send: [ $intent ]
             //   receive: [ $intent ]
@@ -188,16 +179,16 @@ class MarketplaceService extends BaseService {
                 it.delete()
             }
             // This helper takes a $intent and makes the Intent object consistent with it
-            def addIntent={ intent,isSend,isReceive ->
+            def addIntent = { intent, isSend, isReceive ->
                 // We're going to need the IntentDataTypes for multiple actions, below
                 def allIntentDataTypes = intent.dataTypes.collect() {
                     IntentDataType.findByDataType(it) ?: new IntentDataType(dataType: it)
                 }
                 // Patch together the Intent object
-                def intentModel=Intent.findByAction(intent.action)
-                if(!intentModel) {
+                def intentModel = Intent.findByAction(intent.action)
+                if (!intentModel) {
                     // If it's a new one, we can just assign it all of the data types.
-                    intentModel=new Intent(action: intent.action, dataTypes: allIntentDataTypes)
+                    intentModel = new Intent(action: intent.action, dataTypes: allIntentDataTypes)
                 } else {
                     // According to the GORM reference docs, a hasMany relationship is a set
                     // So this *should* eliminate duplicates.
@@ -210,21 +201,21 @@ class MarketplaceService extends BaseService {
                 // First two post conditions have been met, now for the actual WidgetDefinition
                 // Since we cleared them out to start with, we don't have to
                 def newWidgetDefinitionIntent = new WidgetDefinitionIntent(
-                    widgetDefinition: widgetDefinition,
-                    intent: intentModel,
-                    send: isSend,
-                    receive: isReceive,
-                    dataTypes: allIntentDataTypes
+                        widgetDefinition: widgetDefinition,
+                        intent: intentModel,
+                        send: isSend,
+                        receive: isReceive,
+                        dataTypes: allIntentDataTypes
                 )
                 widgetDefinition.addToWidgetDefinitionIntents(newWidgetDefinitionIntent)
             }
 
             // Now use the helper twice, once for send, once for receive
-            obj.intents.receive?.each { addIntent(it,false,true) }
-            obj.intents.send?.each { addIntent(it, true,false) }
+            obj.intents.receive?.each { addIntent(it, false, true) }
+            obj.intents.send?.each { addIntent(it, true, false) }
         }
 
-        widgetDefinition.save(flush:true)
+        widgetDefinition.save(flush: true)
         return widgetDefinition
     }
 
@@ -257,11 +248,11 @@ class MarketplaceService extends BaseService {
         params.widgets?.each {
             def obj = JSON.parse(it)
             if (obj.widgetGuid == null) {
-                throw new OwfException( message:'WidgetGuid must be provided',
-                    exceptionType: OwfExceptionTypes.Validation)
+                throw new OwfException(message: 'WidgetGuid must be provided',
+                        exceptionType: OwfExceptionTypes.Validation)
             }
 
-            widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache:true])
+            widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache: true])
             if (widgetDefinition == null) {
                 // OZP-476: MP Synchronization
                 // The default is to fetch a widget from a well-known MP.  If we can't do that
@@ -271,7 +262,7 @@ class MarketplaceService extends BaseService {
                 try {
                     log.debug("Widget not found locally, building from marketplace with guid=${obj.widgetGuid} and mpUrl=${mpSourceUrl}")
                     setWidgets.addAll(addListingsToDatabase(buildWidgetListFromMarketplace(obj.widgetGuid, mpSourceUrl)))
-                    log.debug("Found ${setWidgets.size()} widgets ${setWidgets.collect {it.toString()}} from the ${mpSourceUrl}")
+                    log.debug("Found ${setWidgets.size()} widgets ${setWidgets.collect { it.toString() }} from the ${mpSourceUrl}")
                     usedMpPath = true
                 } catch (Exception e) {
                     log.error "addExternalWidgetsToUser: unable to build widget list from Marketplace, message -> ${e.getMessage()}", e
@@ -285,34 +276,34 @@ class MarketplaceService extends BaseService {
                 // OZP-476: MP Synchronization
                 // See comments on the MarketplaceService regarding what functionality should/could
                 // be moved back into this service.
-                widgetDefinition = setWidgets.find {it.widgetGuid == obj.widgetGuid}
+                widgetDefinition = setWidgets.find { it.widgetGuid == obj.widgetGuid }
             }
             widgetDefinitions.push(widgetDefinition)
 
             def queryReturn = PersonWidgetDefinition.executeQuery("SELECT MAX(pwd.pwdPosition) AS retVal FROM PersonWidgetDefinition pwd WHERE pwd.person = ?", [user])
-            def maxPosition = (queryReturn[0] != null)? queryReturn[0] : -1
+            def maxPosition = (queryReturn[0] != null) ? queryReturn[0] : -1
             maxPosition++
 
             mapping = PersonWidgetDefinition.findByPersonAndWidgetDefinition(user, widgetDefinition)
             if (mapping == null && (obj.isSelected || !grailsApplication.config.owf.enablePendingApprovalWidgetTagGroup)) {
                 mapping = new PersonWidgetDefinition(
-                    person: user,
-                    widgetDefinition: widgetDefinition,
-                    visible : true,
-                    disabled: grailsApplication.config.owf.enablePendingApprovalWidgetTagGroup,
-                    pwdPosition: maxPosition
+                        person: user,
+                        widgetDefinition: widgetDefinition,
+                        visible: true,
+                        disabled: grailsApplication.config.owf.enablePendingApprovalWidgetTagGroup,
+                        pwdPosition: maxPosition
                 )
 
                 if (mapping.hasErrors()) {
-                    throw new OwfException( message:'A fatal validation error occurred during the creation of the person widget definition. Params: ' + params.toString() + ' Validation Errors: ' + mapping.errors.toString(),
-                        exceptionType: OwfExceptionTypes.Validation)
+                    throw new OwfException(message: 'A fatal validation error occurred during the creation of the person widget definition. Params: ' + params.toString() + ' Validation Errors: ' + mapping.errors.toString(),
+                            exceptionType: OwfExceptionTypes.Validation)
                 }
 
                 if (!mapping.save(flush: true)) {
                     throw new OwfException(
-                        message: 'A fatal error occurred while trying to save the person widget definition. Params: ' + params.toString() +
-                        "\n    on definition: " + obj.toString() + "\n    when trying to save mapping " + mapping.toString(),
-                        exceptionType: OwfExceptionTypes.Database)
+                            message: 'A fatal error occurred while trying to save the person widget definition. Params: ' + params.toString() +
+                                    "\n    on definition: " + obj.toString() + "\n    when trying to save mapping " + mapping.toString(),
+                            exceptionType: OwfExceptionTypes.Database)
                 }
                 // OZP-476: MP Synchronization
                 // The following block of code is functionally contained within the
@@ -342,12 +333,12 @@ class MarketplaceService extends BaseService {
                 def obj = JSON.parse(it)
                 if (obj.directRequired != null) {
                     // delete and the recreate requirements
-                    widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache:true])
+                    widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache: true])
                     domainMappingService.deleteAllMappings(widgetDefinition, RelationshipType.requires, 'src')
 
                     def requiredArr = JSON.parse(obj.directRequired)
                     requiredArr.each {
-                        def requiredWidget = WidgetDefinition.findByWidgetGuid(it, [cache:true])
+                        def requiredWidget = WidgetDefinition.findByWidgetGuid(it, [cache: true])
                         if (requiredWidget != null) {
                             domainMappingService.createMapping(widgetDefinition, RelationshipType.requires, requiredWidget)
                         }
@@ -409,7 +400,7 @@ class MarketplaceService extends BaseService {
             def client = new DefaultHttpClient()
             try {
                 // More simplification to be gained here using the Grails REST plugin.
-                def sch = new Scheme("https", port?:443 as int, socketFactory)
+                def sch = new Scheme("https", port ?: 443 as int, socketFactory)
                 client.getConnectionManager().getSchemeRegistry().register(sch)
 
                 def get = new HttpGet(mpUrl + "/public/descriptor/${guid}")
@@ -447,14 +438,12 @@ class MarketplaceService extends BaseService {
         }
         if (ompObj) {
             return ompObj?.data[0]
-        }
-        else {
+        } else {
             return null
         }
     }
 
-    private SSLSocketFactory createSocketFactory()
-    {
+    private SSLSocketFactory createSocketFactory() {
         // Some initial setup pertaining to getting certs ready for
         // use (presuming SSL mutual handshake between servers).
         // Here is where the Grails REST plugin would really come to

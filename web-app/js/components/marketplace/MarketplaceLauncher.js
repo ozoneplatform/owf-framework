@@ -38,10 +38,18 @@ Ext.define('Ozone.components.marketplace.MarketplaceLauncher', {
             if (me.multipleMarketplaces && me.dashboard.data.layoutConfig.paneType != 'tabbedpane') {
                 // If there are multiple marketplaces, but the dashboard is not tabbed, then make it tabbed.
                 me.dashboard.data.layoutConfig.paneType = 'tabbedpane';
+                // Make sure it's unlocked, since we're having to save it anyways.
+                me.dashboard.data.locked = false;
                 me.dashboardContainer.saveDashboard(me.dashboard.data, 'update', function() {me.reloadDashboardsAndLaunchMarketplace();});
             } else {
-                // Go to the Marketplace dashboard and launch the Marketplace widget (this is a no-op if the widget is already running)
-                me.switchToDashboardAndLaunchWidget();
+                if (me.dashboard.data.locked !== false) {
+                    // If the dashboard is locked, unlock it
+                    me.dashboard.data.locked = false;
+                    me.dashboardContainer.saveDashboard(me.dashboard.data, 'update', function() {me.reloadDashboardsAndLaunchMarketplace();});
+                } else {
+                    // Go to the Marketplace dashboard and launch the Marketplace widget (this is a no-op if the widget is already running)
+                    me.switchToDashboardAndLaunchWidget();
+                }
             }
         } else {
             // If the Marketplace dashboard doesn't exist, create it and launch the Marketplace widget

@@ -41,7 +41,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
 
     _previouslyFocusedStackOrDashboard : null,
-    
+
     initComponent: function() {
 
         var me = this,
@@ -672,10 +672,14 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         // active dashboard must be in a stack
         // expand the stack, then focus the active dashboard
         if(selectedEl.length === 0) {
-            var stackId = this.activeDashboard.configRecord.get('stack').id;
-            this.toggleStack(this.stacks[stackId], $('#stack'+stackId)).then(function () {
-                me.focusActiveDashboard();
-            });
+            var stackId = this.activeDashboard.configRecord.get('stack').id,
+                stack = this.stacks[stackId];
+
+            if (stack) {
+                this.toggleStack(this.stacks[stackId], $('#stack'+stackId)).then(function () {
+                    me.focusActiveDashboard();
+                });
+            }
             return;
         }
 
@@ -1353,7 +1357,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         this.tearDownCircularFocus();
 
         // remove jQuery listeners
-        $(this.el.dom).off();
+        if (this.el && this.el.dom) {
+            $(this.el.dom).off();
+        }
 
         // destroy view so that it will be recreated when opened next setTimeout
         return this.callParent();

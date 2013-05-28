@@ -36,6 +36,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     modalWindowManager: null,
     tooltipManager: null,
 
+    //if set to true when the dashboard switcher is opened, the
+    //dashboards will refresh before the switcher opens
+    dashboardsNeedRefresh: false,
+
     // private
     initComponent: function() {
         var me = this,
@@ -192,6 +196,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         this.updateTitlesandBanner();
         this.initLoad();
+
+        this.setupDashboardChangeListeners();
     },
 
     onWidgetMouseDown: function(evt, target) {
@@ -773,26 +779,43 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     showDashboardSwitcher: function() {
-        // force dashboard save before showing dashboard switcher
-        this.activeDashboard.saveToServer(false, true);
+        var me = this;
         
-        var dashboardSwitcherId = 'dashboard-switcher', dashboardSwitcher = Ext.getCmp(dashboardSwitcherId);
+        //perform the logic of actually creating and displaying the window
+        function show() {
+            var dashboardSwitcherId = 'dashboard-switcher', 
+                dashboardSwitcher = Ext.getCmp(dashboardSwitcherId),
+                activeDashboard = me.activeDashboard;
 
-        if (!dashboardSwitcher) {
-            dashboardSwitcher = Ext.widget('dashboardswitcher', {
-                id: dashboardSwitcherId,
-                dashboardContainer: this,
-                activeDashboard: this.activeDashboard,
-                dashboardStore: this.dashboardStore,
-                plugins: new Ozone.components.keys.HotKeyComponent(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER)
-            });
+            if (!dashboardSwitcher) {
+                dashboardSwitcher = Ext.widget('dashboardswitcher', {
+                    id: dashboardSwitcherId,
+                    dashboardContainer: me,
+                    activeDashboard: me.activeDashboard,
+                    dashboardStore: me.dashboardStore,
+                    plugins: new Ozone.components.keys.HotKeyComponent(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER)
+                });
+            }
+            else if (dashboardSwitcher.isVisible()) {
+                dashboardSwitcher.close();
+                return;
+            }
+
+            dashboardSwitcher.activeDashboard = activeDashboard;
+            dashboardSwitcher.show().center();
         }
-        else if (dashboardSwitcher.isVisible()) {
-            dashboardSwitcher.close();
-            return;
+        
+        // force dashboard save before showing dashboard switcher
+        me.activeDashboard.saveToServer(false, true);
+
+        //if necessary, refresh the dashboards before calling show
+        if (me.dashboardsNeedRefresh) {
+            me.dashboardsNeedRefresh = false;
+            me.reloadDashboards(show);
         }
-        dashboardSwitcher.activeDashboard = this.activeDashboard;
-        dashboardSwitcher.show().center();
+        else {
+            show();
+        }
     },
 
     destroyDashboardSwitcher: function () {
@@ -853,6 +876,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         if (silent) {
             Ext.util.History.startUp();
         }
+        this.fireEvent(OWF.Events.Dashboard.SELECTED, guid);
     },
 
     //this function is private, do not call outside of this class - use activateDashboard instead
@@ -1597,11 +1621,17 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             // activate dashboard
             me._activateDashboard(dashboardGuidToActivate || defaultTabGuid); // Focus the default dashboard.
             me.activateDashboard(dashboardGuidToActivate || defaultTabGuid, true, stackContext);
-
         }, 200);
     },
 
-    reloadDashboards: function() {
+    /**
+     * Reloads the dashboard store from the server.
+     *
+     * @param callback A callback function to execute when the
+     * load is complete.  This function is passed a boolean parameter indicating
+     * whether or not the refresh was successful
+     */
+    reloadDashboards: function(callback) {
         // TODO improvment: only restored dashboards should be refresh and deleted dashboard be removed
         var me = this;
         me.dashboardStore.load({
@@ -1609,6 +1639,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 if (success == true) {
                     me.updateDashboardsFromStore(records, options, success);
                 }
+                callback(success);
             }
         });
     },
@@ -1846,6 +1877,94 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         else {
             this.getBanner().removeMetricButton();
         }
-    }
+    },
 
+    /**
+     * Adds eventing subscriptions to receive messages from the admin widgets indicating
+     * that dashboards/stacks have been associated/dissociated from users or groups. If the
+     * current user is part of what was changed, refresh the dashboards
+     */
+    setupDashboardChangeListeners: function() {
+        var me = this;
+
+        //retrieve all groups associated with dashboards and stacks to which this
+        //user has access
+        //@param getIds set to true to get a list of ids instead of names
+        function getAllDashboardGroups(getIds) {
+            //flatten the array and remove duplicates
+            return Ext.Array.unique(Ext.Array.flatten(
+
+                //get an array of arrays of names of groups associated with dashboards
+                //and stacks
+                Ext.Array.map(me.dashboardStore.data.getRange(), function(dash) {
+                    var stack = dash.get('stack'),
+                        stackGroups = stack && stack.groups || [],
+                        groups = dash.get('groups') || [];
+                    
+                    //get the name from a group
+                    function getGroupValue(group) {
+                        return group[getIds ? 'id' : 'name'];
+                    }
+
+                    //get names of dashboard groups and stack groups
+                    return Ext.Array.map(groups, getGroupValue)
+                        .concat(Ext.Array.map(stackGroups, getGroupValue));
+                })
+            ));
+        }
+
+        //WARNING: If, at some point in the future, there is a need in
+        //some other place to receive AdminChannel info, care will need to be taken
+        //not to override this listener
+        OWF.Container.Eventing.subscribe('AdminChannel', function(sender, msg) {
+
+            //stack or group dashboard editor used to assign to a user or group
+            if (Ext.Array.contains(['Stack', 'Dashboard'], msg.domain)) {
+                var records = msg.action.resultSet.records,
+                    userGroups = getAllDashboardGroups(),
+                    type = msg.action.params.tab,
+
+                    //see if affected records include the current user
+                    affectsUser = 
+                        type === 'users' && 
+                        Ext.Array.some(records, function(record) {
+                            return record.get('username') === Ozone.config.user.displayName;
+                        }),
+
+                    //see if the affected records include any groups that the current user is
+                    //a member of
+                    affectsUserGroups = 
+                        type === 'groups' &&
+                        Ext.Array.some(records, function(record) {
+                            //it appears that these group records are not constructed correctly,
+                            //but the necessary data is still available 'raw'
+                            var name = record.raw.name || record.raw.data[0].name || null;
+
+                            //return Ext.Array.contains(userGroups, record.get('name'));
+                            return Ext.Array.contains(userGroups, name);
+                        });
+
+                //if it is detected that a dashboard or stack may have been added removed from
+                //the current user, refresh the dashboards.
+                if (affectsUser || affectsUserGroups) {
+                    me.dashboardsNeedRefresh = true;
+                }
+            }
+
+            ////User editor used to assign a dashboard or stack
+            //else if (msg.domain === 'User') {
+                //if (msg.action.params.user_id === Ozone.config.user.id && //is it the current user
+                        //(msg.action.request.url.indexOf('dashboard') === 1 || //is it a dashboard? ('tab' is not available in the case)
+                         //msg.action.params.tab === 'stacks')) { //is it a stack
+                    //me.dashboardsNeedRefresh = true;
+                //}
+            //}
+            //else if (msg.domain === 'Group') {
+                //if (Ext.Array.contains(getAllDashboardGroups(true), msg.action.params.group_id) && //a group that we care about was modified
+                        //Ext.Array.contains(['dashboards', 'stacks'], msg.action.params.tab)) {   //a dashboard or stack was added or removed from the group
+                    //me.dashboardsNeedRefresh = true;
+                //}
+            //}
+        });
+    }
 });

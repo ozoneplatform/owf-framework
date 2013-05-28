@@ -639,47 +639,43 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     
     // launches the widget
     launchWidget: function (record, evt, eOpts) {
+        var dashboardContainer = this.dashboardContainer,
+            widgetGuid = record.get('widgetGuid'),
+            widgetDefs = dashboardContainer.widgetStore.queryBy(function (record, id) {
+                return record.data.widgetGuid == widgetGuid;
+            });
 
-        var scope = this.dashboardContainer;
-
-        var widgetGuid = record.get('widgetGuid');
-        var ok2Add = true;
-        var widgetDefs = scope.widgetStore.queryBy(function (record, id) {
-            return record.data.widgetGuid == widgetGuid;
-        });
         if (widgetDefs && widgetDefs.getCount() > 0) {
             var widgetDef = widgetDefs.get(0);
-            if (widgetDef.get('disabled') !== true) {
-                if (widgetDef.get('singleton')) {
-                    var widget = scope.storeContains(widgetGuid);
-                    if (widget) {
-                        scope.activeDashboard.handleAlreadyLaunchedWidget(widget.data);
-                        ok2Add = false;
-                    }
-                }
-                //an already opened widget instance is being opened again
-                else if (record.data.alreadyOpenedWidget) {
-                    scope.activeDashboard.handleAlreadyLaunchedWidget(record.data);
-                    ok2Add = false;
-                }
+            if(widgetDef.get('disabled') === true) {
+                Ozone.Msg.alert(Ozone.util.ErrorMessageString.errorTitle, Ozone.util.ErrorMessageString.widgetNotApproved,
+                    null, null, null, dashboardContainer.modalWindowManager);
             }
             else {
-                Ozone.Msg.alert(Ozone.util.ErrorMessageString.errorTitle, Ozone.util.ErrorMessageString.widgetNotApproved,
-                    null, null, null, scope.modalWindowManager);
-                ok2Add = false;
-            }
+                // Show the switcher for user to choose a dashboard to launch on
+                dashboardContainer.showDashboardSwitcher();
 
+                // TODO: Remove this listener if the user cancels dashboard selection (OP-419)
+                dashboardContainer.addListener(OWF.Events.Dashboard.SELECTED, function(dashboardGuid) {
+                    //If a different dashboard is selected add 2 second delay for render
+                    var delay = dashboardGuid !== dashboardContainer.activeDashboard.id ? 2000 : 0,
+                        launchWidget = function() {
+                            dashboardContainer.launchWidgets(widgetDef, true);
+                        };
+                    setTimeout(launchWidget, delay);
+                }, dashboardContainer, {single:true});
 
-            if (ok2Add) {
-            	if (scope.activeDashboard.configRecord.get('locked')) {
-                    var instanceId = widgetDef.get('uniqueId') || guid.util.guid();
-            		scope.activeDashboard.panes[0].launchFloatingWidget(widgetDef, null, null, instanceId);
-            	} else {
-                    // required to prevent from bubbling down
-                    evt.stopEvent();
-                    var newWidget = scope.launchWidgets(widgetDef,
-                            evt && evt.getKey() === Ext.EventObject.ENTER);
-            	}
+                // Show a notification with instructions for selecting a dashboard
+                $.pnotify({
+                    title: Ozone.layout.DialogMessages.launchWidgetTitle,
+                    text: Ozone.layout.DialogMessages.launchWidgetAlert,
+                    type: 'success',
+                    addclass: "stack-bottomright",
+                    stack: {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25},
+                    history: false,
+                    sticker: false,
+                    icon: false
+                });
             }
         }
 
@@ -783,6 +779,9 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
        removeButton = imagePanel.add(Ext.applyIf({
            handler: removeBtnHandler
        }, removeButton));
+       
+       //IE7 hack to get the bottom border of the Remove button to be visible
+       imagePanel.setHeight(imagePanel.getHeight() + 1);
        
        //in IE7, Ext seems to be manually setting the button widths to
        //the smallest reasonable size for some reason.  We want the widths to

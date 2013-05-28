@@ -282,6 +282,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 	                                        // Show the switcher
 	                                        dashboardContainer.showDashboardSwitcher();
 	                                        // Add a listener so we can launch the widget if the user picks a different dashboard
+                                            // TODO: Remove this listener if the user cancels dashboard selection (OP-419)
 	                                        dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
 	                                            dashboardContainer.launchWidgets(widgetDef, true);
 	                                        }, dashboardContainer, {delay:2000, single:true});

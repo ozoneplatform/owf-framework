@@ -120,7 +120,7 @@ Ext.define('Ozone.components.SettingsWindow', {
                     dashboardContainer: this.dashboardContainer,
                     winId: manageWidgetsWindowId
                 }],
-                width: 593,
+                width: 420,
                 height: 425
             };
             win = Ext.widget('managerwindow', manageWidgetsWindowConfig);

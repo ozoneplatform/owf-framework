@@ -257,6 +257,10 @@
         .image-panel {
             min-width: 96px;
             max-width: 6em;
+
+            .x-panel-body {
+                border-width: 0;
+            }
         }
     
         .widget-icon {
@@ -557,12 +561,14 @@
                     border-style: $panel-body-border-style;
                     border-width: 0 1px 0 0;
 
-                    vertical-align: middle;
-
                     .x-grid-cell-inner {
                         padding: 3px;
                         //padding-left: 10px;
                     }
+                }
+                
+                i {
+                    color: $widget-launcher-grid-row-cell-color;
                 }
             }
             .x-grid-row-alt {
@@ -611,11 +617,27 @@
         }
 
         .x-grid-row-focused .x-grid-cell {
-            font-weight: bold;
+            font-weight: normal;
             background-color: $widget-launcher-grid-row-cell-focus-background-color ;
             .x-grid-cell-inner {
                 color: $widget-launcher-grid-row-cell-focus-color;
             }
+            i {
+                color: $widget-launcher-grid-row-cell-focus-color;
+            }
+        }
+
+        i {
+            font-size: 1.167em;
+        }
+
+        .description {
+            padding-left: 5px;
+        }
+
+        .icon-caret-gap {
+            display: inline-block;
+            width: $owf-font-size/2.4;
         }
     }
 
@@ -656,3 +678,15 @@
 #widget-launcher-body .x-box-inner > :last-child {
     @include border-bottom-radius($widget-launcher-body-radius);
 }
+
+.show_more, .show_less {
+    cursor: pointer;
+}
+
+.showing_more {
+    overflow: visible !important;
+    -o-text-overflow: clip !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+}
+
