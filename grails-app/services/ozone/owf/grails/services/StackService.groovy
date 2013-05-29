@@ -445,16 +445,13 @@ class StackService {
                 }
             }
             // Remove the default stack group
-            stack?.groups?.each { group ->
-                if (group?.stackDefault) {
-                    //delete all widget mappings
-                    //domainMappingService.deleteAllMappings(group)
-                    stack.removeFromGroups(group);
-                    stack.save()
-                    groupService.delete(["data": "{id: ${group.id}}"])
-                }
+            Group defaultStackGroup = stack?.groups?.find {it.stackDefault}
+            if (defaultStackGroup) {
+                stack.removeFromGroups(defaultStackGroup);
+                stack.save()
+                groupService.delete(["data": "{id: ${defaultStackGroup.id}}"])
             }
-            
+
             // Delete the stacks's master dashboards.
             defaultDashboards?.each { dashboard ->
                 dashboard.delete()

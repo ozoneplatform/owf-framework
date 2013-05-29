@@ -99,7 +99,8 @@ class StackControllerTests extends OWFGroovyTestCase {
     void testDelete() {
         
         loginAsUsernameAndRole('testAdmin', ERoleAuthority.ROLE_ADMIN.strVal)
-        
+
+        int stackCount = Stack.count()
         stackController = new StackController()
         stackController.stackService = stackService
         stackController.request.contentType = "text/json"
@@ -111,6 +112,7 @@ class StackControllerTests extends OWFGroovyTestCase {
         
         def resp = JSON.parse(stackController.response.contentAsString)
         assertTrue resp.success
+        assertEquals(stackCount - 1, Stack.count())
     }
     
     void testExport() {
