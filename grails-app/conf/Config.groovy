@@ -4,10 +4,11 @@ import grails.util.BuildSettingsHolder
 
 // locations to search for config files that get merged into the main config
 // config files can either be Java properties files or ConfigSlurper scripts
-
+def userConfig = System.properties.userConfig ?: "${userHome}/.ozone/DevFlagConfig.groovy"
 grails.config.locations = [
         "classpath:OzoneConfig.properties",
-        "classpath:OwfConfig.groovy"
+        "classpath:OwfConfig.groovy",
+        "file:${userConfig}"
 ]
 println "grails.config.locations = ${grails.config.locations}"
 
@@ -513,6 +514,7 @@ uiperformance.bundles = [
                         'events/Events',
                         'components/util/History',
                         'components/util/InstanceVariablizer',
+                        'components/mask/LoadMask',
                         'components/keys/HotKeys',
                         'components/keys/KeyMap',
                         'components/keys/MoveKeyMap',

@@ -84,6 +84,19 @@ Ext.override(Ext.tip.QuickTip, {
             }
             me.delayShow();
         }
+    },
+
+    // Override QuickTip.showAt() function to enable specifying hideDelay option in the QuickTip config object.
+    // Without this override the hideDelay option set on the target is ignored by ExtJS (OP-600).
+    showAt : function(xy){
+        var me = this,
+            target = me.activeTarget;
+
+        if (target) {
+            me.hideDelay = target.hideDelay || me.hideDelay;
+        }
+
+        this.callOverridden([xy]);
     }
 
 });

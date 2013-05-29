@@ -55,6 +55,7 @@ Ext.define('Ozone.data.OWFTransportProxy', {
             onFailure: Ext.bind(function (msg){
               operation.setException(msg);
               this.fireEvent('exception', this, msg, operation);
+              callback.call(scope, operation);
             },this),
             autoSendVersion : false,
             timeout : null,

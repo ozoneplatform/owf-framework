@@ -262,37 +262,61 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             scale: 'launchmenu-banner-large',
             iconAlign: 'top',
             text: null,
-            tooltip: {
-                title: Ozone.layout.tooltipString.addWidgetsTitle,
-                text: Ozone.layout.tooltipString.addWidgetsContent,
-                width: 500,
-                maxWidth: 500
-            },
             cls: "bannerBtn launchMenuBtn",
             iconCls: 'launchMenuBtnIcon',
             enableToggle: true,
             clickCount: 0,
             handler: this.openLaunchMenu,
-            scope: this
+            scope: this,
+            listeners: {
+	        	afterrender: {
+	        		fn: function(btn) {
+	        			Ext.create('Ext.tip.ToolTip',{
+	        				target: btn.getEl().id,
+	        				title: Ozone.layout.tooltipString.addWidgetsTitle,
+	                        html: Ozone.layout.tooltipString.addWidgetsContent,
+	                        anchor: 'bottom',
+	        			    anchorToTarget: true,
+	        			    anchorOffset: -5,
+	        			    mouseOffset: [5,0],
+	        			    width: 500,
+	        			    maxWidth: 500
+	        			    
+	        			    
+	        			});
+	        		}
+	        	}
+	        }
         }, '-');
 
         me.items.push([{
-            xtype: 'button',
-            id: 'dashMenuBtn',
-            text: null,
-            tooltip: {
-                title: Ozone.layout.tooltipString.dashboardSwitcherTitle,
-                text: Ozone.layout.tooltipString.dashboardSwitcherContent,
-                width: 500,
-                maxWidth: 500
-            },
-            cls: 'bannerBtn dashMenuBtn',
-            iconCls: 'dashMenuBtnIcon',
-            iconAlign: 'top',
-            scale: 'banner-large',
-            enableToggle: true,
-            scope: this.dashboardContainer,
-            handler: this.dashboardContainer.showDashboardSwitcher
+	        xtype: 'button',
+	        id: 'dashMenuBtn',
+	        text: null,
+	        cls: 'bannerBtn dashMenuBtn',
+	        iconCls: 'dashMenuBtnIcon',
+	        iconAlign: 'top',
+	        scale: 'banner-large',
+	        enableToggle: true,
+	        scope: this.dashboardContainer,
+	        handler: this.dashboardContainer.showDashboardSwitcher,
+	        listeners: {
+	        	afterrender: {
+	        		fn: function(btn) {
+	        			Ext.create('Ext.tip.ToolTip',{
+	        				target: btn.getEl().id,
+	        				title: Ozone.layout.tooltipString.dashboardSwitcherTitle,
+	        				html: Ozone.layout.tooltipString.dashboardSwitcherContent,
+	        			    anchor: 'bottom',
+	        			    anchorToTarget: true,
+	        			    anchorOffset: -5,
+	        			    mouseOffset: [5,0],
+	        			    width: 500,
+	        			    maxWidth: 500            			    
+	        			});
+	        		}
+	        	}
+	        }
         }, '-',
         // settings button
         {
@@ -303,16 +327,27 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             scale: 'banner-large',
             iconAlign: 'top',
             text: null,
-            tooltip: {
-                title: Ozone.layout.tooltipString.settingsTitle,
-                text: Ozone.layout.tooltipString.settingsContent,
-                width: 500,
-                maxWidth: 500
-            },
             enableToggle: true,
             scope: this,
-            toggleHandler: this.openSettingsWindow
-          }]);
+            toggleHandler: this.openSettingsWindow,
+            listeners: {
+	        	afterrender: {
+	        		fn: function(btn) {
+	        			Ext.create('Ext.tip.ToolTip',{
+	        				target: btn.getEl().id,
+	        				title: Ozone.layout.tooltipString.settingsTitle,
+	                        html: Ozone.layout.tooltipString.settingsContent,
+	        			    anchor: 'bottom',
+	        			    anchorToTarget: true,
+	        			    anchorOffset: -5,
+	        			    mouseOffset: [5,0],
+	        			    width: 500,
+	        			    maxWidth: 500            			    
+	        			});
+	        		}
+	        	}
+	        }
+        }]);
         if (this.user.isAdmin) {
           me.items.push([
               '-',
@@ -325,15 +360,26 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                   scale: 'banner-large',
                   iconAlign: 'top',
                   text: null,
-                  tooltip: {
-                      title: Ozone.layout.tooltipString.adminToolsTitle,
-                      text: Ozone.layout.tooltipString.adminToolsContent,
-                      width: 500,
-                      maxWidth: 500
-                  },
                   enableToggle: true,
                   scope: this,
-                  toggleHandler: this.openAdministrationWindow
+                  toggleHandler: this.openAdministrationWindow,
+                  listeners: {
+      	        	afterrender: {
+      	        		fn: function(btn) {
+      	        			Ext.create('Ext.tip.ToolTip',{
+      	        				target: btn.getEl().id,
+      	        				title: Ozone.layout.tooltipString.adminToolsTitle,
+      	                      	html: Ozone.layout.tooltipString.adminToolsContent,
+      	        			    anchor: 'bottom',
+    	        			    anchorToTarget: true,
+    	        			    anchorOffset: -5,
+    	        			    mouseOffset: [5,0],
+      	        			    width: 500,
+      	        			    maxWidth: 500            			    
+      	        			});
+      	        		}
+      	        	}
+      	        }
               }]);
         }
         me.items.push([
@@ -347,14 +393,25 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 scale: 'banner-large',
                 iconAlign: 'top',
                 text: null,
-                tooltip: {
-                    title: Ozone.layout.tooltipString.helpTitle,
-                    text: Ozone.layout.tooltipString.helpContent,
-                    width: 500,
-                    maxWidth: 500
-                },
                 handler: this.openHelpWindow,
-                scope: this
+                scope: this,
+                listeners: {
+      	        	afterrender: {
+      	        		fn: function(btn) {
+      	        			Ext.create('Ext.tip.ToolTip',{
+      	        				target: btn.getEl().id,
+      	        				title: Ozone.layout.tooltipString.helpTitle,
+      	                      	html: Ozone.layout.tooltipString.helpContent,
+      	        			    anchor: 'bottom',
+    	        			    anchorToTarget: true,
+    	        			    anchorOffset: -5,
+    	        			    mouseOffset: [5,0],
+      	        			    width: 500,
+      	        			    maxWidth: 500            			    
+      	        			});
+      	        		}
+      	        	}
+      	        }
             }, '-'
        ]);
        if(Ozone.config.bannerPopoutEnabled){
@@ -834,15 +891,26 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 scale: 'banner-large',
                 iconAlign: 'top',
                 text: null,
-                tooltip: {
-                    title: Ozone.layout.tooltipString.marketplaceWindowTitle,
-                    text: Ozone.layout.tooltipString.marketplaceWindowContent,
-                    width: 500,
-                    maxWidth: 500
-                },
                 scope: this,
 //                handler: (!!Ozone.config.marketplaceLocation)? this.openMarketplaceWindow: this.openMarketplaceModalWindow
-                handler: this.openMarketplaceModalWindow
+                handler: this.openMarketplaceModalWindow,
+                listeners: {
+    	        	afterrender: {
+    	        		fn: function(btn) {
+    	        			Ext.create('Ext.tip.ToolTip',{
+    	        				target: btn.getEl().id,
+    	        				title: Ozone.layout.tooltipString.marketplaceWindowTitle,
+    	                        html: Ozone.layout.tooltipString.marketplaceWindowContent,
+    	        			    anchor: 'bottom',
+    	        			    anchorToTarget: true,
+    	        			    anchorOffset: -5,
+    	        			    mouseOffset: [5,0],
+    	        			    width: 500,
+    	        			    maxWidth: 500            			    
+    	        			});
+    	        		}
+    	        	}
+    	        }
             });
             
             if(this.popOutToolbar) {
@@ -885,13 +953,25 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 scale: 'banner-large',
                 iconAlign: 'top',
                 text: null,
-                tooltip: {
-                    title: Ozone.layout.tooltipString.metricWindowTitle,
-                    text: Ozone.layout.tooltipString.metricWindowContent,
-                    width: 250
-                },
                 scope: this,
-                handler: this.openMetricWindow
+                handler: this.openMetricWindow,
+                listeners: {
+    	        	afterrender: {
+    	        		fn: function(btn) {
+    	        			Ext.create('Ext.tip.ToolTip',{
+    	        				target: btn.getEl().id,
+    	        				title: Ozone.layout.tooltipString.metricWindowTitle,
+    	                        html: Ozone.layout.tooltipString.metricWindowContent,
+    	        			    anchor: 'bottom',
+    	        			    anchorToTarget: true,
+    	        			    anchorOffset: -5,
+    	        			    mouseOffset: [5,0],
+    	        			    width: 500,
+    	        			    maxWidth: 500            			    
+    	        			});
+    	        		}
+    	        	}
+    	        }
             });
         }
 

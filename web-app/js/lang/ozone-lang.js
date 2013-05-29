@@ -400,6 +400,7 @@ Ozone.layout.DialogMessages = {
 	marketplaceWindow_AddWidget: 'An error occurred while attempting to add the widget from Marketplace.',
 	marketplaceWindow_currentUser: 'Could not retrieve current user name and id.',
     marketplaceWindow_AddSuccessful: 'The widget was added successfully from Marketplace',
+    marketplaceWindow_WebappLaunchSuccessful: 'The Web App was sucessfully added from Marketplace',
     marketplaceWindow_LaunchSuccessful: 'The widget was added successfully from Marketplace. Now choose the dashboard where you want the widget to launch. It must be different from the current dashboard.',
 	widgetAdded: 'Selected widget is already added for this user',
 	marketplaceWindow_RequiredListingsAlertMsg: 'The widget you have launched will not work without some dependencies.  These widgets are listed below and will be additionally added to the launch menu.',

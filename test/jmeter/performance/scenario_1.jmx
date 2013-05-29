@@ -1463,6 +1463,66 @@ time remaining in the total login time set via the allUsersTotalLoginTime variab
                         </UniformRandomTimer>
                         <hashTree/>
                       </hashTree>
+                      <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Save Prior Dashboard" enabled="true">
+                        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+                          <collectionProp name="Arguments.arguments">
+                            <elementProp name="_method" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.value">PUT</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              <stringProp name="Argument.name">_method</stringProp>
+                            </elementProp>
+                            <elementProp name="guid" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.value">${tempActiveDashboardGuid}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              <stringProp name="Argument.name">guid</stringProp>
+                            </elementProp>
+                            <elementProp name="isdefault" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.value">false</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              <stringProp name="Argument.name">isdefault</stringProp>
+                            </elementProp>
+                            <elementProp name="bypassLayoutRearrange" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.value">true</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              <stringProp name="Argument.name">bypassLayoutRearrange</stringProp>
+                            </elementProp>
+                          </collectionProp>
+                        </elementProp>
+                        <stringProp name="HTTPSampler.domain"></stringProp>
+                        <stringProp name="HTTPSampler.port"></stringProp>
+                        <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                        <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                        <stringProp name="HTTPSampler.protocol"></stringProp>
+                        <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                        <stringProp name="HTTPSampler.path">owf/prefs/dashboard/${tempActiveDashboardGuid}</stringProp>
+                        <stringProp name="HTTPSampler.method">POST</stringProp>
+                        <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                        <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                        <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                        <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                        <stringProp name="HTTPSampler.implementation">Java</stringProp>
+                        <boolProp name="HTTPSampler.monitor">false</boolProp>
+                        <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                      </HTTPSamplerProxy>
+                      <hashTree>
+                        <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+                          <collectionProp name="Asserion.test_strings">
+                            <stringProp name="-57127207">&quot;isGroupDashboard&quot;:</stringProp>
+                          </collectionProp>
+                          <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+                          <boolProp name="Assertion.assume_success">false</boolProp>
+                          <intProp name="Assertion.test_type">2</intProp>
+                        </ResponseAssertion>
+                        <hashTree/>
+                      </hashTree>
                       <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Set Up Parameters for Widget Preferences Save" enabled="true">
                         <intProp name="ActionProcessor.action">1</intProp>
                         <intProp name="ActionProcessor.target">0</intProp>
