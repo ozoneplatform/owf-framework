@@ -34,8 +34,6 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             cls: 'titleBox',
             itemId: 'titleBox', //OWF-2558
             fieldLabel: Ozone.util.createRequiredLabel(Ozone.ux.DashboardMgmtString.title),
-            labelSeparator: '',
-            labelWidth: undefined,
             allowBlank: false,
             maxLength: 200,
             value: '',
@@ -56,7 +54,6 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             itemId: 'description',
             fieldLabel: Ozone.ux.DashboardMgmtString.description,
             labelSeparator: '',
-            labelWidth: undefined,
             value: '',
             maxLength: 4000,
             enforceMaxLength: true
@@ -122,7 +119,6 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             name: 'viewSelectRadio',
             inputValue: "importedDashboard",
             cls:'importedViewRadio',
-            //tabIndex: 3,
             listeners: {
                 //this listener works for both since we can use the 'isSelected' param
                 'change': {
@@ -145,8 +141,6 @@ Ext.define('Ozone.layout.CreateViewContainer', {
 		
         this.existingView = {
             xtype: 'combo',
-            //tabIndex: 2,
-            //id: 'existViewCb',
             itemId: 'existViewCb',
             store: this.dashboardContainer.dashboardStore,
             valueField:'guid',
@@ -162,7 +156,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             forceSelection: true,
             disabled: true,
             width: 100,
-            padding: '52, 0, 0, 0'
+            padding: '0, 0, 5, 17'
         };
         this.existingView.value = this.views[0].guid;
 
@@ -179,22 +173,17 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         
         this.importedView = {
             xtype: 'filefield',
-            //tabIndex: 3,
-            //id: 'importFileupload',
             itemId: 'importFileupload',
             cls: 'importFileupload',
             name: 'importFileupload',
             hideLabel: true,
             label: '',
             width: 400,
-            padding: '25, 0, 0, 0',
+            padding: '0, 0, 5, 17',
             emptyText: Ozone.ux.DashboardMgmtString.uploadConfig,
             allowBlank: true,
             disabled: true,
             buttonText:Ozone.ux.DashboardMgmtString.browse,
-    //        buttonConfig: {
-    //            ui: 'button'
-    //        },
             listeners: {
                 afterrender: function (cmp) {
                     cmp.setupFocus = function() {
@@ -298,51 +287,46 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         //when mixed with radio/checkbox fields because it assumes if any radio/checkbox is checked it can assume the
         //entire group is valid
         this.viewSelectRadio = {
-            layout: {
-                type: 'hbox',
-                align: 'stretchmax'
-            },
+            xtype: 'fieldcontainer',
+            fieldLabel: Ozone.ux.DashboardMgmtString.layout,
+            layout: 'fit',
             cls: 'createSelector',
             region: 'center',
             allowBlank: false,
-            hideLabel: true,
             hidden: this.hideViewSelectRadio,
             items: [
-                [
-                    {
-                        xtype: 'radiogroup',
-                        flex: 1,
-                        cls: 'viewSelect',
-                        itemId: "viewSelect", //OWF-2558
-                        layout: {
-                            type: 'vbox',
-                            align: 'stretch'
-                        },
-                        defaults: {
-                            flex: 1
-                        },
-                        items: [
-                            this.newViewRadio,
-                            this.existingViewRadio,
-                            this.importedViewRadio
-                        ]
+                {
+                    xtype: 'radiogroup',
+                    cls: 'viewSelect',
+                    itemId: "viewSelect", //OWF-2558
+                    layout: 'anchor',
+                    defaults: {
+                        anchor: '100%',
+                        padding: '0, 0, 5, 0'
                     },
-                    {
-                        layout: {
-                            type: 'vbox',
-                            align: 'stretch'
-                        },
-                        cls: 'viewSelectBoxes',
-                        flex: 1,
-                        defaults: {
-                            flex: 1
-                        },
-                        items: [
-                            this.existingView,
-                            this.importedView
-                        ]
-                    }
-                ]
+                    items: [
+                        this.newViewRadio,
+                        this.existingViewRadio,
+                        this.existingView,
+                        this.importedViewRadio,
+                        this.importedView
+                    ]
+                }
+                //                    {
+                //                        layout: {
+                //                            type: 'vbox',
+                //                            align: 'stretch'
+                //                        },
+                //                        cls: 'viewSelectBoxes',
+                //                        flex: 1,
+                //                        defaults: {
+                //                            flex: 1
+                //                        },
+                //                        items: [
+                //                            this.existingView,
+                //                            this.importedView
+                //                        ]
+                //                    }
             ]
         };
 
@@ -350,6 +334,13 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             type: 'vbox',
             align: 'stretch'
         };
+
+        this.defaults = {
+            labelWidth: 100,
+            labelSeparator: ''
+        };
+
+        this.margin = '0 5 0 0';
         this.items = [
             this.titleBox,
             this.description,

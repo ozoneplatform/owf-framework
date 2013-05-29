@@ -118,9 +118,9 @@ Ozone.layout.ConfigurationWindowString = {
 };
 
 Ozone.layout.CreateViewWindowString = {
-    createNew: 'Create new',
-    createFromExisiting: 'Create from existing',
-    importView: 'Import'
+    createNew: 'Create new layout',
+    createFromExisiting: 'Use the layout of an existing Application:',
+    importView: 'Import an Application from a file:'
 };
 
 Ozone.layout.ManageViewsWindowString = {
