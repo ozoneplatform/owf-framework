@@ -161,7 +161,10 @@
     .search {
         border-color: $widget-launcher-search-border-color;
         background: $widget-launcher-search-background-color;
-
+        -moz-border-radius: 20px;
+        -webkit-border-radius: 20px;
+        -khtml-border-radius: 20px;
+        border-radius: 20px;
         input{
             color: $widget-launcher-widget-text-color;
         }
@@ -273,16 +276,6 @@
             width: 96px;
         }
 
-        .launch-btn {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 98%; //98% to leave room for borders in IE7
-            margin-top: 3px;
-            text-align: center;
-        }
-        
-
         .infoCenter {
             margin-left: 18px;
             padding-right: 10px;
@@ -328,6 +321,26 @@
                     background-image: theme-image($theme-name, 'launch-menu/launch_tile-over.png') ;
                 }
             }
+        }
+    }
+    .launch-remove-panel {
+        background: transparent;
+        margin-left: 5px;
+        margin-right: 5px;
+
+        .launch-btn {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100px;
+            height: 20px;
+            margin-top: 3px;
+            margin-bottom: 3px;
+            text-align: center;
+            -moz-border-radius: 20px;
+            -webkit-border-radius: 20px;
+            -khtml-border-radius: 20px;
+            border-radius: 20px;
         }
     }
     .carousel {

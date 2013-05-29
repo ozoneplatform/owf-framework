@@ -18,17 +18,17 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     dontLoadWidgetStore: false,
     disableDashboardSelection: false,
 
-   launchBtnCfg: {
+   startBtnCfg: {
        xtype: 'button',
-       text: 'Launch',
-       cls: 'launch-btn',
-       itemId: 'launch'
+       text: 'Start',
+       cls: 'start-btn',
+       itemId: 'start'
    },
 
    removeBtnCfg: {
        xtype: 'button',
        text: 'Remove',
-       cls: 'launch-btn remove-btn',
+       cls: 'start-btn remove-btn',
        itemId: 'remove'
    },
 
@@ -173,29 +173,15 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                     padding: '10',
                     items: [
                         {
-                            xtype: 'panel',
-                            itemId: 'imagePanel',
-                            cls: 'image-panel',
-                            items: [
-                                {
-                                    xtype: 'image',
-                                    cls: 'widget-icon',
-                                    region: 'west',
-                                    itemId: 'widgetImg',
-                                    src: Ext.BLANK_IMAGE_URL,
-                                    listeners: {
-                                        afterrender: function (cmp) {
-                                            cmp.el.on({
-                                                error: function (evt, ele, opts) {
-                                                    ele.src = 'themes/common/images/settings/WidgetsIcon.png';
-                                                }
-                                            });
-                                        }
-                                    }
-                                },
-                               me.launchBtnCfg,
-                               me.removeBtnCfg
-                            ]
+                            xtype: 'image',
+                            cls: 'infoIcon',
+                            src: 'themes/common/images/settings/WidgetsIcon.png'
+                        },
+                        {
+                            xtype: 'label',
+                            itemId: 'infoPanelLabel',
+                            cls: 'infoLabel',
+                            text: 'Favorites Menu'
                         },
                         {
                             xtype: 'container',
@@ -268,110 +254,36 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                                             scope: this
                                         }
                                     ]
-                                },
+                                }
+                            ]
+                        },
+                        {
+                            xtype: 'toolbar',
+                            cls: 'searchBar',
+                            flex: 1,
+                            items: [
                                 {
-                                    xtype: 'slider',
-                                    itemId: 'iconSlider',
-                                    id: 'iconSlider',
-                                    cls: 'iconSlider',
-                                    value: 64,
+                                    xtype: 'searchbox',
+                                    itemId: 'searchbox',
                                     flex: 1,
-                                    increment: 1,
-                                    minValue: 24,
-                                    maxValue: 128,
-                                    plugins: [
-                                        new Ozone.components.focusable.Focusable()
-                                    ],
-                                    //todo extend this slider class and override there
-                                    onKeyDown : function(e) {
-                                        var me = this,
-                                            k,
-                                            val;
-
-                                        if(me.disabled || me.thumbs.length !== 1) {
-                                            e.preventDefault();
-                                            return;
-                                        }
-                                        k = e.getKey();
-
-                                        switch(k) {
-                                            case e.UP:
-                                            case e.RIGHT:
-                                                e.stopEvent();
-                                                val = e.ctrlKey ? me.maxValue : me.getValue(0) + me.keyIncrement;
-                                                me.setValue(0, val, undefined, true);
-                                            break;
-                                            case e.DOWN:
-                                            case e.LEFT:
-                                                e.stopEvent();
-                                                val = e.ctrlKey ? me.minValue : me.getValue(0) - me.keyIncrement;
-                                                me.setValue(0, val, undefined, true);
-                                            break;
-                                            default:
-                                                 //todo - override this in it's own class, preventDefault stops tab presses
-                                                //e.preventDefault();
-                                                break;
-                                        }
-                                    },
+                                    emptyText: "Search",
+                                    dynamic: true,
                                     listeners: {
-                                        change: function (cmp, value, thumb, eOpts) {
-                                            var sizeObj = {
-                                                '.thumb-wrap': {
-                                                    width: value,
-                                                    height: value
-                                                },
-
-                                                //hack for IE7, where the surrounding
-                                                //nodes need a width or they end up with
-                                                //width = 100%
-                                                '.': Ext.isIE7 ? {
-                                                    width: value
-                                                } : null
-                                            };
-
-                                            me.view.setItemSize(sizeObj);
-
-                                        },
-                                        afterrender: function () {
-                                            Ext.tip.QuickTipManager.register({
-                                                target: 'iconSlider',
-                                                title: 'Resize Icons',
-                                                text: 'Use this slider to resize the widget icons below.',
-                                                width: 250
-                                            });
+                                        searchChanged: function (cmp, value) {
+                                            if (!this.dontLoadWidgetStore) {
+                                                if (value == '') {
+                                                    this.widgetStore.widgetFiltered = false;
+                                                }
+                                                else {
+                                                    this.widgetStore.widgetFiltered = true;
+                                                }
+                                                this.searchPanel.search({
+                                                    customWidgetName: value
+                                                });
+                                            }
                                         },
                                         scope: this
                                     }
-                                },
-                                {
-                                    xtype: 'toolbar',
-                                    cls: 'searchBar',
-                                    flex: 1,
-                                    items: [
-                                        {
-                                            xtype: 'searchbox',
-                                            itemId: 'searchbox',
-                                            flex: 1,
-                                            emptyText: "Search title",
-                                            dynamic: true,
-                                            listeners: {
-                                                searchChanged: function (cmp, value) {
-                                                    if (!this.dontLoadWidgetStore) {
-                                                        if (value == '') {
-                                                            this.widgetStore.widgetFiltered = false;
-                                                        }
-                                                        else {
-                                                            this.widgetStore.widgetFiltered = true;
-                                                        }
-                                                        this.searchPanel.search({
-                                                            customWidgetName: value
-                                                        });
-                                                    }
-                                                },
-                                                scope: this
-                                            }
-                                        }
-                                    ]
                                 }
                             ]
                         }
@@ -415,6 +327,21 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                         ptype: 'instancevariablizer',
                         container: me
                     }
+                },
+                {
+                    xtype: 'panel',
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretchmax'
+                    },
+                    itemId: "startRemovePanel",
+                    cls: "start-remove-panel",
+                    region: 'south',
+                    padding: '10',
+                    items: [
+                        me.startBtnCfg,
+                        me.removeBtnCfg
+                    ]
                 }
             ]
         });
@@ -719,40 +646,42 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
      * updates the info panel
      * @param record
      * @param showRemoveFavorites
-     * @param clearSelection
+     * @param disableStartButton
+     * @param showIntentCheckBox
+     * @param intentCheckBoxValue
      */
-    updateInfoPanel: function (record, showRemoveFavorites, disableLaunchButton, showIntentCheckBox, intentCheckBoxValue) {
+    updateInfoPanel: function (record, showRemoveFavorites, disableStartButton, showIntentCheckBox, intentCheckBoxValue) {
         var me = this,
         infoPanel = me.down("#infoPanel"),
         infoCenter = infoPanel.getComponent('infoCenter'),
-        imagePanel = infoPanel.getComponent('imagePanel'),
-        launchBtn = imagePanel.getComponent('launch'),
-        removeBtn = imagePanel.getComponent('remove'),
+        startRemovePanel = infoPanel.getComponent('startRemovePanel'),
+        startBtn = startRemovePanel.getComponent('start'),
+        removeBtn = startRemovePanel.getComponent('remove'),
         htmlPanel = infoPanel.down('#htmlPanel'),
         intentCheckBox = infoPanel.down('#intentCheckBox'),
-        image = imagePanel.getComponent('widgetImg'),
 
-        launchBtnHandler = function (button, evt) {
-           me.launchWidget(record, evt);
+        startBtnHandler = function (button, evt) {
+            console.log("Start event fired");
+            me.launchWidget(record, evt);
         };
 
         removeBtnHandler = function (button, evt) {
             me.removeWidget(record);
         };
 
-        //remove launchBtn so it can be updated
-        if (launchBtn) {
-           imagePanel.remove(launchBtn);
+        //remove startBtn so it can be updated
+        if (startBtn) {
+            startRemovePanel.remove(startBtn);
         }
 
         if (removeBtn) {
-            imagePanel.remove(removeBtn);
+            startRemovePanel.remove(removeBtn);
         }
 
         if (record == null) {
             record = Ext.create('Ozone.data.WidgetDefinition', {
                 name: 'Please select a widget below',
-                description: 'Double click a widget to launch'
+                description: 'Double click a widget to start'
             });
         }
 
@@ -767,11 +696,11 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
 //          }
 //        }
         if (widgetDisabled) {
-            imagePanel.addCls('widget-disabled');
+            startRemovePanel.addCls('widget-disabled');
             infoCenter.addCls('widget-disabled');
         }
         else {
-            imagePanel.removeCls('widget-disabled');
+            startRemovePanel.removeCls('widget-disabled');
             infoCenter.removeCls('widget-disabled');
         }
 
@@ -779,7 +708,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
         //todo remove this hardcoded style
         var html = "<h1 class=\"launchMenuTitle\">" + Ext.htmlEncode(record.get('name')) + "</h1>" +
                 "<p>" + Ext.htmlEncode(desc) + "</p>";
-        image.setSrc(record.get('image') ? record.get('image') : 'images/launch-menu/launch-infoPanel-default.png');
 
         htmlPanel.el.update(html);
 
@@ -793,25 +721,27 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
             intentCheckBox.setValue(intentCheckBoxValue);
         }
 
-       var launchButton = Ext.apply({}, me.launchBtnCfg);
+       var startButton = Ext.apply({}, me.startBtnCfg);
        var removeButton = Ext.apply({}, me.removeBtnCfg);
-       if (disableLaunchButton) {
-           launchButton.disabled = true;
+       if (disableStartButton) {
+           startButton.disabled = true;
            removeButton.disabled = true;
        }
 
-       launchButton = imagePanel.add(Ext.applyIf({
-           handler: launchBtnHandler
-       }, launchButton));
+       startButton = startRemovePanel.add(Ext.applyIf({
+           handler: startBtnHandler
+       }, startButton));
 
-       removeButton = imagePanel.add(Ext.applyIf({
+       removeButton = startRemovePanel.add(Ext.applyIf({
            handler: removeBtnHandler
        }, removeButton));
+
+
 
        //in IE7, Ext seems to be manually setting the button widths to
        //the smallest reasonable size for some reason.  We want the widths to
        //be handled in css however, so we clear the explicit width
-       launchButton.getEl().setWidth('');
+       startButton.getEl().setWidth('');
        removeButton.getEl().setWidth('');
     },
 
