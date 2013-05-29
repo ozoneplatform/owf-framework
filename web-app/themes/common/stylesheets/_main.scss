@@ -369,6 +369,20 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
     @include transition-timing-function(ceaser($linear), ceaser($easeInQuad), ceaser($linear), ceaser($linear));
 }
 
+
+.focusTooltip {
+    background-color: $owf-focus-color !important;
+
+    .x-tip-body {
+        font-size: $owf-font-size;
+        color: getHighContrastColor($owf-focus-color) !important;
+    }
+
+    .x-tip-anchor-top {
+        border-bottom-color: $owf-focus-color !important;
+    }
+}
+
 .x-ie {
     #mainPanel { 
         .accordion_region {

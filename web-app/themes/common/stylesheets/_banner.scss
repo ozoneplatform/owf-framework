@@ -525,7 +525,7 @@
 
 
 @-webkit-keyframes blink {
-    25% {
+    20% {
         box-shadow: inset 0 0 10px 1px $owf-focus-color;
     }
     100% {
@@ -534,7 +534,7 @@
 }
 
 @-moz-keyframes blink {
-    25% {
+    20% {
         box-shadow: inset 0 0 10px 1px $owf-focus-color;
     }
     100% {
@@ -543,7 +543,7 @@
 }
 
 @-o-keyframes blink {
-    25% {
+    20% {
         box-shadow: inset 0 0 10px 1px $owf-focus-color;
     }
     100% {
@@ -552,7 +552,7 @@
 }
 
 @keyframes blink {    
-    25% {
+    20% {
         box-shadow: inset 0 0 10px 1px $owf-focus-color;
     }
     100% {
@@ -561,8 +561,22 @@
 }
 
 .blink {
-    -webkit-animation: blink 800ms;
-    -moz-animation: blink 800ms;
-    -o-animation: blink 800ms;
-    animation: blink 800ms;
+    $blink-duration: 3200ms;
+    -webkit-animation: blink $blink-duration;
+    -moz-animation: blink $blink-duration;
+    -o-animation: blink $blink-duration;
+    animation: blink $blink-duration;
+}
+
+.focusTooltip {
+    background-color: $owf-focus-color !important;
+
+    .x-tip-body {
+        font-size: $owf-font-size;
+        color: getHighContrastColor($owf-focus-color) !important;
+    }
+
+    .x-tip-anchor-top {
+        border-bottom-color: $owf-focus-color !important;
+    }
 }

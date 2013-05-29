@@ -120,6 +120,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     html: widgetDefinition.get('name') + ' has been added successfully from AppsMall.',
                     anchor: 'left',
                     target: 'launchMenuBtn',
+                    cls: 'focusTooltip',
                     listeners: {
                         hide: function () {
                             tip.destroy();
@@ -169,7 +170,6 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 }
             },
             onFailure: function(json) {
-                debugger;
                 Ext.Msg.alert("Error", "Error has occurred while adding widgets from Marketplace");
             }
         });
