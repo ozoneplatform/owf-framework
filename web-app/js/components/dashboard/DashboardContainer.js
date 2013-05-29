@@ -86,7 +86,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         // initialize widget launcher
         OWF.Container.Launcher = new Ozone.launcher.WidgetLauncherContainer(OWF.Container.Eventing);
-        this.addWidgetContainer = new Ozone.marketplace.AddWidgetContainer(OWF.Container.Eventing);
+        this.addWidgetContainer = new Ozone.marketplace.AddWidgetContainer(OWF.Container.Eventing, this);
         OWF.Container.DragAndDrop = new Ozone.dragAndDrop.WidgetDragAndDropContainer({
             eventingContainer: OWF.Container.Eventing
         });

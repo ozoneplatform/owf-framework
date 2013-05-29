@@ -9,12 +9,14 @@ var Ozone = Ozone ? Ozone : {};
  */
 Ozone.marketplace = Ozone.marketplace || {};
 
-Ozone.marketplace.AddWidgetContainer = function (eventingContainer) {
+Ozone.marketplace.AddWidgetContainer = function (eventingContainer, dashboardContainer) {
 
     this.addWidgetChannelName = "_ADD_WIDGET_CHANNEL";
     this.addStackChannelName = "_ADD_STACK_CHANNEL";
     this.windowManager = null;
     this.ANIMATION_DURATION = 1000;
+
+    this.dashboardContainer = dashboardContainer;
 
     if (eventingContainer != null) {
         this.eventingContainer = eventingContainer;
@@ -36,7 +38,7 @@ Ozone.marketplace.AddWidgetContainer = function (eventingContainer) {
         throw {
             name:'AddWidgetContainerException',
             message:'eventingContainer is null'
-        }
+        };
     }
 
 };
@@ -45,8 +47,9 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
     addStack:function (config) {
         var stackJSON = config.widgetsJSON;
+        this.dashboardContainer.loadMask.show();
         this.processMarketplaceStackData(stackJSON.itemUuid);
-        return stackJSON.itemId
+        return stackJSON.itemId;
     },
 
     processMarketplaceStackData: function(stackUuid) {
@@ -67,7 +70,10 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     sticker: false,
                     icon: false
                 });
-            }
+
+                self.dashboardContainer.loadMask.hide();
+            },
+            onFailure: self.dashboardContainer.loadMask.hide
         });
     },
 
@@ -77,6 +83,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             id = config.data.id,
             doLaunch = config.doLaunch,
             imageInfo = config.data.image;
+
+        this.dashboardContainer.loadMask.show();
 
         this.processMarketplaceWidgetData(config.baseUrl, id, doLaunch, function(widgetDefinition) {
             if(Modernizr.csstransitions && Modernizr.cssanimations) {
@@ -171,6 +179,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             },
             onFailure: function(json) {
                 Ext.Msg.alert("Error", "Error has occurred while adding widgets from Marketplace");
+
+                self.dashboardContainer.loadMask.hide();
             }
         });
     },
@@ -243,6 +253,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
     // Added the URL of the Marketplace we're looking at to the JSON we send to
     // the widget controller.
     submitWidgetList: function(widgetList, mpUrl, doLaunch, addCallback) {
+		var self = this;
         return owfdojo.xhrPost({
             url:Ozone.util.contextPath() + '/widget/',
             sync:true,
@@ -267,16 +278,15 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
                 if (result.success) {
                     var widgetGuid = result.data[0].widgetGuid,
-                        dashboardContainer = widgetLauncher.dashboardContainer,
                         widgetDefs;
 
-                    dashboardContainer.widgetStore.on({
+                    self.dashboardContainer.widgetStore.on({
                         // Have to load the store first. Add a listener so we can work with the newly loaded store
                         load: {
                             fn: function(store, records, success, operation, eOpts) {
 
                                 // Get the widget definition
-                                widgetDefs = dashboardContainer.widgetStore.queryBy(function(record,id) {
+                                widgetDefs = self.dashboardContainer.widgetStore.queryBy(function(record,id) {
                                     return record.data.widgetGuid == widgetGuid;
                                 });
 
@@ -290,60 +300,60 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                                         var widgetDef = widgetDefs.get(0);
                                         
                                         if(widgetDef.data.widgetTypes[0].name == "fullscreen") {
-                                        	var me = this;
-                                        	
-                                        	var dashboardStore = dashboardContainer.dashboardStore;
-                                        	
-                                        	var tmpDashboard = null
-                                        	for(var storeCount = 0; storeCount < dashboardStore.getCount(); storeCount++) {
-                                        		tmpDashboard = dashboardStore.getAt(storeCount);
-                                        		
-                                        		if(tmpDashboard.data.name == widgetDef.data.title) {
-                                        			if(tmpDashboard.data.locked == true) {
-                                        				if(tmpDashboard.data.layoutConfig.widgets[0] && 
-                                        					tmpDashboard.data.layoutConfig.widgets[0].widgetGuid == widgetDef.data.widgetGuid) {
-                                        					me.dashboard = tmpDashboard;
-                                        				}
-                                        			}
-                                        		}
-                                        	}
-                                        	
-                                        	if(me.dashboard) {
-                                        		dashboardContainer.activateDashboard(me.dashboard.data.guid);
-                                        	} else {
-                                        		me.dashboard = Ext.create('Ozone.data.Dashboard', {
-	                                                name: widgetDef.data.title,
-	                                                layoutConfig : {
-	                                                    xtype: 'container',
-	                                                    flex: 1,
-	                                                    height: '100%',
-	                                                    items: [],
-	                                                    paneType: 'fitpane',
-	                                                    widgets: [widgetDef.data]
-	                                                },
-	                                                locked:true
-	                                        		
-	                                            });
-	                                        	
-	                                        	dashboardContainer.saveDashboard(me.dashboard.data, 'create', function() {
-	                                            	dashboardContainer.activateDashboard(me.dashboard.data.guid);
-	                                            });
-	                                        	
-	                                        	notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_WebappLaunchSuccessful;
-                                        	}
+                                            var me = this;
+                                            
+                                            var dashboardStore = self.dashboardContainer.dashboardStore;
+                                            
+                                            var tmpDashboard = null;
+                                            for(var storeCount = 0; storeCount < dashboardStore.getCount(); storeCount++) {
+                                                tmpDashboard = dashboardStore.getAt(storeCount);
+                                                
+                                                if(tmpDashboard.data.name == widgetDef.data.title) {
+                                                    if(tmpDashboard.data.locked == true) {
+                                                        if(tmpDashboard.data.layoutConfig.widgets[0] && 
+                                                            tmpDashboard.data.layoutConfig.widgets[0].widgetGuid == widgetDef.data.widgetGuid) {
+                                                            me.dashboard = tmpDashboard;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            
+                                            if(me.dashboard) {
+                                                self.dashboardContainer.activateDashboard(me.dashboard.data.guid);
+                                            } else {
+                                                me.dashboard = Ext.create('Ozone.data.Dashboard', {
+                                                    name: widgetDef.data.title,
+                                                    layoutConfig : {
+                                                        xtype: 'container',
+                                                        flex: 1,
+                                                        height: '100%',
+                                                        items: [],
+                                                        paneType: 'fitpane',
+                                                        widgets: [widgetDef.data]
+                                                    },
+                                                    locked:true
+                                                    
+                                                });
+                                                
+                                                self.dashboardContainer.saveDashboard(me.dashboard.data, 'create', function() {
+                                                    self.dashboardContainer.activateDashboard(me.dashboard.data.guid);
+                                                });
+                                                
+                                                notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_WebappLaunchSuccessful;
+                                            }
                                         } else {
-	                                        // Show the switcher
-	                                        dashboardContainer.showDashboardSwitcher();
-	                                        // Add a listener so we can launch the widget if the user picks a different dashboard
+                                            // Show the switcher
+                                            self.dashboardContainer.showDashboardSwitcher();
+                                            // Add a listener so we can launch the widget if the user picks a different dashboard
                                             // TODO: Remove this listener if the user cancels dashboard selection (OP-419)
-	                                        dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
-	                                            dashboardContainer.launchWidgets(widgetDef, true);
-	                                        }, dashboardContainer, {delay:2000, single:true});
-	
-	                                        notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;
+                                            self.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
+                                                self.dashboardContainer.launchWidgets(widgetDef, true);
+                                            }, self.dashboardContainer, {/*delay:2000,*/ single:true});
+    
+                                            notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;
                                         }
                                     }  else {
-                                        notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddSuccessful;
+                                        notifyText = null;
                                         addCallback && addCallback(widgetDefs.get(0));
                                     }
 
@@ -353,13 +363,27 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                                     // Failure message
                                     notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddWidget;
                                 }
+                                //Display the message
+
+                                notifyText && $.pnotify({
+                                    title: Ozone.layout.DialogMessages.added,
+                                    text: notifyText,
+                                    type: 'success',
+                                    addclass: "stack-bottomright",
+                                    stack: stack_bottomright,
+                                    history: false,
+                                    sticker: false,
+                                    icon: false
+                                });
+
+                                self.dashboardContainer.loadMask.hide();
                             } ,
                             scope: this,
                             single: true
                         }
-                    })
+                    });
 
-                    dashboardContainer.widgetStore.load();
+                    self.dashboardContainer.widgetStore.load();
 
                 }   else {
                     notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddWidget;
@@ -374,6 +398,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                         icon: false
                     });
 
+                    self.dashboardContainer.loadMask.hide();
                 }
 
 
@@ -388,6 +413,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 Ozone.Msg.alert(Ozone.layout.DialogMessages.error, Ozone.layout.DialogMessages.marketplaceWindow_AddWidget, null, null, {
                     cls:'confirmationDialog'
                 });
+                self.dashboardContainer.loadMask.hide();
             }
         });
     },
