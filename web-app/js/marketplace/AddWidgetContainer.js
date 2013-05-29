@@ -277,6 +277,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 	                                        	dashboardContainer.saveDashboard(me.dashboard.data, 'create', function() {
 	                                            	dashboardContainer.activateDashboard(me.dashboard.data.guid);
 	                                            });
+	                                        	
+	                                        	notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_WebappLaunchSuccessful;
                                         	}
                                         } else {
 	                                        // Show the switcher
