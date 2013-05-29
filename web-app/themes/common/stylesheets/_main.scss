@@ -359,6 +359,14 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
 .marketplace_animate_listing {
     position: absolute;
     z-index: 1000000000;
+    // Using css here because there is a bug in compass.
+    // Using transition-property mixin also outputs vendor prefix for values
+    -webkit-transition-property: top, left, width, height;
+    -moz-transition-property: top, left, width, height;
+    -o-transition-property: top, left, width, height;
+    transition-property: top, left, width, height;
+    @include transition-duration(1s);
+    @include transition-timing-function(ceaser($linear), ceaser($easeInQuad), ceaser($linear), ceaser($linear));
 }
 
 .x-ie {

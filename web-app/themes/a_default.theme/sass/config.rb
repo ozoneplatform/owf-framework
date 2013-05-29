@@ -22,3 +22,5 @@ load File.join(File.dirname(__FILE__), $ext_sdk_path, 'resources', 'themes')
 
 #We need to load the OWF Common Stylesheets
 load File.join(File.dirname(__FILE__), $common_theme_path)
+
+require 'ceaser-easing'

@@ -79,7 +79,7 @@
     .bannerBtn {
         margin: 0px;
         padding: 0 6px;
-        @include border-radius(3px);
+        @include border-radius(2px);
     }
 }
 
@@ -521,4 +521,48 @@
                             //less than expected because its IE
         }
     }
+}
+
+
+@-webkit-keyframes blink {
+    25% {
+        box-shadow: inset 0 0 10px 1px $owf-focus-color;
+    }
+    100% {
+        box-shadow: none;
+    }
+}
+
+@-moz-keyframes blink {
+    25% {
+        box-shadow: inset 0 0 10px 1px $owf-focus-color;
+    }
+    100% {
+        box-shadow: none;
+    }
+}
+
+@-o-keyframes blink {
+    25% {
+        box-shadow: inset 0 0 10px 1px $owf-focus-color;
+    }
+    100% {
+        box-shadow: none;
+    }
+}
+
+@keyframes blink {    
+    25% {
+        box-shadow: inset 0 0 10px 1px $owf-focus-color;
+    }
+    100% {
+        box-shadow: none;
+    }
+}
+
+.blink {
+    -webkit-animation: blink 800ms;
+    -moz-animation: blink 800ms;
+    -o-animation: blink 800ms;
+    animation: blink 800ms;
 }

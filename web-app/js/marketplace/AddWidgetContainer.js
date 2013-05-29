@@ -78,42 +78,56 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             doLaunch = config.doLaunch,
             imageInfo = config.data.image;
 
-        this.processMarketplaceWidgetData(config.baseUrl, id, doLaunch, function() {
-            var widget = Ext.getCmp(sender.id),
-                widgetOffsets = widget.el.getOffsetsTo(Ext.getBody()),
-                imgHTML = ['<img class="marketplace_animate_listing" src="', imageInfo.URL,
-                    '" style="',
-                    ';width:', imageInfo.width, 'px',
-                    ';height:', imageInfo.height, 'px',
-                    ';left:', (imageInfo.left + widgetOffsets[0]), 'px',
-                    ';top:', (imageInfo.top + widgetOffsets[1]), 'px',
-                    ';">'
-                ].join(''),
-                img = Ext.DomHelper.insertHtml('beforeEnd', Ext.getBody().dom, imgHTML),
-                $img = jQuery(img),
-                target = Ext.getCmp('launchMenuBtn').btnEl;
-            
-            $img.animate({
-                top: 0,
-                left: 0,
-                width: target.getWidth(),
-                height: target.getHeight()
-            }, {
-                duration: me.ANIMATION_DURATION,
-                specialEasing: {
-                    top: 'linear',
-                    left: 'easeInQuad'
-                },
-                complete: function() {
-                    $img.remove();
+        this.processMarketplaceWidgetData(config.baseUrl, id, doLaunch, function(widgetDefinition) {
+            if(Modernizr.csstransitions && Modernizr.cssanimations) {
+                var widget = Ext.getCmp(sender.id),
+                    widgetOffsets = widget.el.getOffsetsTo(Ext.getBody()),
+                    imgHTML = ['<img class="marketplace_animate_listing" src="', imageInfo.URL,
+                        '" style="',
+                        ';width:', imageInfo.width, 'px',
+                        ';height:', imageInfo.height, 'px',
+                        ';left:', (imageInfo.left + widgetOffsets[0]), 'px',
+                        ';top:', (imageInfo.top + widgetOffsets[1]), 'px',
+                        ';">'
+                    ].join(''),
+                    img = Ext.DomHelper.insertHtml('beforeEnd', Ext.getBody().dom, imgHTML),
+                    $img = jQuery(img),
+                    btn = Ext.getCmp('launchMenuBtn'),
+                    target = btn.el.dom;
 
-                    target.frame(Ext.util.CSS.getRule('.x-focus').style.borderColor, 2);
-                    
-                    setTimeout(function () {
-                        callback(id);
-                    }, 0);
-                }
-            });
+                    $img
+                        .one(CSS.Transition.TRANSITION_END, function () {
+                            $img.remove();
+                            var $target = $(target);
+
+                            $target
+                                .one(CSS.Animation.ANIMATION_END, function () {
+                                    $target.removeClass('blink');
+                                })
+                                .addClass('blink');
+
+                            callback && callback(id);
+                        })
+                        .css({
+                            top: '0px',
+                            left: '0px',
+                            width: btn.btnEl.getWidth() + 'px',
+                            height: btn.btnEl.getHeight() + 'px'
+                        });
+            }
+            else {
+                var tip = Ext.create('Ext.tip.ToolTip', {
+                    html: widgetDefinition.get('name') + ' has been added successfully from AppsMall.',
+                    anchor: 'left',
+                    target: 'launchMenuBtn',
+                    listeners: {
+                        hide: function () {
+                            tip.destroy();
+                        }
+                    }
+                });
+                tip.show();
+            }
         });
     },
 
@@ -147,13 +161,11 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     }
                 }
 
-                callback();
-
                 if (widgetListJson.length > 0) {
                     // OZP-476: MP Synchronization
                     // Added the URL of the Marketplace we're looking at to the
                     // JSON we send to the widget controller.
-                    self.submitWidgetList(Ext.JSON.encode(widgetListJson), marketplaceUrl, doLaunch);
+                    self.submitWidgetList(Ext.JSON.encode(widgetListJson), marketplaceUrl, doLaunch, callback);
                 }
             },
             onFailure: function(json) {
@@ -230,7 +242,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
     // OZP-476: MP Synchronization
     // Added the URL of the Marketplace we're looking at to the JSON we send to
     // the widget controller.
-    submitWidgetList: function(widgetList, mpUrl, doLaunch) {
+    submitWidgetList: function(widgetList, mpUrl, doLaunch, addCallback) {
         return owfdojo.xhrPost({
             url:Ozone.util.contextPath() + '/widget/',
             sync:true,
@@ -329,8 +341,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 	                                        notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;
                                         }
                                     }  else {
-
-                                        notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddSuccessful
+                                        notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddSuccessful;
+                                        addCallback && addCallback(widgetDefs.get(0));
                                     }
 
 
@@ -339,18 +351,6 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                                     // Failure message
                                     notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddWidget;
                                 }
-                                //Display the message
-
-                                $.pnotify({
-                                    title: Ozone.layout.DialogMessages.added,
-                                    text: notifyText,
-                                    type: 'success',
-                                    addclass: "stack-bottomright",
-                                    stack: stack_bottomright,
-                                    history: false,
-                                    sticker: false,
-                                    icon: false
-                                });
                             } ,
                             scope: this,
                             single: true
