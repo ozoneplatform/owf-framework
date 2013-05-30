@@ -18,8 +18,9 @@ private compileStyleSheets = { dir ->
     ant.exec(
             failonerror: "true",
             dir: "${dir}/themes",
-            executable: 'sh') {
+            executable: 'bash') {
 
+      arg(value: "-l")
       arg(value: "compile_all_themes.sh")
     }
   }

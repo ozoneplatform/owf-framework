@@ -17,6 +17,20 @@ coverage {
     ]
 }
 
+codenarc.reports = {
+    AmlXmlReport('xml') {
+        outputFile = 'target/CodeNarcReport.xml'
+        title = 'App Mall OWF CodeNarc Report'
+    }
+
+    AmlHtmlReport('html') {
+        outputFile = 'target/CodeNarcReport.html'
+        title = 'App Mall OWF CodeNarc Report'
+    }
+}
+
+codenarc.ruleSetFiles="file:grails-app/conf/CodeNarcRules.groovy"
+
 private org.apache.ivy.plugins.resolver.DependencyResolver createLocalResolver()
 {
     def localResolver = new FileSystemResolver()
