@@ -16,6 +16,7 @@ class StackServiceTests extends GroovyTestCase {
     def userDashboard 
     def personId
     def group
+    def originalAccountService
         
     protected void setUp() {
         super.setUp()
@@ -28,6 +29,7 @@ class StackServiceTests extends GroovyTestCase {
 
         acctService.autoAccountName = 'testAdmin'
         acctService.autoRoles = [ERoleAuthority.ROLE_ADMIN.strVal]
+        originalAccountService = accountService
         accountService = acctService
         stackService.accountService = acctService
         stackService.groupService.accountService = acctService
@@ -55,6 +57,10 @@ class StackServiceTests extends GroovyTestCase {
     }
 
     protected void tearDown() {
+        // Restore the accountService reference
+        stackService.accountService = originalAccountService
+        stackService.groupService.accountService = originalAccountService
+        dashboardService.accountService = originalAccountService
         super.tearDown()
     }
     
