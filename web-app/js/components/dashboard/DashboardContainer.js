@@ -5,6 +5,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     plugins: new Ozone.plugins.DashboardContainer(),
 
     activeDashboard: null,
+    previousActiveDashboard: null,
     dashboardMenuItems: null,
 
     dashboardStore: null,
@@ -655,6 +656,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     		} else {
     			this.getBanner().enableLaunchMenu();
     		}
+
+            if(this.activeDashboard.isMarketplaceDashboard()) {
+                this.getBanner().setMarketplaceToggle();
+            }
+
         }, this);
 
         if (dashboardCardPanel.isLayedOut) {
@@ -887,12 +893,56 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         this.fireEvent(OWF.Events.Dashboard.SELECTED, guid);
     },
 
+    /**
+    *
+    * Activates previously selected dashboard.
+    *
+    **/
+    activatePreviousDashboard: function () {
+        var guid, stack, previousActiveDashboardModel;
+
+        if(this.previousActiveDashboard && this.previousActiveDashboard !== this.activeDashboard) {
+            previousActiveDashboardModel = this.previousActiveDashboard.configRecord;
+        }
+        else {
+            // Sort in descending order by edited date
+            // Sort on array to prevent store positions from being udpated
+            var sortedDashboards = Ext.Array.sort(Ext.Array.pluck(this.dashboardStore.data.items, 'data'), function(a, b) {
+                return b.editedDate.getTime() - a.editedDate.getTime();
+            });
+
+            // If more than 1 dashboards are found, verify that we dont select the same dashboard to activate
+            if(length >= 2) {
+                if(sortedDashboards[0].guid === this.activeDashboard.guid) {
+                    guid = sortedDashboards[1].guid;
+                }
+                else {
+                    guid = sortedDashboards[0].guid;
+                }
+                previousActiveDashboardModel = this.dashboardStore.getById(guid);
+            }
+        }
+
+        if(previousActiveDashboardModel) {
+            stack = previousActiveDashboardModel.get('stack');
+            guid = previousActiveDashboardModel.get('guid');
+
+            this.activateDashboard(guid, false, stack ? stack.stackContext : null);
+            return true;
+        }
+        else {
+            return false;
+        }
+    },
+
     //this function is private, do not call outside of this class - use activateDashboard instead
     _activateDashboard: function(guid, stackContext) {
         var dashboardCardPanel = this.getDashboardCardPanel();
         if (!dashboardCardPanel) {
             return;
         }
+
+        this.previousActiveDashboard = dashboardCardPanel.layout.getActiveItem();
 
         if (guid != null && guid != '') {
             //make the new dashboard active and visible
@@ -1703,7 +1753,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         this.saveDashboard(newJson, 'create');
 
-        // add to dashbaordStore
+        // add to dashboardStore
 
         var dash = {
             id: newGuid,
@@ -1872,9 +1922,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         }
         //if we have a marketplace widget or marketplace config, tell the banner to add a button
-        if (hasMpWidget
-//              || (!!Ozone.config.marketplaceLocation)
-                ) {
+        if (hasMpWidget) {
             if (mpWidgets.length == 1) { mpWidget = mpWidgets[0] }
             this.getBanner().addMarketplaceButton(mpWidget);
         }

@@ -1166,5 +1166,14 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
         return true;
 
+    },
+
+    /**
+    *
+    * Determines if this is a 'special' marketplace dashboard
+    * @returns {Boolean} true if this is a marketplace dashboard. Otherwise, returns false.
+    **/
+    isMarketplaceDashboard: function () {
+        return this.getIsModifiable();
     }
 });
