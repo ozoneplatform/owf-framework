@@ -75,6 +75,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             },
             onFailure: function(jsonData) {
                 self.dashboardContainer.loadMask.hide();
+                Ozone.Msg.alert("Error", "Stack could not be added because Marketplace sync is disabled.");
             }
         });
     },
