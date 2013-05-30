@@ -38,6 +38,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             maxLength: 200,
             value: '',
             enforceMaxLength: true,
+            margin: '0 0 5 0',
             listeners: {
                 blur: function(field){
                     // Remove leading and tailing spaces
@@ -56,7 +57,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             labelSeparator: '',
             value: '',
             maxLength: 4000,
-            enforceMaxLength: true
+            enforceMaxLength: true,
+            margin: '0 0 5 0'
         };
 
         if (this.existingDashboardRecord != null) {
@@ -294,6 +296,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             region: 'center',
             allowBlank: false,
             hidden: this.hideViewSelectRadio,
+            padding: '10, 0, 0, 0',
             items: [
                 {
                     xtype: 'radiogroup',
@@ -312,21 +315,6 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                         this.importedView
                     ]
                 }
-                //                    {
-                //                        layout: {
-                //                            type: 'vbox',
-                //                            align: 'stretch'
-                //                        },
-                //                        cls: 'viewSelectBoxes',
-                //                        flex: 1,
-                //                        defaults: {
-                //                            flex: 1
-                //                        },
-                //                        items: [
-                //                            this.existingView,
-                //                            this.importedView
-                //                        ]
-                //                    }
             ]
         };
 
