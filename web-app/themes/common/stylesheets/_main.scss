@@ -366,7 +366,10 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
     -o-transition-property: top, left, width, height;
     transition-property: top, left, width, height;
     @include transition-duration(1s);
-    @include transition-timing-function(ceaser($linear), ceaser($easeInQuad), ceaser($linear), ceaser($linear));
+    -webkit-transition-timing-function: $linear, $easeInQuad, $linear, $linear;
+    -moz-transition-timing-function: $linear, $easeInQuad, $linear, $linear;
+    -o-transition-timing-function: $linear, $easeInQuad, $linear, $linear;
+    transition-timing-function: $linear, $easeInQuad, $linear, $linear;
 }
 
 
