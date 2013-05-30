@@ -73,7 +73,9 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
                 self.dashboardContainer.loadMask.hide();
             },
-            onFailure: self.dashboardContainer.loadMask.hide
+            onFailure: function(jsonData) {
+                self.dashboardContainer.loadMask.hide();
+            }
         });
     },
 
