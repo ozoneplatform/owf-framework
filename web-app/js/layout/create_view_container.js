@@ -155,8 +155,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             allowBlank:true,
             forceSelection: true,
             disabled: true,
-            width: 100,
-            padding: '0, 0, 5, 17'
+            padding: '0, 0, 5, 17',
+            anchor: '-24'
         };
         this.existingView.value = this.views[0].guid;
 
@@ -178,8 +178,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             name: 'importFileupload',
             hideLabel: true,
             label: '',
-            width: 400,
             padding: '0, 0, 5, 17',
+            anchor: '-24',
             emptyText: Ozone.ux.DashboardMgmtString.uploadConfig,
             allowBlank: true,
             disabled: true,
@@ -336,7 +336,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         };
 
         this.defaults = {
-            labelWidth: 100,
+            labelWidth: 150,
             labelSeparator: ''
         };
 

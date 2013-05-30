@@ -28,10 +28,10 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
         var dashPanelWidth = me.ownerCt.getWidth();
 
         if (me.height == null ) {
-            me.height = (dashPanelHeight > 379) ? 370 : dashPanelHeight - 10;
+            me.height = (dashPanelHeight > 379) ? 450 : dashPanelHeight - 10;
         }
         if (me.width == null) {
-            me.width = (dashPanelWidth > 559) ? 550 : dashPanelWidth - 10;
+            me.width = (dashPanelWidth > 559) ? 700 : dashPanelWidth - 10;
         }
         if (me.minHeight == null) {
             me.minHeight = 250;
