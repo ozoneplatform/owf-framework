@@ -908,7 +908,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             // Sort in descending order by edited date
             // Sort on array to prevent store positions from being udpated
             var sortedDashboards = Ext.Array.sort(Ext.Array.pluck(this.dashboardStore.data.items, 'data'), function(a, b) {
-                return b.editedDate.getTime() - a.editedDate.getTime();
+                return ((new Date(b.editedDate).getTime()) - (new Date(a.editedDate).getTime()));
             });
 
             // If more than 1 dashboards are found, verify that we dont select the same dashboard to activate

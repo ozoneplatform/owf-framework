@@ -1130,42 +1130,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @return {boolean}
      */
     getIsModifiable: function () {
-
-        // resolve the setting, and then evaluate it...
-        if (Ozone.config.debugFeatureFlags && Ozone.config.debugFeatureFlags.OP23 &&  Ozone.config.debugFeatureFlags.OP23 === true ) {
-            var widgetList = this.config.layoutConfig.widgets;
-            var widgetCount;
-
-
-            // TODO: WidgetList is empty for dashboards within a stack - investigate
-            if (widgetList) {
-                widgetCount = widgetList.length;
-            } else {
-                widgetCount = 0;
-            }
-
-            // first-level check: dashboard only has one widget on it.
-            if (widgetCount != 1) {
-                return false;
-            }
-
-            // second-level check: that widget is of type 'marketplace'.  Not checking at the moment whether it's in a fit pane, etc.
-            // NOTE: can't just get widgetStore, as those are items in launchMenu..  marketplaceWidgets aren't in launch menu
-            // Also can't do a var widget = Ext.getCmp(widgetList[0].uniqueId): if dashboard isn't active, component may not be created.  Not workable.
-
-            var records = this.dashboardContainer.widgetStore.getRange();
-            for (var i = 0; i < records.length; i++) {
-                if (records[i].data.widgetTypes[0].name == 'marketplace') {
-                    if (widgetList[0].widgetGuid === records[i].data.widgetGuid)
-                        return false;
-
-                }
-            }
-
-        }
-
-        return true;
-
+        return !this.isMarketplaceDashboard();
     },
 
     /**
@@ -1174,6 +1139,23 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     * @returns {Boolean} true if this is a marketplace dashboard. Otherwise, returns false.
     **/
     isMarketplaceDashboard: function () {
-        return this.getIsModifiable();
+        var widgets = this.configRecord.get('layoutConfig').widgets,
+            widgetCount = widgets ? widgets.length: 0;
+
+        // multi pane dashboard or no widgets
+        if(!widgets || widgetCount === 0) {
+            return false;
+        }
+
+        // For a dasbhoard to be of type 'marketplace', it must have all widgets that are of type 'marketplace'
+        // Search widgetStore and check for widgetType
+        for(var i = 0, len = widgetCount; i < len; i++) {
+            var widgetDef = this.dashboardContainer.widgetStore.findRecord('widgetGuid', widgets[i].widgetGuid);
+            if(widgetDef.get('widgetTypes')[0].name !== 'marketplace') {
+                return false;
+            }
+        }
+        
+        return true;
     }
 });
