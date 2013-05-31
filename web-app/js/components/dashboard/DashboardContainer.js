@@ -657,7 +657,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     			this.getBanner().enableLaunchMenu();
     		}
 
-            if(this.activeDashboard.isMarketplaceDashboard()) {
+            if(this.activeDashboard.configRecord.isMarketplaceDashboard()) {
                 this.getBanner().setMarketplaceToggle();
             }
 

@@ -53,6 +53,10 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
             model = me.dashboardStore.getAt(i);
 
+            if(!model.isModifiable()) {
+                continue;
+            }
+
             dashboard = Ext.clone(model.data);
             dashboard.model = model;
             dashboards[ dashboard.guid ] = dashboard;
@@ -669,11 +673,13 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             activeDashboardId = this.activeDashboard.id,
             selectedEl = $('#dashboard'+activeDashboardId);
 
-        // active dashboard must be in a stack
+        // dashboard item view not found in switcher, active dashboard must be in a stack.
         // expand the stack, then focus the active dashboard
         if(selectedEl.length === 0) {
-            var stackId = this.activeDashboard.configRecord.get('stack').id,
-                stack = this.stacks[stackId];
+            var stackId, stack;
+
+            stack = this.activeDashboard.configRecord.get('stack');
+            stackId = stack ? stack.id : null;
 
             if (stack) {
                 this.toggleStack(this.stacks[stackId], $('#stack'+stackId)).then(function () {
