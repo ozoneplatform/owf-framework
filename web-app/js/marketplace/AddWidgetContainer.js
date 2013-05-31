@@ -80,7 +80,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         });
     },
 
-    addWidget:function (sender, config, callback) {
+    addWidget:function (sender, config, marketplaceCallback) {
         var me = this,
             widgetsJSON = config,
             id = config.data.id,
@@ -89,7 +89,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
         this.dashboardContainer.loadMask.show();
 
-        this.processMarketplaceWidgetData(config.baseUrl, id, doLaunch, function(widgetDefinition) {
+        var visualizeWidgetAddition = function(widgetDefinition) {
             if(Modernizr.csstransitions && Modernizr.cssanimations) {
                 var widget = Ext.getCmp(sender.id),
                     widgetOffsets = widget.el.getOffsetsTo(Ext.getBody()),
@@ -106,25 +106,25 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     btn = Ext.getCmp('launchMenuBtn'),
                     target = btn.el.dom;
 
-                    $img
-                        .one(CSS.Transition.TRANSITION_END, function () {
-                            $img.remove();
-                            var $target = $(target);
+                $img
+                    .one(CSS.Transition.TRANSITION_END, function () {
+                        $img.remove();
+                        var $target = $(target);
 
-                            $target
-                                .one(CSS.Animation.ANIMATION_END, function () {
-                                    $target.removeClass('blink');
-                                })
-                                .addClass('blink');
+                        $target
+                            .one(CSS.Animation.ANIMATION_END, function () {
+                                $target.removeClass('blink');
+                            })
+                            .addClass('blink');
 
-                            callback && callback(id);
-                        })
-                        .css({
-                            top: '0px',
-                            left: '0px',
-                            width: btn.btnEl.getWidth() + 'px',
-                            height: btn.btnEl.getHeight() + 'px'
-                        });
+                        marketplaceCallback && marketplaceCallback(id);
+                    })
+                    .css({
+                        top: '0px',
+                        left: '0px',
+                        width: btn.btnEl.getWidth() + 'px',
+                        height: btn.btnEl.getHeight() + 'px'
+                    });
             }
             else {
                 var tip = Ext.create('Ext.tip.ToolTip', {
@@ -139,11 +139,14 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     }
                 });
                 tip.show();
+                marketplaceCallback && marketplaceCallback(id);
             }
-        });
+        };
+
+        this.processMarketplaceWidgetData(config.baseUrl, id, doLaunch, visualizeWidgetAddition, marketplaceCallback);
     },
 
-    processMarketplaceWidgetData: function(marketplaceUrl, widgetId, doLaunch, callback) {
+    processMarketplaceWidgetData: function(marketplaceUrl, widgetId, doLaunch, addWidgetCallback, doLaunchCallback) {
         var self = this;
         Ozone.util.Transport.send({
             url: marketplaceUrl + "/relationship/getOWFRequiredItems",
@@ -177,7 +180,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     // OZP-476: MP Synchronization
                     // Added the URL of the Marketplace we're looking at to the
                     // JSON we send to the widget controller.
-                    self.submitWidgetList(Ext.JSON.encode(widgetListJson), marketplaceUrl, doLaunch, callback);
+                    self.submitWidgetList(Ext.JSON.encode(widgetListJson), marketplaceUrl, doLaunch, addWidgetCallback, doLaunchCallback);
                 }
             },
             onFailure: function(json) {
@@ -255,7 +258,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
     // OZP-476: MP Synchronization
     // Added the URL of the Marketplace we're looking at to the JSON we send to
     // the widget controller.
-    submitWidgetList: function(widgetList, mpUrl, doLaunch, addCallback) {
+    submitWidgetList: function(widgetList, mpUrl, doLaunch, addWidgetCallback, doLaunchCallback) {
 		var self = this;
         return owfdojo.xhrPost({
             url:Ozone.util.contextPath() + '/widget/',
@@ -359,14 +362,12 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
     
                                             notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;
                                         }
-                                    }  else {
+                                        doLaunchCallback && doLaunchCallback()
+                                    } else {
                                         notifyText = null;
-                                        addCallback && addCallback(widgetDefs.get(0));
+                                        addWidgetCallback && addWidgetCallback(widgetDefs.get(0));
                                     }
-
-
-                                }  else {
-
+                                } else {
                                     // Failure message
                                     notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddWidget;
                                 }
