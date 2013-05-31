@@ -465,6 +465,7 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
         
         cmp.removeAll(true);
         cmp.initialConfig.items = [];
+        cmp.initialConfig.paneType = '';
 
         if(paneType)
             cmp.el.removeCls(paneType);
