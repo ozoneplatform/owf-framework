@@ -43,10 +43,11 @@ Ext.define('Ozone.data.Dashboard', {
     },
 
     /**
-     *  @description Determine whether this dashboard can be modified by adding new widgets to it.  This is a stronger
-     *   variant than the concept of locking. Current intent is that this logic only applies to dashboards containing
-     *   a single widget of type Marketplace. We recognize that this behavior could be overloaded or extended..
-     * @return {boolean}
+     * Determine whether this dashboard can be modified by adding new widgets to it.  This is a stronger
+     * variant than the concept of locking. Current intent is that this logic only applies to dashboards containing
+     * one or more widgets of type 'marketplace'. We recognize that this behavior could be overloaded or extended..
+     * 
+     * @returns {Boolean}
      */
     isModifiable: function () {
         return !this.isMarketplaceDashboard();
