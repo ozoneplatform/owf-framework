@@ -301,68 +301,11 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
                                     // If the widget is to be launched
                                     if (doLaunch) {
-
                                         // It will be the first item if there is more than one (the remaining are required items)
                                         var widgetDef = widgetDefs.get(0);
-                                        
-                                        if(widgetDef.data.widgetTypes[0].name == "fullscreen") {
-                                            var me = this;
-                                            
-                                            var dashboardStore = self.dashboardContainer.dashboardStore;
-                                            
-                                            var tmpDashboard = null;
-                                            for(var storeCount = 0; storeCount < dashboardStore.getCount(); storeCount++) {
-                                                tmpDashboard = dashboardStore.getAt(storeCount);
-                                                
-                                                if(tmpDashboard.data.name == widgetDef.data.title) {
-                                                    if(tmpDashboard.data.locked == true) {
-                                                        if(tmpDashboard.data.layoutConfig.widgets[0] && 
-                                                            tmpDashboard.data.layoutConfig.widgets[0].widgetGuid == widgetDef.data.widgetGuid) {
-                                                            me.dashboard = tmpDashboard;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            
-                                            if(me.dashboard) {
-                                                self.dashboardContainer.activateDashboard(me.dashboard.data.guid);
-                                            } else {
-                                                me.dashboard = Ext.create('Ozone.data.Dashboard', {
-                                                    name: widgetDef.data.title,
-                                                    layoutConfig : {
-                                                        xtype: 'container',
-                                                        flex: 1,
-                                                        height: '100%',
-                                                        items: [],
-                                                        paneType: 'fitpane',
-                                                        widgets: []
-                                                    }
-                                                    
-                                                });
-                                                
-                                                self.dashboardContainer.saveDashboard(me.dashboard.data, 'create', function() {
-                                                	self.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
-                                                        self.dashboardContainer.launchWidgets(widgetDef, true);
-                                                        self.dashboardContainer.activeDashboard.config.locked = true;
-                                                        self.dashboardContainer.saveDashboard(self.dashboardContainer.activeDashboard, 'update', function() {});
-                                                    }, self.dashboardContainer, {/*delay:2000,*/ single:true});
-                                                    self.dashboardContainer.activateDashboard(me.dashboard.data.guid);
-                                                });
-                                                
-                                                notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_WebappLaunchSuccessful;
-                                            }
-                                        } else {
-                                            // Show the switcher
-                                            self.dashboardContainer.showDashboardSwitcher();
-                                            // Add a listener so we can launch the widget if the user picks a different dashboard
-                                            // TODO: Remove this listener if the user cancels dashboard selection (OP-419)
-                                            self.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
-                                                self.dashboardContainer.launchWidgets(widgetDef, true);
-                                            }, self.dashboardContainer, {/*delay:2000,*/ single:true});
-    
-                                            notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;
-                                        }
-                                        doLaunchCallback && doLaunchCallback()
+
+                                        notifyText = self.launchWidget(widgetDef, doLaunchCallback);
+
                                     } else {
                                         notifyText = null;
                                         addWidgetCallback && addWidgetCallback(widgetDefs.get(0));
@@ -424,6 +367,72 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 self.dashboardContainer.loadMask.hide();
             }
         });
+    },
+
+    launchWidget: function(widgetDef, doLaunchCallback) {
+        var self = this;
+
+        var notifyText = null;
+
+        if(widgetDef.data.widgetTypes[0].name == "fullscreen") {
+            var dashboard;
+            var dashboardStore = self.dashboardContainer.dashboardStore;
+
+            var tmpDashboard = null;
+            for(var storeCount = 0; storeCount < dashboardStore.getCount(); storeCount++) {
+                tmpDashboard = dashboardStore.getAt(storeCount);
+
+                if(tmpDashboard.data.name == widgetDef.data.title) {
+                    if(tmpDashboard.data.locked == true) {
+                        if(tmpDashboard.data.layoutConfig.widgets[0] &&
+                            tmpDashboard.data.layoutConfig.widgets[0].widgetGuid == widgetDef.data.widgetGuid) {
+                            dashboard = tmpDashboard;
+                        }
+                    }
+                }
+            }
+
+            if(dashboard) {
+                self.dashboardContainer.activateDashboard(dashboard.data.guid);
+            } else {
+                dashboard = Ext.create('Ozone.data.Dashboard', {
+                    name: widgetDef.data.title,
+                    layoutConfig : {
+                        xtype: 'container',
+                        flex: 1,
+                        height: '100%',
+                        items: [],
+                        paneType: 'fitpane',
+                        widgets: []
+                    }
+
+                });
+
+                self.dashboardContainer.saveDashboard(dashboard.data, 'create', function() {
+                    self.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
+                        self.dashboardContainer.launchWidgets(widgetDef, true);
+                        self.dashboardContainer.activeDashboard.config.locked = true;
+                        self.dashboardContainer.saveDashboard(self.dashboardContainer.activeDashboard, 'update', function() {});
+                    }, self.dashboardContainer, {/*delay:2000,*/ single:true});
+                    self.dashboardContainer.activateDashboard(dashboard.data.guid);
+                });
+
+                notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_WebappLaunchSuccessful;
+            }
+        } else {
+            // Show the switcher
+            self.dashboardContainer.showDashboardSwitcher();
+            // Add a listener so we can launch the widget if the user picks a different dashboard
+            // TODO: Remove this listener if the user cancels dashboard selection (OP-419)
+            self.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
+                self.dashboardContainer.launchWidgets(widgetDef, true);
+            }, self.dashboardContainer, {/*delay:2000,*/ single:true});
+
+            notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;
+        }
+        doLaunchCallback && doLaunchCallback();
+
+        return notifyText;
     },
 
     registerWindowManager:function (window_manager) {
