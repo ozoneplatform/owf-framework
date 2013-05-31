@@ -23,6 +23,10 @@ Ext.define('Ozone.components.dashboarddesigner.SidePanel', {
                     enterpress: {
                         fn: me.baseLayoutSelected,
                         scope: me
+                    },
+                    buttonclick: {
+                        fn: me.baseLayoutClicked,
+                        scope: me
                     }
                 }
             },
@@ -31,6 +35,10 @@ Ext.define('Ozone.components.dashboarddesigner.SidePanel', {
                 listeners: {
                     enterpress: {
                         fn: me.baseLayoutSelected,
+                        scope: me
+                    },
+                    buttonclick: {
+                        fn: me.baseLayoutClicked,
                         scope: me
                     }
                 }
@@ -119,9 +127,10 @@ Ext.define('Ozone.components.dashboarddesigner.SidePanel', {
         ];
 
         me.addEvents(
-            'baselayoutselected'
+            'baselayoutselected',
+            'baselayoutclicked'
         );
-        me.enableBubble(['baselayoutselected']);
+        me.enableBubble(['baselayoutselected','baselayoutclicked']);
         me.callParent(arguments);
     },
 
@@ -131,6 +140,10 @@ Ext.define('Ozone.components.dashboarddesigner.SidePanel', {
 
     baseLayoutSelected: function(view, record, item) {
         this.fireEvent('baselayoutselected', view, record, item);
+    },
+
+    baseLayoutClicked: function(view, record, item) {
+        this.fireEvent('baselayoutclicked', view, record, item);
     },
 
     paneLayoutTypeSelected: function(view, record, item) {

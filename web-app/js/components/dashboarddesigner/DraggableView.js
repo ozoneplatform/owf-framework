@@ -11,11 +11,13 @@ Ext.define('Ozone.components.dashboarddesigner.DraggableView', {
 		me.on('viewready', me.setup, me, {single: true});
 		me.on('destroy', me.cleanUp, me);
 		me.on('keyup', me.keyup, me, { element: 'el' });
+        me.on('click', me.click, me, {element: 'el' });
 		
 		me.addEvents(
-			'enterpress'
+			'enterpress',
+            'buttonclick'
 		);
-		me.enableBubble(['enterpress']);
+		me.enableBubble(['enterpress','buttonclick']);
 		
 		me.callParent(arguments);
 	},
@@ -27,6 +29,13 @@ Ext.define('Ozone.components.dashboarddesigner.DraggableView', {
 		if(evt.getKey() === Ext.EventObject.ENTER)
 			this.fireEvent('enterpress', this, record, item);
 	},
+
+    click: function(evt, dom) {
+        var item = dom.parentElement,
+            record = this.getRecord(item);
+
+        this.fireEvent('buttonclick', this, record, item);
+    },
 
 	setup: function(view) {
 		var me = this;

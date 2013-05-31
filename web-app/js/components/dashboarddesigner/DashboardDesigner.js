@@ -99,8 +99,18 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
         me.down('dashboarddesignerbaselayout').on('viewready', me.setup, me, { single: true });
         me.on('baselayoutselected', me.enableKeyboardDesign, me);
         me.on('panelayouttypeselected', me.enableKeyboardDesign, me);
+        me.on('baselayoutclicked', me.baseLayoutClicked, me);
 
         Ext.EventManager.onWindowResize(me.resize, me);
+    },
+
+    afterLayout: function() {
+        var ddpanes = this.query('dashboarddesignerpane'),
+            workArea = this.down('dashboarddesignerworkingarea');
+
+        if(ddpanes.length > 0) {
+            workArea.paneSelected(ddpanes[0]);
+        }
     },
 
     setup: function() {
@@ -123,6 +133,44 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
 
     resize: function() {
         this.doComponentLayout();
+    },
+
+    baseLayoutClicked: function(view, record, item) {
+        var me = this,
+            workArea = this.down('dashboarddesignerworkingarea'),
+            ddpanes = this.query('dashboarddesignerpane'),
+            selected = this.el.query('.active-pane'),
+            newSplitPane,
+            activePane;
+
+        // if there are no split panes yet...
+        if(ddpanes.length === 0 || ddpanes.length === 1) {
+            var target = ddpanes.length === 0 ? workArea : ddpanes[0];
+            if (record.get('type')) {
+                newSplitPane = me.nest(target, record);
+            }
+            else {
+                me.updatePaneType(target, record);
+            }
+        }
+        // otherwise go here and split the selected one
+        else if (selected.length === 1){
+
+            var selectedPane = Ext.getCmp(selected[0].id);
+
+            if(record.get('type')) {
+                newSplitPane = me.nest(selectedPane, record);
+            }
+            else {
+                me.updatePaneType(selectedPane, record);
+            }
+        }
+
+        // after select the "top left" of the new pane
+        if (newSplitPane !== undefined) {
+            activePane = newSplitPane.items.items[0];
+            workArea.paneSelected(activePane);
+        }
     },
 
     enableKeyboardDesign: function(view, record, item) {
@@ -186,7 +234,8 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
             layoutClasses,
             layoutConfig,
             layoutClasses = record.get('classes'),
-            ownerCt;
+            ownerCt,
+            newSplitPane;
 
         if(!targetCmp)
             return;
@@ -245,7 +294,7 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
             }
 
             ownerCt.remove(targetCmp);
-            ownerCt.insert(i, layoutConfig);
+            newSplitPane = ownerCt.insert(i, layoutConfig);
         }
         else {
 
@@ -257,12 +306,15 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
             }
 
             // add layout
-            targetCmp.add(layoutConfig);
+            newSplitPane = targetCmp.add(layoutConfig);
+
         }
 
         // recreate circular focus as layout may have changed
         this.tearDownCircularFocus();
         this.setup();
+
+        return newSplitPane;
     },
 
     updatePaneType: function(target, record) {
