@@ -49,6 +49,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         var stackJSON = config.widgetsJSON;
         this.dashboardContainer.loadMask.show();
         this.processMarketplaceStackData(stackJSON.itemUuid);
+        this.dashboardContainer.dashboardsNeedRefresh = true;
         return stackJSON.itemId;
     },
 
@@ -62,7 +63,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 var stack_bottomright = {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25};
                 $.pnotify({
                     title: Ozone.layout.DialogMessages.added,
-                    text: "The stack was successfully added. An administrator will have to give you permission to use it before it will appear in your dashboard.",
+                    text: "The stack was successfully added.",
                     type: 'success',
                     addclass: "stack-bottomright",
                     stack: stack_bottomright,
@@ -75,7 +76,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             },
             onFailure: function(jsonData) {
                 self.dashboardContainer.loadMask.hide();
-                Ozone.Msg.alert("Error", "Stack could not be added because Marketplace sync is disabled.");
+                Ozone.Msg.alert("Error", jsonData);
             }
         });
     },

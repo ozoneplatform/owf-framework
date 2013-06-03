@@ -144,9 +144,6 @@ class StackService {
     }
     
     def createOrUpdate(params) {
-        
-        // Only admins may create or update Stacks
-        ensureAdmin()
         def stacks = []
 
         if (params.update_action) {
@@ -177,6 +174,8 @@ class StackService {
         if (params?.stack_id) params.stack_id = (params.stack_id instanceof String ? Integer.parseInt(params.stack_id) : params.stack_id)
         
         if (params?.id >= 0 || params.stack_id  >= 0) {  // Existing Stack
+            //OP-694: Any user can create a stack but only admins can update
+            ensureAdmin()
             params.id = params?.id >= 0 ? params.id : params.stack_id
             stack = Stack.findById(params.id, [cache: true])
             if (!stack) {
@@ -186,10 +185,10 @@ class StackService {
             stack = new ozone.owf.grails.domain.Stack()
             def dfltGroup = new Group(name: java.util.UUID.randomUUID().toString(), stackDefault: true)
             stack.addToGroups(dfltGroup)
+
         }
 
         if (!params.update_action) {
-            
             //If context was modified and it already exists, throw a unique constrain error
             if(params.stackContext && params.stackContext != stack.stackContext) {
                 if(Stack.findByStackContext(params.stackContext)) {
@@ -466,10 +465,6 @@ class StackService {
     }
 
     def importStack(params) {
-
-        //only admins may import stacks
-        ensureAdmin()
-
         def stackParams = [:]
         params.data = JSON.parse(params.data)
         stackParams.name = params.data.name
