@@ -252,6 +252,7 @@
             background: transparent;
             color: $widget-launcher-info-panel-color;
             border-style: none;
+            padding-bottom: 3px; //IE 7 hack so bottom button's border isn't cut off
         }
 
         .image-panel {
