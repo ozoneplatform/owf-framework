@@ -952,7 +952,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 //save a reference
                 this.activeDashboard = dashboardPanel;
 
-                this.fireEvent(OWF.Events.Dashboard.CHANGED, guid);
+                this.fireEvent(OWF.Events.Dashboard.CHANGED, guid, dashboardPanel);
                 this.setDefaultDashboard(guid);
             }
         } else {

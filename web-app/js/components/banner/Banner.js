@@ -303,19 +303,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 	        handler: this.dashboardContainer.showDashboardSwitcher,
 	        listeners: {
 	        	afterrender: {
-	        		fn: function(btn) {
-	        			Ext.create('Ext.tip.ToolTip',{
-	        				target: btn.getEl().id,
-	        				title: Ozone.layout.tooltipString.dashboardSwitcherTitle,
-	        				html: Ozone.layout.tooltipString.dashboardSwitcherContent,
-	        			    anchor: 'bottom',
-	        			    anchorToTarget: true,
-	        			    anchorOffset: -5,
-	        			    mouseOffset: [5,0],
-	        			    width: 500,
-	        			    maxWidth: 500            			    
-	        			});
-	        		}
+	        		fn: me.dashMenuAfterRender,
+                    scope: me
 	        	}
 	        }
         }, '-',
@@ -1002,6 +991,31 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         }
 
         this.hasMetricButton = false;
+    },
+
+    dashMenuAfterRender: function(btn) {
+        Ext.create('Ext.tip.ToolTip',{
+            target: btn.getEl().id,
+            title: Ozone.layout.tooltipString.dashboardSwitcherTitle,
+            html: Ozone.layout.tooltipString.dashboardSwitcherContent,
+            anchor: 'bottom',
+            anchorToTarget: true,
+            anchorOffset: -5,
+            mouseOffset: [5,0],
+            width: 500,
+            maxWidth: 500                           
+        });
+
+        if(!Modernizr.cssanimations) {
+            var focusColor = Ext.util.CSS.getRule('.x-focus').style.borderColor;
+            this.dashboardContainer.on(OWF.Events.Dashboard.CHANGED, function (guid, dashboard) {
+                // wait 6 seconds if dashboard hasn't rendered
+                // otherwise frame animation won't be visible to user
+                setTimeout(function() {
+                    btn.el.frame(focusColor);
+                }, dashboard.rendered ? 0: 6000);
+            });
+        }
     }
 
 });
