@@ -789,51 +789,50 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     showDashboardSwitcher: function() {
-        var me = this;
-        
-        //perform the logic of actually creating and displaying the window
-        function show() {
-            var dashboardSwitcherId = 'dashboard-switcher', 
-                dashboardSwitcher = Ext.getCmp(dashboardSwitcherId),
-                activeDashboard = me.activeDashboard;
+        var me = this,
+            dashboardSwitcherId = 'dashboard-switcher',
+            dashboardSwitcher = Ext.getCmp(dashboardSwitcherId),
+            //perform the logic of actually creating and displaying the window
+            show = function() {
+                if (!dashboardSwitcher) {
+                    dashboardSwitcher = Ext.widget('dashboardswitcher', {
+                        id: dashboardSwitcherId,
+                        dashboardContainer: me,
+                        activeDashboard: me.activeDashboard,
+                        dashboardStore: me.dashboardStore,
+                        plugins: new Ozone.components.keys.HotKeyComponent(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER)
+                    });
+                }
 
-            if (!dashboardSwitcher) {
-                dashboardSwitcher = Ext.widget('dashboardswitcher', {
-                    id: dashboardSwitcherId,
-                    dashboardContainer: me,
-                    activeDashboard: me.activeDashboard,
-                    dashboardStore: me.dashboardStore,
-                    plugins: new Ozone.components.keys.HotKeyComponent(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER)
-                });
-            }
-            else if (dashboardSwitcher.isVisible()) {
-                dashboardSwitcher.close();
-                return;
-            }
+                dashboardSwitcher.activeDashboard = me.activeDashboard;
+                dashboardSwitcher.show().center();
 
-            dashboardSwitcher.activeDashboard = activeDashboard;
-            dashboardSwitcher.show().center();
+                me.loadMask.hide();
+            };
 
-            me.loadMask.hide();
+        // If it already is open, close it
+        if(dashboardSwitcher && dashboardSwitcher.isVisible()) {
+            dashboardSwitcher.close();
         }
+        else {
+            me.loadMask.show();
 
-        me.loadMask.show();
+            //making this asynchronous helps the loading mask appear in a timely
+            //manner in IE
+            setTimeout(function() {
+                // force dashboard save before showing dashboard switcher
+                me.activeDashboard.saveToServer(false, true);
 
-        //making this asynchronous helps the loading mask appear in a timely
-        //manner in IE
-        setTimeout(function() {
-            // force dashboard save before showing dashboard switcher
-            me.activeDashboard.saveToServer(false, true);
-
-            //if necessary, refresh the dashboards before calling show
-            if (me.dashboardsNeedRefresh) {
-                me.dashboardsNeedRefresh = false;
-                me.reloadDashboards(show);
-            }
-            else {
-                show();
-            }
-        }, 0);
+                //if necessary, refresh the dashboards before calling show
+                if (me.dashboardsNeedRefresh) {
+                    me.dashboardsNeedRefresh = false;
+                    me.reloadDashboards(show);
+                }
+                else {
+                    show();
+                }
+            }, 0);
+        }
     },
 
     destroyDashboardSwitcher: function () {
