@@ -819,17 +819,21 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         me.loadMask.show();
 
-        // force dashboard save before showing dashboard switcher
-        me.activeDashboard.saveToServer(false, true);
+        //making this asynchronous helps the loading mask appear in a timely
+        //manner in IE
+        setTimeout(function() {
+            // force dashboard save before showing dashboard switcher
+            me.activeDashboard.saveToServer(false, true);
 
-        //if necessary, refresh the dashboards before calling show
-        if (me.dashboardsNeedRefresh) {
-            me.dashboardsNeedRefresh = false;
-            me.reloadDashboards(show);
-        }
-        else {
-            show();
-        }
+            //if necessary, refresh the dashboards before calling show
+            if (me.dashboardsNeedRefresh) {
+                me.dashboardsNeedRefresh = false;
+                me.reloadDashboards(show);
+            }
+            else {
+                show();
+            }
+        }, 0);
     },
 
     destroyDashboardSwitcher: function () {
