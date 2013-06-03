@@ -45,7 +45,15 @@ class MarketplaceService extends BaseService {
             if (obj?.widgetGuid) {
                 return addWidgetToDatabase(obj)
             } else if (obj?.stackContext) {
-                return stackService.importStack([data: obj.toString()])
+                def stack = Stack.findByStackContext(obj.stackContext)
+                if (!stack) {
+                    stack = stackService.importStack([data: obj.toString()])
+                }
+                def stackDefaultGroup = stack.findStackDefaultGroup()
+                stackDefaultGroup.addToPeople(accountService.getLoggedInUser())
+                stack
+                
+                
             }
         }
 

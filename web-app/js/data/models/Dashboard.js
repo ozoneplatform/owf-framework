@@ -73,7 +73,7 @@ Ext.define('Ozone.data.Dashboard', {
         // Search widgetStore and check for widgetType
         for(var i = 0, len = widgetCount; i < len; i++) {
             var widgetDef = widgetStore.findRecord('widgetGuid', widgets[i].widgetGuid);
-            if(widgetDef.get('widgetTypes')[0].name !== 'marketplace') {
+            if(widgetDef && widgetDef.get('widgetTypes')[0].name !== 'marketplace') {
                 return false;
             }
         }

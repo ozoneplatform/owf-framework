@@ -49,6 +49,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         var stackJSON = config.widgetsJSON;
         this.dashboardContainer.loadMask.show();
         this.processMarketplaceStackData(stackJSON.itemUuid);
+        this.dashboardContainer.dashboardsNeedRefresh = true;
         return stackJSON.itemId;
     },
 
@@ -62,7 +63,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 var stack_bottomright = {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25};
                 $.pnotify({
                     title: Ozone.layout.DialogMessages.added,
-                    text: "The stack was successfully added. An administrator will have to give you permission to use it before it will appear in your dashboard.",
+                    text: "The stack was successfully added.",
                     type: 'success',
                     addclass: "stack-bottomright",
                     stack: stack_bottomright,
@@ -75,12 +76,12 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             },
             onFailure: function(jsonData) {
                 self.dashboardContainer.loadMask.hide();
-                Ozone.Msg.alert("Error", "Stack could not be added because Marketplace sync is disabled.");
+                Ozone.Msg.alert("Error", jsonData);
             }
         });
     },
 
-    addWidget:function (sender, config, callback) {
+    addWidget:function (sender, config, marketplaceCallback) {
         var me = this,
             widgetsJSON = config,
             id = config.data.id,
@@ -89,7 +90,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
         this.dashboardContainer.loadMask.show();
 
-        this.processMarketplaceWidgetData(config.baseUrl, id, doLaunch, function(widgetDefinition) {
+        var visualizeWidgetAddition = function(widgetDefinition) {
             if(Modernizr.csstransitions && Modernizr.cssanimations) {
                 var widget = Ext.getCmp(sender.id),
                     widgetOffsets = widget.el.getOffsetsTo(Ext.getBody()),
@@ -106,25 +107,25 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     btn = Ext.getCmp('launchMenuBtn'),
                     target = btn.el.dom;
 
-                    $img
-                        .one(CSS.Transition.TRANSITION_END, function () {
-                            $img.remove();
-                            var $target = $(target);
+                $img
+                    .one(CSS.Transition.TRANSITION_END, function () {
+                        $img.remove();
+                        var $target = $(target);
 
-                            $target
-                                .one(CSS.Animation.ANIMATION_END, function () {
-                                    $target.removeClass('blink');
-                                })
-                                .addClass('blink');
+                        $target
+                            .one(CSS.Animation.ANIMATION_END, function () {
+                                $target.removeClass('blink');
+                            })
+                            .addClass('blink');
 
-                            callback && callback(id);
-                        })
-                        .css({
-                            top: '0px',
-                            left: '0px',
-                            width: btn.btnEl.getWidth() + 'px',
-                            height: btn.btnEl.getHeight() + 'px'
-                        });
+                        marketplaceCallback && marketplaceCallback(id);
+                    })
+                    .css({
+                        top: '0px',
+                        left: '0px',
+                        width: btn.btnEl.getWidth() + 'px',
+                        height: btn.btnEl.getHeight() + 'px'
+                    });
             }
             else {
                 var tip = Ext.create('Ext.tip.ToolTip', {
@@ -139,11 +140,14 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     }
                 });
                 tip.show();
+                marketplaceCallback && marketplaceCallback(id);
             }
-        });
+        };
+
+        this.processMarketplaceWidgetData(config.baseUrl, id, doLaunch, visualizeWidgetAddition, marketplaceCallback);
     },
 
-    processMarketplaceWidgetData: function(marketplaceUrl, widgetId, doLaunch, callback) {
+    processMarketplaceWidgetData: function(marketplaceUrl, widgetId, doLaunch, addWidgetCallback, doLaunchCallback) {
         var self = this;
         Ozone.util.Transport.send({
             url: marketplaceUrl + "/relationship/getOWFRequiredItems",
@@ -177,7 +181,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     // OZP-476: MP Synchronization
                     // Added the URL of the Marketplace we're looking at to the
                     // JSON we send to the widget controller.
-                    self.submitWidgetList(Ext.JSON.encode(widgetListJson), marketplaceUrl, doLaunch, callback);
+                    self.submitWidgetList(Ext.JSON.encode(widgetListJson), marketplaceUrl, doLaunch, addWidgetCallback, doLaunchCallback);
                 }
             },
             onFailure: function(json) {
@@ -203,21 +207,21 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             widgetUrl: serviceItem.launchUrl,
             widgetVersion: serviceItem.versionName,
             //FIXME this ternary is a hack for AML-3148
-            singleton: (serviceItem.types.title == "Web Apps" ? false : serviceItem.owfProperties.singleton),
+            singleton: (!serviceItem.ozoneAware ? false : serviceItem.owfProperties.singleton),
             //FIXME this ternary is a hack for AML-3148
-            visible: (serviceItem.types.title == "Web Apps" ? false : serviceItem.owfProperties.visibleInLaunch),
+            visible: (!serviceItem.ozoneAware ? false : serviceItem.owfProperties.visibleInLaunch),
             //FIXME this ternary is a hack for AML-3148
-            background: (serviceItem.types.title == "Web Apps" ? false : serviceItem.owfProperties.background),
+            background: (!serviceItem.ozoneAware ? false : serviceItem.owfProperties.background),
             isSelected: widgetId == serviceItem.id, // true if this is the widget the user selected and not a dependent widget
             //FIXME this ternary is a hack for AML-3148
-            height: (serviceItem.types.title == "Web Apps" ? 200 : serviceItem.owfProperties.height),
+            height: (!serviceItem.ozoneAware  ? 200 : serviceItem.owfProperties.height),
             //FIXME this ternary is a hack for AML-3148
-            width: (serviceItem.types.title == "Web Apps" ? 200 : serviceItem.owfProperties.width),
+            width: (!serviceItem.ozoneAware  ? 200 : serviceItem.owfProperties.width),
             //FIXME this ternary is a hack for AML-3148
-            universalName: (serviceItem.types.title == "Web Apps" ? "" : serviceItem.owfProperties.universalName),
+            universalName: (!serviceItem.ozoneAware ? "" : serviceItem.owfProperties.universalName),
             isExtAjaxFormat: true,
             //FIXME this ternary is a hack for AML-3148
-            widgetTypes: [(serviceItem.types.title == "Web Apps" ? "fullscreen" : serviceItem.owfProperties.owfWidgetType)]
+            widgetTypes: [(!serviceItem.ozoneAware ? "fullscreen" : serviceItem.owfProperties.owfWidgetType)]
 //                ,
 //                tags: Ext.JSON.encode([this.createApprovalTag()])
         };
@@ -255,7 +259,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
     // OZP-476: MP Synchronization
     // Added the URL of the Marketplace we're looking at to the JSON we send to
     // the widget controller.
-    submitWidgetList: function(widgetList, mpUrl, doLaunch, addCallback) {
+    submitWidgetList: function(widgetList, mpUrl, doLaunch, addWidgetCallback, doLaunchCallback) {
 		var self = this;
         return owfdojo.xhrPost({
             url:Ozone.util.contextPath() + '/widget/',
@@ -298,75 +302,16 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
                                     // If the widget is to be launched
                                     if (doLaunch) {
-
                                         // It will be the first item if there is more than one (the remaining are required items)
                                         var widgetDef = widgetDefs.get(0);
-                                        
-                                        if(widgetDef.data.widgetTypes[0].name == "fullscreen") {
-                                            var me = this;
-                                            
-                                            var dashboardStore = self.dashboardContainer.dashboardStore;
-                                            
-                                            var tmpDashboard = null;
-                                            for(var storeCount = 0; storeCount < dashboardStore.getCount(); storeCount++) {
-                                                tmpDashboard = dashboardStore.getAt(storeCount);
-                                                
-                                                if(tmpDashboard.data.name == widgetDef.data.title) {
-                                                    if(tmpDashboard.data.locked == true) {
-                                                        if(tmpDashboard.data.layoutConfig.widgets[0] && 
-                                                            tmpDashboard.data.layoutConfig.widgets[0].widgetGuid == widgetDef.data.widgetGuid) {
-                                                            me.dashboard = tmpDashboard;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            
-                                            if(me.dashboard) {
-                                                self.dashboardContainer.activateDashboard(me.dashboard.data.guid);
-                                            } else {
-                                                me.dashboard = Ext.create('Ozone.data.Dashboard', {
-                                                    name: widgetDef.data.title,
-                                                    layoutConfig : {
-                                                        xtype: 'container',
-                                                        flex: 1,
-                                                        height: '100%',
-                                                        items: [],
-                                                        paneType: 'fitpane',
-                                                        widgets: []
-                                                    }
-                                                    
-                                                });
-                                                
-                                                self.dashboardContainer.saveDashboard(me.dashboard.data, 'create', function() {
-                                                	self.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
-                                                        self.dashboardContainer.launchWidgets(widgetDef, true);
-                                                        self.dashboardContainer.activeDashboard.config.locked = true;
-                                                        self.dashboardContainer.saveDashboard(self.dashboardContainer.activeDashboard, 'update', function() {});
-                                                    }, self.dashboardContainer, {/*delay:2000,*/ single:true});
-                                                    self.dashboardContainer.activateDashboard(me.dashboard.data.guid);
-                                                });
-                                                
-                                                notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_WebappLaunchSuccessful;
-                                            }
-                                        } else {
-                                            // Show the switcher
-                                            self.dashboardContainer.showDashboardSwitcher();
-                                            // Add a listener so we can launch the widget if the user picks a different dashboard
-                                            // TODO: Remove this listener if the user cancels dashboard selection (OP-419)
-                                            self.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
-                                                self.dashboardContainer.launchWidgets(widgetDef, true);
-                                            }, self.dashboardContainer, {/*delay:2000,*/ single:true});
-    
-                                            notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;
-                                        }
-                                    }  else {
+
+                                        notifyText = self.launchWidget(widgetDef, doLaunchCallback);
+
+                                    } else {
                                         notifyText = null;
-                                        addCallback && addCallback(widgetDefs.get(0));
+                                        addWidgetCallback && addWidgetCallback(widgetDefs.get(0));
                                     }
-
-
-                                }  else {
-
+                                } else {
                                     // Failure message
                                     notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddWidget;
                                 }
@@ -423,6 +368,72 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 self.dashboardContainer.loadMask.hide();
             }
         });
+    },
+
+    launchWidget: function(widgetDef, doLaunchCallback) {
+        var self = this;
+
+        var notifyText = null;
+
+        if(widgetDef.data.widgetTypes[0].name == "fullscreen") {
+            var dashboard;
+            var dashboardStore = self.dashboardContainer.dashboardStore;
+
+            var tmpDashboard = null;
+            for(var storeCount = 0; storeCount < dashboardStore.getCount(); storeCount++) {
+                tmpDashboard = dashboardStore.getAt(storeCount);
+
+                if(tmpDashboard.data.name == widgetDef.data.title) {
+                    if(tmpDashboard.data.locked == true) {
+                        if(tmpDashboard.data.layoutConfig.widgets[0] &&
+                            tmpDashboard.data.layoutConfig.widgets[0].widgetGuid == widgetDef.data.widgetGuid) {
+                            dashboard = tmpDashboard;
+                        }
+                    }
+                }
+            }
+
+            if(dashboard) {
+                self.dashboardContainer.activateDashboard(dashboard.data.guid);
+            } else {
+                dashboard = Ext.create('Ozone.data.Dashboard', {
+                    name: widgetDef.data.title,
+                    layoutConfig : {
+                        xtype: 'container',
+                        flex: 1,
+                        height: '100%',
+                        items: [],
+                        paneType: 'fitpane',
+                        widgets: []
+                    }
+
+                });
+
+                self.dashboardContainer.saveDashboard(dashboard.data, 'create', function() {
+                    self.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
+                        self.dashboardContainer.launchWidgets(widgetDef, true);
+                        self.dashboardContainer.activeDashboard.config.locked = true;
+                        self.dashboardContainer.saveDashboard(self.dashboardContainer.activeDashboard, 'update', function() {});
+                    }, self.dashboardContainer, {/*delay:2000,*/ single:true});
+                    self.dashboardContainer.activateDashboard(dashboard.data.guid);
+                });
+
+                notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_WebappLaunchSuccessful;
+            }
+        } else {
+            // Show the switcher
+            self.dashboardContainer.showDashboardSwitcher();
+            // Add a listener so we can launch the widget if the user picks a different dashboard
+            // TODO: Remove this listener if the user cancels dashboard selection (OP-419)
+            self.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
+                self.dashboardContainer.launchWidgets(widgetDef, true);
+            }, self.dashboardContainer, {/*delay:2000,*/ single:true});
+
+            notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;
+        }
+        doLaunchCallback && doLaunchCallback();
+
+        return notifyText;
     },
 
     registerWindowManager:function (window_manager) {
