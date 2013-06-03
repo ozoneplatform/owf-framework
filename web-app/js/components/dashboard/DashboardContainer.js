@@ -129,7 +129,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     xtype: 'panel',
                     flex: 1,
                     layout: {
-                        type: 'bufferedcard'
+                        type: 'dashboardbufferedcard'
                     },
                     cls: 'usableCentralRegion',
                     listeners: {

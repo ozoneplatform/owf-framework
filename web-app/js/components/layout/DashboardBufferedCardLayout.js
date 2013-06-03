@@ -1,6 +1,6 @@
-Ext.define('Ozone.components.layout.BufferedCardLayout', {
+Ext.define('Ozone.components.layout.DashboardBufferedCardLayout', {
     extend: 'Ext.layout.container.Card',
-    alias: 'layout.bufferedcard',
+    alias: 'layout.dashboardbufferedcard',
     
     /**
      * @cfg {Boolean} deferredRender

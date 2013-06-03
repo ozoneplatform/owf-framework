@@ -602,7 +602,7 @@ uiperformance.bundles = [
                         'components/grid/column/TextColumn',
                         'components/layout/container/boxOverflow/Menu',
                         'components/layout/container/HBox',
-                        'components/layout/BufferedCardLayout',
+                        'components/layout/DashboardBufferedCardLayout',
                         'components/layout/PinnableAccordion',
                         'components/panel/WidgetHeader',
                         'components/panel/WidgetTool',
