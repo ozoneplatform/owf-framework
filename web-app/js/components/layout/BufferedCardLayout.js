@@ -35,98 +35,19 @@ Ext.define('Ozone.components.layout.BufferedCardLayout', {
             this.removedCardConfigBuffer.remove(c);
         }
     },
-    
+
     /**
-     * Sets the active (visible) item in the layout.
-     * @param {String} item The string component id or numeric index of the item to activate
-     */
-//    setActiveItemOld: function(item){
-//
-//        this.initCardBuffers();
-//
-//        var ai = this.activeItem, ct = this.owner;
-//        var origItem = item;
-//        item = ct.getComponent(item);
-//
-//        //if the item is null than it could have been remove
-//        //add it back to the container from the initialConfig that was saved
-//        if (!item) {
-//            item = this.removedCardConfigBuffer.get(origItem);
-//
-//            //recreate dash store
-//            var stateStore = Ext.create('Ozone.data.StateStore', {
-//              storeId: item.config.guid,
-//              data: item.config.state
-//            });
-//            item.stateStore = stateStore;
-//
-//            item = ct.add(item);
-//        }
-//
-//        //remove and add the new card
-//        //if the card currently exists in the buffer
-//        var oldIndex = this.cardBuffer.indexOf(item);
-//        if (oldIndex > -1) {
-//          this.cardBuffer.removeAt(oldIndex);
-//        }
-//        this.cardBuffer.add(item);
-//
-//        // Is this a valid, different card?
-//        if (item && ai != item) {
-//
-//            // Changing active cards, hide the current one
-//            if (ai) {
-//                ai.hide();
-//                if (ai.hidden !== true) {
-//                    return false;
-//                }
-//                ai.fireEvent('deactivate', ai);
-//
-//                //check to see if we need
-//                //to remove from our buffer - if so destroy the card
-//                var cardsToRemove = this.cardBuffer.getCount() - this.cardBufferSize;
-//                if (cardsToRemove > 0) {
-//                    for (var i = 0; i < cardsToRemove; i++) {
-//                        var card = this.cardBuffer.getAt(i);
-//
-//                        if (card.rendered) {
-//                            //save initial config of the removed card
-//                            this.removedCardConfigBuffer.add(card.initialConfig);
-//
-//                            //destroy uneeded card - removes from dom and also removes from container
-//                            card.dontRemove = true;
-//                            card.destroy();
-//                            card.dontRemove = false;
-//                        }
-//
-//                        //remove from our buffer
-//                        this.cardBuffer.removeAt(i);
-//                    }
-//                }
-//            }
-//
-//            var layout = item.doLayout && (this.layoutOnCardChange || !item.rendered);
-//
-//            // Change activeItem reference
-//            this.activeItem = item;
-//
-//            // The container is about to get a recursive layout, remove any deferLayout reference
-//            // because it will trigger a redundant layout.
-//            delete item.deferLayout;
-//
-//            // Show the new component
-//            item.show();
-//
-//            this.layout();
-//
-//            if (layout) {
-//                item.doLayout();
-//            }
-//
-//            item.fireEvent('activate', item);
-//        }
-//    },
-    
+    * @Override
+    **/
+    configureItem: function (item) {
+        item.layoutManagedHeight = 0;
+        item.layoutManagedWidth = 0;
+
+        // skip calling configureItem method of two parent classes
+        // done to prevent onHide from being called twice unnecessarily
+        this.superclass.superclass.superclass.configureItem.apply(this, arguments);
+    },
+
     /**
      * Makes the given card active.
      *
@@ -157,29 +78,18 @@ Ext.define('Ozone.components.layout.BufferedCardLayout', {
         newCard = me.parseActiveItem(newCard);
         newIndex = owner.items.indexOf(newCard);
         
+        // PATCH BEGIN
         //if the item is null than it could have been remove
         //add it back to the container from the initialConfig that was saved
         if (!newCard) {
             newCard = this.removedCardConfigBuffer.get(origCard);
 
-            //recreate dash store
-            var stateStore = Ext.create('Ozone.data.StateStore', {
-                storeId: newCard.config.guid,
-                data: []
-            });
-            newCard.stateStore = stateStore;
-
             newIndex = owner.items.items.length;
             newCard = owner.add(newCard);
         }
         
-        //remove and add the new card
-        //if the card currently exists in the buffer
-        var oldIndex = this.cardBuffer.indexOf(newCard);
-        if (oldIndex > -1) {
-          this.cardBuffer.removeAt(oldIndex);
-        }
-        this.cardBuffer.add(newCard);
+        this._updateBuffer(newCard);
+        // PATCH END
         
         // If the card is not a child of the owner, then add it
         if (newIndex == -1) {
@@ -223,36 +133,14 @@ Ext.define('Ozone.components.layout.BufferedCardLayout', {
                 oldCard.fireEvent('deactivate', oldCard, newCard);
             }
 
-            //check to see if we need
-            //to remove from our buffer - if so destroy the card
-            var cardsToRemove = this.cardBuffer.getCount() - this.cardBufferSize;
-            if (cardsToRemove > 0) {
-                for (var i = 0; i < cardsToRemove; i++) {
-                    var card = this.cardBuffer.getAt(i);
-                    
-                    if (card.rendered) {
-                        //save initial config of the removed card
-                        this.removedCardConfigBuffer.add(card.initialConfig);
-                        
-                        //destroy uneeded card - removes from dom and also removes from container
-                        card.dontRemove = true;
-                        card.destroy();
-                        card.dontRemove = false;
-                    }
-                    
-                    //remove from our buffer
-                    this.cardBuffer.removeAt(i);
-                }
-            }
+            // PATCH BEGIN
+            this._removeOldCardsFromBuffer();
+            // PATCH END
             
             // Make sure the new card is shown
             me.owner.suspendLayout = false;
             if (newCard.hidden) {
                 newCard.show();
-            
-                // The container is about to get a recursive layout, remove any deferLayout reference
-                // because it will trigger a redundant layout.
-                delete newCard.deferLayout;
             
             } else {
                 me.onLayout();
@@ -263,6 +151,40 @@ Ext.define('Ozone.components.layout.BufferedCardLayout', {
             return newCard;
         }
         return false;
+    },
+
+    _updateBuffer: function (newCard) {
+        //remove and add the new card
+        //if the card currently exists in the buffer
+        var oldIndex = this.cardBuffer.indexOf(newCard);
+        if (oldIndex > -1) {
+          this.cardBuffer.removeAt(oldIndex);
+        }
+        this.cardBuffer.add(newCard);
+    },
+
+    _removeOldCardsFromBuffer: function () {
+        var me = this;
+
+        var cardsToRemove = me.cardBuffer.getCount() - me.cardBufferSize;
+        if (cardsToRemove > 0) {
+            for (var i = 0; i < cardsToRemove; i++) {
+                var card = me.cardBuffer.getAt(i);
+
+                if (card.rendered) {
+                    //save initial config of the removed card
+                    me.removedCardConfigBuffer.add(card.initialConfig);
+
+                    //destroy uneeded card - removes from dom and also removes from container
+                    card.dontRemove = true;
+                    card.destroy();
+                    card.dontRemove = false;
+                }
+
+                //remove from our buffer
+                me.cardBuffer.removeAt(i);
+            }
+        }
     }
             
 });

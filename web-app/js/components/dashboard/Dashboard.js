@@ -53,6 +53,8 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     layout: 'fit',
     widgetCls: 'widgetwindow',
 
+    cssanimations: Modernizr.cssanimations,
+
     buildItemsArray: function (cfg) {
         if (!cfg || !cfg.items)
             return;
@@ -1121,5 +1123,72 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         else {
             widget && widget.pane.moveWidgetLeft(widget);
         }
+    },
+
+    onHide: function (animateTarget, cb, scope) {
+        console.log('do hide animation');
+        var me = this;
+
+        if(this.cssanimations) {
+            this.slideOutLeft();
+        }
+        else {
+            me.el.hide();    
+        }
+        
+        if (!animateTarget) {
+            me.afterHide(cb, scope);
+        }
+    },
+
+    onShow: function() {
+        console.log('do show animation');
+        var me = this;
+        
+        if(this.cssanimations) {
+            this.slideInLeft();
+        }
+        else {
+            me.el.show();    
+        }
+
+        Ext.AbstractComponent.prototype.onShow.call(this);
+        if (me.floating && me.constrain) {
+            me.doConstrain();
+        }
+    },
+
+    slideIn: function (cls) {
+        this.el.removeCls('inactive').addCls('animate ' + cls);
+        this.el.on(CSS.Animation.ANIMATION_END, function() {
+            this.el.removeCls('animate ' + cls);
+        }, this, {
+            single: true
+        });
+    },
+
+    slideOut: function (cls) {
+        this.el.addCls('animate ' + cls);
+        this.el.on(CSS.Animation.ANIMATION_END, function() {
+            this.el.addCls('inactive').removeCls('animate ' + cls);
+        }, this, {
+            single: true
+        });
+    },
+
+    slideInLeft: function () {
+        this.slideIn('dashboardSlideInLeft');
+    },
+
+    slideOutLeft: function () {
+        this.slideOut('dashboardSlideOutLeft');
+    },
+
+    slideInDown: function () {
+        this.slideIn('dashboardSlideInDown');
+    },
+
+    slideOutDown: function () {
+        this.slideOut('dashboardSlideOutDown');
     }
 });

@@ -83,3 +83,216 @@ directly overriding the base ExtJS 4.0.0 rules.
         }
     }
 }
+
+@-webkit-keyframes dashboardSlideInLeft {
+    0% {
+        -webkit-transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    20% {
+        -webkit-transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    80% {
+        -webkit-transform: translateX(0) scale(0.9);
+    }
+    
+    100% {
+        -webkit-transform: scale(1);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+}
+@-moz-keyframes dashboardSlideInLeft {
+    0% {
+        -moz-transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    20% {
+        -moz-transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    80% {
+        -moz-transform: translateX(0) scale(0.9);
+    }
+    
+    100% {
+        -moz-transform: scale(1);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+}
+@-o-keyframes dashboardSlideInLeft {
+    0% {
+        -moz-transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    20% {
+        -o-transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    80% {
+        -o-transform: translateX(0) scale(0.9);
+    }
+    
+    100% {
+        -o-transform: scale(1);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+}
+@keyframes dashboardSlideInLeft {
+    0% {
+        -moz-transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    20% {
+        transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    80% {
+        transform: translateX(0) scale(0.9);
+    }
+    
+    100% {
+        transform: scale(1);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+}
+
+.dashboardSlideInLeft {
+    -webkit-animation-name: dashboardSlideInLeft;
+    -moz-animation-name: dashboardSlideInLeft;
+    -o-animation-name: dashboardSlideInLeft;
+    animation-name: dashboardSlideInLeft;
+}
+
+@-webkit-keyframes dashboardSlideOutLeft {
+    0% {
+        -webkit-transform: translateX(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    20% {
+        -webkit-transform: translateX(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+    
+    80% {
+        -webkit-transform: translateX(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    100% {
+        -webkit-transform: translateX(-100%);
+    }
+}
+
+@-moz-keyframes dashboardSlideOutLeft {
+    0% {
+        -webkit-transform: translateX(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    20% {
+        -moz-transform: translateX(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+    
+    80% {
+        -moz-transform: translateX(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    100% {
+        -moz-transform: translateX(-100%);
+    }
+}
+
+@-o-keyframes dashboardSlideOutLeft {
+    0% {
+        -webkit-transform: translateX(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    20% {
+        -o-transform: translateX(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+    
+    80% {
+        -o-transform: translateX(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    100% {
+        -o-transform: translateX(-100%);
+    }
+}
+
+@keyframes dashboardSlideOutLeft {
+    0% {
+        -webkit-transform: translateX(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    20% {
+        transform: translateX(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+    
+    80% {
+        transform: translateX(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px #000;
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+.dashboardSlideOutLeft {
+    -webkit-animation-name: dashboardSlideOutLeft;
+    -moz-animation-name: dashboardSlideOutLeft;
+    -o-animation-name: dashboardSlideOutLeft;
+    animation-name: dashboardSlideOutLeft;
+}
+
+$dashboardAnimationDuration: 1.6s !default;
+
+
+.cssanimations #dashboardCardPanel {
+    .dashboard {
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+
+        &.inactive {
+            -webkit-transform: translateX(-100%);
+            -moz-transform: translateX(-100%);
+            -o-transform: translateX(-100%);
+            transform: translateX(-100%);
+        }
+
+        -webkit-transform: translateX(0%);
+        -moz-transform: translateX(0%);
+        -o-transform: translateX(0%);
+        transform: translateX(0%);
+
+        &.animate {
+            -webkit-animation-duration: $dashboardAnimationDuration;
+            -moz-animation-duration: $dashboardAnimationDuration;
+            -o-animation-duration: $dashboardAnimationDuration;
+            animation-duration: $dashboardAnimationDuration;
+        }
+    }
+}
+
+// .no-cssanimations .dashboard.inactive {
+//     display: none;
+// }
