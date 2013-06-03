@@ -54,6 +54,10 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     widgetCls: 'widgetwindow',
 
     cssanimations: Modernizr.cssanimations,
+    animationCls: 'animate ',
+    inactiveCls: 'inactive ',
+    slideInDirection: 'left',
+    slideOutDirection: 'left',
 
     buildItemsArray: function (cfg) {
         if (!cfg || !cfg.items)
@@ -1125,32 +1129,28 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         }
     },
 
+    /**
+    * @Override
+    * Overridden to add CSS animations
+    **/
     onHide: function (animateTarget, cb, scope) {
-        console.log('do hide animation');
         var me = this;
 
-        if(this.cssanimations) {
-            this.slideOutLeft();
-        }
-        else {
-            me.el.hide();    
-        }
+        this.cssanimations ? this.slideOut() : me.el.hide();
         
         if (!animateTarget) {
             me.afterHide(cb, scope);
         }
     },
 
+    /**
+    * @Override
+    * Overridden to add CSS animations
+    **/
     onShow: function() {
-        console.log('do show animation');
         var me = this;
         
-        if(this.cssanimations) {
-            this.slideInLeft();
-        }
-        else {
-            me.el.show();    
-        }
+        this.cssanimations ? this.slideIn() : me.el.show();
 
         Ext.AbstractComponent.prototype.onShow.call(this);
         if (me.floating && me.constrain) {
@@ -1158,37 +1158,145 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         }
     },
 
-    slideIn: function (cls) {
-        this.el.removeCls('inactive').addCls('animate ' + cls);
-        this.el.on(CSS.Animation.ANIMATION_END, function() {
-            this.el.removeCls('animate ' + cls);
-        }, this, {
-            single: true
-        });
+    /**
+    *
+    * Set slide in direction for dashboard animations.
+    * @param {String} direction valid values up, left, down, right
+    **/
+    setSlideInDirection: function (direction) {
+        this.slideInDirection = direction;
     },
 
-    slideOut: function (cls) {
-        this.el.addCls('animate ' + cls);
-        this.el.on(CSS.Animation.ANIMATION_END, function() {
-            this.el.addCls('inactive').removeCls('animate ' + cls);
-        }, this, {
-            single: true
-        });
+    /**
+    *
+    * Set slide out direction for dashboard animations.
+    * @param {String} direction valid values up, left, down, right
+    **/
+    setSlideOutDirection: function (direction) {
+        this.slideOutDirection = direction;
     },
 
-    slideInLeft: function () {
-        this.slideIn('dashboardSlideInLeft');
+    /**
+    *
+    * Slide dashboard into view.
+    *
+    **/
+    slideIn: function () {
+        switch(this.slideInDirection) {
+            case 'down':
+                this.slideInDown();
+                break;
+            case 'up':
+                this.slideInUp();
+                break;
+            case 'left':
+            default:
+                this.slideInLeft();
+                break;
+        }
     },
 
-    slideOutLeft: function () {
-        this.slideOut('dashboardSlideOutLeft');
+    /**
+    *
+    * Slide dashboard out of view.
+    *
+    **/
+    slideOut: function () {
+        switch(this.slideOutDirection) {
+            case 'down':
+                this.slideOutDown();
+                break;
+            case 'up':
+                this.slideOutUp();
+                break;
+            case 'left':
+            default:
+                this.slideOutLeft();
+                break;
+        }
     },
 
+    /**
+    *
+    * Slide down dashboard into view.
+    *
+    **/
     slideInDown: function () {
-        this.slideIn('dashboardSlideInDown');
+        this.showAnimation('dashboardSlideInDown');
     },
 
+    /**
+    *
+    * Slide down dashboard out of view.
+    *
+    **/
     slideOutDown: function () {
-        this.slideOut('dashboardSlideOutDown');
+        this.hideAnimation('dashboardSlideOutDown');
+    },
+
+    /**
+    *
+    * Slide up dashboard into view.
+    *
+    **/
+    slideInUp: function () {
+        this.showAnimation('dashboardSlideInUp');
+    },
+
+    /**
+    *
+    * Slide up dashboard out of view.
+    *
+    **/
+    slideOutUp: function () {
+        this.hideAnimation('dashboardSlideOutUp');
+    },
+
+    /**
+    *
+    * Slide left dashboard into view.
+    *
+    **/
+    slideInLeft: function () {
+        this.showAnimation('dashboardSlideInLeft');
+    },
+
+    /**
+    *
+    * Slide left dashboard out of view.
+    *
+    **/
+    slideOutLeft: function () {
+        this.hideAnimation('dashboardSlideOutLeft');
+    },
+
+    /**
+    *
+    * Helper method to be used from slide in css animations.
+    * @param {String} cls CSS animation class to add
+    *
+    **/
+    showAnimation: function (cls) {
+        this.el.removeCls(this.inactiveCls).addCls(this.animationCls + cls);
+        this.el.on(CSS.Animation.ANIMATION_END, function() {
+            this.el.removeCls(this.animationCls + cls);
+        }, this, {
+            single: true
+        });
+    },
+
+    /**
+    *
+    * Helper method to be used from slide out css animations.
+    * @param {String} cls CSS animation class to add
+    *
+    **/
+    hideAnimation: function (cls) {
+        this.el.addCls(this.animationCls + cls);
+        this.el.on(CSS.Animation.ANIMATION_END, function() {
+            this.el.addCls(this.inactiveCls).removeCls(this.animationCls + cls);
+        }, this, {
+            single: true
+        });
     }
 });

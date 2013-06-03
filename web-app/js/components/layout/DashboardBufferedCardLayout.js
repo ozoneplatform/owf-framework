@@ -128,29 +128,51 @@ Ext.define('Ozone.components.layout.DashboardBufferedCardLayout', {
 
             if (oldCard) {
                 if (me.hideInactive) {
-                    oldCard.hide();
+                    // PATCH BEGIN
+                    me._hideCard(oldCard, newCard);
+                    // PATCH END
                 }
                 oldCard.fireEvent('deactivate', oldCard, newCard);
             }
 
             // PATCH BEGIN
             this._removeOldCardsFromBuffer();
-            // PATCH END
-            
-            // Make sure the new card is shown
-            me.owner.suspendLayout = false;
-            if (newCard.hidden) {
-                newCard.show();
-            
-            } else {
-                me.onLayout();
-            }
+            this._showCard(newCard);
+            // PATCH END        
             
             newCard.fireEvent('activate', newCard, oldCard);
             
             return newCard;
         }
         return false;
+    },
+
+    _hideCard: function (currentDashboard, newDashboard) {
+        var direction = 'left';
+
+        if(newDashboard.configRecord.isMarketplaceDashboard()) {
+            direction = 'down';
+        }
+        else if(currentDashboard.configRecord.isMarketplaceDashboard()) {
+            direction = 'up';
+        }
+
+        currentDashboard.setSlideOutDirection(direction);
+        newDashboard.setSlideInDirection(direction);
+
+        currentDashboard.hide();
+    },
+
+    _showCard: function (dashboard) {
+        // Make sure the new card is shown
+        this.owner.suspendLayout = false;
+        if (dashboard.hidden) {
+            dashboard.show();
+        
+        } else {
+            this.onLayout();
+            dashboard.slideIn();
+        }
     },
 
     _updateBuffer: function (newCard) {
