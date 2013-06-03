@@ -179,20 +179,20 @@ Ext.define('Ozone.components.dashboarddesigner.SidePanel', {
     },
 
     setToDefaultImage: function(dom) {
-        if (dom && dom.localName === 'img') {
-            dom.src = 'images/dashboard-designer/' + dom.alt + '.png'
+        if (dom && dom.nodeName === 'IMG') {
+            dom.src = 'images/dashboard-designer/' + dom.alt + '.png';
         }
     },
 
     mouseOver: function(dom) {
-        if (dom && dom.localName === 'img') {
-            dom.src = 'images/dashboard-designer/' + dom.alt + '_over.png'
+        if (dom && dom.nodeName === 'IMG') {
+            dom.src = 'images/dashboard-designer/' + dom.alt + '_over.png';
         }
     },
 
     mouseDown: function(dom) {
-        if (dom && dom.localName === 'img') {
-            dom.src = 'images/dashboard-designer/' + dom.alt + '_down.png'
+        if (dom && dom.nodeName === 'IMG') {
+            dom.src = 'images/dashboard-designer/' + dom.alt + '_down.png';
         }
     },
 
