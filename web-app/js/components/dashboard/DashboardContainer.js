@@ -789,6 +789,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         var me = this,
             dashboardSwitcherId = 'dashboard-switcher',
             dashboardSwitcher = Ext.getCmp(dashboardSwitcherId),
+            dashboardSwitcherDeferred = $.Deferred(),
+
             //perform the logic of actually creating and displaying the window
             show = function() {
                 if (!dashboardSwitcher) {
@@ -803,6 +805,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                 dashboardSwitcher.activeDashboard = me.activeDashboard;
                 dashboardSwitcher.show().center();
+                dashboardSwitcherDeferred.resolve(dashboardSwitcher);
 
                 me.loadMask.hide();
             };
@@ -830,6 +833,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 }
             }, 0);
         }
+        return dashboardSwitcherDeferred.promise();
     },
 
     destroyDashboardSwitcher: function () {
@@ -848,9 +852,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         // Show the switcher
         var dashboardSwitcherPromise = this.showDashboardSwitcher();
 
-        dashboardSwitcherPromise.done(function() {
-            // Obtain the reference to the switcher
-            var dashboardSwitcher = me.getDashboardSwitcher();
+        dashboardSwitcherPromise.done(function(dashboardSwitcher) {
             // Dashboard selection promise will resolve if a dashboard is selected in a switcher
             var dashboardSelectionPromise = dashboardSwitcher.getDashboardSelectionPromise();
             dashboardSelectionPromise.done(function (dashboardGuid) {
