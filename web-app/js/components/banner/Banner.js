@@ -129,6 +129,9 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 // This will be called as part of the previous dashboard change, but not if the previous
                 // dashboard was the Marketplace dashboard, so call it here just to be safe.
                 this.clearMarketplaceToggle();
+                
+                //Reset to enable all hotkeys since show wasn't executed
+                Ozone.components.keys.KeyMap.reset();
             }
         } else {
             //Reset to enable all hotkeys since show wasn't executed
@@ -203,7 +206,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             }),
             Ext.apply(Ozone.components.keys.HotKeys.MARKETPLACE, {
                 scope: this,
-//                fn: (!!Ozone.config.marketplaceLocation)? this.openMarketplaceWindow: this.openMarketplaceModalWindow
+                exclusive: this.dashboardContainer.widgetStore.findWidgetsByType('marketplace').length > 1,
                 fn: this.openMarketplaceModalWindow
             }),
             Ext.apply(Ozone.components.keys.HotKeys.METRIC, {

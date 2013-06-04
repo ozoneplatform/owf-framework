@@ -16,5 +16,17 @@ Ext.define('Ozone.data.WidgetStore',{
             root: 'rows'
         }
     },
-    totalProperty:'results'
+    totalProperty:'results',
+
+    findWidgetsByType: function (type) {
+        var widgets = [];
+
+        this.each(function (widget) {
+            if(widget.data.widgetTypes[0].name === type) {
+                widgets.push(widget);
+            }
+        });
+
+        return widgets;
+    }
 });
