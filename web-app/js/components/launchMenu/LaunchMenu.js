@@ -619,7 +619,9 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     removeWidget: function(record){
 
     	var widgetsToDelete = [];
-        widgetsToDelete.push(record.get('widgetGuid'));
+        var widgetGuid = record.get('widgetGuid');
+        this.closeWidget(widgetGuid);
+        widgetsToDelete.push(widgetGuid);
           	
         var widgetStore = this.widgetStore;
         var me = this;
@@ -636,6 +638,26 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
             onFailure:function(){  	
             }
         });
+    },
+
+    // Close the given widget in all the user's dashboards
+    closeWidget: function(widgetGuid) {
+        var dashboardCardPanel  = Ext.getCmp('dashboardCardPanel');
+        if (dashboardCardPanel) {
+            // Iterate through all the open dashboards
+            dashboardCardPanel.items.each(function(dashboard) {
+                // Access state store for each dashboard describing the state of the widgets running inside that dashboard
+                dashboard.stateStore.each(function(widgetState) {
+                    // Compare widget GUID to that of the one being removed
+                    if (widgetState.get('widgetGuid') == widgetGuid) {
+                        // Remove the widget in question from its dashboard
+                        var widgetUniqueId = widgetState.get('uniqueId');
+                        console.log("Closing widget " + widgetState.get('name') + " with GUID " + widgetGuid + " on dashboard " + dashboard.name);
+                        dashboard.closeWidget(widgetUniqueId);
+                    }
+                });
+            });
+        }
     },
     
     // launches the widget
@@ -793,9 +815,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
        removeButton = imagePanel.add(Ext.applyIf({
            handler: removeBtnHandler
        }, removeButton));
-       
-       //IE7 hack to get the bottom border of the Remove button to be visible
-       imagePanel.setHeight(imagePanel.getHeight() + 1);
        
        //in IE7, Ext seems to be manually setting the button widths to
        //the smallest reasonable size for some reason.  We want the widths to

@@ -45,7 +45,15 @@ class MarketplaceService extends BaseService {
             if (obj?.widgetGuid) {
                 return addWidgetToDatabase(obj)
             } else if (obj?.stackContext) {
-                return stackService.importStack([data: obj.toString()])
+                def stack = Stack.findByStackContext(obj.stackContext)
+                if (!stack) {
+                    stack = stackService.importStack([data: obj.toString()])
+                }
+                def stackDefaultGroup = stack.findStackDefaultGroup()
+                stackDefaultGroup.addToPeople(accountService.getLoggedInUser())
+                stack
+                
+                
             }
         }
 
@@ -377,11 +385,7 @@ class MarketplaceService extends BaseService {
         if (mpSourceUrl && config.owf.mpSync.trustProvidedUrl) {
             setMpUrls.add(mpSourceUrl)
         } else {
-            WidgetType.findByName('marketplace').collect { tpe ->
-                tpe.widgetDefinitions.each { wd ->
-                    setMpUrls.add(wd.widgetUrl)
-                }
-            }
+            setMpUrls = getMarketplaceUrls()
         }
         def ompObj
 
@@ -403,7 +407,7 @@ class MarketplaceService extends BaseService {
                 def sch = new Scheme("https", port ?: 443 as int, socketFactory)
                 client.getConnectionManager().getSchemeRegistry().register(sch)
 
-                def get = new HttpGet(mpUrl + "/public/descriptor/${guid}")
+                def get = new HttpGet(createMpDescriptorUrlFor(mpUrl, guid))
                 def response = client.execute(get)
                 def header = response.entity?.contentType
 
@@ -441,6 +445,21 @@ class MarketplaceService extends BaseService {
         } else {
             return null
         }
+    }
+
+    private String createMpDescriptorUrlFor(String mpBaseUrl, String guid) {
+        String separator = (mpBaseUrl.endsWith("/") ? "" : "/")
+        return mpBaseUrl + separator + "public/descriptor/${guid}"
+    }
+
+    private HashSet getMarketplaceUrls() {
+        HashSet mpUrls = new HashSet()
+        WidgetType.findByName('marketplace').collect { tpe ->
+            tpe.widgetDefinitions.each { wd ->
+                mpUrls.add(wd.widgetUrl)
+            }
+        }
+        return mpUrls
     }
 
     private SSLSocketFactory createSocketFactory() {

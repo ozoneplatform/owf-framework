@@ -53,6 +53,12 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     layout: 'fit',
     widgetCls: 'widgetwindow',
 
+    cssanimations: Modernizr.cssanimations,
+    animationCls: 'animate ',
+    inactiveCls: 'inactive ',
+    slideInDirection: 'left',
+    slideOutDirection: 'left',
+
     buildItemsArray: function (cfg) {
         if (!cfg || !cfg.items)
             return;
@@ -1124,47 +1130,173 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     },
 
     /**
-     *  @description Determine whether this dashboard can be modified by adding new widgets to it.  This is a stronger
-     *   variant than the concept of locking. Current intent is that this logic only applies to dashboards containing
-     *   a single widget of type Marketplace. We recognize that this behavior could be overloaded or extended..
-     * @return {boolean}
-     */
-    getIsModifiable: function () {
+    * @Override
+    * Overridden to add CSS animations
+    **/
+    onHide: function (animateTarget, cb, scope) {
+        var me = this;
 
-        // resolve the setting, and then evaluate it...
-        if (Ozone.config.debugFeatureFlags && Ozone.config.debugFeatureFlags.OP23 &&  Ozone.config.debugFeatureFlags.OP23 === true ) {
-            var widgetList = this.config.layoutConfig.widgets;
-            var widgetCount;
-
-
-            // TODO: WidgetList is empty for dashboards within a stack - investigate
-            if (widgetList) {
-                widgetCount = widgetList.length;
-            } else {
-                widgetCount = 0;
-            }
-
-            // first-level check: dashboard only has one widget on it.
-            if (widgetCount != 1) {
-                return false;
-            }
-
-            // second-level check: that widget is of type 'marketplace'.  Not checking at the moment whether it's in a fit pane, etc.
-            // NOTE: can't just get widgetStore, as those are items in launchMenu..  marketplaceWidgets aren't in launch menu
-            // Also can't do a var widget = Ext.getCmp(widgetList[0].uniqueId): if dashboard isn't active, component may not be created.  Not workable.
-
-            var records = this.dashboardContainer.widgetStore.getRange();
-            for (var i = 0; i < records.length; i++) {
-                if (records[i].data.widgetTypes[0].name == 'marketplace') {
-                    if (widgetList[0].widgetGuid === records[i].data.widgetGuid)
-                        return false;
-
-                }
-            }
-
+        this.cssanimations ? this.slideOut() : me.el.hide();
+        
+        if (!animateTarget) {
+            me.afterHide(cb, scope);
         }
+    },
 
-        return true;
+    /**
+    * @Override
+    * Overridden to add CSS animations
+    **/
+    onShow: function() {
+        var me = this;
+        
+        this.cssanimations ? this.slideIn() : me.el.show();
 
+        Ext.AbstractComponent.prototype.onShow.call(this);
+        if (me.floating && me.constrain) {
+            me.doConstrain();
+        }
+    },
+
+    /**
+    *
+    * Set slide in direction for dashboard animations.
+    * @param {String} direction valid values up, left, down, right
+    **/
+    setSlideInDirection: function (direction) {
+        this.slideInDirection = direction;
+    },
+
+    /**
+    *
+    * Set slide out direction for dashboard animations.
+    * @param {String} direction valid values up, left, down, right
+    **/
+    setSlideOutDirection: function (direction) {
+        this.slideOutDirection = direction;
+    },
+
+    /**
+    *
+    * Slide dashboard into view.
+    *
+    **/
+    slideIn: function () {
+        switch(this.slideInDirection) {
+            case 'down':
+                this.slideInDown();
+                break;
+            case 'up':
+                this.slideInUp();
+                break;
+            case 'left':
+            default:
+                this.slideInLeft();
+                break;
+        }
+    },
+
+    /**
+    *
+    * Slide dashboard out of view.
+    *
+    **/
+    slideOut: function () {
+        switch(this.slideOutDirection) {
+            case 'down':
+                this.slideOutDown();
+                break;
+            case 'up':
+                this.slideOutUp();
+                break;
+            case 'left':
+            default:
+                this.slideOutLeft();
+                break;
+        }
+    },
+
+    /**
+    *
+    * Slide down dashboard into view.
+    *
+    **/
+    slideInDown: function () {
+        this.showAnimation('dashboardSlideInDown');
+    },
+
+    /**
+    *
+    * Slide down dashboard out of view.
+    *
+    **/
+    slideOutDown: function () {
+        this.hideAnimation('dashboardSlideOutDown');
+    },
+
+    /**
+    *
+    * Slide up dashboard into view.
+    *
+    **/
+    slideInUp: function () {
+        this.showAnimation('dashboardSlideInUp');
+    },
+
+    /**
+    *
+    * Slide up dashboard out of view.
+    *
+    **/
+    slideOutUp: function () {
+        this.hideAnimation('dashboardSlideOutUp');
+    },
+
+    /**
+    *
+    * Slide left dashboard into view.
+    *
+    **/
+    slideInLeft: function () {
+        this.showAnimation('dashboardSlideInLeft');
+    },
+
+    /**
+    *
+    * Slide left dashboard out of view.
+    *
+    **/
+    slideOutLeft: function () {
+        this.hideAnimation('dashboardSlideOutLeft');
+    },
+
+    /**
+    *
+    * Helper method to be used from slide in css animations.
+    * @param {String} cls CSS animation class to add
+    *
+    **/
+    showAnimation: function (cls) {
+        this.el.removeCls(this.inactiveCls).addCls(this.animationCls + cls);
+        this.el.on(CSS.Animation.ANIMATION_END, function() {
+            this.el.removeCls(this.animationCls + cls);
+        }, this, {
+            single: true
+        });
+    },
+
+    /**
+    *
+    * Helper method to be used from slide out css animations.
+    * @param {String} cls CSS animation class to add
+    *
+    **/
+    hideAnimation: function (cls) {
+        this.el.addCls(this.animationCls + cls);
+        this.el.on(CSS.Animation.ANIMATION_END, function() {
+            this.el.addCls(this.inactiveCls).removeCls(this.animationCls + cls);
+        }, this, {
+            single: true
+        });
     }
 });

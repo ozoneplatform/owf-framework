@@ -34,12 +34,11 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             cls: 'titleBox',
             itemId: 'titleBox', //OWF-2558
             fieldLabel: Ozone.util.createRequiredLabel(Ozone.ux.DashboardMgmtString.title),
-            labelSeparator: '',
-            labelWidth: undefined,
             allowBlank: false,
             maxLength: 200,
             value: '',
             enforceMaxLength: true,
+            margin: '0 0 5 0',
             listeners: {
                 blur: function(field){
                     // Remove leading and tailing spaces
@@ -56,16 +55,44 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             itemId: 'description',
             fieldLabel: Ozone.ux.DashboardMgmtString.description,
             labelSeparator: '',
-            labelWidth: undefined,
             value: '',
             maxLength: 4000,
-            enforceMaxLength: true
+            enforceMaxLength: true,
+            margin: '0 0 5 0'
         };
 
         if (this.existingDashboardRecord != null) {
           this.titleBox.value = this.existingDashboardRecord.get('name');
           this.description.value = this.existingDashboardRecord.get('description');
         }
+
+        var enableInputComponent = function(component) {
+            component.enable();
+            component.validate();
+        }
+
+        var disableInputComponent = function(component) {
+            component.reset();
+            component.disable();
+        }
+
+        this.newViewRadio = {
+            boxLabel: Ozone.layout.CreateViewWindowString.createNew,
+            name: 'viewSelectRadio',
+            cls:'newViewRadio',
+            listeners: {
+                'change': {
+                    fn: function(radio, newValue) {
+                        if(newValue)
+                        {
+                            disableInputComponent(this.down('#existViewCb'));
+                            disableInputComponent(this.down('#importFileupload'));
+                        }
+                    },
+                    scope: this
+                }
+            }
+        };
 
         this.existingViewRadio = { 
             boxLabel: Ozone.layout.CreateViewWindowString.createFromExisiting, 
@@ -75,20 +102,11 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             //tabIndex: 2,
             listeners: {
                 'change': {
-                    fn: function(radio, newValue, oldValue) {
+                    fn: function(radio, newValue) {
                         if(newValue)
                         {
-                            // var cmp = this.down('#viewCb');
-                            // cmp.reset();
-                            // cmp.disable();
-
-                            var existViewCb = this.down('#existViewCb');
-                            existViewCb.enable();
-                            existViewCb.validate();
-
-                            var importFileupload = this.down('#importFileupload');
-                            importFileupload.reset();
-                            importFileupload.disable();
+                            enableInputComponent(this.down('#existViewCb'));
+                            disableInputComponent(this.down('#importFileupload'));
                         }
                     },
                     scope: this
@@ -103,19 +121,13 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             name: 'viewSelectRadio',
             inputValue: "importedDashboard",
             cls:'importedViewRadio',
-            //tabIndex: 3,
             listeners: {
                 //this listener works for both since we can use the 'isSelected' param
                 'change': {
-                    fn: function(radio, newValue, oldValue) {
+                    fn: function(radio, newValue) {
                         if(newValue) {
-                            var existViewCb = this.down('#existViewCb');
-                            existViewCb.reset();
-                            existViewCb.disable();
-
-                            var importFileupload = this.down('#importFileupload');
-                            importFileupload.enable();
-                            importFileupload.validate();
+                            disableInputComponent(this.down('#existViewCb'));
+                            enableInputComponent(this.down('#importFileupload'));
                         }
                     },
                     scope: this
@@ -124,14 +136,13 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             vtype: 'importedDashboard',
             importedDashboardField: 'importFileupload' // id of the field to validate
         };
-    	
+
+
         // Set default layout for creating a new dashboard
         //this.newView.value = this.config.layout;
 		
         this.existingView = {
             xtype: 'combo',
-            //tabIndex: 2,
-            //id: 'existViewCb',
             itemId: 'existViewCb',
             store: this.dashboardContainer.dashboardStore,
             valueField:'guid',
@@ -146,7 +157,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             allowBlank:true,
             forceSelection: true,
             disabled: true,
-            width: 400
+            padding: '0, 0, 5, 17',
+            anchor: '-24'
         };
         this.existingView.value = this.views[0].guid;
 
@@ -163,21 +175,17 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         
         this.importedView = {
             xtype: 'filefield',
-            //tabIndex: 3,
-            //id: 'importFileupload',
             itemId: 'importFileupload',
             cls: 'importFileupload',
             name: 'importFileupload',
             hideLabel: true,
             label: '',
-            width: 400,
+            padding: '0, 0, 5, 17',
+            anchor: '-24',
             emptyText: Ozone.ux.DashboardMgmtString.uploadConfig,
             allowBlank: true,
             disabled: true,
             buttonText:Ozone.ux.DashboardMgmtString.browse,
-    //        buttonConfig: {
-    //            ui: 'button'
-    //        },
             listeners: {
                 afterrender: function (cmp) {
                     cmp.setupFocus = function() {
@@ -281,50 +289,32 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         //when mixed with radio/checkbox fields because it assumes if any radio/checkbox is checked it can assume the
         //entire group is valid
         this.viewSelectRadio = {
-            layout: {
-                type: 'hbox',
-                align: 'stretchmax'
-            },
+            xtype: 'fieldcontainer',
+            fieldLabel: Ozone.ux.DashboardMgmtString.layout,
+            layout: 'fit',
             cls: 'createSelector',
             region: 'center',
             allowBlank: false,
-            hideLabel: true,
             hidden: this.hideViewSelectRadio,
+            padding: '10, 0, 0, 0',
             items: [
-                [
-                    {
-                        xtype: 'radiogroup',
-                        flex: 1,
-                        cls: 'viewSelect',
-                        itemId: "viewSelect", //OWF-2558
-                        layout: {
-                            type: 'vbox',
-                            align: 'stretch'
-                        },
-                        defaults: {
-                            flex: 1
-                        },
-                        items: [
-                            this.existingViewRadio,
-                            this.importedViewRadio
-                        ]
+                {
+                    xtype: 'radiogroup',
+                    cls: 'viewSelect',
+                    itemId: "viewSelect", //OWF-2558
+                    layout: 'anchor',
+                    defaults: {
+                        anchor: '100%',
+                        padding: '0, 0, 5, 0'
                     },
-                    {
-                        layout: {
-                            type: 'vbox',
-                            align: 'stretch'
-                        },
-                        cls: 'viewSelectBoxes',
-                        flex: 1,
-                        defaults: {
-                            flex: 1
-                        },
-                        items: [
-                            this.existingView,
-                            this.importedView
-                        ]
-                    }
-                ]
+                    items: [
+                        this.newViewRadio,
+                        this.existingViewRadio,
+                        this.existingView,
+                        this.importedViewRadio,
+                        this.importedView
+                    ]
+                }
             ]
         };
 
@@ -332,6 +322,13 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             type: 'vbox',
             align: 'stretch'
         };
+
+        this.defaults = {
+            labelWidth: 150,
+            labelSeparator: ''
+        };
+
+        this.margin = '0 5 0 0';
         this.items = [
             this.titleBox,
             this.description,

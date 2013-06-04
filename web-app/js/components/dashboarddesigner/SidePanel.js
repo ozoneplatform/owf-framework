@@ -23,6 +23,26 @@ Ext.define('Ozone.components.dashboarddesigner.SidePanel', {
                     enterpress: {
                         fn: me.baseLayoutSelected,
                         scope: me
+                    },
+                    buttonclick: {
+                        fn: me.baseLayoutClicked,
+                        scope: me
+                    },
+                    mouseover: {
+                        fn: me.mouseOver,
+                        scope: me
+                    },
+                    mouseout: {
+                        fn: me.setToDefaultImage,
+                        scope: me
+                    },
+                    mousedown: {
+                        fn: me.mouseDown,
+                        scope: me
+                    },
+                    mouseup: {
+                        fn: me.mouseOver,
+                        scope: me
                     }
                 }
             },
@@ -31,6 +51,26 @@ Ext.define('Ozone.components.dashboarddesigner.SidePanel', {
                 listeners: {
                     enterpress: {
                         fn: me.baseLayoutSelected,
+                        scope: me
+                    },
+                    buttonclick: {
+                        fn: me.baseLayoutClicked,
+                        scope: me
+                    },
+                    mouseover: {
+                        fn: me.mouseOver,
+                        scope: me
+                    },
+                    mouseout: {
+                        fn: me.setToDefaultImage,
+                        scope: me
+                    },
+                    mousedown: {
+                        fn: me.mouseDown,
+                        scope: me
+                    },
+                    mouseup: {
+                        fn: me.mouseOver,
                         scope: me
                     }
                 }
@@ -64,7 +104,7 @@ Ext.define('Ozone.components.dashboarddesigner.SidePanel', {
                                     renderTo: cmp.ownerCt.el,
                                     width: 115,
                                     html: me.dashboardDesigner.locked ? "Dashboard locked" : "Dashboard unlocked",
-                                    listeners: {    
+                                    listeners: {
                                         beforeshow: {
                                             fn: function updateTipBody(tip) {
                                                 var text = me.dashboardDesigner.locked ? "Dashboard locked" : "Dashboard unlocked";
@@ -119,9 +159,10 @@ Ext.define('Ozone.components.dashboarddesigner.SidePanel', {
         ];
 
         me.addEvents(
-            'baselayoutselected'
+            'baselayoutselected',
+            'baselayoutclicked'
         );
-        me.enableBubble(['baselayoutselected']);
+        me.enableBubble(['baselayoutselected','baselayoutclicked', 'mouseover','mouseout']);
         me.callParent(arguments);
     },
 
@@ -131,6 +172,28 @@ Ext.define('Ozone.components.dashboarddesigner.SidePanel', {
 
     baseLayoutSelected: function(view, record, item) {
         this.fireEvent('baselayoutselected', view, record, item);
+    },
+
+    baseLayoutClicked: function(view, record, item) {
+        this.fireEvent('baselayoutclicked', view, record, item);
+    },
+
+    setToDefaultImage: function(dom) {
+        if (dom && dom.nodeName === 'IMG') {
+            dom.src = 'images/dashboard-designer/' + dom.alt + '.png';
+        }
+    },
+
+    mouseOver: function(dom) {
+        if (dom && dom.nodeName === 'IMG') {
+            dom.src = 'images/dashboard-designer/' + dom.alt + '_over.png';
+        }
+    },
+
+    mouseDown: function(dom) {
+        if (dom && dom.nodeName === 'IMG') {
+            dom.src = 'images/dashboard-designer/' + dom.alt + '_down.png';
+        }
     },
 
     paneLayoutTypeSelected: function(view, record, item) {

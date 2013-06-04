@@ -34,6 +34,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     hasMarketplaceButton: false,
     hasMetricButton: false,
 
+    buttonSelectedCls: 'x-btn-default-toolbar-banner-large-selected',
+
     openLaunchMenu: function() {
 
         if(this.dashboardContainer.activeDashboard.configRecord.get('locked') === true) {
@@ -111,10 +113,9 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     },
     openMarketplaceModalWindow: function(btn, e) {
         var me = this;
-        this.buttonSelectedCls = 'x-btn-default-toolbar-banner-large-selected';
+        
         if (this.hasMarketplaceButton) {
             if (!this.marketplaceToggle) {
-                this.marketplacePreviousDashboard = this.dashboardContainer.activeDashboard;
                 if (this.marketplaceWidget) {
                     var keyboard = ('keyup' == e.type) ? true : false;
                     e.stopEvent();
@@ -123,7 +124,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                     this.getMarketplaceLauncher().gotoMarketplace(this.marketplaceWidget, null);
                 }
             } else {
-                this.dashboardContainer.activateDashboard(this.marketplacePreviousDashboard.guid);
+                this.dashboardContainer.activatePreviousDashboard();
                 // This will be called as part of the previous dashboard change, but not if the previous
                 // dashboard was the Marketplace dashboard, so call it here just to be safe.
                 this.clearMarketplaceToggle();
@@ -302,19 +303,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 	        handler: this.dashboardContainer.showDashboardSwitcher,
 	        listeners: {
 	        	afterrender: {
-	        		fn: function(btn) {
-	        			Ext.create('Ext.tip.ToolTip',{
-	        				target: btn.getEl().id,
-	        				title: Ozone.layout.tooltipString.dashboardSwitcherTitle,
-	        				html: Ozone.layout.tooltipString.dashboardSwitcherContent,
-	        			    anchor: 'bottom',
-	        			    anchorToTarget: true,
-	        			    anchorOffset: -5,
-	        			    mouseOffset: [5,0],
-	        			    width: 500,
-	        			    maxWidth: 500            			    
-	        			});
-	        		}
+	        		fn: me.dashMenuAfterRender,
+                    scope: me
 	        	}
 	        }
         }, '-',
@@ -880,6 +870,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
     addMarketplaceButton: function(widget) {
         this.marketplaceWidget = widget;
+
         if(!this.hasMarketplaceButton) {
             var banner = this, popOutIndexModifier = 0;
             banner.insert(this.marketplaceButtonIndex + popOutIndexModifier, {xtype:'tbseparator',itemId:'mpSeparator'});
@@ -892,7 +883,6 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 iconAlign: 'top',
                 text: null,
                 scope: this,
-//                handler: (!!Ozone.config.marketplaceLocation)? this.openMarketplaceWindow: this.openMarketplaceModalWindow
                 handler: this.openMarketplaceModalWindow,
                 listeners: {
     	        	afterrender: {
@@ -940,6 +930,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
         this.hasMarketplaceButton = false;
     },
+
     addMetricButton: function() {
         var index = this.hasMarketplaceButton ? this.marketplaceButtonIndex + 2 : this.marketplaceButtonIndex;
         if(!this.hasMetricButton) {
@@ -1000,6 +991,31 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         }
 
         this.hasMetricButton = false;
+    },
+
+    dashMenuAfterRender: function(btn) {
+        Ext.create('Ext.tip.ToolTip',{
+            target: btn.getEl().id,
+            title: Ozone.layout.tooltipString.dashboardSwitcherTitle,
+            html: Ozone.layout.tooltipString.dashboardSwitcherContent,
+            anchor: 'bottom',
+            anchorToTarget: true,
+            anchorOffset: -5,
+            mouseOffset: [5,0],
+            width: 500,
+            maxWidth: 500                           
+        });
+
+        if(!Modernizr.cssanimations) {
+            var focusColor = Ext.util.CSS.getRule('.x-focus').style.borderColor;
+            this.dashboardContainer.on(OWF.Events.Dashboard.CHANGED, function (guid, dashboard) {
+                // wait 6 seconds if dashboard hasn't rendered
+                // otherwise frame animation won't be visible to user
+                setTimeout(function() {
+                    btn.el.frame(focusColor);
+                }, dashboard.rendered ? 0: 6000);
+            });
+        }
     }
 
 });

@@ -5,6 +5,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     plugins: new Ozone.plugins.DashboardContainer(),
 
     activeDashboard: null,
+    previousActiveDashboard: null,
     dashboardMenuItems: null,
 
     dashboardStore: null,
@@ -128,7 +129,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     xtype: 'panel',
                     flex: 1,
                     layout: {
-                        type: 'bufferedcard'
+                        type: 'dashboardbufferedcard'
                     },
                     cls: 'usableCentralRegion',
                     listeners: {
@@ -446,10 +447,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             this.activeDashboard.enableWidgetMove();
 
             // if using keyboard, highlight first pane
-            if( isUsingKeyboard === true ) {
-                if (document.activeElement) document.activeElement.blur();
-                panes[0].focus();
-            }
+            isUsingKeyboard === true && panes[0].focus();
 
             doc.on('keydown', this._selectPaneOnKeyDown, this, {
                 capture: true,
@@ -655,6 +653,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     		} else {
     			this.getBanner().enableLaunchMenu();
     		}
+
+            if(this.activeDashboard.configRecord.isMarketplaceDashboard()) {
+                this.getBanner().setMarketplaceToggle();
+            }
+
         }, this);
 
         if (dashboardCardPanel.isLayedOut) {
@@ -783,46 +786,49 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     showDashboardSwitcher: function() {
-        var me = this;
-        
-        //perform the logic of actually creating and displaying the window
-        function show() {
-            var dashboardSwitcherId = 'dashboard-switcher', 
-                dashboardSwitcher = Ext.getCmp(dashboardSwitcherId),
-                activeDashboard = me.activeDashboard;
+        var me = this,
+            dashboardSwitcherId = 'dashboard-switcher',
+            dashboardSwitcher = Ext.getCmp(dashboardSwitcherId),
+            //perform the logic of actually creating and displaying the window
+            show = function() {
+                if (!dashboardSwitcher) {
+                    dashboardSwitcher = Ext.widget('dashboardswitcher', {
+                        id: dashboardSwitcherId,
+                        dashboardContainer: me,
+                        activeDashboard: me.activeDashboard,
+                        dashboardStore: me.dashboardStore,
+                        plugins: new Ozone.components.keys.HotKeyComponent(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER)
+                    });
+                }
 
-            if (!dashboardSwitcher) {
-                dashboardSwitcher = Ext.widget('dashboardswitcher', {
-                    id: dashboardSwitcherId,
-                    dashboardContainer: me,
-                    activeDashboard: me.activeDashboard,
-                    dashboardStore: me.dashboardStore,
-                    plugins: new Ozone.components.keys.HotKeyComponent(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER)
-                });
-            }
-            else if (dashboardSwitcher.isVisible()) {
-                dashboardSwitcher.close();
-                return;
-            }
+                dashboardSwitcher.activeDashboard = me.activeDashboard;
+                dashboardSwitcher.show().center();
 
-            dashboardSwitcher.activeDashboard = activeDashboard;
-            dashboardSwitcher.show().center();
+                me.loadMask.hide();
+            };
 
-            me.loadMask.hide();
-        }
-
-        me.loadMask.show();
-
-        // force dashboard save before showing dashboard switcher
-        me.activeDashboard.saveToServer(false, true);
-
-        //if necessary, refresh the dashboards before calling show
-        if (me.dashboardsNeedRefresh) {
-            me.dashboardsNeedRefresh = false;
-            me.reloadDashboards(show);
+        // If it already is open, close it
+        if(dashboardSwitcher && dashboardSwitcher.isVisible()) {
+            dashboardSwitcher.close();
         }
         else {
-            show();
+            me.loadMask.show();
+
+            //making this asynchronous helps the loading mask appear in a timely
+            //manner in IE
+            setTimeout(function() {
+                // force dashboard save before showing dashboard switcher
+                me.activeDashboard.saveToServer(false, true);
+
+                //if necessary, refresh the dashboards before calling show
+                if (me.dashboardsNeedRefresh) {
+                    me.dashboardsNeedRefresh = false;
+                    me.reloadDashboards(show);
+                }
+                else {
+                    show();
+                }
+            }, 0);
         }
     },
 
@@ -887,12 +893,56 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         this.fireEvent(OWF.Events.Dashboard.SELECTED, guid);
     },
 
+    /**
+    *
+    * Activates previously selected dashboard.
+    *
+    **/
+    activatePreviousDashboard: function () {
+        var guid, stack, previousActiveDashboardModel;
+
+        if(this.previousActiveDashboard && this.previousActiveDashboard !== this.activeDashboard) {
+            previousActiveDashboardModel = this.previousActiveDashboard.configRecord;
+        }
+        else {
+            // Sort in descending order by edited date
+            // Sort on array to prevent store positions from being udpated
+            var sortedDashboards = Ext.Array.sort(Ext.Array.pluck(this.dashboardStore.data.items, 'data'), function(a, b) {
+                return ((new Date(b.editedDate).getTime()) - (new Date(a.editedDate).getTime()));
+            });
+
+            // If more than 1 dashboards are found, verify that we dont select the same dashboard to activate
+            if(length >= 2) {
+                if(sortedDashboards[0].guid === this.activeDashboard.guid) {
+                    guid = sortedDashboards[1].guid;
+                }
+                else {
+                    guid = sortedDashboards[0].guid;
+                }
+                previousActiveDashboardModel = this.dashboardStore.getById(guid);
+            }
+        }
+
+        if(previousActiveDashboardModel) {
+            stack = previousActiveDashboardModel.get('stack');
+            guid = previousActiveDashboardModel.get('guid');
+
+            this.activateDashboard(guid, false, stack ? stack.stackContext : null);
+            return true;
+        }
+        else {
+            return false;
+        }
+    },
+
     //this function is private, do not call outside of this class - use activateDashboard instead
     _activateDashboard: function(guid, stackContext) {
         var dashboardCardPanel = this.getDashboardCardPanel();
         if (!dashboardCardPanel) {
             return;
         }
+
+        this.previousActiveDashboard = dashboardCardPanel.layout.getActiveItem();
 
         if (guid != null && guid != '') {
             //make the new dashboard active and visible
@@ -902,7 +952,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 //save a reference
                 this.activeDashboard = dashboardPanel;
 
-                this.fireEvent(OWF.Events.Dashboard.CHANGED, guid);
+                this.fireEvent(OWF.Events.Dashboard.CHANGED, guid, dashboardPanel);
                 this.setDefaultDashboard(guid);
             }
         } else {
@@ -1703,7 +1753,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         this.saveDashboard(newJson, 'create');
 
-        // add to dashbaordStore
+        // add to dashboardStore
 
         var dash = {
             id: newGuid,
@@ -1872,9 +1922,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         }
         //if we have a marketplace widget or marketplace config, tell the banner to add a button
-        if (hasMpWidget
-//              || (!!Ozone.config.marketplaceLocation)
-                ) {
+        if (hasMpWidget) {
             if (mpWidgets.length == 1) { mpWidget = mpWidgets[0] }
             this.getBanner().addMarketplaceButton(mpWidget);
         }
