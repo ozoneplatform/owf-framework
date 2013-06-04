@@ -1691,6 +1691,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         // because widget destruction is delayed by 100ms to prevent memory leaks.
         // Because of the delay, widgets on a dashboard get rerendered while previous ones haven't been destroyed.
         setTimeout(function () {
+            var dashboards = [];
+
             // Update various dashboard-related components.
             for (var i1 = 0, len = storeRecords.length; i1 < len; i1++) {
 
@@ -1711,10 +1713,18 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     me.defaultDashboard = addedDash;
                 }
 
+                // disable animations when rerendering deleted dashboards
+                addedDash.disableCssAnimations();
+                dashboards.push(addedDash);
             }
             // activate dashboard
             me._activateDashboard(dashboardGuidToActivate || defaultTabGuid); // Focus the default dashboard.
             me.activateDashboard(dashboardGuidToActivate || defaultTabGuid, true, stackContext);
+
+            // enable animations now that dashboards are added to card layout
+            for(var j = 0, len = dashboards.length; j < len; j++) {
+                dashboards[j].enableCssAnimations();
+            }
         }, 200);
     },
 

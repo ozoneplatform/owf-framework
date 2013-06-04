@@ -1173,6 +1173,22 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
     /**
     *
+    * Disable CSS animations.
+    **/
+    disableCssAnimations: function () {
+        this.cssanimations = false;
+    },
+
+    /**
+    *
+    * Enable CSS animations.
+    **/
+    enableCssAnimations: function () {
+        this.cssanimations = true;
+    },
+
+    /**
+    *
     * Set slide in direction for dashboard animations.
     * @param {String} direction valid values up, left, down, right
     **/
