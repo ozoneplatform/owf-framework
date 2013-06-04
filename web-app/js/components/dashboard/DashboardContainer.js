@@ -914,7 +914,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     activateDashboard: function(guid, silent, stackContext) {
         //set dashboard in history but disable events so we don't activate the dashboard twice
-        var params = new Object();
+        var params = {};
         if (stackContext) { params.stack = stackContext; }
         params.guid = guid;
         if (silent) {
@@ -924,6 +924,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         if (silent) {
             Ext.util.History.startUp();
         }
+
         this.fireEvent(OWF.Events.Dashboard.SELECTED, guid);
     },
 
@@ -978,7 +979,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         this.previousActiveDashboard = dashboardCardPanel.layout.getActiveItem();
 
-        if (guid != null && guid != '') {
+        if (guid && guid !== '') {
             //make the new dashboard active and visible
             var dashboardPanel = dashboardCardPanel.layout.setActiveItem(guid);
             
@@ -990,7 +991,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 this.setDefaultDashboard(guid);
             }
         } else {
-            var params = new Object();
+            var params = {};
             if (stackContext) {
                 params.stack = stackContext;
                 var stackDashGuids = [];
@@ -1021,11 +1022,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             if (!params.guid) {
                 if (guid == '') {
                     //no guid specified set to default
-                    var defaultGuid = this.defaultDashboard.guid;
-                    params.guid = defaultGuid;
+                    params.guid = this.defaultDashboard.guid;
                 } else {
-                    var prevGuid = this.activeDashboard.guid;
-                    params.guid = prevGuid;
+                    params.guid = this.activeDashboard.guid;
                     //todo remove this defer when there are events on dashboards
                     Ext.defer(Ozone.Msg.alert, 100, this, 
                         [Ozone.util.ErrorMessageString.invalidDashboard, this.activeDashboard.isdefault 

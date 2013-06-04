@@ -143,8 +143,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             this.mpLauncher = Ext.create('Ozone.components.marketplace.MarketplaceLauncher', {
                  dashboardContainer: this.dashboardContainer
             });
-            this.mpLauncher.addListener('marketplacelaunched', this.setMarketplaceToggle, this);
-            this.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, this.clearMarketplaceToggle, this);
+            this.mpLauncher.addListener(OWF.Events.Marketplace.OPENED, this.setMarketplaceToggle, this);
         }
         return this.mpLauncher;
     },
@@ -487,6 +486,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             scope: this
           }
         });
+
+        this.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, this.clearMarketplaceToggle, this);
     },
 
     //returns either the docked banner or the popout banner,

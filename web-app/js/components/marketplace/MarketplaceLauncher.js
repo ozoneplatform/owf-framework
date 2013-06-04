@@ -80,7 +80,7 @@ Ext.define('Ozone.components.marketplace.MarketplaceLauncher', {
         } else {
             this.dashboardContainer.launchWidgets(this.marketplaceWidget, this.keyboard);
         }
-        this.fireEvent('marketplacelaunched');
+        this.fireEvent(OWF.Events.Marketplace.OPENED);
     },
 
     createMarketplaceDashboardAndLaunch: function() {

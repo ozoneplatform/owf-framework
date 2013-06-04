@@ -10,6 +10,10 @@ OWF.Events = {
 		CHANGED: 'dashboardChanged',
         SELECTED: 'dashboardSelected'
 	},
+    Marketplace: {
+        OPENED: 'marketplaceOpened',
+        CLOSED: 'marketplaceClosed'
+    },
 	Banner: {
 		DOCKED: 'docked',
 		UNDOCKED: 'undocked'
