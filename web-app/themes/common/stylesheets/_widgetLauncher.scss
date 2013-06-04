@@ -198,6 +198,13 @@
 		border-color: $widget-launcher-background-color;
 		padding:9px;
 	}
+
+    .x-window-header-text {
+        font-weight: normal;
+        font-size: $widget-launcher-view-title-font-size;
+        color: $widget-launcher-widget-title-color;
+        padding: 10px;
+    }
     
     span, .thumb-text {
         //color: #ccc;
@@ -208,10 +215,12 @@
         //padding-left: 10px;
     }
     .widget-launcher-header-icon {
-		background-image: theme-image($theme-name,'launch-menu/header-icon.png');
-		background-repeat: no-repeat;
-		background-size: 20px 20px;
-		background-position: center center;
+        background-image: theme-image($theme-name, 'launch-menu/favorite_icon.png');
+        background-position: center center;
+        background-repeat: no-repeat;
+        border-style: none;
+        height: 36px;
+        width: 36px;
 	}
 
     .widgetLauncherView {
@@ -220,14 +229,6 @@
     }
 
     .widgetviewcontainer {
-	    .title {
-	        font-weight: normal;
-	        font-size: $widget-launcher-view-title-font-size;
-	        color: $widget-launcher-widget-title-color;
-	        padding: 10px;
-	
-	    }
-      
       	.launch_delete_grid_icon {
 			display: none;
 			padding: 0 5px 0 5px;
@@ -235,44 +236,57 @@
     	}
     }
 
+    .gridViewBtn,
+    .iconViewBtn {
+        background: transparent;
+        filter: none;
+        border: none;
+        float: right;
+        margin: 0px;
+
+    }
+
+    .gridViewBtn {
+        .gridViewBtnIcon-up {
+            background-image: theme-image($theme-name, 'launch-menu/launch_list-up.png') ;
+        }
+        .gridViewBtnIcon-down {
+            background-image: theme-image($theme-name, 'launch-menu/launch_list-down.png') ;
+        }
+        &.x-btn-over {
+            border: none;
+            .gridViewBtnIcon-up {
+                background-image: theme-image($theme-name, 'launch-menu/launch_list-over.png') ;
+            }
+        }
+    }
+
+    .iconViewBtn {
+        .iconViewBtnIcon-up {
+            background-image: theme-image($theme-name, 'launch-menu/launch_tile-up.png') ;
+        }
+        .iconViewBtnIcon-down {
+            background-image: theme-image($theme-name, 'launch-menu/launch_tile-down.png') ;
+        }
+        &.x-btn-over {
+            border: none;
+            .iconViewBtnIcon-up {
+                background-image: theme-image($theme-name, 'launch-menu/launch_tile-over.png') ;
+            }
+        }
+    }
+
     .info-panel {
         background: transparent;
         margin-left: 5px;
         margin-right: 5px;
         margin-top: 5px;
-        
-
-        //.launchMenuTitle {
-        //  font-weight: bold;
-        //  font-size: 1.5em;
-        //  line-height: 1em;
-        //  margin-bottom: .5em;
-        //  color: $widget-launcher-widget-title-color;
-        //
-        //}
-
-        .info-label {
-            padding-left: 5px;
-            font-weight: bold;
-            font-size: 1.5em;
-            line-height: 1em;
-            color: $widget-launcher-widget-title-color;
-        }
 
         .x-panel-body {
             background: transparent;
             color: $widget-launcher-info-panel-color;
             border-style: none;
             padding-bottom: 3px; //IE 7 hack so bottom button's border isn't cut off
-        }
-    
-        .info-icon {
-            background-image: theme-image($theme-name, 'launch-menu/favorite_icon.png');
-            background-position: center center;
-            background-repeat: no-repeat;
-            border-style: none;
-            height: 36px;
-            width: 36px;
         }
 
         .infoCenter {
@@ -281,47 +295,8 @@
             padding-top: 5px;
             
         }
-
-        .gridViewBtn,
-        .iconViewBtn {
-            background: none;
-            filter: none;
-            border: none;
-            float: right;
-            margin: 0px;
-
-        }
-
-        .gridViewBtn {
-            .gridViewBtnIcon-up {
-                background-image: theme-image($theme-name, 'launch-menu/launch_list-up.png') ;
-            }
-            .gridViewBtnIcon-down {
-                background-image: theme-image($theme-name, 'launch-menu/launch_list-down.png') ;
-            }
-            &.x-btn-over {
-                border: none;
-                .gridViewBtnIcon-up {
-                    background-image: theme-image($theme-name, 'launch-menu/launch_list-over.png') ;
-                }
-            }
-        }
-
-        .iconViewBtn {
-            .iconViewBtnIcon-up {
-                background-image: theme-image($theme-name, 'launch-menu/launch_tile-up.png') ;
-            }
-            .iconViewBtnIcon-down {
-                background-image: theme-image($theme-name, 'launch-menu/launch_tile-down.png') ;
-            }
-            &.x-btn-over {
-                border: none;
-                .iconViewBtnIcon-up {
-                    background-image: theme-image($theme-name, 'launch-menu/launch_tile-over.png') ;
-                }
-            }
-        }
     }
+
     .start-remove-panel {
         display: block;
         background: transparent;
@@ -346,13 +321,18 @@
             padding-top: 10px;
             padding-bottom: 10px;
             text-align: center;
-            font-size: 1.5em;
             @include border-radius(15px);
+            .x-btn-inner {
+                font-size: 20px;
+            }
         }
 
         .start-btn {
             @include background-gradient($widget-launcher-start-button-background-color, $widget-launcher-start-button-background-gradient);
             background-color: $widget-launcher-start-button-background-color;
+            .x-btn-inner {
+                color: black;
+            }
         }
 
         .x-btn-disabled {
@@ -509,7 +489,7 @@
         border-color: $widget-launcher-button-border-color;
         padding: 0px;
         .x-btn-inner {
-            color: $widget-launcher-button-color !important;
+            color: $widget-launcher-button-color;
         }
     }
 

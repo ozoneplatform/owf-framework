@@ -7,6 +7,7 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     modalAutoClose: true,
     shadow: false,
     ui: 'widget-launcher',
+    title: 'Favorites Menu',
     dashboardContainer: null,
     closable: true,
     preventHeader: false,
@@ -34,6 +35,78 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
 
     initComponent: function () {
         var me = this;
+
+        this.tools = [
+            {
+
+                xtype: 'toolbar',
+                cls: 'viewSwitch',
+                flex: 1,
+                layout: 'auto', //Ext hbox puts a 2 pixel gap between things
+                //that we don't want, so its easier if we
+                //just lay it out in css
+                //items are floated right, so they need to
+                //be in reverse order
+                items: [
+                    {
+                        xtype: 'button',
+                        itemId: 'iconViewBtn',
+                        cls: 'iconViewBtn',
+                        text: null,
+                        scale: 'large',
+                        iconCls: 'iconViewBtnIcon-down',
+                        iconAlign: 'top',
+                        handler: function (b, e) {
+                            this.showIconView(b);
+                        },
+                        scope: this
+                    },
+                    {
+                        xtype: 'button',
+                        itemId: 'gridViewBtn',
+                        cls: 'gridViewBtn',
+                        text: null,
+                        scale: 'large',
+                        iconCls: 'gridViewBtnIcon-up',
+                        iconAlign: 'top',
+                        handler: function (b, e) {
+                            this.showGridView(b);
+                        },
+                        scope: this
+                    }
+                ]
+            },
+            {
+                xtype: 'toolbar',
+                cls: 'searchBar',
+                flex: 1,
+                items: [
+                    {
+                        xtype: 'searchbox',
+                        itemId: 'searchbox',
+                        flex: 1,
+                        emptyText: "Search",
+                        dynamic: true,
+                        listeners: {
+                            searchChanged: function (cmp, value) {
+                                if (!this.dontLoadWidgetStore) {
+                                    if (value == '') {
+                                        this.widgetStore.widgetFiltered = false;
+                                    }
+                                    else {
+                                        this.widgetStore.widgetFiltered = true;
+                                    }
+                                    this.searchPanel.search({
+                                        customWidgetName: value
+                                    });
+                                }
+                            },
+                            scope: this
+                        }
+                    }
+                ]
+            }
+        ];
 
         //make a copy of widgetStore to use, this is needed because filtering causes problems when widget states are saved
         this.widgetStore = Ext.create('Ozone.data.WidgetStore');
@@ -173,16 +246,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                     padding: '10',
                     items: [
                         {
-                            xtype: 'image',
-                            cls: 'info-icon'
-                        },
-                        {
-                            xtype: 'label',
-                            itemId: 'infoPanelLabel',
-                            cls: 'info-label',
-                            text: 'Favorites Menu'
-                        },
-                        {
                             xtype: 'container',
                             layout: {
                                 type: 'vbox',
@@ -191,97 +254,12 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                             cls: 'infoCenter',
                             itemId: 'infoCenter',
                             items: [
-//                                {
-//                                    xtype: 'component',
-//                                    itemId: 'htmlPanel',
-//                                    cls: 'htmlPanel',
-//                                    flex: 1
-//                                },
                                 {
                                     xtype: 'checkbox',
                                     hidden: true,
                                     itemId: 'intentCheckBox',
                                     cls: 'intentCheckBox',
                                     boxLabel: 'Remember this decision'
-                                }
-                            ]
-                        },
-                        {
-                            xtype: 'panel',
-                            itemId: 'toolbar-panel',
-                            cls: 'toolbar-panel',
-                            layout: {
-                                type: 'vbox',
-                                align: 'stretch'
-                            },
-                            items: [
-                                {
-                                    xtype: 'toolbar',
-                                    cls: 'viewSwitch',
-                                    flex: 1,
-                                    layout: 'auto', //Ext hbox puts a 2 pixel gap between things
-                                    //that we don't want, so its easier if we
-                                    //just lay it out in css
-                                    //items are floated right, so they need to
-                                    //be in reverse order
-                                    items: [
-                                        {
-                                            xtype: 'button',
-                                            itemId: 'iconViewBtn',
-                                            cls: 'iconViewBtn',
-                                            text: null,
-                                            scale: 'large',
-                                            iconCls: 'iconViewBtnIcon-down',
-                                            iconAlign: 'top',
-                                            handler: function (b, e) {
-                                                this.showIconView(b);
-                                            },
-                                            scope: this
-                                        },
-                                        {
-                                            xtype: 'button',
-                                            itemId: 'gridViewBtn',
-                                            cls: 'gridViewBtn',
-                                            text: null,
-                                            scale: 'large',
-                                            iconCls: 'gridViewBtnIcon-up',
-                                            iconAlign: 'top',
-                                            handler: function (b, e) {
-                                                this.showGridView(b);
-                                            },
-                                            scope: this
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            xtype: 'toolbar',
-                            cls: 'searchBar',
-                            flex: 1,
-                            items: [
-                                {
-                                    xtype: 'searchbox',
-                                    itemId: 'searchbox',
-                                    flex: 1,
-                                    emptyText: "Search",
-                                    dynamic: true,
-                                    listeners: {
-                                        searchChanged: function (cmp, value) {
-                                            if (!this.dontLoadWidgetStore) {
-                                                if (value == '') {
-                                                    this.widgetStore.widgetFiltered = false;
-                                                }
-                                                else {
-                                                    this.widgetStore.widgetFiltered = true;
-                                                }
-                                                this.searchPanel.search({
-                                                    customWidgetName: value
-                                                });
-                                            }
-                                        },
-                                        scope: this
-                                    }
                                 }
                             ]
                         }

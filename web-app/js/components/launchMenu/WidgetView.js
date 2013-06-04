@@ -172,6 +172,7 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
                     }
                 },
 
+
                 //widget grid panel
                 {
                     xtype:'grid',
