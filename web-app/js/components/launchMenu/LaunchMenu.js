@@ -18,21 +18,21 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     dontLoadWidgetStore: false,
     disableDashboardSelection: false,
 
-   startBtnCfg: {
-       xtype: 'button',
-       text: 'Start',
-       cls: 'start-btn',
-       itemId: 'start'
-   },
+    startBtnCfg: {
+        xtype: 'button',
+        text: 'Start',
+        cls: 'start-remove-btn start-btn',
+        itemId: 'start'
+    },
 
-   removeBtnCfg: {
-       xtype: 'button',
-       text: 'Remove',
-       cls: 'start-btn remove-btn',
-       itemId: 'remove'
-   },
+    removeBtnCfg: {
+        xtype: 'button',
+        text: 'Remove',
+        cls: 'start-remove-btn remove-btn',
+        itemId: 'remove'
+    },
 
-   initComponent: function () {
+    initComponent: function () {
         var me = this;
 
         //make a copy of widgetStore to use, this is needed because filtering causes problems when widget states are saved
@@ -43,20 +43,20 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
             widgetTypes: ['standard']
         };
 
-       //update names to custom names
-       this.widgetStore.on({
-           datachanged: {
-               fn: function (store, records, successful, operation, eOpts) {
-                   for (var i = 0; i < records.length; i++) {
-                       var newTitle = this.dashboardContainer.widgetNames[records[i].data.widgetGuid];
-                       if (newTitle) {
-                           records[i].data.name = newTitle;
-                       }
-                   }
-               },
-               scope: this
-           }
-       });
+        //update names to custom names
+        this.widgetStore.on({
+            datachanged: {
+                fn: function (store, records, successful, operation, eOpts) {
+                    for (var i = 0; i < records.length; i++) {
+                        var newTitle = this.dashboardContainer.widgetNames[records[i].data.widgetGuid];
+                        if (newTitle) {
+                            records[i].data.name = newTitle;
+                        }
+                    }
+                },
+                scope: this
+            }
+        });
 
         //a load on the main widgetStore this will trigger the launch Menu widgetStore to load
         this.dashboardContainer.widgetStore.on({
@@ -174,13 +174,12 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                     items: [
                         {
                             xtype: 'image',
-                            cls: 'infoIcon',
-                            src: 'themes/common/images/settings/WidgetsIcon.png'
+                            cls: 'info-icon'
                         },
                         {
                             xtype: 'label',
                             itemId: 'infoPanelLabel',
-                            cls: 'infoLabel',
+                            cls: 'info-label',
                             text: 'Favorites Menu'
                         },
                         {
@@ -189,16 +188,15 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                                 type: 'vbox',
                                 align: 'stretch'
                             },
-                            flex: 1,
                             cls: 'infoCenter',
                             itemId: 'infoCenter',
                             items: [
-                                {
-                                    xtype: 'component',
-                                    itemId: 'htmlPanel',
-                                    cls: 'htmlPanel',
-                                    flex: 1
-                                },
+//                                {
+//                                    xtype: 'component',
+//                                    itemId: 'htmlPanel',
+//                                    cls: 'htmlPanel',
+//                                    flex: 1
+//                                },
                                 {
                                     xtype: 'checkbox',
                                     hidden: true,
@@ -332,7 +330,8 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                     xtype: 'panel',
                     layout: {
                         type: 'hbox',
-                        align: 'stretchmax'
+                        align: 'stretchmax',
+                        pack: 'center'
                     },
                     itemId: "startRemovePanel",
                     cls: "start-remove-panel",
@@ -349,24 +348,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
         this.callParent();
 
         this.addEvents('noWidgetLaunched', 'refresh');
-
-//        me.view.on({
-//                    render: {
-//                        fn: function (view, eopts) {
-//                            var keyMap = new Ext.util.KeyMap(this.el, {
-//                                key: [Ext.EventObject.TAB],
-//                                fn: function (key, evt) {
-//                                    //evt.preventDefault(); //stop keypress from firing since the handler might
-//
-//                                    //change the focus
-//                                    me.carousel.down('#leftBtn').el.focus(100);
-//                                },
-//                                scope: this
-//                            });
-//                        },
-//                        scope: this
-//                    }
-//                });
 
         this.on({
             render: {
@@ -416,10 +397,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                 },
                 scope: this
             },
-//            itemclick: {
-//                fn: this.itemClick,
-//                scope: this
-//            },
             itemdblclick: {
                 fn: this.itemDblClick,
                 scope: this
@@ -651,21 +628,20 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
      * @param intentCheckBoxValue
      */
     updateInfoPanel: function (record, showRemoveFavorites, disableStartButton, showIntentCheckBox, intentCheckBoxValue) {
-        var me = this,
-        infoPanel = me.down("#infoPanel"),
-        infoCenter = infoPanel.getComponent('infoCenter'),
-        startRemovePanel = infoPanel.getComponent('startRemovePanel'),
-        startBtn = startRemovePanel.getComponent('start'),
-        removeBtn = startRemovePanel.getComponent('remove'),
-        htmlPanel = infoPanel.down('#htmlPanel'),
-        intentCheckBox = infoPanel.down('#intentCheckBox'),
+        var me = this;
+        var infoPanel = me.down("#infoPanel");
+//        infoCenter = infoPanel.getComponent('infoCenter'),
+        var startRemovePanel = me.down('#startRemovePanel');
+        var startBtn = startRemovePanel.getComponent('start');
+        var removeBtn = startRemovePanel.getComponent('remove');
+//        var htmlPanel = infoPanel.down('#htmlPanel');
+        var intentCheckBox = infoPanel.down('#intentCheckBox');
 
-        startBtnHandler = function (button, evt) {
-            console.log("Start event fired");
+        var startBtnHandler = function (button, evt) {
             me.launchWidget(record, evt);
         };
 
-        removeBtnHandler = function (button, evt) {
+        var removeBtnHandler = function (button, evt) {
             me.removeWidget(record);
         };
 
@@ -695,21 +671,21 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
 //              }
 //          }
 //        }
-        if (widgetDisabled) {
+        if (widgetDisabled || !record) {
             startRemovePanel.addCls('widget-disabled');
-            infoCenter.addCls('widget-disabled');
+//            infoCenter.addCls('widget-disabled');
         }
         else {
             startRemovePanel.removeCls('widget-disabled');
-            infoCenter.removeCls('widget-disabled');
+//            infoCenter.removeCls('widget-disabled');
         }
 
-        var desc = record.get('description') != null ? record.get('description') : '';
-        //todo remove this hardcoded style
-        var html = "<h1 class=\"launchMenuTitle\">" + Ext.htmlEncode(record.get('name')) + "</h1>" +
-                "<p>" + Ext.htmlEncode(desc) + "</p>";
+//        var desc = record.get('description') != null ? record.get('description') : '';
+//        //todo remove this hardcoded style
+//        var html = "<h1 class=\"launchMenuTitle\">" + Ext.htmlEncode(record.get('name')) + "</h1>" +
+//                "<p>" + Ext.htmlEncode(desc) + "</p>";
 
-        htmlPanel.el.update(html);
+//        htmlPanel.el.update(html);
 
         if (this.showIntentCheckBox) {
             intentCheckBox.show();
@@ -735,8 +711,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
        removeButton = startRemovePanel.add(Ext.applyIf({
            handler: removeBtnHandler
        }, removeButton));
-
-
 
        //in IE7, Ext seems to be manually setting the button widths to
        //the smallest reasonable size for some reason.  We want the widths to
@@ -889,6 +863,8 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
         if (intentCheckbox) {
             intentCheckbox.reset();
         }
+
+        this.updateInfoPanel(null, false, true);
     },
 
     createSidePanel: function () {
@@ -907,75 +883,14 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                         cmp.setSize(document.body.clientWidth * 0.15, document.body.clientHeight * 0.65);
                     },
                     scope: this
-                }/*,
-                show: {
-                    fn: function (cmp) {
-                        cmp.alignTo(this, 'tr-tl', [0, 10]);
-                    },
-                    scope: this
-                }*/
+                }
             }
         });
         this.searchPanel.show();
         this.searchPanel.hide();
-        //this.searchPanel.alignTo(this, 'tr-tl', [0, 10]);
-
-        //this.setActive(true);
     },
 
     openOrCloseAdvancedSearch: function (open, disableRefresh) {
-        //never show the advance search window
-
-//        var me = this;
-//
-//        if (!me.searchPanel) {
-//            me.createSidePanel();
-//        }
-//        else {
-//            if (open) {
-//                me.searchPanel.show();
-//                this.searchPanel.alignTo(this, 'tr-tl', [0, 10]);
-//            }
-//            else {
-//                me.searchPanel.hide();
-//            }
-//        }
-//
-//        var button = this.down('#advSearchBtn');
-//        button.toggle(open, true);
-//
-//        var searchbox = this.down('#searchbox');
-//
-//        if (open) {
-//            //todo remove this in favor of using the pressedCls
-//            button.removeCls("advSearchBtn");
-//            button.addCls("advSearchBtn-clicked");
-//
-//            //if the user has searched, clear the box reload the store
-//            if (searchbox.getValue() != '') {
-//                searchbox.reset();
-//
-//                //this will cause the widgetStore to reload and clear any search
-//                if (!disableRefresh) {
-//                  searchbox.onClear();
-//                }
-//            }
-//            searchbox.disable();
-//        }
-//        else {
-//            //todo remove this in favor of using the pressedCls
-//            button.removeCls("advSearchBtn-clicked");
-//            button.addCls("advSearchBtn");
-//
-//            searchbox.enable();
-//
-//            //clear adv search and reset the data
-//            me.searchPanel.clearAllFilters();
-//            if (!disableRefresh) {
-//              me.searchPanel.search();
-//            }
-//        }
-
     },
 
     onEsc: function (k, e) {
@@ -991,9 +906,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
         var view = this.down('#view');
         view.showIconOrGridView(true);
 
-        var slider = this.down("#iconSlider");
-        slider.show();
-
         b = b || this.down('#iconViewBtn');
 
         b.setIconCls('iconViewBtnIcon-down');
@@ -1004,16 +916,13 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
         var view = this.down('#view');
         view.showIconOrGridView(false);
 
-        var slider = this.down("#iconSlider");
-        slider.hide();
-
         b = b || this.down('#gridViewBtn');
         b.setIconCls('gridViewBtnIcon-down');
         this.down("#iconViewBtn").setIconCls('iconViewBtnIcon-up');
 
     },
 
-    getIntentCheckBoxValue: function () {
+    getIntentCheckBoxValue: function rob() {
         var intentCheckBox = this.down('#intentCheckBox');
         return intentCheckBox.getValue();
     },
