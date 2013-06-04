@@ -31,6 +31,11 @@
             }
         }
     }
+    
+    .x-window-header {
+    	left: 85% !important;
+	    width: 65px !important;
+    }
 }
 
 #dashboard-switcher .dashboard, #dashboard-switcher .stack, .stack.drag-proxy, .dashboard.drag-proxy {

@@ -8,7 +8,7 @@ Ext.define('Ozone.components.SettingsWindow', {
     iconCls: 'settings-header-icon',
     ui: 'system-window',
     layout: 'auto',
-    closable: false,
+    closable: true,
     resizable: false,
     draggable: false,
     modal: true,

@@ -173,6 +173,7 @@
 
     .viewSwitch {
         opacity: 0.75;
+        padding-top: 2% !important;
     }
 
     .viewSwitch,
@@ -193,6 +194,7 @@
 		height: 20px;
 		background-image: none;
 		background-color: $widget-launcher-background-color;
+		border-color: $widget-launcher-background-color;
 		padding:9px;
 	}
     
@@ -278,6 +280,7 @@
             margin-top: 3px;
             text-align: center;
         }
+        
 
         .infoCenter {
             margin-left: 18px;

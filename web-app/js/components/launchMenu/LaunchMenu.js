@@ -9,10 +9,10 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     ui: 'widget-launcher',
     dashboardContainer: null,
     closable: true,
-    preventHeader: true,
+    preventHeader: false,
     iconCls: 'widget-launcher-header-icon',
     resizable: false,
-    draggable: true,
+    draggable: false,
     mouseDownCounter: 0,
 
     dontLoadWidgetStore: false,
@@ -723,6 +723,8 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
         removeBtnHandler = function (button, evt) {
             me.removeWidget(record);
         };
+        
+
             
         //remove launchBtn so it can be updated
         if (launchBtn) {

@@ -16,7 +16,7 @@
     ui: 'system-window',
     iconCls: 'admin-tools-header-icon',
     layout: 'auto',
-    closable: false,
+    closable: true,
     resizable: false,
     draggable: false,
     modal: true,
