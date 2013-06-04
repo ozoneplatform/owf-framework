@@ -61,6 +61,7 @@ Ext.define('Ozone.components.view.ToolDataView', {
         switch (event.getKey()) {
             case event.ENTER:
             case event.SPACE:
+                event.stopPropagation();
                 this.up().callBtnHandler(record.data.name, item, true);
                 return true;
         }
