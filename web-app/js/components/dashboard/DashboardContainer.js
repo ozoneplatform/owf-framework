@@ -447,10 +447,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             this.activeDashboard.enableWidgetMove();
 
             // if using keyboard, highlight first pane
-            if( isUsingKeyboard === true ) {
-                if (document.activeElement) document.activeElement.blur();
-                panes[0].focus();
-            }
+            isUsingKeyboard === true && panes[0].focus();
 
             doc.on('keydown', this._selectPaneOnKeyDown, this, {
                 capture: true,
