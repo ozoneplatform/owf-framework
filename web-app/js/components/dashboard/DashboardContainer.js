@@ -839,6 +839,38 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         dashboardSwitcher && dashboardSwitcher.destroy();
     },
 
+    // Displays dashboard switcher and returns a promise which is resolved only after the user selects a dashboard
+    // and it is activated.
+    selectDashboard: function () {
+        var me = this,
+            dashboardActivatedDeferred = $.Deferred();
+
+        // Show the switcher
+        var dashboardSwitcherPromise = this.showDashboardSwitcher();
+
+        dashboardSwitcherPromise.done(function() {
+            // Obtain the reference to the switcher
+            var dashboardSwitcher = me.getDashboardSwitcher();
+            // Dashboard selection promise will resolve if a dashboard is selected in a switcher
+            var dashboardSelectionPromise = dashboardSwitcher.getDashboardSelectionPromise();
+            dashboardSelectionPromise.done(function (dashboardGuid) {
+                if(me.activeDashboard.guid === dashboardGuid) {
+                    // The user selected the same dashboard
+                    dashboardActivatedDeferred.resolve();
+                }
+                else {
+                    // The user selected different dashboard, wait for it becoming active
+                    me.addListener(OWF.Events.Dashboard.CHANGED, function() {
+                        dashboardActivatedDeferred.resolve();
+                    })
+                }
+
+            })
+
+        });
+        return dashboardActivatedDeferred.promise();
+    },
+
     createDashboardConfig: function(dashRecord) {
         var dash = dashRecord.data;
         var stateStore = Ext.create('Ozone.data.StateStore', {

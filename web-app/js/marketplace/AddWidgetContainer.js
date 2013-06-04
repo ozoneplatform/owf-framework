@@ -421,13 +421,11 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_WebappLaunchSuccessful;
             }
         } else {
-            // Show the switcher
-            self.dashboardContainer.showDashboardSwitcher();
-            // Add a listener so we can launch the widget if the user picks a different dashboard
-            // TODO: Remove this listener if the user cancels dashboard selection (OP-419)
-            self.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
+
+            var dashboardSelectionPromise = self.dashboardContainer.selectDashboard();
+            dashboardSelectionPromise.done(function() {
                 self.dashboardContainer.launchWidgets(widgetDef, true);
-            }, self.dashboardContainer, {/*delay:2000,*/ single:true});
+            });
 
             notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;
         }
