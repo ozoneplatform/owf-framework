@@ -529,19 +529,29 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
 
         var widgetStore = this.widgetStore;
         var me = this;
-        Ozone.pref.PrefServer.updateAndDeleteWidgets({
-            widgetsToUpdate:[],
-            widgetGuidsToDelete:widgetsToDelete, 
-            updateOrder:false,
-            onSuccess:function(){
-                widgetStore.remove(record);
-                var dashboardContainerRecord = me.dashboardContainer.widgetStore.findRecord("widgetGuid", record.get('widgetGuid'));
-                me.dashboardContainer.widgetStore.remove(dashboardContainerRecord);
-                me.updateInfoPanel(null, false, true);
-            }, 
-            onFailure:function(){  	
+
+        Ext.widget('alertwindow', {
+            html: '<p>Deleting this widget will remove it from any dashboards it is a part of.</p><br/> '
+                + '<p>Are you sure you want to delete ' + Ext.htmlEncode(record.data.name) + '?</p>',
+            width: 400,
+            dashboardContainer: me.dashboardContainer,
+            showCancelButton: true,
+            okFn: function() {
+                Ozone.pref.PrefServer.updateAndDeleteWidgets({
+                    widgetsToUpdate:[],
+                    widgetGuidsToDelete:widgetsToDelete,
+                    updateOrder:false,
+                    onSuccess:function(){
+                        widgetStore.remove(record);
+                        var dashboardContainerRecord = me.dashboardContainer.widgetStore.findRecord("widgetGuid", record.get('widgetGuid'));
+                        me.dashboardContainer.widgetStore.remove(dashboardContainerRecord);
+                        me.updateInfoPanel(null, false, true);
+                    },
+                    onFailure:function(){
+                    }
+                });
             }
-        });
+        }).show();
     },
 
     // Close the given widget in all the user's dashboards
