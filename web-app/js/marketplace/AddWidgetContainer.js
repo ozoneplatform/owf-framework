@@ -30,8 +30,11 @@ Ozone.marketplace.AddWidgetContainer = function (eventingContainer, dashboardCon
             });
         });
         this.eventingContainer.registerHandler(this.addStackChannelName, function (sender, msg) {
+            var me = this;
             // Must return a value for the callback function to be invoked on the client side.
-            return scope.addStack(Ozone.util.parseJson(msg));
+            return scope.addStack(Ozone.util.parseJson(sender), Ozone.util.parseJson(msg), function (result) {
+                me.callback && me.callback(result);
+            });
         });
     }
     else {
@@ -44,16 +47,81 @@ Ozone.marketplace.AddWidgetContainer = function (eventingContainer, dashboardCon
 };
 
 Ozone.marketplace.AddWidgetContainer.prototype = {
+    getlistingVisualizer: function(sender, config, marketplaceCallback, listingType) {
+        var animTargetX,
+            animTargetBtn,
+            id = config.data.id,
+            imageInfo = config.data.image;
 
-    addStack:function (config) {
+        if (listingType === "widget") {
+            animTargetX = "0px";
+            animTargetBtn = "launchMenuBtn";
+        }
+        else if (listingType === "stack") {
+            animTargetX = "64px";
+            animTargetBtn = "dashMenuBtn";
+        }
+
+        var visualizeAddition = function(definitionName) {
+            if(Modernizr.csstransitions && Modernizr.cssanimations) {
+                var listing = Ext.getCmp(sender.id),
+                    listingOffsets = listing.el.getOffsetsTo(Ext.getBody()),
+                    imgHTML = ['<img class="marketplace_animate_listing" src="', imageInfo.URL,
+                        '" style="',
+                        ';width:', imageInfo.width, 'px',
+                        ';height:', imageInfo.height, 'px',
+                        ';left:', (imageInfo.left + listingOffsets[0]), 'px',
+                        ';top:', (imageInfo.top + listingOffsets[1]), 'px',
+                        ';">'
+                    ].join(''),
+                    img = Ext.DomHelper.insertHtml('beforeEnd', Ext.getBody().dom, imgHTML),
+                    $img = jQuery(img),
+                    btn = Ext.getCmp(animTargetBtn),
+                    target = btn.el.dom;
+
+                $img
+                    .one(CSS.Transition.TRANSITION_END, function () {
+                        $img.remove();
+                        btn.blink();
+                        marketplaceCallback && marketplaceCallback(id);
+                    })
+                    .css({
+                        top: '0px',
+                        left: animTargetX,
+                        width: btn.btnEl.getWidth() + 'px',
+                        height: btn.btnEl.getHeight() + 'px'
+                    });
+            }
+            else {
+                var tip = Ext.create('Ext.tip.ToolTip', {
+                    html: definitionName + ' has been added successfully from AppsMall.',
+                    anchor: 'left',
+                    target: animTargetBtn,
+                    cls: 'focusTooltip',
+                    listeners: {
+                        hide: function () {
+                            tip.destroy();
+                        }
+                    }
+                });
+                btn.blink();
+                tip.show();
+                marketplaceCallback && marketplaceCallback(id);
+            }
+        };
+        return visualizeAddition;
+    },
+
+    addStack: function (sender, config, marketplaceCallback) {
         var stackJSON = config.widgetsJSON;
         this.dashboardContainer.loadMask.show();
-        this.processMarketplaceStackData(stackJSON.itemUuid);
         this.dashboardContainer.dashboardsNeedRefresh = true;
+        var visualizeAddition = this.getlistingVisualizer(sender, config, marketplaceCallback, "stack");
+        this.processMarketplaceStackData(stackJSON.itemUuid, visualizeAddition);
         return stackJSON.itemId;
     },
 
-    processMarketplaceStackData: function(stackUuid) {
+    processMarketplaceStackData: function(stackUuid, addStackCallback) {
         var self = this;
 
         Ozone.util.Transport.send({
@@ -72,6 +140,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     icon: false
                 });
 
+
+                addStackCallback && addStackCallback("The stack");
                 self.dashboardContainer.loadMask.hide();
             },
             onFailure: function(jsonData) {
@@ -82,62 +152,11 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
     },
 
     addWidget:function (sender, config, marketplaceCallback) {
-        var me = this,
-            widgetsJSON = config,
-            id = config.data.id,
-            doLaunch = config.doLaunch,
-            imageInfo = config.data.image;
-
         this.dashboardContainer.loadMask.show();
 
-        var visualizeWidgetAddition = function(widgetDefinition) {
-            var btn = Ext.getCmp('launchMenuBtn');
-            if(Modernizr.csstransitions && Modernizr.cssanimations) {
-                var widget = Ext.getCmp(sender.id),
-                    widgetOffsets = widget.el.getOffsetsTo(Ext.getBody()),
-                    imgHTML = ['<img class="marketplace_animate_listing" src="', imageInfo.URL,
-                        '" style="',
-                        ';width:', imageInfo.width, 'px',
-                        ';height:', imageInfo.height, 'px',
-                        ';left:', (imageInfo.left + widgetOffsets[0]), 'px',
-                        ';top:', (imageInfo.top + widgetOffsets[1]), 'px',
-                        ';">'
-                    ].join(''),
-                    img = Ext.DomHelper.insertHtml('beforeEnd', Ext.getBody().dom, imgHTML),
-                    $img = jQuery(img);
+        var visualizeAddition = this.getlistingVisualizer(sender, config, marketplaceCallback, "widget");
 
-                $img
-                    .one(CSS.Transition.TRANSITION_END, function () {
-                        $img.remove();
-                        btn.blink();
-                        marketplaceCallback && marketplaceCallback(id);
-                    })
-                    .css({
-                        top: '0px',
-                        left: '0px',
-                        width: btn.btnEl.getWidth() + 'px',
-                        height: btn.btnEl.getHeight() + 'px'
-                    });
-            }
-            else {
-                var tip = Ext.create('Ext.tip.ToolTip', {
-                    html: widgetDefinition.get('name') + ' has been added successfully from AppsMall.',
-                    anchor: 'left',
-                    target: 'launchMenuBtn',
-                    cls: 'focusTooltip',
-                    listeners: {
-                        hide: function () {
-                            tip.destroy();
-                        }
-                    }
-                });
-                btn.blink();
-                tip.show();
-                marketplaceCallback && marketplaceCallback(id);
-            }
-        };
-
-        this.processMarketplaceWidgetData(config.baseUrl, id, doLaunch, visualizeWidgetAddition, marketplaceCallback);
+        this.processMarketplaceWidgetData(config.baseUrl, config.data.id, config.doLaunch, visualizeAddition, marketplaceCallback);
     },
 
     processMarketplaceWidgetData: function(marketplaceUrl, widgetId, doLaunch, addWidgetCallback, doLaunchCallback) {
@@ -302,7 +321,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
                                     } else {
                                         notifyText = null;
-                                        addWidgetCallback && addWidgetCallback(widgetDefs.get(0));
+                                        addWidgetCallback && addWidgetCallback(widgetDefs.get(0).get('name'));
                                     }
                                 } else {
                                     // Failure message
