@@ -64,3 +64,4 @@ Thumbs.db
 /*.iws
 /*.ipr
 atlassian-ide-plugin.xml
+.*.swp
