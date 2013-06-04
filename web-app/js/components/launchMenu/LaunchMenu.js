@@ -599,24 +599,7 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                     this.disableDashboardSelection = false;
                 }
                 else {
-
-                    // Display dashboard switcher and launch widgets after the user selects a dashboard
-                    var dashboardSelectionPromise = dashboardContainer.selectDashboard();
-                    dashboardSelectionPromise.done(function() {
-                        dashboardContainer.launchWidgets(widgetDef, true);
-                    });
-
-                    // Show a notification with instructions for selecting a dashboard
-                    $.pnotify({
-                        title: Ozone.layout.DialogMessages.launchWidgetTitle,
-                        text: Ozone.layout.DialogMessages.launchWidgetAlert,
-                        type: 'success',
-                        addclass: "stack-bottomright",
-                        stack: {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25},
-                        history: false,
-                        sticker: false,
-                        icon: false
-                    });
+                    dashboardContainer.selectDashboardAndLaunchWidgets(widgetDef, true);
                 }
             }
         }

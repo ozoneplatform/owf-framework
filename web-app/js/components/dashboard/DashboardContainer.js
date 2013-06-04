@@ -427,6 +427,31 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     /*
+    * Launches widget on a dashboard that user selects from Dashboard Switcher.
+    */
+    selectDashboardAndLaunchWidgets: function (widgetModel, isEnterPressed) {
+        var me = this;
+
+        // Display dashboard switcher and launch widgets after the user selects a dashboard
+        var dashboardSelectionPromise = me.selectDashboard();
+        dashboardSelectionPromise.done(function() {
+            me.launchWidgets(widgetModel, isEnterPressed);
+        });
+
+        // Show a notification with instructions for selecting a dashboard
+        $.pnotify({
+            title: Ozone.layout.DialogMessages.launchWidgetTitle,
+            text: Ozone.layout.DialogMessages.launchWidgetAlert,
+            type: 'success',
+            addclass: "stack-bottomright",
+            stack: {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25},
+            history: false,
+            sticker: false,
+            icon: false
+        });
+    },
+
+    /*
     * Selects a Pane from the active dashboard.
     * 
     * Returns: a promise object that will be resolved with
@@ -987,7 +1012,18 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 //save a reference
                 this.activeDashboard = dashboardPanel;
 
-                this.fireEvent(OWF.Events.Dashboard.CHANGED, guid, dashboardPanel);
+                if(dashboardPanel.cssanimations) {
+                    dashboardPanel.on(OWF.Events.Dashboard.SHOWN, function () {
+                        var me = this;
+                        setTimeout(function () {
+                            me.fireEvent(OWF.Events.Dashboard.CHANGED, guid, dashboardPanel);    
+                        }, 0);
+                    }, this, {
+                        single: true
+                    })
+                } else {
+                    this.fireEvent(OWF.Events.Dashboard.CHANGED, guid, dashboardPanel);
+                }
                 this.setDefaultDashboard(guid);
             }
         } else {

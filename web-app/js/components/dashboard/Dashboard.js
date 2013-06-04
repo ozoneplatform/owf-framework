@@ -117,6 +117,8 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             'serversave',
             'widgetStartDrag',
             'widgetStopDrag',
+            OWF.Events.Dashboard.SHOWN,
+            OWF.Events.Dashboard.HIDDEN,
             OWF.Events.Widget.BEFORE_LAUNCH,
             OWF.Events.Widget.AFTER_LAUNCH
         );
@@ -224,7 +226,9 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     },
 
     enableWidgetDragAndDrop: function () {
-        this.dropZone = this.dropZone || new Ext.dd.DropZone(this.getEl(), {
+        var me = this;
+
+        me.dropZone = me.dropZone || new Ext.dd.DropZone(me.getEl(), {
 
             ddGroup: 'widgets',
 
@@ -250,10 +254,18 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
             // On node drop we can interrogate the target to find the underlying
             // application object that is the real target of the dragged data.
-            onNodeDrop: this.launchWidgets
+            onNodeDrop: function (target, dd, coordinates, data) {
+                if(me.configRecord.isMarketplaceDashboard()) {
+                    me.dashboardContainer.selectDashboardAndLaunchWidgets(data.widgetModel, true);
+                }
+                else {
+                    me.launchWidgets(target, dd, coordinates, data);
+                }
+                
+            }
         });
 
-        this.enableWidgetMove();
+        me.enableWidgetMove();
     },
 
     disableWidgetDragAndDrop: function () {
@@ -1309,6 +1321,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         this.el.removeCls(this.inactiveCls).addCls(this.animationCls + cls);
         this.el.on(CSS.Animation.ANIMATION_END, function() {
             this.el.removeCls(this.animationCls + cls);
+            this.fireEvent(OWF.Events.Dashboard.SHOWN);
         }, this, {
             single: true
         });
@@ -1324,6 +1337,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         this.el.addCls(this.animationCls + cls);
         this.el.on(CSS.Animation.ANIMATION_END, function() {
             this.el.addCls(this.inactiveCls).removeCls(this.animationCls + cls);
+            this.fireEvent(OWF.Events.Dashboard.HIDDEN);
         }, this, {
             single: true
         });

@@ -8,7 +8,9 @@ OWF.Events = {
 	Dashboard: {
 		COMPLETE_RENDER: 'dashboardCompleteRender',
 		CHANGED: 'dashboardChanged',
-        SELECTED: 'dashboardSelected'
+        SELECTED: 'dashboardSelected',
+        SHOWN: 'dashboardShown',
+        HIDDEN: 'dashboardHidden'
 	},
     Marketplace: {
         OPENED: 'marketplaceOpened',
