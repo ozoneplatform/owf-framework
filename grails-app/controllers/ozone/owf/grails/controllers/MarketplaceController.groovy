@@ -57,7 +57,7 @@ class MarketplaceController extends BaseOwfRestController {
                     }
                 }
             } else {
-                statusMessage = "Marketplace sync is disabled"
+                statusMessage = "AppsMall sync is disabled"
                 log.error("MP Sync: Got GUID ${params.guid} but sync is disabled")
             }
         }

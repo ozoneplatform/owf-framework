@@ -789,6 +789,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         var me = this,
             dashboardSwitcherId = 'dashboard-switcher',
             dashboardSwitcher = Ext.getCmp(dashboardSwitcherId),
+            dashboardSwitcherDeferred = $.Deferred(),
+
             //perform the logic of actually creating and displaying the window
             show = function() {
                 if (!dashboardSwitcher) {
@@ -803,6 +805,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                 dashboardSwitcher.activeDashboard = me.activeDashboard;
                 dashboardSwitcher.show().center();
+                dashboardSwitcherDeferred.resolve(dashboardSwitcher);
 
                 me.loadMask.hide();
             };
@@ -830,6 +833,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 }
             }, 0);
         }
+        return dashboardSwitcherDeferred.promise();
     },
 
     destroyDashboardSwitcher: function () {
@@ -837,6 +841,36 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             dashboardSwitcher = Ext.getCmp(dashboardSwitcherId);
 
         dashboardSwitcher && dashboardSwitcher.destroy();
+    },
+
+    // Displays dashboard switcher and returns a promise which is resolved only after the user selects a dashboard
+    // and it is activated.
+    selectDashboard: function () {
+        var me = this,
+            dashboardActivatedDeferred = $.Deferred();
+
+        // Show the switcher
+        var dashboardSwitcherPromise = this.showDashboardSwitcher();
+
+        dashboardSwitcherPromise.done(function(dashboardSwitcher) {
+            // Dashboard selection promise will resolve if a dashboard is selected in a switcher
+            var dashboardSelectionPromise = dashboardSwitcher.getDashboardSelectionPromise();
+            dashboardSelectionPromise.done(function (dashboardGuid) {
+                if(me.activeDashboard.guid === dashboardGuid) {
+                    // The user selected the same dashboard
+                    dashboardActivatedDeferred.resolve();
+                }
+                else {
+                    // The user selected different dashboard, wait for it becoming active
+                    me.addListener(OWF.Events.Dashboard.CHANGED, function() {
+                        dashboardActivatedDeferred.resolve();
+                    })
+                }
+
+            })
+
+        });
+        return dashboardActivatedDeferred.promise();
     },
 
     createDashboardConfig: function(dashRecord) {

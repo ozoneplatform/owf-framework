@@ -99,7 +99,7 @@ Ext.define('Ozone.components.widget.WidgetBase', {
 
 				if(iframe) {
 					iframe.focus();
-					this.forceIframeFocus();
+					this.forceIframeFocus(iframe);
 
 					if (showFocusFrame) 
 						this.showFocusFrame(iframe);
@@ -113,11 +113,16 @@ Ext.define('Ozone.components.widget.WidgetBase', {
 		forceIframeFocus: (function() {
 			var count = 0;
 
-			return function() {
+			return function(iframeEl) {
 				var me = this;
 
 				if(this.iframeReady) {
-					gadgets.rpc.call(this.getIframeId(), '_focus_widget_window');
+					// focus widget only if its iframe is focused
+					// user may have changed the focus to some other widget
+					// while waiting for this widget to render
+					if(document.activeElement === iframeEl.dom) {
+						gadgets.rpc.call(this.getIframeId(), '_focus_widget_window');	
+					}
 
 					if(me.focusIframeTask) {
 						me.focusIframeTask.cancel();
@@ -125,7 +130,7 @@ Ext.define('Ozone.components.widget.WidgetBase', {
 				}
 				else {
 					if (!me.focusIframeTask) {
-						me.focusIframeTask = Ext.create('Ext.util.DelayedTask', me.forceIframeFocus, me);
+						me.focusIframeTask = Ext.create('Ext.util.DelayedTask', me.forceIframeFocus, me, [iframeEl]);
 					}
 					count += 1;
 					// give widget 30 seconds to render

@@ -429,6 +429,11 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
   position: absolute;
 }
 
+.dashboard.hidden {
+    visibility: hidden;
+    z-index: -1;
+}
+
 .x-focus, .x-nbr .x-focus {
     border: $owf-focus-style !important;
     outline: 0 none;

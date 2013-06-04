@@ -161,7 +161,8 @@
     .search {
         border-color: $widget-launcher-search-border-color;
         background: $widget-launcher-search-background-color;
-
+        @include border-radius(15px);
+        //width: 400px;
         input{
             color: $widget-launcher-widget-text-color;
         }
@@ -241,13 +242,21 @@
         margin-top: 5px;
         
 
-        .launchMenuTitle {
-          font-weight: bold;
-          font-size: 1.5em;
-          line-height: 1em;
-          margin-bottom: .5em;
-          color: $widget-launcher-widget-title-color;
+        //.launchMenuTitle {
+        //  font-weight: bold;
+        //  font-size: 1.5em;
+        //  line-height: 1em;
+        //  margin-bottom: .5em;
+        //  color: $widget-launcher-widget-title-color;
+        //
+        //}
 
+        .info-label {
+            padding-left: 5px;
+            font-weight: bold;
+            font-size: 1.5em;
+            line-height: 1em;
+            color: $widget-launcher-widget-title-color;
         }
 
         .x-panel-body {
@@ -256,32 +265,15 @@
             border-style: none;
             padding-bottom: 3px; //IE 7 hack so bottom button's border isn't cut off
         }
-
-        .image-panel {
-            min-width: 96px;
-            max-width: 6em;
-
-            .x-panel-body {
-                border-width: 0;
-            }
-        }
     
-        .widget-icon {
-            display: block;
-            background: transparent !important;
-            height: 96px;
-            width: 96px;
+        .info-icon {
+            background-image: theme-image($theme-name, 'launch-menu/favorite_icon.png');
+            background-position: center center;
+            background-repeat: no-repeat;
+            border-style: none;
+            height: 36px;
+            width: 36px;
         }
-
-        .launch-btn {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 98%; //98% to leave room for borders in IE7
-            margin-top: 3px;
-            text-align: center;
-        }
-        
 
         .infoCenter {
             margin-left: 18px;
@@ -328,6 +320,44 @@
                     background-image: theme-image($theme-name, 'launch-menu/launch_tile-over.png') ;
                 }
             }
+        }
+    }
+    .start-remove-panel {
+        display: block;
+        background: transparent;
+        margin-top: 15px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        margin-left: 5px;
+
+        .x-panel-body {
+            background: transparent;
+            color: $widget-launcher-info-panel-color;
+            border-style: none;
+        }
+
+        .start-remove-btn {
+            display: inline-block;
+            width: 200px;
+            margin-top: 10px;
+            margin-right: 5px;
+            margin-bottom: 10px;
+            margin-left: 5px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            text-align: center;
+            font-size: 1.5em;
+            @include border-radius(15px);
+        }
+
+        .start-btn {
+            @include background-gradient($widget-launcher-start-button-background-color, $widget-launcher-start-button-background-gradient);
+            background-color: $widget-launcher-start-button-background-color;
+        }
+
+        .x-btn-disabled {
+            @include background-gradient($widget-launcher-disabled-button-background-color, $widget-launcher-disabled-button-background-gradient);
+            background-color: $widget-launcher-disabled-button-background-color;
         }
     }
     .carousel {
@@ -679,9 +709,9 @@
 
 }
 
-#widget-launcher-body .x-box-inner > :last-child {
-    @include border-bottom-radius($widget-launcher-body-radius);
-}
+//#widget-launcher-body .x-box-inner > :last-child {
+//    @include border-bottom-radius($widget-launcher-body-radius);
+//}
 
 .show_more, .show_less {
     cursor: pointer;

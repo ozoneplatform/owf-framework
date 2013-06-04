@@ -41,6 +41,13 @@ $widget-launcher-grid-row-cell-selected-background-color: #004258 !default;
 $widget-launcher-grid-row-cell-focus-background-color: #DDF991 !default;
 $widget-launcher-grid-row-cell-focus-color: #000 !default;
 
+$widget-launcher-start-button-background-gradient: (#B9E573 0%, #8DC63F 50%, #6E992B 100%);
+$widget-launcher-start-button-background-color: getBaseFromGradient($widget-launcher-start-button-background-gradient);
+
+
+$widget-launcher-disabled-button-background-gradient: (#efefef 0%, #565656 50%, #424242 100%);
+$widget-launcher-disabled-button-background-color: getBaseFromGradient($widget-launcher-disabled-button-background-gradient);
+
 //carousel
 $carousel-background-color: #1D343C !default;
 $carousel-arrow-active-background-color: #111F24 !default;

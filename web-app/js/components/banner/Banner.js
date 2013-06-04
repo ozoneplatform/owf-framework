@@ -115,6 +115,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         var me = this;
         
         if (this.hasMarketplaceButton) {
+            this.blinkMarketBtnAfterDashboardSwitch();
             if (!this.marketplaceToggle) {
                 if (this.marketplaceWidget) {
                     var keyboard = ('keyup' == e.type) ? true : false;
@@ -1006,16 +1007,26 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             maxWidth: 500                           
         });
 
-        if(!Modernizr.cssanimations) {
-            var focusColor = Ext.util.CSS.getRule('.x-focus').style.borderColor;
-            this.dashboardContainer.on(OWF.Events.Dashboard.CHANGED, function (guid, dashboard) {
+        
+    },
+
+    blinkMarketBtnAfterDashboardSwitch: function () {
+        var btn = this.getComponent('marketBtn');
+
+        this.dashboardContainer.on(OWF.Events.Dashboard.CHANGED, function (guid, dashboard) {
+            if(!Modernizr.cssanimations) {
                 // wait 6 seconds if dashboard hasn't rendered
                 // otherwise frame animation won't be visible to user
                 setTimeout(function() {
-                    btn.el.frame(focusColor);
+                    btn.blink();
                 }, dashboard.rendered ? 0: 6000);
-            });
-        }
+            }
+            else {
+                btn.blink();
+            }
+        }, null, {
+            single: true
+        });
     }
 
 });

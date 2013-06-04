@@ -42,6 +42,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
     _previouslyFocusedStackOrDashboard : null,
 
+    dashboardSelectionDeferred: null,
+
     initComponent: function() {
 
         var me = this,
@@ -716,7 +718,15 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             
         var stackContext = dashboard.stack ? dashboard.stack.stackContext : null;
 
+        this.dashboardSelectionDeferred && this.dashboardSelectionDeferred.resolve(dashboard.guid);
+        this.dashboardSelectionDeferred = null;
+
         this.activateDashboard(dashboard.guid, stackContext);
+    },
+
+    getDashboardSelectionPromise: function() {
+        this.dashboardSelectionDeferred = this.dashboardSelectionDeferred || $.Deferred();
+        return this.dashboardSelectionDeferred.promise();
     },
 
     onDashboardChanged: function() {
@@ -1335,6 +1345,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         me.resetManage();
         //me.tearDownCircularFocus();
+
+        this.dashboardSelectionDeferred && this.dashboardSelectionDeferred.state() == "pending" && this.dashboardSelectionDeferred.reject();
+        this.dashboardSelectionDeferred = null;
 
         // refresh if user deleted all dashboards
         if(me.dashboardContainer.dashboardStore.getCount() === 0) {

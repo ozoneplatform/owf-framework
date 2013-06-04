@@ -28,6 +28,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         "state": null
     },
     hideMode: 'visibility',
+    hideCls: 'hidden',  //css class applied to nonanimated, hidden dashboards
     cls: 'dashboard',
 
     // flag to determine whether or not a save is already in progress
@@ -1136,7 +1137,13 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     onHide: function (animateTarget, cb, scope) {
         var me = this;
 
-        this.cssanimations ? this.slideOut() : me.el.hide();
+        if (this.cssanimations) {
+            this.slideOut();
+        }
+        else {
+            me.el.hide();
+            me.el.addCls(me.hideCls);
+        }
         
         if (!animateTarget) {
             me.afterHide(cb, scope);
@@ -1150,7 +1157,13 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     onShow: function() {
         var me = this;
         
-        this.cssanimations ? this.slideIn() : me.el.show();
+        if (this.cssanimations) {
+            this.slideIn();
+        }
+        else {
+            me.el.show();
+            me.el.removeCls(me.hideCls);
+        }
 
         Ext.AbstractComponent.prototype.onShow.call(this);
         if (me.floating && me.constrain) {
