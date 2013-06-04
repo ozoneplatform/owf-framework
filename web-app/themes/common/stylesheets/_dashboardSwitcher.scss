@@ -11,6 +11,7 @@
 
     &-body {
         overflow: auto;
+        top: 0 !important;
         @include border-radius($dashboard-switcher-body-radius);
     }
 
@@ -35,6 +36,8 @@
     .x-window-header {
     	left: 85% !important;
 	    width: 65px !important;
+	    background: none;
+	    border: none;
     }
 }
 
