@@ -63,6 +63,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         }
 
         var visualizeAddition = function(definitionName) {
+            var btn = Ext.getCmp(animTargetBtn);
             if(Modernizr.csstransitions && Modernizr.cssanimations) {
                 var listing = Ext.getCmp(sender.id),
                     listingOffsets = listing.el.getOffsetsTo(Ext.getBody()),
@@ -75,9 +76,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                         ';">'
                     ].join(''),
                     img = Ext.DomHelper.insertHtml('beforeEnd', Ext.getBody().dom, imgHTML),
-                    $img = jQuery(img),
-                    btn = Ext.getCmp(animTargetBtn),
-                    target = btn.el.dom;
+                    $img = jQuery(img);
 
                 $img
                     .one(CSS.Transition.TRANSITION_END, function () {
