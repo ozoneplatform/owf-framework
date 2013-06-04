@@ -91,6 +91,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         this.dashboardContainer.loadMask.show();
 
         var visualizeWidgetAddition = function(widgetDefinition) {
+            var btn = Ext.getCmp('launchMenuBtn');
             if(Modernizr.csstransitions && Modernizr.cssanimations) {
                 var widget = Ext.getCmp(sender.id),
                     widgetOffsets = widget.el.getOffsetsTo(Ext.getBody()),
@@ -103,21 +104,12 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                         ';">'
                     ].join(''),
                     img = Ext.DomHelper.insertHtml('beforeEnd', Ext.getBody().dom, imgHTML),
-                    $img = jQuery(img),
-                    btn = Ext.getCmp('launchMenuBtn'),
-                    target = btn.el.dom;
+                    $img = jQuery(img);
 
                 $img
                     .one(CSS.Transition.TRANSITION_END, function () {
                         $img.remove();
-                        var $target = $(target);
-
-                        $target
-                            .one(CSS.Animation.ANIMATION_END, function () {
-                                $target.removeClass('blink');
-                            })
-                            .addClass('blink');
-
+                        btn.blink();
                         marketplaceCallback && marketplaceCallback(id);
                     })
                     .css({
@@ -139,6 +131,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                         }
                     }
                 });
+                btn.blink();
                 tip.show();
                 marketplaceCallback && marketplaceCallback(id);
             }
