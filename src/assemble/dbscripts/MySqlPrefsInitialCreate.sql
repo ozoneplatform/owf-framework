@@ -2,7 +2,7 @@
 -- Update Database Script
 -- *********************************************************************
 -- Change Log: changelog.groovy
--- Ran at: 12/18/12 10:26 AM
+-- Ran at: 6/5/13 2:55 PM
 
 -- Liquibase version: 2.0.1
 -- *********************************************************************
@@ -448,4 +448,10 @@ INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPT
 ALTER TABLE `dashboard` MODIFY `description` VARCHAR(4000);
 
 INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Expand a dashboard''s description field to 4000 to match Marketplace', NOW(), 'Modify data type', 'EXECUTED', 'changelog_7.0.0.groovy', '7.0.0-53', '2.0.1', '3:95913c657b14ecdbb8c9f85fc0a071b1', 59);
+
+-- Changeset changelog_7.2.0.groovy::7.2.0-1::owf::(Checksum: 3:69c7062f6bb536836805960380dfdb90)
+-- Add fullscreen widget types to table
+INSERT INTO `widget_type` (`id`, `name`, `version`) VALUES (5, 'fullscreen', 0);
+
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add fullscreen widget types to table', NOW(), 'Insert Row', 'EXECUTED', 'changelog_7.2.0.groovy', '7.2.0-1', '2.0.1', '3:69c7062f6bb536836805960380dfdb90', 60);
 
