@@ -106,13 +106,8 @@ Ext.define('Ozone.components.admin.dashboard.DashboardEditPropertiesTab', {
         defObj.name = name;
         defObj.description = description;
 
-        defObj.layoutConfig = defObj.layoutConfig || {
-            xtype: 'container',
-            flex: 1,
-            height: '100%',
-            items: [],
-            paneType: ""
-        };
+        defObj.layoutConfig = defObj.layoutConfig || 
+            Ozone.config.defaultLayoutConfig;
 
         var record = widget.store.getAt(0);
         //editing an existing record

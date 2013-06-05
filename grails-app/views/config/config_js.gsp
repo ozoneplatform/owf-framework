@@ -41,6 +41,15 @@ Ozone.config.prefsLocation = window.location.protocol + "//" + window.location.h
 
 Ozone.config.prefsLocation = Ozone.config.prefsLocation.replace(/\;jsessionid=.*/g,'');
 
+//the default layout config for a new blank dashboard
+Ozone.config.defaultLayoutConfig = {
+    xtype: 'container',
+    flex: 1,
+    height: '100%',
+    items: [],
+    paneType: ""
+};
+
 //for consistency add the properties onto the new OWF namespace
 var OWF  = OWF || {};
 OWF.config = Ozone.config;

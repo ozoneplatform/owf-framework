@@ -486,14 +486,10 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
         }
         else {
             // dashboard is reset or not customized
-            dashboardLayoutConfig = {
-                xtype: 'container',
-                flex: 1,
-                height: '100%',
-                items: [],
-                paneType: workArea.initialConfig.paneType || "",
+            dashboardLayoutConfig = Ext.applyIf({ 
+                paneType: (workArea.initialConfig.paneType || undefined), //prevent null
                 widgets: me.allWidgets
-            };
+            }, Ozone.config.defaultLayoutConfig);
         }
 
         delete dashboardLayoutConfig.itemId;
