@@ -341,6 +341,7 @@
         }
 
         .start-btn {
+            left: 270px !important; // fix for OP-990, there are other hacks in LaunchMenu.js for start button width to be set properly for ie7
             .x-btn-inner {
                 color: $start-btn-text-color;
                 font-size: 16px;
@@ -374,6 +375,7 @@
         }
 
         .remove-btn {
+            left: 425px !important; // fix for OP-990, there are other hacks in LaunchMenu.js for remove button width to be set properly for ie7
             .x-btn-inner {
                 color: $remove-btn-text-color;
                 font-size: 16px;
