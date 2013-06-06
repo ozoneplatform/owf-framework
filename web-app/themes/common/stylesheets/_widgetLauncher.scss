@@ -163,6 +163,7 @@
         background: $widget-launcher-search-background-color;
         @include border-radius(15px);
         //width: 400px;
+        padding-top: 2px;
         input{
             color: $widget-launcher-widget-text-color;
         }
@@ -183,11 +184,13 @@
         filter: none;
         border-style: none;
         padding: 0px ;
+        padding-bottom: 5px;
         .x-box-inner{
             background: transparent;
             filter: none;
             border-style: none;
         }
+        
     }
 	
 	.x-window-header {
