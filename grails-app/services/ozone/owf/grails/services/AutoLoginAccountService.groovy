@@ -29,6 +29,9 @@ public class AutoLoginAccountService extends AccountService {
 	}
 
     def getLoggedInUserIsAdmin() {
+        if (isTemporaryAdmin()) {
+            return true
+        }
         getLoggedInUserRoles().contains ERoleAuthority.ROLE_ADMIN.strVal
     }
 

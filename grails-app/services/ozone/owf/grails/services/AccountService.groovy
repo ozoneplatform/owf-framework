@@ -1,8 +1,6 @@
 package ozone.owf.grails.services
 
 import org.springframework.security.core.context.SecurityContextHolder as SCH
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
-
 import grails.converters.JSON
 import ozone.owf.grails.AuditOWFWebRequestsLogger
 import ozone.owf.grails.OwfException
@@ -26,8 +24,9 @@ class AccountService {
     //    def domainMappingService
 
     def serviceModelService
+    static final ThreadLocal<Boolean> hasTemporaryAdminPrivileges = new ThreadLocal<Boolean>()
 
-    private static def addFilter = {name, value, c ->
+    private static def addFilter(name, value, c) {
         c.with {
             switch(name) {
                 case 'lastLogin':
@@ -60,7 +59,27 @@ class AccountService {
         return SCH?.context?.authentication?.principal?.username
     }
 
+    def runAsAdmin(closure) {
+        hasTemporaryAdminPrivileges.set(true)
+        def returnValue
+        try {
+            log.debug("Running with temporary admin privileges")
+            returnValue = closure.call()
+        } finally {
+            log.debug("Releasing temporary admin privileges")
+            hasTemporaryAdminPrivileges.set(false)
+        }
+        return returnValue
+    }
+
+    boolean isTemporaryAdmin() {
+        return (hasTemporaryAdminPrivileges.get())
+    }
+
     def getLoggedInUserIsAdmin() {
+        if (isTemporaryAdmin()) {
+            return true
+        }
         for (role in getLoggedInUserRoles()) {
 
             if(role.authority.equals(ERoleAuthority.ROLE_ADMIN.strVal)){

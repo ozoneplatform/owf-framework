@@ -205,7 +205,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
 
         def widgets = marketplaceService.addListingsToDatabase(singleSimpleWidget);
         def resultWidget = widgets[0]
-        assert 1, widgets.size()
+        assert 1 == widgets.size()
         assert "name" == resultWidget.displayName
         assert "description" == resultWidget.description
         assert "largeImage" == resultWidget.imageUrlLarge
@@ -231,7 +231,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
 
         def widgets = marketplaceService.addListingsToDatabase(singleSimpleWidgetWithNullUniversalName);
         def resultWidget = widgets[0]
-        assert 1, widgets.size()
+        assert 1 == widgets.size()
         assert "name" == resultWidget.displayName
         assert "description" == resultWidget.description
         assert "largeImage" == resultWidget.imageUrlLarge
