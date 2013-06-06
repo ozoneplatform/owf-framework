@@ -7,6 +7,7 @@ import org.apache.commons.lang.time.StopWatch
 class StackController extends BaseOwfRestController {
     
     def stackService
+    def marketplaceService
 
     def list = {
         def statusCode
@@ -47,7 +48,12 @@ class StackController extends BaseOwfRestController {
             log.info("Executing stackService: createOrUpdate");
         }
         try {
-            def result = stackService.createOrUpdate(params)
+            def result
+            if (params?.addExternalStackToUser) {
+                result = marketplaceService.addExternalStackToUser(params)
+            } else {
+                result = stackService.createOrUpdate(params)
+            }
             jsonResult = [msg: result as JSON, status: 200 ]
         }
         catch (Exception e) {

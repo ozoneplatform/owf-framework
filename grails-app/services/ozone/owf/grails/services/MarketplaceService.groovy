@@ -51,11 +51,7 @@ class MarketplaceService extends BaseService {
                         stack = stackService.importStack([data: obj.toString()])
                     }
                 }
-                def stackDefaultGroup = stack.findStackDefaultGroup()
-                stackDefaultGroup.addToPeople(accountService.getLoggedInUser())
                 stack
-                
-                
             }
         }
 
@@ -228,6 +224,19 @@ class MarketplaceService extends BaseService {
 
         widgetDefinition.save(flush: true)
         return widgetDefinition
+    }
+
+    def addExternalStackToUser(params) {
+        def stMarketplaceJson = new HashSet()
+        stMarketplaceJson.addAll(buildWidgetListFromMarketplace(params.guid))
+
+        if (!stMarketplaceJson.isEmpty()) {
+            def listings = addListingsToDatabase(stMarketplaceJson)
+            if (listings.size() == 1) {
+                def stackDefaultGroup = listings.get(0).findStackDefaultGroup()
+                stackDefaultGroup.addToPeople(accountService.getLoggedInUser())
+            }
+        }
     }
 
     def addExternalWidgetsToUser(params) {

@@ -122,11 +122,14 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
     processMarketplaceStackData: function(stackUuid, addStackCallback) {
         var self = this;
-
-        Ozone.util.Transport.send({
-            url: Ozone.util.contextPath() + "/marketplace/sync/" + stackUuid,
-            method: "GET",
-            onSuccess: function(jsonData) {
+        return owfdojo.xhrPost({
+            url:Ozone.util.contextPath() + '/stack/',
+            sync:true,
+            content:{
+                addExternalStackToUser:true,
+                guid:stackUuid
+            },
+            load:function (response, ioArgs) {
                 var stack_bottomright = {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25};
                 $.pnotify({
                     title: Ozone.layout.DialogMessages.added,
@@ -143,7 +146,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 addStackCallback && addStackCallback("The stack");
                 self.dashboardContainer.loadMask.hide();
             },
-            onFailure: function(jsonData) {
+            error: function(jsonData) {
                 self.dashboardContainer.loadMask.hide();
                 Ozone.Msg.alert("Error", jsonData);
             }
