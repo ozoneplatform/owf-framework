@@ -41,12 +41,36 @@ $widget-launcher-grid-row-cell-selected-background-color: #004258 !default;
 $widget-launcher-grid-row-cell-focus-background-color: #DDF991 !default;
 $widget-launcher-grid-row-cell-focus-color: #000 !default;
 
-$widget-launcher-start-button-background-gradient: (#B9E573 0%, #8DC63F 50%, #6E992B 100%);
-$widget-launcher-start-button-background-color: getBaseFromGradient($widget-launcher-start-button-background-gradient);
+$start-btn-top-color: #BADD8C;
+$start-btn-bottom-color: #466320;
+$start-btn-border-color: #303031;
+$start-btn-color: #8CC640;
+$start-btn-top-color-over: #E0EFCD;
+$start-btn-bottom-color-over: #596B41;
+$start-btn-border-color-over: #303031;
+$start-btn-color-over: #B2D681;
+$start-btn-top-color-down: #466320;
+$start-btn-bottom-color-down: #699530;
+$start-btn-border-color-down: #303031;
+$start-btn-color-down: #699530;
+$start-btn-text-color: #202021;
 
+$remove-btn-top-color: #E0E0E1;
+$remove-btn-bottom-color: #5E5F60;
+$remove-btn-border-color: #303031;
+$remove-btn-color: #B1B2B3;
+$remove-btn-top-color-over: #F1F1F1;
+$remove-btn-bottom-color-over: #7A7677;
+$remove-btn-border-color-over: #303031;
+$remove-btn-color-over: #E5E5E6;
+$remove-btn-top-color-down: #454344;
+$remove-btn-bottom-color-down: #5E5F60;
+$remove-btn-border-color-down: #303031;
+$remove-btn-color-down: #7D7E80;
+$remove-btn-text-color: #202021;
 
-$widget-launcher-disabled-button-background-gradient: (#efefef 0%, #565656 50%, #424242 100%);
-$widget-launcher-disabled-button-background-color: getBaseFromGradient($widget-launcher-disabled-button-background-gradient);
+$widget-launcher-disabled-btn-color: #8D8D8D;
+$widget-launcher-disabled-btn-text-color: #D0D1D1;
 
 //carousel
 $carousel-background-color: #1D343C !default;

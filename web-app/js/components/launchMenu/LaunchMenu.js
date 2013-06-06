@@ -499,18 +499,15 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
 
     //Changes the widget visibility to false so it will not show in the fav menu
     removeWidget: function(record){
-
         var widgetsToDelete = [];
         var widgetGuid = record.get('widgetGuid');
-        this.closeWidget(widgetGuid);
         widgetsToDelete.push(widgetGuid);
 
         var widgetStore = this.widgetStore;
         var me = this;
 
         Ext.widget('alertwindow', {
-            html: '<p>Deleting this widget will remove it from any dashboards it is a part of.</p><br/> '
-                + '<p>Are you sure you want to delete ' + Ext.htmlEncode(record.data.name) + '?</p>',
+            html: me.formatRemoveMessage(record),
             width: 400,
             dashboardContainer: me.dashboardContainer,
             showCancelButton: true,
@@ -520,6 +517,7 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                     widgetGuidsToDelete:widgetsToDelete,
                     updateOrder:false,
                     onSuccess:function(){
+                        me.closeWidget(widgetGuid);
                         widgetStore.remove(record);
                         var dashboardContainerRecord = me.dashboardContainer.widgetStore.findRecord("widgetGuid", record.get('widgetGuid'));
                         me.dashboardContainer.widgetStore.remove(dashboardContainerRecord);
@@ -530,6 +528,24 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                 });
             }
         }).show();
+    },
+
+    wrapRecordName: function(name) {
+        return '<span class="node-name-widget-launcher">' + Ext.htmlEncode(name) + '</span>';
+    },
+
+    formatRemoveMessage: function(record) {
+        console.log(record);
+        var recordName = record.get('name');
+        var htmlMessage = '';
+
+        var dashboards = this.dashboardContainer.widgetStore.findRecord("widgetGuid", record.get('widgetGuid'));
+
+        htmlMessage += '<p>Deleting this widget will remove it from any dashboards it is a part of.</p><br/> ';
+        // htmlMessage += '<p>' + this.wrapRecordName(recordName) + ' is required by ' + record.get('allRequired').length + ' widgets.</p><br/> ';
+        htmlMessage += '<p>Are you sure you want to delete ' + this.wrapRecordName(recordName) + '?</p>';
+
+        return htmlMessage;
     },
 
     // Close the given widget in all the user's dashboards

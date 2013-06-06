@@ -91,6 +91,28 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
     }
     '''
 
+    def singleSimpleWidgetJsonWithNullUniversalNameJson='''
+    {
+        "displayName":"name",
+        "description":"description",
+        "imageUrlLarge":"largeImage",
+        "imageUrlSmall":"smallImage",
+        "widgetGuid":"086ca7a6-5c53-438c-99f2-f7820638fc6f",
+        "widgetUrl":"http://wikipedia.com",
+        "widgetVersion":"1",
+        "singleton":false,
+        "visible":true,
+        "background":false,
+        "height":200,
+        "width":300,
+        "directRequired" :[],
+        "defaultTags" : ["tag"],
+        "intents":{"send":[],"receive":[]},
+        "widgetTypes":["standard"],
+        "universalName":null
+    }
+    '''
+
     def singleWidgetWithIntentsJson='''
     {
         "displayName":"nameIntents",
@@ -171,6 +193,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
 
     def singleSimpleWidget=new JSONArray("[${singleSimpleWidgetJson}]")
     def singleSimpleWidgetWithUniversalName=new JSONArray("[${singleSimpleWidgetJsonWithUniversalNameJson}]")
+    def singleSimpleWidgetWithNullUniversalName=new JSONArray("[${singleSimpleWidgetJsonWithNullUniversalNameJson}]")
     def singleWidgetWithIntents=new JSONArray("[${singleWidgetWithIntentsJson}]")
     def withAndWithoutIntents=new JSONArray("[${singleSimpleWidgetJson},${singleWidgetWithIntentsJson}]")
     def widgetWithInterestingWidgetTypes = new JSONArray("[${widgetWithInterestingWidgetTypesJSON}]")
@@ -195,6 +218,33 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         assert !resultWidget.background
         assert 200 == resultWidget.height
         assert 300 == resultWidget.width
+
+        def typesList = resultWidget.widgetTypes as List
+
+        assert typesList.size() == 1
+        assert 'standard' == typesList[0].name
+    }
+
+    // just make sure that it actually parses a basic widget
+    void testWidgetWithNullUniversalName() {
+        widgetDefinitionServiceMockClass.demand.canUseUniversalName(0..1) { a, b -> true }
+
+        def widgets = marketplaceService.addListingsToDatabase(singleSimpleWidgetWithNullUniversalName);
+        def resultWidget = widgets[0]
+        assert 1, widgets.size()
+        assert "name" == resultWidget.displayName
+        assert "description" == resultWidget.description
+        assert "largeImage" == resultWidget.imageUrlLarge
+        assert "smallImage" == resultWidget.imageUrlSmall
+        assert "086ca7a6-5c53-438c-99f2-f7820638fc6f" == resultWidget.widgetGuid
+        assert "http://wikipedia.com" == resultWidget.widgetUrl
+        assert "1" == resultWidget.widgetVersion
+        assert !resultWidget.singleton
+        assert resultWidget.visible
+        assert !resultWidget.background
+        assert 200 == resultWidget.height
+        assert 300 == resultWidget.width
+        assert resultWidget.universalName == null
 
         def typesList = resultWidget.widgetTypes as List
 

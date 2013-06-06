@@ -28,9 +28,13 @@
     }
 }
 
+.node-name-widget-launcher {
+    color: lightblue;
+}
+
 #widget-launcher {
     
-    padding: 0px;
+    padding: 10px;
 //    border-color: $widget-launcher-border-color;
     border-style: none;
 
@@ -158,23 +162,18 @@
 
     }
 
+    .toolbar-panel {
+      width: 200px;
+    }
+
     .search {
         border-color: $widget-launcher-search-border-color;
         background: $widget-launcher-search-background-color;
         @include border-radius(15px);
-        //width: 400px;
+        width: 300px;
         input{
             color: $widget-launcher-widget-text-color;
         }
-    }
-
-    .toolbar-panel {
-        width: 200px;
-    }
-
-    .viewSwitch {
-        opacity: 0.75;
-        padding-top: 2% !important;
     }
 
     .viewSwitch,
@@ -182,17 +181,21 @@
         background: transparent;
         filter: none;
         border-style: none;
-        padding: 0px ;
+        padding: 0px 2px;
         .x-box-inner{
             background: transparent;
             filter: none;
             border-style: none;
         }
     }
+
+    .searchBar {
+        padding: 0px 5px;
+    }
 	
 	.x-window-header {
 		@include border-top-radius($widget-launcher-body-radius);
-		height: 20px;
+		height: 32px;//20px;
 		background-image: none;
 		background-color: $widget-launcher-background-color;
 		border-color: $widget-launcher-background-color;
@@ -202,7 +205,7 @@
     .x-window-header-text {
         font-weight: normal;
         font-size: $widget-launcher-view-title-font-size;
-        color: $widget-launcher-widget-title-color;
+        //color: $widget-launcher-widget-title-color;
         padding: 10px;
     }
     
@@ -219,8 +222,8 @@
         background-position: center center;
         background-repeat: no-repeat;
         border-style: none;
-        height: 36px;
-        width: 36px;
+        height: 20px;
+        width: 20px;
 	}
 
     .widgetLauncherView {
@@ -238,7 +241,7 @@
 
     .gridViewBtn,
     .iconViewBtn {
-        background: transparent;
+        //background: transparent;
         filter: none;
         border: none;
         float: right;
@@ -248,39 +251,36 @@
 
     .gridViewBtn {
         .gridViewBtnIcon-up {
-            background-image: theme-image($theme-name, 'launch-menu/launch_list-up.png') ;
+            background-image: theme-image($theme-name, 'launch-menu/view_list_out.png') ;
         }
         .gridViewBtnIcon-down {
-            background-image: theme-image($theme-name, 'launch-menu/launch_list-down.png') ;
+            background-image: theme-image($theme-name, 'launch-menu/view_list_active.png') ;
         }
         &.x-btn-over {
             border: none;
             .gridViewBtnIcon-up {
-                background-image: theme-image($theme-name, 'launch-menu/launch_list-over.png') ;
+                background-image: theme-image($theme-name, 'launch-menu/view_list_over.png') ;
             }
         }
     }
 
     .iconViewBtn {
         .iconViewBtnIcon-up {
-            background-image: theme-image($theme-name, 'launch-menu/launch_tile-up.png') ;
+            background-image: theme-image($theme-name, 'launch-menu/view_grid_out.png') ;
         }
         .iconViewBtnIcon-down {
-            background-image: theme-image($theme-name, 'launch-menu/launch_tile-down.png') ;
+            background-image: theme-image($theme-name, 'launch-menu/view_grid_active.png') ;
         }
         &.x-btn-over {
             border: none;
             .iconViewBtnIcon-up {
-                background-image: theme-image($theme-name, 'launch-menu/launch_tile-over.png') ;
+                background-image: theme-image($theme-name, 'launch-menu/view_grid_over.png') ;
             }
         }
     }
 
     .info-panel {
         background: transparent;
-        margin-left: 5px;
-        margin-right: 5px;
-        margin-top: 5px;
 
         .x-panel-body {
             background: transparent;
@@ -288,22 +288,15 @@
             border-style: none;
             padding-bottom: 3px; //IE 7 hack so bottom button's border isn't cut off
         }
-
-        .infoCenter {
-            margin-left: 18px;
-            padding-right: 10px;
-            padding-top: 5px;
-            
-        }
     }
 
     .start-remove-panel {
         display: block;
         background: transparent;
         margin-top: 15px;
-        margin-right: 5px;
-        margin-bottom: 5px;
-        margin-left: 5px;
+        //margin-right: 5px;
+        //margin-bottom: 5px;
+        //margin-left: 5px;
 
         .x-panel-body {
             background: transparent;
@@ -313,31 +306,90 @@
 
         .start-remove-btn {
             display: inline-block;
-            width: 200px;
-            margin-top: 10px;
-            margin-right: 5px;
-            margin-bottom: 10px;
+            width: 145px;
+            height: 30px;
+            padding: 7px;
             margin-left: 5px;
-            padding-top: 10px;
-            padding-bottom: 10px;
+            margin-right: 5px;
             text-align: center;
-            @include border-radius(15px);
-            .x-btn-inner {
-                font-size: 20px;
-            }
+            @include border-radius(5px);
+        }
+
+        .start-btn.x-btn-default-toolbar-small, .start-btn.x-btn-default-small {
+            background-image: -webkit-linear-gradient($start-btn-top-color, $start-btn-bottom-color);
+            background-image: -moz-linear-gradient($start-btn-top-color, $start-btn-bottom-color);
+            border-color: $start-btn-border-color;
+            //.x-btn-inner {
+            //    background-color: $start-btn-color;
+            //}
+        }
+
+        .start-btn.x-btn-default-toolbar-small-over, .start-btn.x-btn-default-small-over {
+            background-image: -webkit-linear-gradient($start-btn-top-color-over, $start-btn-bottom-color-over);
+            background-image: -moz-linear-gradient($start-btn-top-color-over, $start-btn-bottom-color-over);
+            border-color: $start-btn-border-color-over;
+            //.x-btn-inner {
+            //    background-color: $start-btn-color-over;
+            //}
+        }
+
+        .start-btn.x-btn-default-toolbar-small-pressed, .start-btn.x-btn-default-small-pressed {
+            background-image: -webkit-linear-gradient($start-btn-top-color-down, $start-btn-bottom-color-down);
+            background-image: -moz-linear-gradient($start-btn-top-color-down, $start-btn-bottom-color-down);
+            border-color: $start-btn-border-color-down;
+            background-color: $start-btn-color-down;
         }
 
         .start-btn {
-            @include background-gradient($widget-launcher-start-button-background-color, $widget-launcher-start-button-background-gradient);
-            background-color: $widget-launcher-start-button-background-color;
+            left: 270px !important; // fix for OP-990, there are other hacks in LaunchMenu.js for start button width to be set properly for ie7
             .x-btn-inner {
-                color: black;
+                color: $start-btn-text-color;
+                font-size: 16px;
+            }
+        }
+        .remove-btn.x-btn-default-toolbar-small, .remove-btn.x-btn-default-small {
+            background-image: -webkit-linear-gradient($remove-btn-top-color, $remove-btn-bottom-color);
+            background-image: -moz-linear-gradient($remove-btn-top-color, $remove-btn-bottom-color);
+            border-color: $remove-btn-border-color;
+            //.x-btn-inner {
+            //    background-color: $remove-btn-color;
+            //}
+        }
+
+        .remove-btn.x-btn-default-toolbar-small-over, .remove-btn.x-btn-default-small-over {
+            background-image: -webkit-linear-gradient($remove-btn-top-color-over, $remove-btn-bottom-color-over);
+            background-image: -moz-linear-gradient($remove-btn-top-color-over, $remove-btn-bottom-color-over);
+            border-color: $remove-btn-border-color-over;
+            .x-btn-inner {
+                background-color: $remove-btn-color-over;
             }
         }
 
-        .x-btn-disabled {
-            @include background-gradient($widget-launcher-disabled-button-background-color, $widget-launcher-disabled-button-background-gradient);
-            background-color: $widget-launcher-disabled-button-background-color;
+        .remove-btn.x-btn-default-toolbar-small-pressed, .remove-btn.x-btn-default-small-pressed {
+            background-image: -webkit-linear-gradient($remove-btn-top-color-down, $remove-btn-bottom-color-down);
+            background-image: -moz-linear-gradient($remove-btn-top-color-down, $remove-btn-bottom-color-down);
+            border-color: $remove-btn-border-color-down;
+            //.x-btn-inner {
+            //    background-color: $remove-btn-color-down;
+            //}
+        }
+
+        .remove-btn {
+            left: 425px !important; // fix for OP-990, there are other hacks in LaunchMenu.js for remove button width to be set properly for ie7
+            .x-btn-inner {
+                color: $remove-btn-text-color;
+                font-size: 16px;
+            }
+        }
+
+        .start-remove-btn.x-btn-disabled {
+            background-image: none;
+            background-color: $widget-launcher-disabled-btn-color;
+            border-color: none;
+            .x-btn-inner {
+                color: $widget-launcher-disabled-btn-text-color;
+                background-color: $widget-launcher-disabled-btn-color;
+            }
         }
     }
     .carousel {
@@ -373,15 +425,6 @@
                 background-color: $carousel-button-over-background-color;
             }
         }
-
-        //.leftCarouselBtn {
-        //    @include border-bottom-left-radius($widget-launcher-body-radius - 2);
-        //    @include border-bottom-right-radius(0px);
-        //}
-        //.rightCarouselBtn {
-        //    @include border-bottom-right-radius($widget-launcher-body-radius - 2);
-        //    @include border-bottom-left-radius(0px);
-        //}
 
         .rightCarouselBtnIcon {
             background-image: theme-image($theme-name, 'launch-menu/launch_scoll_right-up.png');
@@ -484,23 +527,9 @@
         background-position: right center;
     }
 
-    .x-btn {
-        @include owf-background-gradient($widget-launcher-button-background-gradient);
-        border-color: $widget-launcher-button-border-color;
-        padding: 0px;
-        .x-btn-inner {
-            color: $widget-launcher-button-color;
-        }
-    }
-
     .x-btn-over {
         @include owf-background-gradient($widget-launcher-button-over-background-gradient);
         border-color: $widget-launcher-button-over-border-color;
-    }
-
-    .x-btn-pressed {
-        @include owf-background-gradient($widget-launcher-button-pressed-background-gradient);
-        border-color: $widget-launcher-button-pressed-border-color;
     }
 
      .advSearchBtnToolbar {

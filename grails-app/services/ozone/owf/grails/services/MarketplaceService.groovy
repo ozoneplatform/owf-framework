@@ -104,7 +104,7 @@ class MarketplaceService extends BaseService {
             height = obj.height as Integer
             imageUrlLarge = obj.imageUrlLarge
             imageUrlSmall = obj.imageUrlSmall
-            universalName = obj.universalName
+            universalName = obj.isNull("universalName") ? null : obj.universalName
             widgetGuid = obj.widgetGuid
             widgetUrl = obj.widgetUrl
             widgetVersion = obj.widgetVersion

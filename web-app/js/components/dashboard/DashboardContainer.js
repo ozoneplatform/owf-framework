@@ -1012,6 +1012,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 //save a reference
                 this.activeDashboard = dashboardPanel;
 
+                // OP-772: blur iframe when switching dashboards.
+                // Blur the focused element.
+                // Only this approach worked; bluring the active iframe directly didn't.
+                var activeEl = document.activeElement;
+                if(activeEl) {
+                    activeEl.blur();
+                }
+
                 if(dashboardPanel.cssanimations) {
                     dashboardPanel.on(OWF.Events.Dashboard.SHOWN, function () {
                         var me = this;
