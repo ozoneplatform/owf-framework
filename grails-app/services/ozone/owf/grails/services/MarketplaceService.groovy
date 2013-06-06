@@ -47,7 +47,9 @@ class MarketplaceService extends BaseService {
             } else if (obj?.stackContext) {
                 def stack = Stack.findByStackContext(obj.stackContext)
                 if (!stack) {
-                    stack = stackService.importStack([data: obj.toString()])
+                    accountService.runAsAdmin {
+                        stack = stackService.importStack([data: obj.toString()])
+                    }
                 }
                 def stackDefaultGroup = stack.findStackDefaultGroup()
                 stackDefaultGroup.addToPeople(accountService.getLoggedInUser())

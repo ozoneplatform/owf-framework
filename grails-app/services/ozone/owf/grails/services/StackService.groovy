@@ -144,6 +144,8 @@ class StackService {
     }
     
     def createOrUpdate(params) {
+        ensureAdmin()
+
         def stacks = []
 
         if (params.update_action) {
@@ -174,8 +176,6 @@ class StackService {
         if (params?.stack_id) params.stack_id = (params.stack_id instanceof String ? Integer.parseInt(params.stack_id) : params.stack_id)
         
         if (params?.id >= 0 || params.stack_id  >= 0) {  // Existing Stack
-            //OP-694: Any user can create a stack but only admins can update
-            ensureAdmin()
             params.id = params?.id >= 0 ? params.id : params.stack_id
             stack = Stack.findById(params.id, [cache: true])
             if (!stack) {
@@ -465,6 +465,8 @@ class StackService {
     }
 
     def importStack(params) {
+        ensureAdmin()
+
         def stackParams = [:]
         params.data = JSON.parse(params.data)
         stackParams.name = params.data.name
