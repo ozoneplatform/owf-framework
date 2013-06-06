@@ -91,7 +91,8 @@ class MarketplaceService extends BaseService {
             widgetDefinition = new WidgetDefinition()
         }
 
-        boolean universalNameIsChanged = !obj.isNull("universalName") && obj.universalName != widgetDefinition.universalName
+        def universalNameIsNull = obj.isNull("universalName")
+        boolean universalNameIsChanged = !universalNameIsNull && obj.universalName != widgetDefinition.universalName
 
         if (universalNameIsChanged && !widgetDefinitionService.canUseUniversalName(widgetDefinition, obj.universalName)) {
             throw new OwfException(message: 'Another widget uses ' + obj.universalName + ' as its Universal Name. '
@@ -104,7 +105,7 @@ class MarketplaceService extends BaseService {
             height = obj.height as Integer
             imageUrlLarge = obj.imageUrlLarge
             imageUrlSmall = obj.imageUrlSmall
-            universalName = obj.isNull("universalName") ? null : obj.universalName
+            universalName = universalNameIsNull ? null : obj.universalName
             widgetGuid = obj.widgetGuid
             widgetUrl = obj.widgetUrl
             widgetVersion = obj.widgetVersion
@@ -178,7 +179,7 @@ class MarketplaceService extends BaseService {
             //
 
             // wipe the slate clean, this ain't no PATCH action
-            WidgetDefinitionIntent.findAllByWidgetDefinition(widgetDefinition).collect() {
+            WidgetDefinitionIntent.findAllByWidgetDefinition(widgetDefinition).collect {
                 def intent = it.intent
                 intent.removeFromWidgetDefinitionIntents(it)
                 widgetDefinition.removeFromWidgetDefinitionIntents(it)
@@ -189,7 +190,7 @@ class MarketplaceService extends BaseService {
             // This helper takes a $intent and makes the Intent object consistent with it
             def addIntent = { intent, isSend, isReceive ->
                 // We're going to need the IntentDataTypes for multiple actions, below
-                def allIntentDataTypes = intent.dataTypes.collect() {
+                def allIntentDataTypes = intent.dataTypes.collect {
                     IntentDataType.findByDataType(it) ?: new IntentDataType(dataType: it)
                 }
                 // Patch together the Intent object
