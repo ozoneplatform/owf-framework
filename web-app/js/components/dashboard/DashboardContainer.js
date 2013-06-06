@@ -1015,9 +1015,21 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 // OP-772: blur iframe when switching dashboards.
                 // Blur the focused element.
                 // Only this approach worked; bluring the active iframe directly didn't.
+
                 var activeEl = document.activeElement;
+
+                // OP-1056: use small delay to avoid IE7/9 issue where browser is sent to the background
                 if(activeEl) {
-                    activeEl.blur();
+                    if(activeEl.nodeName.toLowerCase() != 'body') {
+                        setTimeout(function() {
+                            activeEl.blur();
+                        }, 1);
+
+                    } else {
+                        setTimeout (function() {
+                            $( "input:focus, textarea:focus, select:focus" ).blur();
+                        }, 1);
+                    }
                 }
 
                 if(dashboardPanel.cssanimations) {
