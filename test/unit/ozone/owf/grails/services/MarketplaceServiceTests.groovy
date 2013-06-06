@@ -311,37 +311,31 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
     }
 
     // just make sure that it recognizes a stack and passes it to the StackService
-    // void testSimplestStack() {
-    //     def accountServiceMockClass = mockFor(AccountService)
-    //     def currentUser = new Person()
-    //     accountServiceMockClass.demand.getLoggedInUser { currentUser }
-    //     marketplaceService.accountService = accountServiceMockClass.createMock()
+    void testSimplestStack() {
+        def accountServiceMockClass = mockFor(AccountService, true)
+        boolean asAdmin = false
+        accountServiceMockClass.demand.runAsAdmin(0..9999) { closure ->
+            asAdmin = true
+            closure.call()
+            asAdmin = false
+        }
+        marketplaceService.accountService = accountServiceMockClass.createMock()
 
-    //     def groupMockClass = mockFor(Group)
-    //     groupMockClass.demand.addToPeople { person -> assertEquals(currentUser, person) }
-    //     def stackGroup = groupMockClass.createMock()
+        stackServiceMockClass = mockFor(StackService)
+        marketplaceService.stackService = stackServiceMockClass.createMock()
 
-    //     def stackMockClass = mockFor(Stack)
-    //     stackMockClass.demand.findStackDefaultGroup(0..9999) {return stackGroup}
-    //     def stack = stackMockClass.createMock()
+        Stack.metaClass.'static'.findByStackContext = { stackContext ->
+            assertEquals(singleSimpleStack[0].stackContext, stackContext)
+            return null
+        }
 
-    //     stackServiceMockClass = mockFor(StackService)
-    //     marketplaceService.stackService = stackServiceMockClass.createMock()
+        stackServiceMockClass.demand.importStack { params ->
+            assertTrue(asAdmin)
+            assertEquals([data: singleSimpleStack[0].toString()], params)
+        }
 
-    //     Stack.metaClass.'static'.findByStackContext = { stackContext ->
-    //         assertEquals(singleSimpleStack[0].stackContext, stackContext)
-    //         return null
-    //     }
+        marketplaceService.addListingsToDatabase(singleSimpleStack);
 
-    //     stackServiceMockClass.demand.importStack { params ->
-    //         assertEquals([data: singleSimpleStack[0].toString()], params)
-    //         return stack
-    //     }
-
-    //     marketplaceService.addListingsToDatabase(singleSimpleStack);
-
-
-    //     stackServiceMockClass.verify()
-    //     groupMockClass.verify()
-    // }
+        stackServiceMockClass.verify()
+    }
 }
