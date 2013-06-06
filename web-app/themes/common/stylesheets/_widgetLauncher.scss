@@ -305,52 +305,65 @@
             display: inline-block;
             width: 145px;
             height: 30px;
-            padding: 7px;
             margin-left: 5px;
             margin-right: 5px;
             text-align: center;
+            background-image: none;
             @include border-radius(5px);
+            .x-btn-center {
+                width: 141px;
+                height: 26px;
+                @include border-radius(5px);
+            }
+            .x-btn-inner {
+                font-size: 16px;
+                width: 141px;
+                height: 26px;
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
         }
 
         .start-btn.x-btn-default-toolbar-small, .start-btn.x-btn-default-small {
             background-image: -webkit-linear-gradient($start-btn-top-color, $start-btn-bottom-color);
             background-image: -moz-linear-gradient($start-btn-top-color, $start-btn-bottom-color);
             border-color: $start-btn-border-color;
-            //.x-btn-inner {
-            //    background-color: $start-btn-color;
-            //}
+            .x-btn-inner {
+                background-color: $start-btn-color;
+            }
         }
 
         .start-btn.x-btn-default-toolbar-small-over, .start-btn.x-btn-default-small-over {
             background-image: -webkit-linear-gradient($start-btn-top-color-over, $start-btn-bottom-color-over);
             background-image: -moz-linear-gradient($start-btn-top-color-over, $start-btn-bottom-color-over);
             border-color: $start-btn-border-color-over;
-            //.x-btn-inner {
-            //    background-color: $start-btn-color-over;
-            //}
+            .x-btn-inner {
+                background-color: $start-btn-color-over;
+            }
         }
 
         .start-btn.x-btn-default-toolbar-small-pressed, .start-btn.x-btn-default-small-pressed {
             background-image: -webkit-linear-gradient($start-btn-top-color-down, $start-btn-bottom-color-down);
             background-image: -moz-linear-gradient($start-btn-top-color-down, $start-btn-bottom-color-down);
             border-color: $start-btn-border-color-down;
-            background-color: $start-btn-color-down;
+            .x-btn-inner {
+                background-color: $start-btn-color-down;
+            }
         }
 
         .start-btn {
-            left: 270px !important; // fix for OP-990, there are other hacks in LaunchMenu.js for start button width to be set properly for ie7
+            left: 230px !important; // fix for OP-990, there are other hacks in LaunchMenu.js for start button width to be set properly for ie7
             .x-btn-inner {
                 color: $start-btn-text-color;
-                font-size: 16px;
             }
         }
         .remove-btn.x-btn-default-toolbar-small, .remove-btn.x-btn-default-small {
             background-image: -webkit-linear-gradient($remove-btn-top-color, $remove-btn-bottom-color);
             background-image: -moz-linear-gradient($remove-btn-top-color, $remove-btn-bottom-color);
             border-color: $remove-btn-border-color;
-            //.x-btn-inner {
-            //    background-color: $remove-btn-color;
-            //}
+            .x-btn-inner {
+                background-color: $remove-btn-color;
+            }
         }
 
         .remove-btn.x-btn-default-toolbar-small-over, .remove-btn.x-btn-default-small-over {
@@ -366,16 +379,15 @@
             background-image: -webkit-linear-gradient($remove-btn-top-color-down, $remove-btn-bottom-color-down);
             background-image: -moz-linear-gradient($remove-btn-top-color-down, $remove-btn-bottom-color-down);
             border-color: $remove-btn-border-color-down;
-            //.x-btn-inner {
-            //    background-color: $remove-btn-color-down;
-            //}
+            .x-btn-inner {
+                background-color: $remove-btn-color-down;
+            }
         }
 
         .remove-btn {
-            left: 425px !important; // fix for OP-990, there are other hacks in LaunchMenu.js for remove button width to be set properly for ie7
+            left: 385px !important; // fix for OP-990, there are other hacks in LaunchMenu.js for remove button width to be set properly for ie7
             .x-btn-inner {
                 color: $remove-btn-text-color;
-                font-size: 16px;
             }
         }
 
