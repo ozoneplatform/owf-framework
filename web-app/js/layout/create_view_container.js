@@ -95,7 +95,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         };
 
         this.existingViewRadio = { 
-            boxLabel: Ozone.layout.CreateViewWindowString.createFromExisiting, 
+            boxLabel: Ozone.layout.CreateViewWindowString.createFromExisting,
             name: 'viewSelectRadio',
             inputValue: "copiedDashboard",
             cls:'existingViewRadio',
