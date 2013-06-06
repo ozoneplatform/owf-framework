@@ -13,7 +13,7 @@ The Ozone Widget Framework (OWF) is a web application for composing other lightw
 ![Dashboards](http://i.imgur.com/7FFlu.png)
 
 ## Technology components
-For Version 7 of OWF, the front-end user interface uses ExtJS, and the back-end uses Grails.  User preferences are stored in a relational database - anything supported by Hibernate.  Authentication of users is a modular function provided by Spring Security.  There is a re-factoring effort planned for 2013 to improve performance  modularity and maintainability, which is expected to eliminate the dependency on Grails and ExtJS.
+For Version 7 of OWF, the front-end user interface uses Ext JS, and the back-end uses Grails.  User preferences are stored in a relational database - anything supported by Hibernate.  Authentication of users is a modular function provided by Spring Security.  There is a re-factoring effort planned for 2013 to improve performance, modularity, and maintainability, which is expected to eliminate the dependency on Grails and Ext JS.
  
  
 ## Browser Support
@@ -55,7 +55,7 @@ Government agencies are encouraged to submit contributions as pull requests on G
  
 ### Roadmap
  
-At the Dec 2012 OWF GOSS board, the board agreed to a 6-month re-factoring effort which would re-implement using OSGi on the back end and eliminate the dependency on ExtJS for the front-end.  This work will be done on GitHub and will be completely transparent to the community.
+There is work underway to re-factor OWF to use OSGi on the back end, and eliminate the dependency on Ext JS for the front-end.  Multiple alphas have been released, and announced on [ozoneplatform-announce](https://groups.google.com/forum/?fromgroups#!forum/ozoneplatform-announce).  Although we initially intended a release for June 2013, we're revisiting our design to make sure it is fully scalable and enterprise-ready, both for OWF itself and for other capabilities built on top of the services of what we're calling _ozoneplatform_.  Watch [ozoneplatform-announce](https://groups.google.com/forum/?fromgroups#!forum/ozoneplatform-announce), as well as this page, for further information as to specific timelines and availability of alphas.
  
 ### Related projects
  
