@@ -80,6 +80,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             boxLabel: Ozone.layout.CreateViewWindowString.createNew,
             name: 'viewSelectRadio',
             cls:'newViewRadio',
+            checked: true,
             listeners: {
                 'change': {
                     fn: function(radio, newValue) {

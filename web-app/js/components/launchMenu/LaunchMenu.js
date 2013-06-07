@@ -38,7 +38,7 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
 
         this.tools = [
             {
-
+                itemId: 'viewSwitch',
                 xtype: 'toolbar',
                 cls: 'viewSwitch',
                 flex: 1,
@@ -312,8 +312,14 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
 
         this.on({
             render: {
-                fn: function(cmp){
+                fn: function(cmp) {
                     me.createSidePanel();
+                },
+                scope: this
+            },
+            afterrender: {
+                fn: function(cmp) {
+                    this.setupCircularFocus();
                 },
                 scope: this
             },
@@ -677,6 +683,8 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
            handler: removeBtnHandler
        }, removeButton));
 
+       this.setupCircularFocus();
+
        //in IE7, Ext seems to be manually setting the button widths to
        //the smallest reasonable size for some reason.  We want the widths to
        //be handled in css however, so we clear the explicit width
@@ -901,10 +909,10 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     },
 
     setupCircularFocus: function () {
-        var advSearchBtn = this.down('#advSearchBtn');
-        var focusCatchEl = Ext.DomHelper.append(this.el, '<div class="focus-catch" tabindex="0"></div>'
-                , true);
-        this.setupFocus(advSearchBtn.getFocusEl(), focusCatchEl);
+        var firstCmp = this.header.getComponent('viewSwitch').getComponent('gridViewBtn');
+        var lastCmp = this.getComponent('startRemovePanel').getComponent('remove');
+        this.tearDownCircularFocus();
+        this.setupFocus(firstCmp.getFocusEl(), lastCmp.getFocusEl());
     },
 
     onClose: function () {
