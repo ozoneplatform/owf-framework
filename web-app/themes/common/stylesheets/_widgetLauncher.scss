@@ -298,6 +298,7 @@
         display: block;
         background: transparent;
         margin-top: 15px;
+        text-align: center;
         //margin-right: 5px;
         //margin-bottom: 5px;
         //margin-left: 5px;
@@ -309,7 +310,9 @@
         }
 
         .start-remove-btn {
+            position: static !important;
             display: inline-block;
+            *display: inline;
             width: 145px;
             height: 30px;
             margin-left: 5px;
@@ -356,7 +359,6 @@
         }
 
         .start-btn {
-            left: 230px !important; // fix for OP-990, there are other hacks in LaunchMenu.js for start button width to be set properly for ie7
             .x-btn-inner {
                 color: $start-btn-text-color;
             }
@@ -386,7 +388,6 @@
         }
 
         .remove-btn {
-            left: 385px !important; // fix for OP-990, there are other hacks in LaunchMenu.js for remove button width to be set properly for ie7
             .x-btn-inner {
                 color: $remove-btn-text-color;
             }
