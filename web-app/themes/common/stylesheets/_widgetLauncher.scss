@@ -192,8 +192,8 @@
 	
 	.x-window-header {
 		@include border-top-radius($widget-launcher-body-radius);
-		//height: 32px;//20px;
 		background-image: none;
+        filter: none;
 		background-color: $widget-launcher-background-color;
 		border-color: $widget-launcher-background-color;
 		padding: 2px 9px;
