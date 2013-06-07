@@ -251,6 +251,10 @@
         float: right;
         margin: 0px;
 
+        &.x-focus {
+            padding: 2px;
+        }
+
     }
 
     .gridViewBtn {

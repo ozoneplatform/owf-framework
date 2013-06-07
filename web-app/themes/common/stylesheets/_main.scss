@@ -455,6 +455,10 @@ iframe {
     background: transparent;
 }
 
+.x-btn-default-toolbar-large-focus {
+    background: none;
+}
+
 @include owf-tool;
 
 // EXT overrides 
