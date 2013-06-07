@@ -1197,6 +1197,13 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     **/
     enableCssAnimations: function () {
         this.cssanimations = true;
+
+        //update the way a hidden dashboard is hidden
+        if (this.rendered && this.isHidden()) {
+            this.el.addCls(this.inactiveCls);
+            this.el.removeCls(this.hideCls);
+            this.el.setStyle('visibility', '');
+        }
     },
 
     /**

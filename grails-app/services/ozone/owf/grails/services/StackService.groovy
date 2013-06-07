@@ -533,6 +533,7 @@ class StackService {
 			it = new JSONObject(json)
 			changeWidgetInstanceIds(it.layoutConfig)
             it.isGroupDashboard = true
+            it.isdefault = false
             it.stack = stack
             def dashboard = dashboardService.createOrUpdate(it).dashboard
             domainMappingService.createMapping(stackDefaultGroup, RelationshipType.owns, dashboard)

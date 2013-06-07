@@ -850,7 +850,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                 //if necessary, refresh the dashboards before calling show
                 if (me.dashboardsNeedRefresh) {
+                    if (dashboardSwitcher) {
+                        dashboardSwitcher.destroy();
+                        dashboardSwitcher = null;
+                    }
+
                     me.dashboardsNeedRefresh = false;
+
                     me.reloadDashboards(show);
                 }
                 else {
@@ -1756,6 +1762,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                 // Add dashboard object to local array.
                 me.dashboards.push(me.createDashboardConfig(dsRecord));
+                me.dashboards[i1].hidden = true;    //start all dashboards hidden, the
+                                                    //active one will be shown later
 
                 // Add dashboard to buffered card panel.
                 var addedDash = dashPanel.add(me.dashboards[i1]);
