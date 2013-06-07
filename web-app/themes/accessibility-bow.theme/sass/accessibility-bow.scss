@@ -97,11 +97,11 @@ body {
     height: 100%;
     outline: 0 none;
     cursor: default; // for IE8
-    background-color: #050b13;
+    background-color: #00050D;
     background-attachment:fixed;
     background-position: center center;
     background-repeat: no-repeat;
-    background-image: theme-image($theme-name, 'wallpapers/ic-bg.png');
+    background-image: theme-image($theme-name, 'wallpapers/ic-bg.jpg');
 }
 
 //admin widget
