@@ -182,7 +182,7 @@
         background: transparent;
         filter: none;
         border-style: none;
-        padding: 0px 5px 5px 5px;
+        padding: 2px 5px 5px 5px;
         .x-box-inner{
             background: transparent;
             filter: none;
@@ -309,7 +309,6 @@
         .start-remove-btn {
             position: static !important;
             display: inline-block;
-            *display: inline;
             width: 145px;
             height: 30px;
             margin-left: 5px;
@@ -321,13 +320,14 @@
                 width: 141px;
                 height: 26px;
                 @include border-radius(5px);
+
             }
             .x-btn-inner {
                 font-size: 16px;
-                width: 141px;
+                display: block;
+                width: 141px !important;
                 height: 26px;
-                padding-top: 5px;
-                padding-bottom: 5px;
+                padding: 5px 0;
             }
         }
 
@@ -724,6 +724,20 @@
     cursor: default !important;
   }
 
+}
+
+.x-ie7 #widget-launcher-body .start-remove-panel .start-remove-btn {
+    display: inline;
+
+    .x-btn-center {
+        width: 145px !important;
+        height: 30px;
+    }
+
+    .x-btn-inner {
+        width: 145px !important;
+        height: 30px;
+    }
 }
 
 //#widget-launcher-body .x-box-inner > :last-child {
