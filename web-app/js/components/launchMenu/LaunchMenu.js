@@ -42,25 +42,12 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                 xtype: 'toolbar',
                 cls: 'viewSwitch',
                 flex: 1,
-                layout: 'auto', //Ext hbox puts a 2 pixel gap between things
-                //that we don't want, so its easier if we
-                //just lay it out in css
-                //items are floated right, so they need to
-                //be in reverse order
+                layout: {
+                    type: 'hbox',
+                    align: 'center',
+                    pack: 'end'
+                },
                 items: [
-                    {
-                        xtype: 'button',
-                        itemId: 'iconViewBtn',
-                        cls: 'iconViewBtn',
-                        text: null,
-                        scale: 'large',
-                        iconCls: 'iconViewBtnIcon-down',
-                        iconAlign: 'top',
-                        handler: function (b, e) {
-                            this.showIconView(b);
-                        },
-                        scope: this
-                    },
                     {
                         xtype: 'button',
                         itemId: 'gridViewBtn',
@@ -71,6 +58,19 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                         iconAlign: 'top',
                         handler: function (b, e) {
                             this.showGridView(b);
+                        },
+                        scope: this
+                    },
+                    {
+                        xtype: 'button',
+                        itemId: 'iconViewBtn',
+                        cls: 'iconViewBtn',
+                        text: null,
+                        scale: 'large',
+                        iconCls: 'iconViewBtnIcon-down',
+                        iconAlign: 'top',
+                        handler: function (b, e) {
+                            this.showIconView(b);
                         },
                         scope: this
                     }
@@ -306,11 +306,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                 },
                 {
                     xtype: 'panel',
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretchmax',
-                        pack: 'center'
-                    },
                     itemId: "startRemovePanel",
                     cls: "start-remove-panel",
                     region: 'south',
@@ -617,7 +612,7 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     updateInfoPanel: function (record, showRemoveFavorites, disableStartButton, showIntentCheckBox, intentCheckBoxValue) {
         var me = this;
         var infoPanel = me.down("#infoPanel");
-//        infoCenter = infoPanel.getComponent('infoCenter'),
+        var infoCenter = infoPanel.getComponent('infoCenter');
         var startRemovePanel = me.down('#startRemovePanel');
         var startBtn = startRemovePanel.getComponent('start');
         var removeBtn = startRemovePanel.getComponent('remove');
@@ -660,11 +655,11 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
 //        }
         if (widgetDisabled || !record) {
             startRemovePanel.addCls('widget-disabled');
-//            infoCenter.addCls('widget-disabled');
+            infoCenter.addCls('widget-disabled');
         }
         else {
             startRemovePanel.removeCls('widget-disabled');
-//            infoCenter.removeCls('widget-disabled');
+            infoCenter.removeCls('widget-disabled');
         }
 
 //        var desc = record.get('description') != null ? record.get('description') : '';

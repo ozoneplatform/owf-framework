@@ -192,11 +192,11 @@
 	
 	.x-window-header {
 		@include border-top-radius($widget-launcher-body-radius);
-		height: 32px;//20px;
+		//height: 32px;//20px;
 		background-image: none;
 		background-color: $widget-launcher-background-color;
 		border-color: $widget-launcher-background-color;
-		padding:9px;
+		padding: 2px 9px;
 	}
 
     .x-window-header-text {
@@ -229,6 +229,13 @@
     }
 
     .widgetviewcontainer {
+        .title {
+            font-weight: normal;
+            font-size: $widget-launcher-view-title-font-size;
+            color: $widget-launcher-widget-title-color;
+            padding: 10px;
+        }
+
       	.launch_delete_grid_icon {
 			display: none;
 			padding: 0 5px 0 5px;
@@ -291,9 +298,7 @@
         display: block;
         background: transparent;
         margin-top: 15px;
-        //margin-right: 5px;
-        //margin-bottom: 5px;
-        //margin-left: 5px;
+        text-align: center;
 
         .x-panel-body {
             background: transparent;
@@ -302,7 +307,9 @@
         }
 
         .start-remove-btn {
+            position: static !important;
             display: inline-block;
+            *display: inline;
             width: 145px;
             height: 30px;
             margin-left: 5px;
@@ -325,8 +332,7 @@
         }
 
         .start-btn.x-btn-default-toolbar-small, .start-btn.x-btn-default-small {
-            background-image: -webkit-linear-gradient($start-btn-top-color, $start-btn-bottom-color);
-            background-image: -moz-linear-gradient($start-btn-top-color, $start-btn-bottom-color);
+            @include background-image(linear-gradient($start-btn-top-color, $start-btn-bottom-color));
             border-color: $start-btn-border-color;
             .x-btn-inner {
                 background-color: $start-btn-color;
@@ -334,8 +340,7 @@
         }
 
         .start-btn.x-btn-default-toolbar-small-over, .start-btn.x-btn-default-small-over {
-            background-image: -webkit-linear-gradient($start-btn-top-color-over, $start-btn-bottom-color-over);
-            background-image: -moz-linear-gradient($start-btn-top-color-over, $start-btn-bottom-color-over);
+            @include background-image(linear-gradient($start-btn-top-color-over, $start-btn-bottom-color-over));
             border-color: $start-btn-border-color-over;
             .x-btn-inner {
                 background-color: $start-btn-color-over;
@@ -343,8 +348,7 @@
         }
 
         .start-btn.x-btn-default-toolbar-small-pressed, .start-btn.x-btn-default-small-pressed {
-            background-image: -webkit-linear-gradient($start-btn-top-color-down, $start-btn-bottom-color-down);
-            background-image: -moz-linear-gradient($start-btn-top-color-down, $start-btn-bottom-color-down);
+            @include background-image(linear-gradient($start-btn-top-color-down, $start-btn-bottom-color-down));
             border-color: $start-btn-border-color-down;
             .x-btn-inner {
                 background-color: $start-btn-color-down;
@@ -352,14 +356,12 @@
         }
 
         .start-btn {
-            left: 230px !important; // fix for OP-990, there are other hacks in LaunchMenu.js for start button width to be set properly for ie7
             .x-btn-inner {
                 color: $start-btn-text-color;
             }
         }
         .remove-btn.x-btn-default-toolbar-small, .remove-btn.x-btn-default-small {
-            background-image: -webkit-linear-gradient($remove-btn-top-color, $remove-btn-bottom-color);
-            background-image: -moz-linear-gradient($remove-btn-top-color, $remove-btn-bottom-color);
+            @include background-image(linear-gradient($remove-btn-top-color, $remove-btn-bottom-color));
             border-color: $remove-btn-border-color;
             .x-btn-inner {
                 background-color: $remove-btn-color;
@@ -367,8 +369,7 @@
         }
 
         .remove-btn.x-btn-default-toolbar-small-over, .remove-btn.x-btn-default-small-over {
-            background-image: -webkit-linear-gradient($remove-btn-top-color-over, $remove-btn-bottom-color-over);
-            background-image: -moz-linear-gradient($remove-btn-top-color-over, $remove-btn-bottom-color-over);
+            @include background-image(linear-gradient($remove-btn-top-color-over, $remove-btn-bottom-color-over));
             border-color: $remove-btn-border-color-over;
             .x-btn-inner {
                 background-color: $remove-btn-color-over;
@@ -376,8 +377,7 @@
         }
 
         .remove-btn.x-btn-default-toolbar-small-pressed, .remove-btn.x-btn-default-small-pressed {
-            background-image: -webkit-linear-gradient($remove-btn-top-color-down, $remove-btn-bottom-color-down);
-            background-image: -moz-linear-gradient($remove-btn-top-color-down, $remove-btn-bottom-color-down);
+            @include background-image(linear-gradient($remove-btn-top-color-down, $remove-btn-bottom-color-down));
             border-color: $remove-btn-border-color-down;
             .x-btn-inner {
                 background-color: $remove-btn-color-down;
@@ -385,7 +385,6 @@
         }
 
         .remove-btn {
-            left: 385px !important; // fix for OP-990, there are other hacks in LaunchMenu.js for remove button width to be set properly for ie7
             .x-btn-inner {
                 color: $remove-btn-text-color;
             }
