@@ -1,0 +1,5 @@
+Does anyone ever tried any automated testing tool on OWF itself and/or widgets with success?
+
+I personally tried "Testing anywhere" without success and "Selenium" with metigated success.  
+Problems encountered using Selenium was mainly caused by the fact that id's are generated for each execution.
+
