@@ -233,7 +233,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                 align: 'stretch'
             },
             items: [
-                //infopanel
                 {
                     xtype: 'panel',
                     layout: {
@@ -243,25 +242,14 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                     itemId: "infoPanel",
                     cls: "info-panel",
                     region: 'north',
-                    padding: '10',
+                    padding: '2',
                     items: [
                         {
-                            xtype: 'container',
-                            layout: {
-                                type: 'vbox',
-                                align: 'stretch'
-                            },
-                            cls: 'infoCenter',
-                            itemId: 'infoCenter',
-                            items: [
-                                {
-                                    xtype: 'checkbox',
-                                    hidden: true,
-                                    itemId: 'intentCheckBox',
-                                    cls: 'intentCheckBox',
-                                    boxLabel: 'Remember this decision'
-                                }
-                            ]
+                            xtype: 'checkbox',
+                            hidden: true,
+                            itemId: 'intentCheckBox',
+                            cls: 'intentCheckBox',
+                            boxLabel: 'Remember this decision'
                         }
                     ]
                 },
@@ -530,7 +518,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     },
 
     formatRemoveMessage: function(record) {
-        console.log(record);
         var recordName = record.get('name');
         var htmlMessage = '';
 
@@ -555,7 +542,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                     if (widgetState.get('widgetGuid') == widgetGuid) {
                         // Remove the widget in question from its dashboard
                         var widgetUniqueId = widgetState.get('uniqueId');
-                        console.log("Closing widget " + widgetState.get('name') + " with GUID " + widgetGuid + " on dashboard " + dashboard.name);
                         dashboard.closeWidget(widgetUniqueId);
                     }
                 });
@@ -612,7 +598,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
     updateInfoPanel: function (record, showRemoveFavorites, disableStartButton, showIntentCheckBox, intentCheckBoxValue) {
         var me = this;
         var infoPanel = me.down("#infoPanel");
-        var infoCenter = infoPanel.getComponent('infoCenter');
         var startRemovePanel = me.down('#startRemovePanel');
         var startBtn = startRemovePanel.getComponent('start');
         var removeBtn = startRemovePanel.getComponent('remove');
@@ -655,11 +640,9 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
 //        }
         if (widgetDisabled || !record) {
             startRemovePanel.addCls('widget-disabled');
-            infoCenter.addCls('widget-disabled');
         }
         else {
             startRemovePanel.removeCls('widget-disabled');
-            infoCenter.removeCls('widget-disabled');
         }
 
 //        var desc = record.get('description') != null ? record.get('description') : '';
@@ -904,7 +887,7 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
 
     },
 
-    getIntentCheckBoxValue: function rob() {
+    getIntentCheckBoxValue: function () {
         var intentCheckBox = this.down('#intentCheckBox');
         return intentCheckBox.getValue();
     },
