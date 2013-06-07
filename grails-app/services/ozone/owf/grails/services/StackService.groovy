@@ -470,9 +470,9 @@ class StackService {
         def stackParams = [:]
         params.data = JSON.parse(params.data)
         stackParams.name = params.data.name
-        stackParams.description = params.data.description
+        stackParams.description = params.data.description.equals(null) ? "" : params.data.description
         stackParams.stackContext = params.data.stackContext
-        stackParams.descriptorUrl = params.descriptorUrl
+        stackParams.descriptorUrl = params.data.descriptorUrl.equals(null)  ? "" : params.data.descriptorUrl
 
         def s = createOrUpdate(stackParams)
         def stack = Stack.findById(s.data[0].id)
