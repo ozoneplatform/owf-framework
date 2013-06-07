@@ -306,11 +306,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
                 },
                 {
                     xtype: 'panel',
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretchmax',
-                        pack: 'center'
-                    },
                     itemId: "startRemovePanel",
                     cls: "start-remove-panel",
                     region: 'south',
