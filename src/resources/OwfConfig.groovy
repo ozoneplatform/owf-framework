@@ -103,7 +103,7 @@ owf {
   dataguard {
     // Option to restrict messages between widgets based on access levels.
     // If this option is set to false, all other dataguard options are ignored.
-    restrictMessages = true
+    restrictMessages = false
 
     // Option to audit all messages between widgets, not just failed messages.
     // restrictMessages must be set to true
