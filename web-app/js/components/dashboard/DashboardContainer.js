@@ -1785,9 +1785,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             me._activateDashboard(dashboardGuidToActivate || defaultTabGuid); // Focus the default dashboard.
             me.activateDashboard(dashboardGuidToActivate || defaultTabGuid, true, stackContext);
 
-            // enable animations now that dashboards are added to card layout
-            for(var j = 0, len = dashboards.length; j < len; j++) {
-                dashboards[j].enableCssAnimations();
+            //If browser uses animations, enable them now that dashboards are added to card layout
+            if(Modernizr.cssanimations) {
+                for(var j = 0, len = dashboards.length; j < len; j++) {
+                    dashboards[j].enableCssAnimations();
+                }
             }
         }, 200);
     },

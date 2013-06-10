@@ -882,6 +882,12 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     // private
     onRender: function (ct, position) {
         this.initDashboard();
+
+        //Ensure a dashboard isn't rendered hidden (OP-1161)
+        if(this.cssanimations) {
+            this.hidden = false;
+        }
+
         this.callParent(arguments);
     },
 
