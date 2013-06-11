@@ -997,22 +997,22 @@ owf {
     // OZP-476: Marketplace (MP) Synchronization
     mpSync {
         // Process listing change notifications from Marketplace(s)
-        enabled = true
+        enabled = false
 
         // Change notification from MP will cause a new widget to be created
         // in OWF if it does not already exist
-        autoCreateWidget = true
+        autoCreateWidget = false
 
         // Added to support server-server communication. Suggest setting
         // this true in development environment where the target MP server
         // has a self-signed cert or similar.
-        trustAllCerts = true
+        trustAllCerts = false
 
         // Added to allow or disallow the trusting of a supplied MP URL.
         // Enable this only when you know that the MP which serves listing
         // information is trustworthy or you could open Ozone to a
         // deliberate "poisoning" of the widget definitions.
-        trustProvidedUrl = true
+        trustProvidedUrl = false
     }
 }
 
