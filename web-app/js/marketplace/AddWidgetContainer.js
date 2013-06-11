@@ -112,10 +112,20 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
     },
 
     addStack: function (sender, config, marketplaceCallback) {
+        //the function to execute when the animation completes
+        function animCallback() {
+            marketplaceCallback();
+
+            //TODO Temporary hack to fix release-day bug OP-1218 - remove once fixed correctly
+            setTimeout(function() {
+                window.location.reload();
+            }, 0);
+        }
+
         var stackJSON = config.widgetsJSON;
         this.dashboardContainer.loadMask.show();
         this.dashboardContainer.dashboardsNeedRefresh = true;
-        var visualizeAddition = this.getlistingVisualizer(sender, config, marketplaceCallback, "stack");
+        var visualizeAddition = this.getlistingVisualizer(sender, config, animCallback, "stack");
         this.processMarketplaceStackData(stackJSON.itemUuid, visualizeAddition);
         return stackJSON.itemId;
     },
