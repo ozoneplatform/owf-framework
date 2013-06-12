@@ -42,7 +42,15 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                         draggable: false,
                         resizable: false,
                         shadow: false,
-                        dashboardContainer: me.dashboardContainer
+                        dashboardContainer: me.dashboardContainer,
+                        listeners: {
+                            show: function () {
+                                Ozone.KeyMap.disable();
+                            },
+                            hide: function () {
+                                Ozone.KeyMap.enable();
+                            }
+                        }
                     });
 
                     Ext.Ajax.request({

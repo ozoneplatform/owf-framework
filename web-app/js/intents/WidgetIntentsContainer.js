@@ -195,7 +195,7 @@ OWF = window.OWF ? window.OWF : {};
 		              		sentIds[widgetId] = true;
 		              		Ozone.util.hasAccess({
 		              			widgetId: widgetId, 
-		                  	  	accessLevel: data.accessLevel, 
+		                  	  	accessLevel: data && data.accessLevel, 
 		                  	  	senderId: Ozone.util.parseJson(sender).id,
 		                  	  	callback: function(response) {
 		                  	  		if (response.hasAccess) {

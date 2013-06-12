@@ -308,7 +308,7 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
     .x-panel-body { 
         background-color: transparent!important;
         background-image: none!important;
-        border: none;
+        border: 0px;
     }
 
     //BOTTOM DOCKED
@@ -449,8 +449,8 @@ iframe {
 .focus-catch {
     position: absolute;
     width: 1px !important; //ext will try to resize to full width in IE
-    height: 1px;
-    font-size: 1px; //height cannot be less than font-size in IE
+    height: 0px; // height must be set explicitly
+    font-size: 0px; //height cannot be less than font-size in IE
     border-style: none;
     background: transparent;
 }
