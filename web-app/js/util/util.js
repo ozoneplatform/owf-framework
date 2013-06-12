@@ -482,31 +482,31 @@ Ozone.util.createRequiredLabel= function(label) {
  * @returns {Boolean} True if the channel name is reserved, false otherwise.
  */
 Ozone.util.isReservedChannel = function(channel) {
-	// This is a horrible way of reserving channel names. Need to make this some sort of calculation
-	// so that widgets can't just pass data on an OWF reserved channel name to skirt security.
-	// I'm thinking generating a random guid at the start of a session to append to all OWF reserved channel
-	// names.
-	if(channel) {
-		if (channel.indexOf('_WIDGET_STATE_CHANNEL_') == 0 || 
-				channel == '_WIDGET_LAUNCHER_CHANNEL' || 
-				channel == '_ADD_WIDGET_CHANNEL' || 
-				channel == '_dragStart' || 
-				channel == '_dragOverWidget' || 
-				channel == '_dragOutName' || 
-				channel == '_dragStopInContainer' || 
-				channel == '_dragStopInWidget' || 
-				channel == '_dragSendData' || 
-				channel == '_dropReceiveData' || 
-				channel == '_intents' || 
-				channel == '_intents_receive' || 
-				channel == 'Ozone._WidgetChromeChannel' || 
-				channel == '_WIDGET_LAUNCHER_CHANNEL' || 
-				channel == '_widgetReady' ||
+    // This is a horrible way of reserving channel names. Need to make this some sort of calculation
+    // so that widgets can't just pass data on an OWF reserved channel name to skirt security.
+    // I'm thinking generating a random guid at the start of a session to append to all OWF reserved channel
+    // names.
+    if(channel) {
+        if (channel.indexOf('_WIDGET_STATE_CHANNEL_') == 0 || 
+                channel == '_WIDGET_LAUNCHER_CHANNEL' || 
+                channel == '_ADD_WIDGET_CHANNEL' || 
+                channel == '_dragStart' || 
+                channel == '_dragOverWidget' || 
+                channel == '_dragOutName' || 
+                channel == '_dragStopInContainer' || 
+                channel == '_dragStopInWidget' || 
+                channel == '_dragSendData' || 
+                channel == '_dropReceiveData' || 
+                channel == '_intents' || 
+                channel == '_intents_receive' || 
+                channel == 'Ozone._WidgetChromeChannel' || 
+                channel == '_WIDGET_LAUNCHER_CHANNEL' || 
+                channel == '_widgetReady' ||
                 channel == 'Ozone.eventing.widget.public')
-			
-			return true;
-	}
-	return false;
+            
+            return true;
+    }
+    return false;
 };
 
 /**
@@ -518,11 +518,11 @@ Returns .
  *
 */
 Ozone.util.hasAccess = function(cfg) {
-	var widgetId, accessLevel, channel, senderId, callback;	
-	
-	// Make sure cfg object was passed in and flag to check access is set to true
-	if (!cfg || !cfg.widgetId || !cfg.callback) {
-		var response = "Insufficient information provided to determine access level.";
+    var widgetId, accessLevel, channel, senderId, callback; 
+    
+    // Make sure cfg object was passed in and flag to check access is set to true
+    if (!cfg || !cfg.widgetId || !cfg.callback) {
+        var response = "Insufficient information provided to determine access level.";
         if (!Ozone.Msg)
             Ozone.util.ErrorDlg.show(response,200,50);
         else
@@ -531,195 +531,195 @@ Ozone.util.hasAccess = function(cfg) {
             });
         
         if (cfg.callback) {
-			cfg.callback({
-				widgetId: widgetId,
-				accessLevel: accessLevel,
-				hasAccess: false
-			});
+            cfg.callback({
+                widgetId: widgetId,
+                accessLevel: accessLevel,
+                hasAccess: false
+            });
         }
-		return;
-	} else if (!Ozone.config.dataguard.restrictMessages) {
-		cfg.callback({
-			widgetId: widgetId,
-			accessLevel: accessLevel,
-			hasAccess: true
-		});
-		return;
-	} else {
-		widgetId = cfg.widgetId;
-		accessLevel = cfg.accessLevel;
-		channel = cfg.channel;
-		senderId = cfg.senderId;
-		callback = cfg.callback;
-	}
-	
-	// Allow OWF reserved channels to receive all data because those are used for 
-	// OWF-specific things like drag-and-drop
-	if(Ozone.util.isReservedChannel(cfg.channel)) {
-		callback({
-			widgetId: widgetId,
-			accessLevel: accessLevel,
-			hasAccess: true
-		});
-		return;
-	}
-	
-	// Err on the side of caution by defaulting to false
-	var hasAccess = false; 
-	
-	// Must specify either an accessLevel or senderId
-	if (!accessLevel) {
-		if (!senderId || !Ozone.config.dataguard.allowMessagesWithoutAccessLevel) {
-			Ozone.audit.log({
-				message: "Widget with id " + widgetId + " could not receive data because no access level was provided.",
+        return;
+    } else if (!Ozone.config.dataguard.restrictMessages) {
+        cfg.callback({
+            widgetId: widgetId,
+            accessLevel: accessLevel,
+            hasAccess: true
+        });
+        return;
+    } else {
+        widgetId = cfg.widgetId;
+        accessLevel = cfg.accessLevel;
+        channel = cfg.channel;
+        senderId = cfg.senderId;
+        callback = cfg.callback;
+    }
+    
+    // Allow OWF reserved channels to receive all data because those are used for 
+    // OWF-specific things like drag-and-drop
+    if(Ozone.util.isReservedChannel(cfg.channel)) {
+        callback({
+            widgetId: widgetId,
+            accessLevel: accessLevel,
+            hasAccess: true
+        });
+        return;
+    }
+    
+    // Err on the side of caution by defaulting to false
+    var hasAccess = false; 
+    
+    // Must specify either an accessLevel or senderId
+    if (!accessLevel) {
+        if (!senderId || !Ozone.config.dataguard.allowMessagesWithoutAccessLevel) {
+            Ozone.audit.log({
+                message: "Widget with id " + widgetId + " could not receive data because no access level was provided.",
                 accessOutcomeGood: false,
                 outcomeCategory: Ozone.util.hasAccess.outcomeCategories.noLevelGiven,
                 sendingWidget: senderId,
                 receivingWidget: widgetId
 
-			});
-			callback({
-				widgetId: widgetId,
-				accessLevel: accessLevel,
-				hasAccess: false
-			});
-			return;
-		}
-	}
-	
-	function checkAccess(widgetId, accessLevel, channel, senderId, callback) {
-		// Check cache
-		var accessLevelCacheId = accessLevel ? accessLevel.toUpperCase() : senderId;
+            });
+            callback({
+                widgetId: widgetId,
+                accessLevel: accessLevel,
+                hasAccess: false
+            });
+            return;
+        }
+    }
+    
+    function checkAccess(widgetId, accessLevel, channel, senderId, callback) {
+        // Check cache
+        var accessLevelCacheId = accessLevel ? accessLevel.toUpperCase() : senderId;
         var accessLevelFormatted = accessLevel ? accessLevel : "UNSPECIFIED ACCESS LEVEL";
 
-		if (Ozone.widgetAccesses[widgetId] && Ozone.widgetAccesses[widgetId][accessLevelCacheId]) {
-			// Make sure timestamp is less than 1 hour old
-			var accessLevelTimestamp = Ozone.widgetAccesses[widgetId][accessLevelCacheId].timestamp.getTime();
-			var currentTimestamp = (new Date()).getTime();
-			if ((currentTimestamp - accessLevelTimestamp) < Ozone.config.dataguard.accessLevelCacheTimeout) {
-				hasAccess = Ozone.widgetAccesses[widgetId][accessLevelCacheId].hasAccess;
-	        	
-	        	// Log failed access
-	    	    if (!hasAccess) {
-	    			Ozone.audit.log({
-	    				message: "Widget with id " + widgetId + " does not have sufficient privileges to access " + accessLevelFormatted + " data.",    				
+        if (Ozone.widgetAccesses[widgetId] && Ozone.widgetAccesses[widgetId][accessLevelCacheId]) {
+            // Make sure timestamp is less than 1 hour old
+            var accessLevelTimestamp = Ozone.widgetAccesses[widgetId][accessLevelCacheId].timestamp.getTime();
+            var currentTimestamp = (new Date()).getTime();
+            if ((currentTimestamp - accessLevelTimestamp) < Ozone.config.dataguard.accessLevelCacheTimeout) {
+                hasAccess = Ozone.widgetAccesses[widgetId][accessLevelCacheId].hasAccess;
+                
+                // Log failed access
+                if (!hasAccess) {
+                    Ozone.audit.log({
+                        message: "Widget with id " + widgetId + " does not have sufficient privileges to access " + accessLevelFormatted + " data.",                    
                         accessOutcomeGood: false,
                         outcomeCategory: Ozone.util.hasAccess.outcomeCategories.insufficient,
                         accessLevel: accessLevelFormatted,
                         sendingWidget: senderId,
                         receivingWidget: widgetId
-	    			});
-	    	    } else if (Ozone.config.dataguard.auditAllMessages || !accessLevel) {
-	    			Ozone.audit.log({
-	    				message: "Widget with id " + widgetId + " received message with access level " + accessLevelFormatted + " data.",    				
+                    });
+                } else if (Ozone.config.dataguard.auditAllMessages || !accessLevel) {
+                    Ozone.audit.log({
+                        message: "Widget with id " + widgetId + " received message with access level " + accessLevelFormatted + " data.",                   
                         accessOutcomeGood: true,
                         accessLevel: accessLevelFormatted,
                         sendingWidget: senderId,
                         receivingWidget: widgetId                        
-	    			});
-	    	    }
-				
-				callback({
-					widgetId: widgetId,
-					accessLevel: accessLevel,
-					hasAccess: hasAccess
-				});
-				return;
-			}
-		}
-		
-		// Evaluate access level
-	    Ozone.util.Transport.send({
-	        url: OWF.getContainerUrl() + '/access',
-	        method: 'POST',
-	        onSuccess: function(response) {
-	        	hasAccess = response.data.hasAccess;
-	        	Ozone.widgetAccesses[widgetId] = Ozone.widgetAccesses[widgetId] || {};
-	        	Ozone.widgetAccesses[widgetId][accessLevelCacheId] = {
-	    			hasAccess: hasAccess,
-	    			timestamp: new Date()
-	        	};
-	        	
-	        	// Log failed access
-	    	    if (!hasAccess) {
-	    			Ozone.audit.log({
-	    				message: "Widget with id " + widgetId + " does not have sufficient privileges to access " + accessLevelFormatted + " data.",    				
+                    });
+                }
+                
+                callback({
+                    widgetId: widgetId,
+                    accessLevel: accessLevel,
+                    hasAccess: hasAccess
+                });
+                return;
+            }
+        }
+        
+        // Evaluate access level
+        Ozone.util.Transport.send({
+            url: OWF.getContainerUrl() + '/access',
+            method: 'POST',
+            onSuccess: function(response) {
+                hasAccess = response.data.hasAccess;
+                Ozone.widgetAccesses[widgetId] = Ozone.widgetAccesses[widgetId] || {};
+                Ozone.widgetAccesses[widgetId][accessLevelCacheId] = {
+                    hasAccess: hasAccess,
+                    timestamp: new Date()
+                };
+                
+                // Log failed access
+                if (!hasAccess) {
+                    Ozone.audit.log({
+                        message: "Widget with id " + widgetId + " does not have sufficient privileges to access " + accessLevelFormatted + " data.",                    
                         accessOutcomeGood: false,
                         outcomeCategory: Ozone.util.hasAccess.outcomeCategories.insufficient,
                         accessLevel: accessLevelFormatted,
                         sendingWidget: senderId,
                         receivingWidget: widgetId                        
-	    			});
-	    	    } else if (Ozone.config.dataguard.auditAllMessages || !accessLevel) {
-	    			Ozone.audit.log({
-	    				message: "Widget with id " + widgetId + " received message with access level " + accessLevelFormatted + " data.",
+                    });
+                } else if (Ozone.config.dataguard.auditAllMessages || !accessLevel) {
+                    Ozone.audit.log({
+                        message: "Widget with id " + widgetId + " received message with access level " + accessLevelFormatted + " data.",
                         accessOutcomeGood: true,
                         accessLevel: accessLevelFormatted,                        
-                    	sendingWidget: senderId,
+                        sendingWidget: senderId,
                         receivingWidget: widgetId
-	    			});
-	    	    }
-	    	    
-				callback({
-					widgetId: widgetId,
-					accessLevel: accessLevel,
-					hasAccess: hasAccess
-				});
-	        },
-	        onFailure: function(response) {
-				Ozone.audit.log({
-					message: "Failed to determine whether Widget with id " + widgetId + " has sufficient privileges to access " + accessLevelFormatted + " data.",
+                    });
+                }
+                
+                callback({
+                    widgetId: widgetId,
+                    accessLevel: accessLevel,
+                    hasAccess: hasAccess
+                });
+            },
+            onFailure: function(response) {
+                Ozone.audit.log({
+                    message: "Failed to determine whether Widget with id " + widgetId + " has sufficient privileges to access " + accessLevelFormatted + " data.",
                     accessOutcomeGood: false,
                     outcomeCategory: Ozone.util.hasAccess.outcomeCategories.noLevelGiven,
                     accessLevel: accessLevelFormatted,
                     sendingWidget: senderId,
                     receivingWidget: widgetId                        
 
-				});
+                });
 
-		        if (response == undefined || response == null) response = "";
+                if (response == undefined || response == null) response = "";
 
-		        if (!Ozone.Msg)
-		            Ozone.util.ErrorDlg.show(response,200,50);
-		        else
-		            Ozone.Msg.alert('Server Error',response,null,this,{
-		                cls: "owfAlert"
-		            });
-		        
-				callback({
-					widgetId: widgetId,
-					accessLevel: accessLevel,
-					hasAccess: false
-				});
-	        },
-	        autoSendVersion : false,
-	        content : {
-	        	widgetId: widgetId,
-	        	accessLevel: accessLevel ? accessLevel : null,
-				senderId: senderId ? senderId : null
-	        }
-	    });
-	}
-	
-	if (OWF.getOpenedWidgets && OWF.getOpenedWidgets instanceof Function) {
-		OWF.getOpenedWidgets(function(openedWidgets) {
-			for (var i = 0; i < openedWidgets.length; i++) {
-				var w = openedWidgets[i];
-				if (widgetId == w.id) widgetId = w.widgetGuid;
-	  	  		if (senderId == w.id) senderId = w.widgetGuid;
-			}
-			checkAccess(widgetId, accessLevel, channel, senderId, callback);
-		});
-	} else {
-  	  	// Ensure widgetId and senderId point to widget guid, not instance id
-  	  	var openedWidgets = OWF.Container.Eventing.getOpenedWidgets();
-  	  	for (var i = 0; i < openedWidgets.length; i++) {
-  	  		var w = openedWidgets[i];
-  	  		if (widgetId == w.id) widgetId = w.widgetGuid;
-  	  		if (senderId == w.id) senderId = w.widgetGuid;
-  	  	}
-		checkAccess(widgetId, accessLevel, channel, senderId, callback);
-	}
+                if (!Ozone.Msg)
+                    Ozone.util.ErrorDlg.show(response,200,50);
+                else
+                    Ozone.Msg.alert('Server Error',response,null,this,{
+                        cls: "owfAlert"
+                    });
+                
+                callback({
+                    widgetId: widgetId,
+                    accessLevel: accessLevel,
+                    hasAccess: false
+                });
+            },
+            autoSendVersion : false,
+            content : {
+                widgetId: widgetId,
+                accessLevel: accessLevel ? accessLevel : null,
+                senderId: senderId ? senderId : null
+            }
+        });
+    }
+    
+    if (OWF.getOpenedWidgets && OWF.getOpenedWidgets instanceof Function) {
+        OWF.getOpenedWidgets(function(openedWidgets) {
+            for (var i = 0; i < openedWidgets.length; i++) {
+                var w = openedWidgets[i];
+                if (widgetId == w.id) widgetId = w.widgetGuid;
+                if (senderId == w.id) senderId = w.widgetGuid;
+            }
+            checkAccess(widgetId, accessLevel, channel, senderId, callback);
+        });
+    } else {
+        // Ensure widgetId and senderId point to widget guid, not instance id
+        var openedWidgets = OWF.Container.Eventing.getOpenedWidgets();
+        for (var i = 0; i < openedWidgets.length; i++) {
+            var w = openedWidgets[i];
+            if (widgetId == w.id) widgetId = w.widgetGuid;
+            if (senderId == w.id) senderId = w.widgetGuid;
+        }
+        checkAccess(widgetId, accessLevel, channel, senderId, callback);
+    }
 };
 
 Ozone.util.hasAccess.outcomeCategories = { noLevelGiven: "NOT_SPECIFIED", insufficient: "INSUFFICIENT_ACCESS" };
