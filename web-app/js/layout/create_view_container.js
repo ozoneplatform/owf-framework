@@ -22,6 +22,31 @@ Ext.define('Ozone.layout.CreateViewContainer', {
     createViewContainer_FormValid: true,
     hideViewSelectRadio: false,
 
+    /**
+    *
+    * Returns a dashboard store with non marketplace dashboards
+    *
+    **/
+    getDashboardStore: function () {
+        var dashboard,
+            dashboards = [],
+            dashboardStore = this.dashboardContainer.dashboardStore,
+            storeDashboards = dashboardStore.data.items;
+
+        for(var i = 0, len = storeDashboards.length; i < len; i++) {
+            dashboard = storeDashboards[i];
+            if(dashboard.get('type') !== 'marketplace') {
+                dashboards.push(dashboard.data);
+            }
+        }
+        
+        var store = Ext.create('Ozone.data.DashboardStore', {
+            data: dashboards
+        });
+
+        return store;
+    },
+
     initComponent: function() {
         this.config = this.dashboardContainer.activeDashboard.config;
         this.views = this.dashboardContainer.dashboards;
@@ -145,7 +170,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         this.existingView = {
             xtype: 'combo',
             itemId: 'existViewCb',
-            store: this.dashboardContainer.dashboardStore,
+            store: this.getDashboardStore(),
             valueField:'guid',
             displayField:'name',
             hideLabel: true,

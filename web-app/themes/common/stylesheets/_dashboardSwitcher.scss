@@ -206,6 +206,8 @@
 }
 
 .ozonequicktip {
+    max-width: 580px;
+
     .dashboard-tooltip-content {
         padding: 1.25em;
     }
@@ -227,5 +229,6 @@
 
     .tip-description {
         line-height: (14/12);
+        max-width: 580px;
     }
 }

@@ -16,6 +16,15 @@ class AccessService {
         def widgetId = params.widgetId
     	def receivingWidget = WidgetDefinition.findByWidgetGuid(widgetId)
 
+        //OP-1065 - When widgets on different dashboards use the same channel to publish the widgetId
+        //is the instance id, not the guid, so the above expression returns a null object. This happens
+        //because the pubsub_router checks access on all channel subscribers even if the subscriber
+        //is not on the current dashboard but hasAccess only checks widgets in getOpenedWidgets
+        if (!receivingWidget) {
+            log.info("Failed to find receiving widget, must be on another dashboard")
+            return [success:true, data: [hasAccess: false]]
+        }
+
     	def formalAccesses = []
     	
     	// Define formal access levels to check
