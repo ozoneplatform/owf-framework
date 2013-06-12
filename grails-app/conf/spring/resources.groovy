@@ -40,6 +40,7 @@ beans = {
                 }
                 break
             default :
+                println("You are not using the AutoLoginAccountService. If you want to, add -Duser=[testUser1|testAdmin1|testAdmin2] to your environment.")
                accountService(AccountService) {
                    serviceModelService = ref('serviceModelService')
                }
