@@ -245,6 +245,7 @@ class GroupService {
                     dashConfig.dashboardPosition = it.dashboardPosition
                     dashConfig.name = dash.name
                     dashConfig.description = dash.description
+                    dashConfig.type = dash.type
                     dashConfig.locked = dash.locked
 
                     dashConfig.layoutConfig = dash.layoutConfig

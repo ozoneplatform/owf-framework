@@ -580,6 +580,7 @@ class StackService {
                 dashboardData.put('name', dashboard.name)
                 dashboardData.put('guid', dashboard.guid)
                 dashboardData.put('description', dashboard.description)
+                dashboardData.put('type', dashboard.type)
                 dashboardData.put('isdefault', dashboard.isdefault)
                 dashboardData.put('locked', dashboard.locked)
                 dashboardData.put('dashboardPosition', dashboard.dashboardPosition)

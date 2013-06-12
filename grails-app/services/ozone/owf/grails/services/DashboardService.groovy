@@ -93,6 +93,7 @@ class DashboardService extends BaseService {
                         args.dashboardPosition = maxPosition + (groupDash.dashboardPosition ?: 0)
                         args.name = groupDash.name
                         args.description = groupDash.description
+                        args.type = groupDash.type
                         args.locked = groupDash.locked
                         args.layoutConfig = groupDash.layoutConfig
                         args.stack = groupDash.stack
@@ -449,6 +450,7 @@ class DashboardService extends BaseService {
                 isdefault: convertStringToBool(params.isdefault),
                 dashboardPosition: params.dashboardPosition != null ? params.dashboardPosition : maxPosition,
                 description: JSONObject.NULL.equals(params.description) ? null : params.description,
+                type: JSONObject.NULL.equals(params.type) ? null : params.type,
                 layoutConfig: params.layoutConfig.toString() ?: "",
                 stack: params.stack != null ? Stack.get(params.stack.id.toLong()) : null,
                 locked: params.locked != null ? params.locked : false)
@@ -670,6 +672,10 @@ class DashboardService extends BaseService {
             dashboard.description = JSONObject.NULL.equals(params.description) ? null : params.description
         }
 
+        if (params.type) {
+            dashboard.type = JSONObject.NULL.equals(params.type) ? null : params.type
+        }
+
         dashboard.layoutConfig = params.layoutConfig ?: dashboard.layoutConfig
         // If no stack is provided, set the stack to null.
         // dashboard.stack =  params.stack != null ? Stack.get(params.stack.id.toLong()) : null
@@ -746,6 +752,7 @@ class DashboardService extends BaseService {
                     args.isdefault = groupDash.isdefault
                     args.name = groupDash.name
                     args.description = groupDash.description
+                    args.type = groupDash.type
                     if (params.isdefault != null) {
                         args.isdefault = params.isdefault
                     }

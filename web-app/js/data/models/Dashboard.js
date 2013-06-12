@@ -14,6 +14,7 @@ Ext.define('Ozone.data.Dashboard', {
         'groups',
         'isGroupDashboard',
         'description',
+        'type',
         'createdDate',
         'prettyCreatedDate',
         'editedDate',
@@ -59,25 +60,6 @@ Ext.define('Ozone.data.Dashboard', {
     * @returns {Boolean} true if this is a marketplace dashboard. Otherwise, returns false.
     **/
     isMarketplaceDashboard: function () {
-        var widgets = this.get('layoutConfig').widgets,
-            widgetCount = widgets ? widgets.length: 0,
-            widgetStore = Ext.StoreManager.lookup('widgetStore');
-
-        // marketplace dashboard is a one pane dashboard with layout of either fit or tabbed
-        // multi pane dashboard or no widgets
-        if(!widgets || widgetCount === 0) {
-            return false;
-        }
-
-        // For a dasbhoard to be of type 'marketplace', it must have all widgets that are of type 'marketplace'
-        // Search widgetStore and check for widgetType
-        for(var i = 0, len = widgetCount; i < len; i++) {
-            var widgetDef = widgetStore.findRecord('widgetGuid', widgets[i].widgetGuid);
-            if((!widgetDef) || widgetDef.get('widgetTypes')[0].name !== 'marketplace') {
-                return false;
-            }
-        }
-        
-        return true;
+        return this.get('type') === 'marketplace';
     }
 });
