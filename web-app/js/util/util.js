@@ -501,7 +501,8 @@ Ozone.util.isReservedChannel = function(channel) {
 				channel == '_intents_receive' || 
 				channel == 'Ozone._WidgetChromeChannel' || 
 				channel == '_WIDGET_LAUNCHER_CHANNEL' || 
-				channel == '_widgetReady')
+				channel == '_widgetReady' ||
+                channel == 'Ozone.eventing.widget.public')
 			
 			return true;
 	}
