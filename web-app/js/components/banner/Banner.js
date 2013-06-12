@@ -148,12 +148,20 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         return this.mpLauncher;
     },
     clearMarketplaceToggle: function() {
-        this.marketplaceToggle = false;
-        this.getComponent('marketBtn').removeCls(this.buttonSelectedCls);
+        var btn = this.getComponent('marketBtn');
+
+        if(btn) {
+            this.marketplaceToggle = false;
+            btn.removeCls(this.buttonSelectedCls);
+        }
     },
     setMarketplaceToggle: function() {
-        this.marketplaceToggle = true;
-        this.getComponent('marketBtn').addCls(this.buttonSelectedCls);
+        var btn = this.getComponent('marketBtn');
+
+        if(btn) {
+            this.marketplaceToggle = true;
+            btn.addCls(this.buttonSelectedCls);
+        }
     },
     openMetricWindow: function() {
         if(this.hasMetricButton) {
