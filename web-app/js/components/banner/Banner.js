@@ -183,18 +183,19 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         }
     },
     openHelpWindow: function(){
-      if (!this.helpWindow || this.helpWindow.isDestroyed) {
-        this.helpWindow = Ext.widget('helpwindow', {
-          constrainHeader: true,
-          dashboardContainer: this.dashboardContainer
-        });
-      }
-      if (this.helpWindow.isVisible()) {
-          this.helpWindow.close();
-      }
-      else {
-          this.helpWindow.show();
-      }
+        if (!this.helpWindow || this.helpWindow.isDestroyed) {
+            this.helpWindow = Ext.widget('helpwindow', {
+                constrain: true,
+                renderTo: this.dashboardContainer.el,
+                dashboardContainer: this.dashboardContainer
+            });
+        }
+        if (this.helpWindow.isVisible()) {
+            this.helpWindow.close();
+        }
+        else {
+            this.helpWindow.show();
+        }
     },
     
     addKeyBindings: function() {

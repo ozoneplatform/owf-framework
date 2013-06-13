@@ -146,21 +146,6 @@ Ext.define('Ozone.components.button.UserMenuButton', {
             }, Ozone.components.keys.HotKeys.LOGOUT)
         ]);
 
-        // // Resolve WelcomeMessage, possibly using previous login date (OWFPATCHES-5)
-        // var welcomeMsg = Ozone.layout.DesktopWindowManagerString.welcomeMessage + ' ' + Ext.util.Format.htmlEncode(this.user.displayName);
-
-        // if (Ozone.config.showLastLogin == 'true') {
-        //    // First resolve the last login date
-        //    var prevDateStr = Ext.util.Format.date(prevDate.toLocaleString(), Ozone.config.lastLoginDateFormat);
-        //    // Now replace date into string format
-        //    var lastLoginStr = new String(Ozone.config.lastLoginText);
-        //    lastLoginStr = lastLoginStr.replace(/\[lastLoginDate\]/g, prevDateStr);
-        //    welcomeMsg = welcomeMsg + ' ' + lastLoginStr;
-        // }
-        // else {
-        //    welcomeMsg = Ozone.layout.DesktopWindowManagerString.welcomeMessage + ' ' + Ext.util.Format.htmlEncode(this.user.displayName) + ' ';
-        // }
-
         me.userMenu = new Ext.XTemplate(
             '<ul id="userMenu">',
                 '<tpl for=".">',
@@ -319,21 +304,6 @@ Ext.define('Ozone.components.button.UserMenuButton', {
         me.on('destroy', function() {
             this.destroy();
         }, nav);
-    },
-
-
-    formatLoginDate: function(unformattedDate) {
-        var prevDate = new Date();
- 
-        if(unformattedDate) {
-             prevDate.setUTCFullYear(unformattedDate.substring(0,4));
-             prevDate.setUTCMonth(unformattedDate.substring(5,7)-1);
-             prevDate.setUTCDate(unformattedDate.substring(8, 10));
-             prevDate.setUTCHours(unformattedDate.substring(11,13),unformattedDate.substring(14,16));
-        }
-
-        return Ext.util.Format.date(prevDate, Ozone.config.lastLoginDateFormat);
-
     },
 
     addMenuShowHideHandlers: function() {
