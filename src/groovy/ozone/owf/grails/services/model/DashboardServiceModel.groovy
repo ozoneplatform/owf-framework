@@ -13,6 +13,7 @@ class DashboardServiceModel extends AbstractServiceModel {
   Boolean isGroupDashboard
   List groups = []
   String description = ''
+  String type = ''
   String createdDate 
   String prettyCreatedDate
   String editedDate

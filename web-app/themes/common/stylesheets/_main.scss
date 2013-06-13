@@ -589,3 +589,10 @@ img.widget-drag-proxy {
     background-repeat: no-repeat;
     background-position: right center;
 }
+
+.aboutImage {
+    background-image: theme-image($theme-name, 'brand-logo.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 31px;
+}
