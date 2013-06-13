@@ -114,8 +114,7 @@ ruleset {
     
     // rulesets/dry.xml
     DuplicateNumberLiteral
-    DuplicateStringLiteral 
-    
+
     // rulesets/exceptions.xml
     CatchArrayIndexOutOfBoundsException 
     CatchError 
@@ -215,8 +214,7 @@ ruleset {
     UnnecessaryCatchBlock 
     UnnecessaryConstructor
     UnnecessaryDoubleInstantiation
-    UnnecessaryElseStatement 
-    UnnecessaryFinalOnPrivateMethod 
+    UnnecessaryFinalOnPrivateMethod
     UnnecessaryFloatInstantiation 
     UnnecessaryIfStatement
     UnnecessaryInstanceOfCheck 
