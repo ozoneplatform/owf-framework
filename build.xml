@@ -287,9 +287,9 @@
 
         <mkdir dir="${staging.dir}/etc/docs" />
             <copy todir="${staging.dir}/etc/docs">
-                <fileset dir="test/jmeter/performance">
+                <!-- <fileset dir="test/jmeter/performance">
                     <include name="OWF Performance Metrics.${owf.doc.extension}" />
-                </fileset>
+                </fileset> -->
                 <fileset dir="${basedir}/docs-internal">
                     <include name="OWF Release Notes.${owf.doc.extension}" />
                 </fileset>
