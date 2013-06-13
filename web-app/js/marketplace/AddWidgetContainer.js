@@ -438,6 +438,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                         self.dashboardContainer.launchWidgets(widgetDef, true);
                         self.dashboardContainer.activeDashboard.config.locked = true;
                         self.dashboardContainer.saveDashboard(self.dashboardContainer.activeDashboard, 'update', function() {});
+                        self.dashboardContainer.getBanner().disableLaunchMenu();
                     }, self.dashboardContainer, {/*delay:2000,*/ single:true});
                     self.dashboardContainer.activateDashboard(dashboard.data.guid);
                 });
