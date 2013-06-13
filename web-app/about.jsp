@@ -13,7 +13,6 @@ if (in != null)
 
 String description  = "";
 String notice       = "";
-String image        = "./images/brand-logo.png";
 String version      = "${project.version}";
 String buildNumber  = "${buildNumber}";
 String buildDate    = "${buildDate}";
@@ -35,7 +34,7 @@ if (p != null)
 
 //-------------------------------------------------------------------------
 %>
-<img src="<%= image %>" class="aboutImage"/>
+<div class="aboutImage"></div>
 <p><%= description %></p>
 <p><%= notice %></p>
 <p id="aboutInfo">Version: <%= version %> Build Date: <%= buildDate %> Build Number: <%= buildNumber %></p>

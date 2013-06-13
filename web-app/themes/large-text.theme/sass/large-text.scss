@@ -377,3 +377,9 @@ $customize-dashboard-left-width: 150px;
 		background-image: url('../images/icons/arrow_down.png');
 	}
 }
+
+#about-window {
+  #about-window-body {
+    top: 15px !important;
+  }
+}
