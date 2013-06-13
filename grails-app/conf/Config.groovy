@@ -920,9 +920,6 @@ owf {
       sendWidgetLoadTimesToServer = true
       publishWidgetLoadTimes = true
 
-      showLastLogin = false
-      lastLoginDateFormat = 'n/j/Y G:i'
-
       defaultTheme = "a_default"
 
       // showAccessAlert = "true"
