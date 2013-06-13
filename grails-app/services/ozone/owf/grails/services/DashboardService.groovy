@@ -86,17 +86,19 @@ class DashboardService extends BaseService {
                     def args = [:]
                     def groupDash = Dashboard.get(dm.destId)
                     if (groupDash != null) {
-                        //use a new guid
-                        args.guid = java.util.UUID.randomUUID().toString()
-
-                        args.isdefault = groupDash.isdefault
-                        args.dashboardPosition = maxPosition + (groupDash.dashboardPosition ?: 0)
-                        args.name = groupDash.name
-                        args.description = groupDash.description
-                        args.type = groupDash.type
-                        args.locked = groupDash.locked
-                        args.layoutConfig = groupDash.layoutConfig
-                        args.stack = groupDash.stack
+                        
+                        args.with {
+                            //use a new guid
+                            guid = java.util.UUID.randomUUID().toString()
+                            isdefault = groupDash.isdefault
+                            dashboardPosition = maxPosition + (groupDash.dashboardPosition ?: 0)
+                            name = groupDash.name
+                            description = groupDash.description
+                            type = groupDash.type
+                            locked = groupDash.locked
+                            layoutConfig = groupDash.layoutConfig
+                            stack = groupDash.stack
+                        }
                         
                         def privateDash = deepClone(args,user.id)
 

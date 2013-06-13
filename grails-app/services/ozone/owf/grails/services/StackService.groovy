@@ -575,16 +575,17 @@ class StackService {
 
                 def dashboard = Dashboard.findById(it.destId)
 
-                def dashboardData = [:]
                 //Get only the parameters required for a dashboard definition
-                dashboardData.put('name', dashboard.name)
-                dashboardData.put('guid', dashboard.guid)
-                dashboardData.put('description', dashboard.description)
-                dashboardData.put('type', dashboard.type)
-                dashboardData.put('isdefault', dashboard.isdefault)
-                dashboardData.put('locked', dashboard.locked)
-                dashboardData.put('dashboardPosition', dashboard.dashboardPosition)
-                dashboardData.put('layoutConfig', JSON.parse(dashboard.layoutConfig))
+                def dashboardData = [
+                    'name': dashboard.name,
+                    'guid': dashboard.guid,
+                    'description': dashboard.description,
+                    'type': dashboard.type,
+                    'isdefault': dashboard.isdefault,
+                    'locked': dashboard.locked,
+                    'dashboardPosition': dashboard.dashboardPosition,
+                    'layoutConfig': JSON.parse(dashboard.layoutConfig)
+                ]
 
                 dashboards.push(dashboardData)
             }
@@ -595,39 +596,40 @@ class StackService {
 
             def widgetDefinition = widget.toDataMap().value
 
-                def widgetData = [:]
-                //Get only the values required for a widget definition
-                widgetData.put("widgetGuid", widget.id)
-                widgetData.put("descriptorUrl", widgetDefinition.descriptorUrl)
-                widgetData.put("universalName", widgetDefinition.universalName)
-                widgetData.put("displayName", widgetDefinition.namespace)
-                widgetData.put("description", widgetDefinition.description)
-                widgetData.put("widgetVersion", widgetDefinition.widgetVersion)
-                widgetData.put("widgetUrl", widgetDefinition.url)
-                widgetData.put("imageUrlSmall", widgetDefinition.smallIconUrl)
-                widgetData.put("imageUrlLarge", widgetDefinition.largeIconUrl)
-                widgetData.put("width", widgetDefinition.width)
-                widgetData.put("height", widgetDefinition.height)
-                widgetData.put("visible", widgetDefinition.visible)
-                widgetData.put("singleton", widgetDefinition.singleton)
-                widgetData.put("background", widgetDefinition.background)
-                widgetData.put("widgetTypes", [widgetDefinition.widgetTypes[0].name])
-                widgetData.put("intents", widgetDefinition.intents)
-                def tags = []
-                widgetDefinition.tags.each { tags.push(it.name) }
-                widgetData.put("defaultTags", tags)
+            //Get only the values required for a widget definition
+            def widgetData = [
+                "widgetGuid": widget.id,
+                "descriptorUrl": widgetDefinition.descriptorUrl,
+                "universalName": widgetDefinition.universalName,
+                "displayName": widgetDefinition.namespace,
+                "description": widgetDefinition.description,
+                "widgetVersion": widgetDefinition.widgetVersion,
+                "widgetUrl": widgetDefinition.url,
+                "imageUrlSmall": widgetDefinition.smallIconUrl,
+                "imageUrlLarge": widgetDefinition.largeIconUrl,
+                "width": widgetDefinition.width,
+                "height": widgetDefinition.height,
+                "visible": widgetDefinition.visible,
+                "singleton": widgetDefinition.singleton,
+                "background": widgetDefinition.background,
+                "widgetTypes": [widgetDefinition.widgetTypes[0].name],
+                "intents": widgetDefinition.intents
+            ]
+            def tags = []
+            widgetDefinition.tags.each { tags.push(it.name) }
+            widgetData.put("defaultTags", tags)
 
             widgets.push(widgetData)
         }
 
-        def stackData = [:]
         //Get only the parameters required for a stack descriptor
-        stackData.put('name', stack.name)
-        stackData.put('stackContext', stack.stackContext)
-        stackData.put('description', stack.description)
-        stackData.put('dashboards', dashboards)
-        stackData.put('widgets', widgets)
-
+        def stackData = [
+            'name': stack.name,
+            'stackContext': stack.stackContext,
+            'description': stack.description,
+            'dashboards': dashboards,
+            'widgets': widgets
+        ]
         //Pretty print the JSON
         stackData = (stackData as JSON).toString(true)
 

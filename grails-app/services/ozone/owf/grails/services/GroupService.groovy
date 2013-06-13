@@ -237,24 +237,24 @@ class GroupService {
             JSON.parse(params.dashboards).each {
                 def dash = Dashboard.findByGuid(it.guid)
                 if (dash != null) {
-                    def dashConfig = [:]
-                    //use a new guid
-                    dashConfig.guid = java.util.UUID.randomUUID().toString()
+                    def dashConfig = [
+                        //use a new guid
+                        'guid': java.util.UUID.randomUUID().toString(),
+                        'isdefault': dash.isdefault,
+                        'dashboardPosition': it.dashboardPosition,
+                        'name': dash.name,
+                        'description': dash.description,
+                        'type': dash.type,
+                        'locked': dash.locked,
 
-                    dashConfig.isdefault = dash.isdefault
-                    dashConfig.dashboardPosition = it.dashboardPosition
-                    dashConfig.name = dash.name
-                    dashConfig.description = dash.description
-                    dashConfig.type = dash.type
-                    dashConfig.locked = dash.locked
-
-                    dashConfig.layoutConfig = dash.layoutConfig
-                    // If given a stack override, use that.  Otherwise, use the stack already associated
-                    // with the dashboard to copy.
-                    dashConfig.stack = (params.stack != null) ? params.stack : dash.stack
-                    dashConfig.cloned = true
-                    dashConfig.isGroupDashboard = params.isGroupDashboard  ?: false
-
+                        'layoutConfig': dash.layoutConfig,
+                        // If given a stack override, use that.  Otherwise, use the stack already associated
+                        // with the dashboard to copy.
+                        'stack': (params.stack != null) ? params.stack : dash.stack,
+                        'cloned': true,
+                        'isGroupDashboard': params.isGroupDashboard  ?: false
+                    ]
+                    
                     newGroupDashboards << dashboardService.create(dashConfig).dashboard
                 }
             }
