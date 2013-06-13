@@ -422,7 +422,6 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             } else {
                 dashboard = Ext.create('Ozone.data.Dashboard', {
                     name: widgetDef.data.title,
-                    locked: true,
                     layoutConfig : {
                         xtype: 'container',
                         flex: 1,
