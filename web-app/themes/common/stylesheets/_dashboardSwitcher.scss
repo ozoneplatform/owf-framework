@@ -7,16 +7,28 @@
 
     width: auto !important;
     height: auto !important;
+    
     padding: 0px;
 
+    border: 0px none black;
+
     &-body {
-        overflow: auto;
-        top: 0 !important;
+        /*top: 0 !important;*/
         @include border-radius($dashboard-switcher-body-radius);
     }
 
+    > .x-window-header {
+        /*width: 100% !important;*/
+
+        .dashboard-switcher-header-icon {
+            background-image: theme-image($theme-name, 'dashboardswitcher/switcher_icon.png');
+            width: 26px;
+            height: 26px;
+        }
+    }
+
     ul.actions {
-        // clear: both;
+        clear: both;
         // float: right;
         text-align: right;
         color: $dashboard-switcher-dashboard-text-color;
@@ -32,17 +44,15 @@
             }
         }
     }
-    
-    .x-window-header {
-    	left: 93% !important;
-	    width: 45px !important;
-	    background: none;
-	    border: none;
-	    
-    }
-    
-    .x-tool {
-			left: 0 !important;    
+
+    .all-dashboards {
+        width: 100%;
+        overflow: auto;
+
+        //necessary for scrolling to work properly in IE7 for some reason
+        position: relative;
+
+        zoom: normal;
     }
 }
 
