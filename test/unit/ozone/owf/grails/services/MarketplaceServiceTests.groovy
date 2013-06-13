@@ -324,10 +324,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         stackServiceMockClass = mockFor(StackService)
         marketplaceService.stackService = stackServiceMockClass.createMock()
 
-        Stack.metaClass.'static'.findByStackContext = { stackContext ->
-            assertEquals(singleSimpleStack[0].stackContext, stackContext)
-            return null
-        }
+        mockDomain(Stack)
 
         stackServiceMockClass.demand.importStack { params ->
             assertTrue(asAdmin)
