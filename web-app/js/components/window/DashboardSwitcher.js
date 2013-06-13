@@ -11,7 +11,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     ui: 'system-window',
     store: null,
     closable: true,
-    title: '',
+    title: 'Dashboards',
     iconCls: 'dashboard-switcher-header-icon',
     cls: 'system-window',
     resizable: false,
@@ -92,19 +92,21 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         me._deletedStackOrDashboards = [];
 
         me.tpl = new Ext.XTemplate(
-            '<tpl for=".">',
-                '<div id="{[this.getName(values)+this.getId(values)]}" class="{[this.getClass(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}" {[this.getToolTip(values)]}>',
-                    '<div class="thumb-wrap">',
-                        '<div class="thumb {layout}">',
+            '<div class="all-dashboards">',
+                '<tpl for=".">',
+                    '<div id="{[this.getName(values)+this.getId(values)]}" class="{[this.getClass(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}" {[this.getToolTip(values)]}>',
+                        '<div class="thumb-wrap">',
+                            '<div class="thumb {layout}">',
+                            '</div>',
+                        '</div>',
+                        '{[this.getActions(values)]}',
+                        '<div class="{[this.getName(values)]}-name">',
+                            '{[this.encodeAndEllipsize(values.name)]}',
                         '</div>',
                     '</div>',
-                    '{[this.getActions(values)]}',
-                    '<div class="{[this.getName(values)]}-name">',
-                        '{[this.encodeAndEllipsize(values.name)]}',
-                    '</div>',
-                '</div>',
-            '</tpl>'
-        ,{
+                '</tpl>',
+            '</div>',
+        {
             compiled: true,
             getId: function (values) {
                 return values.isStack ? values.id : values.guid;
@@ -160,7 +162,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                             '<li class="restore icon-refresh" tabindex="0" data-qtip="Restore"></li>'+
                             '<li class="edit icon-edit" tabindex="0" data-qtip="Edit"></li>'+
                             '<li class="delete icon-remove" tabindex="0" data-qtip="Delete"></li>'+
-                        '</ul>'
+                        '</ul>';
             },
             encodeAndEllipsize: function(str) {
                 //html encode the result since ellipses are special characters
@@ -182,11 +184,13 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         
         me.on('afterrender', function (cmp) {
             me.tpl.overwrite( cmp.body, stackOrDashboards );
-            Ext.DomHelper.append( cmp.el, 
+            Ext.DomHelper.append( cmp.body,
             '<ul class="actions">'+
                 '<li class="manage" tabindex="0" data-qtitle="Manage" data-qtip="Activates the Share, Restore, Edit and Delete manager buttons.">Manage</li>'+
                 '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-qtip="Name, describe and design a new dashboard.">+</li>'+
             '</ul>');
+
+            cmp.actionsEl = cmp.body.select('> .actions').first();
 
             me.bindEvents(cmp);
         });
@@ -789,7 +793,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
         // get last element in the clikced stack's row
         var numItemsInRow = Math.round( parentWidth / clickedStackElWidth ),
-            totalItems = $(me.body.dom).children('.dashboard, .stack').length,
+            totalItems = $(me.body.dom).children('.all-dashboards').children('.dashboard, .stack').length,
             clickedStackIndex = $clickedStack.index() + 1;
 
         if( clickedStackIndex === totalItems || (clickedStackIndex % numItemsInRow) === 0 ) {
@@ -1265,7 +1269,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     updateWindowSize: function() {
         var newWidth,
             newHeight,
-            item = this.body.first().dom;
+            dashboards = this.body.select('> .all-dashboards').first(),
+            item = dashboards.first().dom, //first dashboard/stack
+            header = this.header;
         
         if(!item)
             return;
@@ -1274,7 +1280,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             windowEl = this.getEl(),
             widthMargin = itemEl.getMargin('lr'),
             heightMargin = itemEl.getMargin('tb'),
-            totalDashboards = this.body.query('> .dashboard, > .stack').length,
+            totalDashboards = dashboards.query('> .dashboard, > .stack').length,
             dashboardInRow = 0;
 
         this.dashboardItemWidth = itemEl.getWidth();
@@ -1296,15 +1302,20 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             // add 30 to accomodate for scrollbar
             newWidth += 30;
         }
-        if(totalDashboards > this.maxDashboardsWidth * this.maxDashboardsHeight) {
-            newHeight = (this.dashboardItemHeight + heightMargin) * this.maxDashboardsHeight;
-        }
 
-        this.body.setSize(newWidth + 30, newHeight);
+        newHeight = (this.dashboardItemHeight + heightMargin) * this.maxDashboardsHeight;
+
+        this.body.setSize(newWidth + 30);
         
-        this.body.setStyle({
-            'max-height': ((this.dashboardItemHeight + heightMargin + 1) * this.maxDashboardsHeight) + 40 + 'px'
-        });
+        //the extra 70 is for the stack row's triangle thing
+        dashboards.setStyle('max-height', newHeight - this.actionsEl.getHeight() + 70 + 'px');
+
+        //relayout header to account for new size.
+        //suspend layout of this component so header layout doesn't resize the
+        //whole window
+        this.suspendLayout = true;
+        header.doComponentLayout(this.getWidth());
+        this.suspendLayout = false;
     },
 
     saveDashboardOrder: function () {
