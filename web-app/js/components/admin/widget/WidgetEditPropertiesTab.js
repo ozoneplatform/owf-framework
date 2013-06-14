@@ -284,7 +284,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     maxLength: 2083,
                     emptyText: 'https://mycompany.com/widget/images/launchMenuIcon.png',
                     usePlaceholderIfAvailable: false,
-                    fieldLabel: Ozone.util.createRequiredLabel('Launch Menu Icon URL')
+                    fieldLabel: Ozone.util.createRequiredLabel('Large Icon URL')
                 },
                 {
                     xtype: 'numberfield',
