@@ -810,7 +810,15 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         widgetSwitcher.center();
     },
 
-    showDashboardSwitcher: function() {
+    showDashboardSwitcherButtonHandler: function() {
+        return this.showDashboardSwitcher(false);
+    },
+
+    showDashboardSwitcherToSelectForWidgetLaunch: function() {
+        return this.showDashboardSwitcher(true);
+    },
+
+    showDashboardSwitcher: function(hideLockedDashboards) {
         var me = this,
             dashboardSwitcherId = 'dashboard-switcher',
             dashboardSwitcher = Ext.getCmp(dashboardSwitcherId),
@@ -818,15 +826,22 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
             //perform the logic of actually creating and displaying the window
             show = function() {
-                if (!dashboardSwitcher) {
-                    dashboardSwitcher = Ext.widget('dashboardswitcher', {
-                        id: dashboardSwitcherId,
-                        dashboardContainer: me,
-                        activeDashboard: me.activeDashboard,
-                        dashboardStore: me.dashboardStore,
-                        plugins: new Ozone.components.keys.HotKeyComponent(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER)
-                    });
+
+                // OP-1355
+                // Re-render dashboard switcher and its elements
+                // in case locked dashboards have to be hidden
+                if (dashboardSwitcher) {
+                    dashboardSwitcher.destroy();
                 }
+
+                dashboardSwitcher = Ext.widget('dashboardswitcher', {
+                    id: dashboardSwitcherId,
+                    dashboardContainer: me,
+                    activeDashboard: me.activeDashboard,
+                    dashboardStore: me.dashboardStore,
+                    hideLockedDashboards: hideLockedDashboards,
+                    plugins: new Ozone.components.keys.HotKeyComponent(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER)
+                });
 
                 dashboardSwitcher.activeDashboard = me.activeDashboard;
                 dashboardSwitcher.show().center();
@@ -881,7 +896,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             dashboardActivatedDeferred = $.Deferred();
 
         // Show the switcher
-        var dashboardSwitcherPromise = this.showDashboardSwitcher();
+        var dashboardSwitcherPromise = this.showDashboardSwitcherToSelectForWidgetLaunch();
 
         dashboardSwitcherPromise.done(function(dashboardSwitcher) {
             // Dashboard selection promise will resolve if a dashboard is selected in a switcher

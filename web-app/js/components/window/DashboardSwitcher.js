@@ -55,7 +55,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
 
             model = me.dashboardStore.getAt(i);
 
-            if(!model.isModifiable()) {
+            if(!model.isModifiable() || (me.hideLockedDashboards && model.data.locked)) {
                 continue;
             }
 

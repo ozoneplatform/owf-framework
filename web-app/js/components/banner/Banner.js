@@ -210,7 +210,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             }),
             Ext.apply(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER, {
                 scope: this.dashboardContainer,
-                fn: this.dashboardContainer.showDashboardSwitcher
+                fn: this.dashboardContainer.showDashboardSwitcherButtonHandler
             }),
             Ext.apply(Ozone.components.keys.HotKeys.MARKETPLACE, {
                 scope: this,
@@ -312,7 +312,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 	        scale: 'banner-large',
 	        enableToggle: true,
 	        scope: this.dashboardContainer,
-	        handler: this.dashboardContainer.showDashboardSwitcher,
+	        handler: this.dashboardContainer.showDashboardSwitcherButtonHandler,
 	        listeners: {
 	        	afterrender: {
 	        		fn: me.dashMenuAfterRender,
