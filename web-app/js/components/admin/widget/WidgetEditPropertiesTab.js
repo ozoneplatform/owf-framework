@@ -272,7 +272,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     maxLength: 2083,
                     emptyText: 'https://mycompany.com/widget/images/containerIcon.png',
                     usePlaceholderIfAvailable: false,
-                    fieldLabel: Ozone.util.createRequiredLabel('Container Icon URL')
+                    fieldLabel: Ozone.util.createRequiredLabel('Small Icon URL')
                 },
                 {
                     xtype: 'urlfield',
