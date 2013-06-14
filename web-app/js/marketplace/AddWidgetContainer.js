@@ -48,6 +48,7 @@ Ozone.marketplace.AddWidgetContainer = function (eventingContainer, dashboardCon
 
 Ozone.marketplace.AddWidgetContainer.prototype = {
     getlistingVisualizer: function(sender, config, marketplaceCallback, listingType) {
+        var self = this;
         var animTargetX,
             animTargetBtn,
             id = config.data.id,
@@ -112,20 +113,10 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
     },
 
     addStack: function (sender, config, marketplaceCallback) {
-        //the function to execute when the animation completes
-        function animCallback() {
-            marketplaceCallback();
-
-            //TODO Temporary hack to fix release-day bug OP-1218 - remove once fixed correctly
-            setTimeout(function() {
-                window.location.reload();
-            }, 0);
-        }
-
-        var stackJSON = config.widgetsJSON;
         this.dashboardContainer.loadMask.show();
+        var stackJSON = config.widgetsJSON;
         this.dashboardContainer.dashboardsNeedRefresh = true;
-        var visualizeAddition = this.getlistingVisualizer(sender, config, animCallback, "stack");
+        var visualizeAddition = this.getlistingVisualizer(sender, config, marketplaceCallback, "stack");
         this.processMarketplaceStackData(stackJSON.itemUuid, visualizeAddition);
         return stackJSON.itemId;
     },
@@ -139,8 +130,9 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 addExternalStackToUser:true,
                 guid:stackUuid
             },
-            load:function (response, ioArgs) {
+            load: function (response, ioArgs) {
                 var stack_bottomright = {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25};
+
                 $.pnotify({
                     title: Ozone.layout.DialogMessages.added,
                     text: "The stack was successfully added.",
@@ -152,8 +144,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     icon: false
                 });
 
-
                 addStackCallback && addStackCallback("The stack");
+                self.dashboardContainer.widgetStore.load();
                 self.dashboardContainer.loadMask.hide();
             },
             error: function(jsonData) {
@@ -332,7 +324,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                                         notifyText = self.launchWidget(widgetDef, doLaunchCallback);
 
                                     } else {
-                                        notifyText = null;
+                                        notifyText = "The widget was successfully added.";
                                         addWidgetCallback && addWidgetCallback(widgetDefs.get(0).get('name'));
                                     }
                                 } else {
@@ -340,7 +332,6 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                                     notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddWidget;
                                 }
                                 //Display the message
-
                                 notifyText && $.pnotify({
                                     title: Ozone.layout.DialogMessages.added,
                                     text: notifyText,
