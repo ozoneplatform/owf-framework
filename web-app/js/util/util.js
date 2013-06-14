@@ -140,8 +140,11 @@ Ozone.util.contextPath = (function() {
     var configParams = Ozone.util.parseWindowNameData(),
         contextPath = Ozone.config.webContextPath;
 
-    if (configParams && configParams.webContextPath) {
-        contextPath = Ozone.config.webContextPath = configParams.webContextPath;
+    if (configParams) {
+        if(configParams.webContextPath) {
+            Ozone.config.webContextPath = configParams.webContextPath;
+        }
+        contextPath = configParams.webContextPath;
     }
 
     return function () {
