@@ -39,6 +39,11 @@ Ext.define('Ozone.components.form.field.SearchBox', {
         this.callParent(arguments);
 
         function initClearEl(cmp) {
+            Ext.onReady( function(){
+                if ( Ext.isWebKit || Ext.isGecko )
+                    Ext.supports.Placeholder = false;
+            });
+
             cmp.mon(cmp.clearEl, 'click', function() {
                 this.onClear();
             }, cmp);
