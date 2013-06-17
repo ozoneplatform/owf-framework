@@ -7,6 +7,9 @@ import ozone.owf.nineci.hibernate.AuditTrailInterceptor
 
 beans = {
 
+	xmlns context: 'http://www.springframework.org/schema/context'
+	context.'component-scan'('base-package': 'org.ozoneplatform.appconfig.server')
+	
 	entityInterceptor(AuditTrailInterceptor)
 	
     // wire up a different account service if -Duser=something and environment is development

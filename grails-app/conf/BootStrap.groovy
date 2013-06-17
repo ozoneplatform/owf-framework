@@ -25,6 +25,8 @@ import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.RelationshipType
 import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.domain.WidgetType
+import ozone.owf.grails.services.OwfApplicationConfigurationService
+import org.springframework.beans.factory.annotation.Autowired
 
 class BootStrap {
     
@@ -32,7 +34,9 @@ class BootStrap {
     def sessionFactory
     def domainMappingService
     def dashboardService
-    
+	
+    OwfApplicationConfigurationService owfApplicationConfigurationService
+	
     def init = {servletContext ->
 
         println 'BootStrap running!'
@@ -116,7 +120,9 @@ class BootStrap {
             //do nothing
             break
         }
-
+		println 'Creating or updating required database configurations'
+		owfApplicationConfigurationService.createRequired()
+		
         println 'BootStrap finished!'
     }
     def destroy = {
