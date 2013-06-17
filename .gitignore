@@ -18,7 +18,6 @@
 target
 /build.number
 /cobertura.ser
-/lib
 /work
 js-min
 /js-plugins/*.gz.js
