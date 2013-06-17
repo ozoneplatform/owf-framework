@@ -385,12 +385,15 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                 //tabIndex: 4,
                 handler: function (button, event) {
                     if (this.getForm().isValid() && this.createViewContainer_FormValid) {
-                        Ozone.util.formField.removeLeadingTrailingSpaces(this.getComponent('titleBox'));
+                        var titleBox = this.down('#titleBox'),
+                            descriptionBox = this.down('#description');
+
+                        Ozone.util.formField.removeLeadingTrailingSpaces(titleBox);
                         //make sure name is unique
                         Ext.getCmp('mainPanel').saveActiveDashboardToServer();
 
-                        var title = this.getComponent('titleBox').getValue();
-                        var desc = this.getComponent('description').getValue();
+                        var title = titleBox.getValue();
+                        var desc = descriptionBox.getValue();
                         
                         // add a space to the field if it is empty or null so that it will
                         // store an empty string to the db instead of it thinking its a null value
@@ -520,12 +523,12 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         this.views = this.dashboardContainer.dashboards;
 
         // Reset fields
-        var txtTitle = this.getComponent('titleBox');
+        var txtTitle = this.down('#titleBox');
         if (txtTitle) {
             txtTitle.setRawValue('');
         }
 
-        var txtDescription = this.getComponent('description');
+        var txtDescription = this.down('#description');
         if (txtDescription) {
             txtDescription.setRawValue('');
         }
@@ -535,7 +538,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             txtImportFile.setRawValue('');
         }
 
-        var cboViewSelect = this.getComponent('viewSelect');
+        var cboViewSelect = this.down('#viewSelect');
         if (cboViewSelect) {
             cboViewSelect.reset();
         }
@@ -550,7 +553,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
          * internally that is also deffered
          */
         Ext.defer(function() {
-            this.getComponent('titleBox').focus();
+            this.down('#titleBox').focus();
         }, 500, this);
     },
 
