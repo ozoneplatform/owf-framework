@@ -93,8 +93,7 @@ Ext.define('Ozone.components.SettingsWindow', {
             width : 810,
             title : Ozone.layout.ThemeSwitcherWindowConstants.title,
             constrain: true,
-            renderTo: this.dashboardContainer.el,
-            
+            renderTo: !Ext.isIE ? this.dashboardContainer.el : null,
             layout: 'border',
             border: false,
             bodyBorder: false
@@ -112,7 +111,7 @@ Ext.define('Ozone.components.SettingsWindow', {
                 ownerCt: this.dashboardContainer,
                 dashboardContainer: this.dashboardContainer,
                 constrain: true,
-                renderTo: this.dashboardContainer.el,
+                renderTo: !Ext.isIE ? this.dashboardContainer.el : null,
                 cls: "manageContainer",
                 iconCls: 'manageWidgetsContainer-header-icon',
                 draggable: true,
