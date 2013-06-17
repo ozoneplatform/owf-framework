@@ -144,8 +144,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                             str = str + groupStr + '</p>';
                         }
                     } 
-                    return str + '<p class=\'created-by\'><label>Created by: </label>' + (Ext.htmlEncode(Ext.htmlEncode(values.createdBy.userRealName)) || '') + '</p>' +
-                           '<p class=\'last-updated\'><label>Last Modified: </label>' + (values.prettyEditedDate || '') + '</p></div>"';
+                    return str + '<div class=\'dashboard-metadata\'><p class=\'created-by\'><label>Created by: </label>' + (Ext.htmlEncode(Ext.htmlEncode(values.createdBy.userRealName)) || '') + '</p>' +
+                           '<p class=\'last-updated\'><label>Last Modified: </label>' + (values.prettyEditedDate || '') + '</p></div></div>"';
                 }
             },
             
