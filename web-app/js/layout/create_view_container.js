@@ -331,7 +331,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                     layout: 'anchor',
                     defaults: {
                         anchor: '100%',
-                        padding: '0, 0, 5, 0'
+                        padding: '0, 0, 0, 0'
                     },
                     items: [
                         this.newViewRadio,
@@ -345,8 +345,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         };
 
         this.layout = {
-            type: 'vbox',
-            align: 'stretch'
+        	type: 'fit'
         };
 
         this.defaults = {
@@ -354,12 +353,20 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             labelSeparator: ''
         };
 
-        this.margin = '0 5 0 0';
-        this.items = [
-            this.titleBox,
-            this.description,
-            this.viewSelectRadio
-        ];
+        this.margin = '0 0 0 0';
+        this.items = [{
+        	xtype: 'container',
+        	layout: {
+        		type: 'vbox',
+        		align: 'stretch'
+        	},
+        	padding: '0, 5, 0, 0',
+        	items: [
+        	        this.titleBox,
+        	        this.description,
+        	        this.viewSelectRadio
+        	]
+    	}];
 
         this.dockedItems = [{
             xtype: 'toolbar',
