@@ -1822,7 +1822,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         me.dashboardStore.load({
             callback: function(records, options, success) {
                 if (success == true) {
-                    me.updateDashboardsFromStore(records, options, success);
+                    me.updateDashboardsFromStore(records, options, success, me.activedashboard.getGuid());
                 }
                 callback(success);
             }
