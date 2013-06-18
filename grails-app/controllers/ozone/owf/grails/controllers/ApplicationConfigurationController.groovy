@@ -11,4 +11,5 @@ class ApplicationConfigurationController extends AbstractApplicationConfiguratio
 	void doRender(def model){
 		render model as JSON
 	}
+	
 }
