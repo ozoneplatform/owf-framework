@@ -139,7 +139,7 @@ ruleset {
     GrailsDomainHasToString 
 //    GrailsDuplicateConstraint
 //    GrailsDuplicateMapping
-    GrailsPublicControllerMethod 
+   // GrailsPublicControllerMethod 
     GrailsServletContextReference 
     GrailsStatelessService
     
