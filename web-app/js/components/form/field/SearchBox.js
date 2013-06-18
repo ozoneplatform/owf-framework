@@ -52,6 +52,9 @@ Ext.define('Ozone.components.form.field.SearchBox', {
                 key: [Ext.EventObject.ENTER, Ext.EventObject.SPACE],
                 handler: function (key, evt) {
                     evt.stopPropagation();
+                    // OP-1457
+                    evt.preventDefault ? evt.preventDefault() : event.returnValue = false;
+
                     this.onClear();
                 },
                 scope: cmp
