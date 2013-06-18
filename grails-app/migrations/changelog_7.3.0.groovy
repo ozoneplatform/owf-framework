@@ -15,7 +15,7 @@ databaseChangeLog = {
     }
 	
 		
-	changeSet(author: "owf", dbms: "mysql, oracle, postgresql", id: "7.3.0-2", context: "create, upgrade, 7.3.0") {
+	changeSet(author: "owf", dbms: "mysql, oracle, postgresql", id: "7.3.0-3", context: "create, upgrade, 7.3.0") {
 		createTable(tableName: "application_configuration") {
 
 			column(autoIncrement: "true", name: "id", type: "java.sql.Types.BIGINT") {
@@ -72,7 +72,7 @@ databaseChangeLog = {
 
 	}
 
-	changeSet(author: "owf", dbms: "mssql", id: "7.3.0-2", context: "create, upgrade, 7.3.0") {
+	changeSet(author: "owf", dbms: "mssql", id: "7.3.0-3", context: "create, upgrade, 7.3.0") {
 		createTable(tableName: "application_configuration") {
 
 			column(autoIncrement: "true", name: "id", type: "java.sql.Types.BIGINT") {
@@ -127,7 +127,7 @@ databaseChangeLog = {
 		}
 	}
 
-	changeSet(author: "owf", id: "7.3.0-2", context: "create, upgrade, 7.3.0") {
+	changeSet(author: "owf", id: "7.3.0-4", context: "create, upgrade, 7.3.0") {
 		createIndex(indexName: "FKFC9C0477666C6D2", tableName: "application_configuration") {
 			column(name: "created_by_id")
 		}
