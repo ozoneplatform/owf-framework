@@ -466,5 +466,10 @@ class UrlMappings {
             action='checkAccess'
         }
         "500"(controller: 'error')
+		
+		"/applicationConfiguration/configs/$id?" {
+			controller = "applicationConfiguration"
+			action=[GET:"list", PUT:"update"]
+		}
     }
 }
