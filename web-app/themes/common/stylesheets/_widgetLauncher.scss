@@ -317,6 +317,7 @@
             height: 30px;
             margin-left: 5px;
             margin-right: 5px;
+            *margin-bottom: 1px; // OP-1462
             text-align: center;
             background-image: none;
             @include border-radius(5px);
