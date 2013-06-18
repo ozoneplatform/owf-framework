@@ -667,8 +667,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     },
 
     initCircularFocus: function () {
-        var firstEl = this.body.first(),
-            addBtnEl = this.el.last().last();
+        var firstEl = this.body.down('.all-dashboards').first(),
+            addBtnEl = this.body.down('.actions').last();
 
         this.tearDownCircularFocus();
         this.setupFocus(firstEl, addBtnEl);
