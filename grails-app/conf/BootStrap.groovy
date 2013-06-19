@@ -28,12 +28,15 @@ import ozone.owf.grails.domain.WidgetType
 import ozone.owf.grails.services.OwfApplicationConfigurationService
 import org.springframework.beans.factory.annotation.Autowired
 
+import ozone.owf.grails.jobs.DisableInactiveAccountsJob
+
 class BootStrap {
     
     def grailsApplication
     def sessionFactory
     def domainMappingService
     def dashboardService
+    def quartzScheduler
 	
     OwfApplicationConfigurationService owfApplicationConfigurationService
 	
@@ -47,6 +50,12 @@ class BootStrap {
 
         XML.registerObjectMarshaller(new ServiceModelObjectMarshallerXML())
         XMLD.registerObjectMarshaller(new ServiceModelObjectMarshallerXML())
+
+        //Temporary job scheduling from hardcoded config
+        if (grailsApplication.config.owf.disableInactiveAccounts) {
+            def job = new DisableInactiveAccountsJob()
+            job.schedule(quartzScheduler)
+        }
 
         if (GrailsUtil.environment == 'production')
         {

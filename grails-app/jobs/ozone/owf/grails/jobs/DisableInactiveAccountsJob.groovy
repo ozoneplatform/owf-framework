@@ -46,7 +46,7 @@ class DisableInactiveAccountsJob implements Job {
      */
     public void execute(JobExecutionContext context) {
     	//Delete inactive accounts here
-		//println("Doing $name job")
+		// println("Doing $name job")
     }
 
 }
