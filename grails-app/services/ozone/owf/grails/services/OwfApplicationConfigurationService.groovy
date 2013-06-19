@@ -1,10 +1,13 @@
 package ozone.owf.grails.services
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
 import org.ozoneplatform.appconfig.server.service.impl.ApplicationConfigurationServiceImpl
 import org.springframework.transaction.annotation.Transactional
 import static ozone.owf.enums.OwfApplicationSetting.*
 import static ozone.owf.enums.OwfApplicationSettingType.*
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as confHolder
+
 
 class OwfApplicationConfigurationService  extends ApplicationConfigurationServiceImpl {
 	
@@ -55,6 +58,12 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 
         // Configuration for the Inactivity Threshold value in minutes
         createOrUpdateApplicationConfig(INACTIVITY_THRESHOLD, GROUP_NAME,  "Number", "90", subGroupCtr++, SUB_GROUP_NAME)
+
+        // TODO: Remove this code once UI is done. This overrides the value in the database so that it can be changed at
+        // each startup via a config value (if the config value exists)
+        ApplicationConfiguration disableInactiveAccounts = this.getApplicationConfiguration(DISABLE_INACTIVE_ACCOUNTS)
+        disableInactiveAccounts.value = confHolder.config.owf.disableInactiveAccounts ?: confHolder.config.owf.disableInactiveAccounts
+        super.saveApplicationConfiguration(disableInactiveAccounts)
     }
 	
 }
