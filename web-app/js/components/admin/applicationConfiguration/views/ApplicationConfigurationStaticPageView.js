@@ -2,10 +2,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'marketplace',
     '../models/ApplicationConfigurationModel',
     '../views/partials/ApplicationConfigurationLinkView',
-], function($, _, Backbone, Marketplace, ApplicationConfigurationModel, ApplicationConfigurationLinkView ){
+], function($, _, Backbone, ApplicationConfigurationModel, ApplicationConfigurationLinkView ){
     
     /*
      * This is the entry point for the views.  This class will fetch the data, iterate through it

@@ -39,7 +39,7 @@ define([
             this.descriptionView.render();
 
             //If needed start a new section
-            if(this.model.get("subGroupName") != null){
+            if(this.model.get("subGroupName")){
                 var sectionCls = "app_config_section_" + this.model.get("subGroupName") ;
                 sectionCls = sectionCls.toLowerCase().split(' ').join('_');
                 if($("." + sectionCls).length == 0)

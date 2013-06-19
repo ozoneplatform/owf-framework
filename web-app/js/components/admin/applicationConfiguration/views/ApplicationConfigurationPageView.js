@@ -2,11 +2,10 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'marketplace',
     '../collections/ApplicationConfigurationCollection',
     '../collections/ApplicationConfigurationErrors',
     '../views/ApplicationConfigurationItemView'
-], function($, _, Backbone, Marketplace, ApplicationConfigurationCollection, ApplicationConfigurationErrors, ApplicationConfigurationItemView){
+], function($, _, Backbone, ApplicationConfigurationCollection, ApplicationConfigurationErrors, ApplicationConfigurationItemView){
   
     /*
     * This is the entry point for the views.  This class will fetch the data, iterate through it
@@ -26,15 +25,15 @@ define([
             this.$el.html(null);
           
             var me = this;
-          
-            Marketplace.getFranchiseFlag(function(flag){
-                me.franchiseFlag = flag;
 
-                var params = { data: $.param({ groupName: options.groupName}) };
+            var params = {
+                data: $.param({
+                    groupName: (options && options.groupName) || ''
+                })
+            };
 
-                me.collection.fetch(params).complete(function(){
-                    me.render();
-                });
+            me.collection.fetch(params).complete(function(){
+                me.render();
             });
         },
 

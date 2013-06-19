@@ -1,9 +1,8 @@
 define([
     'jquery',
     'underscore',
-    'backbone',
-    'marketplace'
-], function($, _, Backbone, Marketplace){
+    'backbone'
+], function($, _, Backbone){
 
     return Backbone.View.extend({
 

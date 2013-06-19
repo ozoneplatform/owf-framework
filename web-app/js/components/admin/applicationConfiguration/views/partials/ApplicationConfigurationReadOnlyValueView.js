@@ -1,9 +1,8 @@
 define([
     'jquery',
     'underscore',
-    'backbone',
-    'marketplace'
-], function($, _, Backbone, Marketplace){
+    'backbone'
+], function($, _, Backbone){
 
     return Backbone.View.extend({
 
@@ -26,13 +25,13 @@ define([
         
         render: function(){
             var templateParams = {
-                    id: this.model.get("id"), 
-                    value: $.trim(this.model.get("value")),
-                    truncatedText: Marketplace.getTruncatedValue(this.getValueText(), 200),
-                    editCellDivClass: this.model.get("mutable") == true ? 'editable_cell' : null,
-                    helpTextClass: this.model.get("value") ? null : 'app_config_help_text',
-                    helpText: this.model.get("help")
-            }
+                id: this.model.get("id"), 
+                value: $.trim(this.model.get("value")),
+                truncatedText: this.getValueText().substring(0, 200)  + "...",
+                editCellDivClass: this.model.get("mutable") == true ? 'editable_cell' : null,
+                helpTextClass: this.model.get("value") ? null : 'app_config_help_text',
+                helpText: this.model.get("help")
+            };
             
             var html =  this.template(templateParams);
             

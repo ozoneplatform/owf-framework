@@ -1,0 +1,236 @@
+.editable_cell{
+     cursor: hand; 
+     cursor: pointer; 
+     min-width: 300px;
+     width: 300px;
+     min-height: 35px;
+     font-size: 12px;
+     color: $appConfig-cell-color;
+     padding-top: 1px;
+     padding-left: 4px;
+
+
+     &:hover {
+       border: 1px solid $appConfig-cell-border-hover;
+       padding-top: 0px;
+       padding-left: 3px;
+       //background-image: theme-image($theme-name, 'applicationConfiguration/edit_out.png');
+       //background-image:
+       //background-repeat: no-repeat;
+       //background-position: 99% 4%;
+     }
+}               
+
+.editable_cell_image{
+     cursor: hand; 
+     cursor: pointer; 
+     min-width:  25px;
+     max-width:  200px;
+     min-height: 25px;
+     max-height: 50px;
+     padding-right: 5px;     
+}       
+
+.non_editable_cell{
+     min-width: 250px;
+     min-height: 30px;  
+     font-size: 12px;
+     color: $appConfig-noedit-cell-color;
+}   
+
+.spinner {
+    background: theme-image($theme-name, 'spinner.gif') no-repeat transparent;
+    height: 25px;
+    width: 25px;
+    padding: 0.5em;
+    display: none;
+}
+
+.app_config_list_view_panel {
+  padding-left: 30px;
+  border-left: 1px solid $appConfig-divider;
+  float: right;
+  width: 80%;
+  background-color: transparent;
+  position: relative;
+  box-shadow: 0 0 0 15px transparent;
+  height: auto !important;
+  min-height: 424px;          
+}
+                
+div.app_config_column_container{
+    width: 100%;
+    float: left;
+    padding-bottom: 20px;
+}
+
+div.app_config_section{
+    font-size: 14px;
+    padding-bottom: 4px;
+    padding-top:    9px;
+    color: $appConfig-section-header-color;
+}
+
+
+div.app_config_column_left{
+    float: left; 
+    width: 46%;
+}
+
+div.app_config_column_right{
+    float: left; 
+    min-width: 50%;
+    max-width: 50%; 
+    padding-left: 20px;
+}                       
+
+
+div.app_config_map_row{
+    padding-bottom: 6px;
+    min-width: inherit;
+}
+
+
+.app_config_item_title{
+    color: $appConfig-title-color;
+    font-family: Verdana,Helvetica,Arial,sans-serif;
+    font-size: 12px;
+}
+
+.app_config_item_description{
+    color: $appConfig-description-color;
+    font-family: Verdana,Helvetica,Arial,sans-serif;
+    font-size: 11px;
+    display: inline-block;
+    margin-right: 10px;
+    padding-botto: 3px;
+    padding-top: 5px;
+    vertical-align: top;
+    width: 340px;
+}
+
+
+.app_config_item_value_yes {
+     background-image: theme-image($theme-name, 'icons/toggle_icons/on-active_off-up.png');
+     background-repeat:  no-repeat;
+     width: 8%;
+     height:25px;
+     cursor: hand;
+     cursor: pointer;
+     min-width: 50%;
+     max-width: 50%;
+}
+
+.app_config_item_value_no {
+     background-image: theme-image($theme-name, 'icons/toggle_icons/on-up_off-active.png');
+     background-repeat:  no-repeat;
+     width: 8%;
+     height:25px;
+     cursor: hand;
+     cursor: pointer;
+     min-width: 50%;
+     max-width: 50%;
+}
+
+.app_config_text_area{
+  min-width: 300px;
+  width: 300px;
+  min-height: 35px;
+  max-height: 100px;
+    //height: 35px;
+    border: 1px solid $appConfig-cell-border-hover;
+    background-color: $appConfig-cell-background-active;
+    padding-left: 3px;
+    display: none;
+    color: $appConfig-cell-color;
+}
+
+.app_config_text_hover {
+    width: 300px;
+    height: 35px;
+    border: 1px solid $appConfig-cell-border-hover;
+}
+
+
+.app_config_field_error{
+    font-size: 10px;
+    color: $appConfig-error-color;
+}
+
+ // radio button styles
+ .app_config_radio_button_area {
+ }
+
+ .app_config_radio_button_label {
+     font-size: 12px;
+     display: inline-block;
+     line-height: 24px;
+ }
+
+ .app_config_radio_button {
+     margin-right: 4px;
+ }
+
+// MENU STUFF -->
+
+.app_config_menu_item_link {
+    padding-bottom: 15px;
+}
+
+.app_config_menu{
+  float: left;
+  width: 16%;
+  padding-top: 2px;
+}
+
+.app_config_help_text {
+  font-style: italic;
+  color: $appConfig-help-color;
+}
+
+.app_config_menu_item{
+    background-repeat:  no-repeat;
+    font-size: 16px;
+    color: $appConfig-menu-item-color;
+    cursor: hand;
+    cursor: pointer;
+    padding-left: 45px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    background-position: left;
+}
+
+.app_config_menu_item_user_account_settings {
+  background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Inactive.png');
+}
+
+.app_config_menu_item_user_account_settings:hover {
+  background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Hover.png');
+}
+
+.app_config_menu_item_user_account_settings_active {
+  background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Active.png');
+}
+
+// Used for link view
+.app_config_pageLink {
+  padding-top: 14px;
+}
+
+body.configuration_widget {
+    width: 1000px;
+    margin: auto;
+
+
+
+    a {
+        text-decoration: none;
+        //outline: none;
+        color: $link-color;
+        cursor: pointer;
+    }
+
+    a:hover {
+        color: lighten($link-color, 10%);
+    }
+}

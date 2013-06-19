@@ -7,7 +7,7 @@ define([
 
     return ApplicationConfigurationCollection = Backbone.Collection.extend({
            model: ApplicationConfigurationModel,
-           url:  './configs'
+           url:  '../applicationConfiguration/configs'
     }); 
     
 });
