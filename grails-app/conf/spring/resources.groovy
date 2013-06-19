@@ -11,6 +11,12 @@ beans = {
 	context.'component-scan'('base-package': 'org.ozoneplatform.appconfig.server')
 	
 	entityInterceptor(AuditTrailInterceptor)
+
+    auditLogListener(ozone.owf.util.AuditLogListener) {
+        sessionFactory = ref('sessionFactory')
+        accountService = ref('accountService')
+        grailsApplication = ref('grailsApplication')
+    }
 	
     // wire up a different account service if -Duser=something and environment is development
     if (GrailsUtil.environment == "development") {

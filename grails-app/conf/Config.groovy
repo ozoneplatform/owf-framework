@@ -846,7 +846,12 @@ environments {
                     syslogHost:'localhost:8014',
                     facility: 'USER',
                     layout: pattern(conversionPattern: '%d [%t] %-5p %c %x - %m%n'))
+                appender new RollingFileAppender (name:"owfCefAudit", maxFileSize:"10000KB", maxBackupIndex: 10,
+                        file:"logs/owf-cef-audit.log",
+                        layout: pattern(conversionPattern: '%d{yyyy-MM-dd HH:mm:ss,SSS z} [%t] %-5p[%c]: %m%n'))
             }
+            info owfCefAudit: 'org.ozoneplatform'
+
             root {
                 debug 'stdout', 'owfStackTraceLog', 'syslogTraceLog'
                 error()

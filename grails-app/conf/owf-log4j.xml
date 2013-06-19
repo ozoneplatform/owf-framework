@@ -92,6 +92,20 @@
         <param name="ConversionPattern" value="%p %d{dd MMM yyyy HH:mm:ss,SSS z} %m%n" />
       </layout>
     </appender>
+
+    <appender name="ozone-cef-log" class="org.apache.log4j.CompositeRollingAppender">
+        <param name="RollingStyle" value="3" />
+        <param name="StaticLogFileName" value="false" />
+        <param name="File" value="logs/owf-cef-audit.log" />
+        <param name="CountDirection" value="1" />
+        <param name="MaxFileSize" value="100MB" />
+        <param name="MaxSizeRollBackups" value="-1" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd" />
+        <param name="Encoding" value="UTF-8" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{dd MMM yyyy HH:mm:ss,SSS z} %m%n" />
+        </layout>
+    </appender>
   
     <appender name="ozone-async-audit" class="org.apache.log4j.AsyncAppender">
       <appender-ref ref="ozone-audit-log" />
@@ -99,6 +113,10 @@
 
     <appender name="ozone-async-dataGuard-audit" class="org.apache.log4j.AsyncAppender">
       <appender-ref ref="ozone-audit-dataGuard-log" />
+    </appender>
+
+    <appender name="ozone-async-cef" class="org.apache.log4j.AsyncAppender">
+        <appender-ref ref="ozone-cef-log" />
     </appender>
 
 	<logger name="AuditOWFWebRequestsLogger" additivity="false">
@@ -121,6 +139,10 @@
     <logger name="ozone.securitysample" additivity="false">
       <level value="error" />
       <appender-ref ref="ozone-async" />
+    </logger>
+    <logger name="org.ozoneplatform.auditing.filter.AuditingFilters" additivity="false">
+        <level value="info" />
+        <appender-ref ref="ozone-async-cef" />
     </logger>
   
   <logger name="ozone.utils.Utils" additivity="false">
