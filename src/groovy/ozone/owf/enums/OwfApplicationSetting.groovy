@@ -6,7 +6,11 @@ public enum OwfApplicationSetting implements ApplicationSetting{
 
 	CEF_LOGGING_STATUS("owf.enable.cef.logging"),
 	CEF_OJBECT_ACCESS_LOGGING_STATUS("owf.enable.cef.object.access.logging"),
-	CEF_SEARCH_AUDIT_REGEX("owf.cef.search.audit.regex")
+	CEF_SEARCH_AUDIT_REGEX("owf.cef.search.audit.regex"),
+
+    // OP-727
+    DISABLE_INACTIVE_ACCOUNTS("owf.disable.inactive.accounts"),
+    INACTIVITY_THRESHOLD("owf.inactivity.threshold")
 
 	
 	

@@ -1,5 +1,6 @@
 package ozone.owf.grails.services
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.ozoneplatform.appconfig.server.service.impl.ApplicationConfigurationServiceImpl
 import org.springframework.transaction.annotation.Transactional
 import static ozone.owf.enums.OwfApplicationSetting.*
@@ -12,6 +13,7 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 	@Transactional(readOnly=false)
 	void createRequired(){
 		createRequiredCefAuditingConfigurations()
+        createRequiredUserAccountConfigurations()
 	}
 	
 	
@@ -26,5 +28,21 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 		createOrUpdateApplicationConfig(CEF_OJBECT_ACCESS_LOGGING_STATUS, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
 		createOrUpdateApplicationConfig(CEF_SEARCH_AUDIT_REGEX, GROUP_NAME,  "String", "(?i)(.*items.*|.*results.*|.*list.*)", subGroupCtr++, SUB_GROUP_NAME)
 	}
+
+    @Transactional(readOnly=false)
+    public void createRequiredUserAccountConfigurations(){
+
+        // OP-727
+        def GROUP_NAME = USER_ACCOUNT_SETTINGS
+        def SUB_GROUP_NAME = "Inactive Accounts"
+        int subGroupCtr = 1
+
+        // TODO: Initial values hard-coded here - later update to use config when available
+        // Configuration for the Disable Inactive Accounts switch
+        createOrUpdateApplicationConfig(DISABLE_INACTIVE_ACCOUNTS, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
+
+        // Configuration for the Inactivity Threshold value in minutes
+        createOrUpdateApplicationConfig(INACTIVITY_THRESHOLD, GROUP_NAME,  "Number", "90", subGroupCtr++, SUB_GROUP_NAME)
+    }
 	
 }
