@@ -1,0 +1,23 @@
+<plugin name='quartz' version='0.4.2' grailsVersion='1.1 &gt; *'>
+  <author>Sergey Nebolsin</author>
+  <authorEmail>nebolsin@gmail.com</authorEmail>
+  <title>This plugin adds Quartz job scheduling features to Grails application.</title>
+  <description>Quartz plugin allows your Grails application to schedule jobs to be
+executed using a specified interval or cron expression. The underlying
+system uses the Quartz Enterprise Job Scheduler configured via Spring,
+but is made simpler by the coding by convention paradigm.
+</description>
+  <documentation>http://grails.org/Quartz+plugin</documentation>
+  <resources>
+    <resource>DefaultQuartzConfig</resource>
+    <resource>QuartzBootStrap</resource>
+    <resource>UrlMappings</resource>
+    <resource>org.grails.plugins.quartz.JobManagerService</resource>
+  </resources>
+  <dependencies>
+    <resolvers>
+      <resolver type='grailsPlugins' name='grailsPlugins' />
+    </resolvers>
+  </dependencies>
+  <behavior />
+</plugin>
