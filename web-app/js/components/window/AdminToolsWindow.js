@@ -25,7 +25,7 @@
     autoScroll: false,
 
     minToolsInRow: 3,
-    maxToolsInRow: 5,
+    maxToolsInRow: 6,
     
 
     dashboardContainer: null,

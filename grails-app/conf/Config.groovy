@@ -465,6 +465,13 @@ uiperformance.bundles = [
         ]
     ],
     [
+        type: "js",
+        name: "require-js",
+        files: [
+            "../js-lib/requirejs/require-2.1.6"
+        ]       
+    ],
+    [
         type: 'js',
         name: 'owf-server',
         //custom fields for createBundles grails script
