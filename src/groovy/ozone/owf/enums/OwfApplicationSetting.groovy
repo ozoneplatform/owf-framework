@@ -10,7 +10,11 @@ public enum OwfApplicationSetting implements ApplicationSetting{
 
     // OP-727
     DISABLE_INACTIVE_ACCOUNTS("owf.disable.inactive.accounts"),
-    INACTIVITY_THRESHOLD("owf.inactivity.threshold")
+    INACTIVITY_THRESHOLD("owf.inactivity.threshold"),
+
+    // OP-1103
+    ENABLE_MAX_CONCURRENT_SESSIONS("owf.enable.max.concurrent.sessions"),
+    MAX_CONCURRENT_SESSIONS("owf.max.concurrent.sessions")
 
 	
 	

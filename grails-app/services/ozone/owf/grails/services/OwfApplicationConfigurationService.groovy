@@ -32,10 +32,22 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
     @Transactional(readOnly=false)
     public void createRequiredUserAccountConfigurations(){
 
-        // OP-727
+        // OP-1103
         def GROUP_NAME = USER_ACCOUNT_SETTINGS
-        def SUB_GROUP_NAME = "Inactive Accounts"
+        def SUB_GROUP_NAME = "Session Control"
         int subGroupCtr = 1
+
+        // TODO: Initial values hard-coded here - later update to use config when available
+        // Configuration for the Enable session control switch
+        createOrUpdateApplicationConfig(ENABLE_MAX_CONCURRENT_SESSIONS, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
+
+        // Configuration for the Maximum sessions per user value
+        createOrUpdateApplicationConfig(MAX_CONCURRENT_SESSIONS, GROUP_NAME,  "Number", "3", subGroupCtr++, SUB_GROUP_NAME)
+
+
+        // OP-727
+        SUB_GROUP_NAME = "Inactive Accounts"
+        subGroupCtr = 1
 
         // TODO: Initial values hard-coded here - later update to use config when available
         // Configuration for the Disable Inactive Accounts switch
