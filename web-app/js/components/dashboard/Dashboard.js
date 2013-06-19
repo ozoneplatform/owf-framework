@@ -28,7 +28,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         "state": null
     },
     hideMode: 'visibility',
-    hideCls: 'hidden',  //css class applied to nonanimated, hidden dashboards
+    hideCls: 'hidden', //css class applied to nonanimated, hidden dashboards
     cls: 'dashboard',
 
     // flag to determine whether or not a save is already in progress
@@ -47,7 +47,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
     widgetIframeDelay: 200,
 
-//    defaultSettings: {},
+    //    defaultSettings: {},
 
     // array of panes
     panes: null,
@@ -60,7 +60,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     slideInDirection: 'left',
     slideOutDirection: 'left',
 
-    buildItemsArray: function (cfg) {
+    buildItemsArray: function(cfg) {
         if (!cfg || !cfg.items)
             return;
 
@@ -71,8 +71,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             }
 
             cfg.xtype = cfg.paneType;
-        }
-        else {
+        } else {
 
             if (cfg.xtype === "dashboarddesignerpane") {
                 cfg.xtype = 'container';
@@ -88,7 +87,11 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         return cfg;
     },
 
-    initComponent: function () {
+    getMenuDropdown: function() {
+        return Ext.getCmp('userMenuBtn');
+    },
+
+    initComponent: function() {
         var me = this;
 
         // TODO remove after support for old dashboard is added
@@ -120,8 +123,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             OWF.Events.Dashboard.SHOWN,
             OWF.Events.Dashboard.HIDDEN,
             OWF.Events.Widget.BEFORE_LAUNCH,
-            OWF.Events.Widget.AFTER_LAUNCH
-        );
+            OWF.Events.Widget.AFTER_LAUNCH);
 
         this.enableBubble([OWF.Events.Widget.BEFORE_LAUNCH, OWF.Events.Widget.AFTER_LAUNCH]);
 
@@ -134,7 +136,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
         this.stateStore.on({
             add: {
-                fn: function () {
+                fn: function() {
                     if (this.rendered) {
                         this.hasChanged = true;
                     }
@@ -142,7 +144,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 scope: this
             },
             update: {
-                fn: function () {
+                fn: function() {
                     if (this.rendered) {
                         this.hasChanged = true;
                     }
@@ -150,7 +152,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 scope: this
             },
             remove: {
-                fn: function () {
+                fn: function() {
                     if (this.rendered) {
                         this.hasChanged = true;
                     }
@@ -158,7 +160,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 scope: this
             },
             clear: {
-                fn: function () {
+                fn: function() {
                     if (this.rendered) {
                         this.hasChanged = true;
                     }
@@ -168,11 +170,13 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         });
 
         me.on(OWF.Events.Widget.BEFORE_LAUNCH, me.onBeforeWidgetLaunch, me);
-        me.on('afterlayout', me.afterDashboardLayout, me, { single: true });
+        me.on('afterlayout', me.afterDashboardLayout, me, {
+            single: true
+        });
         me.on('beforedestroy', me.cleanup, me);
     },
 
-    afterDashboardLayout: function () {
+    afterDashboardLayout: function() {
         var me = this,
             pane,
             allWidgetsDeferreds = [];
@@ -188,7 +192,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             allWidgetsDeferreds.push.apply(allWidgetsDeferreds, pane.launchPreviouslyOpenedWidgets());
         }
 
-        $.when(allWidgetsDeferreds).then(function () {
+        $.when(allWidgetsDeferreds).then(function() {
             me.fireEvent(OWF.Events.Dashboard.COMPLETE_RENDER, me);
             if (OWF.Mask) {
                 OWF.Mask.hide();
@@ -213,8 +217,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                     }
                     if (newDestIds.length > 0) {
                         intentConfig[intent] = newDestIds;
-                    }
-                    else {
+                    } else {
                         delete intentConfig[intent];
                     }
                 }
@@ -225,55 +228,54 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         });
     },
 
-    enableWidgetDragAndDrop: function () {
+    enableWidgetDragAndDrop: function() {
         var me = this;
 
         me.dropZone = me.dropZone || new Ext.dd.DropZone(me.getEl(), {
 
             ddGroup: 'widgets',
 
-            getTargetFromEvent: function (e) {
+            getTargetFromEvent: function(e) {
                 return e.getTarget('.paneshim');
             },
 
             // On entry into a target node, highlight that node.
-            onNodeEnter: function (target, dd, e, data) {
+            onNodeEnter: function(target, dd, e, data) {
                 Ext.fly(target).addCls('highlight-dashboard-designer-drop');
             },
 
             // On exit from a target node, unhighlight that node.
-            onNodeOut: function (target, dd, e, data) {
+            onNodeOut: function(target, dd, e, data) {
                 Ext.fly(target).removeCls('highlight-dashboard-designer-drop');
             },
 
             // While over a target node, return the default drop allowed class which
             // places a "tick" icon into the drag proxy.
-            onNodeOver: function (target, dd, e, data) {
+            onNodeOver: function(target, dd, e, data) {
                 return Ext.dd.DropZone.prototype.dropAllowed;
             },
 
             // On node drop we can interrogate the target to find the underlying
             // application object that is the real target of the dragged data.
-            onNodeDrop: function (target, dd, coordinates, data) {
-                if(me.configRecord.isMarketplaceDashboard()) {
+            onNodeDrop: function(target, dd, coordinates, data) {
+                if (me.configRecord.isMarketplaceDashboard()) {
                     me.dashboardContainer.selectDashboardAndLaunchWidgets(data.widgetModel, true);
-                }
-                else {
+                } else {
                     me.launchWidgets(target, dd, coordinates, data);
                 }
-                
+
             }
         });
 
         me.enableWidgetMove();
     },
 
-    disableWidgetDragAndDrop: function () {
+    disableWidgetDragAndDrop: function() {
         this.disableWidgetMove();
         this.cleanup();
     },
 
-    cleanup: function () {
+    cleanup: function() {
         // if dashboard isn't rendered, dropZone won't be setup
         if (this.dropZone) {
             this.dropZone.unreg();
@@ -281,7 +283,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         }
     },
 
-    launchWidgets: function (target, dd, coordinates, data) {
+    launchWidgets: function(target, dd, coordinates, data) {
         var targetPaneId = target.id,
             targetPaneEl, offsets,
             targetPane = Ext.getCmp(targetPaneId),
@@ -305,8 +307,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             if (coordinates) {
                 offsets = targetPane.el.getOffsetsTo(Ext.getBody());
                 targetPane.launchWidgets(data.widgetModel, x - offsets[0], y - offsets[1], 0);
-            }
-            else {
+            } else {
                 targetPane.launchWidgets(data.widgetModel);
             }
             return true;
@@ -315,13 +316,13 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         return false;
     },
 
-    onBeforeWidgetLaunch: function (pane, widgetModel, launchData) {
+    onBeforeWidgetLaunch: function(pane, widgetModel, launchData) {
         var stateStore = this.stateStore,
             instanceId = widgetModel.get('uniqueId') || guid.util.guid(),
             isSingleton = widgetModel.get('singleton'),
             isBackground = widgetModel.get('background'),
             stateModel = stateStore.findRecord('widgetGuid', widgetModel.get('widgetGuid')),
-            isAlreadyLaunched = !!stateModel,
+            isAlreadyLaunched = !! stateModel,
             widget;
 
         if (isSingleton && isAlreadyLaunched) {
@@ -335,8 +336,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 style: 'display: none',
                 isWidget: true,
                 iframeProperties: OWF.Container.Eventing.getIframeProperties(
-                    widgetModel.get('url'), instanceId, widgetModel.data, pane.id, launchData, this.configRecord.get('locked')
-                )
+                    widgetModel.get('url'), instanceId, widgetModel.data, pane.id, launchData, this.configRecord.get('locked'))
             });
 
             var widgetState = {
@@ -389,7 +389,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         return true;
     },
 
-    moveWidgetToPane: function (evt, sourcePane, targetPane, widget) {
+    moveWidgetToPane: function(evt, sourcePane, targetPane, widget) {
         var me = this,
             widgetModel = widget.model,
             x = evt.getX(),
@@ -404,13 +404,12 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
         function doIt() {
             if (targetPane.isXType('fitpane') && targetPane.items.length > 0) {
-                targetPane.confirmReplaceWidget(widget.id, widget.title, function () {
+                targetPane.confirmReplaceWidget(widget.id, widget.title, function() {
                     targetPane.clearWidgets(false);
                     targetPane.items.clear();
                     move();
                 });
-            }
-            else {
+            } else {
                 move();
             }
         }
@@ -419,8 +418,13 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             var pane = targetPane,
                 widgetStateModelData = pane.cloneWidgetDataForTransfer(widget);
 
-            widget.on('destroy', function () {
-                me.launchWidgets(pane, null, {x: x, y: y}, {widgetModel: widgetStateModelData});
+            widget.on('destroy', function() {
+                me.launchWidgets(pane, null, {
+                    x: x,
+                    y: y
+                }, {
+                    widgetModel: widgetStateModelData
+                });
             });
             widget.destroy();
         }
@@ -429,7 +433,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         widget.isFloating() ? setTimeout(doIt, 500) : doIt();
     },
 
-    onDestroy: function () {
+    onDestroy: function() {
         if (this.stateStore != null) {
             this.stateStore.destroyStore();
             this.stateStore = null;
@@ -442,7 +446,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @param JSON object specifying the widget guid/universalName
      * @returns widget instance
      */
-    findWidget: function (launchConfig) {
+    findWidget: function(launchConfig) {
         //find the widget with the specified guid
         if (launchConfig.guid != null) {
             return this.widgetStore.getById(launchConfig.guid);
@@ -462,7 +466,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @param JSON object specifying the widget guid and an option launchOnlyIfClosed param.
      * @returns JSON object specifying success/failure, an error message, and the uniqueId of the widget that was launched.
      */
-    launchWidgetInstance: function (sender, launchConfig) {
+    launchWidgetInstance: function(sender, launchConfig) {
         var launchWidget = null,
             specifiedWidget = null,
             responseObj,
@@ -478,8 +482,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 newWidgetLaunched: false,
                 message: "The specified widget wasn't found."
             }
-        }
-        else {
+        } else {
 
             //make a copy so we don't alter the widgetdef if we change the title
             specifiedWidget = specifiedWidget.copy();
@@ -489,8 +492,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 //regex was not used simply replace the title
                 if (launchConfig.titleRegex == null) {
                     specifiedWidget.data.name = launchConfig.title;
-                }
-                else {
+                } else {
                     //check if a regex string by using a regex
                     var matches = launchConfig.titleRegex.match(/^\/(.*)\/(.*)$/);
 
@@ -574,7 +576,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @member Ozone.components.dashboard.Dashboard
      * @param config JSON object containing the function to call and the params required for that function.
      */
-    handleWidgetRequest: function (config) {
+    handleWidgetRequest: function(config) {
         switch (config.fn) {
             case 'getWidgetState':
                 return this.getWidgetState(config.params.guid);
@@ -607,7 +609,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @member Ozone.components.dashboard.Dashboard
      * @param cmpId Id of the widget.
      */
-    getWidgetStateEvents: function (cmpId) {
+    getWidgetStateEvents: function(cmpId) {
         // get component
         var widget = Ext.getCmp(cmpId);
         var eventList = [];
@@ -628,13 +630,13 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @param guid Id of the widget
      * @param events Array of events
      */
-    addWidgetStateEvents: function (eventAction, guid, events) {
+    addWidgetStateEvents: function(eventAction, guid, events) {
         // get widget by guid
         var widget = Ext.getCmp(guid),
             eventName;
 
         function stateEventHandler(widget, eventAction, eventName) {
-            return function () {
+            return function() {
                 return widget.handleStateEvent(eventAction, eventName);
             };
         }
@@ -658,8 +660,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                     }
                     widget["on_" + eventName] = stateEventHandler(widget, eventAction, eventName);
                     widget.tab.on(eventName, widget["on_" + eventName]);
-                }
-                else {
+                } else {
                     if (eventAction === "override") {
                         widget.purgeListener(eventName);
                     }
@@ -681,7 +682,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @param guid Id of the widget
      * @param events Array of events
      */
-    removeWidgetStateEvents: function (eventAction, guid, events) {
+    removeWidgetStateEvents: function(eventAction, guid, events) {
         // get widget by guid
         var widget = Ext.getCmp(guid),
             eventName, cmp;
@@ -719,7 +720,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @member Ozone.components.dashboard.Dashboard
      * @param params guid of the widget to activate.
      */
-    activateWidget: function (widgetInstanceId) {
+    activateWidget: function(widgetInstanceId) {
         var widget = Ext.getCmp(widgetInstanceId);
         if (widget) {
             if (widget.floatingWidget) {
@@ -727,8 +728,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
                 this.updateActiveWidget(widget);
                 return true;
-            }
-            else {
+            } else {
                 return widget.pane.activateWidget(widget);
             }
         }
@@ -740,7 +740,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @member Ozone.components.dashboard.Dashboard
      * @param params guid of the widget to close.
      */
-    closeWidget: function (guid) {
+    closeWidget: function(guid) {
         var widget = Ext.getCmp(guid);
         if (widget !== undefined) {
             //Check if widget has a tab (i.e., is in a tabbed pane)
@@ -762,7 +762,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @member Ozone.components.dashboard.Dashboard
      * @param params JSON object containing the guid of the widget to close.
      */
-    refreshWidgetLaunchMenu: function () {
+    refreshWidgetLaunchMenu: function() {
         var widgetLauncher = Ext.getCmp('widget-launcher');
         widgetLauncher.refresh();
     },
@@ -774,7 +774,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @member Ozone.components.dashboard.Dashboard
      * @param widget The widget instance in state
      */
-    handleAlreadyLaunchedWidget: function (widgetData) {
+    handleAlreadyLaunchedWidget: function(widgetData) {
         var widgetCmp = Ext.getCmp(widgetData.uniqueId);
 
         this.fireEvent(OWF.Events.Widget.AFTER_LAUNCH, widgetCmp, widgetCmp.model, true);
@@ -788,7 +788,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @param guid Id of the specified widget
      * @returns Layout configuration object in JSON format.
      */
-    getWidgetConfig: function (guid) {
+    getWidgetConfig: function(guid) {
         var rec = this.widgetStore.getById(guid);
         return rec ? rec.data : null;
     },
@@ -799,7 +799,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @param guid Id of the specified widget
      * @returns Layout configuration object in JSON format.
      */
-    getWidgetState: function (guid) {
+    getWidgetState: function(guid) {
         var widget = Ext.getCmp(guid),
             state, storeState, size;
 
@@ -814,8 +814,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                     width: size.width
                 });
             }
-        }
-        else {
+        } else {
             storeState = this.stateStore.getById(guid);
             state = storeState ? storeState.data : {};
         }
@@ -829,7 +828,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @param widgetGuid Id of the widget definition
      * @returns the widget that was launched from the specified definition, or null if there is none
      */
-    findWidgetInstance: function (widgetGuid) {
+    findWidgetInstance: function(widgetGuid) {
         var index = this.stateStore.findExact('widgetGuid', widgetGuid);
         var widget = (index > -1) ? this.stateStore.getAt(index) : null;
         return widget;
@@ -842,16 +841,16 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @param dm DashboardMgmt object.
      * @returns None.
      */
-    removeState: function (windowId) {
+    removeState: function(windowId) {
         this.stateStore.remove(this.stateStore.getById(windowId));
     },
 
-    initNewWidget: function (widget) {
-        widget.on('close', function () {
+    initNewWidget: function(widget) {
+        widget.on('close', function() {
             this.updateActiveWidget(null, false);
         }, this);
 
-        widget.on("statesave", function () {
+        widget.on("statesave", function() {
             // For each record in state, add/update value in dashboard defaultStates object
             this.defaultSettings.widgetStates = this.defaultSettings.widgetStates || {};
 
@@ -870,7 +869,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         }, this);
     },
 
-    initDashboard: function () {
+    initDashboard: function() {
         //register with windowmanager
         this.widgetLauncher.registerWindowManager(this);
 
@@ -888,18 +887,18 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     },
 
     // private
-    onRender: function (ct, position) {
+    onRender: function(ct, position) {
         this.initDashboard();
 
         //Ensure a dashboard isn't rendered hidden (OP-1161)
-        if(this.cssanimations) {
+        if (this.cssanimations) {
             this.hidden = false;
         }
 
         this.callParent(arguments);
     },
 
-    onActivate: function (cmp) {
+    onActivate: function(cmp) {
         var banner = this.dashboardContainer.getBanner();
 
         this.initDashboard();
@@ -925,9 +924,14 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 onShow();
             }
         }
+        
+        $('.widgetMenuItem').hide();
+        if(this.config.type)
+        	$('.'+this.config.type+'MenuItem').show();
+        
     },
 
-    onDeActivate: function (cmp) {
+    onDeActivate: function(cmp) {
         this.saveToServer();
         // hide all widgets to fire hide events on Widget State
         var items = this.stateStore.data.items;
@@ -946,7 +950,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         }
     },
 
-    getJson: function () {
+    getJson: function() {
         var json = this.configRecord.data,
             pane,
             panes = this.query('pane'),
@@ -965,7 +969,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         return json;
     },
 
-    saveToServer: function (sync, force, saveAsNew, successCallback, failureCallback) {
+    saveToServer: function(sync, force, saveAsNew, successCallback, failureCallback) {
         //save state
         if (this.configRecord && this.stateStore && !this.dontSave) {
             if (this.hasChanged || this.configRecord.dirty || force) {
@@ -976,7 +980,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                         Ozone.pref.PrefServer.createOrUpdateDashboard({
                             json: this.getJson(),
                             saveAsNew: (saveAsNew === true),
-                            onSuccess: function () {
+                            onSuccess: function() {
                                 dash.configRecord.commit();
                                 dash.hasChanged = false;
                                 dash.fireEvent('serversave', dash, true);
@@ -985,7 +989,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                                     successCallback();
                                 }
                             },
-                            onFailure: function () {
+                            onFailure: function() {
                                 dash.fireEvent('serversave', dash, false);
                                 dash.saveLock = false;
                                 if (failureCallback) {
@@ -1000,14 +1004,14 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         }
     },
 
-    shimPanes: function () {
+    shimPanes: function() {
         var panes = this.panes;
         for (var i = 0, len = panes.length; i < len; i++) {
             panes[i].shim();
         }
     },
 
-    unshimPanes: function () {
+    unshimPanes: function() {
         var panes = this.panes;
         for (var i = 0, len = panes.length; i < len; i++) {
             panes[i].unshim();
@@ -1015,30 +1019,27 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     },
 
     //Enables widget move to all but the sourcePane that originated the drag
-    enableWidgetMove: function (sourcePane) {
+    enableWidgetMove: function(sourcePane) {
         var panes = this.panes;
 
         for (var i = 0, len = panes.length; i < len; i++) {
             if (this.configRecord.get("locked") === true) {
                 panes[i].disableWidgetMove();
-            }
-            else if (sourcePane) {
+            } else if (sourcePane) {
                 if (panes[i].id !== sourcePane.id) {
                     panes[i].enableWidgetMove();
-                }
-                else {
+                } else {
                     //Still enable shim, just don't do highlight on mouseover
                     panes[i].shim();
                 }
-            }
-            else {
+            } else {
                 //Originated from launch menu, so enable all panes for drop
                 panes[i].enableWidgetMove();
             }
         }
     },
 
-    disableWidgetMove: function () {
+    disableWidgetMove: function() {
         var panes = this.panes;
 
         if (!panes)
@@ -1049,11 +1050,11 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         }
     },
 
-    getViewPort: function () {
+    getViewPort: function() {
         return Ext.getCmp(this.viewportId);
     },
 
-    getSite: function () {
+    getSite: function() {
         //find root context
         var baseContextPath = window.location.pathname;
         var baseContextPathRegex = /^(\/[^\/]+\/).*$/i;
@@ -1062,15 +1063,14 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             baseContextPath = matches[1];
             //remove final /
             baseContextPath = baseContextPath.substring(0, baseContextPath.length - 1);
-        }
-        else {
+        } else {
             baseContextPath = '';
         }
 
         return window.location.protocol + "//" + window.location.host + (baseContextPath.charAt(0) != '/' ? ('/' + baseContextPath) : baseContextPath);
     },
 
-    updateActiveWidget: function (widget, notify) {
+    updateActiveWidget: function(widget, notify) {
         //console.log('updating active widget');
         if (!widget) {
             this.activeWidget = null;
@@ -1104,89 +1104,83 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
     },
 
-    getActiveWidget: function (id) {
+    getActiveWidget: function(id) {
         return Ext.getCmp(id) || this.activeWidget;
     },
 
-    getViewHeight: function () {
+    getViewHeight: function() {
         return Ext.getCmp('dashboardCardPanel').getHeight();
     },
 
-    getViewWidth: function () {
+    getViewWidth: function() {
         return Ext.getCmp('dashboardCardPanel').getWidth();
     },
 
-    moveWidgetUp: function (id) {
+    moveWidgetUp: function(id) {
         var widget = this.getActiveWidget(id);
         if (widget && widget.initialConfig.floatingWidget) {
             widget.pane.moveFloatingWidgetUp(widget);
-        }
-        else {
+        } else {
             widget && widget.pane.moveWidgetUp(widget);
         }
     },
 
-    moveWidgetRight: function (id) {
+    moveWidgetRight: function(id) {
         var widget = this.getActiveWidget(id);
         if (widget && widget.initialConfig.floatingWidget) {
             widget.pane.moveFloatingWidgetRight(widget);
-        }
-        else {
+        } else {
             widget && widget.pane.moveWidgetRight(widget);
         }
     },
 
-    moveWidgetDown: function (id) {
+    moveWidgetDown: function(id) {
         var widget = this.getActiveWidget(id);
         if (widget && widget.initialConfig.floatingWidget) {
             widget.pane.moveFloatingWidgetDown(widget);
-        }
-        else {
+        } else {
             widget && widget.pane.moveWidgetDown(widget);
         }
     },
 
-    moveWidgetLeft: function (id) {
+    moveWidgetLeft: function(id) {
         var widget = this.getActiveWidget(id);
         if (widget && widget.initialConfig.floatingWidget) {
             widget.pane.moveFloatingWidgetLeft(widget);
-        }
-        else {
+        } else {
             widget && widget.pane.moveWidgetLeft(widget);
         }
     },
 
     /**
-    * @Override
-    * Overridden to add CSS animations
-    **/
-    onHide: function (animateTarget, cb, scope) {
+     * @Override
+     * Overridden to add CSS animations
+     **/
+    onHide: function(animateTarget, cb, scope) {
         var me = this;
 
         if (this.cssanimations) {
             this.slideOut();
-        }
-        else {
+        } else {
             me.el.hide();
             me.el.addCls(me.hideCls);
         }
-        
+
         if (!animateTarget) {
             me.afterHide(cb, scope);
         }
     },
 
     /**
-    * @Override
-    * Overridden to add CSS animations
-    **/
+     * @Override
+     * Overridden to add CSS animations
+     **/
     onShow: function() {
         var me = this;
-        
+
         if (this.cssanimations) {
             this.slideIn();
-        }
-        else {
+        } else {
             me.el.show();
             me.el.removeCls(me.hideCls);
         }
@@ -1198,18 +1192,18 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     },
 
     /**
-    *
-    * Disable CSS animations.
-    **/
-    disableCssAnimations: function () {
+     *
+     * Disable CSS animations.
+     **/
+    disableCssAnimations: function() {
         this.cssanimations = false;
     },
 
     /**
-    *
-    * Enable CSS animations.
-    **/
-    enableCssAnimations: function () {
+     *
+     * Enable CSS animations.
+     **/
+    enableCssAnimations: function() {
         this.cssanimations = true;
 
         //update the way a hidden dashboard is hidden
@@ -1221,30 +1215,30 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     },
 
     /**
-    *
-    * Set slide in direction for dashboard animations.
-    * @param {String} direction valid values up, left, down, right
-    **/
-    setSlideInDirection: function (direction) {
+     *
+     * Set slide in direction for dashboard animations.
+     * @param {String} direction valid values up, left, down, right
+     **/
+    setSlideInDirection: function(direction) {
         this.slideInDirection = direction;
     },
 
     /**
-    *
-    * Set slide out direction for dashboard animations.
-    * @param {String} direction valid values up, left, down, right
-    **/
-    setSlideOutDirection: function (direction) {
+     *
+     * Set slide out direction for dashboard animations.
+     * @param {String} direction valid values up, left, down, right
+     **/
+    setSlideOutDirection: function(direction) {
         this.slideOutDirection = direction;
     },
 
     /**
-    *
-    * Slide dashboard into view.
-    *
-    **/
-    slideIn: function () {
-        switch(this.slideInDirection) {
+     *
+     * Slide dashboard into view.
+     *
+     **/
+    slideIn: function() {
+        switch (this.slideInDirection) {
             case 'down':
                 this.slideInDown();
                 break;
@@ -1259,12 +1253,12 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     },
 
     /**
-    *
-    * Slide dashboard out of view.
-    *
-    **/
-    slideOut: function () {
-        switch(this.slideOutDirection) {
+     *
+     * Slide dashboard out of view.
+     *
+     **/
+    slideOut: function() {
+        switch (this.slideOutDirection) {
             case 'down':
                 this.slideOutDown();
                 break;
@@ -1279,66 +1273,66 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     },
 
     /**
-    *
-    * Slide down dashboard into view.
-    *
-    **/
-    slideInDown: function () {
+     *
+     * Slide down dashboard into view.
+     *
+     **/
+    slideInDown: function() {
         this.showAnimation('dashboardSlideInDown');
     },
 
     /**
-    *
-    * Slide down dashboard out of view.
-    *
-    **/
-    slideOutDown: function () {
+     *
+     * Slide down dashboard out of view.
+     *
+     **/
+    slideOutDown: function() {
         this.hideAnimation('dashboardSlideOutDown');
     },
 
     /**
-    *
-    * Slide up dashboard into view.
-    *
-    **/
-    slideInUp: function () {
+     *
+     * Slide up dashboard into view.
+     *
+     **/
+    slideInUp: function() {
         this.showAnimation('dashboardSlideInUp');
     },
 
     /**
-    *
-    * Slide up dashboard out of view.
-    *
-    **/
-    slideOutUp: function () {
+     *
+     * Slide up dashboard out of view.
+     *
+     **/
+    slideOutUp: function() {
         this.hideAnimation('dashboardSlideOutUp');
     },
 
     /**
-    *
-    * Slide left dashboard into view.
-    *
-    **/
-    slideInLeft: function () {
+     *
+     * Slide left dashboard into view.
+     *
+     **/
+    slideInLeft: function() {
         this.showAnimation('dashboardSlideInLeft');
     },
 
     /**
-    *
-    * Slide left dashboard out of view.
-    *
-    **/
-    slideOutLeft: function () {
+     *
+     * Slide left dashboard out of view.
+     *
+     **/
+    slideOutLeft: function() {
         this.hideAnimation('dashboardSlideOutLeft');
     },
 
     /**
-    *
-    * Helper method to be used from slide in css animations.
-    * @param {String} cls CSS animation class to add
-    *
-    **/
-    showAnimation: function (cls) {
+     *
+     * Helper method to be used from slide in css animations.
+     * @param {String} cls CSS animation class to add
+     *
+     **/
+    showAnimation: function(cls) {
         this.el.removeCls(this.inactiveCls).addCls(this.animationCls + cls);
         this.el.on(CSS.Animation.ANIMATION_END, function() {
             this.el.removeCls(this.animationCls + cls);
@@ -1349,12 +1343,12 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     },
 
     /**
-    *
-    * Helper method to be used from slide out css animations.
-    * @param {String} cls CSS animation class to add
-    *
-    **/
-    hideAnimation: function (cls) {
+     *
+     * Helper method to be used from slide out css animations.
+     * @param {String} cls CSS animation class to add
+     *
+     **/
+    hideAnimation: function(cls) {
         this.el.addCls(this.animationCls + cls);
         this.el.on(CSS.Animation.ANIMATION_END, function() {
             this.el.addCls(this.inactiveCls).removeCls(this.animationCls + cls);

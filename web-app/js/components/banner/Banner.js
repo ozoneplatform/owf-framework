@@ -455,13 +455,15 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             // user menu button
             {
                 xtype: 'usermenubutton',
+                arrowCls: '',
                 id: 'userMenuBtn',
+                height: '100%',
                 user: this.user,
                 dashboardContainer: this.dashboardContainer
             }
         ]);
  
-        function setupCircularFocus() {
+        /*function setupCircularFocus() {
             var firstEl = this.items.get(0).getFocusEl(),
                 userMenuBtn = this.getComponent('userMenuBtn'),
                 lastEl = this.getComponent('userMenuBtn').getClickables().last();
@@ -471,10 +473,10 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             }
 
             this.setupFocus(firstEl, lastEl, undefined, unhideMenu);
-        }
+        }*/
 
         me.on('afterrender', function(cmp) {
-            setupCircularFocus.call(cmp);
+            //setupCircularFocus.call(cmp);
 
             Ozone.components.focusable.Focusable.clearOutline(this.getEl());
         });
@@ -482,17 +484,16 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         me.callParent(arguments);
 
         this.on({
-          render: {
-            fn: function() {
-              if(Ozone.config.banner.state === "mini") {
-                  me.popOutDockedBanner(false, Ozone.config.banner.position);
-              }
-              else if(Ozone.config.banner.state === "collapsed") {
-                  me.popOutDockedBanner(true, Ozone.config.banner.position);
-              }
-            },
-            scope: this
-          }
+            render: {
+                fn: function() {
+                    if (Ozone.config.banner.state === "mini") {
+                        me.popOutDockedBanner(false, Ozone.config.banner.position);
+                    } else if (Ozone.config.banner.state === "collapsed") {
+                        me.popOutDockedBanner(true, Ozone.config.banner.position);
+                    }
+                },
+                scope: this
+            }
         });
 
         this.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, this.clearMarketplaceToggle, this);
@@ -1041,5 +1042,4 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
         
     }
-
 });
