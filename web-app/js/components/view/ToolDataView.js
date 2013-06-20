@@ -29,7 +29,7 @@ Ext.define('Ozone.components.view.ToolDataView', {
                             Ext.Array.erase (/^([\S]+)\s*(.*)?/.exec(Ext.String.trim(str)), 0, 1),
                             function(it) {
                                 //for each elem in the array, truncate it with an ellipsis if it is longer than 11 characters
-                                return Ext.util.Format.ellipsis(it, 11);
+                                return Ext.util.Format.ellipsis(it, 13);
                             }
                         //join the array back together with spaces
                         ).join(' ')

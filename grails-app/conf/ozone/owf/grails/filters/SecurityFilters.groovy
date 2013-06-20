@@ -564,6 +564,24 @@ class SecurityFilters {
             stackEdit = saveInstance(stackEdit)
             stackEdit.addTag('admin')
         }
+
+        def configurationWidget = WidgetDefinition.findByWidgetUrl('admin/Configuration.gsp',[cache:true]);
+        if (configurationWidget == null) {
+            id = generateId()
+            configurationWidget = new WidgetDefinition(
+                displayName: 'Configuration',
+                height: 440,
+                imageUrlLarge: 'themes/common/images/adm-tools/Configuration64.png',
+                imageUrlSmall: 'themes/common/images/adm-tools/Configuration24.png',
+                widgetGuid: id,
+                widgetUrl: 'admin/Configuration.gsp',
+                widgetVersion: '1.0',
+                width: 900
+            )
+            configurationWidget.addToWidgetTypes(adminWidgetType)
+            configurationWidget = saveInstance(configurationWidget)
+            configurationWidget.addTag('admin')
+        }
 		
         if (accountService.getLoggedInUserIsAdmin()) {
 
@@ -683,6 +701,12 @@ class SecurityFilters {
             if (mapping[0] == null) {
                 // If none of the admin widgets exist yet, create them
                 domainMappingService.createMapping(adminGroup, RelationshipType.owns, stackEdit);
+            }
+
+            mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, configurationWidget);
+            if (mapping[0] == null) {
+                // If none of the admin widgets exist yet, create them
+                domainMappingService.createMapping(adminGroup, RelationshipType.owns, configurationWidget);
             }
 			
         } else {
