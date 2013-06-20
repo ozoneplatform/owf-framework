@@ -25,35 +25,11 @@
         jQuery(function(){ 
             var $ = jQuery;
             
-            $(".app_config_menu_item_franchise_store").click(function(){
-                removeAllActiveClasses();
-                $(this).addClass('app_config_menu_item_franchise_store_active');    
-            }); 
             
-            $(".app_config_menu_item_branding").click(function(){
+            $(".app_config_menu_item_auditing").click(function(){
                 removeAllActiveClasses();
-                $(this).addClass('app_config_menu_item_branding_active');   
+                $(this).addClass('app_config_menu_item_auditing_active');   
             }); 
-
-            $(".app_config_menu_item_scorecard").click(function(){
-                removeAllActiveClasses();
-                $(this).addClass('app_config_menu_item_scorecard_active');  
-            });                     
-
-            $(".app_config_menu_item_additional_config").click(function(){
-                removeAllActiveClasses();
-                $(this).addClass('app_config_menu_item_additional_config_active');  
-            });     
-
-            $(".app_config_menu_item_data_exchange").click(function(){
-                removeAllActiveClasses();
-                $(this).addClass('app_config_menu_item_data_exchange_active');  
-            });     
-
-            $(".app_config_menu_item_listing_management").click(function(){
-                removeAllActiveClasses();
-                $(this).addClass('app_config_menu_item_listing_management_active'); 
-            });
 
             $(".app_config_menu_item_user_account_settings").click(function(){
                 removeAllActiveClasses();
@@ -61,12 +37,7 @@
             });
 
             function removeAllActiveClasses(){
-                $(".app_config_menu_item_franchise_store").removeClass("app_config_menu_item_franchise_store_active");
-                $(".app_config_menu_item_branding").removeClass("app_config_menu_item_branding_active");
-                $(".app_config_menu_item_scorecard").removeClass("app_config_menu_item_scorecard_active");
-                $(".app_config_menu_item_additional_config").removeClass("app_config_menu_item_additional_config_active");
-                $(".app_config_menu_item_data_exchange").removeClass("app_config_menu_item_data_exchange_active");
-                $(".app_config_menu_item_listing_management").removeClass("app_config_menu_item_listing_management_active");
+                $(".app_config_menu_item_auditing").removeClass("app_config_menu_item_auditing_active");
                 $(".app_config_menu_item_user_account_settings").removeClass("app_config_menu_item_user_account_settings_active");
                 // Handle page layout when menus with larger content display
             }                   

@@ -220,8 +220,10 @@ div.app_config_map_row{
 body.configuration_widget {
     width: 1000px;
     margin: auto;
+    background-color: #0f1a2e;
 
-
+    $link-color: #77a7ef;
+    $link-over-color: #ADCFFF;
 
     a {
         text-decoration: none;
@@ -231,6 +233,6 @@ body.configuration_widget {
     }
 
     a:hover {
-        color: lighten($link-color, 10%);
+        color: $link-over-color;
     }
 }

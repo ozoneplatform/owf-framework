@@ -6,12 +6,7 @@
         
         <!-- ** CSS ** -->
         <!-- base library -->
-        <g:if test="${params.themeName != null && params.themeName != ''} ">
-            <link rel='stylesheet' type='text/css' href='../themes/${params.themeName.encodeAsHTML()}.theme/css/${params.themeName.encodeAsHTML()}.css' />
-        </g:if>
-        <g:else>
-            <p:css name='../${owfCss.defaultCssPath()}' absolute='true'/>
-        </g:else>
+        <link rel='stylesheet' type='text/css' href='../themes/a_default.theme/css/a_default.css' />
         
     </head>
   
@@ -19,7 +14,7 @@
         <br>
 
         <div class="app_config_menu">
-            <div class="app_config_menu_item app_config_menu_item_branding app_config_menu_item_branding_active">
+            <div class="app_config_menu_item app_config_menu_item_auditing app_config_menu_item_auditing_active">
                 <a href="#/config/auditing" class="app_config_menu_item_link">Auditing</a>
             </div>   
         </div>                  

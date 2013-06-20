@@ -38,10 +38,8 @@ define([
         },
         
         refresh: function(){
-            this.$el.fadeOut('slow');
             this.$el.html(null);
             this.render();
-            this.$el.fadeIn(300);
         },
         
         events: {

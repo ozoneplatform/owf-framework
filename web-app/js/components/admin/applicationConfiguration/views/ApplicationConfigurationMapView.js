@@ -49,10 +49,8 @@ define([
         },
         
         refresh: function(){
-            this.$el.fadeOut('slow');
             this.$el.html(null);
             this.render();
-            this.$el.fadeIn(300);
         },
 
         //This enables the appropriate text area when the image is clicked (in this case the key part of the param)
@@ -147,11 +145,11 @@ define([
                 }   
             }
 
-            $(this.el).append(html);
+            this.$el.append(html);
 
             this.errorView = new ApplicationConfigurationErrorView({model: this.model});
             this.errorView.render();
-            $(this.el).append(this.errorView.el);
+            this.$el.append(this.errorView.el);
             
             //Not sure why an event doesnt work for onerror, but this does the trick
             this.validateImage(".editable_cell_image");
