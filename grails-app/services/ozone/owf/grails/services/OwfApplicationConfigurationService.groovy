@@ -1,6 +1,5 @@
 package ozone.owf.grails.services
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
 import org.ozoneplatform.appconfig.server.service.impl.ApplicationConfigurationServiceImpl
 import org.springframework.transaction.annotation.Transactional
