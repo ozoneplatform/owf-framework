@@ -24,7 +24,7 @@
         </div>
 
         <!--[if lt IE 8]>
-            <script type="text/javascript" src="../js/backbone/json2.js"></script>
+            <script type="text/javascript" src="../js-lib/json2.js"></script>
         <![endif]-->
 
         <p:javascript data-main='../js/components/admin/applicationConfiguration/main' src='require-js' pathToRoot="../" />

@@ -225,6 +225,9 @@ body.configuration_widget {
     $link-color: #77a7ef;
     $link-over-color: #ADCFFF;
 
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: $owf-font-size;
+
     a {
         text-decoration: none;
         //outline: none;
