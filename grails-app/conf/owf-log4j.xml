@@ -140,7 +140,7 @@
       <level value="error" />
       <appender-ref ref="ozone-async" />
     </logger>
-    <logger name="org.ozoneplatform.auditing.filter.AuditingFilters" additivity="false">
+    <logger name="org.ozoneplatform.auditing" additivity="false">
         <level value="info" />
         <appender-ref ref="ozone-async-cef" />
     </logger>
