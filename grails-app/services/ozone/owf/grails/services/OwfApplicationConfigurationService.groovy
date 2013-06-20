@@ -23,7 +23,7 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 	@Transactional(readOnly=false)
 	public void createRequiredCefAuditingConfigurations(){
 		
-		def GROUP_NAME = CEF_AUDITING
+		def GROUP_NAME = AUDITING
 		def SUB_GROUP_NAME = ""
 		int subGroupCtr = 1
 		

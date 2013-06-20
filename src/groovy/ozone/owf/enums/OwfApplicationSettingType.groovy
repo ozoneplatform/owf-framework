@@ -10,7 +10,7 @@ public enum OwfApplicationSettingType implements ApplicationSettingType  {
 	ADDITIONAL_CONFIGURATION("ADDITIONAL_CONFIGURATION"),
     THEMING("THEMING"),
 	HIDDEN("HIDDEN"),
-	CEF_AUDITING("CEF_AUDITING"),
+	AUDITING("AUDITING"),
     // OP-727, OP-1103  User account settings
     USER_ACCOUNT_SETTINGS("USER_ACCOUNT_SETTINGS")
 
