@@ -26,7 +26,7 @@ define([
             });
             
             this.on('route:show', function (actions) {
-                var listView = new ApplicationConfigurationPageView();
+                var listView = new ApplicationConfigurationPageView({groupName: 'auditing'});
             });
         
         },      
