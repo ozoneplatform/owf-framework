@@ -16,9 +16,12 @@
         <div class="app_config_menu">
             <div class="app_config_menu_item app_config_menu_item_auditing app_config_menu_item_auditing_active">
                 <a href="#/config/auditing" class="app_config_menu_item_link">Auditing</a>
-            </div>   
+            </div>
+            <div class="app_config_menu_item app_config_menu_item_user_account_settings">
+                <a href="#/config/user_account_settings" class="app_config_menu_item_link">User Account Settings</a>
+            </div>
         </div>                  
-        </div>
+
         <!-- Start the page content here -->
         <div id="applicationConfigurationDetail" class="app_config_list_view_panel">
         </div>
@@ -28,4 +31,5 @@
         <![endif]-->
 
         <p:javascript data-main='../js/components/admin/applicationConfiguration/main' src='require-js' pathToRoot="../" />
+    </body>
 </html>
