@@ -30,8 +30,7 @@ beans {
 
 //main owf config object
 owf {
-    //Temporary config for disabling inactive accounts job
-    disableInactiveAccounts = true
+
 
     // log4j file watch interval in milliseconds
     log4jWatchTime = 180000; // 3 minutes
