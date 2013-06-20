@@ -9,15 +9,18 @@ import javax.servlet.http.HttpServletRequest
 class AuditLogListener extends AbstractAuditLogListener {
 
     GrailsApplication grailsApplication
+	
     AccountService accountService
 
+	def jbFilter
+	
     @Override
-    public boolean doLogging() {
+    public boolean doCefLogging() {
         return true
     }
 
     @Override
-    public boolean doObjectAccessLogging(){
+    public boolean doCefObjectAccessLogging(){
         return false
     }
 
@@ -33,7 +36,13 @@ class AuditLogListener extends AbstractAuditLogListener {
 
     @Override
     public String getHostClassification() {
-        return "UNKNOWN";
+		try{
+			if(!jbFilter)
+				jbFilter = this.grailsApplication.getMainContext().getBean("JBlocksFilter")
+			return jbFilter?.configMessage
+		} catch (Exception ex){
+			return "UNKNOWN"
+		}
     }
 
     @Override
