@@ -27,7 +27,8 @@ define([
             var templateParams = {
                 id: this.model.get("id"), 
                 value: $.trim(this.model.get("value")),
-                truncatedText: this.getValueText().substring(0, 200)  + "...",
+                // Only truncate if over 200 chars.
+                truncatedText: (this.getValueText().length <= 200) ? this.getValueText() : this.getValueText().substring(0, 200)  + "...",
                 editCellDivClass: this.model.get("mutable") == true ? 'editable_cell' : null,
                 helpTextClass: this.model.get("value") ? null : 'app_config_help_text',
                 helpText: this.model.get("help")
