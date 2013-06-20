@@ -311,7 +311,8 @@ class MarketplaceService extends BaseService {
                         widgetDefinition: widgetDefinition,
                         visible: true,
                         disabled: grailsApplication.config.owf.enablePendingApprovalWidgetTagGroup,
-                        pwdPosition: maxPosition
+                        pwdPosition: maxPosition,
+                        userWidget: true
                 )
 
                 if (mapping.hasErrors()) {
