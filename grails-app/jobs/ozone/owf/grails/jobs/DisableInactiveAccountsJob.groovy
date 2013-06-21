@@ -19,20 +19,14 @@ class DisableInactiveAccountsJob implements Job {
     }
 
     def schedule(def quartzScheduler) {
-        try {
-            def job = new JobDetail(name, group, this.class)
-            //Change 5000 (once a minute) to 86400000 for 24 hours
-            def trigger = new SimpleTrigger(name, group, new Date(), null, SimpleTrigger.REPEAT_INDEFINITELY, 5000)
-            if (quartzScheduler.getJobDetail(name, group)) {
-                println("$name job already exists, don't schedule")
-            } else {
-                quartzScheduler.scheduleJob(job, trigger)    
-            }
+        def job = new JobDetail(name, group, this.class)
+        //Change 5000 (once every 5 seconds) to 86400000 for 24 hours
+        def trigger = new SimpleTrigger(name, group, new Date(), null, SimpleTrigger.REPEAT_INDEFINITELY, 5000)
+        if (quartzScheduler.getJobDetail(name, group)) {
+            log.info "$name job already exists, don't schedule"
+        } else {
+            quartzScheduler.scheduleJob(job, trigger)    
         }
-        catch (Exception e) {
-            log.error "Job already running " + e
-        }
-		
     }
 
     def cancel(def quartzScheduler) {

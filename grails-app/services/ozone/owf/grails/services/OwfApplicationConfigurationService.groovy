@@ -6,10 +6,20 @@ import org.springframework.transaction.annotation.Transactional
 import static ozone.owf.enums.OwfApplicationSetting.*
 import static ozone.owf.enums.OwfApplicationSettingType.*
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as confHolder
-
+import ozone.owf.grails.jobs.DisableInactiveAccountsJob
 
 class OwfApplicationConfigurationService  extends ApplicationConfigurationServiceImpl {
-	
+
+	def quartzScheduler
+
+    @Override
+    @Transactional(readOnly=false)
+    public void saveApplicationConfiguration(ApplicationConfiguration item){
+        // OP-727 Disabling inactive user accounts
+        if (item.code == DISABLE_INACTIVE_ACCOUNTS.code) {
+            handleDisableInactiveAccountsJobChange(item)
+        }
+	}
 	
 	@Override
 	@Transactional(readOnly=false)
@@ -58,6 +68,25 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
         // Configuration for the Inactivity Threshold value in minutes
         createOrUpdateApplicationConfig(INACTIVITY_THRESHOLD, GROUP_NAME,  "Number", "90", subGroupCtr++, SUB_GROUP_NAME)
 
+        // Turn on the job if the config is set to on
+        handleDisableInactiveAccountsJobChange(this.getApplicationConfiguration(DISABLE_INACTIVE_ACCOUNTS))
+
     }
+
+	private def handleDisableInactiveAccountsJobChange(ApplicationConfiguration configItem) {
+        log.info "Doing disableInactiveAccountsJob change"
+        def job = new DisableInactiveAccountsJob()
+
+        // Schedule the disable job if turned on, otherwise cancel the job  
+        if (configItem) {
+            if (configItem.value.toBoolean()) {
+                job.schedule(quartzScheduler)
+        }
+            else {
+                job.cancel(quartzScheduler)
+            }    
+        }
+		
+   }
 	
 }
