@@ -3,6 +3,7 @@
         position: absolute;
         overflow: visible; /*pointer needs to be able to stick out*/
         border-color: $tip-border-color;
+        width: 235px;
 
         .#{$prefix}tip-header {
             .#{$prefix}box-item {
