@@ -22,10 +22,10 @@ class Person implements Serializable {
     static mapping = {
         //table 'owf_person'
         cache true
-        authorities(lazy:true, cascade : "delete-orphan", cache:true)
+        authorities(lazy:true, cascade : "all-delete-orphan", cache:true)
         groups(lazy:true, cache:true)
-        dashboards(lazy:true, cascade : "delete-orphan", cache:true)
-		personWidgetDefinitions(lazy:true, cascade : "delete-orphan", cache:true)
+        dashboards(lazy:true, cascade : "all-delete-orphan", cache:true)
+		    personWidgetDefinitions(lazy:true, cascade : "all-delete-orphan", cache:true)
         preferences(lazy:true, cascade : "delete-orphan", cache:true)
     }
 
