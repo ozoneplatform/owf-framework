@@ -295,8 +295,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                             else {
                                 
                                 // if the description field is empty, fill it in with the imported description field, otherwise do nothing
-                                if (container.getComponent('description').getValue() == null || container.getComponent('description').getValue() == "") {
-                                    container.getComponent('description').setValue(dashboardJson.description);
+                                if (container.down('#description').getValue() == null || container.down('#description').getValue() == "") {
+                                    container.down('#description').setValue(dashboardJson.description);
                                 }   
                             }
                             isSubmittingForm = false;
