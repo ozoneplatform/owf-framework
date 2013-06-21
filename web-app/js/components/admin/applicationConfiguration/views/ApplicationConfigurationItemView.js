@@ -78,6 +78,8 @@ define([
                     $(this.el).append(this.configView.el);
 
                     break;
+                case 'Integer':
+                case 'Decimal':
                 case 'Number':
                     this.configView = new ApplicationConfigurationStringView({model: this.model, showInImage: false});
 

@@ -24,16 +24,23 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 
     // Implements validations specific to OWF
     public void validateApplicationConfiguration(def applicationConfiguration){
-
         if(!applicationConfiguration)
             return
 
-        if(applicationConfiguration.type == "Number"){
+        if(applicationConfiguration.type == "Integer"){
             def val = applicationConfiguration.value
             if(!val.isInteger() || Integer.valueOf(val) <= 0){
                 applicationConfiguration.errors.rejectValue('value', "application.configuration.invalid.integer.gt.zero")
                 return
             }
+        }
+
+        if(applicationConfiguration.type == "Decimal"){
+            def val = applicationConfiguration.value
+            if(!val.isNumber() || Double.valueOf(val) <= 0){
+                applicationConfiguration.errors.rejectValue('value', "application.configuration.invalid.number.gt.zero")
+                return
+            }               
         }
 
         super.validate(applicationConfiguration)
@@ -71,7 +78,7 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
         createOrUpdateApplicationConfig(ENABLE_MAX_CONCURRENT_SESSIONS, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
 
         // Configuration for the Maximum sessions per user value
-        createOrUpdateApplicationConfig(MAX_CONCURRENT_SESSIONS, GROUP_NAME,  "Number", "3", subGroupCtr++, SUB_GROUP_NAME)
+        createOrUpdateApplicationConfig(MAX_CONCURRENT_SESSIONS, GROUP_NAME,  "Integer", "3", subGroupCtr++, SUB_GROUP_NAME)
 
 
         // OP-727
@@ -83,7 +90,7 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
         createOrUpdateApplicationConfig(DISABLE_INACTIVE_ACCOUNTS, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
 
         // Configuration for the Inactivity Threshold value in minutes
-        createOrUpdateApplicationConfig(INACTIVITY_THRESHOLD, GROUP_NAME,  "Number", "90", subGroupCtr++, SUB_GROUP_NAME)
+        createOrUpdateApplicationConfig(INACTIVITY_THRESHOLD, GROUP_NAME,  "Integer", "90", subGroupCtr++, SUB_GROUP_NAME)
 
         // Turn on the job if the config is set to on
         handleDisableInactiveAccountsJobChange(this.getApplicationConfiguration(DISABLE_INACTIVE_ACCOUNTS))
