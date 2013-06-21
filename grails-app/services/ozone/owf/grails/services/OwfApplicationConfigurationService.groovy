@@ -21,6 +21,23 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
             handleDisableInactiveAccountsJobChange(item)
         }
 	}
+
+    // Implements validations specific to OWF
+    public void validateApplicationConfiguration(def applicationConfiguration){
+
+        if(!applicationConfiguration)
+            return
+
+        if(applicationConfiguration.type == "Number"){
+            def val = applicationConfiguration.value
+            if(!val.isInteger() || Integer.valueOf(val) <= 0){
+                applicationConfiguration.errors.rejectValue('value', "application.configuration.invalid.integer.gt.zero")
+                return
+            }
+        }
+
+        super.validate(applicationConfiguration)
+    }
 	
 	@Override
 	@Transactional(readOnly=false)

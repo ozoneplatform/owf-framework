@@ -22,7 +22,7 @@ class ApplicationConfigurationController extends AbstractApplicationConfiguratio
 
 	@Override
 	public void doValidate(ApplicationConfiguration applicationConfiguration) {
-		owfApplicationConfigurationService.validate(applicationConfiguration)
+		owfApplicationConfigurationService.validateApplicationConfiguration(applicationConfiguration)
 	}
 	
 }
