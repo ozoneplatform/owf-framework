@@ -9,14 +9,14 @@ class DisableInactiveAccountsJobTest extends GroovyTestCase {
     def group = "owfDeleteInactiveAccounts"
 
     //Test that scheduling works
-    def testScheduleJob() {
+    void testScheduleJob() {
         def job = new DisableInactiveAccountsJob()
         job.schedule(quartzScheduler)
         assertNotNull quartzScheduler.getJobDetail(name, group)
     }
 
     //Test that canceling deletes the job
-    def testCancelJob() {
+    void testCancelJob() {
         def job = new DisableInactiveAccountsJob()
         job.schedule(quartzScheduler)
         job.cancel(quartzScheduler)
@@ -24,7 +24,7 @@ class DisableInactiveAccountsJobTest extends GroovyTestCase {
     }
 
     //Test that scheduling the same job twice doesn't produce an error
-    def testDuplicateScheduleJob() {
+    void testDuplicateScheduleJob() {
         def job = new DisableInactiveAccountsJob()
         job.schedule(quartzScheduler)
         job.schedule(quartzScheduler)
