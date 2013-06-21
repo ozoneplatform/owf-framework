@@ -24,7 +24,7 @@ class DisableInactiveAccountsJob implements Job {
             //Change 5000 (once a minute) to 86400000 for 24 hours
             def trigger = new SimpleTrigger(name, group, new Date(), null, SimpleTrigger.REPEAT_INDEFINITELY, 5000)
             if (quartzScheduler.getJobDetail(name, group)) {
-                println("Job already exists, don't schedule")
+                println("$name job already exists, don't schedule")
             } else {
                 quartzScheduler.scheduleJob(job, trigger)    
             }
