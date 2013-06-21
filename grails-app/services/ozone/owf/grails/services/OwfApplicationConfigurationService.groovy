@@ -10,11 +10,12 @@ import ozone.owf.grails.jobs.DisableInactiveAccountsJob
 
 class OwfApplicationConfigurationService  extends ApplicationConfigurationServiceImpl {
 
-	def quartzScheduler
+    def quartzScheduler
 
     @Override
     @Transactional(readOnly=false)
     public void saveApplicationConfiguration(ApplicationConfiguration item){
+        super.saveApplicationConfiguration(item)
         // OP-727 Disabling inactive user accounts
         if (item.code == DISABLE_INACTIVE_ACCOUNTS.code) {
             handleDisableInactiveAccountsJobChange(item)
@@ -43,7 +44,6 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 
     @Transactional(readOnly=false)
     public void createRequiredUserAccountConfigurations(){
-
         // OP-1103
         def GROUP_NAME = USER_ACCOUNT_SETTINGS
         def SUB_GROUP_NAME = "Session Control"
@@ -70,7 +70,6 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 
         // Turn on the job if the config is set to on
         handleDisableInactiveAccountsJobChange(this.getApplicationConfiguration(DISABLE_INACTIVE_ACCOUNTS))
-
     }
 
 	private def handleDisableInactiveAccountsJobChange(ApplicationConfiguration configItem) {
