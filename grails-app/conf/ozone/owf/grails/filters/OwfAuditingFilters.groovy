@@ -1,8 +1,14 @@
 package ozone.owf.grails.filters
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
+import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
 import org.ozoneplatform.auditing.filter.AuditingFilters
+
+import static ozone.owf.enums.OwfApplicationSetting.*
 import ozone.owf.grails.services.AccountService
+import ozone.owf.grails.services.OwfApplicationConfigurationService;
+import org.springframework.web.context.request.RequestContextHolder
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession
 
 class OwfAuditingFilters extends AuditingFilters {
@@ -11,6 +17,8 @@ class OwfAuditingFilters extends AuditingFilters {
     
 	AccountService accountService
 
+	OwfApplicationConfigurationService owfApplicationConfigurationService
+	
 	def jbFilter
 	
     public String getApplicationVersion() {
@@ -18,8 +26,13 @@ class OwfAuditingFilters extends AuditingFilters {
     }
 
     @Override
-    public boolean doLogging() {
-        return true
+    public boolean doCefLogging() {
+		if(getRequest() == null)
+			return false
+		if(this.getRequest().getAttribute(CEF_LOGGING_STATUS.getCode())== null){
+			this.getRequest().setAttribute(CEF_LOGGING_STATUS.getCode(), owfApplicationConfigurationService.is(CEF_LOGGING_STATUS))
+		}
+		return this.getRequest().getAttribute(CEF_LOGGING_STATUS.getCode())
     }
 
     @Override
@@ -38,15 +51,9 @@ class OwfAuditingFilters extends AuditingFilters {
 		}
     }
 
-    @Override
-    public boolean isLogOnEvent(HttpSession session) {
-
-        if (session.loginWasAudited) {
-            return false
-        }
-
-        session.loginWasAudited = true
-        return true
-    }
-
+	@Override
+	public HttpServletRequest getRequest()
+	{
+		return RequestContextHolder?.getRequestAttributes()?.getRequest()
+	}
 }

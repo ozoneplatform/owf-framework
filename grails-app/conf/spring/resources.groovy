@@ -9,6 +9,7 @@ beans = {
 
 	xmlns context: 'http://www.springframework.org/schema/context'
 	context.'component-scan'('base-package': 'org.ozoneplatform.appconfig.server')
+	context.'component-scan'('base-package': 'ozone.owf.util')
 	
 	entityInterceptor(AuditTrailInterceptor)
 
@@ -16,6 +17,7 @@ beans = {
         sessionFactory = ref('sessionFactory')
         accountService = ref('accountService')
         grailsApplication = ref('grailsApplication')
+		owfApplicationConfigurationService = ref('owfApplicationConfigurationService')
     }
 	
     // wire up a different account service if -Duser=something and environment is development
