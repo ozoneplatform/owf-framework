@@ -2,10 +2,7 @@ package ozone.owf.util
 
 import static ozone.owf.enums.OwfApplicationSetting.*
 import grails.util.Environment
-import grails.util.GrailsUtil
-
 import javax.servlet.http.HttpServletRequest
-
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.hibernate.event.PostLoadEvent
 import org.hibernate.event.PostUpdateEvent
@@ -16,7 +13,7 @@ import org.springframework.web.context.request.RequestContextHolder
 
 import ozone.owf.grails.services.AccountService
 import ozone.owf.grails.services.OwfApplicationConfigurationService
-
+import org.springframework.beans.BeansException
 class AuditLogListener extends AbstractAuditLogListener {
 
     GrailsApplication grailsApplication
@@ -85,7 +82,7 @@ class AuditLogListener extends AbstractAuditLogListener {
 			if(!jbFilter)
 				jbFilter = this.grailsApplication.getMainContext().getBean("JBlocksFilter")
 			return jbFilter?.configMessage
-		} catch (Exception ex){
+		} catch (BeansException ex){
 			return Extension.UNKOWN_VALUE
 		}
     }
