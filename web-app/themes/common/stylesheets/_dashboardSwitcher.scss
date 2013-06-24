@@ -68,7 +68,6 @@
 
     float: left;
     margin: 10px;
-    *margin: 10px auto;
     padding: 15px 15px 0px 15px;
     position: relative;
     text-align:center;
@@ -181,6 +180,10 @@
     #dashboard-switcher {
         ul.actions li{
             zoom: 1; display: inline;
+        }
+
+        .dashboard, .stack{
+            margin: 10px auto;
         }
     }
     .dashboard-actions, .stack-actions {
