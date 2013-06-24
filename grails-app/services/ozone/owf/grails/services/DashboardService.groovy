@@ -7,13 +7,11 @@ import ozone.owf.grails.OwfExceptionTypes
 import ozone.owf.grails.domain.Dashboard
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.WidgetDefinition
-import ozone.owf.grails.domain.PersonWidgetDefinition
 import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.Stack
 import org.hibernate.CacheMode
 import ozone.owf.grails.domain.DomainMapping
 import ozone.owf.grails.domain.RelationshipType
-import ozone.owf.grails.domain.EDashboardLayout
 
 class DashboardService extends BaseService {
 
@@ -125,17 +123,19 @@ class DashboardService extends BaseService {
                     def groupDash = Dashboard.get(dm.destId)
                     if (groupDash != null) {
                         
-                        //use a new guid
-                        args.guid = java.util.UUID.randomUUID().toString()
-                        args.isdefault = groupDash.isdefault
-                        args.dashboardPosition = maxPosition + (groupDash.dashboardPosition ?: 0)
-                        args.name = groupDash.name
-                        args.description = groupDash.description
-                        args.type = groupDash.type
-                        args.locked = groupDash.locked
-                        args.layoutConfig = groupDash.layoutConfig
-                        args.stack = groupDash.stack
-                        
+                        args.with {
+                            //use a new guid
+                            guid = java.util.UUID.randomUUID().toString()
+                            isdefault = groupDash.isdefault
+                            dashboardPosition = maxPosition + (groupDash.dashboardPosition ?: 0)
+                            name = groupDash.name
+                            description = groupDash.description
+                            type = groupDash.type
+                            locked = groupDash.locked
+                            layoutConfig = groupDash.layoutConfig
+                            stack = groupDash.stack
+                        }
+
                         def privateDash = deepClone(args,user.id)
 
                         //save mapping
