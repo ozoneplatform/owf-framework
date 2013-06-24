@@ -42,9 +42,7 @@ class AuditLogListener extends AbstractAuditLogListener {
 
 	@Override
     public boolean doCefLogging() {
-		if(Environment.getCurrent().equals(Environment.TEST))
-			return true
-		if(getRequest() == null)
+		if(Environment.getCurrent().equals(Environment.TEST) || getRequest() == null)
 			return false
 		if(this.getRequest().getAttribute(CEF_LOGGING_ENABLED.getCode())== null){
 			this.getRequest().setAttribute(CEF_LOGGING_ENABLED.getCode(), owfApplicationConfigurationService.is(CEF_LOGGING_ENABLED))
@@ -56,10 +54,8 @@ class AuditLogListener extends AbstractAuditLogListener {
 	
     @Override
     public boolean doCefObjectAccessLogging(){
-		if(Environment.getCurrent().equals(Environment.TEST))
-			return true
-		if(getRequest() == null)
-			return false		
+		if(Environment.getCurrent().equals(Environment.TEST) || getRequest() == null)
+			return false	
 		if(this.getRequest().getAttribute(CEF_OBJECT_ACCESS_LOGGING_ENABLED.getCode())== null){
 			this.getRequest().setAttribute(CEF_OBJECT_ACCESS_LOGGING_ENABLED.getCode(), owfApplicationConfigurationService.is(CEF_OBJECT_ACCESS_LOGGING_ENABLED))
 		}

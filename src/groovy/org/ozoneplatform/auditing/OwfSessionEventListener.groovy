@@ -3,26 +3,22 @@ package org.ozoneplatform.auditing
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpSession
 import javax.servlet.http.HttpSessionEvent
-import javax.servlet.http.HttpSessionListener
 
-import org.ozoneplatform.auditing.enums.EventTypes
-import org.ozoneplatform.auditing.format.cef.CEF
+import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.ozoneplatform.auditing.format.cef.Extension
-import org.ozoneplatform.auditing.format.cef.factory.CEFFactory
-import org.ozoneplatform.auditing.format.cef.factory.ExtensionFactory
 import org.ozoneplatform.auditing.http.AbstractSessionEventListener
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.BeansException
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.support.WebApplicationContextUtils
 
+import ozone.owf.grails.services.AccountService
+
 class OwfSessionEventListener extends AbstractSessionEventListener{
 
-	def accountService
+	AccountService accountService
 	
-	def grailsApplication
+	GrailsApplication grailsApplication
 	
 	def jbFilter
 	

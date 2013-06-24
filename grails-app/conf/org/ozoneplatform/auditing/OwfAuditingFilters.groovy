@@ -1,15 +1,17 @@
 package org.ozoneplatform.auditing
 
-import org.codehaus.groovy.grails.commons.GrailsApplication
-import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
-import org.ozoneplatform.auditing.filter.AuditingFilters
-
 import static ozone.owf.enums.OwfApplicationSetting.*
-import ozone.owf.grails.services.AccountService
-import ozone.owf.grails.services.OwfApplicationConfigurationService;
+import grails.util.Environment
+
+import javax.servlet.http.HttpServletRequest
+
+import org.codehaus.groovy.grails.commons.GrailsApplication
+import org.ozoneplatform.auditing.filter.AuditingFilters
+import org.ozoneplatform.auditing.format.cef.Extension
 import org.springframework.web.context.request.RequestContextHolder
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession
+
+import ozone.owf.grails.services.AccountService
+import ozone.owf.grails.services.OwfApplicationConfigurationService
 
 class OwfAuditingFilters extends AuditingFilters {
 
@@ -27,7 +29,7 @@ class OwfAuditingFilters extends AuditingFilters {
 
     @Override
     public boolean doCefLogging() {
-		if(getRequest() == null)
+		if(Environment.getCurrent().equals(Environment.TEST) || getRequest() == null)
 			return false
 		if(this.getRequest().getAttribute(CEF_LOGGING_ENABLED.getCode())== null){
 			this.getRequest().setAttribute(CEF_LOGGING_ENABLED.getCode(), owfApplicationConfigurationService.is(CEF_LOGGING_ENABLED))
@@ -47,7 +49,7 @@ class OwfAuditingFilters extends AuditingFilters {
 				jbFilter = this.grailsApplication.getMainContext().getBean("JBlocksFilter")
 			return jbFilter?.configMessage
 		} catch (Exception ex){
-			return "UNKNOWN"
+			return Extension.UNKOWN_VALUE
 		}
     }
 
