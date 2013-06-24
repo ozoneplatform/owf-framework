@@ -13,8 +13,8 @@ public enum OwfApplicationSetting implements ApplicationSetting{
     INACTIVITY_THRESHOLD("owf.inactivity.threshold"),
 
     // OP-1103
-    ENABLE_MAX_CONCURRENT_SESSIONS("owf.enable.max.concurrent.sessions"),
-    MAX_CONCURRENT_SESSIONS("owf.max.concurrent.sessions")
+    SESSION_CONTROL_ENABLED("owf.session.control.enabled"),
+    SESSION_CONTROL_MAX_CONCURRENT("owf.session.control.max.concurrent")
 
 	
 	
