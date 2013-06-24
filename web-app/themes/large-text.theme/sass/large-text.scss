@@ -383,3 +383,16 @@ $customize-dashboard-left-width: 150px;
     top: 15px !important;
   }
 }
+
+#widget-launcher {
+    .start-remove-panel {
+        .start-remove-btn {
+            .x-btn-inner {
+                padding: 0;
+            }
+            .x-btn-center {
+                margin-bottom: 10px;
+            }
+        }
+    }
+}

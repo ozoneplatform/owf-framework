@@ -5,23 +5,25 @@ import org.quartz.JobDetail
 import org.quartz.JobExecutionContext
 import org.quartz.SimpleTrigger
 import org.quartz.Trigger
+import org.codehaus.groovy.grails.web.context.ServletContextHolder
+import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
 
 class DisableInactiveAccountsJob implements Job {
-	def name = "deleteInactiveAccounts"
-	def group = "owfDeleteInactiveAccounts"
+    def name = "deleteInactiveAccounts"
+    def group = "owfDeleteInactiveAccounts"
+    def purgeUserService
 
     public DisableInactiveAccountsJob() {
 
     }
 
     static triggers = {
-        //simple name: 'mySimpleTrigger', startDelay: 1000, repeatInterval: 5000  
+
     }
 
     def schedule(def quartzScheduler) {
         def job = new JobDetail(name, group, this.class)
-        //Change 5000 (once every 5 seconds) to 86400000 for 24 hours
-        def trigger = new SimpleTrigger(name, group, new Date(), null, SimpleTrigger.REPEAT_INDEFINITELY, 5000)
+        def trigger = new SimpleTrigger(name, group, new Date(), null, SimpleTrigger.REPEAT_INDEFINITELY, 1000*60*60*24)
         if (quartzScheduler.getJobDetail(name, group)) {
             log.info "$name job already exists, don't schedule"
         } else {
@@ -39,8 +41,15 @@ class DisableInactiveAccountsJob implements Job {
      * @return
      */
     public void execute(JobExecutionContext context) {
-    	//Delete inactive accounts here
-		// println("Doing $name job")
+        println("Deleting a user")
+        def ctx = ServletContextHolder.servletContext.getAttribute(GrailsApplicationAttributes.APPLICATION_CONTEXT)
+        if (!ctx) throw new RuntimeException('Unable to execute DisableInactiveAccountsJob: AppContext is unavailable')
+        if (!purgeUserService) {
+            purgeUserService = ctx?.purgeUserService
+        }
+
+        log.info "Purging inactive users"
+        purgeUserService.purgeInactiveAccounts()
     }
 
 }
