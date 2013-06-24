@@ -156,7 +156,7 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
             "true", subGroupCtr++, SUB_GROUP_NAME)
 
         // Configuration for the Maximum sessions per user value
-        createOrUpdateApplicationConfig(SESSION_CONTROL_MAX_CONCURRENT, GROUP_NAME,  "Integer", "3", 
+        createOrUpdateApplicationConfig(SESSION_CONTROL_MAX_CONCURRENT, GROUP_NAME,  "Integer", "1", 
             subGroupCtr++, SUB_GROUP_NAME)
 
         try {
