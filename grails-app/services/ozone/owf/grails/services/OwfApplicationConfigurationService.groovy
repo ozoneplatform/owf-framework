@@ -124,18 +124,17 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 		createRequiredCefAuditingConfigurations()
         createRequiredUserAccountConfigurations()
 	}
-	
-	
+
+
 	@Transactional(readOnly=false)
 	private void createRequiredCefAuditingConfigurations(){
-		
+
 		def GROUP_NAME = AUDITING
 		def SUB_GROUP_NAME = ""
 		int subGroupCtr = 1
-		
+
 		createOrUpdateApplicationConfig(CEF_LOGGING_ENABLED, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
 		createOrUpdateApplicationConfig(CEF_OBJECT_ACCESS_LOGGING_ENABLED, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
-		createOrUpdateApplicationConfig(CEF_SEARCH_AUDIT_REGEX, GROUP_NAME,  "String", "(?i)(.*items.*|.*results.*|.*list.*)", subGroupCtr++, SUB_GROUP_NAME)
 	}
 
     @Transactional(readOnly=false)
