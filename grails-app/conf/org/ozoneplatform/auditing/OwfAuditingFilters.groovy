@@ -6,6 +6,7 @@ import grails.util.Environment
 import javax.servlet.http.HttpServletRequest
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
+import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
 import org.ozoneplatform.auditing.filter.AuditingFilters
 import org.ozoneplatform.auditing.format.cef.Extension
 import org.springframework.web.context.request.RequestContextHolder
@@ -28,10 +29,12 @@ class OwfAuditingFilters extends AuditingFilters {
     }
 
     @Override
-    public boolean doCefLogging() {
-		boolean doCefLogging = owfApplicationConfigurationService.is(CEF_LOGGING_ENABLED)
-		return doCefLogging
-    }
+	public boolean doCefLogging() {
+		ApplicationConfiguration doCefLogging = owfApplicationConfigurationService.getApplicationConfiguration(CEF_LOGGING_ENABLED)
+		if(doCefLogging)
+			return doCefLogging.value
+		return false
+	}
 
     @Override
     public String getUserName() {
