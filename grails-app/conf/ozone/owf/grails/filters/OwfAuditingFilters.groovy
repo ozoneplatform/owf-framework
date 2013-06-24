@@ -29,10 +29,10 @@ class OwfAuditingFilters extends AuditingFilters {
     public boolean doCefLogging() {
 		if(getRequest() == null)
 			return false
-		if(this.getRequest().getAttribute(CEF_LOGGING_STATUS.getCode())== null){
-			this.getRequest().setAttribute(CEF_LOGGING_STATUS.getCode(), owfApplicationConfigurationService.is(CEF_LOGGING_STATUS))
+		if(this.getRequest().getAttribute(CEF_LOGGING_ENABLED.getCode())== null){
+			this.getRequest().setAttribute(CEF_LOGGING_ENABLED.getCode(), owfApplicationConfigurationService.is(CEF_LOGGING_ENABLED))
 		}
-		return this.getRequest().getAttribute(CEF_LOGGING_STATUS.getCode())
+		return this.getRequest().getAttribute(CEF_LOGGING_ENABLED.getCode())
     }
 
     @Override

@@ -4,8 +4,8 @@ import org.ozoneplatform.appconfig.server.domain.model.ApplicationSetting
 
 public enum OwfApplicationSetting implements ApplicationSetting{
 
-	CEF_LOGGING_STATUS("owf.enable.cef.logging"),
-	CEF_OJBECT_ACCESS_LOGGING_STATUS("owf.enable.cef.object.access.logging"),
+	CEF_LOGGING_ENABLED("owf.enable.cef.logging"),
+	CEF_OBJECT_ACCESS_LOGGING_ENABLED("owf.enable.cef.object.access.logging"),
 	CEF_SEARCH_AUDIT_REGEX("owf.cef.search.audit.regex"),
 
     // OP-727
@@ -16,8 +16,7 @@ public enum OwfApplicationSetting implements ApplicationSetting{
     SESSION_CONTROL_ENABLED("owf.session.control.enabled"),
     SESSION_CONTROL_MAX_CONCURRENT("owf.session.control.max.concurrent")
 
-	
-	
+
 	OwfApplicationSetting(String code) {
 		this.code = code;
 	}
