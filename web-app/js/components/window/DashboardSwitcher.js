@@ -144,8 +144,17 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                             str = str + groupStr + '</p>';
                         }
                     } 
-                    return str + '<div class=\'dashboard-metadata\'><p class=\'created-by\'><label>Created by: </label>' + (Ext.htmlEncode(Ext.htmlEncode(values.createdBy.userRealName)) || '') + '</p>' +
-                           '<p class=\'last-updated\'><label>Last Modified: </label>' + (values.prettyEditedDate || '') + '</p></div></div>"';
+                    str += '<div class=\'dashboard-metadata\'>';
+                    var createdBy = Ext.htmlEncode(Ext.htmlEncode(values.createdBy.userRealName));
+                    if (createdBy) {
+                        str += '<p class=\'created-by\'><label>Created by: </label>' + createdBy + '</p>';
+                    }
+                    else {
+                        //Put paragraph tag here if you want to display something when createdBy is null
+                    }
+                    
+                    str += '<p class=\'last-updated\'><label>Last Modified: </label>' + (values.prettyEditedDate || '') + '</p></div></div>"';
+                    return str;
                 }
             },
             
