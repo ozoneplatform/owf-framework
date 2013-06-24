@@ -1,4 +1,4 @@
-package ozone.owf.util
+package org.ozoneplatform.auditing
 
 import static ozone.owf.enums.OwfApplicationSetting.*
 import grails.util.Environment

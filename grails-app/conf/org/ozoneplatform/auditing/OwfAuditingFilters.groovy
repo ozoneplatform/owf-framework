@@ -1,4 +1,4 @@
-package ozone.owf.grails.filters
+package org.ozoneplatform.auditing
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration

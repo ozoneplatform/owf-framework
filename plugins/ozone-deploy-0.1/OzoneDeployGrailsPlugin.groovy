@@ -34,18 +34,20 @@ Plugin to configure ozone for deployment.
     def doWithWebDescriptor = { webXml ->
         // add cas unless environment testUser1 or testAdmin1
         def user = System.properties.user
+		
+		def contextParam = webXml.'context-param'
+		contextParam[contextParam.size() - 1] + {
+			'listener' {
+				'listener-class' ('org.ozoneplatform.auditing.OwfSessionEventListener')
+			}
+		}
+		
         if(['testUser1','testAdmin1'].contains(user)) {
             println "\nNot adding CAS config to the web.xml.\n"
         } else {
             println "\nAdding CAS config to the web.xml.  Requires owf-security jar\n"
             //add listener for jasig client
-            def contextParam = webXml.'context-param'
-            contextParam[contextParam.size() - 1] + {
-                /*
-                'listener' {
-                    'listener-class' ('org.jasig.cas.client.session.SingleSignOutHttpSessionListener')
-                }
-                */
+            contextParam[contextParam.size() - 1] + {				
                 'filter' {
                     'filter-name' ('springSecurityFilterChain')
                     'filter-class' ('org.springframework.web.filter.DelegatingFilterProxy')

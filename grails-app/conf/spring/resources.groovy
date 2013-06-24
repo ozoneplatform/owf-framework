@@ -13,7 +13,7 @@ beans = {
 	
 	entityInterceptor(AuditTrailInterceptor)
 
-    auditLogListener(ozone.owf.util.AuditLogListener) {
+    auditLogListener(org.ozoneplatform.auditing.AuditLogListener) {
         sessionFactory = ref('sessionFactory')
         accountService = ref('accountService')
         grailsApplication = ref('grailsApplication')
