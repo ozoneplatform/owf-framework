@@ -62,6 +62,44 @@ class DashboardService extends BaseService {
         return [success:true, data:returnValue]
     }
 
+    private def getUserPrivateDashboards(user, dmParentId) {
+
+        // This problem is somewhat cumbersome because there's no direct
+        // linkage between dashboard and domain mapping, from either
+        // direction (there can't be).  This lends itself to several
+        // possible answers:
+        //
+        //  1)  get all the dashboards which belong to the user (just ID)
+        //      and filter domain mappins using an "in" clause to get just
+        //      those which descend from a group dashboard, then re-query
+        //      to pull just those dashboards are descendants (at least
+        //      two queries in there, possibly three).
+        //  2)  go with the cross-product (should be small) and then walk
+        //      to filter out everything except the dashboard instances.
+        //
+        // Picking the latter because it's fewer queries, even though we
+        // throw away some stuff.
+
+        // This produces object array, first index has a domain mapping,
+        // dashboard
+        def colQuery = DomainMapping.findAll("\
+                        FROM DomainMapping dm, Dashboard d \
+                        WHERE \
+                            dm.destId = ? AND \
+                            dm.relationshipType = ? AND \
+                            dm.srcId = d.id AND \
+                            d.user = ?", [dmParentId, RelationshipType.cloneOf.strVal, user])
+
+        def col = []
+        colQuery[0].each {
+            if (it instanceof Dashboard) {
+                col.add(it)
+            }
+        }
+
+        return col
+    }
+
     private def processGroupDashboards(groups,user) {
         def privateGroupDashboardToGroupsMap = [:]
         
@@ -72,14 +110,14 @@ class DashboardService extends BaseService {
         if (maxPosition < 0) maxPosition = 0;
 
         //loop through group dashboards
-        domainMappingService.getBulkMappings(groups,RelationshipType.owns,Dashboard.TYPE).each { dm ->
+        def bulkMappings = domainMappingService.getBulkMappings(groups, RelationshipType.owns, Dashboard.TYPE)
+        bulkMappings.each { dm ->
 
             //if there is no user then there is no need to create private user copies
             if (user != null) {
                 //check if this group dashboard already has a private copy for this user
                 def userFilter = { eq('user',user) }
-                def privateGroupDashboards = domainMappingService.getMappedObjects([id:dm.destId,TYPE:dm.destType],
-                        RelationshipType.cloneOf,Dashboard.TYPE,[:],userFilter,'dest')
+                def privateGroupDashboards = getUserPrivateDashboards(user, dm.destId)
 
                 //create private copy of the group dashboard for the user if they don't have one
                 if (privateGroupDashboards.isEmpty()) {
@@ -87,18 +125,16 @@ class DashboardService extends BaseService {
                     def groupDash = Dashboard.get(dm.destId)
                     if (groupDash != null) {
                         
-                        args.with {
-                            //use a new guid
-                            guid = java.util.UUID.randomUUID().toString()
-                            isdefault = groupDash.isdefault
-                            dashboardPosition = maxPosition + (groupDash.dashboardPosition ?: 0)
-                            name = groupDash.name
-                            description = groupDash.description
-                            type = groupDash.type
-                            locked = groupDash.locked
-                            layoutConfig = groupDash.layoutConfig
-                            stack = groupDash.stack
-                        }
+                        //use a new guid
+                        args.guid = java.util.UUID.randomUUID().toString()
+                        args.isdefault = groupDash.isdefault
+                        args.dashboardPosition = maxPosition + (groupDash.dashboardPosition ?: 0)
+                        args.name = groupDash.name
+                        args.description = groupDash.description
+                        args.type = groupDash.type
+                        args.locked = groupDash.locked
+                        args.layoutConfig = groupDash.layoutConfig
+                        args.stack = groupDash.stack
                         
                         def privateDash = deepClone(args,user.id)
 
