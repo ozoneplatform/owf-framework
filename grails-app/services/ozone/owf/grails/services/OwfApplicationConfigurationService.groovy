@@ -16,6 +16,8 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
     //the spring security bean that is responsible for handling the max number of session.
     def concurrentSessionControlStrategy
 
+    def grailsApplication
+
     @Override
     @Transactional(readOnly=false)
     public void saveApplicationConfiguration(ApplicationConfiguration item){
@@ -133,8 +135,14 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 		def SUB_GROUP_NAME = ""
 		int subGroupCtr = 1
 
-		createOrUpdateApplicationConfig(CEF_LOGGING_ENABLED, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
-		createOrUpdateApplicationConfig(CEF_OBJECT_ACCESS_LOGGING_ENABLED, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
+		createOrUpdateApplicationConfig(CEF_LOGGING_ENABLED, GROUP_NAME,  "Boolean", 
+            grailsApplication.config.owf.dynamic.enable.cef.logging,
+            subGroupCtr++, SUB_GROUP_NAME)
+
+		createOrUpdateApplicationConfig(CEF_OBJECT_ACCESS_LOGGING_ENABLED, GROUP_NAME,  "Boolean",
+            grailsApplication.config.owf.dynamic.enable.cef.object.access.logging,
+            subGroupCtr++, SUB_GROUP_NAME)
+
 	}
 
     @Transactional(readOnly=false)
@@ -152,10 +160,12 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
         // TODO: Initial values hard-coded here - later update to use config when available
         // Configuration for the Enable session control switch
         createOrUpdateApplicationConfig(SESSION_CONTROL_ENABLED, GROUP_NAME,  "Boolean", 
-            "true", subGroupCtr++, SUB_GROUP_NAME)
+            grailsApplication.config.owf.dynamic.session.control.enabled,
+            subGroupCtr++, SUB_GROUP_NAME)
 
         // Configuration for the Maximum sessions per user value
-        createOrUpdateApplicationConfig(SESSION_CONTROL_MAX_CONCURRENT, GROUP_NAME,  "Integer", "1", 
+        createOrUpdateApplicationConfig(SESSION_CONTROL_MAX_CONCURRENT, GROUP_NAME,  "Integer",
+            grailsApplication.config.owf.dynamic.session.control.max.concurrent,
             subGroupCtr++, SUB_GROUP_NAME)
 
         try {
@@ -178,11 +188,13 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 
         // TODO: Initial values hard-coded here - later update to use config when available
         // Configuration for the Disable Inactive Accounts switch
-        createOrUpdateApplicationConfig(DISABLE_INACTIVE_ACCOUNTS, GROUP_NAME,  "Boolean", "true",
+        createOrUpdateApplicationConfig(DISABLE_INACTIVE_ACCOUNTS, GROUP_NAME,  "Boolean",
+            grailsApplication.config.owf.dynamic.disable.inactive.accounts,
             subGroupCtr++, SUB_GROUP_NAME)
 
         // Configuration for the Inactivity Threshold value in minutes
-        createOrUpdateApplicationConfig(INACTIVITY_THRESHOLD, GROUP_NAME,  "Integer", "90", 
+        createOrUpdateApplicationConfig(INACTIVITY_THRESHOLD, GROUP_NAME,  "Integer",
+            grailsApplication.config.owf.dynamic.inactivity.threshold, 
             subGroupCtr++, SUB_GROUP_NAME)
 
         // Configuration for the job to disable accounts interval in minutes (integer) 1 day = 1440 minutes

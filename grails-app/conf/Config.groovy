@@ -1024,6 +1024,23 @@ owf {
         // deliberate "poisoning" of the widget definitions.
         trustProvidedUrl = false
     }
+
+    //this section stores the defaults for the various settings that are available through
+    //the Application Configuration Service
+    dynamic {
+        enable.cef.logging = true
+        enable.cef.object.access.logging = true
+
+        disable.inactive.accounts = true
+        inactivity.threshold = 90
+
+        session {
+            control {
+                enabled = false
+                max.concurrent = 1
+            }
+        }
+    }
 }
 
 // log4j configuration : see log4j.xml
