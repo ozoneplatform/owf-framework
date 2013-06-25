@@ -20,10 +20,6 @@
             <div class="app_config_menu_item app_config_menu_item_user_account_settings">
                 <a href="#/config/user_account_settings" class="app_config_menu_item_link">User Account Settings</a>
             </div>
-        </div>                  
-
-        <!-- Start the page content here -->
-        <div id="applicationConfigurationDetail" class="app_config_list_view_panel">
         </div>
 
         <!--[if lt IE 8]>
