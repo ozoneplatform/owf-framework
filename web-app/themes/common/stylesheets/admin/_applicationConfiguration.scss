@@ -22,20 +22,20 @@
 }               
 
 .editable_cell_image{
-     cursor: hand; 
-     cursor: pointer; 
-     min-width:  25px;
-     max-width:  200px;
-     min-height: 25px;
-     max-height: 50px;
-     padding-right: 5px;     
+    cursor: hand; 
+    cursor: pointer; 
+    min-width:  25px;
+    max-width:  200px;
+    min-height: 25px;
+    max-height: 50px;
+    padding-right: 5px;     
 }       
 
 .non_editable_cell{
-     min-width: 250px;
-     min-height: 30px;  
-     font-size: 12px;
-     color: $appConfig-noedit-cell-color;
+    min-width: 250px;
+    min-height: 30px;  
+    font-size: 12px;
+    color: $appConfig-noedit-cell-color;
 }   
 
 .spinner {
@@ -171,38 +171,38 @@ div.app_config_map_row{
      margin-right: 4px;
  }
 
-// MENU STUFF -->
-
-.app_config_menu_item_link {
-    padding-bottom: 15px;
-}
-
-.app_config_menu{
-  float: left;
-  width: 16%;
-  padding-top: 2px;
-}
-
 .app_config_help_text {
-  font-style: italic;
-  color: $appConfig-help-color;
+    font-style: italic;
+    color: $appConfig-help-color;
 }
 
-.app_config_menu_item{
-    background-repeat:  no-repeat;
-    font-size: 16px;
-    color: $appConfig-menu-item-color;
-    cursor: hand;
-    cursor: pointer;
-    padding-left: 45px;
-    padding-top: 13px;
-    padding-bottom: 13px;
-    background-position: left;
-}
-
-// Used for link view
+// Used for the link view
 .app_config_pageLink {
     padding-top: 14px;
+}
+
+
+// MENU STUFF -->
+.app_config_menu{
+    float: left;
+    width: 16%;
+    padding-top: 2px;
+
+    .item {
+        background-repeat:  no-repeat;
+        font-size: 16px;
+        color: $appConfig-menu-item-color;
+        cursor: hand;
+        cursor: pointer;
+        padding-left: 45px;
+        padding-top: 13px;
+        padding-bottom: 13px;
+        background-position: left;
+
+        > a {
+            padding-bottom: 15px;
+        }
+    }
 }
 
 body.configuration_widget {
@@ -227,27 +227,24 @@ body.configuration_widget {
         color: $link-over-color;
     }
 
-    .app_config_menu_item_auditing {
+    .auditing {
         background-image: theme-image($theme-name, 'applicationConfiguration/Auditing_Inactive.png');
+        &:hover {
+            background-image: theme-image($theme-name, 'applicationConfiguration/Auditing_Hover.png');    
+        }
+        
+        &.active {
+            background-image: theme-image($theme-name, 'applicationConfiguration/Auditing_Active.png');    
+        }
     }
 
-    .app_config_menu_item_auditing:hover {
-        background-image: theme-image($theme-name, 'applicationConfiguration/Auditing_Hover.png');
-    }
-
-    .app_config_menu_item_auditing_active {
-        background-image: theme-image($theme-name, 'applicationConfiguration/Auditing_Active.png');
-    }
-
-    .app_config_menu_item_user_account_settings {
+    .user_account_settings {
         background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Inactive.png');
-    }
-
-    .app_config_menu_item_user_account_settings:hover {
-        background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Hover.png');
-    }
-
-    .app_config_menu_item_user_account_settings_active {
-        background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Active.png');
+        &:hover {
+            background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Hover.png');    
+        }
+        &.active {
+            background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Active.png');    
+        }
     }
 }
