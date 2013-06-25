@@ -121,6 +121,10 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
     }
 }
 
+.x-ie7 .accessAlert .x-window-body {
+    margin-right: 2px;
+}
+
 /**
  * Ghost proxy for portal layout
  */
