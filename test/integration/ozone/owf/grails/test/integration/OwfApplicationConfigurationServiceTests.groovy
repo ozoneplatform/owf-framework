@@ -1,13 +1,11 @@
-package ozone.owf.grails.test.integration;
+package ozone.owf.grails.test.integration
 
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy
 import org.springframework.security.core.session.SessionRegistryImpl
 
+import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration;
 import ozone.owf.grails.services.OwfApplicationConfigurationService;
 import static ozone.owf.enums.OwfApplicationSetting.*
-import static ozone.owf.enums.OwfApplicationSettingType.*
-import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
-import groovy.util.GroovyTestCase;
 import static org.junit.Assert.assertThat
 import static org.hamcrest.CoreMatchers.*
 
@@ -16,7 +14,8 @@ public class OwfApplicationConfigurationServiceTests extends GroovyTestCase{
 	OwfApplicationConfigurationService owfApplicationConfigurationService
 
     def grailsApplication
-	
+    def quartzScheduler
+
 	//As more logic is added we can build these tests more.  For now we can just assume that there should be more than
 	//zero application configuration items
 	public void testCreateRequired(){
@@ -122,5 +121,63 @@ public class OwfApplicationConfigurationServiceTests extends GroovyTestCase{
                 SESSION_CONTROL_MAX_CONCURRENT).value.toInteger(),
             is(3)
         )
+    }
+
+
+    def testInactiveAccountConfigurations() {
+
+        def service = owfApplicationConfigurationService
+        def name = "deleteInactiveAccounts"
+        def group = "owfDeleteInactiveAccounts"
+
+        ApplicationConfiguration disabledConf = service.getApplicationConfiguration(
+                DISABLE_INACTIVE_ACCOUNTS)
+        ApplicationConfiguration thresholdConf = service.getApplicationConfiguration(
+                INACTIVITY_THRESHOLD)
+
+        ApplicationConfiguration startConf = service.getApplicationConfiguration(
+                JOB_DISABLE_ACCOUNTS_START)
+
+        ApplicationConfiguration intervalConf = service.getApplicationConfiguration(
+                JOB_DISABLE_ACCOUNTS_INTERVAL)
+
+
+        // Test initial values
+        assertThat(disabledConf.value.toBoolean(), is(grailsApplication.config.owf.dynamic.disable.inactive.accounts))
+        assertThat(thresholdConf.value.toInteger(), is(grailsApplication.config.owf.dynamic.inactivity.threshold))
+        assertThat(startConf.value, is(grailsApplication.config.owf.dynamic.job.disable.accounts.start.time))
+        assertThat(intervalConf.value.toInteger(), is(grailsApplication.config.owf.dynamic.job.disable.accounts.interval))
+
+        // Test changing a value, that the value is returned
+        disabledConf.value = 'false'
+        service.saveApplicationConfiguration(disabledConf)
+        assertThat(service.getApplicationConfiguration(DISABLE_INACTIVE_ACCOUNTS).value.toBoolean(), is(false))
+
+        disabledConf.value = 'true'
+        service.saveApplicationConfiguration(disabledConf)
+        assertThat(service.getApplicationConfiguration(DISABLE_INACTIVE_ACCOUNTS).value.toBoolean(), is(true))
+
+        thresholdConf.value = '50'
+        service.saveApplicationConfiguration(disabledConf)
+        assertThat(service.getApplicationConfiguration(INACTIVITY_THRESHOLD).value.toInteger(), is(50))
+
+        thresholdConf.value = '90'
+        service.saveApplicationConfiguration(disabledConf)
+        assertThat(service.getApplicationConfiguration(INACTIVITY_THRESHOLD).value.toInteger(), is(90))
+
+        // Test that setting the disabled flag starts and stops the job
+
+        disabledConf.value = 'false'
+        service.saveApplicationConfiguration(disabledConf)
+        assertNull(quartzScheduler.getJobDetail(name,group))
+
+        disabledConf.value = 'true'
+        service.saveApplicationConfiguration(disabledConf)
+        assertNotNull(quartzScheduler.getJobDetail(name,group))
+
+        // Set it back to false
+        disabledConf.value = 'false'
+        service.saveApplicationConfiguration(disabledConf)
+        assertNull(quartzScheduler.getJobDetail(name,group))
     }
 }
