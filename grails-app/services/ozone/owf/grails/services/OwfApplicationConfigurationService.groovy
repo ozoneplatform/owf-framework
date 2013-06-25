@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional
 import static ozone.owf.enums.OwfApplicationSetting.*
 import static ozone.owf.enums.OwfApplicationSettingType.*
 import ozone.owf.grails.jobs.DisableInactiveAccountsJob
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as confHolder
 import grails.util.GrailsUtil
 
 class OwfApplicationConfigurationService  extends ApplicationConfigurationServiceImpl {
