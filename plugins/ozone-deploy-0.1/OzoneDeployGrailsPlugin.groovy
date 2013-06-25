@@ -36,11 +36,6 @@ Plugin to configure ozone for deployment.
         def user = System.properties.user
 		
 		def contextParam = webXml.'context-param'
-		contextParam[contextParam.size() - 1] + {
-			'listener' {
-				'listener-class' ('org.ozoneplatform.auditing.OwfSessionEventListener')
-			}
-		}
 		
         if(['testUser1','testAdmin1'].contains(user)) {
             println "\nNot adding CAS config to the web.xml.\n"

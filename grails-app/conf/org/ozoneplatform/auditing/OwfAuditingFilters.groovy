@@ -7,14 +7,14 @@ import javax.servlet.http.HttpServletRequest
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
-import org.ozoneplatform.auditing.filter.AuditingFilters
+import org.ozoneplatform.auditing.filter.AbstractAuditingFilters
 import org.ozoneplatform.auditing.format.cef.Extension
 import org.springframework.web.context.request.RequestContextHolder
 
 import ozone.owf.grails.services.AccountService
 import ozone.owf.grails.services.OwfApplicationConfigurationService
 
-class OwfAuditingFilters extends AuditingFilters {
+class OwfAuditingFilters extends AbstractAuditingFilters {
 
     GrailsApplication grailsApplication
     
