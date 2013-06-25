@@ -28,16 +28,12 @@ class AuditLogListener extends AbstractAuditLogListener {
 	
 	@Override
 	public void onPostUpdate(PostUpdateEvent event) {
-		if(!(event.getEntity() instanceof ApplicationConfiguration)){
-			super.onPostUpdate(event)
-		}		
+		super.onPostUpdate(event)		
 	}
 
 	@Override
 	public void onPostLoad(PostLoadEvent event) {
-		if(!(event.getEntity() instanceof ApplicationConfiguration)){
-			super.onPostLoad(event)
-		}		
+		super.onPostLoad(event)		
 	}
 
 	@Override
@@ -45,7 +41,8 @@ class AuditLogListener extends AbstractAuditLogListener {
 		if(Environment.getCurrent().equals(Environment.TEST) || getRequest() == null)
 			return false
 		if(this.getRequest().getAttribute(CEF_LOGGING_ENABLED.getCode())== null){
-			this.getRequest().setAttribute(CEF_LOGGING_ENABLED.getCode(), owfApplicationConfigurationService.is(CEF_LOGGING_ENABLED))
+			ApplicationConfiguration doCefLogging = owfApplicationConfigurationService.getApplicationConfiguration(CEF_LOGGING_ENABLED)
+			this.getRequest().setAttribute(CEF_LOGGING_ENABLED.getCode(), doCefLogging?.value)
 		}
 		return this.getRequest().getAttribute(CEF_LOGGING_ENABLED.getCode())
     }
@@ -57,7 +54,8 @@ class AuditLogListener extends AbstractAuditLogListener {
 		if(Environment.getCurrent().equals(Environment.TEST) || getRequest() == null)
 			return false	
 		if(this.getRequest().getAttribute(CEF_OBJECT_ACCESS_LOGGING_ENABLED.getCode())== null){
-			this.getRequest().setAttribute(CEF_OBJECT_ACCESS_LOGGING_ENABLED.getCode(), owfApplicationConfigurationService.is(CEF_OBJECT_ACCESS_LOGGING_ENABLED))
+			ApplicationConfiguration doCefLogging = owfApplicationConfigurationService.getApplicationConfiguration(CEF_OBJECT_ACCESS_LOGGING_ENABLED)
+			this.getRequest().setAttribute(CEF_OBJECT_ACCESS_LOGGING_ENABLED.getCode(), doCefLogging?.value)
 		}
 		return this.getRequest().getAttribute(CEF_OBJECT_ACCESS_LOGGING_ENABLED.getCode())
     }
