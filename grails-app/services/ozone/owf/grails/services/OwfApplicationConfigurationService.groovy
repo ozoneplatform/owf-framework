@@ -185,13 +185,27 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
         createOrUpdateApplicationConfig(INACTIVITY_THRESHOLD, GROUP_NAME,  "Integer", "90", 
             subGroupCtr++, SUB_GROUP_NAME)
 
+        // Configuration for the job to disable accounts interval in minutes (integer) 1 day = 1440 minutes
+        // This is currently implemented as a HIDDEN configuration (not visible in UI)
+        createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_INTERVAL, HIDDEN,  "Integer",
+                "1440", subGroupCtr++,
+                SUB_GROUP_NAME)
+
+        // Configuration for the Disable Job start time in hh:mm:ss  format, i.e. "23:59:59"
+        // This is currently implemented as a HIDDEN configuration (not visible in UI)
+        createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_START, HIDDEN,  "String",
+                "23:59:59", subGroupCtr++,
+                SUB_GROUP_NAME)
+
+
         // Turn on the job if the config is set to on
         handleDisableInactiveAccountsJobChange(this.getApplicationConfiguration(DISABLE_INACTIVE_ACCOUNTS))
     }
 
 	private def handleDisableInactiveAccountsJobChange(ApplicationConfiguration configItem) {
         log.info "Doing disableInactiveAccountsJob change"
-        def job = new DisableInactiveAccountsJob()
+        def job = new DisableInactiveAccountsJob(getApplicationConfiguration(JOB_DISABLE_ACCOUNTS_INTERVAL).value,
+                getApplicationConfiguration(JOB_DISABLE_ACCOUNTS_START).value)
 
         // Schedule the disable job if turned on, otherwise cancel the job  
         if (configItem) {

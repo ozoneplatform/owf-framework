@@ -10,6 +10,8 @@ public enum OwfApplicationSetting implements ApplicationSetting{
     // OP-727
     DISABLE_INACTIVE_ACCOUNTS("owf.disable.inactive.accounts"),
     INACTIVITY_THRESHOLD("owf.inactivity.threshold"),
+    JOB_DISABLE_ACCOUNTS_INTERVAL("owf.job.disable.accounts.interval"),
+    JOB_DISABLE_ACCOUNTS_START("owf.job.disable.accounts.start.time"),
 
     // OP-1103
     SESSION_CONTROL_ENABLED("owf.session.control.enabled"),

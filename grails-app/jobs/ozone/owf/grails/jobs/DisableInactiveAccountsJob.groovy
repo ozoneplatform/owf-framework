@@ -8,12 +8,25 @@ import org.quartz.Trigger
 import org.codehaus.groovy.grails.web.context.ServletContextHolder
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
 
+import java.text.ParseException
+import java.text.SimpleDateFormat
+
 class DisableInactiveAccountsJob implements Job {
     def name = "deleteInactiveAccounts"
     def group = "owfDeleteInactiveAccounts"
+    def execInterval
+    def startTime
     def purgeUserService
 
     public DisableInactiveAccountsJob() {
+
+    }
+
+    public DisableInactiveAccountsJob(String _execInterval, String _startTime) {
+
+        execInterval = _execInterval?.isInteger() ? _execInterval.toInteger() : null
+
+        startTime = _startTime
 
     }
 
@@ -21,9 +34,54 @@ class DisableInactiveAccountsJob implements Job {
 
     }
 
+    /**
+     * Get the start time for the first run of the job
+     * @return
+     */
+    private Date getStartDateTime()  {
+
+        def _startDateTime
+        // If a start time provided to constructor, use it
+        if (startTime) {
+            try {
+                def startDate = new Date()
+                // Set the start time as part of the string then convert back to date
+                def startDateString = startDate.format("yyyy-MM-dd") + " " + startTime
+                _startDateTime =  new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(startDateString)
+
+            } catch(ParseException e) {
+
+                log.error "Unable to parse time format. Will use default time: ${e.message}"
+                // Set the start time to now
+                _startDateTime = new Date()
+            }
+
+        }   else {
+            // Set the start time to now
+            _startDateTime = new Date()
+        }
+
+        return _startDateTime
+
+    }
+
+    /**
+     * Get the interval for the job in milliseconds
+     * @return
+     */
+    private Integer getExecInterval() {
+
+        // Conversion factor for minutes to milliseconds
+        def convToMs = 1000*60
+        // Defaults to 24 hours in minutes
+        def defaultInterval = 24*60
+        return (execInterval != null && execInterval > 0) ? convToMs * execInterval : convToMs * defaultInterval
+    }
+
+
     def schedule(def quartzScheduler) {
         def job = new JobDetail(name, group, this.class)
-        def trigger = new SimpleTrigger(name, group, new Date(), null, SimpleTrigger.REPEAT_INDEFINITELY, 1000*60*60*24)
+        def trigger = new SimpleTrigger(name, group, getStartDateTime(), null, SimpleTrigger.REPEAT_INDEFINITELY, getExecInterval())
         if (quartzScheduler.getJobDetail(name, group)) {
             log.info "$name job already exists, don't schedule"
         } else {
@@ -41,7 +99,6 @@ class DisableInactiveAccountsJob implements Job {
      * @return
      */
     public void execute(JobExecutionContext context) {
-        println("Deleting a user")
         def ctx = ServletContextHolder.servletContext.getAttribute(GrailsApplicationAttributes.APPLICATION_CONTEXT)
         if (!ctx) throw new RuntimeException('Unable to execute DisableInactiveAccountsJob: AppContext is unavailable')
         if (!purgeUserService) {
