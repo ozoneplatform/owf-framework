@@ -24,23 +24,12 @@
     function init () {
         jQuery(function(){ 
             var $ = jQuery;
-            
-            
-            $(".app_config_menu_item_auditing").click(function(){
-                removeAllActiveClasses();
-                $(this).addClass('app_config_menu_item_auditing_active');   
-            }); 
+            var $menuItems = $('.app_config_menu .item');
 
-            $(".app_config_menu_item_user_account_settings").click(function(){
-                removeAllActiveClasses();
-                $(this).addClass('app_config_menu_item_user_account_settings_active');
+            $menuItems.on('click', function () {
+                $menuItems.removeClass('active');
+                $(this).addClass('active');
             });
-
-            function removeAllActiveClasses(){
-                $(".app_config_menu_item_auditing").removeClass("app_config_menu_item_auditing_active");
-                $(".app_config_menu_item_user_account_settings").removeClass("app_config_menu_item_user_account_settings_active");
-                // Handle page layout when menus with larger content display
-            }                   
         });
     }
 
