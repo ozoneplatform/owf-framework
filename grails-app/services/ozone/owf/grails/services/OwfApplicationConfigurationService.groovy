@@ -199,14 +199,14 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
         // Configuration for the job to disable accounts interval in minutes (integer) 1 day = 1440 minutes
         // This is currently implemented as a HIDDEN configuration (not visible in UI)
         createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_INTERVAL, HIDDEN,  "Integer",
-                "1440", subGroupCtr++,
-                SUB_GROUP_NAME)
+            grailsApplication.config.owf.dynamic.job.disable.accounts.interval, 
+            subGroupCtr++, SUB_GROUP_NAME)
 
         // Configuration for the Disable Job start time in hh:mm:ss  format, i.e. "23:59:59"
         // This is currently implemented as a HIDDEN configuration (not visible in UI)
         createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_START, HIDDEN,  "String",
-                "23:59:59", subGroupCtr++,
-                SUB_GROUP_NAME)
+            grailsApplication.config.owf.dynamic.job.disable.accounts.start.time, 
+            subGroupCtr++, SUB_GROUP_NAME)
 
 
         // Turn on the job if the config is set to on

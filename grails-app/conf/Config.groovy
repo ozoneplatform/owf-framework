@@ -1040,6 +1040,15 @@ owf {
                 max.concurrent = 1
             }
         }
+
+        job {
+            disable {
+                accounts {
+                    interval = 1440
+                    start.time = "23:59:59"
+                }
+            }
+        }
     }
 }
 
