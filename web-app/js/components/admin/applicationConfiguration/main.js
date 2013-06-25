@@ -45,11 +45,13 @@
     }
 
     require ([
+        'router/Router',
+        'collections/Collection',
+        'collections/Errors',
         'jquery',
         'underscore',
         'backbone',
-        'router/ApplicationConfigurationRouter',
-    ], function($, _, Backbone,  ApplicationConfigurationRouter){
+    ], function(Router, Collection, Errors, $, _, Backbone){
 
         init();
         
@@ -57,10 +59,13 @@
             cache: false
         });
 
+        Collection.prototype.url =  '../applicationConfiguration/configs';
+        Errors.prototype.url =  '../applicationConfiguration/configs/validate';
+
 
         //Not sure if this is a good entry pointto the application or not.  For now it will route events on this
         //page to the appropriate place
-        var app_router = new ApplicationConfigurationRouter();
+        var app_router = new Router();
         
         //Start Backbone history a necessary step for bookmarkable URL's
         Backbone.history.start();

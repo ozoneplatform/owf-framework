@@ -2,8 +2,8 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'views/ApplicationConfigurationPageView',
-    'views/ApplicationConfigurationStaticPageView'  
+    'views/OWFConfigPage',
+    'views/StaticPage'  
 ], function($, _, Backbone, ApplicationConfigurationPageView, ApplicationConfigurationStaticPageView){
     
     return  Backbone.Router.extend({

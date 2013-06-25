@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional
 import static ozone.owf.enums.OwfApplicationSetting.*
 import static ozone.owf.enums.OwfApplicationSettingType.*
 import ozone.owf.grails.jobs.DisableInactiveAccountsJob
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as confHolder
 import grails.util.GrailsUtil
 
 class OwfApplicationConfigurationService  extends ApplicationConfigurationServiceImpl {
@@ -15,6 +14,8 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 	
     //the spring security bean that is responsible for handling the max number of session.
     def concurrentSessionControlStrategy
+
+    def grailsApplication
 
     @Override
     @Transactional(readOnly=false)
@@ -133,8 +134,14 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 		def SUB_GROUP_NAME = ""
 		int subGroupCtr = 1
 
-		createOrUpdateApplicationConfig(CEF_LOGGING_ENABLED, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
-		createOrUpdateApplicationConfig(CEF_OBJECT_ACCESS_LOGGING_ENABLED, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
+		createOrUpdateApplicationConfig(CEF_LOGGING_ENABLED, GROUP_NAME,  "Boolean", 
+            grailsApplication.config.owf.dynamic.enable.cef.logging,
+            subGroupCtr++, SUB_GROUP_NAME)
+
+		createOrUpdateApplicationConfig(CEF_OBJECT_ACCESS_LOGGING_ENABLED, GROUP_NAME,  "Boolean",
+            grailsApplication.config.owf.dynamic.enable.cef.object.access.logging,
+            subGroupCtr++, SUB_GROUP_NAME)
+
 	}
 
     @Transactional(readOnly=false)
@@ -149,13 +156,14 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
         def SUB_GROUP_NAME = "Session Control"
         int subGroupCtr = 1
 
-        // TODO: Initial values hard-coded here - later update to use config when available
         // Configuration for the Enable session control switch
         createOrUpdateApplicationConfig(SESSION_CONTROL_ENABLED, GROUP_NAME,  "Boolean", 
-            "true", subGroupCtr++, SUB_GROUP_NAME)
+            grailsApplication.config.owf.dynamic.session.control.enabled,
+            subGroupCtr++, SUB_GROUP_NAME)
 
         // Configuration for the Maximum sessions per user value
-        createOrUpdateApplicationConfig(SESSION_CONTROL_MAX_CONCURRENT, GROUP_NAME,  "Integer", "1", 
+        createOrUpdateApplicationConfig(SESSION_CONTROL_MAX_CONCURRENT, GROUP_NAME,  "Integer",
+            grailsApplication.config.owf.dynamic.session.control.max.concurrent,
             subGroupCtr++, SUB_GROUP_NAME)
 
         try {
@@ -176,14 +184,28 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
         def SUB_GROUP_NAME = "Inactive Accounts"
         def subGroupCtr = 1
 
-        // TODO: Initial values hard-coded here - later update to use config when available
         // Configuration for the Disable Inactive Accounts switch
-        createOrUpdateApplicationConfig(DISABLE_INACTIVE_ACCOUNTS, GROUP_NAME,  "Boolean", "true",
+        createOrUpdateApplicationConfig(DISABLE_INACTIVE_ACCOUNTS, GROUP_NAME,  "Boolean",
+            grailsApplication.config.owf.dynamic.disable.inactive.accounts,
             subGroupCtr++, SUB_GROUP_NAME)
 
         // Configuration for the Inactivity Threshold value in minutes
-        createOrUpdateApplicationConfig(INACTIVITY_THRESHOLD, GROUP_NAME,  "Integer", "90", 
+        createOrUpdateApplicationConfig(INACTIVITY_THRESHOLD, GROUP_NAME,  "Integer",
+            grailsApplication.config.owf.dynamic.inactivity.threshold, 
             subGroupCtr++, SUB_GROUP_NAME)
+
+        // Configuration for the job to disable accounts interval in minutes (integer) 1 day = 1440 minutes
+        // This is currently implemented as a HIDDEN configuration (not visible in UI)
+        createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_INTERVAL, HIDDEN,  "Integer",
+            grailsApplication.config.owf.dynamic.job.disable.accounts.interval, 
+            subGroupCtr++, SUB_GROUP_NAME)
+
+        // Configuration for the Disable Job start time in hh:mm:ss  format, i.e. "23:59:59"
+        // This is currently implemented as a HIDDEN configuration (not visible in UI)
+        createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_START, HIDDEN,  "String",
+            grailsApplication.config.owf.dynamic.job.disable.accounts.start.time, 
+            subGroupCtr++, SUB_GROUP_NAME)
+
 
         // Turn on the job if the config is set to on
         handleDisableInactiveAccountsJobChange(this.getApplicationConfiguration(DISABLE_INACTIVE_ACCOUNTS))
@@ -191,7 +213,8 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 
 	private def handleDisableInactiveAccountsJobChange(ApplicationConfiguration configItem) {
         log.info "Doing disableInactiveAccountsJob change"
-        def job = new DisableInactiveAccountsJob()
+        def job = new DisableInactiveAccountsJob(getApplicationConfiguration(JOB_DISABLE_ACCOUNTS_INTERVAL).value,
+                getApplicationConfiguration(JOB_DISABLE_ACCOUNTS_START).value)
 
         // Schedule the disable job if turned on, otherwise cancel the job  
         if (configItem) {

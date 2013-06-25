@@ -34,6 +34,7 @@ test-widgets/html-widgets/src/main/webapp/js-lib/
 test-widgets/html-widgets/src/main/webapp/js/
 test-widgets/standalone-container/src/main/webapp/js-min/
 /src/assemble/docs/jsdoc/
+/lib/compressjs
 *.zip
 owf-widget-debug.js
 owf-widget-min.js

@@ -35,6 +35,28 @@ private compileStyleSheets = { dir ->
   println "finished compiling sass stylesheets"
 }
 
+private copyAppConfigFiles = { dir ->
+    def libDir = "${basedir}/lib"
+    def extractDest = "${libDir}/temp"
+    def ant = new AntBuilder()
+
+    ant.unzip(
+        src: "${libDir}/commons-appconfig-1.1.0-webclient.zip",
+        dest: extractDest,
+        overwrite: "true"
+    )
+
+    ant.copy( todir: "${basedir}/web-app/js/components/admin/applicationConfiguration", overwrite: "true" ) {
+        fileset( dir: "${extractDest}/js" )
+    }
+
+    ant.delete(includeemptydirs: true) {
+        fileset(dir: extractDest)
+    }
+
+    println "finished copying app configuration files"
+}
+
 eventRunAppHttpsStart = {
   def baseWebDir = "${basedir}/web-app"
 
@@ -46,6 +68,7 @@ eventRunAppHttpsStart = {
     println "compiling stylesheets in external themes dir"
     compileStyleSheets(basedir)
   }
+  copyAppConfigFiles()
 }
 
 eventRunAppStart = {
@@ -59,10 +82,12 @@ eventRunAppStart = {
     println "compiling stylesheets in external themes dir"
     compileStyleSheets(basedir)
   }
+  copyAppConfigFiles()
 }
 
 eventCreateWarStart = { name, stagingDir ->
 //  compileStyleSheets(stagingDir)
+  copyAppConfigFiles()
 
   println "copying help for help into war"
 
