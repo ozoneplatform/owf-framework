@@ -1057,13 +1057,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     dashboardPanel.on(OWF.Events.Dashboard.SHOWN, function () {
                         var me = this;
                         setTimeout(function () {
-                            me.fireEvent(OWF.Events.Dashboard.CHANGED, guid, dashboardPanel);    
+                            me.fireEvent(OWF.Events.Dashboard.CHANGED, guid, dashboardPanel, me.previousActiveDashboard);    
                         }, 0);
                     }, this, {
                         single: true
                     })
                 } else {
-                    this.fireEvent(OWF.Events.Dashboard.CHANGED, guid, dashboardPanel);
+                    this.fireEvent(OWF.Events.Dashboard.CHANGED, guid, dashboardPanel, this.previousActiveDashboard);
                 }
                 this.setDefaultDashboard(guid);
             }

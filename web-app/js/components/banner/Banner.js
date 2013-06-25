@@ -115,7 +115,6 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         var me = this;
         
         if (this.hasMarketplaceButton) {
-            this.blinkMarketBtnAfterDashboardSwitch();
             if (!this.marketplaceToggle) {
                 if (this.marketplaceWidget) {
                     var keyboard = ('keyup' == e.type) ? true : false;
@@ -497,6 +496,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         });
 
         this.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, this.clearMarketplaceToggle, this);
+        this.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, this.blinkMarketBtnAfterDashboardSwitch, this);
     },
 
     //returns either the docked banner or the popout banner,
@@ -1023,10 +1023,10 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         
     },
 
-    blinkMarketBtnAfterDashboardSwitch: function () {
+    blinkMarketBtnAfterDashboardSwitch: function (guid, activeDashboard, previousActiveDashboard) {
         var btn = this.getComponent('marketBtn');
 
-        this.dashboardContainer.on(OWF.Events.Dashboard.CHANGED, function (guid, dashboard) {
+        if(btn && (activeDashboard.configRecord.isMarketplaceDashboard() || previousActiveDashboard.configRecord.isMarketplaceDashboard())) {
             if(!Modernizr.cssanimations) {
                 // wait 6 seconds if dashboard hasn't rendered
                 // otherwise frame animation won't be visible to user
@@ -1037,9 +1037,9 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             else {
                 btn.blink();
             }
-        }, null, {
-            single: true
-        });
+        }
+
+        
     }
 
 });
