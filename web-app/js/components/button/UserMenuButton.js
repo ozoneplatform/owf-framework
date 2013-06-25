@@ -47,7 +47,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                             show: function () {
                                 Ozone.KeyMap.disable();
                             },
-                            hide: function () {
+                            destroy: function () {
                                 Ozone.KeyMap.enable();
                             }
                         }
