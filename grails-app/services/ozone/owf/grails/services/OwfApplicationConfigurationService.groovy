@@ -156,7 +156,6 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
         def SUB_GROUP_NAME = "Session Control"
         int subGroupCtr = 1
 
-        // TODO: Initial values hard-coded here - later update to use config when available
         // Configuration for the Enable session control switch
         createOrUpdateApplicationConfig(SESSION_CONTROL_ENABLED, GROUP_NAME,  "Boolean", 
             grailsApplication.config.owf.dynamic.session.control.enabled,
@@ -185,7 +184,6 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
         def SUB_GROUP_NAME = "Inactive Accounts"
         def subGroupCtr = 1
 
-        // TODO: Initial values hard-coded here - later update to use config when available
         // Configuration for the Disable Inactive Accounts switch
         createOrUpdateApplicationConfig(DISABLE_INACTIVE_ACCOUNTS, GROUP_NAME,  "Boolean",
             grailsApplication.config.owf.dynamic.disable.inactive.accounts,
