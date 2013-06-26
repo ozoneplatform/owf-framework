@@ -14,9 +14,14 @@ import ozone.owf.grails.domain.PersonWidgetDefinition
 import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.domain.WidgetDefinition
 import org.hibernate.CacheMode
+import org.springframework.transaction.annotation.Transactional
+
+
 /**
  * Service for account-related operations.
  */
+
+@Transactional(readOnly=true)
 class AccountService {
 
     //def authenticateService
@@ -263,6 +268,7 @@ class AccountService {
         return [success:true, data: processedList, results: personList.totalCount]
     }
 
+    @Transactional(readOnly=false)
     def createOrUpdate(params) {
         if (!getLoggedInUserIsAdmin())
             throw new OwfException(message:'You are not authorized to see a list of users in the system.',
@@ -440,6 +446,7 @@ class AccountService {
         return [success:true,data:returnValue]
     }
 
+    @Transactional(readOnly=false)
     def bulkDeleteUsersForAdmin(params){
         if (!getLoggedInUserIsAdmin())
         {
@@ -482,6 +489,7 @@ class AccountService {
         }
     }
 
+    @Transactional(readOnly=false)
     def deleteUser(params){
         def person
         if(params.person){
