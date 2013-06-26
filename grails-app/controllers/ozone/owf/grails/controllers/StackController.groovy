@@ -106,12 +106,23 @@ class StackController extends BaseOwfRestController {
         try {
             def filename = params.filename ? params.filename :"stack_descriptor"
 
+            // Set filename/ID for audit logging
+            request.setAttribute("fileName", filename+".html")
+
+            // Set content type for audit logging
+            response.setContentType("text/json")
+
             //Set content-disposition so browser is expecting a file
             response.setHeader("Content-disposition", "attachment; filename=" + filename + ".html")
 
             def stackDescriptor = stackService.export(params)
+
+            // Set fileSize for audit logging
+            request.setAttribute("fileSize", (stackDescriptor.getBytes("UTF-8")).length)
+
             response.outputStream.write(stackDescriptor.getBytes("UTF-8"))
             response.outputStream.flush()
+
         }
         catch (Exception e) {
             //Set content-disposition back to text to relay the error

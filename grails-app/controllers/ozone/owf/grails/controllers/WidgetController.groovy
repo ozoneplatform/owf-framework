@@ -196,10 +196,20 @@ class WidgetController extends BaseOwfRestController {
         try {
             def filename = params.filename ? params.filename : "widget_descriptor"
 
+            // Set filename/ID for audit logging
+            request.setAttribute("fileName", filename+".html")
+
+            // Set content type for audit logging
+            response.setContentType("text/json")
+
             //Set content-disposition so browser is expecting a file
             response.setHeader("Content-disposition", "attachment; filename=" + filename + ".html")
 
             def widgetDescriptor = widgetDefinitionService.export(params)
+
+            // Set fileSize for audit logging
+            request.setAttribute("fileSize", (widgetDescriptor.getBytes("UTF-8")).length)
+
             response.outputStream.write(widgetDescriptor.getBytes("UTF-8"))
             response.outputStream.flush()
         }
