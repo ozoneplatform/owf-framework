@@ -15,8 +15,10 @@ import ozone.owf.grails.domain.PersonWidgetDefinition
 import ozone.owf.grails.domain.WidgetType
 import ozone.owf.grails.domain.RelationshipType
 import ozone.owf.grails.domain.DomainMapping
+import ozone.owf.grails.services.OwfApplicationConfigurationService;
 import ozone.security.authentication.OWFUserDetailsImpl
 import java.util.HashMap
+import static ozone.owf.enums.OwfApplicationSetting.*
 
 import org.apache.log4j.*
 
@@ -31,6 +33,8 @@ class SecurityFilters {
     def serviceModelService
     def grailsApplication
 
+	OwfApplicationConfigurationService owfApplicationConfigurationService
+	
     def filters = {
         securityAll(controller:'index', action:'index') {
             before = {
@@ -243,8 +247,16 @@ class SecurityFilters {
                     response.sendError(401);
                     return false;
                 }
-            }
+            }			
         }
+		
+		setApplicationConfigurationFlags(controller: '*', action:'*'){			
+			before = {				
+				request.setAttribute(CEF_LOGGING_ENABLED.getCode(), owfApplicationConfigurationService.is(CEF_LOGGING_ENABLED))
+				request.setAttribute(CEF_OBJECT_ACCESS_LOGGING_ENABLED.getCode(), owfApplicationConfigurationService.is(CEF_OBJECT_ACCESS_LOGGING_ENABLED))							
+			}			
+		}
+		
 //        securityDashboardAdmin(controller:'dashboardAdmin', action:'*'){
 //            before = {
 //                if (! accountService.getLoggedInUserIsAdmin() ) {

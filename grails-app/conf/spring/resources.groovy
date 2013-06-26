@@ -17,7 +17,6 @@ beans = {
         sessionFactory = ref('sessionFactory')
         accountService = ref('accountService')
         grailsApplication = ref('grailsApplication')
-		owfApplicationConfigurationService = ref('owfApplicationConfigurationService')
     }
 	
     // wire up a different account service if -Duser=something and environment is development
