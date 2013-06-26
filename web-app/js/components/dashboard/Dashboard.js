@@ -743,7 +743,15 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     closeWidget: function (guid) {
         var widget = Ext.getCmp(guid);
         if (widget !== undefined) {
-            widget.close();
+            //Check if widget has a tab (i.e., is in a tabbed pane)
+            if (widget.tab) {
+                //close the tab, not the widget
+                widget.tab.close();
+            }
+            else {
+                widget.close();
+            }
+            
             return true;
         }
         return false;
