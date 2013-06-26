@@ -5,9 +5,6 @@ import static ozone.owf.enums.OwfApplicationSetting.*
 import javax.servlet.http.HttpServletRequest
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
-import org.hibernate.SessionFactory
-import org.hibernate.event.PostLoadEvent
-import org.hibernate.event.PostUpdateEvent
 import org.ozoneplatform.appconfig.server.domain.model.ApplicationSetting
 import org.ozoneplatform.auditing.format.cef.Extension
 import org.ozoneplatform.auditing.hibernate.AbstractAuditLogListener
