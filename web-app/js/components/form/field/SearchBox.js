@@ -29,6 +29,8 @@ Ext.define('Ozone.components.form.field.SearchBox', {
     
     componentLayout: 'searchbox',
 
+    cls: 'searchBox',
+
     dynamic: false,
 
     //in ms
