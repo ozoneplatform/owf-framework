@@ -397,6 +397,41 @@ $customize-dashboard-left-width: 150px;
     }
 }
 
+.adminEditor {
+    .editor-tabs {
+        //background-color: white;
+        background-image: none !important;
+        filter: none;
+        padding: 0px;
+    }
+
+    .x-box-menu-right {
+        overflow: visible;
+        height: 100%;
+        min-height: 86px;
+
+        .x-btn {
+            height: 100%;
+
+            button {
+                height: 100%;
+            }
+
+            .x-btn-icon {
+                display: inline-block;
+                height: 100%;
+            }
+        }   
+    }
+}
+
+.x-ie7 .adminEditor .x-box-menu-right {
+    min-height: 90px;
+}
+
+.x-ie9 .adminEditor .x-box-menu-right {
+    min-height: 92px;
+}
 .searchBox {
   min-height: 35px;
 }

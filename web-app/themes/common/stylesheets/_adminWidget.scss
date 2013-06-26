@@ -400,6 +400,7 @@ div.detail-info {
     .x-box-menu-right {
         overflow: visible;
         height: 100%;
+        min-height: 74px;
 
         .x-btn {
             height: 100%;
@@ -413,6 +414,10 @@ div.detail-info {
                 height: 100%;
             }
         }   
+    }
+
+    .x-horizontal-box-overflow-body {
+        position: absolute;
     }
 
     .x-form-item-label {
@@ -498,6 +503,10 @@ div.detail-info {
             font-weight: bold;
         }
     }
+}
+
+.x-ie7 .adminEditor .x-box-menu-right {
+    min-height: 78px;
 }
 
 .x-gecko3 .adminEditor .x-box-menu-right .x-btn-icon {
