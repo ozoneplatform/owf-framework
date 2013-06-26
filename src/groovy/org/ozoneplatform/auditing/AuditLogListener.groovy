@@ -31,7 +31,7 @@ class AuditLogListener extends AbstractAuditLogListener {
 	
 	@Override
 	public boolean doCefObjectAccessLogging(){
-		getSettingFromRequest(CEF_OBJECT_ACCESS_LOGGING_ENABLED.getCode())
+		getSettingFromRequest(CEF_OBJECT_ACCESS_LOGGING_ENABLED)
 	}
 	
 	private getSettingFromRequest(ApplicationSetting setting) {
