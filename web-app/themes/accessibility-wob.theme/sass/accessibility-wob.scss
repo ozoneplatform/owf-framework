@@ -460,3 +460,15 @@ div.detail-info {
         }
     }
 }
+
+div.importFileupload.x-item-disabled {
+	div.x-form-file-btn {
+		border-color: #323232;
+	}
+}
+
+.x-ie7 div.importFileupload.x-item-disabled {
+	div.x-form-file-btn {
+		border-color: #404040;
+	}
+}
