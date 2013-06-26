@@ -1247,10 +1247,10 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             title: "Warning",
             html:  msg,
             minHeight: 115,
-            width: 250,
             dashboardContainer: this.dashboardContainer,
             okFn: okFn,
             cancelFn: cancelFn,
+            cls: 'alert-window-widget',
             showCancelButton: !!cancelFn
         }).show();
     },
