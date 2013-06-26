@@ -59,6 +59,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             cls: 'titleBox',
             itemId: 'titleBox', //OWF-2558
             fieldLabel: Ozone.util.createRequiredLabel(Ozone.ux.DashboardMgmtString.title),
+            labelSeparator: '',
+            labelWidth: 150,
             allowBlank: false,
             maxLength: 200,
             value: '',
@@ -80,6 +82,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             itemId: 'description',
             fieldLabel: Ozone.ux.DashboardMgmtString.description,
             labelSeparator: '',
+            labelWidth: 150,
             value: '',
             maxLength: 4000,
             enforceMaxLength: true,
@@ -183,8 +186,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             allowBlank:true,
             forceSelection: true,
             disabled: true,
-            padding: '0, 0, 5, 17',
-            anchor: '-24'
+            padding: '0, 0, 5, 0',
+            margin: '0, 5, 0, 17'            
         };
         this.existingView.value = this.views[0].guid;
 
@@ -206,8 +209,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             name: 'importFileupload',
             hideLabel: true,
             label: '',
-            padding: '0, 0, 5, 17',
-            anchor: '-24',
+            padding: '0, 0, 5, 0',
+            margin: '0, 5, 0, 17',
             emptyText: Ozone.ux.DashboardMgmtString.uploadConfig,
             allowBlank: true,
             disabled: true,
@@ -317,6 +320,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         this.viewSelectRadio = {
             xtype: 'fieldcontainer',
             fieldLabel: Ozone.ux.DashboardMgmtString.layout,
+            labelSeparator: '',
+            labelWidth: 150,
             layout: 'fit',
             cls: 'createSelector',
             region: 'center',
@@ -331,7 +336,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                     layout: 'anchor',
                     defaults: {
                         anchor: '100%',
-                        padding: '0, 0, 0, 0'
+                        padding: '0, 0, 5, 0'
                     },
                     items: [
                         this.newViewRadio,
@@ -349,7 +354,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         };
 
         this.defaults = {
-            labelWidth: 150,
+            labelWidth: 175,
             labelSeparator: ''
         };
 
