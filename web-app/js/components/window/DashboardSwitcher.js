@@ -150,7 +150,9 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                         str += '<p class=\'created-by\'><label>Created by: </label>' + createdBy + '</p>';
                     }
                     else {
-                        //Put paragraph tag here if you want to display something when createdBy is null
+                        //If createdBy is null we just say the "System" made it
+                        str += '<p class=\'created-by\'><label>Created by: </label>' + 'System' + '</p>';
+                        
                     }
                     
                     str += '<p class=\'last-updated\'><label>Last Modified: </label>' + (values.prettyEditedDate || '') + '</p></div></div>"';

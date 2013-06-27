@@ -65,7 +65,7 @@ Ext.define('Ozone.components.admin.dashboard.DashboardDetailPanel', {
                     },
                     renderUserRealName: function(values) {
                         var createdBy = values.createdBy;
-                        return (createdBy.userRealName ? Ext.htmlEncode(createdBy.userRealName) : '')
+                        return (createdBy.userRealName ? Ext.htmlEncode(createdBy.userRealName) : 'System')
                     },
                     renderGroups: function(values) {
                         var groups = values.groups;
