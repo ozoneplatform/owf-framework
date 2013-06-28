@@ -344,6 +344,7 @@
                 <include name="OwfConfig.groovy" />
                 <include name="OzoneConfig.properties" />
                 <include name="owf-override-log4j.xml" />
+                <include name="ehcache.xml" />
             </fileset>
             <fileset dir="${basedir}" includes="themes/**" />
             <fileset dir="${basedir}" includes="help/**" />
@@ -354,11 +355,11 @@
                 <include name="prodDb.script" />
             </fileset>
         </copy>
-        <copy todir="${staging.dir}/etc/override">
-            <fileset dir="src/resources">
-                <include name="ehcache.xml" />
-            </fileset>
-        </copy>
+        <!--<copy todir="${staging.dir}/etc/override">-->
+            <!--<fileset dir="src/resources">-->
+                <!--<include name="ehcache.xml" />-->
+            <!--</fileset>-->
+        <!--</copy>-->
     </target>
 
     <!-- =================================
