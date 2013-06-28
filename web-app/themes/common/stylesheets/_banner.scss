@@ -399,85 +399,157 @@
     }
 }
 
+@mixin round-bottom {
+    @include border-bottom-left-radius(10px);
+    @include border-bottom-right-radius(10px);
+}
+
 #userMenu {
-    @mixin round-bottom {
-        @include border-bottom-left-radius(10px);
-        @include border-bottom-right-radius(10px);
-    }
 
-    height: auto;
-    @include owf-background-color($user-menu-background-color);
     @include round-bottom;
-    color: $user-menu-text-color;
-    font-family: tahoma, arial, verdana, sans-serif;
-    width: 16em;
-    overflow: hidden;
-    z-index: 100000000;
-    
-    margin-top: 8px;
-    margin-bottom: 8px;
 
-    li {
-        padding: 10px;
-        padding-left: 15px;
-        color: $user-menu-text-color;
-        line-height: 1.5;
-
-        &.over, &.x-focus {
-            @include owf-background-color($user-menu-item-over-background-color);
-        }
-        &.over {
-            cursor: pointer;
-        }
-        &.x-focus {
-            //no yellow borders here
-            border-style: none !important;
-        }
-
-        &#prevLogin {
-            color: $owf-prev-login-text-color;
-            font-size: .8em;
-            font-weight: bold;
-        }
-        
-        //it would be cleaner to do this with ids 
-        //(as in #logout.over), but IE doesn't
-        //support that
-        &.logout-over, &.logout-focus {
-            @include owf-background-color($owf-logout-color);
-        }
+    #owfMenu { 
+        border-right: 1px solid $user-menu-button-border-color;
     }
 
-    //this selector gets the last 
-    //item in the list. This item
-    //needs to have rounded borders
-    //to conform to the list borders.
-    //this selector wont work in IE, but
-    //ie doesn't support rounded border anyway
-    > :last-child {
-        @include round-bottom;
+    #marketplaceMenu {
+        border-left: 1px solid $user-menu-button-border-color;
     }
 
-    hr {
-        margin-left: 10px;
-        margin-right: 10px;
-        margin-top: 3px;
-        margin-bottom: 3px;
-        border-style: none;
-        height: 1px;
-        background-color: $user-menu-text-color;
-        background: -webkit-linear-gradient(right, 
-            rgba($user-menu-text-color, 0), 
-            rgba($user-menu-text-color, .4), 
-            rgba($user-menu-text-color, 0));
-
-        background: -moz-linear-gradient(right, 
-            rgba($user-menu-text-color, 0), 
-            rgba($user-menu-text-color, .4), 
-            rgba($user-menu-text-color, 0));
-
+    #owfMenu-body table {
+        width: 100% !important;
     }
 
+    #marketplaceMenu-body table {
+        width: 100% !important;
+    }
+
+    *width: 368px;
+
+	.x-panel-body-default {
+		background: none !important;
+		border: 1px solid $user-menu-background-color;
+	}
+	
+	.x-btn-group-default-framed {
+    	border: 1px solid $user-menu-background-color;
+    	box-shadow: none;
+	}
+	
+	.x-btn-default-toolbar-small, .x-btn-default-small {
+		background-image: none;
+        border: none;
+	}
+	
+	.x-btn {
+
+		width:100%;
+		border-color: transparent;
+		@include owf-background-color($user-menu-background-color, $owf_css_not_important, false);
+		padding-left:10px;
+
+        padding-left: 10px;
+
+        .x-btn-inner {
+            @include owf-background-color($user-menu-background-color, $owf_css_not_important, false);
+            *border-color: transparent;
+        }
+	}
+	
+	.x-btn-over {
+		background: none $user-menu-item-over-background-color !important;
+		border: none;
+
+        .x-btn-inner {
+            background: $user-menu-item-over-background-color !important;
+        }
+	}
+	
+	#userMenu-body {
+		
+        .x-box-inner .x-panel-default { 
+            border: none !important;
+        }
+	    
+	    top: 2px !important;
+
+        border-left: none !important;
+        border-right: none !important;
+        padding: 0px !important;
+
+	    #logout.x-over {
+	    	background: none $owf-logout-color !important;
+
+            .x-btn-inner {
+                background: none $owf-logout-color !important;
+            }
+	    }
+	    
+	    #prevLogin.x-over {
+	    	background: none !important;
+	    }
+	    
+	    div {
+	
+    	    @include owf-background-color($user-menu-background-color);
+    	    // border-bottom:solid 1px transparent;
+    	    font-family: tahoma, arial, verdana, sans-serif;
+    	    *width:150px;
+
+			span {
+	        	color: $user-menu-text-color;
+	        	font-weight:normal;
+			}
+			
+			#owfMenuTitle-btnInnerEl {
+		    	font-size: 1.4em;
+    			font-weight: bold;
+    			// text-indent: 33px;
+		    }
+		    
+		    #marketplaceMenuTitle-btnInnerEl {
+		    	font-size: 1.4em;
+    			font-weight: bold;
+    			// text-indent: 33px;
+		    }
+			
+			#prevLogin-btnInnerEl {
+				color: $owf-prev-login-text-color !important;
+			    font-size: .78em;
+			    font-weight: bold;
+		    }
+	        
+	    }
+	
+	    //this selector gets the last 
+	    //item in the list. This item
+	    //needs to have rounded borders
+	    //to conform to the list borders.
+	    //this selector wont work in IE, but
+	    //ie doesn't support rounded border anyway
+	    > :last-child {
+	        @include round-bottom;
+	    }
+	
+	    .spacer {
+            // Adding any padding to the spacer will cause it to grow vertically
+	  	    padding: 0px !important;
+	        border-style: none;
+	        max-height: 1px;
+            height: 1px;
+	        background-color: $user-menu-text-color;
+	        background: -webkit-linear-gradient(right, 
+	            rgba($user-menu-text-color, 0), 
+	            rgba($user-menu-text-color, .4), 
+	            rgba($user-menu-text-color, 0));
+	
+	        background: -moz-linear-gradient(right, 
+	            rgba($user-menu-text-color, 0), 
+	            rgba($user-menu-text-color, .4), 
+	            rgba($user-menu-text-color, 0));
+	
+	    }
+	}
 }
 
 #prevLoginToolTip {
@@ -488,39 +560,26 @@
 
 
 .x-ie {
-    #userMenuBtn {
-        //include opaque version of background for IE
-        @include owf-background-color(nth($banner-button-background, 
-            length($banner-button-background)), $owf_css_not_important, false);
-    }
-
-    #userMenu {
-        @include owf-background-color($user-menu-background-color, $owf_css_not_important, false);
-
-        li {
-            //have to trigger IE hasLayout or the logout link doesn't get
-            //hover styles at the correct time ...
-            zoom: 1;
-
-            &.over, &.x-focus {
-                @include owf-background-color($user-menu-item-over-background-color, $owf_css_not_important, false);
-            }
-
-            //it would be cleaner to do this with ids 
-            //(as in #logout.over), but IE doesn't
-            //support that
-            &.logout-over, &.logout-focus {
-                @include owf-background-color($owf-logout-color);
-
-            }
-        }
-
-        hr {
-            display: block;
-            margin: -4px 3px; //first number needs to be 7 
-                            //less than expected because its IE
-        }
-    }
+	#userMenu {
+		#userMenu-body {
+			div {
+				//ie gradient esque fix 
+    	    	filter:none;
+			
+				#owfMenuTitle-btnEl {
+			    	width:150px !important;
+			    }
+			    
+			    #marketplaceMenuTitle-btnEl {
+			    	width:150px !important;
+		    	}
+		    	
+		    	#prevLogin-btnInnerEl {
+			    	*font-size: .76em;
+			    }
+			}
+		}
+	}
 }
 
 

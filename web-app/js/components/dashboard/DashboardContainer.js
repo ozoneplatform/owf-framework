@@ -53,29 +53,27 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         this.stackStore = Ext.create('Ozone.data.StackStore', {});
 
-        for(var i = 0, len = this.dashboardStore.getCount(); i < len; i++) {
+        for (var i = 0, len = this.dashboardStore.getCount(); i < len; i++) {
 
             model = this.dashboardStore.getAt(i);
 
             dashboard = model.data;
             stack = dashboard.stack;
 
-            if( stack ) {
-                if( stackModels[ stack.id ] ) {
-                    stackModels[ stack.id ].get('dashboards').push( model );
-                }
-                else {
-                    var stackModel = this.stackStore.add( stack )[0];
-                    stackModel.set('dashboards', [ model ]);
+            if (stack) {
+                if (stackModels[stack.id]) {
+                    stackModels[stack.id].get('dashboards').push(model);
+                } else {
+                    var stackModel = this.stackStore.add(stack)[0];
+                    stackModel.set('dashboards', [model]);
 
-                    stackModels[ stack.id ] = stackModel;
+                    stackModels[stack.id] = stackModel;
                 }
             }
 
         }
-        
-        this.originalDashboardStore = Ext.create('Ozone.data.DashboardStore', {
-        });
+
+        this.originalDashboardStore = Ext.create('Ozone.data.DashboardStore', {});
         this.dashboardMenuItems = [];
         this.dashboards = [];
 
@@ -99,7 +97,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }, this));
 
         //initialize widgetchrome api
-        OWF.Container.Chrome = new Ozone.chrome.WidgetChromeContainer({eventingContainer:OWF.Container.Eventing});
+        OWF.Container.Chrome = new Ozone.chrome.WidgetChromeContainer({
+            eventingContainer: OWF.Container.Eventing
+        });
 
         // initialize widget state event container for receiving events
         OWF.Container.State = new Ozone.state.WidgetStateContainer(OWF.Container.Eventing);
@@ -112,7 +112,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         Ext.apply(this, {
             layout: {
                 type: 'vbox',
-                align:'stretch'
+                align: 'stretch'
             },
             items: [
                 //putting the banner as an actual child component because there are window contraining issues if the
@@ -122,8 +122,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     xtype: 'owfbanner',
                     user: this.user,
                     dashboardContainer: this
-                },
-                {
+                }, {
                     id: 'dashboardCardPanel',
                     itemId: 'dashboardCardPanel',
                     xtype: 'panel',
@@ -168,9 +167,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         this.onBeforeUnload = function(evt) {
             Ozone.pref.PrefServer.deleteUserPreference({
-                namespace:'owf.custom.widgetprefs',
+                namespace: 'owf.custom.widgetprefs',
                 sync: true,
-                name:'widgetNames'
+                name: 'widgetNames'
             });
 
             if (this.activeDashboard != null) {
@@ -180,8 +179,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             //tell History to shutdown cleanly because the browser is leaving OWFs
             if (!this.shareButtonClicked) {
                 Ext.History.shutDown();
-            }
-            else {
+            } else {
                 this.shareButtonClicked = false;
             }
         };
@@ -192,12 +190,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         this.addKeyBindings();
 
         this.addEvents({
-            dashboardChanged : true
+            dashboardChanged: true
         });
 
         // delegate all mousedown to document
         // enables moving widgets from one pane to another
-        Ext.getDoc().on('mousedown', this.onWidgetMouseDown, this, { delegate: '.widgetheader' });
+        Ext.getDoc().on('mousedown', this.onWidgetMouseDown, this, {
+            delegate: '.widgetheader'
+        });
 
         this.updateTitlesandBanner();
         this.initLoad();
@@ -208,7 +208,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     onWidgetMouseDown: function(evt, target) {
         var widgetEl, widgetId, targetEl, widget;
 
-        if(evt.getTarget().nodeName === "IMG") {
+        if (evt.getTarget().nodeName === "IMG") {
             return;
         }
 
@@ -226,7 +226,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         widget = widget.card || widget;
 
         //Return if not a widget or is floating
-        if(!widget.isWidget || widget.floatingWidget) {
+        if (!widget.isWidget || widget.floatingWidget) {
             return;
         }
 
@@ -248,7 +248,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             this._paneWidgets.push(widget);
 
             widgetBox = widget.tab ? widget.tab.getBox() : widget.getBox();
-            widgetBox.midpoint = widget.tab ? widgetBox.x + (widgetBox.width/2) : widgetBox.y + (widgetBox.height / 2);
+            widgetBox.midpoint = widget.tab ? widgetBox.x + (widgetBox.width / 2) : widgetBox.y + (widgetBox.height / 2);
             this._paneWidgetsBox.push(widgetBox);
         }
     },
@@ -273,11 +273,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             }
 
             if (targetPane && this._sourcePane.el === targetPane) {
-                if(isFloating) {
+                if (isFloating) {
                     // hide proxy for floating widgets
                     this.ddProxy.hide();
-                }
-                else { // allow reordering via drag and drop
+                } else { // allow reordering via drag and drop
 
                     this.ddProxy.show();
 
@@ -292,14 +291,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                         overWidget = this._paneWidgets[pos];
                         widgetBox = this._paneWidgetsBox[pos];
 
-                        if(overWidget.tab) {
-                             if(widgetBox.x < eventPageX && ((widgetBox.x + widgetBox.width) > eventPageX)) {
+                        if (overWidget.tab) {
+                            if (widgetBox.x < eventPageX && ((widgetBox.x + widgetBox.width) > eventPageX)) {
                                 match = true;
                                 break;
                             }
-                        }
-                        else {
-                            if(widgetBox.y < eventPageY && ((widgetBox.y + widgetBox.height) > eventPageY)) {
+                        } else {
+                            if (widgetBox.y < eventPageY && ((widgetBox.y + widgetBox.height) > eventPageY)) {
                                 match = true;
                                 break;
                             }
@@ -309,38 +307,33 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                     pos = (match && overWidget ? pos : this._paneWidgets.length);
 
-                    if(this._lastDropIndicatedWidget) {
+                    if (this._lastDropIndicatedWidget) {
                         this._lastDropIndicatedWidget.el.removeCls.call(
-                            this._lastDropIndicatedWidget.tab ? this._lastDropIndicatedWidget.tab.el : this._lastDropIndicatedWidget.el,
-                            ['indicate-drop-before', 'indicate-drop-after']
-                        );
+                            this._lastDropIndicatedWidget.tab ? this._lastDropIndicatedWidget.tab.el : this._lastDropIndicatedWidget.el, ['indicate-drop-before', 'indicate-drop-after']);
                     }
 
-                    if(pos === this._widgetToMove._position) {
+                    if (pos === this._widgetToMove._position) {
                         // dont move as the widget hasn't been moved
                         this.ddProxy.setStatus(this.ddProxy.dropNotAllowed);
-                    }
-                    else if(match) {
+                    } else if (match) {
 
-                        this._lastDropIndicatedWidget =  this._paneWidgets[pos];
+                        this._lastDropIndicatedWidget = this._paneWidgets[pos];
 
                         // var oldPos = pos;
                         var clsToAdd;
 
-                        if((overWidget.tab && widgetBox.midpoint > eventPageX) ||
+                        if ((overWidget.tab && widgetBox.midpoint > eventPageX) ||
                             (!overWidget.tab && widgetBox.midpoint > eventPageY)) {
                             //pos = pos === 0 ? 0 : pos - 1;
                             clsToAdd = 'indicate-drop-before';
-                        }
-                        else {
+                        } else {
                             pos = pos + 1;
                             clsToAdd = 'indicate-drop-after';
                         }
 
                         this._lastDropIndicatedWidget.el.addCls.call(
                             this._lastDropIndicatedWidget.tab ? this._lastDropIndicatedWidget.tab.el : this._lastDropIndicatedWidget.el,
-                            clsToAdd
-                        );
+                            clsToAdd);
 
                         this._movePosition = pos;
 
@@ -350,12 +343,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                         //     console.log(widgetBox.midpoint > eventPageY ? 'before' : 'after', pos, oldPos);
                     }
                 }
-            }
-            else {
+            } else {
                 this.ddProxy.show();
             }
-        }
-        else {
+        } else {
             this._counter = 1;
 
             this.ddProxy = this.ddProxy || Ext.create('Ext.dd.StatusProxy', {
@@ -375,23 +366,20 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     onMouseUp: function(evt, target) {
         var targetPaneEl;
 
-        if(this._lastDropIndicatedWidget) {
+        if (this._lastDropIndicatedWidget) {
             this._lastDropIndicatedWidget.el.removeCls.call(
-                this._lastDropIndicatedWidget.tab ? this._lastDropIndicatedWidget.tab.el : this._lastDropIndicatedWidget.el,
-                ['indicate-drop-before', 'indicate-drop-after']
-            );
+                this._lastDropIndicatedWidget.tab ? this._lastDropIndicatedWidget.tab.el : this._lastDropIndicatedWidget.el, ['indicate-drop-before', 'indicate-drop-after']);
         }
 
         Ext.getDoc().un('mousemove', this.onMouseMove, this);
         Ext.getDoc().un('mouseup', this.onMouseUp, this);
 
-        if(this._movePosition && this._widgetToMove._position < this._movePosition)
+        if (this._movePosition && this._widgetToMove._position < this._movePosition)
             this._movePosition -= 1;
 
-        if(this._reorderingWidgets && this._movePosition !== undefined && this._movePosition !== this._widgetToMove._position) {
+        if (this._reorderingWidgets && this._movePosition !== undefined && this._movePosition !== this._widgetToMove._position) {
             this._sourcePane.reorderWidget(this._widgetToMove, this._movePosition);
-        }
-        else if ( this._widgetToMove && (targetPaneEl = Ext.fly(target).up('.pane')) ) {
+        } else if (this._widgetToMove && (targetPaneEl = Ext.fly(target).up('.pane'))) {
             this.activeDashboard.moveWidgetToPane(evt, Ext.getCmp(this._widgetToMove.paneGuid), Ext.getCmp(targetPaneEl.dom.id), this._widgetToMove);
         }
 
@@ -408,8 +396,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     /*
-    * Launches widget on the current dashboard.
-    */
+     * Launches widget on the current dashboard.
+     */
     launchWidgets: function(widgetModel, isEnterPressed) {
         var me = this;
 
@@ -417,8 +405,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             me.activeDashboard.launchWidgets(pane, null, e, {
                 widgetModel: widgetModel
             })
-        },
-        function () {
+        }, function() {
             var launchMenu = Ext.getCmp('widget-launcher');
             if (launchMenu) {
                 launchMenu.fireEvent('noWidgetLaunched');
@@ -427,9 +414,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     /*
-    * Launches widget on a dashboard that user selects from Dashboard Switcher.
-    */
-    selectDashboardAndLaunchWidgets: function (widgetModel, isEnterPressed) {
+     * Launches widget on a dashboard that user selects from Dashboard Switcher.
+     */
+    selectDashboardAndLaunchWidgets: function(widgetModel, isEnterPressed) {
         var me = this;
 
         // Display dashboard switcher and launch widgets after the user selects a dashboard
@@ -444,7 +431,12 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             text: Ozone.layout.DialogMessages.launchWidgetAlert,
             type: 'success',
             addclass: "stack-bottomright",
-            stack: {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25},
+            stack: {
+                "dir1": "up",
+                "dir2": "left",
+                "firstpos1": 25,
+                "firstpos2": 25
+            },
             history: false,
             sticker: false,
             icon: false
@@ -452,11 +444,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     /*
-    * Selects a Pane from the active dashboard.
-    * 
-    * Returns: a promise object that will be resolved with
-    * event and pane selected
-    */
+     * Selects a Pane from the active dashboard.
+     *
+     * Returns: a promise object that will be resolved with
+     * event and pane selected
+     */
     selectPane: function(isUsingKeyboard) {
         var me = this,
             deferred = jQuery.Deferred(),
@@ -464,10 +456,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             doc = Ext.getDoc();
 
         // if one page resolve right away
-        if( panes.length === 1 ) {
-            deferred.resolve( panes[0] );
-        }
-        else {
+        if (panes.length === 1) {
+            deferred.resolve(panes[0]);
+        } else {
 
             this.activeDashboard.enableWidgetMove();
 
@@ -487,7 +478,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             deferred.always(function() {
                 me.activeDashboard.disableWidgetMove();
 
-                doc.un('keydown', me._selectPaneOnKeyDown, me, {capture: true});
+                doc.un('keydown', me._selectPaneOnKeyDown, me, {
+                    capture: true
+                });
                 me.el.un('click', me._selectPaneOnClick, me);
             });
         }
@@ -496,10 +489,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     /*
-    * Manages pane selection using keyboard.
-    * Resolves deferred when Enter key is pressed and 
-    * rejects when Esc is pressed
-    */
+     * Manages pane selection using keyboard.
+     * Resolves deferred when Enter key is pressed and
+     * rejects when Esc is pressed
+     */
     _selectPaneOnKeyDown: function(e, dom, eOpts) {
         var panes = this.activeDashboard.panes,
             key = e.getKey(),
@@ -511,53 +504,48 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         this._previousPaneIndex = this._previousPaneIndex || 0;
 
-        if( key === Ext.EventObject.TAB ) {
-            if(e.shiftKey) {
+        if (key === Ext.EventObject.TAB) {
+            if (e.shiftKey) {
                 //Go back a pane
-                if(this._previousPaneIndex === 0) {
+                if (this._previousPaneIndex === 0) {
                     nextPaneIndex = lastPaneIndex;
-                }
-                else {
+                } else {
                     nextPaneIndex = this._previousPaneIndex - 1;
                 }
-            }
-            else {
+            } else {
                 //Go forward a pane
                 if (this._previousPaneIndex === lastPaneIndex) {
                     nextPaneIndex = 0;
-                }
-                else {
+                } else {
                     nextPaneIndex = this._previousPaneIndex + 1;
                 }
             }
-            panes[ this._previousPaneIndex ].blur();
-            panes[ nextPaneIndex ].focus();
+            panes[this._previousPaneIndex].blur();
+            panes[nextPaneIndex].focus();
 
             this._previousPaneIndex = nextPaneIndex;
-        }
-        else if( key === Ext.EventObject.ENTER ) {
+        } else if (key === Ext.EventObject.ENTER) {
 
-            eOpts.deferred.resolve( panes[ this._previousPaneIndex ], e );
+            eOpts.deferred.resolve(panes[this._previousPaneIndex], e);
             delete this._previousPaneIndex;
 
         }
         //Enable ESC to cancel
-        else if( key === Ext.EventObject.ESC ) {
+        else if (key === Ext.EventObject.ESC) {
             eOpts.deferred.reject();
         }
     },
 
     /*
-    * Manages pane selection using mouse.
-    */
+     * Manages pane selection using mouse.
+     */
     _selectPaneOnClick: function(e, dom, eOpts) {
         var paneEl = Ext.get(dom).up('.pane'),
             deferred = eOpts.deferred;
 
-        if( paneEl ) {
-            deferred.resolve( Ext.getCmp( paneEl.id ), e );
-        }
-        else {
+        if (paneEl) {
+            deferred.resolve(Ext.getCmp(paneEl.id), e);
+        } else {
             deferred.reject();
         }
     },
@@ -584,7 +572,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                 this.dashboards.push(this.createDashboardConfig(dashRecord));
                 this.originalDashboardStore.add(Ext.JSON.decode(Ext.JSON.encode(dashRecord.data)));
-                
+
                 // Build an array of dashboards that are in the supplied stack context
                 if (stackContext && dashRecord.data.stack && dashRecord.data.stack.stackContext == stackContext) {
                     stackDashboards.push(this.createDashboardConfig(dashRecord));
@@ -604,6 +592,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         // Set active dashboard
         if (this.activeDashboard == null) {
+
             // Couldn't find a dashboard based on guid
             if (stackDashboards.length > 0) {
                 // If a stack context was supplied, set active dashboard to first dashboard in stack
@@ -644,28 +633,27 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         //attach listener to change dashboard on # change
         Ext.util.History.on('change', function(hashData) {
             if (hashData != null) {
-                
+
                 var data = Ext.urlDecode(hashData);
                 if (data.guid != null && data.guid != 'notFound') {
                     this._activateDashboard(data.guid, data.stack);
-                }
-                else
+                } else
                 if (data.guid == 'notFound') {
                     //guid was bad
                     this._activateDashboard(null, data.stack);
-                }
-                else {
+                } else {
                     //no data specified on the hash -- pass empty string
                     this._activateDashboard('', data.stack);
                 }
-            }
-            else {
+            } else {
                 //goto the default dashboard
                 this._activateDashboard(this.defaultDashboard.guid, data.stack);
             }
         }, this);
 
         var dashboardCardPanel = this.getComponent('dashboardCardPanel');
+
+        this.toggleMarketplaceMenuOnDashboardSwitch(this.activeDashboard);
 
         var setupInitialDash = Ext.bind(function() {
             dashboardCardPanel.activeItem = this.activeDashboard.id;
@@ -674,12 +662,12 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             this.activeDashboard = dashboardCardPanel.getComponent(this.activeDashboard.id);
             this.activateDashboard(this.activeDashboard.id, true, this.activeDashboard.stackContext);
             if (this.activeDashboard.configRecord.get('locked')) {
-    			this.getBanner().disableLaunchMenu();
-    		} else {
-    			this.getBanner().enableLaunchMenu();
-    		}
+                this.getBanner().disableLaunchMenu();
+            } else {
+                this.getBanner().enableLaunchMenu();
+            }
 
-            if(this.activeDashboard.configRecord.isMarketplaceDashboard()) {
+            if (this.activeDashboard.configRecord.isMarketplaceDashboard()) {
                 this.getBanner().setMarketplaceToggle();
             }
 
@@ -687,8 +675,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         if (dashboardCardPanel.isLayedOut) {
             setupInitialDash();
-        }
-        else {
+        } else {
             dashboardCardPanel.on({
                 afterlayout: {
                     fn: function() {
@@ -789,7 +776,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     showWidgetSwitcher: function() {
-        var widgetSwitcherId = 'widget-switcher', widgetSwitcher = Ext.getCmp(widgetSwitcherId);
+        var widgetSwitcherId = 'widget-switcher',
+            widgetSwitcher = Ext.getCmp(widgetSwitcherId);
 
         if (!widgetSwitcher) {
             widgetSwitcher = Ext.widget('widgetswitcher', {
@@ -799,8 +787,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 widgetStore: this.widgetStore,
                 plugins: new Ozone.components.keys.HotKeyComponent(Ozone.components.keys.HotKeys.WIDGET_SWITCHER)
             });
-        }
-        else if (widgetSwitcher.isVisible()) {
+        } else if (widgetSwitcher.isVisible()) {
             widgetSwitcher.close();
             return;
         }
@@ -851,10 +838,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             };
 
         // If it already is open, close it
-        if(dashboardSwitcher && dashboardSwitcher.isVisible()) {
+        if (dashboardSwitcher && dashboardSwitcher.isVisible()) {
             dashboardSwitcher.close();
-        }
-        else {
+        } else {
             me.loadMask.show();
 
             //making this asynchronous helps the loading mask appear in a timely
@@ -873,8 +859,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     me.dashboardsNeedRefresh = false;
 
                     me.reloadDashboards(show);
-                }
-                else {
+                } else {
                     show();
                 }
             }, 0);
@@ -882,7 +867,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         return dashboardSwitcherDeferred.promise();
     },
 
-    destroyDashboardSwitcher: function () {
+    destroyDashboardSwitcher: function() {
         var dashboardSwitcherId = 'dashboard-switcher',
             dashboardSwitcher = Ext.getCmp(dashboardSwitcherId);
 
@@ -891,7 +876,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     // Displays dashboard switcher and returns a promise which is resolved only after the user selects a dashboard
     // and it is activated.
-    selectDashboard: function () {
+    selectDashboard: function() {
         var me = this,
             dashboardActivatedDeferred = $.Deferred();
 
@@ -901,12 +886,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         dashboardSwitcherPromise.done(function(dashboardSwitcher) {
             // Dashboard selection promise will resolve if a dashboard is selected in a switcher
             var dashboardSelectionPromise = dashboardSwitcher.getDashboardSelectionPromise();
-            dashboardSelectionPromise.done(function (dashboardGuid) {
-                if(me.activeDashboard.guid === dashboardGuid) {
+            dashboardSelectionPromise.done(function(dashboardGuid) {
+                if (me.activeDashboard.guid === dashboardGuid) {
                     // The user selected the same dashboard
                     dashboardActivatedDeferred.resolve();
-                }
-                else {
+                } else {
                     // The user selected different dashboard, wait for it becoming active
                     me.addListener(OWF.Events.Dashboard.CHANGED, function() {
                         dashboardActivatedDeferred.resolve();
@@ -926,13 +910,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             data: []
         });
 
-//        if (typeof dash.defaultSettings === "string" && !Ext.isEmpty(dash.defaultSettings)) {
-//            dash.defaultSettings = Ext.JSON.decode(dash.defaultSettings);
-//        }
-//        //we always want this to be defaulted to an empty object if it is null or an empty string
-//        if (dash.defaultSettings == null || dash.defaultSettings == "") {
-//            dash.defaultSettings = {};
-//        }
+        //        if (typeof dash.defaultSettings === "string" && !Ext.isEmpty(dash.defaultSettings)) {
+        //            dash.defaultSettings = Ext.JSON.decode(dash.defaultSettings);
+        //        }
+        //        //we always want this to be defaulted to an empty object if it is null or an empty string
+        //        if (dash.defaultSettings == null || dash.defaultSettings == "") {
+        //            dash.defaultSettings = {};
+        //        }
 
         return {
             id: dash.guid,
@@ -941,7 +925,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             xtype: 'dashboard',
             config: dash,
             configRecord: dashRecord,
-//            defaultSettings: dash.defaultSettings,
+            //            defaultSettings: dash.defaultSettings,
             widgetStore: this.widgetStore,
             stateStore: stateStore,
             eventingContainer: OWF.Container.Eventing,
@@ -961,7 +945,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     activateDashboard: function(guid, silent, stackContext) {
         //set dashboard in history but disable events so we don't activate the dashboard twice
         var params = {};
-        if (stackContext) { params.stack = stackContext; }
+        if (stackContext) {
+            params.stack = stackContext;
+        }
         params.guid = guid;
         if (silent) {
             Ext.util.History.shutDown();
@@ -975,17 +961,16 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     /**
-    *
-    * Activates previously selected dashboard.
-    *
-    **/
-    activatePreviousDashboard: function () {
+     *
+     * Activates previously selected dashboard.
+     *
+     **/
+    activatePreviousDashboard: function() {
         var guid, stack, previousActiveDashboardModel;
 
-        if(this.previousActiveDashboard && this.previousActiveDashboard !== this.activeDashboard) {
+        if (this.previousActiveDashboard && this.previousActiveDashboard !== this.activeDashboard) {
             previousActiveDashboardModel = this.previousActiveDashboard.configRecord;
-        }
-        else {
+        } else {
             // Sort in descending order by edited date
             // Sort on array to prevent store positions from being udpated
             var sortedDashboards = Ext.Array.sort(Ext.Array.pluck(this.dashboardStore.data.items, 'data'), function(a, b) {
@@ -993,25 +978,24 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             });
 
             // If more than 1 dashboards are found, verify that we dont select the same dashboard to activate
-            if(length >= 2) {
-                if(sortedDashboards[0].guid === this.activeDashboard.guid) {
+            if (length >= 2) {
+                if (sortedDashboards[0].guid === this.activeDashboard.guid) {
                     guid = sortedDashboards[1].guid;
-                }
-                else {
+                } else {
                     guid = sortedDashboards[0].guid;
                 }
                 previousActiveDashboardModel = this.dashboardStore.getById(guid);
             }
         }
+       
 
-        if(previousActiveDashboardModel) {
+        if (previousActiveDashboardModel) {
             stack = previousActiveDashboardModel.get('stack');
             guid = previousActiveDashboardModel.get('guid');
 
             this.activateDashboard(guid, false, stack ? stack.stackContext : null);
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     },
@@ -1022,16 +1006,18 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         if (!dashboardCardPanel) {
             return;
         }
-
+        
         this.previousActiveDashboard = dashboardCardPanel.layout.getActiveItem();
 
         if (guid && guid !== '') {
             //make the new dashboard active and visible
             var dashboardPanel = dashboardCardPanel.layout.setActiveItem(guid);
-            
+
             if (dashboardPanel) {
                 //save a reference
                 this.activeDashboard = dashboardPanel;
+
+                this.toggleMarketplaceMenuOnDashboardSwitch(this.activeDashboard);
 
                 // OP-772: blur iframe when switching dashboards.
                 // Blur the focused element.
@@ -1040,22 +1026,23 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 var activeEl = document.activeElement;
 
                 // OP-1056: use small delay to avoid IE7/9 issue where browser is sent to the background
-                if(activeEl) {
-                    if(activeEl.nodeName.toLowerCase() != 'body') {
+                if (activeEl) {
+                    if (activeEl.nodeName.toLowerCase() != 'body') {
                         setTimeout(function() {
                             activeEl.blur();
                         }, 1);
 
                     } else {
-                        setTimeout (function() {
-                            $( "input:focus, textarea:focus, select:focus" ).blur();
+                        setTimeout(function() {
+                            $("input:focus, textarea:focus, select:focus").blur();
                         }, 1);
                     }
                 }
 
-                if(dashboardPanel.cssanimations) {
-                    dashboardPanel.on(OWF.Events.Dashboard.SHOWN, function () {
+                if (dashboardPanel.cssanimations) {
+                    dashboardPanel.on(OWF.Events.Dashboard.SHOWN, function() {
                         var me = this;
+                        
                         setTimeout(function () {
                             me.fireEvent(OWF.Events.Dashboard.CHANGED, guid, dashboardPanel, me.previousActiveDashboard);    
                         }, 0);
@@ -1103,11 +1090,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 } else {
                     params.guid = this.activeDashboard.guid;
                     //todo remove this defer when there are events on dashboards
-                    Ext.defer(Ozone.Msg.alert, 100, this, 
-                        [Ozone.util.ErrorMessageString.invalidDashboard, this.activeDashboard.isdefault 
-                        ? Ozone.util.ErrorMessageString.invalidDashboardMsg 
-                        : Ozone.util.ErrorMessageString.invalidDashboardGotoDefaultMsg,
-                        null, null, null, this.modalWindowManager]);
+                    Ext.defer(Ozone.Msg.alert, 100, this, [Ozone.util.ErrorMessageString.invalidDashboard, this.activeDashboard.isdefault ? Ozone.util.ErrorMessageString.invalidDashboardMsg : Ozone.util.ErrorMessageString.invalidDashboardGotoDefaultMsg,
+                        null, null, null, this.modalWindowManager
+                    ]);
                 }
             }
             if (params.guid) {
@@ -1133,37 +1118,36 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     esc: function(key, evt, guid) {
         if (evt.fromWidget) {
             this.unfocusWidget(key, evt, guid);
-        }
-        else {
+        } else {
             this.getBanner().getBanner().focus();
         }
     },
 
     unfocusWidget: function(key, event, guid) {
-        var widget = Ext.getCmp(guid), header;
+        var widget = Ext.getCmp(guid),
+            header;
         if (widget) {
             header = widget.tab ? widget.tab.header : widget.header;
-            if(header) {
+            if (header) {
                 header.titleCmp.focus();
-            }
-            else {
+            } else {
                 this.getBanner().getBanner().focus();
             }
         }
     },
 
-//    showCustomizeWindow: function() {
-//        if(!this.customizeDashWindow) {
-//            this.customizeDashWindow = Ext.widget('customizedashboardwindow', {
-//                dashboardContainer: this
-//            });
-//        }
-//        else {
-//            this.customizeDashWindow.getComponent('customizeDashboardPanel').refresh();
-//        }
-//
-//        this.customizeDashWindow.isVisible() ? this.customizeDashWindow.close() : this.customizeDashWindow.show();
-//    },
+    //    showCustomizeWindow: function() {
+    //        if(!this.customizeDashWindow) {
+    //            this.customizeDashWindow = Ext.widget('customizedashboardwindow', {
+    //                dashboardContainer: this
+    //            });
+    //        }
+    //        else {
+    //            this.customizeDashWindow.getComponent('customizeDashboardPanel').refresh();
+    //        }
+    //
+    //        this.customizeDashWindow.isVisible() ? this.customizeDashWindow.close() : this.customizeDashWindow.show();
+    //    },
 
     openDashboardMgr: function() {
         var winId = "user-manage-dashboards";
@@ -1202,8 +1186,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 cls: "manageContainer",
                 closeAction: 'destroy',
                 draggable: true,
-                items: [
-                    {
+                items: [{
                         xtype: 'owfCreateDashboardsContainer',
                         dashboardContainer: this,
                         winId: createNewDashboardWindowId
@@ -1245,8 +1228,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
         if (win.isVisible()) {
             win.close();
-        }
-        else {
+        } else {
             win.show();
         }
     },
@@ -1268,7 +1250,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         Ozone.eventing.Container.init({
 
             //override getIframeId directly lookup iframe ids via ext components
-            getIframeId:{
+            getIframeId: {
                 fn: function(uniqueId) {
                     var widgetCmp = Ext.getCmp(uniqueId);
                     if (widgetCmp != null) {
@@ -1282,7 +1264,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             },
 
             //override getOpenedWidgets
-            getOpenedWidgets:{
+            getOpenedWidgets: {
                 fn: this.getOpenedWidgets,
                 scope: this
             },
@@ -1309,12 +1291,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                                 loadTimeCfg.name = wrec.get('name');
                                 loadTimeCfg.widgetGuid = wrec.get('widgetGuid');
                                 this.sendLoadTime(loadTimeCfg);
-                            }
-                            else {
+                            } else {
                                 //widget is not in the store however it will be so attach a listener on add
                                 activeWidgets.on({
-                                    add : {
-                                        fn : function(store, records, index) {
+                                    add: {
+                                        fn: function(store, records, index) {
                                             var w = store.getById(widgetCfg.id);
                                             if (w != null) {
                                                 loadTimeCfg.name = w.get('name');
@@ -1323,7 +1304,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                                             }
                                         },
                                         scope: this,
-                                        single:true
+                                        single: true
                                     }
                                 });
                             }
@@ -1346,8 +1327,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                         if (senderDashboard != null && senderDashboard == subscriberDashboard) {
                             returnValue = true;
                         }
-                    }
-                    else {
+                    } else {
                         returnValue = true;
                     }
 
@@ -1359,14 +1339,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         this.eventingContainer = Ozone.eventing.Container;
 
         OWF.IntentsContainer.init({
-            onRoute:{
-                fn:function (sender, intent, data, dest, container) {
+            onRoute: {
+                fn: function(sender, intent, data, dest, container) {
                     var sendingId = Ozone.util.parseJson(sender).id;
                     var sendingCmp = Ext.getCmp(sendingId);
                     var intentConfig = sendingCmp.intentConfig;
 
                     //check for any saved preference that routes this intent
-                    if (!dest || (dest.length != null && dest.length <= 0 )) {
+                    if (!dest || (dest.length != null && dest.length <= 0)) {
                         if (intentConfig != null && intentConfig[owfdojo.toJson(intent)] != null) {
                             var intentConfigDest = intentConfig[owfdojo.toJson(intent)];
 
@@ -1387,8 +1367,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                                 container.callback(intentConfigDest);
 
                                 return;
-                            }
-                            else {
+                            } else {
                                 //remove data
                                 delete intentConfig[owfdojo.toJson(intent)];
                             }
@@ -1396,15 +1375,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                         //handle opening launch menu and routing the intent
                         this.showLaunchMenuForIntents(intent, container, sender, data, sendingCmp);
-                    }
-                    else {
+                    } else {
                         //todo handle error here if the widget doesn't exist
                         //just send the intent if destination(s) is specified
                         container.send(sender, intent, data, null, dest);
                         container.callback(dest);
                     }
                 },
-                scope:this
+                scope: this
             }
         });
     },
@@ -1430,7 +1408,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             //reload main widgetStore to retreive new data
             this.widgetStore.load({
                 scope: this,
-                callback: function (records, operation, success) {
+                callback: function(records, operation, success) {
                     //refresh data
                     launchMenu.refreshOpenedWidgets();
                     launchMenu.clearSelections(true);
@@ -1453,13 +1431,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     //setting this tree selection for intent filtering
                     var rootNode = {
                         expanded: true,
-                        children: [
-                            {
+                        children: [{
                                 text: intent.action,
                                 expanded: true,
                                 expandable: false,
-                                children: [
-                                    {
+                                children: [{
                                         text: intent.dataType,
                                         leaf: true
                                     }
@@ -1472,7 +1448,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     //now select
                     var separator = '!@//@!';
                     intentsTree.selectPath(separator + 'Root' + separator + intent.action + separator + intent.dataType,
-                                                'text', separator);
+                        'text', separator);
 
                     intentsTreeSelModel.setLocked(true);
 
@@ -1491,11 +1467,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                     //explicitly filter by intents by passing this cfg to the search function
                     var filterCfg = {
-                      intent: {
-                         action: intent.action,
-                         dataType: intent.dataType,
-                         receive: true
-                      }
+                        intent: {
+                            action: intent.action,
+                            dataType: intent.dataType,
+                            receive: true
+                        }
                     };
                     launchMenu.searchPanel.search(filterCfg);
 
@@ -1511,17 +1487,19 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             var dashboardContainer = this;
             var widgetLaunchListener = {
                 beforewidgetlaunch: {
-                    fn:function (pane, model) {
-                        var data = { intents: true };
-                        model.set('launchData',gadgets.json.stringify(data));
+                    fn: function(pane, model) {
+                        var data = {
+                            intents: true
+                        };
+                        model.set('launchData', gadgets.json.stringify(data));
                     }
-                }, 
-                afterwidgetlaunch:{
-                    fn:function (widget, model, wasAlreadyLaunched) {
+                },
+                afterwidgetlaunch: {
+                    fn: function(widget, model, wasAlreadyLaunched) {
                         var id = widget.uniqueId;
                         var destIdString = '{\"id\":\"' + id + '\"}';
-                        
-                        !sendingCmp.intentConfig && ( sendingCmp.intentConfig = {} );
+
+                        !sendingCmp.intentConfig && (sendingCmp.intentConfig = {});
                         intentConfig = sendingCmp.intentConfig;
 
                         //the widget is already open, send intent immeditaly
@@ -1541,17 +1519,16 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                             //create a listener function to send the intent once the launched widget
                             //and has registered to receive the intent
-                            deferredSendIntentListener = function (i, destWidgetId) {
+                            deferredSendIntentListener = function(i, destWidgetId) {
                                 //send the data to the dest widgets only if intent and dest widget match
-                                if (i != null && owfdojo.toJson(i) === owfdojo.toJson(intent)
-                                        && destWidgetId === destIdString) {
+                                if (i != null && owfdojo.toJson(i) === owfdojo.toJson(intent) && destWidgetId === destIdString) {
 
                                     //send intent
                                     container.send(sender, intent, data, null, destIdString);
                                     //remove this listener now that the intent has been sent
                                     container.removeListener('onIntentsReady',
-                                            deferredSendIntentListener,
-                                            this);
+                                        deferredSendIntentListener,
+                                        this);
                                     //check if the intentcheckbox is checked if so save to intentConfig
                                     if (launchMenu.getIntentCheckBoxValue()) {
                                         if (intentConfig[owfdojo.toJson(intent)] == null) {
@@ -1566,9 +1543,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                             };
                             //hook event that will fire when the dest widget is ready for the intent
                             container.addListener('onIntentsReady',
-                                    deferredSendIntentListener,
-                                    this
-                            );
+                                deferredSendIntentListener,
+                                this);
+
                         }
                         //fire callback to startActivity call once dest widgets have been identified
                         container.callback([destIdString]);
@@ -1578,13 +1555,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                         //a widget has been launched unhook our noWidgetLaunchListener
                         launchMenu.un(noWidgetLaunchListener);
-                        
+
                         // remove the listener when finished because when launching new widgets in this pane
                         // the beforewidgetlaunch will continue to be hit if you don't.
                         dashboardContainer.un(widgetLaunchListener);
                     },
-                    scope:this,
-                    single:true
+                    scope: this,
+                    single: true
                 }
             };
             this.on(widgetLaunchListener);
@@ -1611,7 +1588,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
 
-    findParentDashboard:function (widgetId) {
+    findParentDashboard: function(widgetId) {
         var dashboardCardPanel = this.getComponent('dashboardCardPanel');
         var parentDashboard = null;
         for (var i = 0; i < dashboardCardPanel.items.getCount(); i++) {
@@ -1624,7 +1601,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         return parentDashboard;
     },
 
-    sendLoadTime : function(loadTimeCfg) {
+    sendLoadTime: function(loadTimeCfg) {
         //send to server
         if (Ozone.config.sendWidgetLoadTimesToServer === true) {
             Ozone.util.Transport.send({
@@ -1632,7 +1609,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 method: 'POST',
                 async: true,
                 content: loadTimeCfg,
-                onSuccess : function() {
+                onSuccess: function() {
                     //do nothing
                 }
             });
@@ -1645,7 +1622,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
     },
 
-    getOpenedWidgets:function () {
+    getOpenedWidgets: function() {
         var returnValue = [];
         if (this.activeDashboard != null && this.activeDashboard.stateStore != null) {
             var recs = this.activeDashboard.stateStore.getRange();
@@ -1662,15 +1639,15 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                         if (iframeCmp != null) {
                             returnValue.push({
                                 //kernel fields
-                                id:rec.uniqueId,
-                                name:rec.name,
-                                url:widgetDef.url,
+                                id: rec.uniqueId,
+                                name: rec.name,
+                                url: widgetDef.url,
                                 //kernel fields
 
                                 //extra info
-                                frameId:iframeCmp.id,
-                                widgetGuid:rec.widgetGuid,
-                                widgetName:widgetDef.name,
+                                frameId: iframeCmp.id,
+                                widgetGuid: rec.widgetGuid,
+                                widgetName: widgetDef.name,
                                 universalName: widgetDef.universalName
                             });
                         }
@@ -1689,8 +1666,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             if (this.autoSaveClear) {
                 clearInterval(this.autoSaveId);
                 this.autoSaveClear = false;
-            }
-            else
+            } else
             if (this.autoSaveEnabled) {
                 //get active dashboard and save it
                 if (this.activeDashboard) {
@@ -1761,13 +1737,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         var dashPanel = this.getDashboardCardPanel();
         dashPanel.removeAll(true);
-        
+
         this.destroyDashboardSwitcher();
 
         // Without the timeout, updateDashboardsFromStore causes problems when dashboards are restored 
         // because widget destruction is delayed by 100ms to prevent memory leaks.
         // Because of the delay, widgets on a dashboard get rerendered while previous ones haven't been destroyed.
-        setTimeout(function () {
+        setTimeout(function() {
             var dashboards = [];
 
             // Update various dashboard-related components.
@@ -1777,8 +1753,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                 // Add dashboard object to local array.
                 me.dashboards.push(me.createDashboardConfig(dsRecord));
-                me.dashboards[i1].hidden = true;    //start all dashboards hidden, the
-                                                    //active one will be shown later
+                me.dashboards[i1].hidden = true; //start all dashboards hidden, the
+                //active one will be shown later
 
                 // Add dashboard to buffered card panel.
                 var addedDash = dashPanel.add(me.dashboards[i1]);
@@ -1801,8 +1777,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             me.activateDashboard(dashboardGuidToActivate || defaultTabGuid, true, stackContext);
 
             //If browser uses animations, enable them now that dashboards are added to card layout
-            if(Modernizr.cssanimations) {
-                for(var j = 0, len = dashboards.length; j < len; j++) {
+            if (Modernizr.cssanimations) {
+                for (var j = 0, len = dashboards.length; j < len; j++) {
                     dashboards[j].enableCssAnimations();
                 }
             }
@@ -1906,7 +1882,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     dashboardCreated: function(json) {
         // if it already exists in store return
-        if(this.dashboardStore.getById(json.guid)) {
+        if (this.dashboardStore.getById(json.guid)) {
             return;
         }
         var dashboard = Ext.create('Ozone.data.Dashboard', json);
@@ -1926,10 +1902,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         var banner = this.getBanner().getBanner(),
             me = this;
 
-        if(banner.state !== 'docked') {
+        if (banner.state !== 'docked') {
             banner.hide();
-        }
-        else {
+        } else {
             banner.el.mask();
         }
 
@@ -1944,10 +1919,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         });
 
         dashboardDesigner.on('destroy', function() {
-            if(banner.state !== 'docked') {
+            if (banner.state !== 'docked') {
                 banner.show();
-            }
-            else {
+            } else {
                 banner.el.unmask();
             }
             Ozone.KeyMap.enable();
@@ -1976,15 +1950,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     retrieveUpdatedWidgets: function() {
         //Ext.getCmp('launchMenuWindow').setLoading(true);
         this.widgetStore.load({
-            scope:this,
+            scope: this,
             callback: function(wrecords, woptions, wsuccess) {
                 if (wrecords.length >= 0) {
                     if (!wsuccess) {
                         Ozone.Msg.alert(Ozone.util.ErrorMessageString.retrieveUpdatedWidgets, Ozone.util.ErrorMessageString.retrieveUpdatedWidgetsMsg,
                             null, null, null, this.modalWindowManager);
                     }
-                }
-                else {
+                } else {
                     Ozone.Msg.alert(Ozone.util.ErrorMessageString.retrieveUpdatedWidgets, Ozone.util.ErrorMessageString.retrieveUpdatedWidgetsMsg,
                         null, null, null, this.modalWindowManager);
                 }
@@ -2029,7 +2002,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         // and find out if there are marketplace widgets
         var hasMpWidget = false;
         var hasMetricWidget = false;
-        var mpWidgets = [], mpWidget = null;
+        var mpWidgets = [],
+            mpWidget = null;
         var records = this.widgetStore.getRange();
         for (var i = 0; i < records.length; i++) {
             var newTitle = this.widgetNames[records[i].data.widgetGuid];
@@ -2047,17 +2021,17 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
         //if we have a marketplace widget or marketplace config, tell the banner to add a button
         if (hasMpWidget) {
-            if (mpWidgets.length == 1) { mpWidget = mpWidgets[0] }
+            if (mpWidgets.length == 1) {
+                mpWidget = mpWidgets[0]
+            }
             this.getBanner().addMarketplaceButton(mpWidget);
-        }
-        else {
+        } else {
             this.getBanner().removeMarketplaceButton();
         }
 
         if (hasMetricWidget) {
             this.getBanner().addMetricButton();
-        }
-        else {
+        } else {
             this.getBanner().removeMetricButton();
         }
     },
@@ -2073,27 +2047,28 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         //retrieve all groups associated with dashboards and stacks to which this
         //user has access
         //@param getIds set to true to get a list of ids instead of names
+
         function getAllDashboardGroups(getIds) {
             //flatten the array and remove duplicates
             return Ext.Array.unique(Ext.Array.flatten(
 
-                //get an array of arrays of names of groups associated with dashboards
-                //and stacks
-                Ext.Array.map(me.dashboardStore.data.getRange(), function(dash) {
-                    var stack = dash.get('stack'),
-                        stackGroups = stack && stack.groups || [],
-                        groups = dash.get('groups') || [];
-                    
-                    //get the name from a group
-                    function getGroupValue(group) {
-                        return group[getIds ? 'id' : 'name'];
-                    }
+            //get an array of arrays of names of groups associated with dashboards
+            //and stacks
+            Ext.Array.map(me.dashboardStore.data.getRange(), function(dash) {
+                var stack = dash.get('stack'),
+                    stackGroups = stack && stack.groups || [],
+                    groups = dash.get('groups') || [];
 
-                    //get names of dashboard groups and stack groups
-                    return Ext.Array.map(groups, getGroupValue)
-                        .concat(Ext.Array.map(stackGroups, getGroupValue));
-                })
-            ));
+                //get the name from a group
+
+                function getGroupValue(group) {
+                    return group[getIds ? 'id' : 'name'];
+                }
+
+                //get names of dashboard groups and stack groups
+                return Ext.Array.map(groups, getGroupValue)
+                    .concat(Ext.Array.map(stackGroups, getGroupValue));
+            })));
         }
 
         //WARNING: If, at some point in the future, there is a need in
@@ -2108,24 +2083,24 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     type = msg.action.params.tab,
 
                     //see if affected records include the current user
-                    affectsUser = 
-                        type === 'users' && 
+                    affectsUser =
+                        type === 'users' &&
                         Ext.Array.some(records, function(record) {
-                            return record.get('username') === Ozone.config.user.displayName;
-                        }),
+                        return record.get('username') === Ozone.config.user.displayName;
+                    }),
 
                     //see if the affected records include any groups that the current user is
                     //a member of
-                    affectsUserGroups = 
+                    affectsUserGroups =
                         type === 'groups' &&
                         Ext.Array.some(records, function(record) {
-                            //it appears that these group records are not constructed correctly,
-                            //but the necessary data is still available 'raw'
-                            var name = record.raw.name || record.raw.data[0].name || null;
+                        //it appears that these group records are not constructed correctly,
+                        //but the necessary data is still available 'raw'
+                        var name = record.raw.name || record.raw.data[0].name || null;
 
-                            //return Ext.Array.contains(userGroups, record.get('name'));
-                            return Ext.Array.contains(userGroups, name);
-                        });
+                        //return Ext.Array.contains(userGroups, record.get('name'));
+                        return Ext.Array.contains(userGroups, name);
+                    });
 
                 //if it is detected that a dashboard or stack may have been added removed from
                 //the current user, refresh the dashboards.
@@ -2136,18 +2111,28 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
             ////User editor used to assign a dashboard or stack
             //else if (msg.domain === 'User') {
-                //if (msg.action.params.user_id === Ozone.config.user.id && //is it the current user
-                        //(msg.action.request.url.indexOf('dashboard') === 1 || //is it a dashboard? ('tab' is not available in the case)
-                         //msg.action.params.tab === 'stacks')) { //is it a stack
-                    //me.dashboardsNeedRefresh = true;
-                //}
+            //if (msg.action.params.user_id === Ozone.config.user.id && //is it the current user
+            //(msg.action.request.url.indexOf('dashboard') === 1 || //is it a dashboard? ('tab' is not available in the case)
+            //msg.action.params.tab === 'stacks')) { //is it a stack
+            //me.dashboardsNeedRefresh = true;
+            //}
             //}
             //else if (msg.domain === 'Group') {
-                //if (Ext.Array.contains(getAllDashboardGroups(true), msg.action.params.group_id) && //a group that we care about was modified
-                        //Ext.Array.contains(['dashboards', 'stacks'], msg.action.params.tab)) {   //a dashboard or stack was added or removed from the group
-                    //me.dashboardsNeedRefresh = true;
-                //}
+            //if (Ext.Array.contains(getAllDashboardGroups(true), msg.action.params.group_id) && //a group that we care about was modified
+            //Ext.Array.contains(['dashboards', 'stacks'], msg.action.params.tab)) {   //a dashboard or stack was added or removed from the group
+            //me.dashboardsNeedRefresh = true;
+            //}
             //}
         });
+    },
+
+    toggleMarketplaceMenuOnDashboardSwitch: function(dashboard) {
+        var btn = this.getBanner().getComponent('userMenuBtn');
+
+        if (dashboard.configRecord.isMarketplaceDashboard()) {
+            btn.enableMarketplaceMenu();
+        } else {
+            btn.disableMarketplaceMenu();
+        }
     }
 });
