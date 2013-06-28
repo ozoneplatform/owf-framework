@@ -813,7 +813,7 @@ environments {
     development {
         uiperformance.enabled = false
 
-        /*perfTest.enabled = true                 // Determines whether or not bootstrap is run
+        /*perfTest.enabled = false              // Determines whether or not bootstrap is run
         perfTest.assignToOWFUsersGroup = false  // Assign widgets, dashboards and stacks to OWF Users group only
         perfTest.clearCacheEvery = 10
         perfTest.numDashboards = 5              // The number of dashboards each user will get assigned to them
@@ -832,7 +832,7 @@ environments {
         perfTest.numStackDashboards = 2         // The number of dashboards each stack will get assigned to them
         */
         
-        perfTest.enabled = true                 // Determines whether or not bootstrap is run
+        perfTest.enabled = false                // Determines whether or not bootstrap is run
         perfTest.assignToOWFUsersGroup = true   // Assign widgets, dashboards and stacks to OWF Users group only
         perfTest.clearCacheEvery = 20
         perfTest.numDashboards = 0              // The number of dashboards each user will get assigned to them
