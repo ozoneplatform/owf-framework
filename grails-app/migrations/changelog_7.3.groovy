@@ -15,7 +15,7 @@ databaseChangeLog = {
     }
 	
 		
-	changeSet(author: "owf", dbms: "mysql, oracle, postgresql", id: "7.3-3", context: "create, upgrade, 7.3") {
+	changeSet(author: "owf", dbms: "mysql, oracle, postgresql, hsqldb", id: "7.3-3", context: "create, upgrade, 7.3") {
 		createTable(tableName: "application_configuration") {
 
 			column(autoIncrement: "true", name: "id", type: "java.sql.Types.BIGINT") {
