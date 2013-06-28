@@ -139,8 +139,10 @@ class BootStrap {
 
     private def loadDevelopmentData() {
         def enabled = grailsApplication.config?.perfTest?.enabled
+        def assignToOWFUsersGroup = grailsApplication.config?.perfTest?.assignToOWFUsersGroup
 
         log.info('Performance Test Data Generation Enabled: ' + enabled)
+        log.info('Generate test data for OWF Users Group: ' + assignToOWFUsersGroup)
       
         if (enabled) {  
         
@@ -194,73 +196,87 @@ class BootStrap {
 
             def sampleWidgetBaseUrl = ((grailsApplication.config?.perfTest?.sampleWidgetBaseUrl) ? grailsApplication.config.perfTest?.sampleWidgetBaseUrl : 'https://127.0.0.1:8443/');
             log.info 'sampleWidgetBaseUrl: ' + sampleWidgetBaseUrl
-
-            loadGroups(numGroups, clearCacheEvery)
+            
+            loadWidgetTypes()
+            sessionFactory.currentSession.clear()
+                
+            loadWidgetDefinitions(numWidgets, clearCacheEvery)
             sessionFactory.currentSession.clear()
 
-            loadStacks(numStacks, clearCacheEvery)
-            sessionFactory.currentSession.clear()
-        
             loadAdmins(numAdmins, numGroupsPerUser, numStacksPerUser, clearCacheEvery)
             sessionFactory.currentSession.clear()
         
             loadPersons(numUsers, numGroupsPerUser, numStacksPerUser, clearCacheEvery)
             sessionFactory.currentSession.clear()
-        
-            loadWidgetTypes()
-            sessionFactory.currentSession.clear()
 
-            loadWidgetDefinitions(numWidgets, clearCacheEvery)
-            sessionFactory.currentSession.clear()
+            if(assignToOWFUsersGroup) {
+                assignWidgetsToGroup(loadOWFUsersGroup(), numWidgetsInGroups)
 
-            assignWidgetsInGroups(numGroups, numWidgetsInGroups, clearCacheEvery)
-            sessionFactory.currentSession.clear()
+                assignDashboardsToGroup(loadOWFUsersGroup(), '', numGroupDashboards, numDashboardsWidgets, clearCacheEvery)
+                sessionFactory.currentSession.clear()
 
-            loadRoles()
-            sessionFactory.currentSession.clear()
+                loadStacks(numStacks, true, clearCacheEvery)
+                sessionFactory.currentSession.clear()
 
-            //create default user
-            createNewUser()
-            sessionFactory.currentSession.clear()
-
-            assignPeopleToRoles()
-            sessionFactory.currentSession.clear()
-
-            loadPersonWidgetDefinitions(numWidgetsPerUser, clearCacheEvery)
-            sessionFactory.currentSession.clear()
-
-            loadDashboards(numDashboards, numDashboardsWidgets, clearCacheEvery)
-            sessionFactory.currentSession.clear()
-
-            loadStackDashboards(numStackDashboards, numDashboardsWidgets, clearCacheEvery)
-            sessionFactory.currentSession.clear()
-        
-            loadGroupDashboards(numGroupDashboards, numDashboardsWidgets, clearCacheEvery)
-            sessionFactory.currentSession.clear()
-        
-            loadRequestmaps()
-            sessionFactory.currentSession.clear()
-
-            loadPreferences(numPreferences, clearCacheEvery)
-            sessionFactory.currentSession.clear()
-
-            //create sample widgetdefs
-            if (grailsApplication.config?.perfTest?.createSampleWidgets) {
-                loadAndAssignSampleWidgetDefinitions(sampleWidgetBaseUrl, 10)
+                loadStackDashboards(numStackDashboards, numDashboardsWidgets, clearCacheEvery)
                 sessionFactory.currentSession.clear()
             }
+            else {
+                loadGroups(numGroups, clearCacheEvery)
+                sessionFactory.currentSession.clear()
 
-            Person.list().each {
-                log.info "Calling listDashboards for user ${it}"
-                dashboardService.listDashboards([ user_id: it.id ])
+                loadStacks(numStacks, clearCacheEvery)
+                sessionFactory.currentSession.clear()
+
+                assignWidgetsToGroups(numGroups, numWidgetsInGroups, clearCacheEvery)
+                sessionFactory.currentSession.clear()
+
+                loadRoles()
+                sessionFactory.currentSession.clear()
+
+                //create default user
+                createNewUser()
+                sessionFactory.currentSession.clear()
+
+                assignPeopleToRoles()
+                sessionFactory.currentSession.clear()
+
+                loadPersonWidgetDefinitions(numWidgetsPerUser, clearCacheEvery)
+                sessionFactory.currentSession.clear()
+
+                loadDashboards(numDashboards, numDashboardsWidgets, clearCacheEvery)
+                sessionFactory.currentSession.clear()
+
+                loadStackDashboards(numStackDashboards, numDashboardsWidgets, clearCacheEvery)
+                sessionFactory.currentSession.clear()
+            
+                loadGroupDashboards(numGroupDashboards, numDashboardsWidgets, clearCacheEvery)
+                sessionFactory.currentSession.clear()
+            
+                loadRequestmaps()
+                sessionFactory.currentSession.clear()
+
+                loadPreferences(numPreferences, clearCacheEvery)
+                sessionFactory.currentSession.clear()
+
+                //create sample widgetdefs
+                if (grailsApplication.config?.perfTest?.createSampleWidgets) {
+                    loadAndAssignSampleWidgetDefinitions(sampleWidgetBaseUrl, 10)
+                    sessionFactory.currentSession.clear()
+                }
+
+                /*Person.list().each {
+                    log.info "Calling listDashboards for user ${it}"
+                    dashboardService.listDashboards([ user_id: it.id ])
+                }
+                sessionFactory.currentSession.clear()*/
             }
-            sessionFactory.currentSession.clear()
 
         }
     }
 
-    private def saveInstance(instance) {
-        if (instance.save(flush:true) == null) {
+    private def saveInstance(instance, boolean flush = true) {
+        if (instance.save(flush:flush) == null) {
             log.info "ERROR: ${instance} not saved - ${instance.errors}"
         } else {
             log.debug "${instance.class}:${instance} saved"
@@ -268,7 +284,7 @@ class BootStrap {
         return instance
     }
 
-    private loadWidgetDefinitions(int numWidgets = 0, int clearCacheEvery) {
+    private loadWidgetDefinitions(int numWidgets = 0, boolean assignToOWFUsersGroup = false, int clearCacheEvery) {
         def standard = WidgetType.findByName('standard')
 
         sessionFactory.currentSession.clear()
@@ -511,9 +527,31 @@ class BootStrap {
         saveInstance(new Role(authority: ERoleAuthority.ROLE_USER.strVal, description: "User Role"))
         saveInstance(new Role(authority: ERoleAuthority.ROLE_ADMIN.strVal, description: "Admin Role"))
     }
+
+    private loadOWFUsersGroup() {
+        def groups = Group.findAllByNameAndAutomatic('OWF Users', true)
+        if(groups.size() == 0) {
+            def allUsers = new Group(
+                name: 'OWF Users',
+                description: 'OWF Users',
+                automatic: true,
+                status: 'active',
+                displayName: 'OWF Users'
+            )
+            return saveInstance(allUsers)
+        }
+        return groups[0]
+    }
+
+    private loadOWFAdminGroup() {
+        Group.findAllByNameAndAutomatic('OWF Administrators', true)
+    }
   
     private loadWidgetTypes() {
-        saveInstance(new WidgetType(name: 'standard')) 
+        saveInstance(new WidgetType(name: 'standard'))
+        saveInstance(new WidgetType(name: 'administration'))
+        saveInstance(new WidgetType(name: 'metrics'))
+        saveInstance(new WidgetType(name: 'marketplace'))
     }
   
     private loadAdmins(int numAdmins, int numGroups, int numStacks, int clearCacheEvery) {
@@ -548,9 +586,11 @@ class BootStrap {
                     userRealName: 'Test User '+i,
                     username: 'testUser'+i,
                     lastLogin: new Date() - 5
-                ))
+                ), false)
+
             assignGroupsToUser(person, numGroups)
             assignStacksToUser(person, numStacks)
+
             if ((i % clearCacheEvery) == 0){
                 sessionFactory.currentSession.clear()
             }
@@ -566,7 +606,7 @@ class BootStrap {
                     email: "testgroup${i}@group${i}.com",
                     automatic: false,
                     displayName: 'TestGroup' + i
-                ));
+                ), false);
 
             if ((i % clearCacheEvery) == 0){
                 sessionFactory.currentSession.clear()
@@ -585,15 +625,22 @@ class BootStrap {
         }
     }
 
-    private assignWidgetsInGroups(int numGroups, int numWidgetsInGroups, int clearCacheEvery) {
+    private assignWidgetsToGroup(group, numWidgetsInGroups) {
+        println group
+        def widgets = WidgetDefinition.list(max:numWidgetsInGroups)
+        widgets.each { widget ->
+            println widget
+            println group
+            domainMappingService.createMapping(group,RelationshipType.owns,widget)
+        }
+    }
+
+    private assignWidgetsToGroups(int numGroups, int numWidgetsInGroups, int clearCacheEvery) {
         for (int i = 1; i <= numGroups; i++) {
-            //create group
             def group = Group.findByName('TestGroup' + i)
-            def widgets = WidgetDefinition.list(max:numWidgetsInGroups)
-            widgets.each { widget ->
-                //assign the people to this group up to numUsersInGroups value
-                domainMappingService.createMapping(group,RelationshipType.owns,widget)
-            }
+
+            assignWidgetsToGroup(group, numWidgetsInGroups)
+            
             if ((i % clearCacheEvery) == 0){
                 sessionFactory.currentSession.clear()
             }
@@ -616,7 +663,13 @@ class BootStrap {
         }
     }
 
-    private loadStacks(int numStacks, int clearCacheEvery) {
+    private loadStacks(int numStacks, boolean assignToOWFUsersGroup = false, int clearCacheEvery) {
+        def allUsersGroup;
+
+        if(assignToOWFUsersGroup) {
+            allUsersGroup = loadOWFUsersGroup();
+        }
+        
         for (int i = 1; i <= numStacks; i++) {
             //create stack
             def stack = new Stack(
@@ -638,6 +691,11 @@ class BootStrap {
 
             //associate stack with its default group
             stack.addToGroups(stackDefaultGroup)
+
+            if(allUsersGroup) {
+                stack.addToGroups(allUsersGroup)    
+            }
+            
             domainMappingService.createMapping(stack, RelationshipType.owns, stackDefaultGroup)
             saveInstance(stack)
 
@@ -709,6 +767,7 @@ class BootStrap {
     private loadDashboards(int numDashboards, int numDashboardsWidgets, int clearCacheEvery) {
 
         def testUsers = Person.findAllByUsernameLike('test%')
+
         testUsers.each { user ->
             log.debug 'generating user dashboards for user:' + user
 
@@ -728,10 +787,9 @@ class BootStrap {
                     layoutConfig: '{"xtype":"desktoppane","flex":1,"height":"100%","items":[],"paneType":"desktoppane","widgets":[],"defaultSettings":{"widgetStates":{"ec5435cf-4021-4f2a-ba69-dde451d12551":{"x":4,"y":5,"height":383,"width":540,"timestamp":1348064185725},"eb5435cf-4021-4f2a-ba69-dde451d12551":{"x":549,"y":7,"height":250,"width":295,"timestamp":1348064183912}}}}'
                 )
 
-                def userWidgets = PersonWidgetDefinition.findAllByPerson(user)
-
                 def rand = new Random();
                 def randomWidget
+                def userWidgets = PersonWidgetDefinition.findAllByPerson(user)
 
                 //Create JSON string of widgets
                 def widgets = '[{'
@@ -778,6 +836,8 @@ class BootStrap {
     }
 
     private assignDashboardsToGroup(Group group, String groupType, int numDashboards, int numDashboardsWidgets, int clearCacheEvery) {
+        def allWidgets = WidgetDefinition.list()
+        
         for (int i = 1; i <= numDashboards; i++) {
             def dashboardGuid = generateId()
             def paneGuid = generateId()
@@ -792,8 +852,6 @@ class BootStrap {
             )
 
             groupType == 'Stack' && (dashboard.stack = group.stacks?.toArray()[0])
-
-            def allWidgets = WidgetDefinition.list()
 
             def rand = new Random()
             def randomWidget
