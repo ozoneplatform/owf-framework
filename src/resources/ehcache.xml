@@ -24,4 +24,20 @@
 
     </defaultCache>
 
+    <!-- Caches required by the security project for sharing security information between
+         cluster nodes. Do not modify these settings -->
+    <cache name="sessionIds"
+            maxElementsInMemory="100000"
+            eternal="true"
+            overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+            properties="replicateUpdatesViaCopy=true" />
+    </cache>
+    <cache name="allowedSessions"
+            maxElementsInMemory="1"
+            eternal="true"
+            overflowToDisk="false">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+            properties="replicateUpdatesViaCopy=true" />
+    </cache>
 </ehcache>
