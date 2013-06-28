@@ -819,7 +819,7 @@ gadgets.rpc = function() {
     function getTargetWin(id) {
       if (typeof id === "undefined" || id === "..") {
           //Check to see if we are an iframe in a child window, and if so use the opener
-          if(window.parent.opener) {
+          if(sameDomain[id] !== false && window.parent.opener) {
               return window.parent.opener.parent;
           }
           //Normal case, we are an IFrame in a page
@@ -891,7 +891,6 @@ gadgets.rpc = function() {
     if (sameDomain[target] !== false) {
       // Seed with a negative, typed value to avoid
       // hitting this code path repeatedly
-      sameDomain[target] = false;
       var targetEl = getTargetWin(target);
 
       try {
