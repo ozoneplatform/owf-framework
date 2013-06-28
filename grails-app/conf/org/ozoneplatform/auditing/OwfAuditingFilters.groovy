@@ -30,10 +30,14 @@ class OwfAuditingFilters extends AbstractAuditingFilters {
 
     @Override
 	public boolean doCefLogging() {
-		ApplicationConfiguration doCefLogging = owfApplicationConfigurationService.getApplicationConfiguration(CEF_LOGGING_ENABLED)
-		if(doCefLogging)
-			return doCefLogging.value
-		return false
+		try{
+			ApplicationConfiguration doCefLogging = owfApplicationConfigurationService.getApplicationConfiguration(CEF_LOGGING_ENABLED)
+			if(doCefLogging)
+				return doCefLogging.value
+		} catch (Throwable t){
+			return true
+		}
+		return true
 	}
 
     @Override
