@@ -1032,7 +1032,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 // otherwise frame animation won't be visible to user
                 setTimeout(function() {
                     btn.blink();
-                }, dashboard.rendered ? 0: 6000);
+                }, activeDashboard.rendered ? 0: 6000);
             }
             else {
                 btn.blink();
