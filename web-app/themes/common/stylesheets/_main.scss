@@ -237,7 +237,7 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
     .x-panel.tab-dashboard-panel {
         .widget-tab-bar {
             overflow: hidden !important;
-            padding-top: 2px;
+            padding: 0px;
             //height: 29px!important;
             .widget-tab {
                 @include owf-panel($inactive-widget-theme,
@@ -247,6 +247,9 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
                                     $owf_no_incl_non_header_border,
                                     $owf_incl_header_border,
                                     $owf_no_full_header_border); 
+                .x-panel-body {
+                    border-top: 0px;
+                }
             }
             .widget-tab.x-panel-active {
                 @include owf-panel($active-widget-theme, 
@@ -256,6 +259,9 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
                                     $owf_no_incl_non_header_border,
                                     $owf_incl_header_border,
                                     $owf_no_full_header_border); 
+                .x-panel-body {
+                    border-top: 0px;
+                }
             }
             .x-box-scroller-right { 
                 .x-toolbar-scroll-right {
