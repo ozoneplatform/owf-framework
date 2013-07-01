@@ -673,7 +673,6 @@ uiperformance.bundles = [
                         'components/marketplace/MPWidgetDetailsPanel',
                         'components/marketplace/MarketplaceLauncher',
                         'chrome/WidgetChromeContainer',
-                        'chrome/OWFMenuChromeContainer',
                         'components/widget/DeleteWidgetsPanel',
                         'metrics/BaseMetrics',
             //this patch file should be at the end

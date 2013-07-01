@@ -408,6 +408,8 @@
 
     @include round-bottom;
 
+    *width: 368px;
+    
     #owfMenu { 
         border-right: 1px solid $user-menu-button-border-color;
     }
@@ -424,8 +426,6 @@
         width: 100% !important;
     }
 
-    *width: 368px;
-
 	.x-panel-body-default {
 		background: none !important;
 		border: 1px solid $user-menu-background-color;
@@ -439,17 +439,16 @@
 	.x-btn-default-toolbar-small, .x-btn-default-small {
 		background-image: none;
         border: none;
+        @include border-radius(0);
 	}
 	
 	.x-btn {
+        @include owf-background-color($user-menu-background-color, $owf_css_not_important, false);
 
-		width:100%;
+		width: 100%;
 		border-color: transparent;
-		@include owf-background-color($user-menu-background-color, $owf_css_not_important, false);
-		padding-left:10px;
-
-        padding-left: 10px;
-
+		padding-left: 10px;
+        
         .x-btn-inner {
             @include owf-background-color($user-menu-background-color, $owf_css_not_important, false);
             *border-color: transparent;
@@ -470,11 +469,10 @@
         .x-box-inner .x-panel-default { 
             border: none !important;
         }
-	    
-	    top: 2px !important;
 
         border-left: none !important;
         border-right: none !important;
+        border-bottom: none !important;
         padding: 0px !important;
 
 	    #logout.x-over {
@@ -485,32 +483,33 @@
             }
 	    }
 	    
-	    #prevLogin.x-over {
+	    #owfMenuTitle, #prevLogin, #marketplaceMenuTitle {
 	    	background: none !important;
+            cursor: default !important;
+
+            .x-btn-inner {
+                background: none !important;
+                cursor: default !important;
+            }
 	    }
 	    
 	    div {
 	
     	    @include owf-background-color($user-menu-background-color);
-    	    // border-bottom:solid 1px transparent;
+    	    
     	    font-family: tahoma, arial, verdana, sans-serif;
-    	    *width:150px;
+            *width:150px;
+
+            padding-right: 2px;
 
 			span {
 	        	color: $user-menu-text-color;
 	        	font-weight:normal;
 			}
-			
-			#owfMenuTitle-btnInnerEl {
+
+			#owfMenuTitle-btnInnerEl, #marketplaceMenuTitle-btnInnerEl {
 		    	font-size: 1.4em;
-    			font-weight: bold;
-    			// text-indent: 33px;
-		    }
-		    
-		    #marketplaceMenuTitle-btnInnerEl {
-		    	font-size: 1.4em;
-    			font-weight: bold;
-    			// text-indent: 33px;
+                font-weight: bold;
 		    }
 			
 			#prevLogin-btnInnerEl {
