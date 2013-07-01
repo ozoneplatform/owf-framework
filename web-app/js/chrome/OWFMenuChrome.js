@@ -10,18 +10,8 @@ var Ozone = Ozone ? Ozone : {};
 Ozone.chrome = Ozone.chrome ? Ozone.chrome : {};
 
 /**
- *  @deprecated Since OWF 3.7.0  You should use <a href="#.getInstance">Ozone.chrome.OWFMenuChrome.getInstance</a>
- *  @constructor  widgetEventingController - Ozone.eventing.Widget object
- *  @param  {Object} config - config object with parameters
- *  @param  {Ozone.eventing.Widget} config.widgetEventingController - widget eventing object which handles eventing for the widget
- *  @description This object allows a widget to modify the button contained in the widget header (the chrome).
- *  To do so it requires a widgetEventingController
- *  @example
- *    this.wc = new Ozone.chrome.OWFMenuChrome({
- *        widgetEventingController: this.widgetEventingController
- *    });
- *
- * @throws {Error} throws an error with a message if widget initialization fails
+ * NOTE: This class is unused currently, but it and OWFMenuChromeContainer illustrate how a widget
+ * can add a button to OWF's User Menu.
  */
 Ozone.chrome.OWFMenuChrome = function(config) {
     if (Ozone.chrome.OWFMenuChrome.instance == null) {
@@ -29,20 +19,8 @@ Ozone.chrome.OWFMenuChrome = function(config) {
         scope.channelName = "Ozone._OWFMenuChromeContainer";
         scope.version = Ozone.version.owfversion + Ozone.version.OWFMenuChrome;
         scope.items = {};
-        scope.registerChromeMenu = function(menuConfig) {
-            // Regular menu item
-            scope.items[menuConfig.itemId != null ? menuConfig.itemId : menuConfig.id] = menuConfig;
 
-            if (menuConfig.menu) {
-                for (var j = 0; j < menuConfig.menu.items.length; j++) {
-                    var menuItem = menuConfig.menu.items[j];
-                    // Sub-menu
-                    scope.registerChromeMenu(menuItem);
-                }
-            }
-        };
-
-        var pub = /** @lends Ozone.chrome.OWFMenuChrome.prototype */ {
+        var pub = {
 
             init: function(config) {
 
@@ -101,17 +79,6 @@ Ozone.chrome.OWFMenuChrome = function(config) {
     return Ozone.chrome.OWFMenuChrome.instance;
 };
 
-/**
- *  @description Retrieves Ozone.chrome.OWFMenuChrome Singleton instance.  To do so it requires a widgetEventingController
- *  @param  {Object} config - config object with parameters
- *  @param  {Ozone.eventing.Widget} config.widgetEventingController - widget eventing object which handles eventing for the widget
- *  @example
- *    this.wc = Ozone.chrome.OWFMenuChrome.getInstance({
- *        widgetEventingController: this.widgetEventingController
- *    });
- *
- * @throws {Error} throws an error with a message if widget initialization fails
- */
 Ozone.chrome.OWFMenuChrome.getInstance = function(cfg) {
     if (Ozone.chrome.OWFMenuChrome.instance == null) {
         Ozone.chrome.OWFMenuChrome.instance = new Ozone.chrome.OWFMenuChrome(cfg);

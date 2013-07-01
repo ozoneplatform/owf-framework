@@ -9,6 +9,10 @@ Ext.define('Ozone.components.button.UserMenuButton', {
 
     menuAlign: 'tr-br',
 
+    isMenuHidden: true,
+    hideDelay: 100,
+    showDelay: 800,
+
     scale: 'banner-large',
 
     initComponent: function() {
@@ -17,6 +21,8 @@ Ext.define('Ozone.components.button.UserMenuButton', {
         me.buildDisplayText();
         me.initializeMarketplaceUserMenuClient();
         me.buildMenu();
+
+        me.on('afterrender', me.onAfterRender, me);
 
         this.callParent(arguments);
     },
@@ -39,29 +45,31 @@ Ext.define('Ozone.components.button.UserMenuButton', {
             shadow: false,
             shadowOffset: 0,
             allowOtherMenus: true,
-            items:[{
-            		xtype: 'panel',
+            items: [{
+                    xtype: 'panel',
                     width: 368,
                     layout: 'hbox',
                     frame: false,
                     shadow: false,
                     shadowOffset: 0,
-		            items: [{
-		                    xtype: 'buttongroup',
-		                    columns: 1,
-		                    id: 'owfMenu',
-		                    width: 193,
-		                    height: 200,
-		                    items: me.buildOwfMenuItems()
-		                }, {
-		                	xtype: 'buttongroup',
-		                	columns: 1,
-		                	id: 'marketplaceMenu',
-		                    width: 183,
-		                    height: 200,
-		                    items: me.buildMarketplaceMenuItems()
-		                }]
-            }]
+                    items: [{
+                            xtype: 'buttongroup',
+                            columns: 1,
+                            id: 'owfMenu',
+                            width: 193,
+                            height: 200,
+                            items: me.buildOwfMenuItems()
+                        }, {
+                            xtype: 'buttongroup',
+                            columns: 1,
+                            id: 'marketplaceMenu',
+                            width: 183,
+                            height: 200,
+                            items: me.buildMarketplaceMenuItems()
+                        }
+                    ]
+                }
+            ]
         };
     },
 
@@ -71,19 +79,16 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                     text: 'OWF Options',
                     id: 'owfMenuTitle',
                     width: '100%',
-                    overCls: '',
-                    height: 28,
-                    clickable: false
-                 },{
+                    height: 28
+                }, {
                     text: 'Previous Sign In ' + me.user.prettyPrevLogin,
                     id: 'prevLogin',
-                    overCls: '',
-                    height: 25,
-                    clickable: false
+                    height: 25
                 }, {
                     text: 'Profile',
                     id: 'profile',
                     height: 25,
+                    clickable: true,
                     handler: Ext.bind(function() {
                         if (me.profileWindow == null || me.profileWindow.isDestroyed) {
                             me.profileWindow = Ext.widget('profileWindow', {
@@ -98,6 +103,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                     text: 'About',
                     id: 'about',
                     height: 25,
+                    clickable: true,
                     handler: (function() {
                         //save the about window between calls
                         var aboutWindow;
@@ -139,6 +145,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                 text: 'Sign Out',
                 id: 'logout',
                 cls: 'logout',
+                clickable: true,
                 height: 25,
                 handler: me.logout
             }
@@ -150,16 +157,14 @@ Ext.define('Ozone.components.button.UserMenuButton', {
     buildMarketplaceMenuItems: function() {
         var me = this,
             marketplaceMenuItems = [{
-                text: 'Store Options',
-                id:'marketplaceMenuTitle',
-                overCls : '',
-                height: 25,
-                padding: '3 0 0 0',
-                clickable:false
-            },{
+                    text: 'Store Options',
+                    id: 'marketplaceMenuTitle',
+                    height: 25
+                }, {
                     text: 'User Profile',
                     id: 'marketplaceUserProfile',
                     height: 28,
+                    clickable: true,
                     handler: Ext.bind(function(evt, obj) {
                         me.marketplaceUserMenuClient.activateMarketplaceMenuAction('marketplaceUserProfile');
                     }, me)
@@ -167,6 +172,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                     text: 'Themes',
                     id: 'marketplaceThemes',
                     height: 25,
+                    clickable: true,
                     handler: Ext.bind(function(evt, obj) {
                         me.marketplaceUserMenuClient.activateMarketplaceMenuAction('marketplaceThemes');
                     }, me)
@@ -174,6 +180,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                     text: 'My Listings',
                     id: 'marketplaceMyListings',
                     height: 25,
+                    clickable: true,
                     handler: Ext.bind(function(evt, obj) {
                         me.marketplaceUserMenuClient.activateMarketplaceMenuAction('marketplaceMyListings');
                     }, me)
@@ -181,15 +188,17 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                     text: 'Create Listing',
                     id: 'marketplaceCreateListing',
                     height: 25,
+                    clickable: true,
                     handler: Ext.bind(function(evt, obj) {
                         me.marketplaceUserMenuClient.activateMarketplaceMenuAction('marketplaceCreateListing');
                     }, me)
                 }
             ];
 
-        if (me.user.isAdmin) {
+            // Add the Marketplace Admin items even if the current OWF user
+            // is not an AML admin - eventing is hooked up for admin item toggling
+            // based on the current AML user info passed from Marketplace
             marketplaceMenuItems = me.addMarketplaceAdminMenuItems(marketplaceMenuItems);
-        }
 
         return marketplaceMenuItems;
     },
@@ -200,11 +209,13 @@ Ext.define('Ozone.components.button.UserMenuButton', {
         existingMenuItems.push([{
                 spacer: true,
                 cls: 'spacer',
+                id: 'marketplaceAdminSpacer',
                 disabled: true
             }, {
                 text: 'Configuration Pages',
                 id: 'marketplaceConfigurationPages',
                 height: 25,
+                clickable: true,
                 handler: Ext.bind(function(evt, obj) {
                     me.marketplaceUserMenuClient.activateMarketplaceMenuAction('marketplaceConfigurationPages');
                 }, me)
@@ -212,6 +223,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                 text: 'Franchise Administration',
                 id: 'marketplaceFranchiseAdministration',
                 height: 25,
+                clickable: true,
                 handler: Ext.bind(function(evt, obj) {
                     me.marketplaceUserMenuClient.activateMarketplaceMenuAction('marketplaceFranchiseAdministration');
                 }, me)
@@ -274,6 +286,63 @@ Ext.define('Ozone.components.button.UserMenuButton', {
         window.location.href = Ozone.util.contextPath() + Ozone.config.logoutURL;
     },
 
+    onAfterRender: function(cmp) {
+        var me = cmp;
+
+        me.collectAndCacheClickableMenuItems(cmp);
+
+        me.on('mouseover', me.showUserMenu, me);
+        me.mon(me.menu, 'mouseleave', me.hideUserMenu, me);
+
+        Ext.Array.each(me.clickables, function(c) {
+            me.mon(c, 'click', me.hideMenu, me);
+        });
+    },
+
+    showUserMenu: function() {
+        var me = this;
+
+        me.isMenuHidden = false;
+
+        if (!me.showTask) {
+            me.showTask = Ext.create('Ext.util.DelayedTask', function() {
+                me.showMenu();
+            });
+        }
+        me.showTask.delay(Ext.isNumber(me.showDelay) ? me.showDelay : 800, null);
+    },
+
+    hideUserMenu: function(menu, event, eventOpts) {
+        var me = this;
+
+        me.isMenuHidden = true;
+
+        if (!me.hideTask) {
+            me.hideTask = Ext.create('Ext.util.DelayedTask', function() {
+                me.hideMenu();
+            });
+        }
+        me.hideTask.delay(Ext.isNumber(me.hideDelay) ? me.hideDelay : 100, null);
+    },
+
+    collectAndCacheClickableMenuItems: function(cmp) {
+        var me = cmp,
+            owfMenu = me.menu.down('#owfMenu'),
+            marketplaceMenu = me.menu.down('#marketplaceMenu');
+
+        me.clickables = [];
+
+        var owfClickables = owfMenu.items.filterBy(function(rec, id) {
+            return rec.clickable && rec.clickable === true;
+        }).items;
+
+        var marketplaceClickables = marketplaceMenu.items.filterBy(function(rec, id) {
+            return rec.clickable && rec.clickable === true;
+        }).items;
+
+        me.clickables = owfClickables.concat(marketplaceClickables);
+    },
+
     enableMarketplaceMenu: function() {
         var element = this.menu.down("#marketplaceMenu");
 
@@ -291,18 +360,22 @@ Ext.define('Ozone.components.button.UserMenuButton', {
     enableMarketplaceAdminSubMenu: function() {
         var m = this.menu.down("#marketplaceMenu"),
             configurationPagesAdminItem = m.down("#marketplaceConfigurationPages"),
-            franchiseAdminMenuItem = m.down("#marketplaceFranchiseAdministration");
+            franchiseAdminMenuItem = m.down("#marketplaceFranchiseAdministration")
+            spacer = m.down("#marketplaceAdminSpacer");
 
-        configurationPagesAdminItem.enable();
-        franchiseAdminMenuItem.enable();
+        configurationPagesAdminItem.show();
+        franchiseAdminMenuItem.show();
+        spacer.show();
     },
 
     disableMarketplaceAdminSubMenu: function() {
         var m = this.menu.down("#marketplaceMenu"),
             configurationPagesAdminItem = m.down("#marketplaceConfigurationPages"),
             franchiseAdminMenuItem = m.down("#marketplaceFranchiseAdministration");
+            spacer = m.down("#marketplaceAdminSpacer");
 
-        configurationPagesAdminItem.disable();
-        franchiseAdminMenuItem.disable();
+        configurationPagesAdminItem.hide();
+        franchiseAdminMenuItem.hide();
+        spacer.hide();
     }
 });
