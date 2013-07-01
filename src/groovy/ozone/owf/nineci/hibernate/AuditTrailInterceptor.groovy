@@ -6,6 +6,7 @@ import org.springframework.web.context.request.RequestContextHolder as RCH
 import org.apache.log4j.Logger
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import ozone.owf.grails.domain.Person
+import ozone.owf.grails.services.AccountService
 
 
 class AuditTrailInterceptor extends EmptyInterceptor {
@@ -15,6 +16,8 @@ class AuditTrailInterceptor extends EmptyInterceptor {
     static final String EDITED_BY = CONF.getProperty("stamp.audit.editedBy")
     static final String EDITED_DATE = CONF.getProperty("stamp.audit.editedDate")
     static final String CREATED_DATE = CONF.getProperty("stamp.audit.createdDate")
+
+    AccountService accountService
 
     boolean onFlushDirty(Object entity, Serializable id, Object[] currentState,Object[] previousState, String[] propertyNames,Type[] types) {
       
@@ -72,15 +75,17 @@ class AuditTrailInterceptor extends EmptyInterceptor {
 
     Object getUserID() {
 
-        Long returnValue 
-        if(RCH?.getRequestAttributes()?.getSession()?.personID != null)
-        {
-            returnValue = RCH?.getRequestAttributes()?.getSession()?.personID
-        }
-        if (returnValue)        
-            return Person.get(returnValue)
-        else
-            return  null //Could add a default system user here
+        // Long returnValue 
+        // if(RCH?.getRequestAttributes()?.getSession()?.personID != null)
+        // {
+        //     returnValue = RCH?.getRequestAttributes()?.getSession()?.personID
+        // }
+        // if (returnValue)        
+        //     return Person.get(returnValue)
+        // else
+        //     return  null //Could add a default system user here
+
+        return accountService.getLoggedInUser()
     }
 	
 

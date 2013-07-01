@@ -11,7 +11,9 @@ beans = {
 	context.'component-scan'('base-package': 'org.ozoneplatform.appconfig.server')
 	context.'component-scan'('base-package': 'ozone.owf.util')
 	
-	entityInterceptor(AuditTrailInterceptor)
+	entityInterceptor(AuditTrailInterceptor) {
+        accountService = ref('accountService')
+    }
 
     auditLogListener(org.ozoneplatform.auditing.AuditLogListener) {
         sessionFactory = ref('sessionFactory')
