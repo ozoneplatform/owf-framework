@@ -83,8 +83,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                 }, {
                     text: 'Previous Sign In ' + me.user.prettyPrevLogin,
                     id: 'prevLogin',
-                    height: 25,
-                    clickable: true
+                    height: 25
                 }, {
                     text: 'Profile',
                     id: 'profile',
@@ -196,9 +195,10 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                 }
             ];
 
-        if (me.user.isAdmin) {
+            // Add the Marketplace Admin items even if the current OWF user
+            // is not an AML admin - eventing is hooked up for admin item toggling
+            // based on the current AML user info passed from Marketplace
             marketplaceMenuItems = me.addMarketplaceAdminMenuItems(marketplaceMenuItems);
-        }
 
         return marketplaceMenuItems;
     },
@@ -209,6 +209,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
         existingMenuItems.push([{
                 spacer: true,
                 cls: 'spacer',
+                id: 'marketplaceAdminSpacer',
                 disabled: true
             }, {
                 text: 'Configuration Pages',
@@ -359,18 +360,22 @@ Ext.define('Ozone.components.button.UserMenuButton', {
     enableMarketplaceAdminSubMenu: function() {
         var m = this.menu.down("#marketplaceMenu"),
             configurationPagesAdminItem = m.down("#marketplaceConfigurationPages"),
-            franchiseAdminMenuItem = m.down("#marketplaceFranchiseAdministration");
+            franchiseAdminMenuItem = m.down("#marketplaceFranchiseAdministration")
+            spacer = m.down("#marketplaceAdminSpacer");
 
-        configurationPagesAdminItem.enable();
-        franchiseAdminMenuItem.enable();
+        configurationPagesAdminItem.show();
+        franchiseAdminMenuItem.show();
+        spacer.show();
     },
 
     disableMarketplaceAdminSubMenu: function() {
         var m = this.menu.down("#marketplaceMenu"),
             configurationPagesAdminItem = m.down("#marketplaceConfigurationPages"),
             franchiseAdminMenuItem = m.down("#marketplaceFranchiseAdministration");
+            spacer = m.down("#marketplaceAdminSpacer");
 
-        configurationPagesAdminItem.disable();
-        franchiseAdminMenuItem.disable();
+        configurationPagesAdminItem.hide();
+        franchiseAdminMenuItem.hide();
+        spacer.hide();
     }
 });
