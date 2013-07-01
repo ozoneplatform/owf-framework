@@ -26,6 +26,9 @@ Ext.define('Ozone.components.pane.AccordionPane', {
     type: 'accordion',
 
     activateWidget: function(widget, showFocusFrame, focusIframe) {
+        if(widget.is('backgroundwidget')) { 
+            return false; 
+        }
         widget.rendered ? widget.expand() : widget.show();
         widget.focus(false, false, showFocusFrame, focusIframe);
         this.dashboard.updateActiveWidget(widget);

@@ -57,6 +57,9 @@ Ext.define('Ozone.components.pane.DesktopPane', {
     },
     
     activateWidget: function(widget, showFocusFrame, focusIframe) {
+        if(widget.is('backgroundwidget')) { 
+            return false; 
+        }
         if (widget.rendered === false || 
             (widget.rendered === true && widget.floating)) {
 

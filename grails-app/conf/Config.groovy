@@ -586,6 +586,7 @@ uiperformance.bundles = [
                         'components/tip/QuickTip',
                         'components/tip/ToolTip',
                         'components/widget/WidgetIframeComponent',
+                        'components/widget/BackgroundWidget',
                         'components/focusable/FocusCatch',
                         'components/widget/WidgetBase',
                         'components/widget/WidgetPanel',

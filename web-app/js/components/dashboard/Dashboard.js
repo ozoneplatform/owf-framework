@@ -332,11 +332,12 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
         if (isBackground) {
             widget = this.add({
-                xtype: 'widgetiframe',
-                style: 'display: none',
+                id: instanceId,
+                xtype: 'backgroundwidget',
                 isWidget: true,
+                pane: pane,
                 iframeProperties: OWF.Container.Eventing.getIframeProperties(
-                    widgetModel.get('url'), instanceId, widgetModel.data, pane.id, launchData, this.configRecord.get('locked'))
+                    widgetModel.get('url'), instanceId, widgetModel.data, pane.type, launchData, this.configRecord.get('locked'))
             });
 
             var widgetState = {
@@ -374,8 +375,6 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 pane.stateStore.removeAt(recordIndex);
             }
             pane.stateStore.add(widgetState);
-
-            //console.log('Launching background widget', widgetState.name)
 
             pane.fireEvent(OWF.Events.Widget.AFTER_LAUNCH, widget, widgetModel);
             return false;
@@ -722,7 +721,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      */
     activateWidget: function(widgetInstanceId) {
         var widget = Ext.getCmp(widgetInstanceId);
-        if (widget) {
+        if (widget && !widget.is('backgroundwidget')) {
             if (widget.floatingWidget) {
                 widget.minimized === true ? widget.restoreFromMinimize(true) : widget.focus(false, false, true, true);
 
@@ -1072,7 +1071,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
     updateActiveWidget: function(widget, notify) {
         //console.log('updating active widget');
-        if (!widget) {
+        if (!widget || (widget && widget.is('backgroundwidget'))) {
             this.activeWidget = null;
             return;
         }

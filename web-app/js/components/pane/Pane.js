@@ -281,6 +281,9 @@ Ext.define('Ozone.components.pane.Pane', {
     },
 
     activateWidget: function(widget, showFocusFrame, focusIframe) {
+        if(widget.is('backgroundwidget')) { 
+            return false; 
+        }
         widget.focus(false, false, showFocusFrame, focusIframe);
         this.dashboard.updateActiveWidget(widget);
 
