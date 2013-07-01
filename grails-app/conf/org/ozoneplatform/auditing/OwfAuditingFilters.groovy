@@ -33,7 +33,7 @@ class OwfAuditingFilters extends AbstractAuditingFilters {
 		try{
 			ApplicationConfiguration doCefLogging = owfApplicationConfigurationService.getApplicationConfiguration(CEF_LOGGING_ENABLED)
 			if(doCefLogging)
-				return doCefLogging.value
+				return Boolean.valueOf(doCefLogging.value)
 		} catch (Throwable t){
 			return true
 		}
