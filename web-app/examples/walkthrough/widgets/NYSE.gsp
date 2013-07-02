@@ -53,7 +53,9 @@
 	</style>
 	</g:if>
 	
-	
+	<!--[if lt IE 8]>
+        <script type="text/javascript" src="../../../js-lib/json2.js"></script>
+    <![endif]-->
 	<script type="text/javascript" src="../../../js-lib/ext-4.0.7/ext-all-debug.js"></script>
     <p:javascript src="owf-widget" pathToRoot="../../../" />
     <script type="text/javascript" src="../../../js/components/focusable/Focusable.js"></script>
@@ -87,7 +89,7 @@
                         }
                         if (found) {
                             OWF.RPC.getWidgetProxy(widgetId, function(widget) {
-                                if (Ext.isFunction(widget.doPlot)) { widget.doPlot(data); }
+                                if (Ext.isFunction(widget.doPlot)) { widget.doPlot(JSON.stringify(data)); }
                             });
                         } else {
                             if (_tm) { _tm.remove(widgetId); }
@@ -297,9 +299,7 @@
 				                    action:'Graph',
 				                    dataType:'application/vnd.owf.sample.price'
 				                },
-				                {
-				                    data: data
-				                },
+				                JSON.stringify(data),
                                 function (dest) {
                                   //dest is an array of destination widget proxies
                                   if (dest.length > 0) {

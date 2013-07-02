@@ -12,6 +12,9 @@
       <link href="../../../js-lib/ext-4.0.7/resources/css/ext-all.css" rel="stylesheet" type="text/css">
       <link href="../../../css/dragAndDrop.css" rel="stylesheet" type="text/css">
     </g:else>
+    <!--[if lt IE 8]>
+        <script type="text/javascript" src="../../../js-lib/json2.js"></script>
+    <![endif]-->
     <script type="text/javascript" src="../../../js-lib/ext-4.0.7/ext-all-debug.js"></script>
     <p:javascript src="owf-widget" pathToRoot="../../../" />
 	<script type="text/javascript" src="../../../js-lib/patches/LegendItemOverrides.js"></script>
@@ -22,7 +25,7 @@
         var _chart;
         
         function doPlot(data) {
-            if (_chart) { _chart.plot(data); }
+            if (_chart) { _chart.plot(JSON.parse(data)); }
         }
       
         Ext.onReady(function () {
@@ -132,7 +135,7 @@
                         dataType: 'application/vnd.owf.sample.price'
                     },
                     function (sender, intent, data) {
-                        doPlot(data.data);
+                        doPlot(data);
                     }
                 );
                 OWF.notifyWidgetReady();
