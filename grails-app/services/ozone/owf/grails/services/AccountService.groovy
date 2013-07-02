@@ -15,6 +15,7 @@ import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.domain.WidgetDefinition
 import org.hibernate.CacheMode
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.annotation.Propagation
 
 
 /**
@@ -41,6 +42,11 @@ class AccountService {
                     ilike(name, '%' + value + '%')
             }
         }
+    }
+
+    @Transactional(readOnly=true, propagation=Propagation.REQUIRES_NEW)
+    def getLoggedInUserReadOnly() {
+        return Person.findByUsername(getLoggedInUsername(),[cache:true])
     }
 
     def getLoggedInUser() {
