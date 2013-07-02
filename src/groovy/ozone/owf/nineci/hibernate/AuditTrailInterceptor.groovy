@@ -75,17 +75,24 @@ class AuditTrailInterceptor extends EmptyInterceptor {
 
     Object getUserID() {
 
-        Long returnValue 
-        if(RCH?.getRequestAttributes()?.getSession()?.personID != null)
-        {
-            returnValue = RCH?.getRequestAttributes()?.getSession()?.personID
-        }
-        if (returnValue)        
-            return Person.get(returnValue)
-        else
-            return  null //Could add a default system user here
+        // Long returnValue 
+        // if(RCH?.getRequestAttributes()?.getSession()?.personID != null)
+        // {
+        //     returnValue = RCH?.getRequestAttributes()?.getSession()?.personID
+        // }
+        // if (returnValue)        
+        //     return Person.get(returnValue)
+        // else
+        //     return  null //Could add a default system user here
 
-        // return accountService.getLoggedInUser()
+        def username = accountService.getLoggedInUsername()
+        if (username) {
+            return accountService.getLoggedInUser()
+        }
+        else {
+            return null
+        }
+
     }
 	
 
