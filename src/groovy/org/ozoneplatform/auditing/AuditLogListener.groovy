@@ -53,7 +53,7 @@ class AuditLogListener extends AbstractAuditLogListener {
 			def host = 'http://localhost:8080/jblocks-banner/config/getConfigs'
 			try{
 				hostCls = JSON.parse(new URL(host)?.text)?.hostCls ?: Extension.UNKOWN_VALUE
-			} catch (Exception e){
+			} catch (java.net.ConnectException e){
 				hostCls = Extension.UNKOWN_VALUE
 			}			
 		}		
