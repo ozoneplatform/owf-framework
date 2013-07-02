@@ -2,6 +2,7 @@ package org.ozoneplatform.auditing
 
 import static ozone.owf.enums.OwfApplicationSetting.*
 
+import grails.converters.JSON
 import javax.servlet.http.HttpServletRequest
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
@@ -18,7 +19,7 @@ class AuditLogListener extends AbstractAuditLogListener {
 	
     AccountService accountService
 	
-	def jbFilter
+	String hostCls
 	
 
 	@Override
@@ -49,13 +50,16 @@ class AuditLogListener extends AbstractAuditLogListener {
 
     @Override
     public String getHostClassification() {
-		try{
-			if(!jbFilter)
-				jbFilter = this.grailsApplication.getMainContext().getBean("JBlocksFilter")
-			return jbFilter?.configMessage
-		} catch (BeansException ex){
-			return Extension.UNKOWN_VALUE
-		}
+		if(!hostCls){
+			def host = 'http://localhost:8080/jblocks-banner/config/getConfigs'
+			try{
+				hostCls = JSON.parse(new URL(host)?.text)?.hostCls ?: Extension.UNKOWN_VALUE
+			} catch (Throwable t){
+				t.printStackTrace()
+				hostCls = Extension.UNKOWN_VALUE
+			}			
+		}		
+		hostCls
     }
 
     @Override
