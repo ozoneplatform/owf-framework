@@ -35,7 +35,7 @@ class OwfAuditingFilters extends AbstractAuditingFilters {
 			ApplicationConfiguration doCefLogging = owfApplicationConfigurationService.getApplicationConfiguration(CEF_LOGGING_ENABLED)
 			if(doCefLogging)
 				return Boolean.valueOf(doCefLogging.value)
-		} catch (Throwable t){
+		} catch (Exception e){
 			return true
 		}
 		return true
@@ -53,8 +53,7 @@ class OwfAuditingFilters extends AbstractAuditingFilters {
 			def host = 'http://localhost:8080/jblocks-banner/config/getConfigs'
 			try{
 				hostCls = JSON.parse(new URL(host)?.text)?.hostCls ?: Extension.UNKOWN_VALUE
-			} catch (Throwable t){
-				t.printStackTrace()
+			} catch (Exception e){
 				hostCls = Extension.UNKOWN_VALUE
 			}			
 		}		

@@ -9,7 +9,6 @@ import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.ozoneplatform.appconfig.server.domain.model.ApplicationSetting
 import org.ozoneplatform.auditing.format.cef.Extension
 import org.ozoneplatform.auditing.hibernate.AbstractAuditLogListener
-import org.springframework.beans.BeansException
 import org.springframework.web.context.request.RequestContextHolder
 
 import ozone.owf.grails.services.AccountService
@@ -54,8 +53,7 @@ class AuditLogListener extends AbstractAuditLogListener {
 			def host = 'http://localhost:8080/jblocks-banner/config/getConfigs'
 			try{
 				hostCls = JSON.parse(new URL(host)?.text)?.hostCls ?: Extension.UNKOWN_VALUE
-			} catch (Throwable t){
-				t.printStackTrace()
+			} catch (Exception e){
 				hostCls = Extension.UNKOWN_VALUE
 			}			
 		}		
