@@ -75,14 +75,13 @@ class AuditTrailInterceptor extends EmptyInterceptor {
 
     Object getUserID() {
         Long returnValue 
-        if(RCH?.getRequestAttributes()?.getSession()?.personID != null)
-        {
+        if (RCH?.getRequestAttributes()?.getSession()?.personID != null)  {
             returnValue = RCH?.getRequestAttributes()?.getSession()?.personID
         }
-        if (returnValue)        
+        if (returnValue) {
             return Person.get(returnValue)
-        else
-            return  null //Could add a default system user here
+        } else {
+            return null //Could add a default system user here
         }
     }
 }
