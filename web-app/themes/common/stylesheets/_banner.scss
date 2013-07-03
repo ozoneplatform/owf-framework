@@ -78,7 +78,7 @@
     //in here to increase specificity
     .bannerBtn {
         margin: 0px;
-        padding: 0 6px;
+        padding: 0 10px 0 10px;
         @include border-radius(2px);
     }
 }
@@ -89,40 +89,15 @@
     }
 }
 
-
 /*#popOutBanner {*/
     /*z-index: 100000000000 !important;*/
 /*}*/
 
 @include extjs-button-ui(
-    'default-toolbar-launchmenu-banner-large',
-    
-    $color: #ffffff,
-    $color-over: $banner-button-text-color,
-    $color-focus: #ffffff,
-    $color-pressed: #ffffff,
-    $color-disabled: #ffffff,
-    
-    $font-size: $owf-font-size,
-    $font-size-over: $owf-font-size,
-    $font-size-focus: $owf-font-size,
-    $font-size-pressed: $owf-font-size,
-    $font-size-disabled: $owf-font-size,
-    
-    $font-family: $owf-font-family,
-    $font-family-over: $owf-font-family,
-    $font-family-focus: $owf-font-family,
-    $font-family-pressed: $owf-font-family,
-    $font-family-disabled: $owf-font-family,
-
-    $icon-size: $banner-button-icon-size
-);
-
-@include extjs-button-ui(
     'default-toolbar-banner-large',
     
     $color: #ffffff,
-    $color-over: $banner-button-text-color,
+    $color-over: #ffffff,
     $color-focus: #ffffff,
     $color-pressed: #ffffff,
     $color-disabled: #ffffff,
@@ -162,42 +137,6 @@
         //reset to default
         background-position: 0% 0%;
     }
-
-    /*.launchMenuBtn {*/
-        /*//height: 32px;*/
-        /*padding-left: 2px;*/
-        /*padding-right: 2px;*/
-
-        /*button {*/
-            /*width: $launch-menu-icon-width !important; //override important ext style*/
-         /*//   height: 32px;*/
-        /*}*/
-        /*.launchMenuBtnIcon {*/
-            /*width: $launch-menu-icon-width;*/
-            /*//height: 32px;*/
-
-        /*}*/
-    /*}*/
-}
-
-
-.x-btn-default-toolbar-launchmenu-banner-large {
-    .launchMenuBtnIcon {
-        background-image: $launch-menu-icon;
-    }
-   // @include owf-background-gradient($launch-menu-button-background-colors);
-}
-.x-btn-default-toolbar-launchmenu-banner-large-over {
-    .launchMenuBtnIcon {
-        background-image: $launch-menu-over-icon;
-    }
-    @include owf-background-gradient($banner-button-over-background);
-}
-.x-btn-default-toolbar-launchmenu-banner-large-pressed {
-    .launchMenuBtnIcon {
-        background-image: $launch-menu-pressed-icon;
-    }
-//    @include owf-background-gradient($launch-menu-button-pressed-background-colors);
 }
 
 .x-btn-default-toolbar-banner-large-over {
@@ -206,38 +145,6 @@
 
 .x-btn-default-toolbar-banner-large-selected {
     @include owf-background-gradient($banner-button-over-background);
-}
-
-.dashMenuBtn {
-    .dashMenuBtnIcon {
-        background-image: $dashboard-icon;
-    }
-    &.x-btn-over {
-        .dashMenuBtnIcon {
-            background-image: $dashboard-over-icon;
-        }
-    }
-    &.x-btn-pressed {
-        .dashMenuBtnIcon {
-            background-image: $dashboard-over-icon;
-        }
-    }
-}
-
-.marketBtn {
-    .marketplaceBtnIcon {
-        background-image: $mp-icon;
-    }
-    &.x-btn-over {
-        .marketplaceBtnIcon {
-            background-image: $mp-over-icon;
-        }
-    }
-    &.x-btn-pressed {
-        .marketplaceBtnIcon {
-            background-image: $mp-pressed-icon;
-        }
-    }
 }
 
 .metricBtn {
@@ -256,50 +163,28 @@
     }
 }
 
-.settingsBtn {
-    .settingsBtnIcon {
-        background-image: $settings-icon;
-    }
-    &.x-btn-over {
-        .settingsBtnIcon {
-            background-image: $settings-over-icon;
-        }
-    }
-    &.x-btn-pressed {
-        .settingsBtnIcon {
-            background-image: $settings-pressed-icon;
-        }
-    }
-}
-
-.adminBtn {
-    .adminBtnIcon {
-        background-image: $admin-icon;
-    }
-    &.x-btn-over {
-        .adminBtnIcon {
-            background-image: $admin-over-icon;
-        }
-    }
-    &.x-btn-pressed {
-        .adminBtnIcon {
-            background-image: $admin-pressed-icon;
-        }
-    }
-}
-
 .helpBtn {
+
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+
     .helpBtnIcon {
         background-image: $help-icon;
+        background-size: 80%;
+        background-position: center;
     }
     &.x-btn-over {
         .helpBtnIcon {
             background-image: $help-over-icon;
+            background-size: 80%;
+            background-position: center;
         }
     }
     &.x-btn-pressed {
         .helpBtnIcon {
             background-image: $help-pressed-icon;
+            background-size: 80%;
+            background-position: center;
         }
     }
 }
@@ -319,6 +204,7 @@
         }
     }
 }
+
 #popOutBannerBtn, #popInBannerBtn {
     background: none !important;
     filter: none !important;
