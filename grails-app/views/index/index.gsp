@@ -25,10 +25,10 @@
         </script>
 
         <!-- bring in custom header/footer resources -->
-        <g:each in="${grailsApplication.config.owf.customHeaderFooter.jsImports}" var="jsImport">
+        <g:each in="${grailsApplication.mainContext.getBean('customHeaderFooterService').jsImportsAsList}" var="jsImport">
             <script type="text/javascript" src="${jsImport}"></script>
         </g:each>
-        <g:each in="${grailsApplication.config.owf.customHeaderFooter.cssImports}" var="cssImport">
+        <g:each in="${grailsApplication.mainContext.getBean('customHeaderFooterService').cssImportsAsList}" var="cssImport">
             <link rel="stylesheet" href="${cssImport}" type="text/css" />
         </g:each>
 

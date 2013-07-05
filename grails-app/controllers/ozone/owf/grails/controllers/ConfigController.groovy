@@ -12,6 +12,7 @@ class ConfigController {
     def preferenceService
     def themeService
     def serviceModelService
+    def customHeaderFooterService
 
     def config = {
         def curUser = accountService.getLoggedInUser()
@@ -57,6 +58,8 @@ class ConfigController {
         conf.metric = conf.metric.findAll { 
             ! (it.key in ['keystorePass', 'truststorePass', 'keystorePath', 'truststorePath'])
         }
+
+        conf.customHeaderFooter = customHeaderFooterService.configAsMap
 
         render(view: 'config_js',
                 model: [
