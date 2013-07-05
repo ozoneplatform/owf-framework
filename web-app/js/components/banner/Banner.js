@@ -41,14 +41,45 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         if(this.dashboardContainer.activeDashboard.configRecord.get('locked') === true) {
             return;
         }
-        
-        if (this.launchMenu.isVisible()) {
-            this.launchMenu.close();
+
+        if(!this.launchMenu) {
+            this.launchMenu = new Ozone.components.appcomponents.AppComponentsMenu({
+                collection: OWF.Collections.Widgets
+            });
+            $('#dashboardCardPanel').append(this.launchMenu.render().el);
         }
         else {
-            this.launchMenu.show();
-            this.launchMenu.refresh();
+            this.launchMenu.toggle();
         }
+        
+        // if(!this.launchMenu) {
+        //     this.launchMenu = Ext.widget('launchMenu', {
+        //         id: 'widget-launcher',
+        //         dashboardContainer: me.dashboardContainer,
+        //         hidden: true,
+        //         listeners: {
+        //             hide: {
+        //                 fn: function() {
+        //                     this.down('#launchMenuBtn').toggle(false, true);
+        //                 },
+        //                 scope: me
+        //             },
+        //             show: {
+        //                 fn: function() {
+        //                     this.down('#launchMenuBtn').toggle(true, true);
+        //                 },
+        //                 scope: me
+        //             }
+        //         }
+        //     });
+        // }
+        // if (this.launchMenu.isVisible()) {
+        //     this.launchMenu.close();
+        // }
+        // else {
+        //     this.launchMenu.show();
+        //     this.launchMenu.refresh();
+        // }
     },
 
     disableLaunchMenu: function() {
