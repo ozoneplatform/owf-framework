@@ -17,6 +17,7 @@
 		// GENERAL
 		mode: 'horizontal',
 		slideSelector: '',
+		oneItemPerSlide: true,
 		infiniteLoop: true,
 		hideControlOnEnd: false,
 		speed: 500,
@@ -117,9 +118,16 @@
 		/**
 		 * Initializes namespace settings to be used throughout plugin
 		 */
-		var init = function(){
+		var init = function() {
 			// merge user-supplied options with the defaults
 			slider.settings = $.extend({}, defaults, options);
+			
+			// wrap el in a wrapper
+			el.wrap('<div class="bx-wrapper"><div class="bx-viewport"></div></div>');
+			// store a namspace reference to .bx-viewport
+			slider.viewport = el.parent();
+			if(!slider.settings.oneItemPerSlide) createSlides();
+			
 			// parse slideWidth setting
 			slider.settings.slideWidth = parseInt(slider.settings.slideWidth);
 			// store the original children
@@ -174,14 +182,29 @@
 			setup();
 		}
 
+		var createSlides = function () {
+			var viewport = slider.viewport,
+				width = viewport.width(),
+				height = viewport.height(),
+				children = el.children(),
+				child = children.first(),
+				columns = Math.floor(width/child.outerWidth(true)),
+				rows = Math.floor(height/child.outerHeight(true)),
+				childrenPerSlide = columns * rows,
+				slideChildren;
+			
+			children.detach();
+			
+			for(var i = 0, len = children.length; i < len; i+= childrenPerSlide) {
+				slideChildren = i + childrenPerSlide > len ? children.slice(i) : children.slice(i, childrenPerSlide);
+				el.append($('<div class="slide"></div>').append(slideChildren));
+			}
+		}
+
 		/**
 		 * Performs all DOM and CSS modifications
 		 */
 		var setup = function(){
-			// wrap el in a wrapper
-			el.wrap('<div class="bx-wrapper"><div class="bx-viewport"></div></div>');
-			// store a namspace reference to .bx-viewport
-			slider.viewport = el.parent();
 			// add a loading div to display while images are loading
 			slider.loader = $('<div class="bx-loading" />');
 			slider.viewport.prepend(slider.loader);

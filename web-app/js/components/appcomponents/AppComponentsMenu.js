@@ -25,12 +25,19 @@
                     return _.template(tpl, widget.attributes);
                 }).join('');
 
-            this.$el.html('<div class="header"><h3>App Components</h3><div><div class="body">' + widgetsHtml + '<div>');
+            this.$el.html('<div class="header"><h3>App Components</h3></div><div class="body">' + widgetsHtml + '<div>');
             return this;
         },
 
         toggle: function () {
             this.$el.is(':visible') ? this.hide() : this.show();
+        },
+
+        shown: function () {
+            this.$el.find('.body').bxSlider({
+                oneItemPerSlide: false
+            });
+            return this;
         },
 
         show: function () {

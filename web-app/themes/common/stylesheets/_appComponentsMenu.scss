@@ -1,15 +1,68 @@
+.bx-viewport {
+    width: auto !important;
+    margin: 0 60px;
+    box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    -ms-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+}
+
 .appcomponents-menu {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     
-    height: 500px;
     color: #fff;
-    background: #222;
+    background: $widget-launcher-background-color;
 
     .header {
         padding: 0.5em 0;
         margin: 0 0 0 0.5em;
     }
+
+    .body {
+        overflow: hidden;
+        height: 102px;
+    }
+
+    .bx-viewport {
+        background: inherit;
+        border: none;
+        @include box-shadow(none);
+    }
+}
+
+.widget {
+
+    background-color: $widget-launcher-background-color;
+    border-color: $widget-launcher-background-color;
+    float: left;
+    cursor: pointer;
+    
+
+    .thumb-text {
+        color: $widget-launcher-widget-text-color;
+    }
+}
+.widget-selected {
+    background-color: $widget-launcher-widget-selected-background-color;
+    border-color: $widget-launcher-widget-selected-border-color;
+    .thumb-text {
+        color: $widget-launcher-widget-selected-text-color;
+    }
+}
+.widget-over {
+    background-color: $widget-launcher-widget-over-background-color;
+    border-color: $widget-launcher-widget-over-border-color;
+
+    .thumb-text {
+        color: $widget-launcher-widget-over-text-color;
+    }
+}
+.widget-disabled {
+    /*-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";*/
+    /*filter: alpha(opacity=40);*/
+    /*opacity: 0.4;  */
+    @include opacity(.4);
 }

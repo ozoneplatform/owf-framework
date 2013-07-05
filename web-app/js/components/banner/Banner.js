@@ -47,6 +47,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 collection: OWF.Collections.Widgets
             });
             $('#dashboardCardPanel').append(this.launchMenu.render().el);
+            this.launchMenu.shown();
         }
         else {
             this.launchMenu.toggle();
@@ -55,20 +56,20 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         // if(!this.launchMenu) {
         //     this.launchMenu = Ext.widget('launchMenu', {
         //         id: 'widget-launcher',
-        //         dashboardContainer: me.dashboardContainer,
+        //         dashboardContainer: this.dashboardContainer,
         //         hidden: true,
         //         listeners: {
         //             hide: {
         //                 fn: function() {
         //                     this.down('#launchMenuBtn').toggle(false, true);
         //                 },
-        //                 scope: me
+        //                 scope: this
         //             },
         //             show: {
         //                 fn: function() {
         //                     this.down('#launchMenuBtn').toggle(true, true);
         //                 },
-        //                 scope: me
+        //                 scope: this
         //             }
         //         }
         //     });
@@ -273,26 +274,6 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         me.addEvents({
             docked : true,
             undocked : true
-        });
-        
-        me.launchMenu = Ext.widget('launchMenu', {
-            id: 'widget-launcher',
-            dashboardContainer: me.dashboardContainer,
-            hidden: true,
-            listeners: {
-                hide: {
-                    fn: function() {
-                        this.down('#launchMenuBtn').toggle(false, true);
-                    },
-                    scope: me
-                },
-                show: {
-                    fn: function() {
-                        this.down('#launchMenuBtn').toggle(true, true);
-                    },
-                    scope: me
-                }
-            }
         });
 
         me.items = [];
