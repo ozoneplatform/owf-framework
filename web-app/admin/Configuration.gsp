@@ -20,6 +20,9 @@
             <div class="item user_account_settings">
                 <a href="#/config/user_account_settings">User Account Settings</a>
             </div>
+            <div class="item branding">
+                <a href="#/config/branding">Branding</a>
+            </div>
         </div>
 
         <!--[if lt IE 8]>
