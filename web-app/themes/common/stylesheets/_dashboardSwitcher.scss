@@ -54,6 +54,20 @@
 
         zoom: normal;
     }
+    
+    .x-tool .x-tool-close {
+	    background-image: theme-image($theme-name, 'tools/close-out.png') !important;
+	}
+	
+	.x-tool-over .x-tool-close {
+	     background-image: theme-image($theme-name, 'tools/close-over.png') !important;
+	     background-position: 0 !important;
+	}
+	
+	.x-tool-pressed .x-tool-close {
+	     background-image: theme-image($theme-name, 'tools/close-down.png') !important;
+	     background-position: 0 !important;
+	}
 }
 
 #dashboard-switcher .dashboard, #dashboard-switcher .stack, .stack.drag-proxy, .dashboard.drag-proxy {
