@@ -1319,6 +1319,13 @@
 			if(slider.controls.autoEl) slider.controls.autoEl.remove();
 			clearInterval(slider.interval);
 			if(slider.settings.responsive) $(window).unbind('resize', resizeWindow);
+			if(!slider.settings.oneItemPerSlide) {
+				var $this = $(this),
+					$slides = $('.slide', $this);
+					$slideChildren = $slides.children().detach();
+				$slides.remove();
+				$slideChildren.appendTo($this);
+			}
 		}
 
 		/**
