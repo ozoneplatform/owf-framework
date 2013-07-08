@@ -208,7 +208,9 @@ class StackService {
             
             def stackDefaultGroup = stack.findStackDefaultGroup()
 			//OP-70 adding owner to users by default
-			stackDefaultGroup.addToPeople(accountService.getLoggedInUser())
+			if(stackDefaultGroup && accountService.getLoggedInUser()) {
+				stackDefaultGroup.addToPeople(accountService.getLoggedInUser())
+			}
             def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
 
             returnValue = serviceModelService.createServiceModel(stack,[
