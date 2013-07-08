@@ -40,6 +40,11 @@
         border: none;
         @include box-shadow(none);
     }
+
+    .bx-loading {
+        background-color: $widget-launcher-background-color;
+        background-image: theme-image($theme-name, 'OWF-Spinner.gif');
+    }
 }
 
 .widget {
