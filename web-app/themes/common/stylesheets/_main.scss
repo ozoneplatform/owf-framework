@@ -35,6 +35,17 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
     margin-right: auto;
 }
 
+.search-input {
+    background-color: $widget-launcher-search-background-color;
+    border: $owf-form-field-border-width solid $widget-launcher-search-border-color;
+    background-image: theme-image($theme-name, 'magnifier.png');
+    background-repeat: no-repeat;
+    background-position: 5px 5px;
+    @include border-radius(4px);
+    color: $widget-launcher-widget-text-color;
+    padding: 5px 0 5px 25px;
+}
+
 .owf-manage-window {
     @include owf-manage-window();
 }

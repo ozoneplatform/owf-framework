@@ -25,7 +25,7 @@
                     return _.template(tpl, widget.attributes);
                 }).join('');
 
-            this.$el.html('<div class="header"><h3>App Components</h3></div><div class="body">' + widgetsHtml + '<div>');
+            this.$el.html('<div class="header"><span>App Components</span><input type="text" class="search-input"></div><div class="body">' + widgetsHtml + '<div>');
             return this;
         },
 
