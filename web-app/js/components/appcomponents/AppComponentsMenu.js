@@ -11,6 +11,12 @@
             '</div>' +
             '<div class="thumb-text"><%= namespace %></div>',
 
+        attributes: function () {
+            return {
+                tabindex: 0
+            };
+        },
+
         initialize: function () {
             Backbone.View.prototype.initialize.apply(this, arguments);
             this.model = this.options.model;
@@ -41,11 +47,12 @@
 
         render: function () {
             this.$el.html(  '<div class="header">' +
-                                '<span>App Components</span>'+
                                 '<a class="x-tool">' +
                                     '<img src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="x-tool-close">' +
                                 '</a>' +
-                                '<input type="text" class="search-input"></div>' + 
+                                '<input type="text" class="search-input">' +
+                                '<span>App Components</span>'+
+                            '</div>' + 
                             '<div class="body"></div>');
             this.$body = this.$el.find('.body');
 

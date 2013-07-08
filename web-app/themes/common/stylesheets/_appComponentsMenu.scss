@@ -1,6 +1,7 @@
 .bx-viewport {
     width: auto !important;
     margin: 0 60px;
+
     box-sizing: content-box;
     -moz-box-sizing: content-box;
     -ms-box-sizing: content-box;
@@ -48,8 +49,8 @@
     }
 
     .bx-viewport {
-        background: inherit;
-        border: none;
+        background: $widget-launcher-background-color;
+        border: 0px;
         @include box-shadow(none);
     }
 
