@@ -61,7 +61,6 @@
 }
 
 .widget {
-
     background-color: $widget-launcher-background-color;
     border-color: $widget-launcher-background-color;
     float: left;
@@ -71,7 +70,17 @@
     .thumb-text {
         color: $widget-launcher-widget-text-color;
     }
+
+    &:hover {
+        background-color: $widget-launcher-widget-over-background-color;
+        border-color: $widget-launcher-widget-over-border-color;
+
+        .thumb-text {
+            color: $widget-launcher-widget-over-text-color;
+        }
+    }
 }
+
 .widget-selected {
     background-color: $widget-launcher-widget-selected-background-color;
     border-color: $widget-launcher-widget-selected-border-color;
@@ -79,14 +88,7 @@
         color: $widget-launcher-widget-selected-text-color;
     }
 }
-.widget-over {
-    background-color: $widget-launcher-widget-over-background-color;
-    border-color: $widget-launcher-widget-over-border-color;
 
-    .thumb-text {
-        color: $widget-launcher-widget-over-text-color;
-    }
-}
 .widget-disabled {
     /*-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";*/
     /*filter: alpha(opacity=40);*/
