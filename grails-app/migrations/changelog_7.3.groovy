@@ -38,7 +38,7 @@ databaseChangeLog = {
 				constraints(nullable: "false", unique: "true")
 			}
 
-			column(name: "value", type: "java.sql.Types.VARCHAR(2000)") {
+			column(name: "VALUE", type: "java.sql.Types.VARCHAR(2000)") {
 				constraints(nullable: "true")
 			}
 
@@ -97,7 +97,7 @@ databaseChangeLog = {
 				constraints(nullable: "false", unique: "true")
 			}
 
-			column(name: "value", type: "java.sql.Types.VARCHAR(2000)") {
+			column(name: "VALUE", type: "java.sql.Types.VARCHAR(2000)") {
 				constraints(nullable: "true")
 			}
 
@@ -124,7 +124,7 @@ databaseChangeLog = {
 			column(name: "mutable", type: "java.sql.Types.BOOLEAN") {
 				constraints(nullable: "false")
 			}
-			
+
 			column(name: "sub_group_order", type: "java.sql.Types.BIGINT")
 		}
 	}
@@ -146,5 +146,13 @@ databaseChangeLog = {
 		addForeignKeyConstraint(baseColumnNames: "created_by_id", baseTableName: "application_configuration", constraintName: "FKFC9C0477666C6D2", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
 		addForeignKeyConstraint(baseColumnNames: "edited_by_id", baseTableName: "application_configuration", constraintName: "FKFC9C047E31CB353", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
 	}
+
+
+    changeSet(author: "owf", id: "7.3-5", context: "create, upgrade, 7.4") {
+        comment("Add icon image url to dashboard")
+        addColumn(tableName: "dashboard") {
+            column(name: "icon_image_url", type: "varchar(2083)")
+        }
+    }
 
 }
