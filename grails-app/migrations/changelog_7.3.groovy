@@ -148,11 +148,4 @@ databaseChangeLog = {
 	}
 
 
-    changeSet(author: "owf", id: "7.3-5", context: "create, upgrade, 7.4") {
-        comment("Add icon image url to dashboard")
-        addColumn(tableName: "dashboard") {
-            column(name: "icon_image_url", type: "varchar(2083)")
-        }
-    }
-
 }
