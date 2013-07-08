@@ -122,7 +122,9 @@
         _initCarousel: function () {
             if(this.views.length) {
                 this.carousel = this.$body.bxSlider({
-                    oneItemPerSlide: false
+                    oneItemPerSlide: false,
+                    infiniteLoop: true,
+                    touchEnabled: false
                 });
             }
             return this;
