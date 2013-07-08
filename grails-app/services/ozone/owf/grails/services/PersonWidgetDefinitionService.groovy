@@ -341,6 +341,34 @@ class PersonWidgetDefinitionService {
             cacheMode(CacheMode.GET)
         }
         
+        // Get the OWF Users Group and add it to the list
+        def allUsersGroup = Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
+        if (allUsersGroup) {
+            groups = groups << allUsersGroup
+
+            // If the users group contained stacks, add their default groups.
+            def allUsersStackGroups = allUsersGroup?.stacks?.collect{ it.findStackDefaultGroup() }
+            if (allUsersStackGroups) {
+                groups = (groups << allUsersStackGroups).flatten()
+            }
+        }
+
+        // Process admin group dashboards if this user is an admin.
+        if (accountService.getLoggedInUserIsAdmin()) {
+            def allAdminsGroup = Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
+
+            // Add the admin group.
+            if (allAdminsGroup) {
+                groups = groups << allAdminsGroup
+
+                // If the admin group contained stacks, add their default groups
+                def allAdminStackGroups = allAdminsGroup?.stacks?.collect{ it.findStackDefaultGroup() }
+                if (allAdminStackGroups) {
+                    groups = (groups << allAdminStackGroups).flatten()
+                }
+            }
+        }
+
         // Generate a combined group list.
         groups = (groups << stackDefaultGroups).flatten()
         
