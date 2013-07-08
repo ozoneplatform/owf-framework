@@ -30,7 +30,8 @@
         searchQuery: '',
 
         initialize: function () {
-            _.bindAll(this, 'addOne');
+            _.bindAll(this, 'addOne', 'reloadSlider');
+            $(window).on('resize', this.reloadSlider);
         },
 
         events: {
@@ -53,7 +54,7 @@
         },
 
         addOne: function (model, index) {
-            if(model.get('namespace').indexOf(this.searchQuery) < 0) {
+            if(model.get('namespace').indexOf(this.searchQuery) < 0 || model.get('widgetTypes')[0].name !== 'standard') {
                 return;
             }
 
@@ -74,6 +75,12 @@
                 ._initCarousel();
 
         }, 500),
+
+        reloadSlider: _.debounce(function (evt) {
+            
+            this.carousel && this.carousel.reloadSlider();
+
+        }, 1000),
 
         toggle: function () {
             this.$el.is(':visible') ? this.hide() : this.show();
@@ -100,6 +107,7 @@
             _.invoke(this.views, 'remove');
             delete this.views;
             this._destroyCarousel();
+            $(window).off('resize', this.reloadSlider);
 
             return Backbone.View.prototype.remove.call(this);
         },
