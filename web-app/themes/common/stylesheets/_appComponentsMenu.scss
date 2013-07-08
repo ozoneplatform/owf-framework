@@ -26,8 +26,20 @@
         }
     }
 
-    .search-input {
+    .search-input, .x-tool {
         float: right;
+    }
+
+    .x-tool {
+        margin: 0 0 0 5px;
+
+        &:hover .x-tool-close {
+            background-position: -19px 0;
+        }
+    }
+
+    .x-tool-close {
+        vertical-align: middle;
     }
 
     .body {

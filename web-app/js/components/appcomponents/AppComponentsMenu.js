@@ -35,11 +35,18 @@
         },
 
         events: {
-            'keyup .search-input': 'search'
+            'keyup .search-input': 'search',
+            'click .x-tool': 'toggle'
         },
 
         render: function () {
-            this.$el.html('<div class="header"><span>App Components</span><input type="text" class="search-input"></div><div class="body"></div>');
+            this.$el.html(  '<div class="header">' +
+                                '<span>App Components</span>'+
+                                '<a class="x-tool">' +
+                                    '<img src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="x-tool-close">' +
+                                '</a>' +
+                                '<input type="text" class="search-input"></div>' + 
+                            '<div class="body"></div>');
             this.$body = this.$el.find('.body');
 
             this.addAll();
