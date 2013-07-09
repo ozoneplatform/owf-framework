@@ -265,7 +265,7 @@ Ext.define('Ozone.components.pane.Pane', {
         for(var i = 0, len = models.length ; i < len ; i++) {
             widgetModel = models[i];
 
-            if(!(widgetModel instanceof Ozone.data.WidgetDefinition)) {
+            if(!(widgetModel instanceof Ozone.data.WidgetDefinition || widgetModel instanceof Ozone.data.State)) {
                 widgetModel = Ext.create('Ozone.data.State', widgetModel.attributes || widgetModel);
             }
             
