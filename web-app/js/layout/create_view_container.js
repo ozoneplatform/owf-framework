@@ -206,14 +206,12 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             boxLabel: Ozone.layout.CreateViewWindowString.createNew,
             name: 'viewSelectRadio',
             cls:'newViewRadio',
-            checked: true,
             listeners: {
                 'change': {
                     fn: function(radio, newValue) {
                         if(newValue)
                         {
                             disableInputComponent(this.down('#existViewCb'));
-                            disableInputComponent(this.down('#importFileupload'));
                         }
                     },
                     scope: this
@@ -233,7 +231,6 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                         if(newValue)
                         {
                             enableInputComponent(this.down('#existViewCb'));
-                            disableInputComponent(this.down('#importFileupload'));
                         }
                     },
                     scope: this
@@ -243,10 +240,11 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             copiedDashboardField: 'existViewCb' // id of the field to validate
         };
 		
-        this.importedViewRadio = { 
-            boxLabel: Ozone.layout.CreateViewWindowString.importView, 
+        this.premadeLayoutRadio = {
+            boxLabel: Ozone.ux.DashboardMgmtString.premadeLayout,
             name: 'viewSelectRadio',
-            inputValue: "importedDashboard",
+            inputValue: "premadeLayout",
+            checked: 'true',
             cls:'importedViewRadio',
             listeners: {
                 //this listener works for both since we can use the 'isSelected' param
@@ -254,19 +252,123 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                     fn: function(radio, newValue) {
                         if(newValue) {
                             disableInputComponent(this.down('#existViewCb'));
-                            enableInputComponent(this.down('#importFileupload'));
                         }
                     },
                     scope: this
                 }
             },
-            vtype: 'importedDashboard',
             importedDashboardField: 'importFileupload' // id of the field to validate
         };
 
+        this.premadeViewRow1 = {
+            xtype: 'container',
+            name: 'premadeViewRow1',
+            cls: 'premadeViewRow',
+            layout: {
+                type: 'hbox'
+            },
+            height: 50,
+            items: [
+                {
+                    xtype: 'button',
+                    itemId: 'premadeDesktop',
+                    cls: 'premadeLayoutButton premadeDesktop',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premadeFit',
+                    cls: 'premadeLayoutButton premadeFit',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premadeTabbed',
+                    cls: 'premadeLayoutButton premadeTabbed',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premade2ColumnFit',
+                    cls: 'premadeLayoutButton premade2ColumnFit',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premade2RowFit',
+                    cls: 'premadeLayoutButton premade2RowFit',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premade4Fit',
+                    cls: 'premadeLayoutButton premade4Fit',
+                    scale: 'banner-large'
+                }
+            ]
+        };
 
-        // Set default layout for creating a new dashboard
-        //this.newView.value = this.config.layout;
+        this.premadeViewRow2 = {
+            xtype: 'container',
+            name: 'premadeViewRow2',
+            cls: 'premadeViewRow',
+            layout: {
+                type: 'hbox'
+            },
+            height: 50,
+            items: [
+                {
+                    xtype: 'button',
+                    itemId: 'premade2ColumnPortal',
+                    cls: 'premadeLayoutButton premade2ColumnPortal',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premadeAccordionFit',
+                    cls: 'premadeLayoutButton premadeAccordionFit',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premadeTabbedAccordion',
+                    cls: 'premadeLayoutButton premadeTabbedAccordion',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premade2RowFitTabbed',
+                    cls: 'premadeLayoutButton premade2RowFitTabbed',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premadeAccordion2RowFit',
+                    cls: 'premadeLayoutButton premadeAccordion2RowFit',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premadeTabbed2Fit',
+                    cls: 'premadeLayoutButton premadeTabbed2Fit',
+                    scale: 'banner-large'
+                }
+            ]
+        };
+
+        this.premadeViewContainer = {
+            xtype: 'container',
+            name: 'premadeViewContainer',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
+            padding: '5, 5, 0, 15',
+            items: [
+                this.premadeViewRow1,
+                this.premadeViewRow2
+            ]
+        };
 		
         this.existingView = {
             xtype: 'combo',
@@ -417,9 +519,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         //entire group is valid
         this.viewSelectRadio = {
             xtype: 'fieldcontainer',
-            fieldLabel: Ozone.ux.DashboardMgmtString.layout,
-            labelSeparator: '',
-            labelWidth: 150,
+            labelWidth: 110,
             layout: 'fit',
             cls: 'createSelector',
             region: 'center',
@@ -437,11 +537,11 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                         padding: '0, 0, 5, 0'
                     },
                     items: [
-                        this.newViewRadio,
+                        this.premadeLayoutRadio,
+                        this.premadeViewContainer,
                         this.existingViewRadio,
                         this.existingView,
-                        this.importedViewRadio,
-                        this.importedView
+                        this.newViewRadio
                     ]
                 }
             ]
