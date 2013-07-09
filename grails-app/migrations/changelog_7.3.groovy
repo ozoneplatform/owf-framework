@@ -30,7 +30,7 @@ databaseChangeLog = {
 
 			column(name: "created_date", type: "java.sql.Types.DATE")
 
-			column(name: "edited_by_id", type: "java.sql.Types.BIGINT")
+			column(name: "edited_by_id", type: '${owf.personIdType}')
 
 			column(name: "edited_date", type: "java.sql.Types.DATE")
 

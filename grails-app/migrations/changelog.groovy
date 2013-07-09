@@ -7,7 +7,7 @@ databaseChangeLog = {
     // On MS SQL Server, we use numeric(19, 0) for the person id, but we use bigint everywhere else. Use this property like:
     // 	    column(name: "edited_by_id", type: '${owf.personIdType}')
     // but only use SINGLE QUOTES around the ${}, because Spring needs to do the interpretation, not Groovy.
-    property([name:"owf.personIdType", value:"java.sql.Types.BIGINT", dbms:"postgresql, mysql, oracle"])
+    property([name:"owf.personIdType", value:"java.sql.Types.BIGINT", dbms:"hsqldb, postgresql, mysql, oracle"])
     property([name:"owf.personIdType", value:"numeric(19,0)", dbms:"mssql"])
 
     //previous version change logs go here
