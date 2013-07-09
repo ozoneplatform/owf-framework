@@ -24,8 +24,12 @@
 
         parse: function (resp, options) {
             return _.map(resp.rows, function (widget) {
-                var val = widget.value;
+                var val = _.omit(widget.value, 'namespace', 'path', 'widgetVersion');
                 val.id = widget.path;
+                val.widgetGuid = widget.path;
+                val.name = widget.value.namespace;
+                val.title = widget.value.namespace;
+                val.version = widget.value.widgetVersion;
                 val.image = encodeURI(decodeURI(val.image));
                 return val;
             });

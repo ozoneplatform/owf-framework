@@ -196,7 +196,6 @@
 				slideChildren, slide;
 			
 			children.detach();
-			slider.slides
 			
 			for(var i = 0, len = children.length; i < len; i+= childrenPerSlide) {
 				slideChildren = i + childrenPerSlide > len ? children.slice(i) : children.slice(i, childrenPerSlide);

@@ -22,19 +22,21 @@
         
         className: 'widget',
 
-        tpl: '<div class="thumb-wrap" data-id="<%= id %>">' +
+        tpl: '<div class="thumb-wrap">' +
                 '<img onerror="this.src = \'themes/common/images/settings/WidgetsIcon.png\'" src="<%= image %>" class="thumb" />' +
             '</div>' +
-            '<div class="thumb-text"><%= namespace %></div>',
+            '<div class="thumb-text"><%= name %></div>',
 
         attributes: function () {
             return {
-                tabindex: 0
+                tabindex: 0,
+                'data-id': this.model.get('id')
             };
         },
 
         initialize: function () {
             Backbone.View.prototype.initialize.apply(this, arguments);
+            this.$el.data('view', this);
             this.model = this.options.model;
         },
 
@@ -84,7 +86,7 @@
         },
 
         addOne: function (model, index) {
-            if(model.get('namespace').indexOf(this.searchQuery) < 0 || model.get('widgetTypes')[0].name !== 'standard') {
+            if(model.get('name').indexOf(this.searchQuery) < 0 || model.get('widgetTypes')[0].name !== 'standard') {
                 return;
             }
 
@@ -105,8 +107,8 @@
         },
 
         reloadSlider: _.debounce(function (evt) {
-            this.carousel && this.carousel.reloadSlider();
-                console.log(this.carousel.getSlides());
+            this._destroyCarousel()
+                ._initCarousel();
         }, 1000),
 
         toggle: function () {
@@ -149,12 +151,48 @@
                     infiniteLoop: true,
                     touchEnabled: false
                 });
+                this._initSortable();
             }
             return this;
         },
 
+        _initSortable: function () {
+            var me = this,
+                $slides = me.carousel.getSlides();
+
+            $slides.sortable({
+                helper: 'clone',
+                appendTo: $('body'),
+                connectWith: '.bx-slide',
+                tolerance: "pointer",
+                cursorAt: { left: -25, top: -25 },
+
+                start: function(event, ui) {
+                    var model = ui.item.data('view').model;
+
+                    me.$el.on('mouseleave.launch', function () {
+                        me._dragging = true;
+                        me.hide();
+                        me.options.dashboardContainer.launchWidgets(model, false, true);
+                    });
+                },
+
+                stop: function () {
+                    if(me._dragging) {
+                        me.show();
+                        $slides.sortable('cancel');
+                    }
+                    me.$el.off('.launch');
+                    delete me._dragging;
+                }
+            });
+        },
+
         _destroyCarousel: function () {
-            this.carousel && this.carousel.destroySlider();
+            if(this.carousel) {
+                this.carousel.getSlides().sortable('destroy');
+                this.carousel.destroySlider();
+            }
             return this;
         }
 

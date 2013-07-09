@@ -398,13 +398,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     /*
      * Launches widget on the current dashboard.
      */
-    launchWidgets: function(widgetModel, isEnterPressed) {
+    launchWidgets: function(widgetModel, isEnterPressed, isDragAndDrop) {
         var me = this;
 
-        me.selectPane(isEnterPressed).then(function(pane, e) {
+        me.selectPane(isEnterPressed, isDragAndDrop).then(function(pane, e) {
             me.activeDashboard.launchWidgets(pane, null, e, {
                 widgetModel: widgetModel
-            })
+            });
         }, function() {
             var launchMenu = Ext.getCmp('widget-launcher');
             if (launchMenu) {
@@ -449,14 +449,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
      * Returns: a promise object that will be resolved with
      * event and pane selected
      */
-    selectPane: function(isUsingKeyboard) {
+    selectPane: function(isUsingKeyboard, isDragAndDrop) {
         var me = this,
             deferred = jQuery.Deferred(),
             panes = this.activeDashboard.panes,
             doc = Ext.getDoc();
 
-        // if one page resolve right away
-        if (panes.length === 1) {
+        // if one pane resolve right away only if not performing drag and drop
+        if (panes.length === 1 && !isDragAndDrop) {
             deferred.resolve(panes[0]);
         } else {
 
@@ -473,6 +473,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             this.el.on('click', this._selectPaneOnClick, this, {
                 deferred: deferred
             });
+            this.el.on('mouseup', this._selectPaneOnClick, this, {
+                deferred: deferred
+            });
 
             // cleanup listeners when deferred is either resolved or rejected
             deferred.always(function() {
@@ -482,6 +485,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     capture: true
                 });
                 me.el.un('click', me._selectPaneOnClick, me);
+                me.el.un('mouseup', me._selectPaneOnClick, me);
             });
         }
 

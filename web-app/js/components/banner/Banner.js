@@ -44,7 +44,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
         if(!this.launchMenu) {
             this.launchMenu = new Ozone.components.appcomponents.AppComponentsMenu({
-                collection: OWF.Collections.Widgets
+                collection: OWF.Collections.Widgets,
+                dashboardContainer: this.dashboardContainer
             });
             $('#dashboardCardPanel').append(this.launchMenu.render().el);
             this.launchMenu.shown();
