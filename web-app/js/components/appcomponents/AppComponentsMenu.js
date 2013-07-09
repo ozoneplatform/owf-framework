@@ -81,7 +81,6 @@
         },
 
         search: _.debounce(function (evt) {
-            
             this.searchQuery = $(evt.target).val();
 
             this._destroyCarousel()
@@ -91,9 +90,7 @@
         }, 500),
 
         reloadSlider: _.debounce(function (evt) {
-            
             this.carousel && this.carousel.reloadSlider();
-
         }, 1000),
 
         toggle: function () {
