@@ -5,7 +5,7 @@
 Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.prototype */ {
     extend: 'Ext.toolbar.Toolbar',
     alias: ['widget.owfbanner', 'widget.Ozone.components.banner.Banner'],
-    
+
     itemId: 'banner',
     cls: 'banner',
 
@@ -22,7 +22,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     state: "docked",
 
     dashboardContainer: null,
-    
+
     toolbarButtons: null,
 
     noItemsToShow: 2,
@@ -36,117 +36,62 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
     buttonSelectedCls: 'x-btn-default-toolbar-banner-large-selected',
 
-    openLaunchMenu: function() {
-
-        if(this.dashboardContainer.activeDashboard.configRecord.get('locked') === true) {
+    openAppComponents: function() {
+        if (this.dashboardContainer.activeDashboard.configRecord.get('locked') === true ||
+            this.dashboardContainer.activeDashboard.configRecord.isMarketplaceDashboard()) {
             return;
         }
 
-        if(!this.launchMenu) {
-            this.launchMenu = new Ozone.components.appcomponents.AppComponentsMenu({
+        if(!this.appComponentsView) {
+            this.appComponentsView = new Ozone.components.appcomponents.AppComponentsMenu({
                 collection: OWF.Collections.Widgets,
                 dashboardContainer: this.dashboardContainer
             });
-            $('#dashboardCardPanel').append(this.launchMenu.render().el);
-            this.launchMenu.shown();
+            $('#dashboardCardPanel').append(this.appComponentsView.render().el);
+            this.appComponentsView.shown();
         }
         else {
-            this.launchMenu.toggle();
+            this.appComponentsView.toggle();
         }
-        
-        // if(!this.launchMenu) {
-        //     this.launchMenu = Ext.widget('launchMenu', {
-        //         id: 'widget-launcher',
-        //         dashboardContainer: this.dashboardContainer,
-        //         hidden: true,
-        //         listeners: {
-        //             hide: {
-        //                 fn: function() {
-        //                     this.down('#launchMenuBtn').toggle(false, true);
-        //                 },
-        //                 scope: this
-        //             },
-        //             show: {
-        //                 fn: function() {
-        //                     this.down('#launchMenuBtn').toggle(true, true);
-        //                 },
-        //                 scope: this
-        //             }
-        //         }
-        //     });
-        // }
-        // if (this.launchMenu.isVisible()) {
-        //     this.launchMenu.close();
-        // }
-        // else {
-        //     this.launchMenu.show();
-        //     this.launchMenu.refresh();
-        // }
     },
 
-    disableLaunchMenu: function() {
-        if (this.launchMenu.isVisible()) {
-            this.launchMenu.close();
-        }
-        this.getComponent('launchMenuBtn').disable();
+    enableAppComponentsBtn: function() {
+        this.getComponent('appComponentsBtn').enable();
         if (this.popOutToolbar) {
-        	this.popOutToolbar.getComponent('launchMenuBtn').disable();
+            this.popOutToolbar.getComponent('appComponentsBtn').enable();
         }
     },
 
-    enableLaunchMenu: function() {
-        this.getComponent('launchMenuBtn').enable();
+    disableAppComponentsBtn: function() {
+        if (this.appComponentsView.isVisible()) {
+            this.appComponentsView.close();
+        }
+        this.getComponent('appComponentsBtn').disable();
         if (this.popOutToolbar) {
-        	this.popOutToolbar.getComponent('launchMenuBtn').enable();
+            this.popOutToolbar.getComponent('appComponentsBtn').disable();
         }
     },
 
-    openSettingsWindow: function(){
-        if (!this.settingsWindow || this.settingsWindow.isDestroyed) 
-            this.settingsWindow = Ext.widget('settingswindow', {
-                dashboardContainer: this.dashboardContainer
-            });
-
-        if (this.settingsWindow.isVisible()) {
-            this.settingsWindow.close();
-        }
-        else {
-            this.settingsWindow.show();
-        }
-    },
-
-    openAdministrationWindow: function(){
-        if (!this.administrationWindow || this.administrationWindow.isDestroyed) 
-            this.administrationWindow = Ext.widget('admintoolswindow', {
-                dashboardContainer: this.dashboardContainer
-            });
-
-        if (this.administrationWindow.isVisible())
-            this.administrationWindow.hide();
-        else
-            this.administrationWindow.show();
-    },
-    openMarketplaceWindow: function(){
-        if(this.hasMarketplaceButton) {
+    openMarketplaceWindow: function() {
+        if (this.hasMarketplaceButton) {
             if (!this.mpWindow) {
                 this.mpWindow = Ext.widget('marketplace');
             }
 
             if (this.mpWindow.isVisible()) {
-                this.mpWindow.close(); 
-            }
-            else {
+                this.mpWindow.close();
+            } else {
                 this.mpWindow.show();
             }
-        }
-        else {
+        } else {
             //Reset to enable all hotkeys since show wasn't executed
             Ozone.components.keys.KeyMap.reset();
         }
     },
+
     openMarketplaceModalWindow: function(btn, e) {
         var me = this;
-        
+
         if (this.hasMarketplaceButton) {
             if (!this.marketplaceToggle) {
                 if (this.marketplaceWidget) {
@@ -161,7 +106,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 // This will be called as part of the previous dashboard change, but not if the previous
                 // dashboard was the Marketplace dashboard, so call it here just to be safe.
                 this.clearMarketplaceToggle();
-                
+
                 //Reset to enable all hotkeys since show wasn't executed
                 Ozone.components.keys.KeyMap.reset();
             }
@@ -170,51 +115,36 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             Ozone.components.keys.KeyMap.reset();
         }
     },
+
     getMarketplaceLauncher: function() {
         if (!this.mpLauncher) {
             this.mpLauncher = Ext.create('Ozone.components.marketplace.MarketplaceLauncher', {
-                 dashboardContainer: this.dashboardContainer
+                dashboardContainer: this.dashboardContainer
             });
             this.mpLauncher.addListener(OWF.Events.Marketplace.OPENED, this.setMarketplaceToggle, this);
         }
         return this.mpLauncher;
     },
+
     clearMarketplaceToggle: function() {
         var btn = this.getComponent('marketBtn');
 
-        if(btn) {
+        if (btn) {
             this.marketplaceToggle = false;
             btn.removeCls(this.buttonSelectedCls);
         }
     },
+
     setMarketplaceToggle: function() {
         var btn = this.getComponent('marketBtn');
 
-        if(btn) {
+        if (btn) {
             this.marketplaceToggle = true;
             btn.addCls(this.buttonSelectedCls);
         }
     },
-    openMetricWindow: function() {
-        if(this.hasMetricButton) {
-            if(!this.metricWindow || this.metricWindow.isDestroyed) {
-                this.metricWindow = Ext.widget('metricwindow', {
-                    dashboardContainer: this.dashboardContainer
-                });
-            }
-            if(this.metricWindow.isVisible()) {
-                this.metricWindow.close();
-            }
-            else {
-                this.metricWindow.show();
-            }
-        }
-        else {
-            //Reset to enable all hotkeys since show wasn't executed
-            Ozone.components.keys.KeyMap.reset();
-        }
-    },
-    openHelpWindow: function(){
+
+    openHelpWindow: function() {
         if (!this.helpWindow || this.helpWindow.isDestroyed) {
             this.helpWindow = Ext.widget('helpwindow', {
                 constrain: true,
@@ -222,23 +152,19 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 dashboardContainer: this.dashboardContainer
             });
         }
+
         if (this.helpWindow.isVisible()) {
             this.helpWindow.close();
-        }
-        else {
+        } else {
             this.helpWindow.show();
         }
     },
-    
+
     addKeyBindings: function() {
         Ozone.KeyMap.addBinding([
             Ext.apply(Ozone.components.keys.HotKeys.LAUNCH_MENU, {
                 scope: this,
-                fn: this.openLaunchMenu
-            }),
-            Ext.apply(Ozone.components.keys.HotKeys.SETTINGS, {
-                scope: this,
-                fn: this.openSettingsWindow
+                fn: this.openAppComponents
             }),
             Ext.apply(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER, {
                 scope: this.dashboardContainer,
@@ -249,23 +175,11 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 exclusive: this.dashboardContainer.widgetStore.findWidgetsByType('marketplace').length > 1,
                 fn: this.openMarketplaceModalWindow
             }),
-            Ext.apply(Ozone.components.keys.HotKeys.METRIC, {
-                scope: this,
-                fn: this.openMetricWindow
-            }),
             Ext.apply(Ozone.components.keys.HotKeys.HELP, {
                 scope: this,
                 fn: this.openHelpWindow
             })
         ]);
-
-        if (this.user.isAdmin) {
-          Ozone.KeyMap.addBinding(
-            Ext.apply(Ozone.components.keys.HotKeys.ADMINISTRATION, {
-              scope: this,
-              fn: this.openAdministrationWindow
-            }));
-        }
     },
 
     initComponent: function() {
@@ -273,136 +187,59 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
         me.addKeyBindings();
         me.addEvents({
-            docked : true,
-            undocked : true
+            docked: true,
+            undocked: true
         });
 
         me.items = [];
-        me.items.push({
-            xtype: 'button',
-            id: "launchMenuBtn",
-            itemId: "launchMenuBtn",
-            // custom scale required for IE in quirks mode dropping all but last class on elements
-            // TODO: revisit when a doctype is added
-            scale: 'launchmenu-banner-large',
-            iconAlign: 'top',
-            text: null,
-            cls: "bannerBtn launchMenuBtn",
-            iconCls: 'launchMenuBtnIcon',
-            enableToggle: true,
-            clickCount: 0,
-            handler: this.openLaunchMenu,
-            scope: this,
-            listeners: {
-	        	afterrender: {
-	        		fn: function(btn) {
-	        			Ext.create('Ext.tip.ToolTip',{
-	        				target: btn.getEl().id,
-	        				title: Ozone.layout.tooltipString.addWidgetsTitle,
-	                        html: Ozone.layout.tooltipString.addWidgetsContent,
-	                        anchor: 'bottom',
-	        			    anchorToTarget: true,
-	        			    anchorOffset: -5,
-	        			    mouseOffset: [5,0],
-	        			    width: 500,
-	        			    maxWidth: 500
-	        			    
-	        			    
-	        			});
-	        		}
-	        	}
-	        }
-        }, '-');
-
         me.items.push([{
-	        xtype: 'button',
-	        id: 'dashMenuBtn',
-	        text: null,
-	        cls: 'bannerBtn dashMenuBtn',
-	        iconCls: 'dashMenuBtnIcon',
-	        iconAlign: 'top',
-	        scale: 'banner-large',
-	        enableToggle: true,
-	        scope: this.dashboardContainer,
-	        handler: this.dashboardContainer.showDashboardSwitcherButtonHandler,
-	        listeners: {
-	        	afterrender: {
-	        		fn: me.dashMenuAfterRender,
-                    scope: me
-	        	}
-	        }
-        }, '-',
-        // settings button
-        {
-            xtype: 'button',
-            itemId: 'settingsBtn',
-            cls: 'bannerBtn  settingsBtn',
-            iconCls: 'settingsBtnIcon',
-            scale: 'banner-large',
-            iconAlign: 'top',
-            text: null,
-            enableToggle: true,
-            scope: this,
-            toggleHandler: this.openSettingsWindow,
-            listeners: {
-	        	afterrender: {
-	        		fn: function(btn) {
-	        			Ext.create('Ext.tip.ToolTip',{
-	        				target: btn.getEl().id,
-	        				title: Ozone.layout.tooltipString.settingsTitle,
-	                        html: Ozone.layout.tooltipString.settingsContent,
-	        			    anchor: 'bottom',
-	        			    anchorToTarget: true,
-	        			    anchorOffset: -5,
-	        			    mouseOffset: [5,0],
-	        			    width: 500,
-	        			    maxWidth: 500            			    
-	        			});
-	        		}
-	        	}
-	        }
-        }]);
-        if (this.user.isAdmin) {
-          me.items.push([
-              '-',
-              // admin button
-              {
-                  xtype: 'button',
-                  itemId: 'adminBtn',
-                  cls: 'bannerBtn  adminBtn',
-                  iconCls: 'adminBtnIcon',
-                  scale: 'banner-large',
-                  iconAlign: 'top',
-                  text: null,
-                  enableToggle: true,
-                  scope: this,
-                  toggleHandler: this.openAdministrationWindow,
-                  listeners: {
-      	        	afterrender: {
-      	        		fn: function(btn) {
-      	        			Ext.create('Ext.tip.ToolTip',{
-      	        				target: btn.getEl().id,
-      	        				title: Ozone.layout.tooltipString.adminToolsTitle,
-      	                      	html: Ozone.layout.tooltipString.adminToolsContent,
-      	        			    anchor: 'bottom',
-    	        			    anchorToTarget: true,
-    	        			    anchorOffset: -5,
-    	        			    mouseOffset: [5,0],
-      	        			    width: 500,
-      	        			    maxWidth: 500            			    
-      	        			});
-      	        		}
-      	        	}
-      	        }
-              }]);
-        }
-        me.items.push([
-            '-',
-            // help button
-            {
+                xtype: 'button',
+                id: 'myAppsBtn',
+                text: 'My Apps',
+                cls: 'bannerBtn myAppsBtn',
+                scale: 'banner-large',
+                enableToggle: true,
+                scope: this.dashboardContainer,
+                handler: this.dashboardContainer.showDashboardSwitcherButtonHandler,
+                listeners: {
+                    afterrender: {
+                        fn: me.myAppsAfterRender,
+                        scope: me
+                    }
+                }
+            }, '-', {
+                xtype: 'button',
+                text: 'App Components',
+                id: 'appComponentsBtn',
+                itemId: 'appComponentsBtn',
+                // custom scale required for IE in quirks mode dropping all but last class on elements
+                // TODO: revisit when a doctype is added
+                scale: 'banner-large',
+                cls: 'bannerBtn appComponentsBtn',
+                enableToggle: true,
+                toggleHandler: this.openAppComponents,
+                scope: this,
+                listeners: {
+                    afterrender: {
+                        fn: function(btn) {
+                            Ext.create('Ext.tip.ToolTip', {
+                                target: btn.getEl().id,
+                                title: Ozone.layout.tooltipString.addWidgetsTitle,
+                                html: Ozone.layout.tooltipString.addWidgetsContent,
+                                anchor: 'bottom',
+                                anchorToTarget: true,
+                                anchorOffset: -5,
+                                mouseOffset: [5, 0],
+                                width: 500,
+                                maxWidth: 500
+                            });
+                        }
+                    }
+                }
+            }, '-', {
                 xtype: 'button',
                 itemId: 'helpBtn',
-                cls: 'bannerBtn  helpBtn',
+                cls: 'bannerBtn helpBtn',
                 iconCls: 'helpBtnIcon',
                 scale: 'banner-large',
                 iconAlign: 'top',
@@ -410,58 +247,56 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 handler: this.openHelpWindow,
                 scope: this,
                 listeners: {
-      	        	afterrender: {
-      	        		fn: function(btn) {
-      	        			Ext.create('Ext.tip.ToolTip',{
-      	        				target: btn.getEl().id,
-      	        				title: Ozone.layout.tooltipString.helpTitle,
-      	                      	html: Ozone.layout.tooltipString.helpContent,
-      	        			    anchor: 'bottom',
-    	        			    anchorToTarget: true,
-    	        			    anchorOffset: -5,
-    	        			    mouseOffset: [5,0],
-      	        			    width: 500,
-      	        			    maxWidth: 500            			    
-      	        			});
-      	        		}
-      	        	}
-      	        }
+                    afterrender: {
+                        fn: function(btn) {
+                            Ext.create('Ext.tip.ToolTip', {
+                                target: btn.getEl().id,
+                                title: Ozone.layout.tooltipString.helpTitle,
+                                html: Ozone.layout.tooltipString.helpContent,
+                                anchor: 'bottom',
+                                anchorToTarget: true,
+                                anchorOffset: -5,
+                                mouseOffset: [5, 0],
+                                width: 500,
+                                maxWidth: 500
+                            });
+                        }
+                    }
+                }
             }, '-'
-       ]);
-       if(Ozone.config.bannerPopoutEnabled){
-	       me.items.push([
-	            // popout button
-	            {
-	                xtype: 'button',
-	                id: 'popOutBannerBtn',
-	                cls: 'popOutBannerBtn ',
-	                iconCls: 'popOutBannerBtnIcon',
-	                iconAlign: 'top',
-	                scale: 'banner-large',
-	                width: 10,
-	                text: null,
-	                tooltip: {
-	                    title: Ozone.layout.tooltipString.bannerUndockTitle,
-	                    text: Ozone.layout.tooltipString.bannerUndockContent,
-	                    width: 280,
-	                    maxWidth: 280
-	                },
-	                handler: this.popOutDockedBanner,
-	                scope: this
-	            }
-	       ]);
-       }
-       me.items.push([
+        ]);
+        if (Ozone.config.bannerPopoutEnabled) {
+            me.items.push([
+                    '-', {
+                    xtype: 'button',
+                    id: 'popOutBannerBtn',
+                    cls: 'popOutBannerBtn ',
+                    iconCls: 'popOutBannerBtnIcon',
+                    iconAlign: 'top',
+                    scale: 'banner-large',
+                    width: 10,
+                    text: null,
+                    tooltip: {
+                        title: Ozone.layout.tooltipString.bannerUndockTitle,
+                        text: Ozone.layout.tooltipString.bannerUndockContent,
+                        width: 280,
+                        maxWidth: 280
+                    },
+                    handler: this.popOutDockedBanner,
+                    scope: this
+                }
+            ]);
+        }
+        me.items.push([
 
             // The logo image is now provided by css on the inner box div (x-box-inner) of the
             // banner toolbar. The next two configs remain for spacing
             {
-              xtype: 'component',
-              itemId: 'logoImg',
-              flex: 6.75,
-              cls: 'logo-img'
-            },
-            {
+                xtype: 'component',
+                itemId: 'logoImg',
+                flex: 6.75,
+                cls: 'logo-img'
+            }, {
                 xtype: 'component',
                 flex: 1
             },
@@ -475,7 +310,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 dashboardContainer: this.dashboardContainer
             }
         ]);
- 
+
         /*function setupCircularFocus() {
             var firstEl = this.items.get(0).getFocusEl(),
                 userMenuBtn = this.getComponent('userMenuBtn'),
@@ -516,79 +351,70 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     //returns either the docked banner or the popout banner,
     //depending on which one is in use
     getBanner: function() {
-        if (this.popOutToolbar && this.popOutToolbar.isVisible())
+        if (this.popOutToolbar && this.popOutToolbar.isVisible()) {
             return this.popOutToolbar;
-        else
+        } else {
             return this;
+        }
+    },
+
+    getUserMenu: function() {
+        return this.getComponent('userMenuBtn');
     },
 
     getPopOutBanner: function() {
         var me = this,
             popOutButtons = [],
-            launchMenuBtn = this.getComponent('launchMenuBtn');
+            appComponentsBtn = this.getComponent('appComponentsBtn');
 
-        if(me.popOutToolbar) {
+        if (me.popOutToolbar) {
             return me.popOutToolbar;
         }
 
-        popOutButtons.push(
-            {
-                id: 'gripper',
-                xtype: 'component'
-            },
-            {
-                id: 'popout_logo',
-                xtype: 'component'
-            }
-        );
+        popOutButtons.push({
+            id: 'gripper',
+            xtype: 'component'
+        }, {
+            id: 'popout_logo',
+            xtype: 'component'
+        });
 
-        popOutButtons.push(launchMenuBtn.cloneConfig({
-                id: 'popWidgetButton',
-                clickCount: launchMenuBtn.clickCount,
-                disabled: this.getComponent('launchMenuBtn').disabled
-            }), '-',
-            this.getComponent('dashMenuBtn').cloneConfig(), '-'
-        );
+        popOutButtons.push(appComponentsBtn.cloneConfig({
+            id: 'popWidgetButton',
+            clickCount: appComponentsBtn.clickCount,
+            disabled: this.getComponent('appComponentsBtn').disabled
+        }), '-',
+            this.getComponent('myAppsBtn').cloneConfig(), '-');
 
         if (this.hasMarketplaceButton) {
             popOutButtons.push(this.getComponent('marketBtn').cloneConfig(), '-');
         }
 
-
-        if (this.hasMetricButton) {
-            popOutButtons.push(this.getComponent('metricBtn').cloneConfig(), '-');
-        }
-
-        popOutButtons.push(this.getComponent('settingsBtn').cloneConfig(), '-');
-
         if (this.user.isAdmin) {
-          popOutButtons.push(
-              this.getComponent('adminBtn').cloneConfig(), '-'
-          );
+            popOutButtons.push(
+                this.getComponent('adminBtn').cloneConfig(), '-');
         }
-        
-        if(Ozone.config.bannerPopoutEnabled){
-	        popOutButtons.push(
-	            this.getComponent('helpBtn').cloneConfig(), '-',
-	            {
-	                xtype: 'button',
-	                id: 'popInBannerBtn',
-	                cls: 'popInBannerBtn',
-	                iconCls: 'popInBannerBtnIcon',
-	                iconAlign: 'top',
-	                scale: 'banner-large',
-	                width: 10,
-	                text: null,
-	                tooltip: {
-	                    title: Ozone.layout.tooltipString.bannerDockTitle,
-	                    text: Ozone.layout.tooltipString.bannerDockContent,
-	                    width: 200,
-	                    maxWidth: 200
-	                },
-	                handler: this.dockPopOutBanner,
-	                scope: this
-	            }
-	        );
+
+        if (Ozone.config.bannerPopoutEnabled) {
+            popOutButtons.push(
+                this.getComponent('helpBtn').cloneConfig(), '-', {
+                xtype: 'button',
+                id: 'popInBannerBtn',
+                cls: 'popInBannerBtn',
+                iconCls: 'popInBannerBtnIcon',
+                iconAlign: 'top',
+                scale: 'banner-large',
+                width: 10,
+                text: null,
+                tooltip: {
+                    title: Ozone.layout.tooltipString.bannerDockTitle,
+                    text: Ozone.layout.tooltipString.bannerDockContent,
+                    width: 200,
+                    maxWidth: 200
+                },
+                handler: this.dockPopOutBanner,
+                scope: this
+            });
         }
 
         me.popOutToolbar = Ext.create("Ext.toolbar.Toolbar", {
@@ -596,7 +422,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             cls: 'banner',
             constrain: true,
             ownerCt: me.dashboardContainer,
-            floating : true,
+            floating: true,
             draggable: true,
             state: 'full',
             // fixedZIndex: 1000000,
@@ -618,13 +444,11 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                             evt.stopPropagation();
                             action();
                         },
-                        scope: me 
-                    }, 
-                    key, //also copy properties from key
-                    Ext.Array.difference(   //copy all properties from key except fn, handler, and scope
-                        Ext.Object.getKeys(key), 
-                        ['fn', 'handler', 'scope']
-                    ));
+                        scope: me
+                    },
+                        key, //also copy properties from key
+                    Ext.Array.difference( //copy all properties from key except fn, handler, and scope
+                    Ext.Object.getKeys(key), ['fn', 'handler', 'scope']));
                 }
 
                 keys.MOVE_UP = createKeyBinding(moveKeys.MOVE_UP, Ext.bind(me.moveUp, me));
@@ -653,7 +477,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
                             if (toFocus) toFocus.focus();
                         }
-                    }, 
+                    },
                     scope: this
                 });
 
@@ -673,19 +497,20 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 }, this);
 
             },
-            items : [popOutButtons]
+            items: [popOutButtons]
         });
 
-        me.popOutToolbar.on('move',
-            function() {
-                this.saveState();
-            }, me, {buffer: 500});
+        me.popOutToolbar.on('move', function() {
+            this.saveState();
+        }, me, {
+            buffer: 500
+        });
 
         me.popOutToolbar.on('afterrender', function(cmp) {
             var items = cmp.items.items,
-                lastEl = items[items.length-1].getEl(),
+                lastEl = items[items.length - 1].getEl(),
                 width = lastEl.getOffsetsTo(cmp.getEl())[0] + lastEl.getWidth();
-            
+
             cmp.originalWidth = width + 5;
             cmp.originalHeight = cmp.getHeight();
 
@@ -696,7 +521,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             cmp.getEl().on('blur', me.startCollapseTimer, me);
             cmp.getEl().on('mouseover', me.clearCollapseTimer, me);
             cmp.getEl().on('focus', function() {
-                me.clearCollapseTimer(); 
+                me.clearCollapseTimer();
                 me.expandBanner();
             }, me);
 
@@ -727,7 +552,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 //extra elements
                 Ext.defer(function() {
                     this.getEl().select('.x-toolbar-separator, #gripper, #popout_logo')
-                    .each(function (item) {
+                        .each(function(item) {
                         item.dom.tabIndex = -1;
                     });
                 }, 100, cmp);
@@ -741,31 +566,31 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             //Ensure it's on top
             me.dashboardContainer.bannerManager.register(me.popOutToolbar);
             me.dashboardContainer.bannerManager.bringToFront(me.popOutToolbar);
-            
+
             //Fix bug where height somehow gets set to 0
-            if(this.height < this.originalHeight) {
+            if (this.height < this.originalHeight) {
                 this.setHeight(this.originalHeight);
             }
         });
-        
+
         return me.popOutToolbar;
     },
-    
-    popOutDockedBanner: function(disableAnim, position){
+
+    popOutDockedBanner: function(disableAnim, position) {
         var me = this,
             popOutBanner = me.getPopOutBanner();
-        
+
         me.hide();
 
-        if(popOutBanner.rendered) {
+        if (popOutBanner.rendered) {
             popOutBanner.setHeight(popOutBanner.originalHeight);
         }
-        
+
         me.state = "mini";
         popOutBanner.show();
         me.fireEvent(OWF.Events.Banner.UNDOCKED);
 
-        if(position && position.length == 2) {
+        if (position && position.length == 2) {
             popOutBanner.setPosition(position[0], position[1]);
         }
         disableAnim === true ? me.collapseMiniBanner(0) : me.startCollapseTimer();
@@ -773,7 +598,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
         //Required to fix odd behavior where resizePopOutBanner resizes to about 19 pixels
         //under certain circumstances.
-        if(this.popOutToolbar.width < 50) {
+        if (this.popOutToolbar.width < 50) {
             me.resizePopOutBanner();
         }
 
@@ -793,16 +618,17 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
         this.saveState();
     },
-    
+
     startCollapseTimer: function() {
         var me = this;
         if (!me.collapseTask) {
             me.collapseTask = Ext.create('Ext.util.DelayedTask', function() {
-                if (me.popOutToolbar.getEl().contains(document.activeElement))
+                if (me.popOutToolbar.getEl().contains(document.activeElement)) {
                     //if focus is still in the banner, try again later
                     me.startCollapseTimer();
-                else
+                } else {
                     me.collapseMiniBanner();
+                }
             });
         }
         me.collapseTask.delay(Ext.isNumber(me.collapseDelay) ? me.collapseDelay : 5000, null, me);
@@ -810,7 +636,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
     clearCollapseTimer: function() {
         var me = this;
-        if(me.collapseTask) {
+        if (me.collapseTask) {
             me.collapseTask.cancel();
             me.collapseTask = null;
             me.expandBanner();
@@ -822,7 +648,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             popOutBanner = this.getPopOutBanner(),
             items = popOutBanner.items.items;
 
-        if(!popOutBanner.miniWidth) {
+        if (!popOutBanner.miniWidth) {
             popOutBanner.miniWidth = items[me.noItemsToShow].getEl().getOffsetsTo(popOutBanner.getEl())[0];
         }
         popOutBanner.animate({
@@ -833,9 +659,9 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             },
             listeners: {
                 afteranimate: function() {
-                  if (me.state != 'docked') {
-                    me.state = "collapsed";
-                  }
+                    if (me.state != 'docked') {
+                        me.state = "collapsed";
+                    }
                 }
             }
         });
@@ -846,9 +672,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             popOutBanner = this.getPopOutBanner(),
             items = popOutBanner.items.items;
 
-        if(popOutBanner.originalWidth 
-            && popOutBanner.originalWidth !== popOutBanner.getSize().width) {
-            
+        if (popOutBanner.originalWidth && popOutBanner.originalWidth !== popOutBanner.getSize().width) {
+
             popOutBanner.animate({
                 easing: 'backOut',
                 duration: 500,
@@ -857,9 +682,9 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 },
                 listeners: {
                     afteranimate: function() {
-                      if (me.state != 'docked') {
-                        me.state = "mini";
-                      }
+                        if (me.state != 'docked') {
+                            me.state = "mini";
+                        }
                     }
                 }
             });
@@ -868,9 +693,9 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
     resizePopOutBanner: function() {
         var banner = this.getPopOutBanner(),
-                    items = banner.items.items,
-                    lastEl = items[items.length-1].getEl(),
-                    width = lastEl.getOffsetsTo(banner.getEl())[0] + lastEl.getWidth();
+            items = banner.items.items,
+            lastEl = items[items.length - 1].getEl(),
+            width = lastEl.getOffsetsTo(banner.getEl())[0] + lastEl.getWidth();
 
         banner.originalWidth = width + 5;
         banner.setWidth(banner.originalWidth);
@@ -888,9 +713,9 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             name: "state",
             value: Ozone.util.toString(value),
             onSuccess: function(result) {
-              if (cb != null) {
-                cb();
-              }
+                if (cb != null) {
+                    cb();
+                }
             },
             onFailure: function() {}
         });
@@ -899,41 +724,46 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     addMarketplaceButton: function(widget) {
         this.marketplaceWidget = widget;
 
-        if(!this.hasMarketplaceButton) {
-            var banner = this, popOutIndexModifier = 0;
-            banner.insert(this.marketplaceButtonIndex + popOutIndexModifier, {xtype:'tbseparator',itemId:'mpSeparator'});
-            banner.insert(this.marketplaceButtonIndex + 1 + popOutIndexModifier,{
+        if (!this.hasMarketplaceButton) {
+            var banner = this,
+                popOutIndexModifier = 0;
+            banner.insert(this.marketplaceButtonIndex + popOutIndexModifier, {
+                xtype: 'tbseparator',
+                itemId: 'mpSeparator'
+            });
+            banner.insert(this.marketplaceButtonIndex + 1 + popOutIndexModifier, {
                 xtype: 'button',
                 itemId: 'marketBtn',
-                cls: 'bannerBtn  marketBtn',
-                iconCls: 'marketplaceBtnIcon',
+                cls: 'bannerBtn marketBtn',
                 scale: 'banner-large',
-                iconAlign: 'top',
-                text: null,
+                text: 'Store',
                 scope: this,
                 handler: this.openMarketplaceModalWindow,
                 listeners: {
-    	        	afterrender: {
-    	        		fn: function(btn) {
-    	        			Ext.create('Ext.tip.ToolTip',{
-    	        				target: btn.getEl().id,
-    	        				title: Ozone.layout.tooltipString.marketplaceWindowTitle,
-    	                        html: Ozone.layout.tooltipString.marketplaceWindowContent,
-    	        			    anchor: 'bottom',
-    	        			    anchorToTarget: true,
-    	        			    anchorOffset: -5,
-    	        			    mouseOffset: [5,0],
-    	        			    width: 500,
-    	        			    maxWidth: 500            			    
-    	        			});
-    	        		}
-    	        	}
-    	        }
+                    afterrender: {
+                        fn: function(btn) {
+                            Ext.create('Ext.tip.ToolTip', {
+                                target: btn.getEl().id,
+                                title: Ozone.layout.tooltipString.marketplaceWindowTitle,
+                                html: Ozone.layout.tooltipString.marketplaceWindowContent,
+                                anchor: 'bottom',
+                                anchorToTarget: true,
+                                anchorOffset: -5,
+                                mouseOffset: [5, 0],
+                                width: 500,
+                                maxWidth: 500
+                            });
+                        }
+                    }
+                }
             });
-            
-            if(this.popOutToolbar) {
-                if(!this.popOutToolbar.getComponent('marketBtn')) {
-                    this.popOutToolbar.insert(this.marketplaceButtonIndex + 2, {xtype:'tbseparator',itemId:'mpSeparator'});
+
+            if (this.popOutToolbar) {
+                if (!this.popOutToolbar.getComponent('marketBtn')) {
+                    this.popOutToolbar.insert(this.marketplaceButtonIndex + 2, {
+                        xtype: 'tbseparator',
+                        itemId: 'mpSeparator'
+                    });
                     this.popOutToolbar.insert(this.marketplaceButtonIndex + 3, this.getComponent('marketBtn').cloneConfig());
                     this.resizePopOutBanner();
                 }
@@ -943,13 +773,13 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         }
     },
     removeMarketplaceButton: function() {
-        if(this) {
+        if (this) {
             var marketBtnIndex = this.items.indexOf(this.getComponent('marketBtn'));
             this.remove(marketBtnIndex);
             this.remove(marketBtnIndex - 1); //Remove separator
         }
 
-        if(this.popOutToolbar) {
+        if (this.popOutToolbar) {
             var marketBtnIndex = this.popOutToolbar.items.indexOf(this.popOutToolbar.getComponent('marketBtn'));
             this.popOutToolbar.remove(marketBtnIndex);
             this.popOutToolbar.remove(marketBtnIndex - 1);
@@ -961,57 +791,26 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
     addMetricButton: function() {
         var index = this.hasMarketplaceButton ? this.marketplaceButtonIndex + 2 : this.marketplaceButtonIndex;
-        if(!this.hasMetricButton) {
-            var banner = this, popOutIndexModifier = 0;
-            banner.insert(index + popOutIndexModifier, {xtype:'tbseparator',itemId:'metricSeparator'});
-            banner.insert(index + 1 + popOutIndexModifier,{
-                xtype: 'button',
-                itemId: 'metricBtn',
-                cls: 'bannerBtn  metricBtn',
-                iconCls: 'metricBtnIcon',
-                scale: 'banner-large',
-                iconAlign: 'top',
-                text: null,
-                scope: this,
-                handler: this.openMetricWindow,
-                listeners: {
-    	        	afterrender: {
-    	        		fn: function(btn) {
-    	        			Ext.create('Ext.tip.ToolTip',{
-    	        				target: btn.getEl().id,
-    	        				title: Ozone.layout.tooltipString.metricWindowTitle,
-    	                        html: Ozone.layout.tooltipString.metricWindowContent,
-    	        			    anchor: 'bottom',
-    	        			    anchorToTarget: true,
-    	        			    anchorOffset: -5,
-    	        			    mouseOffset: [5,0],
-    	        			    width: 500,
-    	        			    maxWidth: 500            			    
-    	        			});
-    	        		}
-    	        	}
-    	        }
-            });
-        }
 
-        if(this.popOutToolbar) {
-            if(!this.popOutToolbar.getComponent('metricBtn')) {
-                this.popOutToolbar.insert(index + 2, {xtype:'tbseparator',itemId:'metricSeparator'});
+        if (this.popOutToolbar) {
+            if (!this.popOutToolbar.getComponent('metricBtn')) {
+                this.popOutToolbar.insert(index + 2, {
+                    xtype: 'tbseparator',
+                    itemId: 'metricSeparator'
+                });
                 this.popOutToolbar.insert(index + 3, this.getComponent('metricBtn').cloneConfig());
                 this.resizePopOutBanner();
             }
         }
-
-        this.hasMetricButton = true;
     },
     removeMetricButton: function() {
-        if(this) {
+        if (this) {
             var metricBtnIndex = this.items.indexOf(this.getComponent('metricBtn'));
             this.remove(metricBtnIndex);
             this.remove(metricBtnIndex - 1); //Remove separator
         }
 
-        if(this.popOutToolbar) {
+        if (this.popOutToolbar) {
             var metricBtnIndex = this.popOutToolbar.items.indexOf(this.popOutToolbar.getComponent('metricBtn'));
             this.popOutToolbar.remove(metricBtnIndex);
             this.popOutToolbar.remove(metricBtnIndex - 1);
@@ -1021,38 +820,33 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         this.hasMetricButton = false;
     },
 
-    dashMenuAfterRender: function(btn) {
-        Ext.create('Ext.tip.ToolTip',{
+    myAppsAfterRender: function(btn) {
+        Ext.create('Ext.tip.ToolTip', {
             target: btn.getEl().id,
             title: Ozone.layout.tooltipString.dashboardSwitcherTitle,
             html: Ozone.layout.tooltipString.dashboardSwitcherContent,
             anchor: 'bottom',
             anchorToTarget: true,
             anchorOffset: -5,
-            mouseOffset: [5,0],
+            mouseOffset: [5, 0],
             width: 500,
-            maxWidth: 500                           
+            maxWidth: 500
         });
-
-        
     },
 
-    blinkMarketBtnAfterDashboardSwitch: function (guid, activeDashboard, previousActiveDashboard) {
+    blinkMarketBtnAfterDashboardSwitch: function(guid, activeDashboard, previousActiveDashboard) {
         var btn = this.getComponent('marketBtn');
 
-        if(btn && (activeDashboard.configRecord.isMarketplaceDashboard() || previousActiveDashboard.configRecord.isMarketplaceDashboard())) {
-            if(!Modernizr.cssanimations) {
+        if (btn && (activeDashboard.configRecord.isMarketplaceDashboard() || previousActiveDashboard.configRecord.isMarketplaceDashboard())) {
+            if (!Modernizr.cssanimations) {
                 // wait 6 seconds if dashboard hasn't rendered
                 // otherwise frame animation won't be visible to user
                 setTimeout(function() {
                     btn.blink();
-                }, activeDashboard.rendered ? 0: 6000);
-            }
-            else {
+                }, activeDashboard.rendered ? 0 : 6000);
+            } else {
                 btn.blink();
             }
         }
-
-        
     }
 });

@@ -665,10 +665,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
             this.activeDashboard = dashboardCardPanel.getComponent(this.activeDashboard.id);
             this.activateDashboard(this.activeDashboard.id, true, this.activeDashboard.stackContext);
-            if (this.activeDashboard.configRecord.get('locked')) {
-                this.getBanner().disableLaunchMenu();
+            if (this.activeDashboard.configRecord.get('locked') || this.activeDashboard.configRecord.isMarketplaceDashboard()) {
+                this.getBanner().disableAppComponentsBtn();
             } else {
-                this.getBanner().enableLaunchMenu();
+                this.getBanner().enableAppComponentsBtn();
             }
 
             if (this.activeDashboard.configRecord.isMarketplaceDashboard()) {
@@ -2034,9 +2034,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
 
         if (hasMetricWidget) {
-            this.getBanner().addMetricButton();
+            this.getBanner().getUserMenu().enableMetricsMenuItem();
         } else {
-            this.getBanner().removeMetricButton();
+            this.getBanner().getUserMenu().disableMetricsMenuItem();
         }
     },
 

@@ -55,12 +55,12 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             imageInfo = config.data.image;
 
         if (listingType === "widget") {
-            animTargetX = "0px";
-            animTargetBtn = "launchMenuBtn";
+            animTargetX = "67px";
+            animTargetBtn = "appComponentsBtn";
         }
         else if (listingType === "stack") {
-            animTargetX = "64px";
-            animTargetBtn = "dashMenuBtn";
+            animTargetX = "0px";
+            animTargetBtn = "myAppsBtn";
         }
 
         var visualizeAddition = function(definitionName) {
@@ -429,7 +429,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                         self.dashboardContainer.launchWidgets(widgetDef, true);
                         self.dashboardContainer.activeDashboard.config.locked = true;
                         self.dashboardContainer.saveDashboard(self.dashboardContainer.activeDashboard, 'update', function() {});
-                        self.dashboardContainer.getBanner().disableLaunchMenu();
+                        self.dashboardContainer.getBanner().disableAppComponentsBtn();
                     }, self.dashboardContainer, {/*delay:2000,*/ single:true});
                     self.dashboardContainer.activateDashboard(dashboard.data.guid);
                 });

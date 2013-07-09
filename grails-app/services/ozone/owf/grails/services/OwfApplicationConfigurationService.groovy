@@ -147,7 +147,21 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
     @Transactional(readOnly=false)
     private void createRequiredUserAccountConfigurations(){
         createRequiredSessionConfigurations() 
-        createRequiredInactiveAccountConfigurations() 
+        createRequiredInactiveAccountConfigurations()
+        createRequiredCustomHeaderFooterConfigurations()
+    }
+
+    private void createRequiredCustomHeaderFooterConfigurations() {
+        def GROUP_NAME=USER_ACCOUNT_SETTINGS
+        def SUB_GROUP_NAME = "Custom Header Footer"
+        int subGroupCtr = 1
+
+        createOrUpdateApplicationConfig(CUSTOM_HEADER_URL, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
+        createOrUpdateApplicationConfig(CUSTOM_HEADER_HEIGHT, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
+        createOrUpdateApplicationConfig(CUSTOM_FOOTER_URL, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
+        createOrUpdateApplicationConfig(CUSTOM_FOOTER_HEIGHT, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
+        createOrUpdateApplicationConfig(CUSTOM_CSS_IMPORTS, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
+        createOrUpdateApplicationConfig(CUSTOM_JS_IMPORTS, GROUP_NAME, "String", "", subGroupCtr, SUB_GROUP_NAME)
     }
 
     private void createRequiredSessionConfigurations() {

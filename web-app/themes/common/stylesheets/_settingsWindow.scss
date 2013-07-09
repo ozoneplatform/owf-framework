@@ -7,6 +7,20 @@
             width: 26px;
         }
     }
+    
+    .x-tool .x-tool-close {
+	    background-image: theme-image($theme-name, 'tools/close-out.png') !important;
+	}
+	
+	.x-tool-over .x-tool-close {
+	     background-image: theme-image($theme-name, 'tools/close-over.png') !important;
+	     background-position: 0 !important;
+	}
+	
+	.x-tool-pressed .x-tool-close {
+	     background-image: theme-image($theme-name, 'tools/close-down.png') !important;
+	     background-position: 0 !important;
+	}
 
     .settings-header-icon {
         background-image: theme-image($theme-name, 'settings/settings_icon.png');

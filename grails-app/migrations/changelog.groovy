@@ -4,6 +4,12 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 //includes other changelog files which are organized by version
 databaseChangeLog = {
 
+    // On MS SQL Server, we use numeric(19, 0) for the person id, but we use bigint everywhere else. Use this property like:
+    // 	    column(name: "edited_by_id", type: '${owf.personIdType}')
+    // but only use SINGLE QUOTES around the ${}, because Spring needs to do the interpretation, not Groovy.
+    property([name:"owf.personIdType", value:"java.sql.Types.BIGINT", dbms:"hsqldb, postgresql, mysql, oracle"])
+    property([name:"owf.personIdType", value:"numeric(19,0)", dbms:"mssql"])
+
     //previous version change logs go here
 	include file: 'changelog_3.7.0.groovy'
 	include file: 'changelog_3.8.0.groovy'
@@ -23,5 +29,4 @@ databaseChangeLog = {
     else {
       println "Building up to the previous version of the database"
     }
-
 }

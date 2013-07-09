@@ -15,7 +15,14 @@ public enum OwfApplicationSetting implements ApplicationSetting{
 
     // OP-1103
     SESSION_CONTROL_ENABLED("owf.session.control.enabled"),
-    SESSION_CONTROL_MAX_CONCURRENT("owf.session.control.max.concurrent")
+    SESSION_CONTROL_MAX_CONCURRENT("owf.session.control.max.concurrent"),
+
+    CUSTOM_HEADER_URL("owf.custom.header.url"),
+    CUSTOM_FOOTER_URL("owf.custom.footer.url"),
+    CUSTOM_HEADER_HEIGHT("owf.custom.header.height"),
+    CUSTOM_FOOTER_HEIGHT("owf.custom.footer.height"),
+    CUSTOM_JS_IMPORTS("owf.custom.jss"),
+    CUSTOM_CSS_IMPORTS("owf.custom.css")
 
 
 	OwfApplicationSetting(String code) {

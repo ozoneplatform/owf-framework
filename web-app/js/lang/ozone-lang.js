@@ -141,7 +141,7 @@ Ozone.layout.tooltipString = {
 	widgetLaunchMenuTitle: 			'Launch Menu',
 	manageDashboardsTitle: 			'Dashboard Settings',
 	manageDashboardsContent: 		'This screen allows users to rearrange, edit, and delete dashboards. It also allows users to set their language preference.',
-	createDashboardTitle: 			'Create Dashboard',
+	createDashboardTitle: 			'New App',
 	createDashboardContent: 		'This screen allows users to create blank dashboards, copy an existing dashboard, or import a dashboard from a shared configuration.',
 	addWidgetsTitle: 				'Favorites Menu (Alt+Shift+F)',
 	addWidgetsContent: 				'This button opens or closes the Favorites Menu, allowing users to add widgets to their current dashboard.',
@@ -180,7 +180,7 @@ Ozone.layout.tooltipString = {
     adminPWDApproveTitle:			'Approve User Widgets',
 	adminDashCopyTitle: 			'Copy Dashboard',
 	adminDashCopyContent: 			'Copy an existing dashboard to one or more users. Note that once copied, each dashboard instance is an independent entity. Changes made to the initial dashboard at a later date will not be copied.',
-	adminDashEditTitle: 			'Edit Dashboard',
+	adminDashEditTitle: 			'Edit App',
 	adminDashEditContent: 			'Changes the properties of a dashboard. Note that dashboard state is represented as a JSON object, and any changes made to it must be valid JSON.',
 	adminDashDeleteTitle: 			'Delete Dashboard',
 	adminDashDeleteContent: 		'Deletes the selected dashboard. Note that if a user is currently using the dashboard, they will not be kicked out. However, it will not be available once they navigate away.',
@@ -210,6 +210,18 @@ Ozone.layout.admin = {
 };
 
 Ozone.ux.DashboardMgmtString = {
+    createNewHeader : 'Create a new App description words. I like words. They help explain what is going on.',
+    titleBlankText: 'Title',
+    iconBlankText: 'Icon URL',
+    descriptionBlankText : 'Description',
+
+    dashboardIconPath: '/themes/common/images/dashboardswitcher/DefaultDashboard.png',
+
+    premadeLayout: 'Choose a premade layout',
+    existingLayout: 'Use the layout of an existing App',
+    newLayout: 'Create a new layout',
+
+    addPageToExisting: 'Add this as page to existing',
     createDashboard : 'Create a Dashboard', 
     selectDashboardDotDot : 'Select a dashboard...',
     deleteDashboard : 'Delete a Dashboard', 
@@ -233,7 +245,7 @@ Ozone.ux.DashboardMgmtString = {
     desktop : 'Desktop', 
     fit : 'Fit', 
 	tooltipManageDashboards: 'Dashboard Settings',
-	tooltipCreateDashboard: 'Create Dashboard',
+	tooltipCreateDashboard: 'New App',
 	
     ok : 'OK', 
     reset : 'Reset',

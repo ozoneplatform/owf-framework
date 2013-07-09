@@ -15,7 +15,7 @@ databaseChangeLog = {
     }
 	
 		
-	changeSet(author: "owf", dbms: "mysql, oracle, postgresql, hsqldb", id: "7.3-3", context: "create, upgrade, 7.3") {
+	changeSet(author: "owf", id: "7.3-3", context: "create, upgrade, 7.3") {
 		createTable(tableName: "application_configuration") {
 
 			column(autoIncrement: "true", name: "id", type: "java.sql.Types.BIGINT") {
@@ -26,11 +26,11 @@ databaseChangeLog = {
 				constraints(nullable: "false")
 			}
 
-			column(name: "created_by_id", type: "java.sql.Types.BIGINT")
+			column(name: "created_by_id", type: '${owf.personIdType}')
 
 			column(name: "created_date", type: "java.sql.Types.DATE")
 
-			column(name: "edited_by_id", type: "java.sql.Types.BIGINT")
+			column(name: "edited_by_id", type: '${owf.personIdType}')
 
 			column(name: "edited_date", type: "java.sql.Types.DATE")
 
@@ -38,7 +38,7 @@ databaseChangeLog = {
 				constraints(nullable: "false", unique: "true")
 			}
 
-			column(name: "value", type: "java.sql.Types.VARCHAR(2000)") {
+			column(name: "VALUE", type: "java.sql.Types.VARCHAR(2000)") {
 				constraints(nullable: "true")
 			}
 
@@ -71,62 +71,6 @@ databaseChangeLog = {
             column(name: "help", type: "java.sql.Types.VARCHAR(2000)")
 						
 		}
-
-	}
-
-	changeSet(author: "owf", dbms: "mssql", id: "7.3-3", context: "create, upgrade, 7.3") {
-		createTable(tableName: "application_configuration") {
-
-			column(autoIncrement: "true", name: "id", type: "java.sql.Types.BIGINT") {
-				constraints(nullable: "false", primaryKey: "true", primaryKeyName: "application_configurationPK")
-			}
-
-			column(name: "version", type: "java.sql.Types.BIGINT") {
-				constraints(nullable: "false")
-			}
-
-			column(name: "created_by_id", type: "numeric(19, 0)")
-
-			column(name: "created_date", type: "java.sql.Types.DATE")
-
-			column(name: "edited_by_id", type: "numeric(19, 0)")
-
-			column(name: "edited_date", type: "java.sql.Types.DATE")
-
-			column(name: "code", type: "java.sql.Types.VARCHAR(250)") {
-				constraints(nullable: "false", unique: "true")
-			}
-
-			column(name: "value", type: "java.sql.Types.VARCHAR(2000)") {
-				constraints(nullable: "true")
-			}
-
-			column(name: "title", type: "java.sql.Types.VARCHAR(250)") {
-				constraints(nullable: "false")
-			}
-
-			column(name: "description", type: "java.sql.Types.VARCHAR(2000)") {
-				constraints(nullable: "true")
-			}
-
-			column(name: "type", type: "java.sql.Types.VARCHAR(250)") {
-				constraints(nullable: "false")
-			}
-
-			column(name: "group_name", type: "java.sql.Types.VARCHAR(250)") {
-				constraints(nullable: "false")
-			}
-
-			column(name: "sub_group_name", type: "java.sql.Types.VARCHAR(250)") {
-				constraints(nullable: "true")
-			}
-
-			column(name: "mutable", type: "java.sql.Types.BOOLEAN") {
-				constraints(nullable: "false")
-			}
-			
-			column(name: "sub_group_order", type: "java.sql.Types.BIGINT")
-		}
 	}
 
 	changeSet(author: "owf", id: "7.3-4", context: "create, upgrade, 7.3") {
@@ -147,4 +91,10 @@ databaseChangeLog = {
 		addForeignKeyConstraint(baseColumnNames: "edited_by_id", baseTableName: "application_configuration", constraintName: "FKFC9C047E31CB353", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
 	}
 
+    changeSet(author: "owf", id: "7.3-5", context: "create, upgrade, 7.3") {
+        comment("Add icon image url to dashboard")
+        addColumn(tableName: "dashboard") {
+            column(name: "icon_image_url", type: "varchar(2083)")
+        }
+    }
 }
