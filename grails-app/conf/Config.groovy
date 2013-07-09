@@ -607,6 +607,7 @@ uiperformance.bundles = [
                         'data/ModelIdGenerator',
                         'data/models/WidgetDefinition',
                         'data/stores/WidgetStore',
+                        'data/collections/Collection',
                         'data/collections/Widgets',
                         'data/models/Group',
                         'data/stores/GroupStore',
