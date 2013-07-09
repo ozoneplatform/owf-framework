@@ -126,6 +126,8 @@
 			el.wrap('<div class="bx-wrapper"><div class="bx-viewport"></div></div>');
 			// store a namspace reference to .bx-viewport
 			slider.viewport = el.parent();
+
+			slider.slides = null;
 			if(!slider.settings.oneItemPerSlide) createSlides();
 			
 			// parse slideWidth setting
@@ -191,13 +193,16 @@
 				columns = Math.floor(width/child.outerWidth(true)),
 				rows = Math.floor(height/child.outerHeight(true)),
 				childrenPerSlide = columns * rows,
-				slideChildren;
+				slideChildren, slide;
 			
 			children.detach();
+			slider.slides
 			
 			for(var i = 0, len = children.length; i < len; i+= childrenPerSlide) {
 				slideChildren = i + childrenPerSlide > len ? children.slice(i) : children.slice(i, childrenPerSlide);
-				el.append($('<div class="slide"></div>').append(slideChildren));
+				slide = $('<div class="bx-slide"></div>').append(slideChildren);
+				slider.slides = slider.slides ? slider.slides.add(slide) : slide;
+				el.append(slide);
 			}
 		}
 
@@ -1273,7 +1278,14 @@
 		 * Returns number of slides in show
 		 */
 		el.getSlideCount = function(){
-			return slider.children.length;
+			return (!slider.settings.oneItemPerSlide ? slider.slides.length : slider.children.length);
+		}
+
+		/**
+		 * Returns slides
+		 */
+		el.getSlides = function () {
+			return (!slider.settings.oneItemPerSlide ? slider.slides : slider.children);
 		}
 
 		/**
@@ -1321,8 +1333,9 @@
 			if(slider.settings.responsive) $(window).unbind('resize', resizeWindow);
 			if(!slider.settings.oneItemPerSlide) {
 				var $this = $(this),
-					$slides = $('.slide', $this);
+					$slides = slider.slides,
 					$slideChildren = $slides.children().detach();
+				
 				$slides.remove();
 				$slideChildren.appendTo($this);
 			}

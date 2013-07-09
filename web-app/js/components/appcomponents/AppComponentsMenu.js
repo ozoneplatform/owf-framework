@@ -41,7 +41,7 @@
         },
 
         events: {
-            'keyup .search-input': 'search',
+            'keyup .search-input': '_inputKeyUp',
             'click .x-tool': 'toggle'
         },
 
@@ -80,17 +80,21 @@
             this.$body.append(view.render().$el);
         },
 
-        search: _.debounce(function (evt) {
-            this.searchQuery = $(evt.target).val();
+        filter: function (query) {
+            this.searchQuery = query;
 
             this._destroyCarousel()
                 .addAll()
                 ._initCarousel();
+        },
 
+        _inputKeyUp: _.debounce(function (evt) {
+            this.filter($(evt.target).val());
         }, 500),
 
         reloadSlider: _.debounce(function (evt) {
             this.carousel && this.carousel.reloadSlider();
+                console.log(this.carousel.getSlides());
         }, 1000),
 
         toggle: function () {
@@ -113,10 +117,9 @@
         },
 
         remove: function () {
-            console.log('remove');
-
             _.invoke(this.views, 'remove');
             delete this.views;
+
             this._destroyCarousel();
             $(window).off('resize', this.reloadSlider);
 
