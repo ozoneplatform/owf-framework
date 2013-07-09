@@ -666,7 +666,6 @@ uiperformance.bundles = [
                         'components/pane/PortalPane',
                         'components/pane/TabbedPane',
                         'components/pane/FitPane',
-                        'components/window/SettingsWindow',
                         'components/view/ToolDataView',
                         'components/view/TagCloud',
                         'components/button/ShareButton',
