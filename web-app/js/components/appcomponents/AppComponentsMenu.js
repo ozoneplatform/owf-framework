@@ -60,6 +60,7 @@
 
         events: {
             'keyup .search-input': '_inputKeyUp',
+            'dblclick .widget': '_onDblClick',
             'click .x-tool': 'toggle'
         },
 
@@ -106,6 +107,17 @@
                 ._initCarousel();
         },
 
+        launch: function (app, isEnterPressed, isDragAndDrop) {
+            var me = this;
+
+            me.hide();
+            me.options.dashboardContainer
+                .launchWidgets(app, isEnterPressed, isDragAndDrop)
+                .always(function () {
+                    me.show();
+                })
+        },
+
         reloadSlider: _.debounce(function (evt) {
             this._destroyCarousel()
                 ._initCarousel();
@@ -144,6 +156,11 @@
             this.filter($(evt.target).val());
         }, 500),
 
+        _onDblClick: function (evt) {
+            var model = $(evt.currentTarget).data('view').model;
+            this.launch(model, false, false);
+        },
+
         _initCarousel: function () {
             if(this.views.length) {
                 this.carousel = this.$body.bxSlider({
@@ -172,14 +189,12 @@
 
                     me.$el.on('mouseleave.launch', function () {
                         me._dragging = true;
-                        me.hide();
-                        me.options.dashboardContainer.launchWidgets(model, false, true);
+                        me.launch(model, false, true);
                     });
                 },
 
                 stop: function () {
                     if(me._dragging) {
-                        me.show();
                         $slides.sortable('cancel');
                     }
                     me.$el.off('.launch');

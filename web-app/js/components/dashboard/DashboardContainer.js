@@ -401,7 +401,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     launchWidgets: function(widgetModel, isEnterPressed, isDragAndDrop) {
         var me = this;
 
-        me.selectPane(isEnterPressed, isDragAndDrop).then(function(pane, e) {
+        return me.selectPane(isEnterPressed, isDragAndDrop).then(function(pane, e) {
             me.activeDashboard.launchWidgets(pane, null, e, {
                 widgetModel: widgetModel
             });
