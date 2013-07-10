@@ -653,7 +653,7 @@ uiperformance.bundles = [
                         'components/dashboard/Dashboard',
                         'components/window/DashboardSwitcher',
                         'components/window/HelpWindow',
-                        'components/appcomponents/AppComponentsMenu',
+                        'components/appcomponents/AppComponentsCarousel',
                         'components/launchMenu/DDView',
                         'components/launchMenu/Carousel',
                         'components/launchMenu/AdvancedSearchPanel',

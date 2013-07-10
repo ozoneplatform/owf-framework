@@ -801,14 +801,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         widgetSwitcher.center();
     },
 
-    showAppComponentsView: function () {
+    showAppComponentsCarousel: function () {
         if (this.activeDashboard.configRecord.get('locked') === true ||
             this.activeDashboard.configRecord.isMarketplaceDashboard()) {
             return;
         }
 
         if(!this.appComponentsView) {
-            this.appComponentsView = new Ozone.components.appcomponents.AppComponentsMenu({
+            this.appComponentsView = new Ozone.components.appcomponents.AppComponentsCarousel({
                 collection: OWF.Collections.Widgets,
                 dashboardContainer: this
             });

@@ -47,7 +47,7 @@
 
     });
 
-    Ozone.components.appcomponents.AppComponentsMenu = Backbone.View.extend({
+    Ozone.components.appcomponents.AppComponentsCarousel = Backbone.View.extend({
 
         className: 'appcomponents-menu',
 
