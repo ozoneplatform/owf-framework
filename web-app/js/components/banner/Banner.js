@@ -198,7 +198,6 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 text: 'My Apps',
                 cls: 'bannerBtn myAppsBtn',
                 scale: 'banner-large',
-                enableToggle: true,
                 scope: this.dashboardContainer,
                 handler: this.dashboardContainer.showDashboardSwitcherButtonHandler,
                 listeners: {

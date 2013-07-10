@@ -198,7 +198,7 @@
 			children.detach();
 			
 			for(var i = 0, len = children.length; i < len; i+= childrenPerSlide) {
-				slideChildren = i + childrenPerSlide > len ? children.slice(i) : children.slice(i, childrenPerSlide);
+				slideChildren = i + childrenPerSlide > len ? children.slice(i) : children.slice(i, i + childrenPerSlide);
 				slide = $('<div class="bx-slide"></div>').append(slideChildren);
 				slider.slides = slider.slides ? slider.slides.add(slide) : slide;
 				el.append(slide);
