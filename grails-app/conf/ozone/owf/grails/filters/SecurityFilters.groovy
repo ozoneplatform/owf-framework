@@ -595,16 +595,17 @@ class SecurityFilters {
             configurationWidget.addTag('admin')
         }
 		
+        //allow users or admins to use stack editor
+        preferenceService.updateForUser(
+            userid: accountService.getLoggedInUser().id,
+            namespace: 'owf.admin.UserEditCopy',
+            path: 'guid_to_launch',
+            value: userEdit.widgetGuid
+        )
+
         if (accountService.getLoggedInUserIsAdmin()) {
 
             // Update preferences
-            preferenceService.updateForUser(
-                userid: admin.id,
-                namespace: 'owf.admin.UserEditCopy',
-                path: 'guid_to_launch',
-                value: userEdit.widgetGuid
-            )
-             
             preferenceService.updateForUser(
                 path: 'guid_to_launch',
                 namespace: 'owf.admin.WidgetEditCopy',
