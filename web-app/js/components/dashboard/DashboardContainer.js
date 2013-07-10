@@ -801,6 +801,25 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         widgetSwitcher.center();
     },
 
+    showAppComponentsView: function () {
+        if (this.activeDashboard.configRecord.get('locked') === true ||
+            this.activeDashboard.configRecord.isMarketplaceDashboard()) {
+            return;
+        }
+
+        if(!this.appComponentsView) {
+            this.appComponentsView = new Ozone.components.appcomponents.AppComponentsMenu({
+                collection: OWF.Collections.Widgets,
+                dashboardContainer: this
+            });
+            $('#dashboardCardPanel').append(this.appComponentsView.render().el);
+            this.appComponentsView.shown();
+        }
+        else {
+            this.appComponentsView.toggle();
+        }
+    },
+
     showDashboardSwitcherButtonHandler: function() {
         return this.showDashboardSwitcher(false);
     },

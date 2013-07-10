@@ -36,25 +36,6 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
     buttonSelectedCls: 'x-btn-default-toolbar-banner-large-selected',
 
-    openAppComponents: function() {
-        if (this.dashboardContainer.activeDashboard.configRecord.get('locked') === true ||
-            this.dashboardContainer.activeDashboard.configRecord.isMarketplaceDashboard()) {
-            return;
-        }
-
-        if(!this.appComponentsView) {
-            this.appComponentsView = new Ozone.components.appcomponents.AppComponentsMenu({
-                collection: OWF.Collections.Widgets,
-                dashboardContainer: this.dashboardContainer
-            });
-            $('#dashboardCardPanel').append(this.appComponentsView.render().el);
-            this.appComponentsView.shown();
-        }
-        else {
-            this.appComponentsView.toggle();
-        }
-    },
-
     enableAppComponentsBtn: function() {
         this.getComponent('appComponentsBtn').enable();
         if (this.popOutToolbar) {
@@ -163,8 +144,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     addKeyBindings: function() {
         Ozone.KeyMap.addBinding([
             Ext.apply(Ozone.components.keys.HotKeys.LAUNCH_MENU, {
-                scope: this,
-                fn: this.openAppComponents
+                scope: this.dashboardContainer,
+                fn: this.dashboardContainer.showAppComponentsView
             }),
             Ext.apply(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER, {
                 scope: this.dashboardContainer,
@@ -216,8 +197,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 scale: 'banner-large',
                 cls: 'bannerBtn appComponentsBtn',
                 enableToggle: true,
-                toggleHandler: this.openAppComponents,
-                scope: this,
+                scope: this.dashboardContainer,
+                handler: this.dashboardContainer.showAppComponentsView,
                 listeners: {
                     afterrender: {
                         fn: function(btn) {
