@@ -141,8 +141,8 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 		createOrUpdateApplicationConfig(CEF_OBJECT_ACCESS_LOGGING_ENABLED, GROUP_NAME,  "Boolean", cefObjAccessEnabled, subGroupCtr++, SUB_GROUP_NAME)
 
 		createOrUpdateApplicationConfig(CEF_LOG_SWEEP_ENABLED, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
-		createOrUpdateApplicationConfig(CEF_LOG_LOCATION, GROUP_NAME,  "String", "./lib", subGroupCtr++, SUB_GROUP_NAME)
-		createOrUpdateApplicationConfig(CEF_LOG_SWEEP_LOCATION, GROUP_NAME,  "String", "/tmp/logs", subGroupCtr++, SUB_GROUP_NAME)
+		createOrUpdateApplicationConfig(CEF_LOG_LOCATION, GROUP_NAME,  "String", "", subGroupCtr++, SUB_GROUP_NAME)
+		createOrUpdateApplicationConfig(CEF_LOG_SWEEP_LOCATION, GROUP_NAME,  "String", "", subGroupCtr++, SUB_GROUP_NAME)
 		
 
 	}
