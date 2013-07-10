@@ -27,8 +27,20 @@
 
         searchQuery: '',
 
+        addFilterFn: $.noop,
+
+        selected: null,
+
+        selectClass: 'selected',
+
+        events: {
+            'click .widget': '_onClick',
+        },
+
         initialize: function () {
+            SuperClass.prototype.initialize.apply(this, arguments);
             _.bindAll(this, 'addOne');
+            this.addFilterFn = this.options.addFilterFn || this.addFilterFn;
         },
 
         render: function () {
@@ -43,8 +55,8 @@
             return this;
         },
 
-        addOne: function (model) {
-            if(model.get('name').indexOf(this.searchQuery) < 0 || model.get('widgetTypes')[0].name !== 'standard') {
+        addOne: function (model, index) {
+            if(this.addFilterFn(model, index) === false) {
                 return;
             }
 
@@ -66,6 +78,16 @@
             delete this.views;
 
             return SuperClass.prototype.remove.call(this);
+        },
+
+        _onClick: function (evt) {
+            var view = $(evt.currentTarget).data('view');
+
+            if(this.selected) {
+                this.selected.$el.removeClass(this.selectClass);
+            }
+            this.selected = view;
+            this.selected.$el.addClass(this.selectClass);
         }
 
     });

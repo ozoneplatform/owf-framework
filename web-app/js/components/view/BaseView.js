@@ -18,6 +18,10 @@
 
     Ozone.components.BaseView = Backbone.View.extend({
 
+        initialize: function () {
+            this.$el.data('view', this);
+        },
+
         toggle: function () {
             this.$el.is(':visible') ? this.hide() : this.show();
         },

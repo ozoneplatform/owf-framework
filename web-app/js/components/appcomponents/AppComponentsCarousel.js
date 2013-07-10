@@ -24,13 +24,11 @@
 
         className: 'appcomponents-menu',
 
-        events: {
+        events: _.extend({}, SuperClass.prototype.events, {
             'keyup .search-input': '_inputKeyUp',
             'dblclick .widget': '_onDblClick',
             'click .x-tool': 'hide'
-        },
-
-        searchQuery: '',
+        }),
 
         initialize: function () {
             SuperClass.prototype.initialize.apply(this, arguments);
@@ -53,7 +51,13 @@
 
             this.list = new Ozone.components.appcomponents.AppComponentsList({
                 el: this.$body,
-                collection: this.options.collection
+                collection: this.options.collection,
+                addFilterFn: function (model, index) {
+                    if(model.get('name').indexOf(this.searchQuery) < 0 || model.get('widgetTypes')[0].name !== 'standard') {
+                        return false;
+                    }
+                    return true;
+                }
             });
             this.list.render();
             return this;

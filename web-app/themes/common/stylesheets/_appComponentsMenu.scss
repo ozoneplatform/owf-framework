@@ -13,38 +13,8 @@
     top: 0;
     left: 0;
     width: 100%;
-    
-    color: #fff;
-    background: $widget-launcher-background-color;
-
-    .header {
-        padding: 0.5em 0;
-        margin: 0 0.5em 0 0.5em;
-        line-height: 2em;
-
-        span {
-            font-weight: bold;
-        }
-    }
-
-    .search-input, .x-tool {
-        float: right;
-    }
-
-    .x-tool {
-        margin: 0 0 0 5px;
-
-        &:hover .x-tool-close {
-            background-position: -19px 0;
-        }
-    }
-
-    .x-tool-close {
-        vertical-align: middle;
-    }
 
     .body {
-        overflow: hidden;
         height: 102px;
     }
 
@@ -81,7 +51,7 @@
     }
 }
 
-.widget-selected {
+.widget.selected {
     background-color: $widget-launcher-widget-selected-background-color;
     border-color: $widget-launcher-widget-selected-border-color;
     .thumb-text {
@@ -94,4 +64,55 @@
     /*filter: alpha(opacity=40);*/
     /*opacity: 0.4;  */
     @include opacity(.4);
+}
+
+.intents-window {
+    width: 560px;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    margin-left: -280px;
+
+    .body {
+        margin: 0 1em 0 1em;
+    }
+
+    .remember {
+        margin-left: 5px;
+    }
+}
+
+.appcomponents-menu, .intents-window {
+    color: #fff;
+    background: $widget-launcher-background-color;
+
+    .header, .footer {
+        padding: 0.5em 0;
+        margin: 0 1em 0 1em;
+        line-height: 2em;
+
+        span {
+            font-weight: bold;
+        }
+    }
+
+    .search-input, .x-tool {
+        float: right;
+    }
+
+    .x-tool {
+        margin: 0 0 0 5px;
+
+        &:hover .x-tool-close {
+            background-position: -19px 0;
+        }
+    }
+
+    .x-tool-close {
+        vertical-align: middle;
+    }
+
+    .body {
+        overflow: hidden;
+    }
 }

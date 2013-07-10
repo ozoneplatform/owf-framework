@@ -802,7 +802,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     showAppComponentsCarousel: function () {
-        var me = this;
+        var me = this,
+            appComponentsBtn;
 
         if (me.activeDashboard.configRecord.get('locked') === true ||
             me.activeDashboard.configRecord.isMarketplaceDashboard()) {
@@ -814,9 +815,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 collection: OWF.Collections.Widgets,
                 dashboardContainer: me
             });
+            appComponentsBtn = me.getBanner().getComponent('appComponentsBtn');
             me.appComponentsView.$el.on('hide', function () {
-                me.getBanner().getComponent('appComponentsBtn').toggle(false, true)
+                appComponentsBtn.toggle(false, true);
             });
+
             $('#dashboardCardPanel').append(me.appComponentsView.render().el);
             me.appComponentsView.shown();
         }
@@ -1402,7 +1405,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                         }
 
                         //handle opening launch menu and routing the intent
-                        this.showLaunchMenuForIntents(intent, container, sender, data, sendingCmp);
+                        this.showIntentsWindow(intent, container, sender, data, sendingCmp);
                     } else {
                         //todo handle error here if the widget doesn't exist
                         //just send the intent if destination(s) is specified
@@ -1415,197 +1418,127 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         });
     },
 
-    showLaunchMenuForIntents: function(intent, container, sender, data, sendingCmp) {
+    showIntentsWindow: function(intent, container, sender, data, sendingCmp) {
+        var me = this,
+            intentConfig,
+            deferredSendIntentListener;
+
+        me._initIntentsWindow(intent).show();
+
+        me.intentsWindow.$el
+            .on('cancel', function () {
+                me.intentsWindow.$el.off('cancel');
+
+                //unattach the listeners no widget will be launched
+                me.un(widgetLaunchListener);
+
+                if (deferredSendIntentListener) {
+                    container.removeListener('onIntentsReady', deferredSendIntentListener, me);
+                }
+
+                //fire callback to startActivity
+                container.callback([]);
+            })
+            .on('hide', function () {
+                setTimeout(function () {
+                    me.intentsWindow.remove();
+                    delete me.intentsWindow;
+                }, 0);
+            });
+
+        var widgetLaunchListener = {
+            beforewidgetlaunch: {
+                fn: function(pane, model) {
+                    var data = {
+                        intents: true
+                    };
+                    model.set('launchData', gadgets.json.stringify(data));
+                },
+                single: true
+            },
+            afterwidgetlaunch: {
+                fn: function(widget, model, wasAlreadyLaunched) {
+                    var id = widget.uniqueId;
+                    var destIdString = '{\"id\":\"' + id + '\"}';
+
+                    !sendingCmp.intentConfig && (sendingCmp.intentConfig = {});
+                    intentConfig = sendingCmp.intentConfig;
+
+                    function sendIntent () {
+                        container.send(sender, intent, data, null, destIdString);
+                        //check if the intentcheckbox is checked if so save to intentConfig
+                        if (me.intentsWindow.isRememberSelection()) {
+
+                            if (intentConfig[owfdojo.toJson(intent)] == null) {
+                                intentConfig[owfdojo.toJson(intent)] = [];
+                            }
+                            intentConfig[owfdojo.toJson(intent)].push(destIdString);
+                        }
+                    }
+
+                    //the widget is already open, send intent immeditaly
+                    if (wasAlreadyLaunched) {
+                        sendIntent();
+                    }
+                    //widget is not launched yet
+                    else {
+
+                        //create a listener function to send the intent once the launched widget
+                        //and has registered to receive the intent
+                        deferredSendIntentListener = function(i, destWidgetId) {
+                            //send the data to the dest widgets only if intent and dest widget match
+                            if (i != null && owfdojo.toJson(i) === owfdojo.toJson(intent) && destWidgetId === destIdString) {
+                                sendIntent();
+                                //remove this listener now that the intent has been sent
+                                container.removeListener('onIntentsReady', deferredSendIntentListener, me);
+                            }
+                            //todo perhaps put a timer to timeout the intent, and remove the listener
+                            //this would only need to be done if a widget was opened that never registered
+                            //for the specified intent
+                        };
+
+                        //hook event that will fire when the dest widget is ready for the intent
+                        container.addListener('onIntentsReady', deferredSendIntentListener, me);
+
+                    }
+                    //fire callback to startActivity call once dest widgets have been identified
+                    container.callback([destIdString]);
+                },
+                single: true
+            }
+        };
+        me.on(widgetLaunchListener);
+    },
+
+    _initIntentsWindow: function (intent) {
+        var openMatches = this.activeDashboard.stateStore.findByReceiveIntent(intent);
+        openMatches = _.map(openMatches, function (match) {
+            var data = _.extend({}, match.data);
+            data.image = match.get('image');
+            return data;
+        });
+
+        this.intentsWindow = new Ozone.components.appcomponents.IntentsWindow({
+            collection: new Ozone.data.collections.Widgets(openMatches),
+            dashboardContainer: this
+        });
+
+        $('body').append(this.intentsWindow.render().el);
+        return this.intentsWindow;
+    },
+
+    _showIntentsWindow: function(intent, container, sender, data, sendingCmp) {
         var intentConfig = sendingCmp.intentConfig;
 
         //open launch menu
         var launchMenu = Ext.getCmp('widget-launcher');
         if (launchMenu) {
 
-            //make sure the launch menu is visible
-            if (!launchMenu.isVisible()) {
-                launchMenu.show();
-            }
-
-            //dont load the launchMenu's widgetStore, this disables the searchPanel from causing a load as well
-            launchMenu.disableWidgetStoreLoading(true);
-
-            //Don't show the Dashboard Switcher to allow the user to select a dashboard
-            launchMenu.disableDashboardSelection = true;
-
-            //reload main widgetStore to retreive new data
-            this.widgetStore.load({
-                scope: this,
-                callback: function(records, operation, success) {
-                    //refresh data
-                    launchMenu.refreshOpenedWidgets();
-                    launchMenu.clearSelections(true);
-
-                    //now update the launch menu for choosing a dest widget(s) for intents
-                    var infoPanelData = Ext.create('Ozone.data.WidgetDefinition', {
-                        name: 'Please select a widget below',
-                        description: 'Widgets below are filtered against Intent: ' + intent.action + ' ' + intent.dataType
-                    });
-                    launchMenu.updateInfoPanel(infoPanelData, false, true, false, false);
-                    launchMenu.showIntentCheckBox = true;
-
-                    //open the adv search panel
-                    launchMenu.openOrCloseAdvancedSearch(true);
-
-                    var intentsTree = launchMenu.searchPanel.down('#intentsTree');
-                    var intentsTreeSelModel = intentsTree.getSelectionModel();
-                    intentsTreeSelModel.setLocked(false);
-
-                    //setting this tree selection for intent filtering
-                    var rootNode = {
-                        expanded: true,
-                        children: [{
-                                text: intent.action,
-                                expanded: true,
-                                expandable: false,
-                                children: [{
-                                        text: intent.dataType,
-                                        leaf: true
-                                    }
-                                ]
-                            }
-                        ]
-                    };
-                    intentsTree.setRootNode(rootNode);
-
-                    //now select
-                    var separator = '!@//@!';
-                    intentsTree.selectPath(separator + 'Root' + separator + intent.action + separator + intent.dataType,
-                        'text', separator);
-
-                    intentsTreeSelModel.setLocked(true);
-
-                    launchMenu.disableWidgetStoreLoading(false);
-
-                    //cleanup flags when the launch menu closes
-                    launchMenu.on({
-                        close: {
-                            fn: function(cmp) {
-                                intentsTreeSelModel.setLocked(false);
-                            },
-                            scope: this,
-                            single: true
-                        }
-                    });
-
-                    //explicitly filter by intents by passing this cfg to the search function
-                    var filterCfg = {
-                        intent: {
-                            action: intent.action,
-                            dataType: intent.dataType,
-                            receive: true
-                        }
-                    };
-                    launchMenu.searchPanel.search(filterCfg);
-
-                    launchMenu.searchPanel.loadGroupStore();
-                    launchMenu.showOpenedWidgetsView(true);
-                    launchMenu.loadLauncherState();
-                }
-            });
-
-            var deferredSendIntentListener = null;
-            var noWidgetLaunchListener = null;
-
-            var dashboardContainer = this;
-            var widgetLaunchListener = {
-                beforewidgetlaunch: {
-                    fn: function(pane, model) {
-                        var data = {
-                            intents: true
-                        };
-                        model.set('launchData', gadgets.json.stringify(data));
-                    }
-                },
-                afterwidgetlaunch: {
-                    fn: function(widget, model, wasAlreadyLaunched) {
-                        var id = widget.uniqueId;
-                        var destIdString = '{\"id\":\"' + id + '\"}';
-
-                        !sendingCmp.intentConfig && (sendingCmp.intentConfig = {});
-                        intentConfig = sendingCmp.intentConfig;
-
-                        //the widget is already open, send intent immeditaly
-                        if (wasAlreadyLaunched) {
-                            container.send(sender, intent, data, null, destIdString);
-                            //check if the intentcheckbox is checked if so save to intentConfig
-                            if (launchMenu.getIntentCheckBoxValue()) {
-
-                                if (intentConfig[owfdojo.toJson(intent)] == null) {
-                                    intentConfig[owfdojo.toJson(intent)] = [];
-                                }
-                                intentConfig[owfdojo.toJson(intent)].push(destIdString);
-                            }
-                        }
-                        //widget is not launched yet
-                        else {
-
-                            //create a listener function to send the intent once the launched widget
-                            //and has registered to receive the intent
-                            deferredSendIntentListener = function(i, destWidgetId) {
-                                //send the data to the dest widgets only if intent and dest widget match
-                                if (i != null && owfdojo.toJson(i) === owfdojo.toJson(intent) && destWidgetId === destIdString) {
-
-                                    //send intent
-                                    container.send(sender, intent, data, null, destIdString);
-                                    //remove this listener now that the intent has been sent
-                                    container.removeListener('onIntentsReady',
-                                        deferredSendIntentListener,
-                                        this);
-                                    //check if the intentcheckbox is checked if so save to intentConfig
-                                    if (launchMenu.getIntentCheckBoxValue()) {
-                                        if (intentConfig[owfdojo.toJson(intent)] == null) {
-                                            intentConfig[owfdojo.toJson(intent)] = [];
-                                        }
-                                        intentConfig[owfdojo.toJson(intent)].push(destIdString);
-                                    }
-                                }
-                                //todo perhaps put a timer to timeout the intent, and remove the listener
-                                //this would only need to be done if a widget was opened that never registered
-                                //for the specified intent
-                            };
-                            //hook event that will fire when the dest widget is ready for the intent
-                            container.addListener('onIntentsReady',
-                                deferredSendIntentListener,
-                                this);
-
-                        }
-                        //fire callback to startActivity call once dest widgets have been identified
-                        container.callback([destIdString]);
-
-                        //widget has been launched set the intent checkbox to be hidden
-                        launchMenu.showIntentCheckBox = false;
-
-                        //a widget has been launched unhook our noWidgetLaunchListener
-                        launchMenu.un(noWidgetLaunchListener);
-
-                        // remove the listener when finished because when launching new widgets in this pane
-                        // the beforewidgetlaunch will continue to be hit if you don't.
-                        dashboardContainer.un(widgetLaunchListener);
-                    },
-                    scope: this,
-                    single: true
-                }
-            };
-            this.on(widgetLaunchListener);
-
             //if the user didn't actually launch a widget remove the other listeners
             noWidgetLaunchListener = {
                 noWidgetLaunched: {
                     fn: function() {
-                        //unattach the listeners no widget will be launched
-                        this.un(widgetLaunchListener);
-                        if (deferredSendIntentListener != null) {
-                            container.removeListener('onIntentsReady', deferredSendIntentListener, this);
-                        }
-                        //fire callback to startActivity
-                        container.callback([]);
-                        launchMenu.showIntentCheckBox = false;
+                        
                     },
                     scope: this,
                     single: true

@@ -19,7 +19,7 @@
     Ozone.components.appcomponents = Ozone.components.appcomponents || {};
 
     var SuperClass = Ozone.components.BaseView;
-    
+
     Ozone.components.appcomponents.AppComponent = SuperClass.extend({
         
         className: 'widget',
@@ -38,7 +38,6 @@
 
         initialize: function () {
             SuperClass.prototype.initialize.apply(this, arguments);
-            this.$el.data('view', this);
             this.model = this.options.model;
         },
 
