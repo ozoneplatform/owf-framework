@@ -95,8 +95,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 '<tpl for=".">',
                     '<div id="{[this.getName(values)+this.getId(values)]}" class="{[this.getClass(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}" {[this.getToolTip(values)]}>',
                         '<div class="thumb-wrap">',
-                            '<div class="thumb {layout}">',
-                            '</div>',
+                            '{[this.getIcon(values)]}',
                         '</div>',
                         '<div class="{[this.getName(values)]}-name">',
                             '{[this.encodeAndEllipsize(values.name)]}',
@@ -116,6 +115,13 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             },
             getName: function (values) {
                 return values.isStack ? 'stack' : 'dashboard';
+            },
+            getIcon: function(values) {
+                if (values.iconImageUrl) {
+                    return '<div class="thumb" style="background-image: url(' + values.iconImageUrl + ') !important"></div>';
+                } else {
+                    return '<div class="thumb"></div>';
+                }
             },
             getToolTip: function (values) {
                 var str = 'data-qtip="<div class=\'dashboard-tooltip-content\'>' +
@@ -698,10 +704,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             }
             return;
         }
-
-        setTimeout(function () {
-            selectedEl && selectedEl.focus();
-        }, 500);
     },
 
     getDashboard: function ($el) {
