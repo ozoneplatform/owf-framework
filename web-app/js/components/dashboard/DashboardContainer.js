@@ -661,7 +661,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
             this.activeDashboard = dashboardCardPanel.getComponent(this.activeDashboard.id);
             this.activateDashboard(this.activeDashboard.id, true, this.activeDashboard.stackContext);
-            if (this.activeDashboard.configRecord.get('locked')) {
+            if (this.activeDashboard.configRecord.get('locked') || this.activeDashboard.configRecord.isMarketplaceDashboard()) {
                 this.getBanner().disableAppComponentsBtn();
             } else {
                 this.getBanner().enableAppComponentsBtn();

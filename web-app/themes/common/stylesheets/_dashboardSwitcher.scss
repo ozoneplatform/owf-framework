@@ -300,3 +300,58 @@
 .alert-window-widget {
     width: 250px;
 }
+
+.premadeLayoutButton {
+  margin: 5px 5px 5px 5px;
+  height: 45px;
+  width: 59px;
+  background-position: center;
+}
+
+.premadeDesktop {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_1-Desktop.png');
+}
+
+.premadeFit {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_1-Fit.png');
+}
+
+.premadeTabbed {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_1-Tabbed.png');
+}
+
+.premade2ColumnFit {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-FitBSB.png');
+}
+
+.premade2RowFit {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-FitStack.png');
+}
+
+.premade4Fit {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_4-Fit.png');
+}
+
+.premade2ColumnPortal {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-Portal.png');
+}
+
+.premadeAccordionFit {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-Accord-Fit.png');
+}
+
+.premadeTabbedAccordion {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-Tabbed-Accord.png');
+}
+
+.premade2RowFitTabbed {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-Fit-Tab.png');
+}
+
+.premadeAccordion2RowFit {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_3-Accord-Fit-Fit.png');
+}
+
+.premadeTabbed2Fit {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_3-Tab-Fit-Fit.png');
+}

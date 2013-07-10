@@ -144,11 +144,10 @@ class StackService {
     }
     
     def createOrUpdate(params) {
-        ensureAdmin()
-
         def stacks = []
 
         if (params.update_action) {
+			//FIXME for edit // ensureAdminOrOwner();
             stacks << params;
         } else {
             if (params.data) {
@@ -208,6 +207,10 @@ class StackService {
             stack.save(flush: true, failOnError: true)
             
             def stackDefaultGroup = stack.findStackDefaultGroup()
+			//OP-70 adding owner to users by default
+			if(stackDefaultGroup && accountService.getLoggedInUser()) {
+				stackDefaultGroup.addToPeople(accountService.getLoggedInUser())
+			}
             def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
 
             returnValue = serviceModelService.createServiceModel(stack,[
@@ -465,7 +468,7 @@ class StackService {
     }
 
     def importStack(params) {
-        ensureAdmin()
+        //ensureAdmin() removed for OP-70
 
         def stackParams = [:]
         params.data = JSON.parse(params.data)

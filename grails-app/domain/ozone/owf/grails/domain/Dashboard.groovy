@@ -18,9 +18,12 @@ class Dashboard implements Serializable, Comparable {
     Integer dashboardPosition
     boolean alteredByAdmin
     String description = ''
+    String iconImageUrl
     String type = ''
     String layoutConfig = ''
     boolean locked = false
+    Boolean publishedToStore = false
+    Boolean markedForDeletion = false
     Stack stack  // The stack in which this dashboard should appear
     static belongsTo = [user:Person]
   
@@ -36,11 +39,14 @@ class Dashboard implements Serializable, Comparable {
         name(nullable:false, blank:false, maxSize: 200)
         dashboardPosition(nullable:false, display:false)
         alteredByAdmin(nullable:false, blank:false)
+        iconImageUrl(nullable: true, blank: true, maxSize: 2083)
         description(nullable: true, blank: true)
         type(nullable: true, blank: true)
         user(nullable:true)
         layoutConfig(nullable: true, blank: true)
         stack(nullable:true)
+        publishedToStore(nullable:true)
+        markedForDeletion(nullable:true)
     }
     
     String toString() {

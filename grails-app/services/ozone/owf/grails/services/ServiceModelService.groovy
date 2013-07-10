@@ -57,6 +57,7 @@ class ServiceModelService {
                         isGroupDashboard: params.isGroupDashboard ?: false,
                         groups: params.groups != null ? params.groups.collect{ createServiceModel(it) } : [],
                         description: domain.description,
+                        iconImageUrl: domain.iconImageUrl,
                         type: domain.type,
                         createdDate: OWFDate.standardShortDateDisplay(domain.createdDate),
                         prettyCreatedDate: domain.createdDate != null ? prettytime.format(domain.createdDate) : '',
@@ -64,7 +65,9 @@ class ServiceModelService {
                         prettyEditedDate: domain.editedDate != null ? prettytime.format(domain.editedDate) : '',
                         createdBy: createServiceModel(domain.createdBy),
                         layoutConfig: domain.layoutConfig,
-                        stack: createServiceModel(domain.stack)
+                        stack: createServiceModel(domain.stack),
+                        markedForDeletion: domain.markedForDeletion,
+                        publishedToStore: domain.publishedToStore
                         )
                 break
 
