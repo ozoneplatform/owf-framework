@@ -147,21 +147,37 @@ class StackService {
         def stacks = []
 
         if (params.update_action) {
-			stacks << params;
-
-            stacks.each {
-                ensureAdminOrOwner(it.id >= 0 ?: it.stack_id);
+			if(params.id >= 0 || params.stack_id >= 0) {
+                ensureAdminOrOwner(params.id >= 0 ? params.id: params.stack_id);
             }
+
+            stacks << params
         } else {
             if (params.data) {
                 def json = JSON.parse(params.data)
                 
                 if (json instanceof List) {
+                    json.each {
+                        if(it.id >= 0 || it.stack_id >= 0) {
+                            ensureAdminOrOwner(it.id >= 0 ? it.id: it.stack_id);
+                        }
+                    }
+
                     stacks = json
                 } else {
+                    if(json.id >= 0 || json.stack_id >= 0) {
+                        ensureAdminOrOwner(json.id >= 0 ? json.id: json.stack_id);
+                    }
+
                     stacks << json
                 }
             } else {
+                if(params.id || params.stack_id) {
+                    if(params.id >= 0 || params.stack_id >= 0) {
+                        ensureAdminOrOwner(params.id >= 0 ? param.id: params.stack_id);
+                    }
+                }
+
                 stacks << params
             }
         }
@@ -207,7 +223,7 @@ class StackService {
                 stackContext: params.stackContext ?: stack.stackContext,
                 imageUrl: params.imageUrl ?: stack.imageUrl,
                 descriptorUrl: params.descriptorUrl ?: stack.descriptorUrl,
-                user: params.user ?: accountService.getLoggedInUser()
+                user: params.user ?: (params.id  >= 0 ? stack.user : accountService.getLoggedInUser())
             ]
             
             stack.save(flush: true, failOnError: true)
@@ -696,7 +712,7 @@ class StackService {
 
         if(!stackInstance) {
             throw new OwfException(message: "Cannot find a stack with id ${stackId}", exceptionType: OwfExceptionTypes.NotFound)
-        } else if(accountService.getLoggedInUser.id != stackInstance.user.id && !accountService.getLoggedInUserIsAdmin()) {
+        } else if((!stackInstance.user || accountService.getLoggedInUser().id != stackInstance.user.id) && !accountService.getLoggedInUserIsAdmin()) {
             throw new OwfException(message: "You must be an administrator or owner of a stack to edit it.",
                 exceptionType: OwfExceptionTypes.Authorization)
         } 
