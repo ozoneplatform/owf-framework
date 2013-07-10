@@ -52,7 +52,101 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         this.views = this.dashboardContainer.dashboards;
         
         this.addEvents('saved', 'failed');
-        
+
+        this.headerLabel = {
+            xtype: 'label',
+            name: 'headerLabel',
+            forId: 'myFieldId',
+            cls: 'createNewHeaderLabel',
+            text: Ozone.ux.DashboardMgmtString.createNewHeader,
+            margins: '0 0 0 10'
+        };
+
+        this.iconImage = Ext.create('Ext.Img', {
+            name: 'appIconImage',
+            cls: 'appIconImage',
+            itemId: 'appIconImage',
+            src: OWF.getContainerUrl() + Ozone.ux.DashboardMgmtString.dashboardIconPath,
+            height: 54,
+            width: 54,
+            margin: '4 0 0 5',
+           listeners: {
+               show: function(a,b,c,d) {
+                   alert('showing it');
+               }
+           }
+        });
+
+        var iconImage = this.iconImage;
+
+        this.titleTextField = {
+            xtype: 'textfield',
+            name: 'titleTextField',
+            cls: 'titleTextField',
+            itemId: 'titleTextField',
+            usePlaceholderIfAvailable: false,
+            emptyText: Ozone.ux.DashboardMgmtString.titleBlankText,
+            allowBlank: false,
+            maxLength: 200,
+            height: 22,
+            value: '',
+            enforceMaxLength: true,
+            margin: '0 0 5 0'
+        };
+
+        this.iconURLField = {
+            xtype: 'textfield',
+            name: 'iconURLField',
+            cls: 'iconURLField',
+            itemId: 'iconURLField',
+            usePlaceholderIfAvailable: false,
+            emptyText: Ozone.ux.DashboardMgmtString.iconBlankText,
+            allowBlank: true,
+            maxLength: 200,
+            height: 22,
+            value: '',
+            enforceMaxLength: true,
+            margin: '0 0 5 0',
+            listeners: {
+                blur: function(field){
+                    // Remove leading and tailing spaces
+                    var val = field.getValue().replace(new RegExp(Ozone.lang.regexLeadingTailingSpaceChars), '');
+                    field.setValue(val);
+                    //$.get(val).done(function() { alert('it worked');}).fail(function() { alert('it failed');});
+                    iconImage.setSrc(field.getValue());
+                }
+            }
+        };
+
+        this.titleIconContainer = {
+            xtype: 'container',
+            name: 'titleIconContainer',
+            height: 60,
+            flex: 1,
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
+            padding: '5, 5, 0, 15',
+            items: [
+                this.titleTextField,
+                this.iconURLField
+            ]
+        };
+
+        this.appInfoContainer = {
+            xtype: 'container',
+            name: 'appInfoContainer',
+            layout: {
+                type: 'hbox'
+            },
+            padding: '0, 5, 0, 0',
+            items: [
+                this.iconImage,
+                this.titleIconContainer
+            ]
+        };
+
         this.titleBox = {
             xtype: 'textfield',
             name: 'titleBox',
@@ -80,42 +174,44 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             name: 'description',
             cls: 'description',
             itemId: 'description',
-            fieldLabel: Ozone.ux.DashboardMgmtString.description,
-            labelSeparator: '',
-            labelWidth: 150,
+            usePlaceholderIfAvailable: false,
+            emptyText: Ozone.ux.DashboardMgmtString.descriptionBlankText,
             value: '',
             maxLength: 4000,
             enforceMaxLength: true,
-            margin: '0 0 5 0'
+            margin: '10 10 10 10'
         };
 
         if (this.existingDashboardRecord != null) {
-          this.titleBox.value = this.existingDashboardRecord.get('name');
-          this.description.value = this.existingDashboardRecord.get('description');
+            this.titleTextField.value = this.existingDashboardRecord.get('name');
+            this.iconURLField.value = this.existingDashboardRecord.get('iconImageUrl');
+            this.description.value = this.existingDashboardRecord.get('description');
+
+            if (this.iconURLField.value != '' && this.iconURLField.value != null && this.iconURLField.value != undefined) {
+                this.iconImage.setSrc(this.iconURLField.value);
+            }
         }
 
         var enableInputComponent = function(component) {
             component.enable();
             component.validate();
-        }
+        };
 
         var disableInputComponent = function(component) {
             component.reset();
             component.disable();
-        }
+        };
 
         this.newViewRadio = {
             boxLabel: Ozone.layout.CreateViewWindowString.createNew,
             name: 'viewSelectRadio',
             cls:'newViewRadio',
-            checked: true,
             listeners: {
                 'change': {
                     fn: function(radio, newValue) {
                         if(newValue)
                         {
                             disableInputComponent(this.down('#existViewCb'));
-                            disableInputComponent(this.down('#importFileupload'));
                         }
                     },
                     scope: this
@@ -135,7 +231,6 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                         if(newValue)
                         {
                             enableInputComponent(this.down('#existViewCb'));
-                            disableInputComponent(this.down('#importFileupload'));
                         }
                     },
                     scope: this
@@ -145,10 +240,11 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             copiedDashboardField: 'existViewCb' // id of the field to validate
         };
 		
-        this.importedViewRadio = { 
-            boxLabel: Ozone.layout.CreateViewWindowString.importView, 
+        this.premadeLayoutRadio = {
+            boxLabel: Ozone.ux.DashboardMgmtString.premadeLayout,
             name: 'viewSelectRadio',
-            inputValue: "importedDashboard",
+            inputValue: "premadeLayout",
+            checked: 'true',
             cls:'importedViewRadio',
             listeners: {
                 //this listener works for both since we can use the 'isSelected' param
@@ -156,19 +252,123 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                     fn: function(radio, newValue) {
                         if(newValue) {
                             disableInputComponent(this.down('#existViewCb'));
-                            enableInputComponent(this.down('#importFileupload'));
                         }
                     },
                     scope: this
                 }
             },
-            vtype: 'importedDashboard',
             importedDashboardField: 'importFileupload' // id of the field to validate
         };
 
+        this.premadeViewRow1 = {
+            xtype: 'container',
+            name: 'premadeViewRow1',
+            cls: 'premadeViewRow',
+            layout: {
+                type: 'hbox'
+            },
+            height: 50,
+            items: [
+                {
+                    xtype: 'button',
+                    itemId: 'premadeDesktop',
+                    cls: 'premadeLayoutButton premadeDesktop',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premadeFit',
+                    cls: 'premadeLayoutButton premadeFit',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premadeTabbed',
+                    cls: 'premadeLayoutButton premadeTabbed',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premade2ColumnFit',
+                    cls: 'premadeLayoutButton premade2ColumnFit',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premade2RowFit',
+                    cls: 'premadeLayoutButton premade2RowFit',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premade4Fit',
+                    cls: 'premadeLayoutButton premade4Fit',
+                    scale: 'banner-large'
+                }
+            ]
+        };
 
-        // Set default layout for creating a new dashboard
-        //this.newView.value = this.config.layout;
+        this.premadeViewRow2 = {
+            xtype: 'container',
+            name: 'premadeViewRow2',
+            cls: 'premadeViewRow',
+            layout: {
+                type: 'hbox'
+            },
+            height: 50,
+            items: [
+                {
+                    xtype: 'button',
+                    itemId: 'premade2ColumnPortal',
+                    cls: 'premadeLayoutButton premade2ColumnPortal',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premadeAccordionFit',
+                    cls: 'premadeLayoutButton premadeAccordionFit',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premadeTabbedAccordion',
+                    cls: 'premadeLayoutButton premadeTabbedAccordion',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premade2RowFitTabbed',
+                    cls: 'premadeLayoutButton premade2RowFitTabbed',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premadeAccordion2RowFit',
+                    cls: 'premadeLayoutButton premadeAccordion2RowFit',
+                    scale: 'banner-large'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'premadeTabbed2Fit',
+                    cls: 'premadeLayoutButton premadeTabbed2Fit',
+                    scale: 'banner-large'
+                }
+            ]
+        };
+
+        this.premadeViewContainer = {
+            xtype: 'container',
+            name: 'premadeViewContainer',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
+            padding: '5, 5, 0, 15',
+            items: [
+                this.premadeViewRow1,
+                this.premadeViewRow2
+            ]
+        };
 		
         this.existingView = {
             xtype: 'combo',
@@ -319,9 +519,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         //entire group is valid
         this.viewSelectRadio = {
             xtype: 'fieldcontainer',
-            fieldLabel: Ozone.ux.DashboardMgmtString.layout,
-            labelSeparator: '',
-            labelWidth: 150,
+            labelWidth: 110,
             layout: 'fit',
             cls: 'createSelector',
             region: 'center',
@@ -339,11 +537,11 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                         padding: '0, 0, 5, 0'
                     },
                     items: [
-                        this.newViewRadio,
+                        this.premadeLayoutRadio,
+                        this.premadeViewContainer,
                         this.existingViewRadio,
                         this.existingView,
-                        this.importedViewRadio,
-                        this.importedView
+                        this.newViewRadio
                     ]
                 }
             ]
@@ -367,7 +565,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         	},
         	padding: '0, 5, 0, 0',
         	items: [
-        	        this.titleBox,
+                    this.headerLabel,
+                    this.appInfoContainer,
         	        this.description,
         	        this.viewSelectRadio
         	]
@@ -390,25 +589,30 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                 //tabIndex: 4,
                 handler: function (button, event) {
                     if (this.getForm().isValid() && this.createViewContainer_FormValid) {
-                        var titleBox = this.down('#titleBox'),
-                            descriptionBox = this.down('#description');
+                        var titleTextField = this.down('#titleTextField'),
+                            descriptionBox = this.down('#description'),
+                            iconImageUrlField = this.down('#iconURLField');
 
-                        Ozone.util.formField.removeLeadingTrailingSpaces(titleBox);
+                        Ozone.util.formField.removeLeadingTrailingSpaces(titleTextField);
                         //make sure name is unique
                         Ext.getCmp('mainPanel').saveActiveDashboardToServer();
 
-                        var title = titleBox.getValue();
+                        var title = titleTextField.getValue();
                         var desc = descriptionBox.getValue();
+                        var iconImageUrl = iconImageUrlField.getValue();
                         
                         // add a space to the field if it is empty or null so that it will
                         // store an empty string to the db instead of it thinking its a null value
                         if (desc == null || desc == '')
                             desc = ' ';
+                        if (iconImageUrl == null || iconImageUrl == '')
+                            iconImageUrl = ' ';
 
                         //edit an existing dashboard if a record was passed in
                         if (this.existingDashboardRecord != null) {
                             this.existingDashboardRecord.set('name',title);
                             this.existingDashboardRecord.set('description',desc);
+                            this.existingDashboardRecord.set('iconImageUrl', iconImageUrl);
                             this.dashboardContainer.editDashboard(this.existingDashboardRecord);
                             this.close();
                         }
@@ -436,6 +640,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                                 
                                 existingViewToDuplicate.name = title;
                                 existingViewToDuplicate.description = desc;
+                                existingViewToDuplicate.iconImageUrl = iconImageUrl;
                                 existingViewToDuplicate.isdefault = false;
 
                                 Ext.getCmp('mainPanel').createDashboard(
@@ -452,6 +657,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                                     // Reset title
                                     dashboardJson.name = title;
                                     dashboardJson.description = desc;
+                                    dashboardJson.iconImageUrl = iconImageUrl;
 
                                     // make sure the right type of json is being imported
                                     if (!Ozone.util.validateDashboardJSON(dashboardJson)) {
@@ -479,7 +685,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                                 Ext.getCmp('mainPanel').createDashboard(
                                         Ext.create('Ozone.data.Dashboard', {
                                             "name": title,
-                                            "description": desc
+                                            "description": desc,
+                                            "iconImageUrl": iconImageUrl
                                         })
                                 );
                                 this.close();
@@ -528,9 +735,14 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         this.views = this.dashboardContainer.dashboards;
 
         // Reset fields
-        var txtTitle = this.down('#titleBox');
+        var txtTitle = this.down('#titleTextField');
         if (txtTitle) {
             txtTitle.setRawValue('');
+        }
+
+        var txtIconUrl = this.down('#iconURLField');
+        if (txtIconUrl) {
+            txtIconUrl.setRawValue('');
         }
 
         var txtDescription = this.down('#description');

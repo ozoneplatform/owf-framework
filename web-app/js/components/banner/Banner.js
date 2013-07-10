@@ -37,7 +37,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     buttonSelectedCls: 'x-btn-default-toolbar-banner-large-selected',
 
     openAppComponents: function() {
-        if (this.dashboardContainer.activeDashboard.configRecord.get('locked') === true) {
+        if (this.dashboardContainer.activeDashboard.configRecord.get('locked') === true ||
+            this.dashboardContainer.activeDashboard.configRecord.isMarketplaceDashboard()) {
             return;
         }
 

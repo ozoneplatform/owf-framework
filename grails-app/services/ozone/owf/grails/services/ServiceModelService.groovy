@@ -57,6 +57,7 @@ class ServiceModelService {
                         isGroupDashboard: params.isGroupDashboard ?: false,
                         groups: params.groups != null ? params.groups.collect{ createServiceModel(it) } : [],
                         description: domain.description,
+                        iconImageUrl: domain.iconImageUrl,
                         type: domain.type,
                         createdDate: OWFDate.standardShortDateDisplay(domain.createdDate),
                         prettyCreatedDate: domain.createdDate != null ? prettytime.format(domain.createdDate) : '',

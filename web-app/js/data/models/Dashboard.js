@@ -14,6 +14,7 @@ Ext.define('Ozone.data.Dashboard', {
         'groups',
         'isGroupDashboard',
         'description',
+        'iconImageUrl',
         'type',
         'createdDate',
         'prettyCreatedDate',

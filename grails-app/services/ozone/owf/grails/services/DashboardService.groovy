@@ -130,6 +130,7 @@ class DashboardService extends BaseService {
                             dashboardPosition = maxPosition + (groupDash.dashboardPosition ?: 0)
                             name = groupDash.name
                             description = groupDash.description
+                            iconImageUrl = groupDash.iconImageUrl
                             type = groupDash.type
                             locked = groupDash.locked
                             layoutConfig = groupDash.layoutConfig
@@ -475,6 +476,9 @@ class DashboardService extends BaseService {
     }
 
     def create(params) {
+
+        def blah = params.iconImageUrl
+
         updateOldDefault(params)
         //default person to current user
         def person = accountService.getLoggedInUser()
@@ -518,6 +522,7 @@ class DashboardService extends BaseService {
                 isdefault: convertStringToBool(params.isdefault),
                 dashboardPosition: params.dashboardPosition != null ? params.dashboardPosition : maxPosition,
                 description: JSONObject.NULL.equals(params.description) ? null : params.description,
+                iconImageUrl: JSONObject.NULL.equals(params.iconImageUrl) ? null : params.iconImageUrl,
                 type: JSONObject.NULL.equals(params.type) ? null : params.type,
                 layoutConfig: params.layoutConfig.toString() ?: "",
                 stack: params.stack != null ? Stack.get(params.stack.id.toLong()) : null,
@@ -740,6 +745,10 @@ class DashboardService extends BaseService {
             dashboard.description = JSONObject.NULL.equals(params.description) ? null : params.description
         }
 
+        if (params.iconImageUrl) {
+            dashboard.iconImageUrl = JSONObject.NULL.equals(params.iconImageUrl) ? null : params.iconImageUrl
+        }
+
         if (params.type) {
             dashboard.type = JSONObject.NULL.equals(params.type) ? null : params.type
         }
@@ -820,6 +829,7 @@ class DashboardService extends BaseService {
                     args.isdefault = groupDash.isdefault
                     args.name = groupDash.name
                     args.description = groupDash.description
+                    args.iconImageUrl = groupDash.iconImageUrl
                     args.type = groupDash.type
                     if (params.isdefault != null) {
                         args.isdefault = params.isdefault

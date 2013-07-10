@@ -200,6 +200,7 @@ Ozone.pref = Ozone.pref || {};
                   '_method': cfg.method,
                   'name': cfg.json.name,
                   'description': cfg.json.description,
+                  'iconImageUrl': cfg.json.iconImageUrl,
                   'type': cfg.json.type,
                   'guid': cfg.json.guid,
                   'isdefault': cfg.json.isdefault,
@@ -265,6 +266,7 @@ Ozone.pref = Ozone.pref || {};
           var postParams = {
             'name': json.name,
             'description': json.description,
+            'iconImageUrl': json.iconImageUrl,
             'type': json.type,
             'guid': json.guid,
             'isdefault': json.isdefault,

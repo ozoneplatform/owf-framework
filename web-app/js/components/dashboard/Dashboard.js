@@ -902,7 +902,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
         this.initDashboard();
 
-        if (this.configRecord.get('locked')) {
+        if (this.configRecord.get('locked') || this.configRecord.isMarketplaceDashboard()) {
             banner.disableAppComponentsBtn();
         } else {
             banner.enableAppComponentsBtn();
