@@ -18,7 +18,9 @@
     
     Ozone.components.appcomponents = Ozone.components.appcomponents || {};
 
-    Ozone.components.appcomponents.AppComponentsList = Backbone.View.extend({
+    var SuperClass = Ozone.components.BaseView;
+
+    Ozone.components.appcomponents.AppComponentsList = SuperClass.extend({
 
         // managed sub views
         views: null,
@@ -59,25 +61,11 @@
             return this.addAll();
         },
 
-        toggle: function () {
-            this.$el.is(':visible') ? this.hide() : this.show();
-        },
-
-        show: function () {
-            this.$el.show();
-            return this;
-        },
-
-        hide: function () {
-            this.$el.hide();
-            return this;
-        },
-
         remove: function () {
             _.invoke(this.views, 'remove');
             delete this.views;
 
-            return Backbone.View.prototype.remove.call(this);
+            return SuperClass.prototype.remove.call(this);
         }
 
     });

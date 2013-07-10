@@ -18,7 +18,9 @@
     
     Ozone.components.appcomponents = Ozone.components.appcomponents || {};
 
-    Ozone.components.appcomponents.AppComponent = Backbone.View.extend({
+    var SuperClass = Ozone.components.BaseView;
+    
+    Ozone.components.appcomponents.AppComponent = SuperClass.extend({
         
         className: 'widget',
 
@@ -35,7 +37,7 @@
         },
 
         initialize: function () {
-            Backbone.View.prototype.initialize.apply(this, arguments);
+            SuperClass.prototype.initialize.apply(this, arguments);
             this.$el.data('view', this);
             this.model = this.options.model;
         },

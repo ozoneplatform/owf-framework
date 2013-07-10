@@ -802,21 +802,26 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     showAppComponentsCarousel: function () {
-        if (this.activeDashboard.configRecord.get('locked') === true ||
-            this.activeDashboard.configRecord.isMarketplaceDashboard()) {
+        var me = this;
+
+        if (me.activeDashboard.configRecord.get('locked') === true ||
+            me.activeDashboard.configRecord.isMarketplaceDashboard()) {
             return;
         }
 
-        if(!this.appComponentsView) {
-            this.appComponentsView = new Ozone.components.appcomponents.AppComponentsCarousel({
+        if(!me.appComponentsView) {
+            me.appComponentsView = new Ozone.components.appcomponents.AppComponentsCarousel({
                 collection: OWF.Collections.Widgets,
-                dashboardContainer: this
+                dashboardContainer: me
             });
-            $('#dashboardCardPanel').append(this.appComponentsView.render().el);
-            this.appComponentsView.shown();
+            me.appComponentsView.$el.on('hide', function () {
+                me.getBanner().getComponent('appComponentsBtn').toggle(false, true)
+            });
+            $('#dashboardCardPanel').append(me.appComponentsView.render().el);
+            me.appComponentsView.shown();
         }
         else {
-            this.appComponentsView.toggle();
+            me.appComponentsView.toggle();
         }
     },
 

@@ -18,7 +18,7 @@
     
     Ozone.components.appcomponents = Ozone.components.appcomponents || {};
 
-    var SuperClass = Backbone.View;
+    var SuperClass = Ozone.components.BaseView;
 
     Ozone.components.appcomponents.AppComponentsCarousel = SuperClass.extend({
 
@@ -27,7 +27,7 @@
         events: {
             'keyup .search-input': '_inputKeyUp',
             'dblclick .widget': '_onDblClick',
-            'click .x-tool': 'toggle'
+            'click .x-tool': 'hide'
         },
 
         searchQuery: '',
@@ -46,7 +46,8 @@
                                 '<input type="text" class="search-input">' +
                                 '<span>App Components</span>'+
                             '</div>' + 
-                            '<div class="body"></div>');
+                            '<div class="body"></div>'
+            );
 
             this.$body = this.$el.find('.body');
 
