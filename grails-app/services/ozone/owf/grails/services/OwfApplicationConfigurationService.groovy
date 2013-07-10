@@ -155,8 +155,8 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
     }
 
     private void createRequiredCustomHeaderFooterConfigurations() {
-        def GROUP_NAME=USER_ACCOUNT_SETTINGS
-        def SUB_GROUP_NAME = "Custom Header Footer"
+        def GROUP_NAME=BRANDING
+        def SUB_GROUP_NAME = "Custom Header and Footer"
         int subGroupCtr = 1
 
         createOrUpdateApplicationConfig(CUSTOM_HEADER_URL, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
