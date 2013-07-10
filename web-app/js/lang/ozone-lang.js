@@ -118,9 +118,9 @@ Ozone.layout.ConfigurationWindowString = {
 };
 
 Ozone.layout.CreateViewWindowString = {
+    chosePremadeLayout: 'Choose a premade layout',
+    createFromExisting: 'Use the layout of an existing App',
     createNew: 'Create new layout',
-    createFromExisting: 'Use the layout of an existing Dashboard:',
-    importView: 'Import a Dashboard from a file:'
 };
 
 Ozone.layout.ManageViewsWindowString = {

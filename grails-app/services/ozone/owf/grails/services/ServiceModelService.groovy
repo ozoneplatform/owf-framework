@@ -65,7 +65,9 @@ class ServiceModelService {
                         prettyEditedDate: domain.editedDate != null ? prettytime.format(domain.editedDate) : '',
                         createdBy: createServiceModel(domain.createdBy),
                         layoutConfig: domain.layoutConfig,
-                        stack: createServiceModel(domain.stack)
+                        stack: createServiceModel(domain.stack),
+                        markedForDeletion: domain.markedForDeletion,
+                        publishedToStore: domain.publishedToStore
                         )
                 break
 

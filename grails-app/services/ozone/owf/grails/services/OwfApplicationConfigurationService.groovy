@@ -134,13 +134,16 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 		def SUB_GROUP_NAME = ""
 		int subGroupCtr = 1
 
-		createOrUpdateApplicationConfig(CEF_LOGGING_ENABLED, GROUP_NAME,  "Boolean", 
-            grailsApplication.config.owf.dynamic.enable.cef.logging,
-            subGroupCtr++, SUB_GROUP_NAME)
+		def cefEnabled = grailsApplication.config.owf.dynamic.enable.cef.logging
+		def cefObjAccessEnabled = grailsApplication.config.owf.dynamic.enable.cef.object.access.logging
+		
+		createOrUpdateApplicationConfig(CEF_LOGGING_ENABLED, GROUP_NAME,  "Boolean", cefEnabled, subGroupCtr++, SUB_GROUP_NAME)
+		createOrUpdateApplicationConfig(CEF_OBJECT_ACCESS_LOGGING_ENABLED, GROUP_NAME,  "Boolean", cefObjAccessEnabled, subGroupCtr++, SUB_GROUP_NAME)
 
-		createOrUpdateApplicationConfig(CEF_OBJECT_ACCESS_LOGGING_ENABLED, GROUP_NAME,  "Boolean",
-            grailsApplication.config.owf.dynamic.enable.cef.object.access.logging,
-            subGroupCtr++, SUB_GROUP_NAME)
+		createOrUpdateApplicationConfig(CEF_LOG_SWEEP_ENABLED, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
+		createOrUpdateApplicationConfig(CEF_LOG_LOCATION, GROUP_NAME,  "String", "", subGroupCtr++, SUB_GROUP_NAME)
+		createOrUpdateApplicationConfig(CEF_LOG_SWEEP_LOCATION, GROUP_NAME,  "String", "", subGroupCtr++, SUB_GROUP_NAME)
+		
 
 	}
 
@@ -152,8 +155,8 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
     }
 
     private void createRequiredCustomHeaderFooterConfigurations() {
-        def GROUP_NAME=USER_ACCOUNT_SETTINGS
-        def SUB_GROUP_NAME = "Custom Header Footer"
+        def GROUP_NAME=BRANDING
+        def SUB_GROUP_NAME = "Custom Header and Footer"
         int subGroupCtr = 1
 
         createOrUpdateApplicationConfig(CUSTOM_HEADER_URL, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
