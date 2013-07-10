@@ -35,16 +35,8 @@
             });
         },
 
-        findWidgetsByType: function (type) {
-            var widgets = [];
-
-            this.each(function (widget) {
-                if(widget.data.widgetTypes[0].name === type) {
-                    widgets.push(widget);
-                }
-            });
-
-            return widgets;
+        findByReceiveIntent: function (intent) {
+            return Ozone.util._findByReceiveIntent(this.models, intent);
         }
 
     });

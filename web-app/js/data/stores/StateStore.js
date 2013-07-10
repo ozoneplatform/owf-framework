@@ -7,28 +7,7 @@ Ext.define('Ozone.data.StateStore',{
     },
 
     findByReceiveIntent: function (intent) {
-        return _.filter(this.data.items, function (state) {
-            
-            if(!intent.dataType) {
-                return false;
-            }
-
-            var intents = state.get('intents'),
-                found = false;
-
-            _.each(intents.receive, function (componentIntent) {
-                if(componentIntent.action === intent.action) {
-                    _.each(componentIntent.dataTypes, function (dataType) {
-                        if(dataType === intent.dataType) {
-                            found = true;
-                        }
-                    })
-                }
-            });
-
-            return found;
-
-        });
+        return Ozone.util._findByReceiveIntent(this.data.items, intent);
     }
 
 });

@@ -728,3 +728,27 @@ Ozone.util.hasAccess = function(cfg) {
 Ozone.util.hasAccess.outcomeCategories = { noLevelGiven: "NOT_SPECIFIED", insufficient: "INSUFFICIENT_ACCESS" };
 
 
+Ozone.util._findByReceiveIntent = function (array, intent) {
+    return _.filter(array, function (state) {
+        
+        if(!intent.dataType) {
+            return false;
+        }
+
+        var intents = state.get('intents'),
+            found = false;
+
+        _.each(intents.receive, function (componentIntent) {
+            if(componentIntent.action === intent.action) {
+                _.each(componentIntent.dataTypes, function (dataType) {
+                    if(dataType === intent.dataType) {
+                        found = true;
+                    }
+                })
+            }
+        });
+
+        return found;
+
+    });
+};

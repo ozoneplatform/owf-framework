@@ -1421,7 +1421,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     showIntentsWindow: function(intent, container, sender, data, sendingCmp) {
         var me = this,
             intentConfig,
-            deferredSendIntentListener;
+            deferredSendIntentListener,
+            isRememberSelection = false;
 
         me._initIntentsWindow(intent).show();
 
@@ -1440,6 +1441,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 container.callback([]);
             })
             .on('hide', function () {
+                isRememberSelection = me.intentsWindow.isRememberSelection();
                 setTimeout(function () {
                     me.intentsWindow.remove();
                     delete me.intentsWindow;
@@ -1467,7 +1469,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     function sendIntent () {
                         container.send(sender, intent, data, null, destIdString);
                         //check if the intentcheckbox is checked if so save to intentConfig
-                        if (me.intentsWindow.isRememberSelection()) {
+                        if (isRememberSelection) {
 
                             if (intentConfig[owfdojo.toJson(intent)] == null) {
                                 intentConfig[owfdojo.toJson(intent)] = [];
@@ -1511,19 +1513,22 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     _initIntentsWindow: function (intent) {
-        var openMatches = this.activeDashboard.stateStore.findByReceiveIntent(intent);
-        openMatches = _.map(openMatches, function (match) {
+        var matchingOpenedAppComponents = this.activeDashboard.stateStore.findByReceiveIntent(intent);
+        matchingOpenedAppComponents = _.map(matchingOpenedAppComponents, function (match) {
             var data = _.extend({}, match.data);
             data.image = match.get('image');
             return data;
         });
 
+        var matchingAppComponents = OWF.Collections.Widgets.findByReceiveIntent(intent);
+
         this.intentsWindow = new Ozone.components.appcomponents.IntentsWindow({
-            collection: new Ozone.data.collections.Widgets(openMatches),
+            matchingOpenedAppComponents: new Ozone.data.collections.Widgets(matchingOpenedAppComponents),
+            matchingAppComponents: new Ozone.data.collections.Widgets(matchingAppComponents),
             dashboardContainer: this
         });
-
         $('body').append(this.intentsWindow.render().el);
+        this.intentsWindow.shown();
         return this.intentsWindow;
     },
 

@@ -27,7 +27,7 @@
 
         searchQuery: '',
 
-        addFilterFn: $.noop,
+        addFilterFn: null,
 
         selected: null,
 
@@ -56,7 +56,7 @@
         },
 
         addOne: function (model, index) {
-            if(this.addFilterFn(model, index) === false) {
+            if(_.isFunction(this.addFilterFn) && !this.addFilterFn(model, index)) {
                 return;
             }
 

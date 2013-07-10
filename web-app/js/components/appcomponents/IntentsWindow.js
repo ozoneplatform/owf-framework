@@ -31,22 +31,30 @@
             'click .x-tool': 'cancel',
         },
 
-        intent: null,
+        BLANK_IMAGE_SRC: "data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==",
 
-        setIntent: function (intent) {
-            this.intent = intent;
-            return this;
-        },
+        showingOpenedInstances: false,
 
         initialize: function () {
             SuperClass.prototype.initialize.apply(this, arguments);
-            _.extend(this, _.pick(this.options, ['intent', 'dashboardContainer']));
+            _.extend(this, _.pick(this.options, 
+                    ['dashboardContainer', 'matchingOpenedAppComponents', 'matchingAppComponents']));
+
+            if(this.matchingOpenedAppComponents.length > 0) {
+                this.showingOpenedInstances = true;
+                this.matchingOpenedAppComponents.add(new Backbone.Model({
+                    id: 'new-component',
+                    name: 'A new component',
+                    image: this.BLANK_IMAGE_SRC,
+                    newComponent: true
+                }));
+            }
         },
 
         render: function () {
             this.$el.html(  '<div class="header">' +
                                 '<a class="x-tool">' +
-                                    '<img src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="x-tool-close">' +
+                                    '<img src="' + this.BLANK_IMAGE_SRC + '" class="x-tool-close">' +
                                 '</a>' +
                                 '<span>Select the components you would like to send this action to: </span>'+
                             '</div>' + 
@@ -60,18 +68,31 @@
             this.$body = this.$el.find('.body');
 
             this.list = new Ozone.components.appcomponents.AppComponentsList({
-                el: this.$body,
-                collection: this.options.collection
+                collection: this.showingOpenedInstances ? this.matchingOpenedAppComponents : this.matchingAppComponents
             });
 
-            this.list.render();
+            this.list.render().$el.appendTo(this.$body);
 
             return this;
         },
 
-        launch: function (model) {
-            this.dashboardContainer.activeDashboard.handleAlreadyLaunchedWidget(model.attributes);
+        shown: function () {
+            if(this.showingOpenedInstances) {
+                var $lastEl = this.list.$el.children(':last-child');
+                $lastEl.children('.thumb-wrap').hide();
+                $lastEl.outerHeight($lastEl.prev().outerHeight(true));
+            }
+        },
+
+        launch: function (model, isEnterPressed, isDragAndDrop) {
             this.hide();
+
+            if(this.showingOpenedInstances) {
+                this.dashboardContainer.activeDashboard.handleAlreadyLaunchedWidget(model.attributes);
+            }
+            else {
+                this.dashboardContainer.launchWidgets(model, isEnterPressed, isDragAndDrop);
+            }
         },
 
         cancel: function () {
@@ -83,7 +104,7 @@
             this.list.remove();
             delete this.list;
 
-            return SuperClass.prototype.remove.call(this);
+            return  SuperClass.prototype.remove.call(this);
         },
 
         isRememberSelection: function () {
@@ -96,7 +117,25 @@
 
         _onDblClick: function (evt) {
             var model = $(evt.currentTarget).data('view').model;
-            this.launch(model);
+
+            if(this.showingOpenedInstances && model.get('newComponent')) {
+                this.showingOpenedInstances = false;
+                
+                // detach to prevent reflows
+                this.$body.detach();
+
+                this.list.remove();
+                this.list = new Ozone.components.appcomponents.AppComponentsList({
+                    collection: this.matchingAppComponents
+                });
+
+                this.$body.insertAfter(this.$el.children('.header'));
+
+                this.list.render().$el.appendTo(this.$body);
+            }
+            else {
+                this.launch(model, false, false);
+            }
         },
 
         _onRememberClick: function (evt) {
