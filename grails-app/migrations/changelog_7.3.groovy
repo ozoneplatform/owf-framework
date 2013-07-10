@@ -97,4 +97,16 @@ databaseChangeLog = {
             column(name: "icon_image_url", type: "varchar(2083)")
         }
     }
+
+    changeSet(author: "owf", id: "7.3-6", context: "create, upgrade, 7.3") {
+        comment("Add published_to_store and marked_for_deletion columns to dashboard table")
+        addColumn(tableName: "dashboard") {
+            column(name: "published_to_store", type: "java.sql.Types.BOOLEAN") {
+                constraints(nullable: "true")
+            }
+            column(name: "marked_for_deletion", type: "java.sql.Types.BOOLEAN") {
+                constraints(nullable: "true")
+            }
+        }
+    }
 }

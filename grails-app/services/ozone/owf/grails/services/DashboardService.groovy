@@ -135,6 +135,8 @@ class DashboardService extends BaseService {
                             locked = groupDash.locked
                             layoutConfig = groupDash.layoutConfig
                             stack = groupDash.stack
+                            markedForDeletion = groupDash.markedForDeletion
+                            publishedToStore = groupDash.publishedToStore
                         }
 
                         def privateDash = deepClone(args,user.id)
@@ -496,7 +498,8 @@ class DashboardService extends BaseService {
                 type: JSONObject.NULL.equals(params.type) ? null : params.type,
                 layoutConfig: params.layoutConfig.toString() ?: "",
                 stack: params.stack != null ? Stack.get(params.stack.id.toLong()) : null,
-                locked: params.locked != null ? params.locked : false)
+                locked: params.locked != null ? params.locked : false,
+                publishedToStore: params.publishedToStore ? convertStringToBool(params.publishedToStore) : false)
 
         //if this is not a group dashboard then assign it to the specified user
         //otherwise group dashboards are not associated with any user
@@ -727,6 +730,9 @@ class DashboardService extends BaseService {
         // If no stack is provided, set the stack to null.
         // dashboard.stack =  params.stack != null ? Stack.get(params.stack.id.toLong()) : null
         dashboard.locked = params.locked instanceof Boolean ? params.locked : params.locked == "true"
+
+        dashboard.publishedToStore = params.publishedToStore ? convertStringToBool(params.publishedToStore) : dashboard.publishedToStore
+        dashboard.markedForDeletion = params.markedForDeletion ? convertStringToBool(params.markedForDeletion) : dashboard.markedForDeletion
 
         // TODO: Consider renaming the regenerateStateIds param.  This controls regenerating widget instance id's which are encapsulated in layout_config now instead of a state table.
         if (params.regenerateStateIds) {
