@@ -219,7 +219,7 @@ INSERT INTO DOMAIN_MAPPING VALUES(348,0,183,'widget_definition','owns',193,'grou
 INSERT INTO DOMAIN_MAPPING VALUES(349,0,184,'widget_definition','owns',191,'group')
 INSERT INTO DOMAIN_MAPPING VALUES(350,0,185,'widget_definition','owns',191,'group')
 INSERT INTO DOMAIN_MAPPING VALUES(351,0,184,'widget_definition','owns',192,'group')
-+INSERT INTO DOMAIN_MAPPING VALUES(352,0,186,'widget_definition','owns',192,'group')
++INSERT INTO DOMAIN_MAPPING VALUES(352,0,185,'widget_definition','owns',192,'group')
 INSERT INTO OWF_GROUP VALUES(4,0,FALSE,'TestGroup1','testgroup1@group1.com','TestGroup1','active','TestGroup1',FALSE)
 INSERT INTO OWF_GROUP VALUES(5,0,FALSE,'TestGroup2','testgroup2@group2.com','TestGroup2','active','TestGroup2',FALSE)
 INSERT INTO OWF_GROUP VALUES(191,0,TRUE,'OWF Administrators',NULL,'OWF Administrators','active','OWF Administrators',FALSE)
