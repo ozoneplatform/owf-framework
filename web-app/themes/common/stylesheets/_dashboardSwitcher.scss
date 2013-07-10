@@ -95,14 +95,19 @@
     }
     
     .x-window-header {
-        margin-bottom: 20px;
+        margin-bottom: 5px;
     }
 
     #dashboard-switcher-body {
         width: 100% !important;
+        height: 90% !important;
 
         /**** BEGIN slider styling ****/
         .bx-wrapper {
+            // Must be set explicitly to remain constant
+            // regardless of how many children per slide in the viewport
+            height: 380px !important;
+
             .bx-viewport {
                 @include box-shadow(none);
 
@@ -111,13 +116,14 @@
                 margin: 0 60px;
                 overflow: hidden;
                 width: auto !important;
+                height: 95% !important;
             }
         }
         /***** END slider styling  ****/
     }
 
     .all-dashboards {
-        height: $dashboard-switcher-body-height !important;
+        height: auto !important;
         overflow: hidden;
 
         //necessary for scrolling to work properly in IE7 for some reason
