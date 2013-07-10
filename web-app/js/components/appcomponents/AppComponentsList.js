@@ -45,6 +45,7 @@
 
         render: function () {
             this.addAll();
+            this.$el.disableSelection();
             return this;
         },
 
@@ -76,6 +77,7 @@
         remove: function () {
             _.invoke(this.views, 'remove');
             delete this.views;
+            this.$el.enableSelection()
 
             return SuperClass.prototype.remove.call(this);
         },

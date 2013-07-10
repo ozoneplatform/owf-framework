@@ -35,7 +35,7 @@
     }
     .thumb-text {
         color: $selectable-item-text-color;
-        font: ceil($owf-font-size * .85) $owf-font-family;
+        font: $owf-font-size $owf-font-family;
         height: 3em;
         width: 6em;
         margin-left: auto;

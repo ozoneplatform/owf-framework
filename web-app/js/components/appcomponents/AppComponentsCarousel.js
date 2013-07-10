@@ -124,30 +124,31 @@
             var me = this,
                 $slides = me.carousel.getSlides();
 
-            $slides.sortable({
-                helper: 'clone',
-                appendTo: $('body'),
-                connectWith: '.bx-slide',
-                tolerance: "pointer",
-                cursorAt: { left: -25, top: -25 },
+            $slides
+                .sortable({
+                    helper: 'clone',
+                    appendTo: $('body'),
+                    connectWith: '.bx-slide',
+                    tolerance: "pointer",
+                    cursorAt: { left: -25, top: -25 },
 
-                start: function(event, ui) {
-                    var model = ui.item.data('view').model;
+                    start: function(event, ui) {
+                        var model = ui.item.data('view').model;
 
-                    me.$el.on('mouseleave.launch', function () {
-                        me._dragging = true;
-                        me.launch(model, false, true);
-                    });
-                },
+                        me.$el.on('mouseleave.launch', function () {
+                            me._dragging = true;
+                            me.launch(model, false, true);
+                        });
+                    },
 
-                stop: function () {
-                    if(me._dragging) {
-                        $slides.sortable('cancel');
+                    stop: function () {
+                        if(me._dragging) {
+                            $slides.sortable('cancel');
+                        }
+                        me.$el.off('.launch');
+                        delete me._dragging;
                     }
-                    me.$el.off('.launch');
-                    delete me._dragging;
-                }
-            });
+                });
             return this;
         },
 

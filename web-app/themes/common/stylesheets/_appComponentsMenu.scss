@@ -15,7 +15,7 @@
     width: 100%;
 
     .body {
-        height: 102px;
+        height: 106px;
     }
 
     .bx-viewport {
@@ -67,11 +67,12 @@
 }
 
 .intents-window {
-    width: 560px;
+    width: 48em;
     position: absolute;
     top: 30%;
     left: 50%;
-    margin-left: -280px;
+    margin-left: -24em;
+    @include border-radius(0.5em);
 
     .body {
         margin: 0 1em 0 1em;

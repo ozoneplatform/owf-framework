@@ -33,7 +33,12 @@
 
         BLANK_IMAGE_SRC: "data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==",
 
-        showingOpenedInstances: false,
+        showingOpenInstances: false,
+
+        headerText: {
+            openInstances: 'Select the components you would like to send this action to: ',
+            allInstances: 'These components work with your action. Double click or drag one.'
+        },
 
         initialize: function () {
             SuperClass.prototype.initialize.apply(this, arguments);
@@ -41,7 +46,7 @@
                     ['dashboardContainer', 'matchingOpenedAppComponents', 'matchingAppComponents']));
 
             if(this.matchingOpenedAppComponents.length > 0) {
-                this.showingOpenedInstances = true;
+                this.showingOpenInstances = true;
                 this.matchingOpenedAppComponents.add(new Backbone.Model({
                     id: 'new-component',
                     name: 'A new component',
@@ -51,12 +56,17 @@
             }
         },
 
+        getHeaderText: function () {
+            return this.showingOpenInstances ? this.headerText.openInstances : this.headerText.allInstances;
+        },
+
         render: function () {
+                                
             this.$el.html(  '<div class="header">' +
                                 '<a class="x-tool">' +
                                     '<img src="' + this.BLANK_IMAGE_SRC + '" class="x-tool-close">' +
                                 '</a>' +
-                                '<span>Select the components you would like to send this action to: </span>'+
+                                '<span>' + this.getHeaderText() + '</span>'+
                             '</div>' + 
                             '<div class="body"></div>' +
                             '<div class="footer" style="visibility: hidden;">' + 
@@ -68,7 +78,7 @@
             this.$body = this.$el.find('.body');
 
             this.list = new Ozone.components.appcomponents.AppComponentsList({
-                collection: this.showingOpenedInstances ? this.matchingOpenedAppComponents : this.matchingAppComponents
+                collection: this.showingOpenInstances ? this.matchingOpenedAppComponents : this.matchingAppComponents
             });
 
             this.list.render().$el.appendTo(this.$body);
@@ -77,7 +87,7 @@
         },
 
         shown: function () {
-            if(this.showingOpenedInstances) {
+            if(this.showingOpenInstances) {
                 var $lastEl = this.list.$el.children(':last-child');
                 $lastEl.children('.thumb-wrap').hide();
                 $lastEl.outerHeight($lastEl.prev().outerHeight(true));
@@ -87,7 +97,7 @@
         launch: function (model, isEnterPressed, isDragAndDrop) {
             this.hide();
 
-            if(this.showingOpenedInstances) {
+            if(this.showingOpenInstances) {
                 this.dashboardContainer.activeDashboard.handleAlreadyLaunchedWidget(model.attributes);
             }
             else {
@@ -104,7 +114,7 @@
             this.list.remove();
             delete this.list;
 
-            return  SuperClass.prototype.remove.call(this);
+            return SuperClass.prototype.remove.call(this);
         },
 
         isRememberSelection: function () {
@@ -116,11 +126,15 @@
         },
 
         _onDblClick: function (evt) {
-            var model = $(evt.currentTarget).data('view').model;
+            var model = $(evt.currentTarget).data('view').model,
+                $header;
 
-            if(this.showingOpenedInstances && model.get('newComponent')) {
-                this.showingOpenedInstances = false;
-                
+            if(this.showingOpenInstances && model.get('newComponent')) {
+                this.showingOpenInstances = false;
+
+                $header = this.$el.children('.header');
+                $header.children('span').html(this.getHeaderText());
+
                 // detach to prevent reflows
                 this.$body.detach();
 
@@ -129,7 +143,7 @@
                     collection: this.matchingAppComponents
                 });
 
-                this.$body.insertAfter(this.$el.children('.header'));
+                this.$body.insertAfter($header);
 
                 this.list.render().$el.appendTo(this.$body);
             }
