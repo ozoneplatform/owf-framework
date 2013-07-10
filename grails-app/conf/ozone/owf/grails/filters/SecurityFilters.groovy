@@ -723,19 +723,19 @@ class SecurityFilters {
                 // If none of the admin widgets exist yet, create them
                 domainMappingService.createMapping(adminGroup, RelationshipType.owns, configurationWidget);
             }
-			
-        } else {
-            //User isn't an admin, remove them from the OWF Administrators group if they are in it
-            def adminGroup = Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
-            if(adminGroup != null) {
-                if(admin.groups?.contains(adminGroup)) {
-                    admin.groups.remove(adminGroup)
-                }
-                if(adminGroup.people.contains(admin)) {
-                    adminGroup.people.remove(admin)
-                }
-            }
-        }
+		}
+        // } else {
+        //     //User isn't an admin, remove them from the OWF Administrators group if they are in it
+        //     def adminGroup = Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
+        //     if(adminGroup != null) {
+        //         if(admin.groups?.contains(adminGroup)) {
+        //             admin.groups.remove(adminGroup)
+        //         }
+        //         if(adminGroup.people.contains(admin)) {
+        //             adminGroup.people.remove(admin)
+        //         }
+        //     }
+        // }
 		
         /*if (userAdmin) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, userAdmin)?.delete(flush: true);
         if (userEdit) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, userEdit)?.delete(flush: true);
