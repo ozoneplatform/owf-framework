@@ -68,14 +68,24 @@
         }
         
         .create {
-        	 bottom: 60px;
-			 left: 15px;
+        	 bottom: -45px;
+			 left: 35px;
 			 position: relative;
+        }
+
+        .create-link-text, .more-link-text {
+            display: inline-block;
+            width: 80px;
+            padding-left: 7px;
+        }
+
+        .create-link-text {
+            width: 60px;
         }
         
         .storeLink {
-        	top: 435px; 
-        	left: 25px;
+        	top: 493px; 
+        	left: -5px;
         	position: absolute; 
         	text-align: left;
         	font-weight: bold;
@@ -87,12 +97,12 @@
         	position: relative;
         	width: 20px;
         	height: 20px; 
-			right: 550px;
-		    bottom: 30px;
+            display: inline-block;
+            float: left;
         }
         
         .createLink {
-        	top: 435px; 
+        	top: 493px; 
         	left: 160px; 
         	position: absolute; 
         	text-align: left;
@@ -105,8 +115,8 @@
         	position: relative;
         	width: 20px;
         	height: 20px; 
-			right: 410px;
-		    bottom: 45px;
+            display: inline-block;
+            float: left;
         }
         
         .createLinkShift {

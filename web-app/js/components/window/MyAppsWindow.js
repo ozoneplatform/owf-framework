@@ -194,8 +194,14 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             Ext.DomHelper.append( cmp.body,
             '<div class="actions">'+
                 '<ul>'+
-                	'<div class="storeImg"></div><li class="storeLink">Discover More </br>in the Store</li>'+
-            		'<div class="createImg"></div><li class="createLink">Create </br>New App</li>'+
+                	'<li class="storeLink">'+
+                        '<span class="moreImg"></span>'+
+                        '<span class="more-link-text">Discover More in the Store</span>'+
+                    '</li>'+
+            		'<li class="createLink">'+
+                        '<span class="createImg"></span>'+
+                        '<span class="create-link-text">Create New App</span>'+
+                    '</li>'+
                     '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-qtip="Name, describe and design a new dashboard.">+</li>'+
                 '</ul>'+
             '</div>');
