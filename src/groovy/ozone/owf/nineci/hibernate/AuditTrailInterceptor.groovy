@@ -4,6 +4,7 @@ import org.hibernate.SessionFactory
 import org.hibernate.type.Type
 import org.apache.log4j.Logger
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import ozone.owf.grails.domain.Person
 import ozone.owf.grails.services.AccountService
 
 
@@ -39,12 +40,23 @@ class AuditTrailInterceptor extends EmptyInterceptor {
 
     boolean onSave(Object entity, Serializable id, Object[] state,String[] propertyNames, Type[] types) {
 
+		
        
         def metaClass = entity.metaClass
         MetaProperty property = metaClass.hasProperty(entity, CREATED_DATE)
         def time = System.currentTimeMillis()
         List fieldList = propertyNames.toList()
-        Object userId = getUserID()
+
+		//If its a person object and its being created then only the system could be creating it
+		//So set the date fields then return
+		if(entity instanceof Person){
+			def now = property.getType().newInstance([time] as Object[] )
+			setValue(state, fieldList, CREATED_DATE, now)
+			setValue(state, fieldList, EDITED_DATE, now)
+			return true
+		}
+		
+		Object userId = getUserID()
 		
         if(property) {
             def now = property.getType().newInstance([time] as Object[] )
