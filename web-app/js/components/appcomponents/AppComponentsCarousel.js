@@ -24,6 +24,14 @@
 
         className: 'appcomponents-menu',
 
+        // auto instantiate carousel
+        autoInit: true,
+
+        initialize: function () {
+            SuperClass.prototype.initialize.apply(this, arguments);
+            this.autoInit = this.options.autoInit || this.autoInit;
+        },
+
         filter: function (query) {
             this.destroyCarousel();
             SuperClass.prototype.filter.call(this, query);
@@ -35,8 +43,8 @@
             return this;
         },
 
-        initCarousel: function () {
-            if(this.collection.length > 0) {
+        initCarousel: function (force) {
+            if(this.collection.length > 0 && (this.autoInit || this.force)) {
                 this.carousel = true;
                 this.$el.bxSlider({
                     oneItemPerSlide: false,
