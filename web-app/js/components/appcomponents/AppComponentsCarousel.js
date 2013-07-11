@@ -27,6 +27,9 @@
         // auto instantiate carousel
         autoInit: true,
 
+        // boolean flag indicating whether or not carousel is instantiated
+        _carousel: false,
+
         initialize: function () {
             SuperClass.prototype.initialize.apply(this, arguments);
             this.autoInit = this.options.autoInit || this.autoInit;
@@ -45,7 +48,7 @@
 
         initCarousel: function (force) {
             if(this.collection.length > 0 && (this.autoInit || this.force)) {
-                this.carousel = true;
+                this._carousel = true;
                 this.$el.bxSlider({
                     oneItemPerSlide: false,
                     infiniteLoop: true,
@@ -65,10 +68,10 @@
         },
 
         destroyCarousel: function () {
-            if(this.carousel) {
+            if(this._carousel) {
                 this.$el.destroySlider();
             }
-            delete this.carousel;
+            this._carousel = false;
             return this;
         },
 

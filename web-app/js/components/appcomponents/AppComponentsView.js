@@ -62,7 +62,9 @@
         },
 
         filter: function (query) {
+            this._destroySortable();
             this.carousel.filter(query);
+            this._initSortable();
         },
 
         launch: function (app, isEnterPressed, isDragAndDrop) {
@@ -77,7 +79,9 @@
         },
 
         refresh: _.debounce(function (evt) {
+            this._destroySortable();
             this.carousel.reloadCarousel();
+            this._initSortable();
         }, 1000),
 
         shown: function () {
@@ -87,7 +91,7 @@
         },
 
         remove: function () {
-            this.carousel.getSlides().sortable('destroy');
+            this._destroySortable();
             this.carousel.remove();
             this.carousel = null;
 
@@ -134,6 +138,11 @@
                         delete me._dragging;
                     }
                 });
+            return this;
+        },
+
+        _destroySortable: function () {
+            this.carousel.getSlides().sortable('destroy');
             return this;
         }
 
