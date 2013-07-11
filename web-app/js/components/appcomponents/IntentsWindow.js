@@ -153,6 +153,9 @@
         },
 
         _onComponentMouseDown: function (evt) {
+            if(this.isShowingOpenInstances) {
+                return;
+            }
             var me = this,
                 $el = $(evt.currentTarget),
                 view = $el.data('view'),

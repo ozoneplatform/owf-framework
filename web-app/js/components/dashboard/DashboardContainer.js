@@ -1423,10 +1423,26 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             intentConfig,
             deferredSendIntentListener,
             isRememberSelection = false,
-            bodyEl = Ext.getBody();
+            bodyEl = Ext.getBody(),
+            maskEl = bodyEl.mask().addCls('intent-modal-mask');
         
-        bodyEl.mask().addCls('intent-modal-mask');
+        function onHide() {
+            isRememberSelection = me.intentsWindow.isRememberSelection();
+
+            me.intentsWindow.$el.off('hide', onHide);
+            maskEl.un('click', onHide);
+            bodyEl.unmask();
+            setTimeout(function () {
+                me.intentsWindow.remove();
+                me.intentsWindow = null;
+                Ozone.KeyMap.enable();
+            }, 0);
+        }
+
+        maskEl.on('click', onHide);
+        Ozone.KeyMap.disable();
         me._initIntentsWindow(intent).show();
+
 
         me.intentsWindow.$el
             .on('cancel', function () {
@@ -1442,14 +1458,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 //fire callback to startActivity
                 container.callback([]);
             })
-            .on('hide', function () {
-                isRememberSelection = me.intentsWindow.isRememberSelection();
-                bodyEl.unmask();
-                setTimeout(function () {
-                    me.intentsWindow.remove();
-                    delete me.intentsWindow;
-                }, 0);
-            });
+            .on('hide', onHide);
 
         var widgetLaunchListener = {
             beforewidgetlaunch: {
