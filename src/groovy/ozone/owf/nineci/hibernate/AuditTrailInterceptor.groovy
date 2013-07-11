@@ -1,22 +1,22 @@
 package ozone.owf.nineci.hibernate //grails.plugin.audittrail
 import org.hibernate.EmptyInterceptor
+import org.hibernate.SessionFactory
 import org.hibernate.type.Type
-import org.springframework.security.core.context.SecurityContextHolder as SCH
-import org.springframework.web.context.request.RequestContextHolder as RCH
 import org.apache.log4j.Logger
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
-import ozone.owf.grails.domain.Person
 import ozone.owf.grails.services.AccountService
 
 
 class AuditTrailInterceptor extends EmptyInterceptor {
-    private static final Logger log = Logger.getLogger(AuditTrailInterceptor)
+    protected static final Logger log = Logger.getLogger(AuditTrailInterceptor)
     static final Properties CONF = ConfigurationHolder.config.toProperties()
     static final String CREATED_BY = CONF.getProperty("stamp.audit.createdBy")
     static final String EDITED_BY = CONF.getProperty("stamp.audit.editedBy")
     static final String EDITED_DATE = CONF.getProperty("stamp.audit.editedDate")
     static final String CREATED_DATE = CONF.getProperty("stamp.audit.createdDate")
 
+	SessionFactory sessionFactory
+	
     AccountService accountService
 
     boolean onFlushDirty(Object entity, Serializable id, Object[] currentState,Object[] previousState, String[] propertyNames,Type[] types) {
@@ -74,6 +74,7 @@ class AuditTrailInterceptor extends EmptyInterceptor {
     }
 
     Object getUserID() {
+
         if (accountService.getLoggedInUsername()) {
             return accountService.getLoggedInUserReadOnly()    
         } else {

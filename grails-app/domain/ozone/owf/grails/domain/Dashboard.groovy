@@ -22,6 +22,8 @@ class Dashboard implements Serializable, Comparable {
     String type = ''
     String layoutConfig = ''
     boolean locked = false
+    Boolean publishedToStore = false
+    Boolean markedForDeletion = false
     Stack stack  // The stack in which this dashboard should appear
     static belongsTo = [user:Person]
   
@@ -43,6 +45,8 @@ class Dashboard implements Serializable, Comparable {
         user(nullable:true)
         layoutConfig(nullable: true, blank: true)
         stack(nullable:true)
+        publishedToStore(nullable:true)
+        markedForDeletion(nullable:true)
     }
     
     String toString() {

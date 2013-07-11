@@ -207,7 +207,9 @@ Ozone.pref = Ozone.pref || {};
                   'locked': cfg.json.locked,
                   'state': cfg.json.state,
                   'layoutConfig': cfg.json.layoutConfig,
-                  'stack': cfg.json.stack
+                  'stack': cfg.json.stack,
+                  'markedForDeletion': cfg.json.markedForDeletion,
+                  'publishedToStore': cfg.json.publishedToStore
               };
               if (cfg.json.cloned === true) content.cloned = true;
               if (cfg.json.bypassLayoutRearrange === true) content.bypassLayoutRearrange = true;
@@ -273,7 +275,9 @@ Ozone.pref = Ozone.pref || {};
             'locked': json.locked,
             'state': json.state,
             'layoutConfig': typeof json.layoutConfig === 'string' ? json.layoutConfig : Ozone.util.toString(json.layoutConfig),
-            'stack': json.stack
+            'stack': json.stack,
+            'markedForDeletion' : json.markedForDeletion,
+            'publishedToStore' : json.publishedToStore
           };
           return postParams;
       };
