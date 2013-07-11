@@ -10,6 +10,7 @@
             //console.time('page');
         </script>
         <!-- ** CSS ** -->
+        <link rel="stylesheet" type="text/css" href="./js-lib/jquery.bxslider/jquery.bxslider.css">
         <!-- base library -->
         <p:css id='theme' name='${owfCss.defaultCssPath()}' absolute='true'/>
 
