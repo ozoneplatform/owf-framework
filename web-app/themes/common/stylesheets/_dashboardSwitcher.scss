@@ -15,7 +15,8 @@
     }
 
     > .x-window-header {
-        /*width: 100% !important;*/
+        margin-bottom: 5px;
+        width: 100% !important;
         
         .x-window-header-text {
 			font-size: 18px;
@@ -118,21 +119,22 @@
 		    bottom: 30px;
         }
     }
-    
-    .x-window-header {
-        margin-bottom: 5px;
-    }
 
     .dashboard-switcher-descriptor {
         color: $dashboard-switcher-dashboard-text-color;
         padding: 0 15px;
         bottom: 20px !important;
         position: relative;
+        text-align: left;
     }
 
     #dashboard-switcher-body {
-        width: 100% !important;
+        width: 95% !important;
         height: 90% !important;
+
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
 
         /**** BEGIN slider styling ****/
         .bx-wrapper {
@@ -237,8 +239,8 @@
     }
     
     &:hover {
-        @include border-top-radius($dashboard-switcher-body-radius);
-        @include border-bottom-radius($dashboard-switcher-body-radius);
+        @include border-top-radius($dashboard-item-body-radius);
+        @include border-bottom-radius($dashboard-item-body-radius);
 
         background-color: $dashboard-switcher-dashboard-over-background-color !important;
         border-color: $dashboard-switcher-dashboard-over-border-color !important;
