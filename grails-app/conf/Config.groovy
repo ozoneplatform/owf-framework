@@ -309,6 +309,7 @@ uiperformance.bundles = [
             '../js/components/admin/group/GroupEditPropertiesTab',
             '../js/components/admin/group/GroupEditStacksTab',
             '../js/components/admin/group/GroupEditUsersTab',
+            '../js/components/admin/group/GroupEditWidgetPanel',
             '../js/components/admin/group/GroupEditWidgetsTab',
             '../js/components/admin/group/GroupEditPanel'
         ]
