@@ -20,6 +20,10 @@ class AuditTrailInterceptor extends EmptyInterceptor {
 
     boolean onFlushDirty(Object entity, Serializable id, Object[] currentState,Object[] previousState, String[] propertyNames,Type[] types) {
       
+		if(!isAuditable(entity)){
+			return true
+		}
+		
         def metaClass = entity.metaClass
         MetaProperty property = metaClass.hasProperty(entity, EDITED_DATE)
         List fieldList = propertyNames.toList()
