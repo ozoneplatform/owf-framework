@@ -19,6 +19,11 @@
 
     > .x-window-header {
         /*width: 100% !important;*/
+        
+        .x-window-header-text {
+			font-size: 18px;
+			padding-left: 30px;
+		}
 
         .dashboard-switcher-header-icon {
             background-image: theme-image($theme-name, 'dashboardswitcher/switcher_icon.png');
@@ -42,6 +47,33 @@
                 background: $dashboard-switcher-dashboard-over-background-color;
                 color: $dashboard-switcher-dashboard-over-text-color;
             }
+        }
+        
+        .storeLink {
+        	right: 345px; 
+        	bottom:3px; 
+        	position: absolute; 
+        	text-align: left;
+        	font-weight: bold;
+        	font-size: 10px;
+        }
+
+		.moreImg {
+        	background-image: theme-image($theme-name, 'myappswindow/moreInStore.png'); 
+        	position: relative;
+        	width: 24px;
+        	height: 24px; 
+			left: 15px;
+		    top: 15px;
+        }
+        
+        .createLink {
+        	right: 255px; 
+        	bottom: 3px; 
+        	position: absolute; 
+        	text-align: left;
+        	font-weight: bold;
+        	font-size: 10px;
         }
     }
 

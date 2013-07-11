@@ -13,6 +13,7 @@ class Stack {
     String imageUrl
     String descriptorUrl
     Integer uniqueWidgetCount = 0
+    static belongsTo = [owner:Person]
     
     static hasMany = [groups: Group]
     
@@ -28,6 +29,7 @@ class Stack {
         imageUrl(nullable: true, blank: true, maxSize: 2083)
         descriptorUrl(nullable: true, blank: true, maxSize: 2083)
         uniqueWidgetCount(nullable: false, blank: false)
+        owner(nullable:true)
     }
 
     Group findStackDefaultGroup() {

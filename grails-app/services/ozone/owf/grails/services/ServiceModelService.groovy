@@ -65,7 +65,9 @@ class ServiceModelService {
                         prettyEditedDate: domain.editedDate != null ? prettytime.format(domain.editedDate) : '',
                         createdBy: createServiceModel(domain.createdBy),
                         layoutConfig: domain.layoutConfig,
-                        stack: createServiceModel(domain.stack)
+                        stack: createServiceModel(domain.stack),
+                        markedForDeletion: domain.markedForDeletion,
+                        publishedToStore: domain.publishedToStore
                         )
                 break
 
@@ -202,7 +204,8 @@ class ServiceModelService {
                         totalDashboards: params.totalDashboards ?: 0,
                         totalUsers: params.totalUsers ?: 0,
                         totalGroups: params.totalGroups ?: 0,
-                        totalWidgets: domain.uniqueWidgetCount ?: 0
+                        totalWidgets: domain.uniqueWidgetCount ?: 0,
+                        owner: createServiceModel(domain.owner)
                         )
                 break
             default:

@@ -114,7 +114,6 @@ class DashboardService extends BaseService {
             //if there is no user then there is no need to create private user copies
             if (user != null) {
                 //check if this group dashboard already has a private copy for this user
-                def userFilter = { eq('user',user) }
                 def privateGroupDashboards = getUserPrivateDashboards(user, dm.destId)
 
                 //create private copy of the group dashboard for the user if they don't have one
@@ -135,6 +134,8 @@ class DashboardService extends BaseService {
                             locked = groupDash.locked
                             layoutConfig = groupDash.layoutConfig
                             stack = groupDash.stack
+                            markedForDeletion = groupDash.markedForDeletion
+                            publishedToStore = groupDash.publishedToStore
                         }
 
                         def privateDash = deepClone(args,user.id)
@@ -359,7 +360,7 @@ class DashboardService extends BaseService {
             //           args['isGroupDashboard'] = false
             //         }
 
-            args['isGroupDashboard'] = it.user == null ? true : false
+            args['isGroupDashboard'] = (it.user == null)
 
             if (privateGroupDashboardToGroupsMap[it.id] != null) {
                 args['groups'] = privateGroupDashboardToGroupsMap[it.id]
@@ -446,9 +447,6 @@ class DashboardService extends BaseService {
     }
 
     def create(params) {
-
-        def blah = params.iconImageUrl
-
         updateOldDefault(params)
         //default person to current user
         def person = accountService.getLoggedInUser()
@@ -479,7 +477,7 @@ class DashboardService extends BaseService {
             })
 
             //For each widget replace its old guid with the current guid in the layoutConfig, using universalName to identify them
-            universalNameMatches.each() { widget ->
+            universalNameMatches.each { widget ->
                 if(universalNameToOldGuidMap[widget.universalName] != widget.widgetGuid) {
                     params.layoutConfig = params.layoutConfig.replace(universalNameToOldGuidMap[widget.universalName], widget.widgetGuid)
                 }
@@ -496,7 +494,8 @@ class DashboardService extends BaseService {
                 type: JSONObject.NULL.equals(params.type) ? null : params.type,
                 layoutConfig: params.layoutConfig.toString() ?: "",
                 stack: params.stack != null ? Stack.get(params.stack.id.toLong()) : null,
-                locked: params.locked != null ? params.locked : false)
+                locked: params.locked != null ? params.locked : false,
+                publishedToStore: params.publishedToStore ? convertStringToBool(params.publishedToStore) : false)
 
         //if this is not a group dashboard then assign it to the specified user
         //otherwise group dashboards are not associated with any user
@@ -627,7 +626,7 @@ class DashboardService extends BaseService {
             }
             Map newParams = new HashMap()
             newParams.guid = it
-            def result = delete(newParams)
+            delete(newParams)
         }
         return [success: true]
     }
@@ -727,6 +726,9 @@ class DashboardService extends BaseService {
         // If no stack is provided, set the stack to null.
         // dashboard.stack =  params.stack != null ? Stack.get(params.stack.id.toLong()) : null
         dashboard.locked = params.locked instanceof Boolean ? params.locked : params.locked == "true"
+
+        dashboard.publishedToStore = params.publishedToStore ? convertStringToBool(params.publishedToStore) : dashboard.publishedToStore
+        dashboard.markedForDeletion = params.markedForDeletion ? convertStringToBool(params.markedForDeletion) : dashboard.markedForDeletion
 
         // TODO: Consider renaming the regenerateStateIds param.  This controls regenerating widget instance id's which are encapsulated in layout_config now instead of a state table.
         if (params.regenerateStateIds) {
@@ -965,7 +967,7 @@ class DashboardService extends BaseService {
             return stringToConvert
         }
 
-        (stringToConvert == "true" || stringToConvert == "on") ? true : false
+        (stringToConvert == "true" || stringToConvert == "on")
     }
 
     private def findByGuidForUser(guid,userid) {

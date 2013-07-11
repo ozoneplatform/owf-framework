@@ -171,7 +171,8 @@ class PreferenceControllerTests extends OWFGroovyTestCase {
 		loginAsUsernameAndRole('testUser3', ERoleAuthority.ROLE_USER.strVal)
 		
 		def person = Person.build(username:'testUser3')
-		def preference = Preference.build(path:'test path', namespace:'com.dev.foo', value:'123', user:person)
+		def person2 = Person.build(username:'not_testUser3')
+		def preference = Preference.build(path:'test path', namespace:'com.dev.foo', value:'123', user:person2)
 		
 		controller = new PreferenceController()
 		controller.preferenceService = preferenceService
@@ -180,7 +181,7 @@ class PreferenceControllerTests extends OWFGroovyTestCase {
 		controller.params.namespace = 'com.dev.foo1'
 		controller.params.path = 'test path1'
 		controller.params.value = '1234'
-		controller.params.userid = person.id
+		controller.params.userid = person2.id
 		
 		controller.update()
 		

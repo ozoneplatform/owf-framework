@@ -147,18 +147,37 @@ class StackService {
         def stacks = []
 
         if (params.update_action) {
-			//FIXME for edit // ensureAdminOrOwner();
-            stacks << params;
+			if(params.id >= 0 || params.stack_id >= 0) {
+                ensureAdminOrOwner(params.id >= 0 ? params.id: params.stack_id);
+            }
+
+            stacks << params
         } else {
             if (params.data) {
                 def json = JSON.parse(params.data)
                 
                 if (json instanceof List) {
+                    json.each {
+                        if(it.id >= 0 || it.stack_id >= 0) {
+                            ensureAdminOrOwner(it.id >= 0 ? it.id: it.stack_id);
+                        }
+                    }
+
                     stacks = json
                 } else {
+                    if(json.id >= 0 || json.stack_id >= 0) {
+                        ensureAdminOrOwner(json.id >= 0 ? json.id: json.stack_id);
+                    }
+
                     stacks << json
                 }
             } else {
+                if(params.id || params.stack_id) {
+                    if(params.id >= 0 || params.stack_id >= 0) {
+                        ensureAdminOrOwner(params.id >= 0 ? param.id: params.stack_id);
+                    }
+                }
+
                 stacks << params
             }
         }
@@ -172,10 +191,12 @@ class StackService {
 
         def stack, returnValue = null
 
-        if (params?.stack_id) params.stack_id = (params.stack_id instanceof String ? Integer.parseInt(params.stack_id) : params.stack_id)
+        if (params?.stack_id){
+            params.stack_id = (params.stack_id instanceof String ? Integer.parseInt(params.stack_id) : params.stack_id)
+        }
         
         if (params?.id >= 0 || params.stack_id  >= 0) {  // Existing Stack
-            params.id = params?.id >= 0 ? params.id : params.stack_id
+            params.id = (params?.id >= 0 ? params.id : params.stack_id)
             stack = Stack.findById(params.id, [cache: true])
             if (!stack) {
                 throw new OwfException(message: 'Stack ' + params.id + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
@@ -201,7 +222,8 @@ class StackService {
                 description: params.description ?: stack.description,
                 stackContext: params.stackContext ?: stack.stackContext,
                 imageUrl: params.imageUrl ?: stack.imageUrl,
-                descriptorUrl: params.descriptorUrl ?: stack.descriptorUrl
+                descriptorUrl: params.descriptorUrl ?: stack.descriptorUrl,
+                owner: params.owner ?: (params.id  >= 0 ? stack.owner : accountService.getLoggedInUser())
             ]
             
             stack.save(flush: true, failOnError: true)
@@ -679,5 +701,22 @@ class StackService {
         if (!accountService.getLoggedInUserIsAdmin()) {
             throw new OwfException(message: "You must be an admin", exceptionType: OwfExceptionTypes.Authorization)
         }
+    }
+
+    private def ensureAdminOrOwner(stackId) {
+        if(!stackId && !accountService.getLoggedInUserIsAdmin()) {
+            throw new OwfException(message: "Cannot verify ownership of a stack without the stack ID", exceptionType: OwfExceptionTypes.NotFound)
+        } 
+
+        def stackInstance = Stack.get(stackId)
+
+        if(!stackInstance) {
+            throw new OwfException(message: "Cannot find a stack with id ${stackId}", exceptionType: OwfExceptionTypes.NotFound)
+        } else if((!stackInstance.owner || accountService.getLoggedInUser().id != stackInstance.owner.id) && !accountService.getLoggedInUserIsAdmin()) {
+            throw new OwfException(message: "You must be an administrator or owner of a stack to edit it.",
+                exceptionType: OwfExceptionTypes.Authorization)
+        } 
+
+
     }
 }

@@ -595,6 +595,14 @@ class SecurityFilters {
             configurationWidget.addTag('admin')
         }
 		
+        //allow users or admins to use stack editor
+        preferenceService.updateForUser(
+            path: 'guid_to_launch',
+            namespace: 'owf.admin.StackEditCopy',
+            userid: accountService.getLoggedInUser().id,
+            value: stackEdit.widgetGuid
+        )
+
         if (accountService.getLoggedInUserIsAdmin()) {
 
             // Update preferences
@@ -604,7 +612,7 @@ class SecurityFilters {
                 path: 'guid_to_launch',
                 value: userEdit.widgetGuid
             )
-             
+
             preferenceService.updateForUser(
                 path: 'guid_to_launch',
                 namespace: 'owf.admin.WidgetEditCopy',
@@ -622,12 +630,6 @@ class SecurityFilters {
                 namespace: 'owf.admin.DashboardEditCopy',
                 userid: admin.id,
                 value: dashboardEdit.widgetGuid
-            )
-            preferenceService.updateForUser(
-                path: 'guid_to_launch',
-                namespace: 'owf.admin.StackEditCopy',
-                userid: admin.id,
-                value: stackEdit.widgetGuid
             )
 
             // Create OWF Administrators group if it doesn't already exist
