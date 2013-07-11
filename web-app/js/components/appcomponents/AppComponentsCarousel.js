@@ -22,7 +22,7 @@
 
     Ozone.components.appcomponents.AppComponentsCarousel = SuperClass.extend({
 
-        className: 'appcomponents-menu',
+        className: 'appcomponents-carousel',
 
         // auto instantiate carousel
         autoInit: true,

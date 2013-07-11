@@ -44,6 +44,14 @@
         render: function () {
             this.$el.append(_.template(this.tpl, this.model.attributes));
             return this;
+        },
+
+        copy: function () {
+            var view = new Ozone.components.appcomponents.AppComponent({
+                model: this.model
+            }).render();
+
+            return view;
         }
 
     });

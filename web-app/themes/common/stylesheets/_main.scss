@@ -4,6 +4,10 @@ This CSS is for specific style for the OWF UI.  This does not include the Admin 
 specifically overriding any default ExtJS css rules for OWF specific elements.
 */
 
+a {
+    color: $link-color;
+}
+
 .hide {
     display: none !important;
 }

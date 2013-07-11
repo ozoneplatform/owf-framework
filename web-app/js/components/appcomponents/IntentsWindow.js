@@ -25,18 +25,22 @@
         className: 'intents-window',
 
         events: {
-            'dblclick .widget': '_onDblClick',
+            'dblclick .widget': '_onComponentDblClick',
+            'mousedown .widget': '_onComponentMouseDown',
             'click .remember': '_onRememberClick',
             'click .x-tool': 'cancel',
+            'click .show-new-component': '_showNewComponentView'
         },
 
         BLANK_IMAGE_SRC: "data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==",
 
-        showingOpenInstances: false,
+        isShowingOpenInstances: false,
+
+        noOfNewComponentsToShowAtOnce: 18,
 
         headerText: {
             openInstances: 'Select the component to which you would like to send this action: ',
-            allInstances: 'Select the component to which you would like to send this action:'
+            allInstances: 'Select the new component to which you would like to send this action:'
         },
 
         initialize: function () {
@@ -44,19 +48,11 @@
             _.extend(this, _.pick(this.options, 
                     ['dashboardContainer', 'matchingOpenedAppComponents', 'matchingAppComponents']));
 
-            if(this.matchingOpenedAppComponents.length > 0) {
-                this.showingOpenInstances = true;
-                this.matchingOpenedAppComponents.add(new Backbone.Model({
-                    id: 'new-component',
-                    name: 'A new component',
-                    image: this.BLANK_IMAGE_SRC,
-                    newComponent: true
-                }));
-            }
+            this.isShowingOpenInstances = this.matchingOpenedAppComponents.length > 0;
         },
 
         getHeaderText: function () {
-            return this.showingOpenInstances ? this.headerText.openInstances : this.headerText.allInstances;
+            return this.isShowingOpenInstances ? this.headerText.openInstances : this.headerText.allInstances;
         },
 
         render: function () {
@@ -68,35 +64,52 @@
                                 '<span>' + this.getHeaderText() + '</span>'+
                             '</div>' + 
                             '<div class="body"></div>' +
-                            '<div class="footer">' + 
-                                '<input type="checkbox" class="remember-checkbox">' +
-                                '<label class="remember">Remember this decision</label>' + 
-                            '</div>'
+                            '<div class="footer"></div>'
             );
-
             this.$body = this.$el.find('.body');
 
-            this.list = new Ozone.components.appcomponents.AppComponentsList({
-                collection: this.showingOpenInstances ? this.matchingOpenedAppComponents : this.matchingAppComponents
-            });
-
-            this.list.render().$el.appendTo(this.$body);
+            this.renderSubView()
+                .renderFooter();
 
             return this;
         },
 
+        renderSubView: function () {
+            this.list = new Ozone.components.appcomponents.AppComponentsList({
+                collection: this.isShowingOpenInstances ? this.matchingOpenedAppComponents : this.matchingAppComponents
+            });
+
+            this.list.render().$el.appendTo(this.$body);
+            return this;
+        },
+
+        renderFooter: function () {
+            var footerHTML = '';
+            if(this.isShowingOpenInstances) {
+                footerHTML += '<p>OR Choose a <a href="#" class="show-new-component">new component</a></p>';
+            }
+            
+            footerHTML += '<input type="checkbox" class="remember-checkbox">' +
+                            '<label class="remember">Remember this decision</label>';
+
+            this.$el.children('.footer').html(footerHTML);
+            return this;
+        },
+
         shown: function () {
-            if(this.showingOpenInstances) {
-                var $lastEl = this.list.$el.children(':last-child');
-                $lastEl.children('.thumb-wrap').hide();
-                $lastEl.outerHeight($lastEl.prev().outerHeight(true));
+            // show maximum of 3 rows
+            if(!this.isShowingOpenInstances && this.matchingAppComponents.length > 18) {
+                var $first = this.list.$el.children(':first-child');
+                this.list.$el.css({
+                    height: ($first.outerHeight(true) * 3)
+                });
             }
         },
 
         launch: function (model, isEnterPressed, isDragAndDrop) {
             this.hide();
 
-            if(this.showingOpenInstances) {
+            if(this.isShowingOpenInstances) {
                 this.dashboardContainer.activeDashboard.handleAlreadyLaunchedWidget(model.attributes);
             }
             else {
@@ -120,31 +133,73 @@
             return this.$el.find('.remember-checkbox').is(':checked');
         },
 
-        _onDblClick: function (evt) {
-            var model = $(evt.currentTarget).data('view').model,
-                $header;
+        _showNewComponentView: function (evt) {
+            evt.preventDefault();
+            this.isShowingOpenInstances = false;
 
-            if(this.showingOpenInstances && model.get('newComponent')) {
-                this.showingOpenInstances = false;
+            $header = this.$el.children('.header');
+            $header.children('span').html(this.getHeaderText());
 
-                $header = this.$el.children('.header');
-                $header.children('span').html(this.getHeaderText());
+            // detach to prevent reflows
+            this.$body.detach();
 
-                // detach to prevent reflows
-                this.$body.detach();
+            this.list.remove();
 
-                this.list.remove();
-                this.list = new Ozone.components.appcomponents.AppComponentsList({
-                    collection: this.matchingAppComponents
+            this.renderSubView()
+                .renderFooter()
+                .shown();
+            
+            this.$body.insertAfter($header);
+        },
+
+        _onComponentMouseDown: function (evt) {
+            var me = this,
+                $el = $(evt.currentTarget),
+                view = $el.data('view'),
+                model = view.model,
+                $doc = $(document),
+                zIndex = me.$el.css('z-index'),
+                $proxy;
+
+            evt.preventDefault();
+
+            me.$el.on('mouseleave.launch', function () {
+                me.launch(model, false, true);
+            });
+
+            $doc.on('mousemove.launch', function (evt) {
+                    // create proxy if not created
+                    if(!$proxy) {
+                        $proxy = view.copy().$el;
+                        $('body').append($proxy);
+                    }
+
+                    // move proxy to new location
+                    $proxy.css({
+                        position: 'absolute',
+                        left: evt.pageX + 25,
+                        top: evt.pageY + 25,
+                        zIndex: zIndex
+                    });
+
+                })
+                .on('mouseup.launch', function () {
+                    // remove proxy
+                    if($proxy) {
+                        $proxy.remove();
+                        $proxy = null;
+                    }
+
+                    me.$el.off('.launch');
+                    $doc.off('.launch');
+                    $doc = null;
                 });
+        },
 
-                this.$body.insertAfter($header);
+        _onComponentDblClick: function (evt) {
+            var model = $(evt.currentTarget).data('view').model;
 
-                this.list.render().$el.appendTo(this.$body);
-            }
-            else {
-                this.launch(model, false, false);
-            }
+            this.launch(model, false, false);
         },
 
         _onRememberClick: function (evt) {

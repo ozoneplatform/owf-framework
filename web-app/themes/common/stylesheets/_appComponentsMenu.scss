@@ -17,17 +17,10 @@
     .body {
         height: 106px;
     }
+}
 
-    .bx-viewport {
-        background: $widget-launcher-background-color;
-        border: 0px;
-        @include box-shadow(none);
-    }
-
-    .bx-loading {
-        background-color: $widget-launcher-background-color;
-        background-image: theme-image($theme-name, 'OWF-Spinner.gif');
-    }
+.appcomponents-carousel {
+    overflow-y: auto;
 }
 
 .widget {
@@ -87,6 +80,10 @@
     .remember {
         margin-left: 5px;
     }
+
+    .bx-wrapper {
+        height: 100%;
+    }
 }
 
 .appcomponents-menu, .intents-window {
@@ -101,6 +98,10 @@
         span {
             font-weight: bold;
         }
+    }
+
+    .footer {
+        clear: both;
     }
 
     .search-input, .x-tool {
@@ -119,7 +120,14 @@
         vertical-align: middle;
     }
 
-    .body {
-        overflow: hidden;
+    .bx-viewport {
+        background: $widget-launcher-background-color;
+        border: 0px;
+        @include box-shadow(none);
+    }
+
+    .bx-loading {
+        background-color: $widget-launcher-background-color;
+        background-image: theme-image($theme-name, 'OWF-Spinner.gif');
     }
 }
