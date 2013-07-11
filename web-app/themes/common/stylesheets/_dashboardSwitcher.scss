@@ -100,8 +100,9 @@
 
     #dashboard-switcher-descriptor {
         color: $dashboard-switcher-dashboard-text-color;
-        padding: 0 40px;
+        padding: 0 15px;
         top: 20px !important;
+        position: relative;
     }
 
     #dashboard-switcher-body {

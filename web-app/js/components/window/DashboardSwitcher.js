@@ -205,6 +205,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             Ext.DomHelper.append( cmp.body,
             '<div class="actions">'+
                 '<ul>'+
+                	'<div class="moreImg"></div><li class="storeLink">Discover More </br>in the Store</li>'+
+            		'<li class="createLink">Create New</br>App</li>'+
                     '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-qtip="Name, describe and design a new dashboard.">+</li>'+
                 '</ul>'+
             '</div>');
@@ -236,6 +238,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             .on('click', '.dashboard', $.proxy(me.onDashboardClick, me))
             .on('click', '.stack', $.proxy(me.onStackClick, me))
             .on('click', '.create', $.proxy(me.createDashboard, me))
+            .on('click', '.storeLink',  $.proxy(me.switchToMarketplace,me))
             .on('mouseover', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
             .on('mouseout', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
             .on('focus', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
@@ -913,6 +916,25 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     	if(this.$stackDashboards) {
     		this.$stackDashboards.children('.dashboards').html( this.tpl.applyTemplate( stack.dashboards ) )
     	}
+    },
+    
+    switchToMarketplace: function() {
+    	var mpButton = $('.marketBtn')
+    	
+    	if(mpButton) {
+    		mpButton.click()
+    		this.close();
+    	}
+    },
+    
+    verifyDiscoverMoreButton: function() {
+    	var mpButton = $('.marketBtn')
+    	var discoverMoreButton = $('.storeLink')
+    	
+    	if(mpButton.is(':visible'))
+    		discoverMoreButton.show();
+    	else
+    		discoverMoreButton.hide();
     },
 
     restoreDashboard: function (evt) {
