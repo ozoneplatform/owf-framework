@@ -151,18 +151,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                         }
                     } 
                     str += '<div class=\'dashboard-metadata\'>';
-                    var createdBy = Ext.htmlEncode(Ext.htmlEncode(values.createdBy.userRealName));
-                    if (createdBy) {
-                        str += '<p class=\'created-by\'><label>Created by: </label>' + createdBy + '</p>';
-                    }
-                    else {
-                        //If createdBy is null we just say the "System" made it
-                        str += '<p class=\'created-by\'><label>Created by: </label>' + 'System' + '</p>';
-                        
-                    }
-                    
-                    str += '<p class=\'last-updated\'><label>Last Modified: </label>' + (values.prettyEditedDate || '') + '</p></div></div>"';
-                    return str;
+                 
                 }
             },
             
@@ -205,7 +194,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             Ext.DomHelper.append( cmp.body,
             '<div class="actions">'+
                 '<ul>'+
-                	'<div class="moreImg"></div><li class="storeLink">Discover More </br>in the Store</li>'+
+                	'<div class="storeImg"></div><li class="storeLink">Discover More </br>in the Store</li>'+
             		'<div class="createImg"></div><li class="createLink">Create </br>New App</li>'+
                     '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-qtip="Name, describe and design a new dashboard.">+</li>'+
                 '</ul>'+
@@ -930,7 +919,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     verifyDiscoverMoreButton: function() {
     	var mpButton = $('.marketBtn')
     	var discoverMoreButton = $('.storeLink')
-    	var discoverMoreIcon = $('.moreImg')
+    	var discoverMoreIcon = $('.storeImg')
     	var createButton = $('.createLink')
     	var createIcon = $('.createImg')
     	
