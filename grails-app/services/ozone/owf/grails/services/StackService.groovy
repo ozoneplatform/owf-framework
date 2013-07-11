@@ -223,7 +223,7 @@ class StackService {
                 stackContext: params.stackContext ?: stack.stackContext,
                 imageUrl: params.imageUrl ?: stack.imageUrl,
                 descriptorUrl: params.descriptorUrl ?: stack.descriptorUrl,
-                user: params.owner ?: (params.id  >= 0 ? stack.owner : accountService.getLoggedInUser())
+                owner: params.owner ?: (params.id  >= 0 ? stack.owner : accountService.getLoggedInUser())
             ]
             
             stack.save(flush: true, failOnError: true)
