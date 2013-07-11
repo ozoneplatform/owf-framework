@@ -22,8 +22,13 @@
             this.$el.data('view', this);
         },
 
+        isVisible: function () {
+            return this.$el.is(':visible');
+        },
+
         toggle: function () {
-            this.$el.is(':visible') ? this.hide() : this.show();
+            this.isVisible() ? this.hide() : this.show();
+            return this;
         },
 
         show: function () {

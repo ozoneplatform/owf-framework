@@ -762,8 +762,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @param params JSON object containing the guid of the widget to close.
      */
     refreshWidgetLaunchMenu: function() {
-        var widgetLauncher = Ext.getCmp('widget-launcher');
-        widgetLauncher.refresh();
+        this.dashboardContainer.refreshAppComponentsView();
     },
 
     /**

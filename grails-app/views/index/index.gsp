@@ -104,7 +104,7 @@
 
                 var widgets = ${widgets};
                 OWF.Collections = {};
-                OWF.Collections.Widgets = new Ozone.data.collections.Widgets({
+                OWF.Collections.AppComponents = new Ozone.data.collections.Widgets({
                     results:  widgets.length,
                     rows: widgets
                 }, {

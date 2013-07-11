@@ -41,6 +41,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     //dashboards will refresh before the switcher opens
     dashboardsNeedRefresh: false,
 
+    // flag indicating whether or not to fetch app components from server
+    fetchAppComponents: false,
+
     // private
     initComponent: function() {
         var me = this,
@@ -801,6 +804,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         widgetSwitcher.center();
     },
 
+    refreshAppComponentsView: function () {
+        this.fetchAppComponents = true;
+    },
+
     showAppComponentsView: function () {
         var me = this,
             appComponentsBtn;
@@ -810,9 +817,34 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             return;
         }
 
+        if(me.fetchAppComponents) {
+            if(me.appComponentsView && me.appComponentsView.isVisible()) {
+                me.appComponentsView.hide();
+                return;
+            }
+            else {
+                me.fetchAppComponents = false;
+                me.loadMask.show();
+
+                // remove existing view
+                if(me.appComponentsView) {
+                    me.appComponentsView.$el.off('hide');
+                    me.appComponentsView.remove();
+                    me.appComponentsView = null;
+                }
+
+                // fetch and show view
+                OWF.Collections.AppComponents.fetch().done(function () {
+                    me.showAppComponentsView();
+                    me.loadMask.hide();
+                });
+                return;
+            }
+        }
+
         if(!me.appComponentsView) {
             me.appComponentsView = new Ozone.components.appcomponents.AppComponentsView({
-                collection: OWF.Collections.Widgets,
+                collection: OWF.Collections.AppComponents,
                 dashboardContainer: me
             });
             appComponentsBtn = me.getBanner().getComponent('appComponentsBtn');
@@ -1167,19 +1199,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
     },
 
-    //    showCustomizeWindow: function() {
-    //        if(!this.customizeDashWindow) {
-    //            this.customizeDashWindow = Ext.widget('customizedashboardwindow', {
-    //                dashboardContainer: this
-    //            });
-    //        }
-    //        else {
-    //            this.customizeDashWindow.getComponent('customizeDashboardPanel').refresh();
-    //        }
-    //
-    //        this.customizeDashWindow.isVisible() ? this.customizeDashWindow.close() : this.customizeDashWindow.show();
-    //    },
-
     openDashboardMgr: function() {
         var winId = "user-manage-dashboards";
         var win = Ext.getCmp(winId);
@@ -1532,7 +1551,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             return data;
         });
 
-        var matchingAppComponents = OWF.Collections.Widgets.findByReceiveIntent(intent);
+        var matchingAppComponents = OWF.Collections.AppComponents.findByReceiveIntent(intent);
 
         this.intentsWindow = new Ozone.components.appcomponents.IntentsWindow({
             matchingOpenedAppComponents: new Ozone.data.collections.Widgets(matchingOpenedAppComponents),
