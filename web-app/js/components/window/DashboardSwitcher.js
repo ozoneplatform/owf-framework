@@ -11,7 +11,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     ui: 'system-window',
     store: null,
     closable: true,
-    title: 'My Apps',
+    title: 'Dashboards',
+    iconCls: 'dashboard-switcher-header-icon',
     cls: 'system-window',
     resizable: false,
     draggable: false,
@@ -25,8 +26,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     dashboardItemWidth: 0,
 
     //size of switcher in dashboard units
-    minDashboardsWidth: 0,
-    maxDashboardsWidth: 6,
+    minDashboardsWidth: 3,
+    maxDashboardsWidth: 5,
     maxDashboardsHeight: 3,
 
     storeLengthChanged: true,
@@ -38,8 +39,8 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     DROP_LEFT_CLS: 'x-view-drop-indicator-left',
     DROP_RIGHT_CLS: 'x-view-drop-indicator-right',
 
-    _previouslyFocusedStackOrDashboard: null,
-    _previouslyHoveredStackOrDashboard: null,
+
+    _previouslyFocusedStackOrDashboard : null,
 
     dashboardSelectionDeferred: null,
 
@@ -91,17 +92,17 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         me._deletedStackOrDashboards = [];
 
         me.tpl = new Ext.XTemplate(
-            '<div id="dashboard-switcher-descriptor">All of your applications appear here. To start an App, click it. To edit or delete, hover over it and select \'Details\'.</div>',
             '<div class="all-dashboards">',
                 '<tpl for=".">',
                     '<div id="{[this.getName(values)+this.getId(values)]}" class="{[this.getClass(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}" {[this.getToolTip(values)]}>',
                         '<div class="thumb-wrap">',
-                            '{[this.getIcon(values)]}',
+                            '<div class="thumb {layout}">',
+                            '</div>',
                         '</div>',
+                        '{[this.getActions(values)]}',
                         '<div class="{[this.getName(values)]}-name">',
                             '{[this.encodeAndEllipsize(values.name)]}',
                         '</div>',
-                        '{[this.getActions(values)]}',
                     '</div>',
                 '</tpl>',
             '</div>',
@@ -116,13 +117,6 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             },
             getName: function (values) {
                 return values.isStack ? 'stack' : 'dashboard';
-            },
-            getIcon: function(values) {
-                if (values.iconImageUrl) {
-                    return '<div class="thumb" style="background-image: url(' + values.iconImageUrl + ') !important"></div>';
-                } else {
-                    return '<div class="thumb"></div>';
-                }
             },
             getToolTip: function (values) {
                 var str = 'data-qtip="<div class=\'dashboard-tooltip-content\'>' +
@@ -201,29 +195,19 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         
         me.on('afterrender', function (cmp) {
             me.tpl.overwrite( cmp.body, stackOrDashboards );
-
             Ext.DomHelper.append( cmp.body,
-            '<div class="actions">'+
-                '<ul>'+
-                	'<div class="moreImg"></div><li class="storeLink">Discover More </br>in the Store</li>'+
-            		'<li class="createLink">Create New</br>App</li>'+
-                    '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-qtip="Name, describe and design a new dashboard.">+</li>'+
-                '</ul>'+
-            '</div>');
+            '<ul class="actions">'+
+                '<li class="manage" tabindex="0" data-qtitle="Manage" data-qtip="Activates the Share, Restore, Edit and Delete manager buttons.">Manage</li>'+
+                '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-qtip="Name, describe and design a new dashboard.">+</li>'+
+            '</ul>');
 
             cmp.actionsEl = cmp.body.select('> .actions').first();
 
             me.bindEvents(cmp);
-
-            $('.all-dashboards').bxSlider({
-                oneItemPerSlide: false,
-                infiniteLoop: true,
-                touchEnabled: false
-            });
         });
 
         me.on('beforeclose', me.onClose, me);
-        // me.on('show', me.updateWindowSize, me);
+        me.on('show', me.updateWindowSize, me);
         me.on('show', me.initCircularFocus, me, {single: true});
         me.on('show', me.focusActiveDashboard, me);
         me.mon(me.dashboardContainer, OWF.Events.Dashboard.CHANGED, me.onDashboardChanged, me);
@@ -237,12 +221,10 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         $dom
             .on('click', '.dashboard', $.proxy(me.onDashboardClick, me))
             .on('click', '.stack', $.proxy(me.onStackClick, me))
+            .on('click', '.manage', $.proxy(me.toggleManage, me))
             .on('click', '.create', $.proxy(me.createDashboard, me))
-            .on('click', '.storeLink',  $.proxy(me.switchToMarketplace,me))
             .on('mouseover', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
-            .on('mouseout', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
             .on('focus', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
-            .on('blur', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
             .on('click', '.dashboard .restore', $.proxy(me.restoreDashboard, me))
             .on('click', '.dashboard .share', $.proxy(me.shareDashboard, me))
             .on('click', '.dashboard .edit', $.proxy(me.editDashboard, me))
@@ -251,6 +233,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
 
         me.initKeyboardNav();
+
 
         // drag and drop
         var $draggedItem,
@@ -471,11 +454,25 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                     me.deleteStack(evt);
                 }
             })
+            .on('focus', '.manage', function (evt) {
+                $(evt.currentTarget).addClass('selected');
+            })
+            .on('blur', '.manage', function (evt) {
+                if(!me._managing) {
+                    $(evt.currentTarget).removeClass('selected');
+                }
+            })
             .on('focus', '.create', function (evt) {
                 $(evt.currentTarget).addClass('selected');
             })
             .on('blur', '.create', function (evt) {
                 $(evt.currentTarget).removeClass('selected');
+            })
+            .on('keyup', '.manage', function (evt) {
+                if(evt.which === Ext.EventObject.ENTER) {
+                    me.toggleManage(evt);
+                    $(evt.currentTarget).addClass('selected');
+                }
             })
             .on('keyup', '.create', function (evt) {
                 if(evt.which === Ext.EventObject.ENTER) {
@@ -708,6 +705,10 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             }
             return;
         }
+
+        setTimeout(function () {
+            selectedEl && selectedEl.focus();
+        }, 500);
     },
 
     getDashboard: function ($el) {
@@ -724,7 +725,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     },
 
     onDashboardClick: function (evt) {
-        if (evt.type !== 'click' && evt.which !== Ext.EventObject.ENTER)
+        if((evt.type !== 'click' && evt.which !== Ext.EventObject.ENTER) || this._managing === true)
             return;
 
         var $clickedDashboard = $(evt.currentTarget),
@@ -889,21 +890,31 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     },
 
     onMouseOver: function (evt) {
-        var el = $(evt.currentTarget);
+        var el,
+            $ = jQuery;
 
-        if (this._previouslyHoveredStackOrDashboard != null) {
-            $('ul', this._previouslyHoveredStackOrDashboard).addClass('hide');    
+        if( !this._managing )
+            return;
+
+        el = $(evt.currentTarget);
+
+        if(this._lastManageEl) {
+            if(el[0] === this._lastManageEl[0]) {
+                return;
+            }
+            else {
+                //$('ul', this._lastManageEl).slideUp();
+                $('ul', this._lastManageEl).addClass('hide');
+                //this.hideStackDashboards();
+            }
         }
-        
-        $('ul', el).removeClass('hide');    
-        
-        this._previouslyHoveredStackOrDashboard = el;
-    },
 
-    onMouseLeave: function(evt) {
-        var el = $(evt.currentTarget);
+        this._lastManageEl = el;
 
-        $('ul', this._previouslyHoveredStackOrDashboard).addClass('hide');    
+        //$('ul', el).slideDown();
+        $('ul', this._lastManageEl).removeClass('hide');
+
+        $('.dashboard, .stack', this.el.dom).css('height', el.height() + 'px');
     },
 
     updateDashboardEl: function ($dashboard, dashboard) {
@@ -917,24 +928,44 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     		this.$stackDashboards.children('.dashboards').html( this.tpl.applyTemplate( stack.dashboards ) )
     	}
     },
-    
-    switchToMarketplace: function() {
-    	var mpButton = $('.marketBtn')
-    	
-    	if(mpButton) {
-    		mpButton.click()
-    		this.close();
-    	}
+
+    toggleManage: function (evt) {
+        var $manageBtn;
+
+        if(evt) {
+            $manageBtn = $(evt.currentTarget);
+            this.$manageBtn = $manageBtn;
+        }
+
+        if( this._managing ) {
+            this.resetManage();
+            this._managing = false;
+        }
+        else {
+            // add selected class to manage button
+            $manageBtn && $manageBtn.addClass('selected');
+            this._managing = true;
+            if(this._previouslyFocusedStackOrDashboard) {
+                this._previouslyFocusedStackOrDashboard.trigger('mouseover');
+            }
+        }
     },
-    
-    verifyDiscoverMoreButton: function() {
-    	var mpButton = $('.marketBtn')
-    	var discoverMoreButton = $('.storeLink')
-    	
-    	if(mpButton.is(':visible'))
-    		discoverMoreButton.show();
-    	else
-    		discoverMoreButton.hide();
+
+    resetManage: function () {
+        if(!this._managing)
+            return;
+
+        this.$manageBtn.removeClass('selected');
+        // reset the height to normal
+        $('.dashboard, .stack', this.el.dom).css('height', '');
+        
+        // hide action buttons of previously clicked stack
+        if( this._lastManageEl ) {
+             //$('ul', this._lastManageEl).slideUp();
+             $('ul', this._lastManageEl).addClass('hide');
+             this._lastManageEl = null;
+        }
+        this._managing = false;
     },
 
     restoreDashboard: function (evt) {
@@ -1334,6 +1365,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     onClose: function() {
         var me = this;
 
+        me.resetManage();
         //me.tearDownCircularFocus();
 
         this.dashboardSelectionDeferred && this.dashboardSelectionDeferred.state() == "pending" && this.dashboardSelectionDeferred.reject();
