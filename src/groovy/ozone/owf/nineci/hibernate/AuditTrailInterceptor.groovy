@@ -4,6 +4,7 @@ import org.hibernate.SessionFactory
 import org.hibernate.type.Type
 import org.apache.log4j.Logger
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import ozone.owf.grails.domain.Person
 import ozone.owf.grails.services.AccountService
 
 
@@ -15,12 +16,14 @@ class AuditTrailInterceptor extends EmptyInterceptor {
     static final String EDITED_DATE = CONF.getProperty("stamp.audit.editedDate")
     static final String CREATED_DATE = CONF.getProperty("stamp.audit.createdDate")
 
-	SessionFactory sessionFactory
-	
     AccountService accountService
 
     boolean onFlushDirty(Object entity, Serializable id, Object[] currentState,Object[] previousState, String[] propertyNames,Type[] types) {
       
+		if(!isAuditable(entity)){
+			return true
+		}
+		
         def metaClass = entity.metaClass
         MetaProperty property = metaClass.hasProperty(entity, EDITED_DATE)
         List fieldList = propertyNames.toList()
@@ -39,33 +42,37 @@ class AuditTrailInterceptor extends EmptyInterceptor {
 
     boolean onSave(Object entity, Serializable id, Object[] state,String[] propertyNames, Type[] types) {
 
+		//Making the assumption that if there is no created by field then this is not an auditable object
+		//Auditing Person would be really bad because it would result in infinite loop since it is queried in getUserId
+		if(entity instanceof Person || !isAuditable(entity)){
+			return true
+		}
        
-        def metaClass = entity.metaClass
-        MetaProperty property = metaClass.hasProperty(entity, CREATED_DATE)
-        def time = System.currentTimeMillis()
-        List fieldList = propertyNames.toList()
-        Object userId = getUserID()
+        List fieldList = propertyNames.toList()		
+
+		MetaProperty createdDt = entity.metaClass.hasProperty(entity, CREATED_DATE)
+		def now = createdDt.getType().newInstance([System.currentTimeMillis()] as Object[])
 		
-        if(property) {
-            def now = property.getType().newInstance([time] as Object[] )
-            setValue(state, fieldList, CREATED_DATE, now)
-        }
-        property = metaClass.hasProperty(entity,EDITED_DATE)
-        if(property) {
-            def now = property.getType().newInstance([time] as Object[] )
-            setValue(state, fieldList, EDITED_DATE, now)
-        }
-        property = metaClass.hasProperty(entity,EDITED_BY)
-        if(property) {
-            setValue(state, fieldList, EDITED_BY, userId)
-        }
-        property = metaClass.hasProperty(entity,CREATED_BY)
-        if(property) {
-            setValue(state, fieldList, CREATED_BY, userId)
-        }
+		//Set date fields
+		setValue(state, fieldList, CREATED_DATE, now)
+		setValue(state, fieldList, EDITED_DATE, now)
+		
+		//Set user fields
+		Object userId = getUserID()
+		setValue(state, fieldList, EDITED_BY, userId)
+		setValue(state, fieldList, CREATED_BY, userId)
+
     	return true
     }
 
+	private boolean isAuditable(Object entity){
+		return entity.metaClass.hasProperty(entity,CREATED_BY)    && 
+			   entity.metaClass.hasProperty(entity,CREATED_DATE)  && 
+			   entity.metaClass.hasProperty(entity,EDITED_BY)     && 
+			   entity.metaClass.hasProperty(entity,EDITED_DATE)    
+	}
+	
+	
     def setValue(Object[] currentState, List fieldList, String propertyToSet, Object value) {
         int index = fieldList.indexOf(propertyToSet)
         if (index >= 0) {
@@ -74,7 +81,6 @@ class AuditTrailInterceptor extends EmptyInterceptor {
     }
 
     Object getUserID() {
-
         if (accountService.getLoggedInUsername()) {
             return accountService.getLoggedInUserReadOnly()    
         } else {
