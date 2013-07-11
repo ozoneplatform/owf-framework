@@ -801,7 +801,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         widgetSwitcher.center();
     },
 
-    showAppComponentsCarousel: function () {
+    showAppComponentsView: function () {
         var me = this,
             appComponentsBtn;
 
@@ -811,7 +811,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
 
         if(!me.appComponentsView) {
-            me.appComponentsView = new Ozone.components.appcomponents.AppComponentsCarousel({
+            me.appComponentsView = new Ozone.components.appcomponents.AppComponentsView({
                 collection: OWF.Collections.Widgets,
                 dashboardContainer: me
             });

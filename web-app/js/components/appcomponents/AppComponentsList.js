@@ -40,6 +40,7 @@
         initialize: function () {
             SuperClass.prototype.initialize.apply(this, arguments);
             _.bindAll(this, 'addOne');
+            this.collection = this.options.collection;
             this.addFilterFn = this.options.addFilterFn || this.addFilterFn;
         },
 
@@ -52,7 +53,7 @@
         addAll: function () {
             _.invoke(this.views, 'remove');
             this.views = [];
-            this.options.collection.each(this.addOne);
+            this.collection.each(this.addOne);
             return this;
         },
 

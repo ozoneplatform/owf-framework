@@ -658,6 +658,7 @@ uiperformance.bundles = [
                         'components/appcomponents/AppComponent',
                         'components/appcomponents/AppComponentsList',
                         'components/appcomponents/AppComponentsCarousel',
+                        'components/appcomponents/AppComponentsView',
                         'components/appcomponents/IntentsWindow',
                         'components/launchMenu/DDView',
                         'components/launchMenu/Carousel',

@@ -145,7 +145,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         Ozone.KeyMap.addBinding([
             Ext.apply(Ozone.components.keys.HotKeys.LAUNCH_MENU, {
                 scope: this.dashboardContainer,
-                fn: this.dashboardContainer.showAppComponentsCarousel
+                fn: this.dashboardContainer.showAppComponentsView
             }),
             Ext.apply(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER, {
                 scope: this.dashboardContainer,
@@ -198,7 +198,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 cls: 'bannerBtn appComponentsBtn',
                 enableToggle: true,
                 scope: this.dashboardContainer,
-                handler: this.dashboardContainer.showAppComponentsCarousel,
+                handler: this.dashboardContainer.showAppComponentsView,
                 listeners: {
                     afterrender: {
                         fn: function(btn) {
