@@ -828,7 +828,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                 // remove existing view
                 if(me.appComponentsView) {
-                    me.appComponentsView.$el.off('hide');
+                    me.appComponentsView.$el.off('.toggle');
                     me.appComponentsView.remove();
                     me.appComponentsView = null;
                 }
@@ -848,8 +848,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 dashboardContainer: me
             });
             appComponentsBtn = me.getBanner().getComponent('appComponentsBtn');
-            me.appComponentsView.$el.on('hide', function () {
+            me.appComponentsView.$el.on('hide.toggle', function () {
                 appComponentsBtn.toggle(false, true);
+            });
+            me.appComponentsView.$el.on('show.toggle', function () {
+                appComponentsBtn.toggle(true, true);
             });
 
             $('#dashboardCardPanel').append(me.appComponentsView.render().el);

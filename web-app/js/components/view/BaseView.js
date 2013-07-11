@@ -20,6 +20,7 @@
 
         initialize: function () {
             this.$el.data('view', this);
+            _.extend(this, _.omit(this.options, 'el', '$el'));
         },
 
         isVisible: function () {

@@ -25,8 +25,9 @@
         id: 'intents-window',
 
         events: {
-            'dblclick .widget': '_onComponentDblClick',
+            'mouseenter .widget': '_onComponentMouseEnter',
             'mousedown .widget': '_onComponentMouseDown',
+            'click .widget': '_onComponentClick',
             'click .remember': '_onRememberClick',
             'click .x-tool': 'cancel',
             'click .show-new-component': '_showNewComponentView'
@@ -45,9 +46,6 @@
 
         initialize: function () {
             SuperClass.prototype.initialize.apply(this, arguments);
-            _.extend(this, _.pick(this.options, 
-                    ['dashboardContainer', 'matchingOpenedAppComponents', 'matchingAppComponents']));
-
             this.isShowingOpenInstances = this.matchingOpenedAppComponents.length > 0;
         },
 
@@ -56,7 +54,6 @@
         },
 
         render: function () {
-                                
             this.$el.html(  '<div class="header">' +
                                 '<a class="x-tool">' +
                                     '<img src="' + this.BLANK_IMAGE_SRC + '" class="x-tool-close">' +
@@ -152,6 +149,14 @@
             this.$body.insertAfter($header);
         },
 
+        _onComponentMouseEnter: _.debounce(function (evt) {
+            var id = $(evt.currentTarget).data('id');
+
+            if(id && this.isShowingOpenInstances) {
+                Ext.getCmp(id).el.frame('#f00');
+            }
+        }, 500),
+
         _onComponentMouseDown: function (evt) {
             if(this.isShowingOpenInstances) {
                 return;
@@ -199,9 +204,8 @@
                 });
         },
 
-        _onComponentDblClick: function (evt) {
+        _onComponentClick: function (evt) {
             var model = $(evt.currentTarget).data('view').model;
-
             this.launch(model, false, false);
         },
 

@@ -29,9 +29,9 @@
 
         addFilterFn: null,
 
-        selected: null,
-
+        selectable: true,
         selectClass: 'selected',
+        selected: null,
 
         events: {
             'click .widget': '_onClick',
@@ -40,8 +40,6 @@
         initialize: function () {
             SuperClass.prototype.initialize.apply(this, arguments);
             _.bindAll(this, 'addOne');
-            this.collection = this.options.collection;
-            this.addFilterFn = this.options.addFilterFn || this.addFilterFn;
         },
 
         render: function () {
@@ -84,13 +82,15 @@
         },
 
         _onClick: function (evt) {
-            var view = $(evt.currentTarget).data('view');
+            if(this.selectable) {
+                var view = $(evt.currentTarget).data('view');
 
-            if(this.selected) {
-                this.selected.$el.removeClass(this.selectClass);
+                if(this.selected) {
+                    this.selected.$el.removeClass(this.selectClass);
+                }
+                this.selected = view;
+                this.selected.$el.addClass(this.selectClass);
             }
-            this.selected = view;
-            this.selected.$el.addClass(this.selectClass);
         }
 
     });

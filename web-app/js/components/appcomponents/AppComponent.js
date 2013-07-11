@@ -32,13 +32,8 @@
         attributes: function () {
             return {
                 tabindex: 0,
-                'data-id': this.model.get('id')
+                'data-id': this.model.get('id') || this.model.get('uniqueId')
             };
-        },
-
-        initialize: function () {
-            SuperClass.prototype.initialize.apply(this, arguments);
-            this.model = this.options.model;
         },
 
         render: function () {

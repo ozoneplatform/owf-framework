@@ -30,11 +30,6 @@
         // boolean flag indicating whether or not carousel is instantiated
         _carousel: false,
 
-        initialize: function () {
-            SuperClass.prototype.initialize.apply(this, arguments);
-            this.autoInit = this.options.autoInit || this.autoInit;
-        },
-
         filter: function (query) {
             this.destroyCarousel();
             SuperClass.prototype.filter.call(this, query);

@@ -26,7 +26,7 @@
 
         events: _.extend({}, SuperClass.prototype.events, {
             'keyup .search-input': '_inputKeyUp',
-            'dblclick .widget': '_onDblClick',
+            'click .widget': '_onDblClick',
             'click .x-tool': 'hide'
         }),
 
@@ -46,6 +46,7 @@
             this.carousel = new Ozone.components.appcomponents.AppComponentsCarousel({
                 el: this.$body,
                 collection: this.options.collection,
+                selectable: false,
                 addFilterFn: function (model, index) {
                     if(model.get('name').indexOf(this.searchQuery) < 0 || model.get('widgetTypes')[0].name !== 'standard') {
                         return false;
