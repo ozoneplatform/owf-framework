@@ -205,7 +205,7 @@ class ServiceModelService {
                         totalUsers: params.totalUsers ?: 0,
                         totalGroups: params.totalGroups ?: 0,
                         totalWidgets: domain.uniqueWidgetCount ?: 0,
-                        user: createServiceModel(domain.user)
+                        owner: createServiceModel(domain.owner)
                         )
                 break
             default:

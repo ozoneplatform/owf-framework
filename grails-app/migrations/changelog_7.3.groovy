@@ -109,4 +109,16 @@ databaseChangeLog = {
             }
         }
     }
+
+    changeSet(author: "owf", id: "7.3-7", context: "create, upgrade, 7.3") {
+		addColumn(tableName: "stack") {
+			column(name: "owner_id", type: "bigint")
+		}
+	
+		createIndex(indexName: "FK68AC2888656347D", tableName: "stack") {
+			column(name: "owner_id")
+		}
+	
+		addForeignKeyConstraint(baseColumnNames: "owner_id", baseTableName: "stack", constraintName: "FK68AC2888656347D", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
+	}
 }

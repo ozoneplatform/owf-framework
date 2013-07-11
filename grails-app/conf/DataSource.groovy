@@ -16,7 +16,7 @@ hibernate {
 // environment specific settings
 environments {
 	development {
-		dataSource {
+		/*dataSource {
             pooled = true
             url = "jdbc:hsqldb:file:${basedir}/prodDb;shutdown=true"
 		    //TO-DO Address the issue with bootstrap vs. prodDb.script...
@@ -30,15 +30,15 @@ environments {
                 testOnReturn = true
                 validationQuery = "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS"
 		    }
-	    }
-        /*
+	    }*/
+        
         dataSource {
             pooled = true
             dbCreate = "none"
             driverClassName = "com.mysql.jdbc.Driver"
-            url="jdbc:mysql://owfdb01:3306/owf_build"
-            username = "owfbuild"
-            password = "0wf-bu1!d"
+            url="jdbc:mysql://localhost/owf_dbm"
+            username = "sa"
+            password = "pass"
             dialect = "org.hibernate.dialect.MySQL5InnoDBDialect"
             properties {
                 minEvictableIdleTimeMillis = 180000
@@ -49,7 +49,7 @@ environments {
                 testOnReturn = true
                 validationQuery = "SELECT 1"
             }
-        }*/
+        }
     }
 	test {
 		dataSource {

@@ -223,7 +223,7 @@ class StackService {
                 stackContext: params.stackContext ?: stack.stackContext,
                 imageUrl: params.imageUrl ?: stack.imageUrl,
                 descriptorUrl: params.descriptorUrl ?: stack.descriptorUrl,
-                user: params.user ?: (params.id  >= 0 ? stack.user : accountService.getLoggedInUser())
+                user: params.owner ?: (params.id  >= 0 ? stack.owner : accountService.getLoggedInUser())
             ]
             
             stack.save(flush: true, failOnError: true)
@@ -712,7 +712,7 @@ class StackService {
 
         if(!stackInstance) {
             throw new OwfException(message: "Cannot find a stack with id ${stackId}", exceptionType: OwfExceptionTypes.NotFound)
-        } else if((!stackInstance.user || accountService.getLoggedInUser().id != stackInstance.user.id) && !accountService.getLoggedInUserIsAdmin()) {
+        } else if((!stackInstance.owner || accountService.getLoggedInUser().id != stackInstance.owner.id) && !accountService.getLoggedInUserIsAdmin()) {
             throw new OwfException(message: "You must be an administrator or owner of a stack to edit it.",
                 exceptionType: OwfExceptionTypes.Authorization)
         } 

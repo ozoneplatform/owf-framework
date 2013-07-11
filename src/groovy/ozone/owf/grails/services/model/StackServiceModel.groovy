@@ -12,6 +12,6 @@ class StackServiceModel extends AbstractServiceModel {
     Integer totalUsers = 0
     Integer totalGroups = 0
     Integer totalWidgets = 0
-    PersonServiceModel user
+    PersonServiceModel owner
 }
 
