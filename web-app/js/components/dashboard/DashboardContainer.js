@@ -1422,8 +1422,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         var me = this,
             intentConfig,
             deferredSendIntentListener,
-            isRememberSelection = false;
-
+            isRememberSelection = false,
+            bodyEl = Ext.getBody();
+        
+        bodyEl.mask().addCls('intent-modal-mask');
         me._initIntentsWindow(intent).show();
 
         me.intentsWindow.$el
@@ -1442,6 +1444,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             })
             .on('hide', function () {
                 isRememberSelection = me.intentsWindow.isRememberSelection();
+                bodyEl.unmask();
                 setTimeout(function () {
                     me.intentsWindow.remove();
                     delete me.intentsWindow;
