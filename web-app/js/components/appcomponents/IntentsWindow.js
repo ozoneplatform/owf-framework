@@ -25,7 +25,6 @@
         className: 'intents-window',
 
         events: {
-            'click .widget': '_onSelect',
             'dblclick .widget': '_onDblClick',
             'click .remember': '_onRememberClick',
             'click .x-tool': 'cancel',
@@ -36,8 +35,8 @@
         showingOpenInstances: false,
 
         headerText: {
-            openInstances: 'Select the components you would like to send this action to: ',
-            allInstances: 'These components work with your action. Double click or drag one.'
+            openInstances: 'Select the component to which you would like to send this action: ',
+            allInstances: 'Select the component to which you would like to send this action:'
         },
 
         initialize: function () {
@@ -69,7 +68,7 @@
                                 '<span>' + this.getHeaderText() + '</span>'+
                             '</div>' + 
                             '<div class="body"></div>' +
-                            '<div class="footer" style="visibility: hidden;">' + 
+                            '<div class="footer">' + 
                                 '<input type="checkbox" class="remember-checkbox">' +
                                 '<label class="remember">Remember this decision</label>' + 
                             '</div>'
@@ -119,10 +118,6 @@
 
         isRememberSelection: function () {
             return this.$el.find('.remember-checkbox').is(':checked');
-        },
-
-        _onSelect: function () {
-            this.$el.children('.footer').css('visibility', '');
         },
 
         _onDblClick: function (evt) {
