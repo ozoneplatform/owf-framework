@@ -36,7 +36,7 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 
         if(applicationConfiguration.type == "Integer"){
             def val = applicationConfiguration.value
-            if(!val.isInteger() || Integer.valueOf(val) <= 0){
+            if(!val.isInteger() || Integer.valueOf(val) < 0){
                 applicationConfiguration.errors.rejectValue('value', "application.configuration.invalid.integer.gt.zero")
                 return
             }
@@ -44,10 +44,18 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 
         if(applicationConfiguration.type == "Decimal"){
             def val = applicationConfiguration.value
-            if(!val.isNumber() || Double.valueOf(val) <= 0){
+            if(!val.isNumber() || Double.valueOf(val) < 0){
                 applicationConfiguration.errors.rejectValue('value', "application.configuration.invalid.number.gt.zero")
                 return
             }               
+        }
+
+        if(applicationConfiguration.code == CUSTOM_HEADER_HEIGHT.code || applicationConfiguration.code == CUSTOM_FOOTER_HEIGHT.code) {
+            def value = Integer.valueOf(applicationConfiguration.value)
+            if(value > 150) {
+                applicationConfiguration.errors.rejectValue('value', "application.configuration.custom.headerfooter.height.exceeds.max")
+            }
+            return
         }
 
         super.validate(applicationConfiguration)
@@ -160,9 +168,9 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
         int subGroupCtr = 1
 
         createOrUpdateApplicationConfig(CUSTOM_HEADER_URL, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
-        createOrUpdateApplicationConfig(CUSTOM_HEADER_HEIGHT, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
+        createOrUpdateApplicationConfig(CUSTOM_HEADER_HEIGHT, GROUP_NAME, "Integer", 0, subGroupCtr++, SUB_GROUP_NAME)
         createOrUpdateApplicationConfig(CUSTOM_FOOTER_URL, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
-        createOrUpdateApplicationConfig(CUSTOM_FOOTER_HEIGHT, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
+        createOrUpdateApplicationConfig(CUSTOM_FOOTER_HEIGHT, GROUP_NAME, "Integer", 0, subGroupCtr++, SUB_GROUP_NAME)
         createOrUpdateApplicationConfig(CUSTOM_CSS_IMPORTS, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
         createOrUpdateApplicationConfig(CUSTOM_JS_IMPORTS, GROUP_NAME, "String", "", subGroupCtr, SUB_GROUP_NAME)
     }
