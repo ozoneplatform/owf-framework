@@ -671,7 +671,7 @@ uiperformance.bundles = [
                         'marketplace/MPCategoryRetriever',
                         'marketplace/MPListingsAPI',
                         'marketplace/MPCategoryAPI',
-                        'marketplace/MarketplaceUserMenuClient',
+                        'marketplace/MarketplaceUserMenuContainer',
                         'components/marketplace/MPWidgetDetailsPanel',
                         'components/marketplace/MarketplaceLauncher',
                         'chrome/WidgetChromeContainer',
