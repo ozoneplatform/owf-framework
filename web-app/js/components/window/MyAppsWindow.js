@@ -195,8 +195,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             '<div class="actions">'+
                 '<ul>'+
                 	'<li class="storeLink">'+
-                        '<span class="moreImg"></span>'+
-                        '<span class="more-link-text">Discover More in the Store</span>'+
+                        '<span class="storeImg"></span>'+
+                        '<span class="store-link-text">Discover More in the Store</span>'+
                     '</li>'+
             		'<li class="createLink">'+
                         '<span class="createImg"></span>'+
@@ -923,22 +923,15 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     },
     
     verifyDiscoverMoreButton: function() {
-    	var mpButton = $('.marketBtn')
     	var discoverMoreButton = $('.storeLink')
-    	var discoverMoreIcon = $('.storeImg')
     	var createButton = $('.createLink')
-    	var createIcon = $('.createImg')
     	
-    	if(mpButton.is(':visible')) {
+    	if($('.marketBtn').is(':visible')) {
     		discoverMoreButton.show();
-    		discoverMoreIcon.show();
     		createButton.removeClass('createLinkShift');
-    		createIcon.removeClass('createImgShift');
     	} else {
     		discoverMoreButton.hide();
-    		discoverMoreIcon.hide();
     		createButton.addClass('createLinkShift');
-    		createIcon.addClass('createImgShift');
     	}
     },
 

@@ -73,7 +73,7 @@
 			 position: relative;
         }
 
-        .create-link-text, .more-link-text {
+        .create-link-text, .store-link-text {
             display: inline-block;
             width: 80px;
             padding-left: 7px;
@@ -120,13 +120,8 @@
         }
         
         .createLinkShift {
-       		top: 435px; 
-        	left: 25px;
-        }
-        
-        .createImgShift {
-       		right: 550px;
-		    bottom: 30px;
+       		top: 495px; 
+        	left: -20px;
         }
     }
 
