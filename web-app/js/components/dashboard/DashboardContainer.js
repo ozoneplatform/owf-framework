@@ -821,7 +821,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     dashboardSwitcher.destroy();
                 }
 
-                dashboardSwitcher = Ext.widget('dashboardswitcher', {
+                dashboardSwitcher = Ext.widget('myappswindow', {
                     id: dashboardSwitcherId,
                     dashboardContainer: me,
                     activeDashboard: me.activeDashboard,
