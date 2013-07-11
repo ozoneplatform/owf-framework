@@ -123,7 +123,7 @@
         margin-bottom: 5px;
     }
 
-    #dashboard-switcher-descriptor {
+    .dashboard-switcher-descriptor {
         color: $dashboard-switcher-dashboard-text-color;
         padding: 0 15px;
         bottom: 20px !important;
@@ -345,6 +345,10 @@
     .dashboards {
         background: darken($dashboard-switcher-dashboard-background-color, 10%);
         overflow: hidden;
+
+        .dashboard-switcher-descriptor {
+            display: none;
+        }
     }
 }
 .stack-dashboards-anchor-tip {
