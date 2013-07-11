@@ -77,7 +77,7 @@
         },
 
         refresh: _.debounce(function (evt) {
-            this.carousel.reloadSlider();
+            this.carousel.reloadCarousel();
         }, 1000),
 
         shown: function () {
