@@ -98,6 +98,12 @@
         margin-bottom: 5px;
     }
 
+    #dashboard-switcher-descriptor {
+        color: $dashboard-switcher-dashboard-text-color;
+        padding: 0 40px;
+        top: 20px !important;
+    }
+
     #dashboard-switcher-body {
         width: 100% !important;
         height: 90% !important;
