@@ -223,7 +223,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         });
 
         me.on('beforeclose', me.onClose, me);
-        // me.on('show', me.updateWindowSize, me);
+        me.on('show', me.verifyDiscoverMoreButton, me);
         me.on('show', me.initCircularFocus, me, {single: true});
         me.on('show', me.focusActiveDashboard, me);
         me.mon(me.dashboardContainer, OWF.Events.Dashboard.CHANGED, me.onDashboardChanged, me);
@@ -921,7 +921,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     switchToMarketplace: function() {
     	var mpButton = $('.marketBtn')
     	
-    	if(mpButton) {
+    	if(mpButton.is(':visible')) {
     		mpButton.click()
     		this.close();
     	}
@@ -930,11 +930,21 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     verifyDiscoverMoreButton: function() {
     	var mpButton = $('.marketBtn')
     	var discoverMoreButton = $('.storeLink')
+    	var discoverMoreIcon = $('.moreImg')
+    	var createButton = $('.createLink')
+    	var createIcon = $('.createImg')
     	
-    	if(mpButton.is(':visible'))
+    	if(mpButton.is(':visible')) {
     		discoverMoreButton.show();
-    	else
+    		discoverMoreIcon.show();
+    		createButton.removeClass('createLinkShift');
+    		createIcon.removeClass('createImgShift');
+    	} else {
     		discoverMoreButton.hide();
+    		discoverMoreIcon.hide();
+    		createButton.addClass('createLinkShift');
+    		createIcon.addClass('createImgShift');
+    	}
     },
 
     restoreDashboard: function (evt) {
