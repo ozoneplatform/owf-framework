@@ -22,7 +22,7 @@
 
     Ozone.components.appcomponents.AppComponentsView = SuperClass.extend({
 
-        className: 'appcomponents-menu',
+        id: 'appcomponents-view',
 
         events: _.extend({}, SuperClass.prototype.events, {
             'keyup .search-input': '_inputKeyUp',

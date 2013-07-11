@@ -22,7 +22,7 @@
 
     Ozone.components.appcomponents.IntentsWindow = SuperClass.extend({
 
-        className: 'intents-window',
+        id: 'intents-window',
 
         events: {
             'dblclick .widget': '_onComponentDblClick',
