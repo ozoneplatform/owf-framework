@@ -19,7 +19,7 @@ environments {
 		dataSource {
             pooled = true
             url = "jdbc:hsqldb:file:${basedir}/prodDb;shutdown=true"
-		    //TO-DO Address the issue with bootstrap vs. prodDb.script...
+            //TO-DO Address the issue with bootstrap vs. prodDb.script...
             dbCreate = "none" // one of 'create', 'create-drop','update
             properties {
                 minEvictableIdleTimeMillis = 180000
@@ -29,8 +29,8 @@ environments {
                 testWhileIdle = true
                 testOnReturn = true
                 validationQuery = "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS"
-		    }
-	    }
+            }
+        }
         /*
         dataSource {
             pooled = true

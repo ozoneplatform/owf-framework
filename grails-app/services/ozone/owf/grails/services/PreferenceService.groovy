@@ -241,7 +241,7 @@ class PreferenceService extends BaseService {
 		
 		if (params.userid)
 		{
-			if (params.userid == accountService.getLoggedInUser().id && !accountService.getLoggedInUserIsAdmin())
+			if (params.userid != accountService.getLoggedInUser().id && !accountService.getLoggedInUserIsAdmin())
 			{
 				throw new OwfException(message:'You are not authorized to edit preferences for other users.', 
 	   	 									exceptionType: OwfExceptionTypes.Authorization)

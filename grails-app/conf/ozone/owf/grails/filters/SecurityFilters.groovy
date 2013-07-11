@@ -602,7 +602,7 @@ class SecurityFilters {
                 path: 'guid_to_launch',
                 value: userEdit.widgetGuid
             )
-             
+
             preferenceService.updateForUser(
                 path: 'guid_to_launch',
                 namespace: 'owf.admin.WidgetEditCopy',

@@ -1,11 +1,8 @@
 package ozone.owf.grails.jobs
 
-import org.ozoneplatform.auditing.quartz.jobs.AbstractFileMovementJob
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-
 import static ozone.owf.enums.OwfApplicationSetting.*
-import ozone.owf.grails.services.OwfApplicationConfigurationService;
+import org.ozoneplatform.auditing.quartz.jobs.AbstractFileMovementJob
+import ozone.owf.grails.services.OwfApplicationConfigurationService
 
 
 
