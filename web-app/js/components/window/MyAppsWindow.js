@@ -91,7 +91,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         me._deletedStackOrDashboards = [];
 
         me.tpl = new Ext.XTemplate(
-            '<div id="dashboard-switcher-descriptor">All of your applications appear here. To start an App, click it. To edit or delete, hover over it and select \'Details\'.</div>',
+            '<div class="dashboard-switcher-descriptor">All of your applications appear here. To start an App, click it. To edit or delete, hover over it and select \'Details\'.</div>',
             '<div class="all-dashboards">',
                 '<tpl for=".">',
                     '<div id="{[this.getName(values)+this.getId(values)]}" class="{[this.getClass(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}" {[this.getToolTip(values)]}>',
@@ -151,18 +151,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                         }
                     } 
                     str += '<div class=\'dashboard-metadata\'>';
-                    var createdBy = Ext.htmlEncode(Ext.htmlEncode(values.createdBy.userRealName));
-                    if (createdBy) {
-                        str += '<p class=\'created-by\'><label>Created by: </label>' + createdBy + '</p>';
-                    }
-                    else {
-                        //If createdBy is null we just say the "System" made it
-                        str += '<p class=\'created-by\'><label>Created by: </label>' + 'System' + '</p>';
-                        
-                    }
-                    
-                    str += '<p class=\'last-updated\'><label>Last Modified: </label>' + (values.prettyEditedDate || '') + '</p></div></div>"';
-                    return str;
+                 
                 }
             },
             
@@ -205,8 +194,14 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             Ext.DomHelper.append( cmp.body,
             '<div class="actions">'+
                 '<ul>'+
-                	'<div class="moreImg"></div><li class="storeLink">Discover More </br>in the Store</li>'+
-            		'<div class="createImg"></div><li class="createLink">Create </br>New App</li>'+
+                	'<li class="storeLink">'+
+                        '<span class="moreImg"></span>'+
+                        '<span class="more-link-text">Discover More in the Store</span>'+
+                    '</li>'+
+            		'<li class="createLink">'+
+                        '<span class="createImg"></span>'+
+                        '<span class="create-link-text">Create New App</span>'+
+                    '</li>'+
                     '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-qtip="Name, describe and design a new dashboard.">+</li>'+
                 '</ul>'+
             '</div>');
@@ -930,7 +925,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     verifyDiscoverMoreButton: function() {
     	var mpButton = $('.marketBtn')
     	var discoverMoreButton = $('.storeLink')
-    	var discoverMoreIcon = $('.moreImg')
+    	var discoverMoreIcon = $('.storeImg')
     	var createButton = $('.createLink')
     	var createIcon = $('.createImg')
     	
