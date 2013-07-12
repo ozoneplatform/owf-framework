@@ -21,6 +21,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
     afterRenderInitComplete: false,
     createViewContainer_FormValid: true,
     hideViewSelectRadio: false,
+    stackId: null, // parent stack id
 
     /**
     *
@@ -58,7 +59,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             name: 'headerLabel',
             forId: 'myFieldId',
             cls: 'createNewHeaderLabel',
-            text: Ozone.ux.DashboardMgmtString.createNewHeader,
+            text: this.headerText,
             margins: '0 0 0 10'
         };
 
