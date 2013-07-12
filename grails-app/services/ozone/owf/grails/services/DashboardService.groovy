@@ -114,7 +114,6 @@ class DashboardService extends BaseService {
             //if there is no user then there is no need to create private user copies
             if (user != null) {
                 //check if this group dashboard already has a private copy for this user
-                def userFilter = { eq('user',user) }
                 def privateGroupDashboards = getUserPrivateDashboards(user, dm.destId)
 
                 //create private copy of the group dashboard for the user if they don't have one
@@ -130,10 +129,13 @@ class DashboardService extends BaseService {
                             dashboardPosition = maxPosition + (groupDash.dashboardPosition ?: 0)
                             name = groupDash.name
                             description = groupDash.description
+                            iconImageUrl = groupDash.iconImageUrl
                             type = groupDash.type
                             locked = groupDash.locked
                             layoutConfig = groupDash.layoutConfig
                             stack = groupDash.stack
+                            markedForDeletion = groupDash.markedForDeletion
+                            publishedToStore = groupDash.publishedToStore
                         }
 
                         def privateDash = deepClone(args,user.id)
@@ -206,7 +208,8 @@ class DashboardService extends BaseService {
             }
         }
 
-        // Get stack default groups associated through by group association or direct association.
+        // Get stack default groups associated through group association or direct association.
+        // Or stack default groups for stacks associated with the all users group.
         def stackDefaultGroups = []
         if (params.user != null) {
             
@@ -216,6 +219,7 @@ class DashboardService extends BaseService {
                         eq('id',params.user.id)
                     }
                 }
+
                 cache(true)
                 cacheMode(CacheMode.GET)
             }
@@ -239,6 +243,34 @@ class DashboardService extends BaseService {
             //turn cache mode to GET which means don't use instances from this query for the 2nd level cache
             //seems to be a bug where the people collection is cached with only one person due to the people association filter above
             cacheMode(CacheMode.GET)
+        }
+
+        // Get the OWF Users Group and add it to the list
+        def allUsersGroup = Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
+        if (allUsersGroup) {
+            groups = groups << allUsersGroup
+
+            // If the users group contained stacks, add their default groups.
+            def allUsersStackGroups = allUsersGroup?.stacks?.collect{ it.findStackDefaultGroup() }
+            if (allUsersStackGroups) {
+                groups = (groups << allUsersStackGroups).flatten()
+            }
+        }
+
+        // Process admin group dashboards if this user is an admin.
+        if (accountService.getLoggedInUserIsAdmin()) {
+            def allAdminsGroup = Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
+
+            if (allAdminsGroup) {
+                // Add the admin group.
+                groups = groups << allAdminsGroup
+
+                // If the admin group contained stacks, add their default groups
+                def allAdminStackGroups = allAdminsGroup?.stacks?.collect{ it.findStackDefaultGroup() }
+                if (allAdminStackGroups) {
+                    groups = (groups << allAdminStackGroups).flatten()
+                }
+            }
         }
 
         def groupDashboardIds = []as Set
@@ -358,7 +390,7 @@ class DashboardService extends BaseService {
             //           args['isGroupDashboard'] = false
             //         }
 
-            args['isGroupDashboard'] = it.user == null ? true : false
+            args['isGroupDashboard'] = (it.user == null)
 
             if (privateGroupDashboardToGroupsMap[it.id] != null) {
                 args['groups'] = privateGroupDashboardToGroupsMap[it.id]
@@ -475,7 +507,7 @@ class DashboardService extends BaseService {
             })
 
             //For each widget replace its old guid with the current guid in the layoutConfig, using universalName to identify them
-            universalNameMatches.each() { widget ->
+            universalNameMatches.each { widget ->
                 if(universalNameToOldGuidMap[widget.universalName] != widget.widgetGuid) {
                     params.layoutConfig = params.layoutConfig.replace(universalNameToOldGuidMap[widget.universalName], widget.widgetGuid)
                 }
@@ -488,10 +520,12 @@ class DashboardService extends BaseService {
                 isdefault: convertStringToBool(params.isdefault),
                 dashboardPosition: params.dashboardPosition != null ? params.dashboardPosition : maxPosition,
                 description: JSONObject.NULL.equals(params.description) ? null : params.description,
+                iconImageUrl: JSONObject.NULL.equals(params.iconImageUrl) ? null : params.iconImageUrl,
                 type: JSONObject.NULL.equals(params.type) ? null : params.type,
                 layoutConfig: params.layoutConfig.toString() ?: "",
                 stack: params.stack != null ? Stack.get(params.stack.id.toLong()) : null,
-                locked: params.locked != null ? params.locked : false)
+                locked: params.locked != null ? params.locked : false,
+                publishedToStore: params.publishedToStore ? convertStringToBool(params.publishedToStore) : false)
 
         //if this is not a group dashboard then assign it to the specified user
         //otherwise group dashboards are not associated with any user
@@ -622,7 +656,7 @@ class DashboardService extends BaseService {
             }
             Map newParams = new HashMap()
             newParams.guid = it
-            def result = delete(newParams)
+            delete(newParams)
         }
         return [success: true]
     }
@@ -710,6 +744,10 @@ class DashboardService extends BaseService {
             dashboard.description = JSONObject.NULL.equals(params.description) ? null : params.description
         }
 
+        if (params.iconImageUrl) {
+            dashboard.iconImageUrl = JSONObject.NULL.equals(params.iconImageUrl) ? null : params.iconImageUrl
+        }
+
         if (params.type) {
             dashboard.type = JSONObject.NULL.equals(params.type) ? null : params.type
         }
@@ -718,6 +756,9 @@ class DashboardService extends BaseService {
         // If no stack is provided, set the stack to null.
         // dashboard.stack =  params.stack != null ? Stack.get(params.stack.id.toLong()) : null
         dashboard.locked = params.locked instanceof Boolean ? params.locked : params.locked == "true"
+
+        dashboard.publishedToStore = params.publishedToStore ? convertStringToBool(params.publishedToStore) : dashboard.publishedToStore
+        dashboard.markedForDeletion = params.markedForDeletion ? convertStringToBool(params.markedForDeletion) : dashboard.markedForDeletion
 
         // TODO: Consider renaming the regenerateStateIds param.  This controls regenerating widget instance id's which are encapsulated in layout_config now instead of a state table.
         if (params.regenerateStateIds) {
@@ -790,6 +831,7 @@ class DashboardService extends BaseService {
                     args.isdefault = groupDash.isdefault
                     args.name = groupDash.name
                     args.description = groupDash.description
+                    args.iconImageUrl = groupDash.iconImageUrl
                     args.type = groupDash.type
                     if (params.isdefault != null) {
                         args.isdefault = params.isdefault
@@ -955,7 +997,7 @@ class DashboardService extends BaseService {
             return stringToConvert
         }
 
-        (stringToConvert == "true" || stringToConvert == "on") ? true : false
+        (stringToConvert == "true" || stringToConvert == "on")
     }
 
     private def findByGuidForUser(guid,userid) {

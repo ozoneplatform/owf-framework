@@ -219,19 +219,19 @@ class PreferenceServiceTests extends OWFGroovyTestCase {
 	}
 	
 	void testDeepCloneWithNoUserid() {
-		loginAsUsernameAndRole('testUser1', 'ROLE_USER')
+		loginAsUsernameAndRole('testUser4', 'ROLE_USER')
+		
+		def person = Person.build(username:'testUser4')
 		
       	def params = [namespace:'namespace1', path:'path1', value:'clonedValue']
 
-		shouldFail(OwfException) {			
-			def result = service.deepClone(params)
-		}
-		
 		try {
 			def result = service.deepClone(params)
 		} catch(e) {
-			assertEquals OwfException, e.class
-			assertEquals 'You are not authorized to edit preferences for other users.', e.message
+			assertEquals result.namespace, 'namespace1'
+			assertEquals result.path, 'path1'
+			assertEquals result.value, 'clonedValue'
+			assertEquals result.user, person
 		}
 	}
 	

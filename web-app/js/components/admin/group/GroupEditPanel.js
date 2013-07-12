@@ -11,7 +11,7 @@ Ext.define('Ozone.components.admin.group.GroupEditPanel', {
 		Ext.applyIf(this,{
 			layout: 'fit',
 			items: [{
-	            xtype: 'editwidgetpanel',
+	            xtype: 'groupeditwidgetpanel',
 	            cls: 'adminEditor',
 	            bodyCls: 'adminEditor-body',
 	            dragAndDrop: false,

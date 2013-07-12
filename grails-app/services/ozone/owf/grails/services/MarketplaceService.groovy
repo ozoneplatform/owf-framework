@@ -90,6 +90,7 @@ class MarketplaceService extends BaseService {
         }
 
         def universalNameIsNull = obj.isNull("universalName")
+        def descriptorUrlIsNull = obj.isNull("descriptorUrl")
         boolean universalNameIsChanged = !universalNameIsNull && obj.universalName != widgetDefinition.universalName
 
         if (universalNameIsChanged && !widgetDefinitionService.canUseUniversalName(widgetDefinition, obj.universalName)) {
@@ -111,7 +112,7 @@ class MarketplaceService extends BaseService {
             singleton = obj.singleton
             visible = obj.widgetUrl.isAllWhitespace() ? false : obj.visible
             background = obj.background
-            descriptorUrl = obj.descriptorUrl
+            descriptorUrl = descriptorUrlIsNull ? null : obj.descriptorUrl
             save(flush: true, failOnError: true)
         }
 

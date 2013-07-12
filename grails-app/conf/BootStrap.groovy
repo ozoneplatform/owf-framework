@@ -103,20 +103,22 @@ class BootStrap {
         }
         switch (GrailsUtil.environment) {
             case 'test':
-            loadWidgetTypes()
-            break
+                loadWidgetTypes()
+                break
             case ["development", "testUser1", "testAdmin1"]:
-            StopWatch stopWatch = new StopWatch();
-            log.info('Loading development fixture data')
-            stopWatch.start();
-            loadDevelopmentData()
-            stopWatch.stop();
-            log.info('Finished Loading development fixture data:'+stopWatch)
-            break
+                StopWatch stopWatch = new StopWatch();
+                log.info('Loading development fixture data')
+                stopWatch.start();
+                createSystemGroups();
+                loadDevelopmentData()
+                stopWatch.stop();
+                log.info('Finished Loading development fixture data:'+stopWatch)
+                break
             case 'production':
-            log.info('Adding default newUser')
-            createNewUser()
-            break;
+                log.info('Adding default newUser')
+                createNewUser()
+                createSystemGroups()
+                break;
             default:
             //do nothing
             break
@@ -736,6 +738,40 @@ class BootStrap {
             }
 
         }
+    }
+    /**
+     * Creates the OWF Users and OWF Administrators group if they do not already exist.
+     */
+    private createSystemGroups() {
+        // Create OWF Administrators group if it doesn't already exist
+        def adminGroup = Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
+        if (adminGroup == null) {
+            // add it
+            adminGroup = new Group(
+                name: 'OWF Administrators',
+                description: 'OWF Administrators',
+                automatic: true,
+                status: 'active',
+                displayName: 'OWF Administrators'
+            )
+
+            adminGroup = saveInstance(adminGroup)
+        }
+
+        def allUsers = Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
+        // Create the OWF Users group if it doesn't exist.
+        if (allUsers == null) {
+            // add it
+            allUsers = new Group(
+                name: 'OWF Users',
+                description: 'OWF Users',
+                automatic: true,
+                status: 'active',
+                displayName: 'OWF Users'
+            )
+
+            allUsers = saveInstance(allUsers)
+        } 
     }
     private assignPeopleToRoles() {
         // assign people to roles, must be on the hasMany relationship

@@ -5,20 +5,23 @@
 
 #dashboard-switcher {
 
-    width: auto !important;
-    height: auto !important;
+    width: $dashboard-switcher-width !important;
+    height: $dashboard-switcher-height !important;
     
-    padding: 0px;
-
     border: 0px none black;
 
     &-body {
-        /*top: 0 !important;*/
         @include border-radius($dashboard-switcher-body-radius);
     }
 
     > .x-window-header {
-        /*width: 100% !important;*/
+        margin-bottom: 5px;
+        width: 100% !important;
+        
+        .x-window-header-text {
+			font-size: 18px;
+			padding-left: 30px;
+		}
 
         .dashboard-switcher-header-icon {
             background-image: theme-image($theme-name, 'dashboardswitcher/switcher_icon.png');
@@ -27,27 +30,144 @@
         }
     }
 
-    ul.actions {
-        clear: both;
-        // float: right;
+    .actions {
+        height: auto;
+        float: right;
         text-align: right;
-        color: $dashboard-switcher-dashboard-text-color;
-        margin-right: 15px;
-        
-        li {
-            display: inline-block;
-            padding: 5px 10px;
 
+        ul li {
+            color: $dashboard-switcher-dashboard-text-color;
+            
             &:hover, &.selected {
                 background: $dashboard-switcher-dashboard-over-background-color;
                 color: $dashboard-switcher-dashboard-over-text-color;
             }
+        }    
+    }
+
+    .actions {
+        height: auto;
+        float: right;
+        text-align: right;
+
+        ul {
+            color: $dashboard-switcher-dashboard-text-color;
+            float: right;
+            margin-right: 15px;
+            text-align: right;
+
+            li {
+                display: inline-block;
+                padding: 5px 10px;
+
+                &:hover, &.selected {
+                    background: $dashboard-switcher-dashboard-over-background-color;
+                    color: $dashboard-switcher-dashboard-over-text-color;
+                }
+            }
+        }
+        
+        .create {
+        	 bottom: -45px;
+			 left: 35px;
+			 position: relative;
+        }
+
+        .create-link-text, .store-link-text {
+            display: inline-block;
+            width: 85px;
+            padding-left: 7px;
+        }
+
+        .create-link-text {
+            width: 60px;
+        }
+        
+        .storeLink {
+        	top: 493px; 
+        	left: -5px;
+        	position: absolute; 
+        	text-align: left;
+        	font-weight: bold;
+        	font-size: 10px;
+        }
+
+		.storeImg {
+        	background-image: theme-image($theme-name, 'myappswindow/moreInStore.png'); 
+        	position: relative;
+        	width: 20px;
+        	height: 20px; 
+            display: inline-block;
+            float: left;
+        }
+        
+        .createLink {
+        	top: 493px; 
+        	left: 160px; 
+        	position: absolute; 
+        	text-align: left;
+        	font-weight: bold;
+        	font-size: 10px;
+        }
+        
+        .createImg {
+        	background-image: theme-image($theme-name, 'myappswindow/createNewApp.png'); 
+        	position: relative;
+        	width: 20px;
+        	height: 20px; 
+            display: inline-block;
+            float: left;
+        }
+        
+        .createLinkShift {
+       		top: 495px; 
+        	left: -20px;
         }
     }
 
+    .dashboard-switcher-descriptor {
+        color: $dashboard-switcher-dashboard-text-color;
+        padding: 0 15px;
+        bottom: 20px !important;
+        position: relative;
+        text-align: left;
+    }
+
+    #dashboard-switcher-body {
+        width: 95% !important;
+        height: 90% !important;
+
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+
+        /**** BEGIN slider styling ****/
+        .bx-wrapper {
+            // Must be set explicitly to remain constant
+            // regardless of how many children per slide in the viewport
+            height: 380px !important;
+
+            .bx-viewport {
+                @include box-shadow(none);
+
+                background: transparent !important;
+                border: 0px !important;
+                margin: 0 60px;
+                overflow: hidden;
+                width: auto !important;
+                height: 95% !important;
+            }
+        }
+        
+        .bx-wrapper .bx-pager, .bx-wrapper .bx-controls-auto {
+    			bottom: -20px;
+    	}
+        /***** END slider styling  ****/
+    }
+
     .all-dashboards {
-        width: 100%;
-        overflow: auto;
+        height: auto !important;
+        overflow: hidden;
 
         //necessary for scrolling to work properly in IE7 for some reason
         position: relative;
@@ -71,8 +191,8 @@
 }
 
 #dashboard-switcher .dashboard, #dashboard-switcher .stack, .stack.drag-proxy, .dashboard.drag-proxy {
-    $thumb-width: 73px;
-    $name-width: 8.2em;
+    $dashboard-width: 78px;
+    $dashboard-height: 120px;
 
     //For these elements, it is more useful
     //to compute content width not overall box 
@@ -81,51 +201,58 @@
     @include box-sizing(content-box);
 
     float: left;
-    margin: 10px;
-    padding: 15px 15px 0px 15px;
+    margin: 0px;
+    padding: 0px;
     position: relative;
-    text-align:center;
+    text-align: center;
     overflow: hidden;
     cursor: pointer;
-    min-width: $name-width;
-    max-width: $name-width;
+    width: $dashboard-width;
+    height: $dashboard-height;
     
     .thumb-wrap {
         text-align: center;
-        white-space:nowrap;
-        margin-left:auto;
-        margin-right:auto;
-        width: $thumb-width;
+        white-space: nowrap;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        
         .thumb {
-            text-align: center;
+            height: 70px;
+            width: 70px;
+
             margin-left: auto;
             margin-right: auto;
-            width: $thumb-width;
-            height: 70px;
+            
+            text-align: center;
+
             background-repeat: no-repeat;
             background-position: center center;
             background-image: $dashboard-switcher-layout-default-icon;
+            background-size: 70%;
         }
     }
 
     &-name {
         color: $dashboard-switcher-dashboard-text-color;
-        height: 3.25em;
-        width: $name-width;
+        height: 15px;
+        width: 100%;
         margin-top: 2px;
         margin-left: auto;
         margin-right: auto;
+        font-size: 10px;
     }
     
     &:hover {
+        @include border-top-radius($dashboard-item-body-radius);
+        @include border-bottom-radius($dashboard-item-body-radius);
+
         background-color: $dashboard-switcher-dashboard-over-background-color !important;
         border-color: $dashboard-switcher-dashboard-over-border-color !important;
+
         .dashboard-name {
             color: $dashboard-switcher-dashboard-over-text-color  !important;
         }
-        @include border-top-radius($dashboard-switcher-body-radius);
-        @include border-bottom-radius($dashboard-switcher-body-radius);
-        
     }
 
     &-selected {
@@ -197,7 +324,7 @@
         }
 
         .dashboard, .stack{
-            margin: 10px auto;
+            margin: 5px auto;
         }
     }
     .dashboard-actions, .stack-actions {
@@ -225,6 +352,10 @@
     .dashboards {
         background: darken($dashboard-switcher-dashboard-background-color, 10%);
         overflow: hidden;
+
+        .dashboard-switcher-descriptor {
+            display: none;
+        }
     }
 }
 .stack-dashboards-anchor-tip {
@@ -267,4 +398,59 @@
 
 .alert-window-widget {
     width: 250px;
+}
+
+.premadeLayoutButton {
+  margin: 5px 5px 5px 5px;
+  height: 45px;
+  width: 59px;
+  background-position: center;
+}
+
+.premadeDesktop {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_1-Desktop.png');
+}
+
+.premadeFit {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_1-Fit.png');
+}
+
+.premadeTabbed {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_1-Tabbed.png');
+}
+
+.premade2ColumnFit {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-FitBSB.png');
+}
+
+.premade2RowFit {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-FitStack.png');
+}
+
+.premade4Fit {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_4-Fit.png');
+}
+
+.premade2ColumnPortal {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-Portal.png');
+}
+
+.premadeAccordionFit {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-Accord-Fit.png');
+}
+
+.premadeTabbedAccordion {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-Tabbed-Accord.png');
+}
+
+.premade2RowFitTabbed {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-Fit-Tab.png');
+}
+
+.premadeAccordion2RowFit {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_3-Accord-Fit-Fit.png');
+}
+
+.premadeTabbed2Fit {
+  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_3-Tab-Fit-Fit.png');
 }

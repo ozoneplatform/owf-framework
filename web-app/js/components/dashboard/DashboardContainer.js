@@ -41,6 +41,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     //dashboards will refresh before the switcher opens
     dashboardsNeedRefresh: false,
 
+    // flag indicating whether or not to fetch app components from server
+    fetchAppComponents: false,
+
     // private
     initComponent: function() {
         var me = this,
@@ -398,13 +401,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     /*
      * Launches widget on the current dashboard.
      */
-    launchWidgets: function(widgetModel, isEnterPressed) {
+    launchWidgets: function(widgetModel, isEnterPressed, isDragAndDrop) {
         var me = this;
 
-        me.selectPane(isEnterPressed).then(function(pane, e) {
+        return me.selectPane(isEnterPressed, isDragAndDrop).then(function(pane, e) {
             me.activeDashboard.launchWidgets(pane, null, e, {
                 widgetModel: widgetModel
-            })
+            });
         }, function() {
             var launchMenu = Ext.getCmp('widget-launcher');
             if (launchMenu) {
@@ -449,14 +452,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
      * Returns: a promise object that will be resolved with
      * event and pane selected
      */
-    selectPane: function(isUsingKeyboard) {
+    selectPane: function(isUsingKeyboard, isDragAndDrop) {
         var me = this,
             deferred = jQuery.Deferred(),
             panes = this.activeDashboard.panes,
             doc = Ext.getDoc();
 
-        // if one page resolve right away
-        if (panes.length === 1) {
+        // if one pane resolve right away only if not performing drag and drop
+        if (panes.length === 1 && !isDragAndDrop) {
             deferred.resolve(panes[0]);
         } else {
 
@@ -473,6 +476,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             this.el.on('click', this._selectPaneOnClick, this, {
                 deferred: deferred
             });
+            this.el.on('mouseup', this._selectPaneOnClick, this, {
+                deferred: deferred
+            });
 
             // cleanup listeners when deferred is either resolved or rejected
             deferred.always(function() {
@@ -482,6 +488,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     capture: true
                 });
                 me.el.un('click', me._selectPaneOnClick, me);
+                me.el.un('mouseup', me._selectPaneOnClick, me);
             });
         }
 
@@ -661,7 +668,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
             this.activeDashboard = dashboardCardPanel.getComponent(this.activeDashboard.id);
             this.activateDashboard(this.activeDashboard.id, true, this.activeDashboard.stackContext);
-            if (this.activeDashboard.configRecord.get('locked')) {
+            if (this.activeDashboard.configRecord.get('locked') || this.activeDashboard.configRecord.isMarketplaceDashboard()) {
                 this.getBanner().disableAppComponentsBtn();
             } else {
                 this.getBanner().enableAppComponentsBtn();
@@ -797,6 +804,65 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         widgetSwitcher.center();
     },
 
+    refreshAppComponentsView: function () {
+        this.fetchAppComponents = true;
+    },
+
+    showAppComponentsView: function () {
+        var me = this,
+            appComponentsBtn;
+
+        if (me.activeDashboard.configRecord.get('locked') === true ||
+            me.activeDashboard.configRecord.isMarketplaceDashboard()) {
+            return;
+        }
+
+        if(me.fetchAppComponents) {
+            if(me.appComponentsView && me.appComponentsView.isVisible()) {
+                me.appComponentsView.hide();
+                return;
+            }
+            else {
+                me.fetchAppComponents = false;
+                me.loadMask.show();
+
+                // remove existing view
+                if(me.appComponentsView) {
+                    me.appComponentsView.$el.off('.toggle');
+                    me.appComponentsView.remove();
+                    me.appComponentsView = null;
+                }
+
+                // fetch and show view
+                OWF.Collections.AppComponents.fetch().done(function () {
+                    me.showAppComponentsView();
+                    me.loadMask.hide();
+                });
+                return;
+            }
+        }
+
+        if(!me.appComponentsView) {
+            me.appComponentsView = new Ozone.components.appcomponents.AppComponentsView({
+                collection: OWF.Collections.AppComponents,
+                dashboardContainer: me
+            });
+            appComponentsBtn = me.getBanner().getComponent('appComponentsBtn');
+            me.appComponentsView.$el.on('hide.toggle', function () {
+                appComponentsBtn.toggle(false, true);
+            });
+            me.appComponentsView.$el.on('show.toggle', function () {
+                appComponentsBtn.toggle(true, true);
+            });
+
+            $('#dashboardCardPanel').append(me.appComponentsView.render().el);
+            me.appComponentsView.shown();
+        }
+        else {
+            me.appComponentsView.toggle();
+        }
+    },
+
     showDashboardSwitcherButtonHandler: function() {
         return this.showDashboardSwitcher(false);
     },
@@ -821,7 +887,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     dashboardSwitcher.destroy();
                 }
 
-                dashboardSwitcher = Ext.widget('dashboardswitcher', {
+                dashboardSwitcher = Ext.widget('myappswindow', {
                     id: dashboardSwitcherId,
                     dashboardContainer: me,
                     activeDashboard: me.activeDashboard,
@@ -1136,19 +1202,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
     },
 
-    //    showCustomizeWindow: function() {
-    //        if(!this.customizeDashWindow) {
-    //            this.customizeDashWindow = Ext.widget('customizedashboardwindow', {
-    //                dashboardContainer: this
-    //            });
-    //        }
-    //        else {
-    //            this.customizeDashWindow.getComponent('customizeDashboardPanel').refresh();
-    //        }
-    //
-    //        this.customizeDashWindow.isVisible() ? this.customizeDashWindow.close() : this.customizeDashWindow.show();
-    //    },
-
     openDashboardMgr: function() {
         var winId = "user-manage-dashboards";
         var win = Ext.getCmp(winId);
@@ -1374,7 +1427,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                         }
 
                         //handle opening launch menu and routing the intent
-                        this.showLaunchMenuForIntents(intent, container, sender, data, sendingCmp);
+                        this.showIntentsWindow(intent, container, sender, data, sendingCmp);
                     } else {
                         //todo handle error here if the widget doesn't exist
                         //just send the intent if destination(s) is specified
@@ -1387,197 +1440,144 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         });
     },
 
-    showLaunchMenuForIntents: function(intent, container, sender, data, sendingCmp) {
+    showIntentsWindow: function(intent, container, sender, data, sendingCmp) {
+        var me = this,
+            intentConfig,
+            deferredSendIntentListener,
+            isRememberSelection = false,
+            bodyEl = Ext.getBody(),
+            maskEl = bodyEl.mask().addCls('intent-modal-mask');
+        
+        function onHide() {
+            isRememberSelection = me.intentsWindow.isRememberSelection();
+
+            me.intentsWindow.$el.off('hide', onHide);
+            maskEl.un('click', onHide);
+            bodyEl.unmask();
+            setTimeout(function () {
+                me.intentsWindow.remove();
+                me.intentsWindow = null;
+                Ozone.KeyMap.enable();
+            }, 0);
+        }
+
+        maskEl.on('click', onHide);
+        Ozone.KeyMap.disable();
+        me._initIntentsWindow(intent).show();
+
+
+        me.intentsWindow.$el
+            .on('cancel', function () {
+                me.intentsWindow.$el.off('cancel');
+
+                //unattach the listeners no widget will be launched
+                me.un(widgetLaunchListener);
+
+                if (deferredSendIntentListener) {
+                    container.removeListener('onIntentsReady', deferredSendIntentListener, me);
+                }
+
+                //fire callback to startActivity
+                container.callback([]);
+            })
+            .on('hide', onHide);
+
+        var widgetLaunchListener = {
+            beforewidgetlaunch: {
+                fn: function(pane, model) {
+                    var data = {
+                        intents: true
+                    };
+                    model.set('launchData', gadgets.json.stringify(data));
+                },
+                single: true
+            },
+            afterwidgetlaunch: {
+                fn: function(widget, model, wasAlreadyLaunched) {
+                    var id = widget.uniqueId;
+                    var destIdString = '{\"id\":\"' + id + '\"}';
+
+                    !sendingCmp.intentConfig && (sendingCmp.intentConfig = {});
+                    intentConfig = sendingCmp.intentConfig;
+
+                    function sendIntent () {
+                        container.send(sender, intent, data, null, destIdString);
+                        //check if the intentcheckbox is checked if so save to intentConfig
+                        if (isRememberSelection) {
+
+                            if (intentConfig[owfdojo.toJson(intent)] == null) {
+                                intentConfig[owfdojo.toJson(intent)] = [];
+                            }
+                            intentConfig[owfdojo.toJson(intent)].push(destIdString);
+                        }
+                    }
+
+                    //the widget is already open, send intent immeditaly
+                    if (wasAlreadyLaunched) {
+                        sendIntent();
+                    }
+                    //widget is not launched yet
+                    else {
+
+                        //create a listener function to send the intent once the launched widget
+                        //and has registered to receive the intent
+                        deferredSendIntentListener = function(i, destWidgetId) {
+                            //send the data to the dest widgets only if intent and dest widget match
+                            if (i != null && owfdojo.toJson(i) === owfdojo.toJson(intent) && destWidgetId === destIdString) {
+                                sendIntent();
+                                //remove this listener now that the intent has been sent
+                                container.removeListener('onIntentsReady', deferredSendIntentListener, me);
+                            }
+                            //todo perhaps put a timer to timeout the intent, and remove the listener
+                            //this would only need to be done if a widget was opened that never registered
+                            //for the specified intent
+                        };
+
+                        //hook event that will fire when the dest widget is ready for the intent
+                        container.addListener('onIntentsReady', deferredSendIntentListener, me);
+
+                    }
+                    //fire callback to startActivity call once dest widgets have been identified
+                    container.callback([destIdString]);
+                },
+                single: true
+            }
+        };
+        me.on(widgetLaunchListener);
+    },
+
+    _initIntentsWindow: function (intent) {
+        var matchingOpenedAppComponents = this.activeDashboard.stateStore.findByReceiveIntent(intent);
+        matchingOpenedAppComponents = _.map(matchingOpenedAppComponents, function (match) {
+            var data = _.extend({}, match.data);
+            data.image = match.get('image');
+            return data;
+        });
+
+        var matchingAppComponents = OWF.Collections.AppComponents.findByReceiveIntent(intent);
+
+        this.intentsWindow = new Ozone.components.appcomponents.IntentsWindow({
+            matchingOpenedAppComponents: new Ozone.data.collections.Widgets(matchingOpenedAppComponents),
+            matchingAppComponents: new Ozone.data.collections.Widgets(matchingAppComponents),
+            dashboardContainer: this
+        });
+        $('body').append(this.intentsWindow.render().el);
+        this.intentsWindow.shown();
+        return this.intentsWindow;
+    },
+
+    _showIntentsWindow: function(intent, container, sender, data, sendingCmp) {
         var intentConfig = sendingCmp.intentConfig;
 
         //open launch menu
         var launchMenu = Ext.getCmp('widget-launcher');
         if (launchMenu) {
 
-            //make sure the launch menu is visible
-            if (!launchMenu.isVisible()) {
-                launchMenu.show();
-            }
-
-            //dont load the launchMenu's widgetStore, this disables the searchPanel from causing a load as well
-            launchMenu.disableWidgetStoreLoading(true);
-
-            //Don't show the Dashboard Switcher to allow the user to select a dashboard
-            launchMenu.disableDashboardSelection = true;
-
-            //reload main widgetStore to retreive new data
-            this.widgetStore.load({
-                scope: this,
-                callback: function(records, operation, success) {
-                    //refresh data
-                    launchMenu.refreshOpenedWidgets();
-                    launchMenu.clearSelections(true);
-
-                    //now update the launch menu for choosing a dest widget(s) for intents
-                    var infoPanelData = Ext.create('Ozone.data.WidgetDefinition', {
-                        name: 'Please select a widget below',
-                        description: 'Widgets below are filtered against Intent: ' + intent.action + ' ' + intent.dataType
-                    });
-                    launchMenu.updateInfoPanel(infoPanelData, false, true, false, false);
-                    launchMenu.showIntentCheckBox = true;
-
-                    //open the adv search panel
-                    launchMenu.openOrCloseAdvancedSearch(true);
-
-                    var intentsTree = launchMenu.searchPanel.down('#intentsTree');
-                    var intentsTreeSelModel = intentsTree.getSelectionModel();
-                    intentsTreeSelModel.setLocked(false);
-
-                    //setting this tree selection for intent filtering
-                    var rootNode = {
-                        expanded: true,
-                        children: [{
-                                text: intent.action,
-                                expanded: true,
-                                expandable: false,
-                                children: [{
-                                        text: intent.dataType,
-                                        leaf: true
-                                    }
-                                ]
-                            }
-                        ]
-                    };
-                    intentsTree.setRootNode(rootNode);
-
-                    //now select
-                    var separator = '!@//@!';
-                    intentsTree.selectPath(separator + 'Root' + separator + intent.action + separator + intent.dataType,
-                        'text', separator);
-
-                    intentsTreeSelModel.setLocked(true);
-
-                    launchMenu.disableWidgetStoreLoading(false);
-
-                    //cleanup flags when the launch menu closes
-                    launchMenu.on({
-                        close: {
-                            fn: function(cmp) {
-                                intentsTreeSelModel.setLocked(false);
-                            },
-                            scope: this,
-                            single: true
-                        }
-                    });
-
-                    //explicitly filter by intents by passing this cfg to the search function
-                    var filterCfg = {
-                        intent: {
-                            action: intent.action,
-                            dataType: intent.dataType,
-                            receive: true
-                        }
-                    };
-                    launchMenu.searchPanel.search(filterCfg);
-
-                    launchMenu.searchPanel.loadGroupStore();
-                    launchMenu.showOpenedWidgetsView(true);
-                    launchMenu.loadLauncherState();
-                }
-            });
-
-            var deferredSendIntentListener = null;
-            var noWidgetLaunchListener = null;
-
-            var dashboardContainer = this;
-            var widgetLaunchListener = {
-                beforewidgetlaunch: {
-                    fn: function(pane, model) {
-                        var data = {
-                            intents: true
-                        };
-                        model.set('launchData', gadgets.json.stringify(data));
-                    }
-                },
-                afterwidgetlaunch: {
-                    fn: function(widget, model, wasAlreadyLaunched) {
-                        var id = widget.uniqueId;
-                        var destIdString = '{\"id\":\"' + id + '\"}';
-
-                        !sendingCmp.intentConfig && (sendingCmp.intentConfig = {});
-                        intentConfig = sendingCmp.intentConfig;
-
-                        //the widget is already open, send intent immeditaly
-                        if (wasAlreadyLaunched) {
-                            container.send(sender, intent, data, null, destIdString);
-                            //check if the intentcheckbox is checked if so save to intentConfig
-                            if (launchMenu.getIntentCheckBoxValue()) {
-
-                                if (intentConfig[owfdojo.toJson(intent)] == null) {
-                                    intentConfig[owfdojo.toJson(intent)] = [];
-                                }
-                                intentConfig[owfdojo.toJson(intent)].push(destIdString);
-                            }
-                        }
-                        //widget is not launched yet
-                        else {
-
-                            //create a listener function to send the intent once the launched widget
-                            //and has registered to receive the intent
-                            deferredSendIntentListener = function(i, destWidgetId) {
-                                //send the data to the dest widgets only if intent and dest widget match
-                                if (i != null && owfdojo.toJson(i) === owfdojo.toJson(intent) && destWidgetId === destIdString) {
-
-                                    //send intent
-                                    container.send(sender, intent, data, null, destIdString);
-                                    //remove this listener now that the intent has been sent
-                                    container.removeListener('onIntentsReady',
-                                        deferredSendIntentListener,
-                                        this);
-                                    //check if the intentcheckbox is checked if so save to intentConfig
-                                    if (launchMenu.getIntentCheckBoxValue()) {
-                                        if (intentConfig[owfdojo.toJson(intent)] == null) {
-                                            intentConfig[owfdojo.toJson(intent)] = [];
-                                        }
-                                        intentConfig[owfdojo.toJson(intent)].push(destIdString);
-                                    }
-                                }
-                                //todo perhaps put a timer to timeout the intent, and remove the listener
-                                //this would only need to be done if a widget was opened that never registered
-                                //for the specified intent
-                            };
-                            //hook event that will fire when the dest widget is ready for the intent
-                            container.addListener('onIntentsReady',
-                                deferredSendIntentListener,
-                                this);
-
-                        }
-                        //fire callback to startActivity call once dest widgets have been identified
-                        container.callback([destIdString]);
-
-                        //widget has been launched set the intent checkbox to be hidden
-                        launchMenu.showIntentCheckBox = false;
-
-                        //a widget has been launched unhook our noWidgetLaunchListener
-                        launchMenu.un(noWidgetLaunchListener);
-
-                        // remove the listener when finished because when launching new widgets in this pane
-                        // the beforewidgetlaunch will continue to be hit if you don't.
-                        dashboardContainer.un(widgetLaunchListener);
-                    },
-                    scope: this,
-                    single: true
-                }
-            };
-            this.on(widgetLaunchListener);
-
             //if the user didn't actually launch a widget remove the other listeners
             noWidgetLaunchListener = {
                 noWidgetLaunched: {
                     fn: function() {
-                        //unattach the listeners no widget will be launched
-                        this.un(widgetLaunchListener);
-                        if (deferredSendIntentListener != null) {
-                            container.removeListener('onIntentsReady', deferredSendIntentListener, this);
-                        }
-                        //fire callback to startActivity
-                        container.callback([]);
-                        launchMenu.showIntentCheckBox = false;
+                        
                     },
                     scope: this,
                     single: true

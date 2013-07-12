@@ -36,7 +36,7 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 
         if(applicationConfiguration.type == "Integer"){
             def val = applicationConfiguration.value
-            if(!val.isInteger() || Integer.valueOf(val) <= 0){
+            if(!val.isInteger() || Integer.valueOf(val) < 0){
                 applicationConfiguration.errors.rejectValue('value', "application.configuration.invalid.integer.gt.zero")
                 return
             }
@@ -44,10 +44,18 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 
         if(applicationConfiguration.type == "Decimal"){
             def val = applicationConfiguration.value
-            if(!val.isNumber() || Double.valueOf(val) <= 0){
+            if(!val.isNumber() || Double.valueOf(val) < 0){
                 applicationConfiguration.errors.rejectValue('value', "application.configuration.invalid.number.gt.zero")
                 return
             }               
+        }
+
+        if(applicationConfiguration.code == CUSTOM_HEADER_HEIGHT.code || applicationConfiguration.code == CUSTOM_FOOTER_HEIGHT.code) {
+            def value = Integer.valueOf(applicationConfiguration.value)
+            if(value > 150) {
+                applicationConfiguration.errors.rejectValue('value', "application.configuration.custom.headerfooter.height.exceeds.max")
+            }
+            return
         }
 
         super.validate(applicationConfiguration)
@@ -134,13 +142,16 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 		def SUB_GROUP_NAME = ""
 		int subGroupCtr = 1
 
-		createOrUpdateApplicationConfig(CEF_LOGGING_ENABLED, GROUP_NAME,  "Boolean", 
-            grailsApplication.config.owf.dynamic.enable.cef.logging,
-            subGroupCtr++, SUB_GROUP_NAME)
+		def cefEnabled = grailsApplication.config.owf.dynamic.enable.cef.logging
+		def cefObjAccessEnabled = grailsApplication.config.owf.dynamic.enable.cef.object.access.logging
+		
+		createOrUpdateApplicationConfig(CEF_LOGGING_ENABLED, GROUP_NAME,  "Boolean", cefEnabled, subGroupCtr++, SUB_GROUP_NAME)
+		createOrUpdateApplicationConfig(CEF_OBJECT_ACCESS_LOGGING_ENABLED, GROUP_NAME,  "Boolean", cefObjAccessEnabled, subGroupCtr++, SUB_GROUP_NAME)
 
-		createOrUpdateApplicationConfig(CEF_OBJECT_ACCESS_LOGGING_ENABLED, GROUP_NAME,  "Boolean",
-            grailsApplication.config.owf.dynamic.enable.cef.object.access.logging,
-            subGroupCtr++, SUB_GROUP_NAME)
+		createOrUpdateApplicationConfig(CEF_LOG_SWEEP_ENABLED, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
+		createOrUpdateApplicationConfig(CEF_LOG_LOCATION, GROUP_NAME,  "String", "", subGroupCtr++, SUB_GROUP_NAME)
+		createOrUpdateApplicationConfig(CEF_LOG_SWEEP_LOCATION, GROUP_NAME,  "String", "", subGroupCtr++, SUB_GROUP_NAME)
+		
 
 	}
 
@@ -152,14 +163,14 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
     }
 
     private void createRequiredCustomHeaderFooterConfigurations() {
-        def GROUP_NAME=USER_ACCOUNT_SETTINGS
-        def SUB_GROUP_NAME = "Custom Header Footer"
+        def GROUP_NAME=BRANDING
+        def SUB_GROUP_NAME = "Custom Header and Footer"
         int subGroupCtr = 1
 
         createOrUpdateApplicationConfig(CUSTOM_HEADER_URL, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
-        createOrUpdateApplicationConfig(CUSTOM_HEADER_HEIGHT, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
+        createOrUpdateApplicationConfig(CUSTOM_HEADER_HEIGHT, GROUP_NAME, "Integer", 0, subGroupCtr++, SUB_GROUP_NAME)
         createOrUpdateApplicationConfig(CUSTOM_FOOTER_URL, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
-        createOrUpdateApplicationConfig(CUSTOM_FOOTER_HEIGHT, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
+        createOrUpdateApplicationConfig(CUSTOM_FOOTER_HEIGHT, GROUP_NAME, "Integer", 0, subGroupCtr++, SUB_GROUP_NAME)
         createOrUpdateApplicationConfig(CUSTOM_CSS_IMPORTS, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
         createOrUpdateApplicationConfig(CUSTOM_JS_IMPORTS, GROUP_NAME, "String", "", subGroupCtr, SUB_GROUP_NAME)
     }

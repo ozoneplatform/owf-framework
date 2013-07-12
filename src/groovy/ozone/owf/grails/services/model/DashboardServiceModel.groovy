@@ -13,6 +13,7 @@ class DashboardServiceModel extends AbstractServiceModel {
   Boolean isGroupDashboard
   List groups = []
   String description = ''
+  String iconImageUrl = ''
   String type = ''
   String createdDate 
   String prettyCreatedDate
@@ -21,7 +22,10 @@ class DashboardServiceModel extends AbstractServiceModel {
   PersonServiceModel createdBy
   String layoutConfig
   Boolean locked = false
-  StackServiceModel stack
+  Boolean publishedToStore
+  Boolean markedForDeletion
+
+    StackServiceModel stack
   
   Map toDataMap() {
     Map dataMap = [:]

@@ -118,9 +118,9 @@ Ozone.layout.ConfigurationWindowString = {
 };
 
 Ozone.layout.CreateViewWindowString = {
-    createNew: 'Create new layout',
-    createFromExisting: 'Use the layout of an existing Dashboard:',
-    importView: 'Import a Dashboard from a file:'
+    chosePremadeLayout: 'Choose a premade layout',
+    createFromExisting: 'Use the layout of an existing App',
+    createNew: 'Create new layout'
 };
 
 Ozone.layout.ManageViewsWindowString = {
@@ -138,17 +138,17 @@ Ozone.layout.DesktopWindowManagerString = {
 };
 
 Ozone.layout.tooltipString = {
-	widgetLaunchMenuTitle: 			'App Components',
+	widgetLaunchMenuTitle: 			'Launch Menu',
 	manageDashboardsTitle: 			'Dashboard Settings',
 	manageDashboardsContent: 		'This screen allows users to rearrange, edit, and delete dashboards. It also allows users to set their language preference.',
-	createDashboardTitle: 			'Create Dashboard',
+	createDashboardTitle: 			'New App',
 	createDashboardContent: 		'This screen allows users to create blank dashboards, copy an existing dashboard, or import a dashboard from a shared configuration.',
-	addWidgetsTitle: 				'App Components Menu (Alt+Shift+F)',
-	addWidgetsContent: 				'This button opens or closes the App Components carousel, allowing users to add widgets to their current application.',
-	dashboardSwitcherTitle:			'My Apps (Alt+Shift+C)',
-	dashboardSwitcherContent:		'This button opens or closes the My Apps Window, allowing users to switch between their applications.',
+	addWidgetsTitle: 				'Favorites Menu (Alt+Shift+F)',
+	addWidgetsContent: 				'This button opens or closes the Favorites Menu, allowing users to add widgets to their current dashboard.',
+	dashboardSwitcherTitle:			'Switcher (Alt+Shift+C)',
+	dashboardSwitcherContent:		'This button opens or closes the Switcher, allowing users to switch between their dashboards.',
 	marketplaceWindowTitle:			'Apps Mall (Alt+Shift+M)',
-	marketplaceWindowContent:		'This button opens the Apps Mall window, allowing users to discover widgets in Apps Mall and add them to their App Components carousel.',
+	marketplaceWindowContent:		'This button opens the Apps Mall window, allowing users to discover widgets in Apps Mall and add them to their Favorites menu.',
     metricWindowTitle:		    	'Metric (Alt+Shift+R)',
     metricWindowContent:      		'This button opens the Metric window, where widgets that monitor OWF and widget statistics are located.',
 	settingsTitle:					'Settings (Alt+Shift+S)',
@@ -180,7 +180,7 @@ Ozone.layout.tooltipString = {
     adminPWDApproveTitle:			'Approve User Widgets',
 	adminDashCopyTitle: 			'Copy Dashboard',
 	adminDashCopyContent: 			'Copy an existing dashboard to one or more users. Note that once copied, each dashboard instance is an independent entity. Changes made to the initial dashboard at a later date will not be copied.',
-	adminDashEditTitle: 			'Edit Dashboard',
+	adminDashEditTitle: 			'Edit App',
 	adminDashEditContent: 			'Changes the properties of a dashboard. Note that dashboard state is represented as a JSON object, and any changes made to it must be valid JSON.',
 	adminDashDeleteTitle: 			'Delete Dashboard',
 	adminDashDeleteContent: 		'Deletes the selected dashboard. Note that if a user is currently using the dashboard, they will not be kicked out. However, it will not be available once they navigate away.',
@@ -210,6 +210,18 @@ Ozone.layout.admin = {
 };
 
 Ozone.ux.DashboardMgmtString = {
+    createNewHeader : 'Create a new App description words. I like words. They help explain what is going on.',
+    titleBlankText: 'Title',
+    iconBlankText: 'Icon URL',
+    descriptionBlankText : 'Description',
+
+    dashboardIconPath: '/themes/common/images/dashboardswitcher/DefaultDashboard.png',
+
+    premadeLayout: 'Choose a premade layout',
+    existingLayout: 'Use the layout of an existing App',
+    newLayout: 'Create a new layout',
+
+    addPageToExisting: 'Add this as page to existing',
     createDashboard : 'Create a Dashboard', 
     selectDashboardDotDot : 'Select a dashboard...',
     deleteDashboard : 'Delete a Dashboard', 
@@ -233,7 +245,7 @@ Ozone.ux.DashboardMgmtString = {
     desktop : 'Desktop', 
     fit : 'Fit', 
 	tooltipManageDashboards: 'Dashboard Settings',
-	tooltipCreateDashboard: 'Create Dashboard',
+	tooltipCreateDashboard: 'New App',
 	
     ok : 'OK', 
     reset : 'Reset',
@@ -403,10 +415,10 @@ Ozone.layout.DialogMessages = {
     marketplaceWindow_WebappLaunchSuccessful: 'The web app was added successfully from Marketplace.',
     marketplaceWindow_LaunchSuccessful: 'The widget was added successfully from Marketplace. Now choose the dashboard where you want the widget to launch. It must be different from the current dashboard.',
 	widgetAdded: 'Selected widget is already added for this user',
-	marketplaceWindow_RequiredListingsAlertMsg: 'The widget you have launched will not work without some dependencies.  These widgets are listed below and will be additionally added to the App Components carousel.',
+	marketplaceWindow_RequiredListingsAlertMsg: 'The widget you have launched will not work without some dependencies.  These widgets are listed below and will be additionally added to the launch menu.',
     fitPaneFullWarning: 'You are attempting to add a widget to a pane with a single-widget layout. Continuing will replace the existing widget.',
     dashboardLockTitle: 'Lock Dashboard',
-    dashboardLockWarning: 'Locking this dashboard disables the App Components carousel. New widgets cannot be launched or added to this layout. Do you still want to lock this dashboard?',
+    dashboardLockWarning: 'Locking this dashboard disables the Launch Menu. New widgets cannot be launched or added to this layout. Do you still want to lock this dashboard?',
     dashboardLockAlertTitle: 'Locked Dashboard',
     dashboardLockAlert: 'This dashboard is locked. Widgets cannot be added or removed from a locked dashboard.',
     closeBackgroundWidgetWarning: ' is a background widget. You won’t see it on your screen because it runs behind the scenes.<br/><br/>To close the widget, click OK.',
