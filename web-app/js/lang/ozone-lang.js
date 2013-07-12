@@ -120,7 +120,7 @@ Ozone.layout.ConfigurationWindowString = {
 Ozone.layout.CreateViewWindowString = {
     chosePremadeLayout: 'Choose a premade layout',
     createFromExisting: 'Use the layout of an existing App',
-    createNew: 'Create new layout',
+    createNew: 'Create new layout'
 };
 
 Ozone.layout.ManageViewsWindowString = {

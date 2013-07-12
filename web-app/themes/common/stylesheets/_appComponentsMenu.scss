@@ -1,0 +1,135 @@
+.bx-viewport {
+    width: auto !important;
+    margin: 0 60px;
+
+    box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    -ms-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+}
+
+#appcomponents-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    .body {
+        height: 106px;
+    }
+}
+
+.appcomponents-carousel {
+    overflow-y: auto;
+}
+
+.widget {
+    background-color: $widget-launcher-background-color;
+    border-color: $widget-launcher-background-color;
+    float: left;
+    cursor: pointer;
+    
+
+    .thumb-text {
+        color: $widget-launcher-widget-text-color;
+    }
+
+    &:hover {
+        background-color: $widget-launcher-widget-over-background-color;
+        border-color: $widget-launcher-widget-over-border-color;
+
+        .thumb-text {
+            color: $widget-launcher-widget-over-text-color;
+        }
+    }
+}
+
+.widget.selected {
+    background-color: $widget-launcher-widget-selected-background-color;
+    border-color: $widget-launcher-widget-selected-border-color;
+    .thumb-text {
+        color: $widget-launcher-widget-selected-text-color;
+    }
+}
+
+.widget-disabled {
+    /*-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";*/
+    /*filter: alpha(opacity=40);*/
+    /*opacity: 0.4;  */
+    @include opacity(.4);
+}
+
+
+.intent-modal-mask {
+    z-index: 100000;
+}
+
+#intents-window {
+    z-index: 100002;
+    width: 48em;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    margin-left: -24em;
+    @include border-radius(0.5em);
+
+    .body {
+        margin: 0 1em 0 1em;
+    }
+
+    .remember {
+        margin-left: 5px;
+    }
+
+    .bx-wrapper {
+        height: 100%;
+    }
+}
+
+#appcomponents-view, #intents-window {
+    color: #fff;
+    background: $widget-launcher-background-color;
+
+    .header, .footer {
+        padding: 0.5em 0;
+        margin: 0 1em 0 1em;
+        line-height: 2em;
+
+        span {
+            font-weight: bold;
+        }
+    }
+
+    .footer {
+        clear: both;
+    }
+
+    .search-input, .x-tool {
+        float: right;
+    }
+
+    .x-tool {
+        margin: 0 0 0 5px;
+
+        &:hover .x-tool-close {
+             background-image: theme-image($theme-name, 'tools/close-over.png') !important;
+             background-position: 0 !important;
+        }
+    }
+
+    .x-tool-close {
+        vertical-align: middle;
+        background-image: theme-image($theme-name, 'tools/close-out.png') !important;
+    }
+
+    .bx-viewport {
+        background: $widget-launcher-background-color;
+        border: 0px;
+        @include box-shadow(none);
+    }
+
+    .bx-loading {
+        background-color: $widget-launcher-background-color;
+        background-image: theme-image($theme-name, 'OWF-Spinner.gif');
+    }
+}

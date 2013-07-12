@@ -25,8 +25,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     dashboardItemWidth: 0,
 
     //size of switcher in dashboard units
-    minDashboardsWidth: 3,
-    maxDashboardsWidth: 5,
+    minDashboardsWidth: 0,
+    maxDashboardsWidth: 6,
     maxDashboardsHeight: 3,
 
     storeLengthChanged: true,
@@ -38,8 +38,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     DROP_LEFT_CLS: 'x-view-drop-indicator-left',
     DROP_RIGHT_CLS: 'x-view-drop-indicator-right',
 
-
-    _previouslyFocusedStackOrDashboard : null,
+    _previouslyFocusedStackOrDashboard: null,
+    _previouslyHoveredStackOrDashboard: null,
 
     dashboardSelectionDeferred: null,
 
@@ -90,19 +90,18 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         me.stacks = stacks;
         me._deletedStackOrDashboards = [];
 
-        me.tpl = new Ext.XTemplate(	
-        	'<div style="color:white; padding-left:40px;">All of your applications appear here. To start an App, click it. To edit or delete,</br> hover over it and select &quot;Details&quot;.</div>',
+        me.tpl = new Ext.XTemplate(
+            '<div class="dashboard-switcher-descriptor">All of your applications appear here. To start an App, click it. To edit or delete, hover over it and select \'Details\'.</div>',
             '<div class="all-dashboards">',
                 '<tpl for=".">',
                     '<div id="{[this.getName(values)+this.getId(values)]}" class="{[this.getClass(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}" {[this.getToolTip(values)]}>',
                         '<div class="thumb-wrap">',
-                            '<div class="thumb {layout}">',
-                            '</div>',
+                            '{[this.getIcon(values)]}',
                         '</div>',
-                        '{[this.getActions(values)]}',
                         '<div class="{[this.getName(values)]}-name">',
                             '{[this.encodeAndEllipsize(values.name)]}',
                         '</div>',
+                        '{[this.getActions(values)]}',
                     '</div>',
                 '</tpl>',
             '</div>',
@@ -117,6 +116,13 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             },
             getName: function (values) {
                 return values.isStack ? 'stack' : 'dashboard';
+            },
+            getIcon: function(values) {
+                if (values.iconImageUrl) {
+                    return '<div class="thumb" style="background-image: url(' + values.iconImageUrl + ') !important"></div>';
+                } else {
+                    return '<div class="thumb"></div>';
+                }
             },
             getToolTip: function (values) {
                 var str = 'data-qtip="<div class=\'dashboard-tooltip-content\'>' +
@@ -145,18 +151,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                         }
                     } 
                     str += '<div class=\'dashboard-metadata\'>';
-                    var createdBy = Ext.htmlEncode(Ext.htmlEncode(values.createdBy.userRealName));
-                    if (createdBy) {
-                        str += '<p class=\'created-by\'><label>Created by: </label>' + createdBy + '</p>';
-                    }
-                    else {
-                        //If createdBy is null we just say the "System" made it
-                        str += '<p class=\'created-by\'><label>Created by: </label>' + 'System' + '</p>';
-                        
-                    }
-                    
-                    str += '<p class=\'last-updated\'><label>Last Modified: </label>' + (values.prettyEditedDate || '') + '</p></div></div>"';
-                    return str;
+                 
                 }
             },
             
@@ -195,26 +190,37 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         
         me.on('afterrender', function (cmp) {
             me.tpl.overwrite( cmp.body, stackOrDashboards );
-            $ = jQuery
-            
+
             Ext.DomHelper.append( cmp.body,
-            '<ul class="actions">'+
-            	'<div class="moreImg"></div><li class="storeLink">Discover More </br>in the Store</li>'+
-            	'<li class="createLink">Create New</br>App</li>'+
-                '<li class="manage" tabindex="0" data-qtitle="Manage" data-qtip="Activates the Share, Restore, Edit and Delete manager buttons.">Manage</li>'+
-                '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-qtip="Name, describe and design a new dashboard.">+</li>'+
-            '</ul>');
-            
+            '<div class="actions">'+
+                '<ul>'+
+                	'<li class="storeLink">'+
+                        '<span class="storeImg"></span>'+
+                        '<span class="store-link-text">Discover More </br> in the Store</span>'+
+                    '</li>'+
+            		'<li class="createLink">'+
+                        '<span class="createImg"></span>'+
+                        '<span class="create-link-text">Create New App</span>'+
+                    '</li>'+
+                    '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-qtip="Name, describe and design a new dashboard.">+</li>'+
+                '</ul>'+
+            '</div>');
+
             cmp.actionsEl = cmp.body.select('> .actions').first();
 
             me.bindEvents(cmp);
+
+            $('.all-dashboards').bxSlider({
+                oneItemPerSlide: false,
+                infiniteLoop: true,
+                touchEnabled: false
+            });
         });
 
         me.on('beforeclose', me.onClose, me);
-        me.on('show', me.updateWindowSize, me);
+        me.on('show', me.verifyDiscoverMoreButton, me);
         me.on('show', me.initCircularFocus, me, {single: true});
         me.on('show', me.focusActiveDashboard, me);
-        me.on('show', me.verifyDiscoverMoreButton, me);
         me.mon(me.dashboardContainer, OWF.Events.Dashboard.CHANGED, me.onDashboardChanged, me);
     },
 
@@ -226,11 +232,12 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         $dom
             .on('click', '.dashboard', $.proxy(me.onDashboardClick, me))
             .on('click', '.stack', $.proxy(me.onStackClick, me))
-            .on('click', '.manage', $.proxy(me.toggleManage, me))
-            .on('click', '.storeLink',  $.proxy(me.switchToMarketplace,me))
             .on('click', '.create', $.proxy(me.createDashboard, me))
+            .on('click', '.storeLink',  $.proxy(me.switchToMarketplace,me))
             .on('mouseover', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
+            .on('mouseout', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
             .on('focus', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
+            .on('blur', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
             .on('click', '.dashboard .restore', $.proxy(me.restoreDashboard, me))
             .on('click', '.dashboard .share', $.proxy(me.shareDashboard, me))
             .on('click', '.dashboard .edit', $.proxy(me.editDashboard, me))
@@ -240,7 +247,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('click', '.createLink', $.proxy(me.createNewApp, me));
 
         me.initKeyboardNav();
-
 
         // drag and drop
         var $draggedItem,
@@ -461,25 +467,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     me.deleteStack(evt);
                 }
             })
-            .on('focus', '.manage', function (evt) {
-                $(evt.currentTarget).addClass('selected');
-            })
-            .on('blur', '.manage', function (evt) {
-                if(!me._managing) {
-                    $(evt.currentTarget).removeClass('selected');
-                }
-            })
             .on('focus', '.create', function (evt) {
                 $(evt.currentTarget).addClass('selected');
             })
             .on('blur', '.create', function (evt) {
                 $(evt.currentTarget).removeClass('selected');
-            })
-            .on('keyup', '.manage', function (evt) {
-                if(evt.which === Ext.EventObject.ENTER) {
-                    me.toggleManage(evt);
-                    $(evt.currentTarget).addClass('selected');
-                }
             })
             .on('keyup', '.create', function (evt) {
                 if(evt.which === Ext.EventObject.ENTER) {
@@ -712,10 +704,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             }
             return;
         }
-
-        setTimeout(function () {
-            selectedEl && selectedEl.focus();
-        }, 500);
     },
 
     getDashboard: function ($el) {
@@ -732,7 +720,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     },
 
     onDashboardClick: function (evt) {
-        if((evt.type !== 'click' && evt.which !== Ext.EventObject.ENTER) || this._managing === true)
+        if (evt.type !== 'click' && evt.which !== Ext.EventObject.ENTER)
             return;
 
         var $clickedDashboard = $(evt.currentTarget),
@@ -897,31 +885,21 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     },
 
     onMouseOver: function (evt) {
-        var el,
-            $ = jQuery;
+        var el = $(evt.currentTarget);
 
-        if( !this._managing )
-            return;
-
-        el = $(evt.currentTarget);
-
-        if(this._lastManageEl) {
-            if(el[0] === this._lastManageEl[0]) {
-                return;
-            }
-            else {
-                //$('ul', this._lastManageEl).slideUp();
-                $('ul', this._lastManageEl).addClass('hide');
-                //this.hideStackDashboards();
-            }
+        if (this._previouslyHoveredStackOrDashboard != null) {
+            $('ul', this._previouslyHoveredStackOrDashboard).addClass('hide');    
         }
+        
+        $('ul', el).removeClass('hide');    
+        
+        this._previouslyHoveredStackOrDashboard = el;
+    },
 
-        this._lastManageEl = el;
+    onMouseLeave: function(evt) {
+        var el = $(evt.currentTarget);
 
-        //$('ul', el).slideDown();
-        $('ul', this._lastManageEl).removeClass('hide');
-
-        $('.dashboard, .stack', this.el.dom).css('height', el.height() + 'px');
+        $('ul', this._previouslyHoveredStackOrDashboard).addClass('hide');    
     },
 
     updateDashboardEl: function ($dashboard, dashboard) {
@@ -935,63 +913,27 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     		this.$stackDashboards.children('.dashboards').html( this.tpl.applyTemplate( stack.dashboards ) )
     	}
     },
-
-    toggleManage: function (evt) {
-        var $manageBtn;
-
-        if(evt) {
-            $manageBtn = $(evt.currentTarget);
-            this.$manageBtn = $manageBtn;
-        }
-
-        if( this._managing ) {
-            this.resetManage();
-            this._managing = false;
-        }
-        else {
-            // add selected class to manage button
-            $manageBtn && $manageBtn.addClass('selected');
-            this._managing = true;
-            if(this._previouslyFocusedStackOrDashboard) {
-                this._previouslyFocusedStackOrDashboard.trigger('mouseover');
-            }
-        }
-    },
     
     switchToMarketplace: function() {
     	var mpButton = $('.marketBtn')
     	
-    	if(mpButton) {
+    	if(mpButton.is(':visible')) {
     		mpButton.click()
     		this.close();
     	}
     },
     
     verifyDiscoverMoreButton: function() {
-    	var mpButton = $('.marketBtn')
     	var discoverMoreButton = $('.storeLink')
+    	var createButton = $('.createLink')
     	
-    	if(mpButton.is(':visible'))
+    	if($('.marketBtn').is(':visible')) {
     		discoverMoreButton.show();
-    	else
+    		createButton.removeClass('createLinkShift');
+    	} else {
     		discoverMoreButton.hide();
-    },
-
-    resetManage: function () {
-        if(!this._managing)
-            return;
-
-        this.$manageBtn.removeClass('selected');
-        // reset the height to normal
-        $('.dashboard, .stack', this.el.dom).css('height', '');
-        
-        // hide action buttons of previously clicked stack
-        if( this._lastManageEl ) {
-             //$('ul', this._lastManageEl).slideUp();
-             $('ul', this._lastManageEl).addClass('hide');
-             this._lastManageEl = null;
-        }
-        this._managing = false;
+    		createButton.addClass('createLinkShift');
+    	}
     },
 
     restoreDashboard: function (evt) {
@@ -1426,7 +1368,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     onClose: function() {
         var me = this;
 
-        me.resetManage();
         //me.tearDownCircularFocus();
 
         this.dashboardSelectionDeferred && this.dashboardSelectionDeferred.state() == "pending" && this.dashboardSelectionDeferred.reject();

@@ -9,7 +9,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
 
     menuAlign: 'tr-br',
 
-    isMenuHidden: true,
+    isMenuShown: false,
     hideDelay: 100,
     showDelay: 800,
 
@@ -19,7 +19,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
         var me = this;
 
         me.buildDisplayText();
-        me.initializeMarketplaceUserMenuClient();
+        me.initializeMarketplaceUserMenuContainer();
         me.buildMenu();
 
         me.on('afterrender', me.onAfterRender, me);
@@ -31,9 +31,9 @@ Ext.define('Ozone.components.button.UserMenuButton', {
         this.text = Ext.htmlEncode(this.user.userRealName);
     },
 
-    initializeMarketplaceUserMenuClient: function() {
-        this.marketplaceUserMenuClient =
-            new Ozone.marketplace.MarketplaceUserMenuClient(Ozone.eventing.Container, this.dashboardContainer);
+    initializeMarketplaceUserMenuContainer: function() {
+        this.marketplaceUserMenuContainer =
+            new Ozone.marketplace.MarketplaceUserMenuContainer(Ozone.eventing.Container, this.dashboardContainer);
     },
 
     buildMenu: function() {
@@ -57,14 +57,12 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                             columns: 1,
                             id: 'owfMenu',
                             width: 193,
-                            height: 200,
                             items: me.buildOwfMenuItems()
                         }, {
                             xtype: 'buttongroup',
                             columns: 1,
                             id: 'marketplaceMenu',
                             width: 183,
-                            height: 200,
                             items: me.buildMarketplaceMenuItems()
                         }
                     ]
@@ -180,7 +178,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
         var me = this;
 
         existingMenuItems.push([{
-                text: 'Admin',
+                text: 'Administration',
                 id: 'admin',
                 cls: 'admin',
                 clickable: true,
@@ -236,7 +234,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                     height: 28,
                     clickable: true,
                     handler: Ext.bind(function(evt, obj) {
-                        me.marketplaceUserMenuClient.activateMarketplaceMenuAction('marketplaceUserProfile');
+                        me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceUserProfile');
                     }, me)
                 }, {
                     text: 'Themes',
@@ -244,7 +242,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                     height: 25,
                     clickable: true,
                     handler: Ext.bind(function(evt, obj) {
-                        me.marketplaceUserMenuClient.activateMarketplaceMenuAction('marketplaceThemes');
+                        me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceThemes');
                     }, me)
                 }, {
                     text: 'My Listings',
@@ -252,7 +250,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                     height: 25,
                     clickable: true,
                     handler: Ext.bind(function(evt, obj) {
-                        me.marketplaceUserMenuClient.activateMarketplaceMenuAction('marketplaceMyListings');
+                        me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceMyListings');
                     }, me)
                 }, {
                     text: 'Create Listing',
@@ -260,7 +258,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                     height: 25,
                     clickable: true,
                     handler: Ext.bind(function(evt, obj) {
-                        me.marketplaceUserMenuClient.activateMarketplaceMenuAction('marketplaceCreateListing');
+                        me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceCreateListing');
                     }, me)
                 }
             ];
@@ -287,7 +285,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                 height: 25,
                 clickable: true,
                 handler: Ext.bind(function(evt, obj) {
-                    me.marketplaceUserMenuClient.activateMarketplaceMenuAction('marketplaceConfigurationPages');
+                    me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceConfigurationPages');
                 }, me)
             }, {
                 text: 'Franchise Administration',
@@ -295,7 +293,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                 height: 25,
                 clickable: true,
                 handler: Ext.bind(function(evt, obj) {
-                    me.marketplaceUserMenuClient.activateMarketplaceMenuAction('marketplaceFranchiseAdministration');
+                    me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceFranchiseAdministration');
                 }, me)
             }
         ]);
@@ -362,36 +360,51 @@ Ext.define('Ozone.components.button.UserMenuButton', {
         me.collectAndCacheClickableMenuItems(cmp);
 
         me.on('mouseover', me.showUserMenu, me);
+        me.mon(me.menu, 'mouseover', me.showUserMenu, me);
+
+        me.on('mouseout', me.hideUserMenu, me);
         me.mon(me.menu, 'mouseleave', me.hideUserMenu, me);
 
         Ext.Array.each(me.clickables, function(c) {
-            me.mon(c, 'click', me.hideMenu, me);
+            me.mon(c, 'click', function() {
+                me.hideUserMenu();
+            }, me);
         });
     },
 
     showUserMenu: function() {
         var me = this;
-
-        me.isMenuHidden = false;
+        
+        // check if there's an active hide task, and cancel if it is active
+        if (me.hideTask) {
+            me.hideTask.cancel();
+        }
 
         if (!me.showTask) {
             me.showTask = Ext.create('Ext.util.DelayedTask', function() {
                 me.showMenu();
+                me.isMenuShown = true;
             });
         }
+
         me.showTask.delay(Ext.isNumber(me.showDelay) ? me.showDelay : 800, null);
     },
 
-    hideUserMenu: function(menu, event, eventOpts) {
+    hideUserMenu: function() {
         var me = this;
-
-        me.isMenuHidden = true;
+        
+        // check if there's an active show task, and cancel if it is active
+        if (me.showTask) {
+            me.showTask.cancel();
+        }
 
         if (!me.hideTask) {
             me.hideTask = Ext.create('Ext.util.DelayedTask', function() {
                 me.hideMenu();
+                me.isMenuShown = false;
             });
         }
+
         me.hideTask.delay(Ext.isNumber(me.hideDelay) ? me.hideDelay : 100, null);
     },
 
@@ -424,7 +437,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
     enableMarketplaceMenu: function() {
         var element = this.menu.down("#marketplaceMenu");
 
-        this.menu.width = 368
+        this.menu.width = 368;
         element.show();
     },
 
