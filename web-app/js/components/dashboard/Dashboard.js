@@ -762,8 +762,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @param params JSON object containing the guid of the widget to close.
      */
     refreshWidgetLaunchMenu: function() {
-        var widgetLauncher = Ext.getCmp('widget-launcher');
-        widgetLauncher.refresh();
+        this.dashboardContainer.refreshAppComponentsView();
     },
 
     /**
@@ -1004,49 +1003,40 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     },
 
     shimPanes: function() {
-        var panes = this.panes;
-        for (var i = 0, len = panes.length; i < len; i++) {
-            panes[i].shim();
-        }
+        _.invoke(this.panes, 'shim');
     },
 
     unshimPanes: function() {
-        var panes = this.panes;
-        for (var i = 0, len = panes.length; i < len; i++) {
-            panes[i].unshim();
-        }
+        _.invoke(this.panes, 'unshim');
     },
 
     //Enables widget move to all but the sourcePane that originated the drag
     enableWidgetMove: function(sourcePane) {
-        var panes = this.panes;
+        var panes = this.panes,
+            isLocked = this.configRecord.get("locked");
 
-        for (var i = 0, len = panes.length; i < len; i++) {
-            if (this.configRecord.get("locked") === true) {
-                panes[i].disableWidgetMove();
-            } else if (sourcePane) {
-                if (panes[i].id !== sourcePane.id) {
-                    panes[i].enableWidgetMove();
-                } else {
-                    //Still enable shim, just don't do highlight on mouseover
-                    panes[i].shim();
-                }
-            } else {
-                //Originated from launch menu, so enable all panes for drop
-                panes[i].enableWidgetMove();
-            }
+        this.shimPanes();
+
+        if(!isLocked) {
+            var $shims = $('.paneshim', this.el.dom);
+
+            // mouseover doesn't fire in IE7 after mouse is already over the element
+            // use movemove instead
+            $shims.on('mousemove.launch', function () {
+                $shims.addClass('highlight-dashboard-designer-drop');
+                $(this).removeClass('highlight-dashboard-designer-drop');
+            });
+
+            $(document).one('mouseup', function () {
+                $shims
+                    .removeClass('highlight-dashboard-designer-drop')
+                    .off('.launch');
+            });
         }
     },
 
     disableWidgetMove: function() {
-        var panes = this.panes;
-
-        if (!panes)
-            return;
-
-        for (var i = 0, len = panes.length; i < len; i++) {
-            panes[i].disableWidgetMove();
-        }
+        this.unshimPanes();
     },
 
     getViewPort: function() {

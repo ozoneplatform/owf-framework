@@ -196,7 +196,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 '<ul>'+
                 	'<li class="storeLink">'+
                         '<span class="storeImg"></span>'+
-                        '<span class="store-link-text">Discover More in the Store</span>'+
+                        '<span class="store-link-text">Discover More </br> in the Store</span>'+
                     '</li>'+
             		'<li class="createLink">'+
                         '<span class="createImg"></span>'+

@@ -102,6 +102,15 @@
                     storeId: 'widgetStore'
                 });
 
+                var widgets = ${widgets};
+                OWF.Collections = {};
+                OWF.Collections.AppComponents = new Ozone.data.collections.Widgets({
+                    results:  widgets.length,
+                    rows: widgets
+                }, {
+                    parse: true
+                });
+
                 // mappings are not supported in Models,
                 // they only supported through Ext Proxy Reader
                 widgetStore.loadRecords(widgetStore.proxy.reader.read(${widgets}).records);
