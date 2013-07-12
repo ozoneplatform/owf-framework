@@ -261,7 +261,7 @@ class UrlMappings {
             controller = "dashboard"
             action = UrlMappings.handleDashboardAction
         }
-        
+
         "/prefs/widgetDefinition/dependents" {
             controller = "widgetDefinition"
             action = "dependents"

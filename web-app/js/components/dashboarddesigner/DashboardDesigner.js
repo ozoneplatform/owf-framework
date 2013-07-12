@@ -520,9 +520,18 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
         else {
             me.dashboard.set('layoutConfig', dashboardLayoutConfig);
             me.dashboard.set('locked', me.locked);
-            // Clear out the stack association on newly created dashboards.  At this time, fresh dashboard
-            // instances should be unassigned to a stack including the case where we are copying from an existing dashboard.
-            me.dashboard.set('stack', null);
+
+            if (!me.dashboard.get("stack")) {
+                // Create new stack and dashboard
+                // Copy dashboard parameters into stack parameters. This will assign the same name, description and image to both the new App and its default Page
+                me.dashboard.set('stack', {
+                    "name": me.dashboard.get("name"),
+                    "description": me.dashboard.get("description"),
+                    "imageUrl": me.dashboard.get("iconImageUrl")
+                });
+
+            }
+
             me.dashboardContainer.saveDashboard(me.dashboard.data, 'create', function() {
 
                 // activate new dashboard

@@ -236,7 +236,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('click', '.dashboard .edit', $.proxy(me.editDashboard, me))
             .on('click', '.dashboard .delete', $.proxy(me.deleteDashboard, me))
             .on('click', '.stack .restore', $.proxy(me.restoreStack, me))
-            .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
+            .on('click', '.stack .delete', $.proxy(me.deleteStack, me))
+            .on('click', '.createLink', $.proxy(me.createNewApp, me));
 
         me.initKeyboardNav();
 
@@ -1089,13 +1090,32 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         }, 100);
     },
 
+
+    createNewApp: function (evt) {
+        var me = this,
+            createDashWindow = Ext.widget('createdashboardwindow', {
+                stackId: null,
+                title: Ozone.ux.DashboardMgmtString.createNewAppTitle,
+                headerText: Ozone.ux.DashboardMgmtString.createNewAppHeader,
+                itemId: 'createDashWindow',
+                dashboardContainer: me.dashboardContainer,
+                ownerCt: me.dashboardContainer
+            });
+
+        createDashWindow.show();
+        me.close();
+    },
+
     createDashboard: function (evt) {
         var me = this,
             createDashWindow = Ext.widget('createdashboardwindow', {
-            itemId: 'createDashWindow',
-            dashboardContainer: me.dashboardContainer,
-            ownerCt: me.dashboardContainer
-        });
+                createNewApp: false,
+                title: Ozone.ux.DashboardMgmtString.createNewPageTitle,
+                headerText: Ozone.ux.DashboardMgmtString.createNewPageHeader,
+                itemId: 'createDashWindow',
+                dashboardContainer: me.dashboardContainer,
+                ownerCt: me.dashboardContainer
+            });
 
         createDashWindow.show();
         me.close();
