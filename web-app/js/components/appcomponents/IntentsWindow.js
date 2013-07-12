@@ -77,6 +77,8 @@
 
         renderSubView: function () {
             this.list = new Ozone.components.appcomponents.AppComponentsList({
+                // hide details link
+                details: false,
                 collection: this.isShowingOpenInstances ? this.matchingOpenedAppComponents : this.matchingAppComponents
             });
 

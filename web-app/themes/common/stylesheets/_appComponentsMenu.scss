@@ -15,7 +15,7 @@
     width: 100%;
 
     .body {
-        height: 106px;
+        height: 150px;
     }
 }
 
@@ -90,6 +90,24 @@
     color: #fff;
     background: $widget-launcher-background-color;
 
+    .search-input {
+        float: right;
+    }
+
+    .bx-viewport {
+        background: $widget-launcher-background-color;
+        border: 0px;
+        @include box-shadow(none);
+    }
+
+    .bx-loading {
+        background-color: $widget-launcher-background-color;
+        background-image: theme-image($theme-name, 'OWF-Spinner.gif');
+    }
+}
+
+#appcomponents-view, #intents-window, #widget-details-tip {
+
     .header, .footer {
         padding: 0.5em 0;
         margin: 0 1em 0 1em;
@@ -104,11 +122,8 @@
         clear: both;
     }
 
-    .search-input, .x-tool {
-        float: right;
-    }
-
     .x-tool {
+        float: right;
         margin: 0 0 0 5px;
 
         &:hover .x-tool-close {
@@ -121,15 +136,27 @@
         vertical-align: middle;
         background-image: theme-image($theme-name, 'tools/close-out.png') !important;
     }
+}
 
-    .bx-viewport {
-        background: $widget-launcher-background-color;
-        border: 0px;
-        @include box-shadow(none);
+#widget-details-tip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200px;
+    background-color: #222;
+    color: $widget-launcher-widget-text-color;
+    @include border-radius(4px);
+
+    .widget-description {
+        margin: 0 1em 0 1em;
     }
 
-    .bx-loading {
-        background-color: $widget-launcher-background-color;
-        background-image: theme-image($theme-name, 'OWF-Spinner.gif');
+    .widget-name {
+        font-size: 1.25em;
     }
+}
+
+.widget-remove {
+    color: #f00;
+    float: right;
 }

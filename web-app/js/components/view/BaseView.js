@@ -42,6 +42,12 @@
             this.$el.hide();
             this.$el.trigger('hide');
             return this;
+        },
+
+        remove: function () {
+            Backbone.View.prototype.remove.call(this);
+            this.$el.off();
+            return this;
         }
 
     });

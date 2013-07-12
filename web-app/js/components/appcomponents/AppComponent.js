@@ -27,8 +27,14 @@
         tpl: '<div class="thumb-wrap">' +
                 '<img onerror="this.src = \'themes/common/images/settings/WidgetsIcon.png\'" src="<%= image %>" class="thumb" />' +
             '</div>' +
-            '<div class="thumb-text"><%= name %></div>',
+            '<div class="thumb-text"><%= name %></div>'+
+            '<% if (details) { %>' +
+                '<a href="#" class="widget-details" style="visibility: hidden;">details<a>' +
+            '<% } %>',
 
+        // boolean flag indicating whether or not to show details link
+        details: true,
+        
         attributes: function () {
             return {
                 tabindex: 0,
@@ -37,7 +43,11 @@
         },
 
         render: function () {
-            this.$el.append(_.template(this.tpl, this.model.attributes));
+            var tpl = _.template(this.tpl, _.extend({
+                details: this.details
+            }, this.model.attributes));
+
+            this.$el.append(tpl);
             return this;
         },
 
