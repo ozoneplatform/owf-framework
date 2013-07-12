@@ -264,7 +264,11 @@ Ext.define('Ozone.components.pane.Pane', {
 
         for(var i = 0, len = models.length ; i < len ; i++) {
             widgetModel = models[i];
-            widgetModel = widgetModel.isModel ? widgetModel : Ext.create('Ozone.data.State', widgetModel);
+
+            if(!(widgetModel instanceof Ozone.data.WidgetDefinition || widgetModel instanceof Ozone.data.State)) {
+                widgetModel = Ext.create('Ozone.data.State', widgetModel.attributes || widgetModel);
+            }
+            
 
             if(this.fireEvent(OWF.Events.Widget.BEFORE_LAUNCH, this, widgetModel) !== false) {
                 if(widgetModel.get('floatingWidget')) {
@@ -441,27 +445,6 @@ Ext.define('Ozone.components.pane.Pane', {
 
     unshim: function() {
         this.shimEl && this.shimEl.removeCls('paneshim');
-    },
-
-    enableDrop: function() {
-        this.shimEl && this.shimEl.addCls('highlight-dashboard-designer-drop');
-    },
-
-    disableDrop: function() {
-        this.shimEl && this.shimEl.removeCls('highlight-dashboard-designer-drop');
-    },
-
-    enableWidgetMove: function() {
-        this.shim();
-        this.el.on('mousemove', this.enableDrop, this);
-        this.el.on('mouseout', this.disableDrop, this);
-    },
-
-    disableWidgetMove: function() {
-        this.unshim();
-        this.disableDrop();
-        this.el.un('mousemove', this.enableDrop, this);
-        this.el.un('mouseout', this.disableDrop, this);
     },
 
     moveFloatingWidgetUp: function(widget) {

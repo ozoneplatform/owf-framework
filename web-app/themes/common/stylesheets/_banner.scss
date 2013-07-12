@@ -139,7 +139,8 @@
     }
 }
 
-.x-btn-default-toolbar-banner-large-over {
+.x-btn-default-toolbar-banner-large-over,
+.x-btn-default-toolbar-banner-large-pressed {
     @include owf-background-gradient($banner-button-over-background);
 }
 

@@ -208,7 +208,8 @@ class DashboardService extends BaseService {
             }
         }
 
-        // Get stack default groups associated through by group association or direct association.
+        // Get stack default groups associated through group association or direct association.
+        // Or stack default groups for stacks associated with the all users group.
         def stackDefaultGroups = []
         if (params.user != null) {
             
@@ -218,6 +219,7 @@ class DashboardService extends BaseService {
                         eq('id',params.user.id)
                     }
                 }
+
                 cache(true)
                 cacheMode(CacheMode.GET)
             }
@@ -241,6 +243,34 @@ class DashboardService extends BaseService {
             //turn cache mode to GET which means don't use instances from this query for the 2nd level cache
             //seems to be a bug where the people collection is cached with only one person due to the people association filter above
             cacheMode(CacheMode.GET)
+        }
+
+        // Get the OWF Users Group and add it to the list
+        def allUsersGroup = Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
+        if (allUsersGroup) {
+            groups = groups << allUsersGroup
+
+            // If the users group contained stacks, add their default groups.
+            def allUsersStackGroups = allUsersGroup?.stacks?.collect{ it.findStackDefaultGroup() }
+            if (allUsersStackGroups) {
+                groups = (groups << allUsersStackGroups).flatten()
+            }
+        }
+
+        // Process admin group dashboards if this user is an admin.
+        if (accountService.getLoggedInUserIsAdmin()) {
+            def allAdminsGroup = Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
+
+            if (allAdminsGroup) {
+                // Add the admin group.
+                groups = groups << allAdminsGroup
+
+                // If the admin group contained stacks, add their default groups
+                def allAdminStackGroups = allAdminsGroup?.stacks?.collect{ it.findStackDefaultGroup() }
+                if (allAdminStackGroups) {
+                    groups = (groups << allAdminStackGroups).flatten()
+                }
+            }
         }
 
         def groupDashboardIds = []as Set

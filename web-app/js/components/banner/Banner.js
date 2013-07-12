@@ -36,20 +36,6 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
     buttonSelectedCls: 'x-btn-default-toolbar-banner-large-selected',
 
-    openAppComponents: function() {
-        if (this.dashboardContainer.activeDashboard.configRecord.get('locked') === true ||
-            this.dashboardContainer.activeDashboard.configRecord.isMarketplaceDashboard()) {
-            return;
-        }
-
-        if (this.appComponentsCarousel.isVisible()) {
-            this.appComponentsCarousel.close();
-        } else {
-            this.appComponentsCarousel.show();
-            this.appComponentsCarousel.refresh();
-        }
-    },
-
     enableAppComponentsBtn: function() {
         this.getComponent('appComponentsBtn').enable();
         if (this.popOutToolbar) {
@@ -58,8 +44,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     },
 
     disableAppComponentsBtn: function() {
-        if (this.appComponentsCarousel.isVisible()) {
-            this.appComponentsCarousel.close();
+        if (this.appComponentsView.isVisible()) {
+            this.appComponentsView.close();
         }
         this.getComponent('appComponentsBtn').disable();
         if (this.popOutToolbar) {
@@ -158,8 +144,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     addKeyBindings: function() {
         Ozone.KeyMap.addBinding([
             Ext.apply(Ozone.components.keys.HotKeys.LAUNCH_MENU, {
-                scope: this,
-                fn: this.openAppComponents
+                scope: this.dashboardContainer,
+                fn: this.dashboardContainer.showAppComponentsView
             }),
             Ext.apply(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER, {
                 scope: this.dashboardContainer,
@@ -186,26 +172,6 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             undocked: true
         });
 
-        me.appComponentsCarousel = Ext.widget('launchMenu', {
-            id: 'widget-launcher',
-            dashboardContainer: me.dashboardContainer,
-            hidden: true,
-            listeners: {
-                hide: {
-                    fn: function() {
-                        this.down('#appComponentsBtn').toggle(false, true);
-                    },
-                    scope: me
-                },
-                show: {
-                    fn: function() {
-                        this.down('#appComponentsBtn').toggle(true, true);
-                    },
-                    scope: me
-                }
-            }
-        });
-
         me.items = [];
         me.items.push([{
                 xtype: 'button',
@@ -213,7 +179,6 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 text: 'My Apps',
                 cls: 'bannerBtn myAppsBtn',
                 scale: 'banner-large',
-                enableToggle: true,
                 scope: this.dashboardContainer,
                 handler: this.dashboardContainer.showDashboardSwitcherButtonHandler,
                 listeners: {
@@ -232,9 +197,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 scale: 'banner-large',
                 cls: 'bannerBtn appComponentsBtn',
                 enableToggle: true,
-                clickCount: 0,
-                handler: this.openAppComponents,
-                scope: this,
+                scope: this.dashboardContainer,
+                handler: this.dashboardContainer.showAppComponentsView,
                 listeners: {
                     afterrender: {
                         fn: function(btn) {

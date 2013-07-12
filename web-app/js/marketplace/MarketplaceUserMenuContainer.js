@@ -1,3 +1,4 @@
+
 /**
  * @ignore
  */
@@ -9,8 +10,8 @@ var Ozone = Ozone ? Ozone : {};
  */
 Ozone.marketplace = Ozone.marketplace ? Ozone.marketplace : {};
 
-Ozone.marketplace.MarketplaceUserMenuClient = function(widgetEventingController, dashboardContainer) {
-    if (Ozone.marketplace.MarketplaceUserMenuClient.instance == null) {
+Ozone.marketplace.MarketplaceUserMenuContainer = function(widgetEventingController, dashboardContainer) {
+    if (Ozone.marketplace.MarketplaceUserMenuContainer.instance == null) {
         var scope = this;
 
         scope.menuItemClickChannelName = "_MARKETPLACE_MENU_ITEM_CLICK";
@@ -19,17 +20,17 @@ Ozone.marketplace.MarketplaceUserMenuClient = function(widgetEventingController,
         scope.widgetEventingController = widgetEventingController || Ozone.eventing.Container;
         scope.dashboardContainer = dashboardContainer;
 
-        Ozone.marketplace.MarketplaceUserMenuClient.instance = scope;
+        Ozone.marketplace.MarketplaceUserMenuContainer.instance = scope;
 
         scope.widgetEventingController.registerHandler(scope.menuAdminToggleChannelName, function(sender, msg) {
             return scope.toggleMarketplaceAdminMenu(sender);
         });
     }
 
-    return Ozone.marketplace.MarketplaceUserMenuClient.instance;
+    return Ozone.marketplace.MarketplaceUserMenuContainer.instance;
 };
 
-Ozone.marketplace.MarketplaceUserMenuClient.prototype = {
+Ozone.marketplace.MarketplaceUserMenuContainer.prototype = {
     getMarketplaceWidgetId: function() {
         var activeDashboard = this.dashboardContainer.activeDashboard;
         if (activeDashboard.configRecord.isMarketplaceDashboard()) {
@@ -75,11 +76,11 @@ Ozone.marketplace.MarketplaceUserMenuClient.prototype = {
     }
 };
 
-Ozone.marketplace.MarketplaceUserMenuClient.getInstance = function(widgetEventingController, dashboardContainer) {
-    if (Ozone.marketplace.MarketplaceUserMenuClient.instance == null) {
-        Ozone.marketplace.MarketplaceUserMenuClient.instance =
-            new Ozone.marketplace.MarketplaceUserMenuClient(widgetEventingController, dashboardContainer);
+Ozone.marketplace.MarketplaceUserMenuContainer.getInstance = function(widgetEventingController, dashboardContainer) {
+    if (Ozone.marketplace.MarketplaceUserMenuContainer.instance == null) {
+        Ozone.marketplace.MarketplaceUserMenuContainer.instance =
+            new Ozone.marketplace.MarketplaceUserMenuContainer(widgetEventingController, dashboardContainer);
     }
 
-    return Ozone.marketplace.MarketplaceUserMenuClient.instance;
+    return Ozone.marketplace.MarketplaceUserMenuContainer.instance;
 };

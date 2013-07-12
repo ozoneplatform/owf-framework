@@ -10,6 +10,7 @@
             //console.time('page');
         </script>
         <!-- ** CSS ** -->
+        <link rel="stylesheet" type="text/css" href="./js-lib/jquery.bxslider/jquery.bxslider.css">
         <!-- base library -->
         <p:css id='theme' name='${owfCss.defaultCssPath()}' absolute='true'/>
 
@@ -99,6 +100,15 @@
                 // user's widgets
                 var widgetStore = Ext.create('Ozone.data.WidgetStore', {
                     storeId: 'widgetStore'
+                });
+
+                var widgets = ${widgets};
+                OWF.Collections = {};
+                OWF.Collections.AppComponents = new Ozone.data.collections.Widgets({
+                    results:  widgets.length,
+                    rows: widgets
+                }, {
+                    parse: true
                 });
 
                 // mappings are not supported in Models,
