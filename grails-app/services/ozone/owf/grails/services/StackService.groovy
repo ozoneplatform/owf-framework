@@ -147,7 +147,7 @@ class StackService {
         def stacks = []
 
         if (params.update_action) {
-			if(params.id >= 0 || params.stack_id >= 0) {
+            if(params.id >= 0 || params.stack_id >= 0) {
                 ensureAdminOrOwner(params.id >= 0 ? params.id: params.stack_id);
             }
 
@@ -188,6 +188,7 @@ class StackService {
     }
     
     private def updateStack(params) {
+        def originalParams = params
 
         def stack, returnValue = null
 
@@ -208,6 +209,10 @@ class StackService {
 
         }
 
+        if("createAndAdd" == originalParams.update_action) {
+            params = JSON.parse(oringalParams.stack_data)
+        }
+
         if (!params.update_action) {
             //If context was modified and it already exists, throw a unique constrain error
             if(params.stackContext && params.stackContext != stack.stackContext) {
@@ -226,13 +231,13 @@ class StackService {
                 owner: params.owner ?: (params.id  >= 0 ? stack.owner : accountService.getLoggedInUser())
             ]
             
-            stack.save(flush: true, failOnError: true)
+            stack = stack.save(flush: true, failOnError: true)
             
             def stackDefaultGroup = stack.findStackDefaultGroup()
-			//OP-70 adding owner to users by default
-			if(stackDefaultGroup && accountService.getLoggedInUser()) {
-				stackDefaultGroup.addToPeople(accountService.getLoggedInUser())
-			}
+            //OP-70 adding owner to users by default
+            if(stackDefaultGroup && accountService.getLoggedInUser()) {
+                stackDefaultGroup.addToPeople(accountService.getLoggedInUser())
+            }
             def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
 
             returnValue = serviceModelService.createServiceModel(stack,[
@@ -242,7 +247,14 @@ class StackService {
                 totalWidgets: 0
             ])
     
-        } else {
+        } 
+
+        if("createAndAdd" == originalParams.update_action) {
+            params = oringalParams
+            params.data = originalParams.dashboard_data
+        }
+
+        if(params.update_action) {
             
             if ('groups' == params.tab) {
                 
@@ -362,30 +374,30 @@ class StackService {
 
         return returnValue
     }
-	
-	def restore(params) {
-		def stack = Stack.findById(params.id)
-		
-		if (stack == null) {
-			throw new OwfException(message:'Stack ' + params.guid + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
-		}
-		def user = accountService.getLoggedInUser()
-		def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
-		def updatedDashboards = []
-		userStackDashboards?.each { userStackDashboard ->
-			
-			updatedDashboards.push(dashboardService.restore([
-					guid: userStackDashboard.guid
-				]).data[0])
-		}
+    
+    def restore(params) {
+        def stack = Stack.findById(params.id)
+        
+        if (stack == null) {
+            throw new OwfException(message:'Stack ' + params.guid + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
+        }
+        def user = accountService.getLoggedInUser()
+        def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
+        def updatedDashboards = []
+        userStackDashboards?.each { userStackDashboard ->
+            
+            updatedDashboards.push(dashboardService.restore([
+                    guid: userStackDashboard.guid
+                ]).data[0])
+        }
                 
                 reorderUserDashboards(params)
-		
-		def stackDefaultGroup = stack.findStackDefaultGroup()
-		def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
-		
-		return [success:true, updatedDashboards: updatedDashboards]
-	}
+        
+        def stackDefaultGroup = stack.findStackDefaultGroup()
+        def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
+        
+        return [success:true, updatedDashboards: updatedDashboards]
+    }
         
     def reorderUserDashboards(params) {
         def stack = Stack.findById(params.id)
@@ -505,7 +517,7 @@ class StackService {
 
         // create widgets from stack descriptor json
         def widgets = params.data.widgets
-		def oldToNewGuids = [:]
+        def oldToNewGuids = [:]
         widgets.each {
             def widget = WidgetDefinition.findByWidgetGuid(it.widgetGuid)
 
@@ -526,37 +538,37 @@ class StackService {
             if(!tags.isEmpty()){
                 it.tags = tags
             }
-			def types = []
-			if(it.widgetTypes){
-				def type = WidgetType.findByName(it.widgetTypes[0])
-				def t = [:]
-				t.put("id", type.id)
-				t.put("name", type.name)
-				types.push(new JSONObject(t))
-				it.widgetTypes = types
-			}
+            def types = []
+            if(it.widgetTypes){
+                def type = WidgetType.findByName(it.widgetTypes[0])
+                def t = [:]
+                t.put("id", type.id)
+                t.put("name", type.name)
+                types.push(new JSONObject(t))
+                it.widgetTypes = types
+            }
             it.stackDescriptor = true
             if(widget) {
                 it.id = it.widgetGuid
             }
-			def oldGuid = it.widgetGuid
+            def oldGuid = it.widgetGuid
             widget = widgetDefinitionService.createOrUpdate(it)
-			if(!(oldGuid.equals(widget.data[0].id))){
-				oldToNewGuids[oldGuid] = widget.data[0].id
-			}
+            if(!(oldGuid.equals(widget.data[0].id))){
+                oldToNewGuids[oldGuid] = widget.data[0].id
+            }
         }
 
         // create dashboards from stack descriptor json
         def dashboards = params.data.dashboards
-	
+    
         dashboards.each {
-			def json = it.toString()
-			oldToNewGuids.each {old, changed ->
-				json = json.replace(old, changed)
-			}
-			json = json.replace(it.guid, java.util.UUID.randomUUID().toString())
-			it = new JSONObject(json)
-			changeWidgetInstanceIds(it.layoutConfig)
+            def json = it.toString()
+            oldToNewGuids.each {old, changed ->
+                json = json.replace(old, changed)
+            }
+            json = json.replace(it.guid, java.util.UUID.randomUUID().toString())
+            it = new JSONObject(json)
+            changeWidgetInstanceIds(it.layoutConfig)
             it.isGroupDashboard = true
             it.isdefault = false
             it.stack = stack
@@ -564,26 +576,26 @@ class StackService {
             domainMappingService.createMapping(stackDefaultGroup, RelationshipType.owns, dashboard)
         }
 
-		// Add any widgets to the stack's default group if not already there.
-		widgetDefinitionService.reconcileGroupWidgetsFromDashboards(stackDefaultGroup, false)
-		
+        // Add any widgets to the stack's default group if not already there.
+        widgetDefinitionService.reconcileGroupWidgetsFromDashboards(stackDefaultGroup, false)
+        
         //Update the uniqueWidgetCount of the stack
         stack.uniqueWidgetCount = widgets.length()
         stack.save(flush: true, failOnError: true)
     }
-	
-	private def changeWidgetInstanceIds(layoutConfig) {
-		
-		def widgets = layoutConfig.widgets
-		for(def i = 0; i < widgets?.size(); i++) {
-			widgets[i].put("uniqueId", java.util.UUID.randomUUID().toString())
-		}
-		
-		def items = layoutConfig.items
-		for(def i = 0; i < items?.size(); i++) {
-			changeWidgetInstanceIds(items[i])
-		}
-	}
+    
+    private def changeWidgetInstanceIds(layoutConfig) {
+        
+        def widgets = layoutConfig.widgets
+        for(def i = 0; i < widgets?.size(); i++) {
+            widgets[i].put("uniqueId", java.util.UUID.randomUUID().toString())
+        }
+        
+        def items = layoutConfig.items
+        for(def i = 0; i < items?.size(); i++) {
+            changeWidgetInstanceIds(items[i])
+        }
+    }
     
     def export(params) {
         
