@@ -87,7 +87,7 @@
         renderFooter: function () {
             var footerHTML = '';
             if(this.isShowingOpenInstances) {
-                footerHTML += '<p>Send the information to a different <a href="#" class="show-new-component">App Component</a></p>';
+                footerHTML += '<p>OR send the information to a different <a href="#" class="show-new-component">App Component</a></p>';
             }
             
             footerHTML += '<input type="checkbox" class="remember-checkbox">' +
