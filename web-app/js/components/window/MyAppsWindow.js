@@ -210,10 +210,18 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
             me.bindEvents(cmp);
 
-            $('.all-dashboards').bxSlider({
+            me.slider = $('.all-dashboards').bxSlider({
                 oneItemPerSlide: false,
                 infiniteLoop: true,
-                touchEnabled: false
+                touchEnabled: false,
+                onSliderLoad: Ext.bind(function(currentIndex) {
+                    var slideCount = $('.bx-slide').length;
+
+                    // 1 slide of actual content + a clone slide on each side auto-created by the plugin
+                    if (slideCount === 3) {
+                        $('.bx-pager').hide();
+                    }
+                }, me)
             });
         });
 
