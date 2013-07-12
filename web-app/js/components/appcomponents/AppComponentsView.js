@@ -169,6 +169,8 @@
 
                             me._sorting = true;
 
+                            ui.helper.addClass('selected');
+
                             // mouseleave doesn't fire in IE7 when using sortable
                             // manually check for mouseleav by checking evt.target
                             me.$el.on('mouseout.launch', function (evt) {
@@ -198,7 +200,7 @@
                                 else {
                                     newIndex = me.collection.indexOf($next.data('view').model);
                                 }
-                                
+
                                 me.collection.move(itemView.model, newIndex);
                                 me._reordered = true;
                             }

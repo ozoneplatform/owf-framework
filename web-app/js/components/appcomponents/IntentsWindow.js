@@ -187,7 +187,7 @@
             $doc.on('mousemove.launch', function (evt) {
                     // create proxy if not created
                     if(!$proxy) {
-                        $proxy = view.copy().$el;
+                        $proxy = view.copy().$el.addClass('selected');
                         $('body').append($proxy);
                     }
 
