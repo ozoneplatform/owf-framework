@@ -628,7 +628,7 @@ class SecurityFilters {
                 value: stackEdit.widgetGuid
             )
 
-            // Create OWF Administrators group if it doesn't already exist
+            // Add admin widgets back to the admin if they are gone for some reason.
             def adminGroup = Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
             if (adminGroup != null) {
 			
