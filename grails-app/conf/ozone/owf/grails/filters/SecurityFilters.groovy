@@ -52,7 +52,7 @@ class SecurityFilters {
                         response.sendError(401)
                         return false
                     } else {
-
+    
                         log.debug("Username is " + username);
 
                         if (log.isInfoEnabled()) {
@@ -129,8 +129,6 @@ class SecurityFilters {
                             }
                             session["savedLastLogin"] = true
                         }
-
-                        loadUserData(personInDB)
 
                         // Add Admin Widgets if user is an admin
                         loadAdminData(personInDB)
@@ -388,214 +386,214 @@ class SecurityFilters {
     private loadAdminData(admin) {
 
         def id = null
-        def adminWidgetType = WidgetType.findByName('administration')
-        def userAdmin = WidgetDefinition.findByWidgetUrl('admin/UserManagement.gsp',[cache:true]);
-        if(adminWidgetType == null) {
-            adminWidgetType = saveInstance(new WidgetType(name: 'administration'))
-        }
-        if (userAdmin == null) {
-            id = generateId()
-            userAdmin = new WidgetDefinition(
-                displayName: 'Users',
-                height: 440,
-                imageUrlLarge: 'themes/common/images/adm-tools/Users64.png',
-                imageUrlSmall: 'themes/common/images/adm-tools/Users24.png',
-                widgetGuid: id,
-                widgetUrl: 'admin/UserManagement.gsp',
-                widgetVersion: '1.0',
-                width: 818
-            )
-            userAdmin.addToWidgetTypes(adminWidgetType)
-            userAdmin = saveInstance(userAdmin)
-            userAdmin.addTag('admin')
-        }
-
-        def userEdit = WidgetDefinition.findByWidgetUrl('admin/UserEdit.gsp',[cache:true]);
-        if (userEdit == null) {
-            id = generateId()
-            userEdit = new WidgetDefinition(
-                displayName: 'User Editor',
-                visible: false,
-                height: 440,
-                imageUrlLarge: 'themes/common/images/adm-tools/Users64.png',
-                imageUrlSmall: 'themes/common/images/adm-tools/Users24.png',
-                widgetGuid: id,
-                widgetUrl: 'admin/UserEdit.gsp',
-                widgetVersion: '1.0',
-                width: 581
-            )
-            userEdit.addToWidgetTypes(adminWidgetType)
-            userEdit = saveInstance(userEdit)
-            userEdit.addTag('admin')
-        }
-
-        def widgetAdmin = WidgetDefinition.findByWidgetUrl('admin/WidgetManagement.gsp',[cache:true]);
-        if (widgetAdmin == null) {
-            id = generateId()
-            widgetAdmin = new WidgetDefinition(
-                displayName: 'Widgets',
-                height: 440,
-                imageUrlLarge: 'themes/common/images/adm-tools/Widgets64.png',
-                imageUrlSmall: 'themes/common/images/adm-tools/Widgets24.png',
-                widgetGuid: id,
-                widgetUrl: 'admin/WidgetManagement.gsp',
-                widgetVersion: '1.0',
-                width: 818
-            )
-            widgetAdmin.addToWidgetTypes(adminWidgetType)
-            widgetAdmin = saveInstance(widgetAdmin)
-            widgetAdmin.addTag('admin')
-        }
-
-        def widgetEdit = WidgetDefinition.findByWidgetUrl('admin/WidgetEdit.gsp',[cache:true]);
-        if (widgetEdit == null) {
-            id = generateId()
-            widgetEdit = new WidgetDefinition(
-                displayName: 'Widget Editor',
-                visible: false,
-                height: 493,
-                imageUrlLarge: 'themes/common/images/adm-tools/Widgets64.png',
-                imageUrlSmall: 'themes/common/images/adm-tools/Widgets24.png',
-                widgetGuid: id,
-                widgetUrl: 'admin/WidgetEdit.gsp',
-                widgetVersion: '1.0',
-                width: 581
-            )
-            widgetEdit.addToWidgetTypes(adminWidgetType)
-            widgetEdit = saveInstance(widgetEdit)
-            widgetEdit.addTag('admin')
-        }
-
-        def groupAdmin = WidgetDefinition.findByWidgetUrl('admin/GroupManagement.gsp',[cache:true]);
-        if (groupAdmin == null) {
-            id = generateId()
-            groupAdmin = new WidgetDefinition(
-                displayName: 'Groups',
-                height: 440,
-                imageUrlLarge: 'themes/common/images/adm-tools/Groups64.png',
-                imageUrlSmall: 'themes/common/images/adm-tools/Groups24.png',
-                widgetGuid: id,
-                widgetUrl: 'admin/GroupManagement.gsp',
-                widgetVersion: '1.0',
-                width: 818
-            )
-            groupAdmin.addToWidgetTypes(adminWidgetType)
-            groupAdmin = saveInstance(groupAdmin)
-            groupAdmin.addTag('admin')
-        }
-
-        def groupEdit = WidgetDefinition.findByWidgetUrl('admin/GroupEdit.gsp',[cache:true]);
-        if (groupEdit == null) {
-            id = generateId()
-            groupEdit = new WidgetDefinition(
-                displayName: 'Group Editor',
-                visible: false,
-                height: 440,
-                imageUrlLarge: 'themes/common/images/adm-tools/Groups64.png',
-                imageUrlSmall: 'themes/common/images/adm-tools/Groups24.png',
-                widgetGuid: id,
-                widgetUrl: 'admin/GroupEdit.gsp',
-                widgetVersion: '1.0',
-                width: 581
-            )
-            groupEdit.addToWidgetTypes(adminWidgetType)
-            groupEdit = saveInstance(groupEdit)
-            groupEdit.addTag('admin')
-        }
-		
-        def dashboardAdmin = WidgetDefinition.findByWidgetUrl('admin/GroupDashboardManagement.gsp',[cache:true]);
-        if (dashboardAdmin == null) {
-            id = generateId()
-            dashboardAdmin = new WidgetDefinition(
-                displayName: 'Group Dashboards',
-                height: 440,
-                imageUrlLarge: 'themes/common/images/adm-tools/Dashboards64.png',
-                imageUrlSmall: 'themes/common/images/adm-tools/Dashboards24.png',
-                widgetGuid: id,
-                widgetUrl: 'admin/GroupDashboardManagement.gsp',
-                widgetVersion: '1.0',
-                width: 818
-            )
-            dashboardAdmin.addToWidgetTypes(adminWidgetType)
-            dashboardAdmin = saveInstance(dashboardAdmin)
-            dashboardAdmin.addTag('admin')
-        }
-
-        def dashboardEdit = WidgetDefinition.findByWidgetUrl('admin/DashboardEdit.gsp',[cache:true]);
-        if (dashboardEdit == null) {
-            id = generateId()
-            dashboardEdit = new WidgetDefinition(
-                displayName: 'Dashboard Editor',
-                visible: false,
-                height: 440,
-                imageUrlLarge: 'themes/common/images/adm-tools/Dashboards64.png',
-                imageUrlSmall: 'themes/common/images/adm-tools/Dashboards24.png',
-                widgetGuid: id,
-                widgetUrl: 'admin/DashboardEdit.gsp',
-                widgetVersion: '1.0',
-                width: 581
-            )
-            dashboardEdit.addToWidgetTypes(adminWidgetType)
-            dashboardEdit = saveInstance(dashboardEdit)
-            dashboardEdit.addTag('admin')
-        }
-        
-        def stackAdmin = WidgetDefinition.findByWidgetUrl('admin/StackManagement.gsp',[cache:true]);
-        if (stackAdmin == null) {
-            id = generateId()
-            stackAdmin = new WidgetDefinition(
-                displayName: 'Stacks',
-                height: 440,
-                imageUrlLarge: 'themes/common/images/adm-tools/Stacks64.png',
-                imageUrlSmall: 'themes/common/images/adm-tools/Stacks24.png',
-                widgetGuid: id,
-                widgetUrl: 'admin/StackManagement.gsp',
-                widgetVersion: '1.0',
-                width: 818
-            )
-            stackAdmin.addToWidgetTypes(adminWidgetType)
-            stackAdmin = saveInstance(stackAdmin)
-            stackAdmin.addTag('admin')
-        }
-
-        def stackEdit = WidgetDefinition.findByWidgetUrl('admin/StackEdit.gsp',[cache:true]);
-        if (stackEdit == null) {
-            id = generateId()
-            stackEdit = new WidgetDefinition(
-                displayName: 'Stack Editor',
-                visible: false,
-                height: 440,
-                imageUrlLarge: 'themes/common/images/adm-tools/Stacks64.png',
-                imageUrlSmall: 'themes/common/images/adm-tools/Stacks24.png',
-                widgetGuid: id,
-                widgetUrl: 'admin/StackEdit.gsp',
-                widgetVersion: '1.0',
-                width: 581
-            )
-            stackEdit.addToWidgetTypes(adminWidgetType)
-            stackEdit = saveInstance(stackEdit)
-            stackEdit.addTag('admin')
-        }
-
-        def configurationWidget = WidgetDefinition.findByWidgetUrl('admin/Configuration.gsp',[cache:true]);
-        if (configurationWidget == null) {
-            id = generateId()
-            configurationWidget = new WidgetDefinition(
-                displayName: 'Configuration',
-                height: 440,
-                imageUrlLarge: 'themes/common/images/adm-tools/Configuration64.png',
-                imageUrlSmall: 'themes/common/images/adm-tools/Configuration24.png',
-                widgetGuid: id,
-                widgetUrl: 'admin/Configuration.gsp',
-                widgetVersion: '1.0',
-                width: 900
-            )
-            configurationWidget.addToWidgetTypes(adminWidgetType)
-            configurationWidget = saveInstance(configurationWidget)
-            configurationWidget.addTag('admin')
-        }
-		
         if (accountService.getLoggedInUserIsAdmin()) {
+
+            def adminWidgetType = WidgetType.findByName('administration')
+            def userAdmin = WidgetDefinition.findByWidgetUrl('admin/UserManagement.gsp',[cache:true]);
+            if(adminWidgetType == null) {
+                adminWidgetType = saveInstance(new WidgetType(name: 'administration'))
+            }
+            if (userAdmin == null) {
+                id = generateId()
+                userAdmin = new WidgetDefinition(
+                    displayName: 'Users',
+                    height: 440,
+                    imageUrlLarge: 'themes/common/images/adm-tools/Users64.png',
+                    imageUrlSmall: 'themes/common/images/adm-tools/Users24.png',
+                    widgetGuid: id,
+                    widgetUrl: 'admin/UserManagement.gsp',
+                    widgetVersion: '1.0',
+                    width: 818
+                )
+                userAdmin.addToWidgetTypes(adminWidgetType)
+                userAdmin = saveInstance(userAdmin)
+                userAdmin.addTag('admin')
+            }
+
+            def userEdit = WidgetDefinition.findByWidgetUrl('admin/UserEdit.gsp',[cache:true]);
+            if (userEdit == null) {
+                id = generateId()
+                userEdit = new WidgetDefinition(
+                    displayName: 'User Editor',
+                    visible: false,
+                    height: 440,
+                    imageUrlLarge: 'themes/common/images/adm-tools/Users64.png',
+                    imageUrlSmall: 'themes/common/images/adm-tools/Users24.png',
+                    widgetGuid: id,
+                    widgetUrl: 'admin/UserEdit.gsp',
+                    widgetVersion: '1.0',
+                    width: 581
+                )
+                userEdit.addToWidgetTypes(adminWidgetType)
+                userEdit = saveInstance(userEdit)
+                userEdit.addTag('admin')
+            }
+
+            def widgetAdmin = WidgetDefinition.findByWidgetUrl('admin/WidgetManagement.gsp',[cache:true]);
+            if (widgetAdmin == null) {
+                id = generateId()
+                widgetAdmin = new WidgetDefinition(
+                    displayName: 'Widgets',
+                    height: 440,
+                    imageUrlLarge: 'themes/common/images/adm-tools/Widgets64.png',
+                    imageUrlSmall: 'themes/common/images/adm-tools/Widgets24.png',
+                    widgetGuid: id,
+                    widgetUrl: 'admin/WidgetManagement.gsp',
+                    widgetVersion: '1.0',
+                    width: 818
+                )
+                widgetAdmin.addToWidgetTypes(adminWidgetType)
+                widgetAdmin = saveInstance(widgetAdmin)
+                widgetAdmin.addTag('admin')
+            }
+
+            def widgetEdit = WidgetDefinition.findByWidgetUrl('admin/WidgetEdit.gsp',[cache:true]);
+            if (widgetEdit == null) {
+                id = generateId()
+                widgetEdit = new WidgetDefinition(
+                    displayName: 'Widget Editor',
+                    visible: false,
+                    height: 493,
+                    imageUrlLarge: 'themes/common/images/adm-tools/Widgets64.png',
+                    imageUrlSmall: 'themes/common/images/adm-tools/Widgets24.png',
+                    widgetGuid: id,
+                    widgetUrl: 'admin/WidgetEdit.gsp',
+                    widgetVersion: '1.0',
+                    width: 581
+                )
+                widgetEdit.addToWidgetTypes(adminWidgetType)
+                widgetEdit = saveInstance(widgetEdit)
+                widgetEdit.addTag('admin')
+            }
+
+            def groupAdmin = WidgetDefinition.findByWidgetUrl('admin/GroupManagement.gsp',[cache:true]);
+            if (groupAdmin == null) {
+                id = generateId()
+                groupAdmin = new WidgetDefinition(
+                    displayName: 'Groups',
+                    height: 440,
+                    imageUrlLarge: 'themes/common/images/adm-tools/Groups64.png',
+                    imageUrlSmall: 'themes/common/images/adm-tools/Groups24.png',
+                    widgetGuid: id,
+                    widgetUrl: 'admin/GroupManagement.gsp',
+                    widgetVersion: '1.0',
+                    width: 818
+                )
+                groupAdmin.addToWidgetTypes(adminWidgetType)
+                groupAdmin = saveInstance(groupAdmin)
+                groupAdmin.addTag('admin')
+            }
+
+            def groupEdit = WidgetDefinition.findByWidgetUrl('admin/GroupEdit.gsp',[cache:true]);
+            if (groupEdit == null) {
+                id = generateId()
+                groupEdit = new WidgetDefinition(
+                    displayName: 'Group Editor',
+                    visible: false,
+                    height: 440,
+                    imageUrlLarge: 'themes/common/images/adm-tools/Groups64.png',
+                    imageUrlSmall: 'themes/common/images/adm-tools/Groups24.png',
+                    widgetGuid: id,
+                    widgetUrl: 'admin/GroupEdit.gsp',
+                    widgetVersion: '1.0',
+                    width: 581
+                )
+                groupEdit.addToWidgetTypes(adminWidgetType)
+                groupEdit = saveInstance(groupEdit)
+                groupEdit.addTag('admin')
+            }
+    		
+            def dashboardAdmin = WidgetDefinition.findByWidgetUrl('admin/GroupDashboardManagement.gsp',[cache:true]);
+            if (dashboardAdmin == null) {
+                id = generateId()
+                dashboardAdmin = new WidgetDefinition(
+                    displayName: 'Group Dashboards',
+                    height: 440,
+                    imageUrlLarge: 'themes/common/images/adm-tools/Dashboards64.png',
+                    imageUrlSmall: 'themes/common/images/adm-tools/Dashboards24.png',
+                    widgetGuid: id,
+                    widgetUrl: 'admin/GroupDashboardManagement.gsp',
+                    widgetVersion: '1.0',
+                    width: 818
+                )
+                dashboardAdmin.addToWidgetTypes(adminWidgetType)
+                dashboardAdmin = saveInstance(dashboardAdmin)
+                dashboardAdmin.addTag('admin')
+            }
+
+            def dashboardEdit = WidgetDefinition.findByWidgetUrl('admin/DashboardEdit.gsp',[cache:true]);
+            if (dashboardEdit == null) {
+                id = generateId()
+                dashboardEdit = new WidgetDefinition(
+                    displayName: 'Dashboard Editor',
+                    visible: false,
+                    height: 440,
+                    imageUrlLarge: 'themes/common/images/adm-tools/Dashboards64.png',
+                    imageUrlSmall: 'themes/common/images/adm-tools/Dashboards24.png',
+                    widgetGuid: id,
+                    widgetUrl: 'admin/DashboardEdit.gsp',
+                    widgetVersion: '1.0',
+                    width: 581
+                )
+                dashboardEdit.addToWidgetTypes(adminWidgetType)
+                dashboardEdit = saveInstance(dashboardEdit)
+                dashboardEdit.addTag('admin')
+            }
+            
+            def stackAdmin = WidgetDefinition.findByWidgetUrl('admin/StackManagement.gsp',[cache:true]);
+            if (stackAdmin == null) {
+                id = generateId()
+                stackAdmin = new WidgetDefinition(
+                    displayName: 'Stacks',
+                    height: 440,
+                    imageUrlLarge: 'themes/common/images/adm-tools/Stacks64.png',
+                    imageUrlSmall: 'themes/common/images/adm-tools/Stacks24.png',
+                    widgetGuid: id,
+                    widgetUrl: 'admin/StackManagement.gsp',
+                    widgetVersion: '1.0',
+                    width: 818
+                )
+                stackAdmin.addToWidgetTypes(adminWidgetType)
+                stackAdmin = saveInstance(stackAdmin)
+                stackAdmin.addTag('admin')
+            }
+
+            def stackEdit = WidgetDefinition.findByWidgetUrl('admin/StackEdit.gsp',[cache:true]);
+            if (stackEdit == null) {
+                id = generateId()
+                stackEdit = new WidgetDefinition(
+                    displayName: 'Stack Editor',
+                    visible: false,
+                    height: 440,
+                    imageUrlLarge: 'themes/common/images/adm-tools/Stacks64.png',
+                    imageUrlSmall: 'themes/common/images/adm-tools/Stacks24.png',
+                    widgetGuid: id,
+                    widgetUrl: 'admin/StackEdit.gsp',
+                    widgetVersion: '1.0',
+                    width: 581
+                )
+                stackEdit.addToWidgetTypes(adminWidgetType)
+                stackEdit = saveInstance(stackEdit)
+                stackEdit.addTag('admin')
+            }
+
+            def configurationWidget = WidgetDefinition.findByWidgetUrl('admin/Configuration.gsp',[cache:true]);
+            if (configurationWidget == null) {
+                id = generateId()
+                configurationWidget = new WidgetDefinition(
+                    displayName: 'Configuration',
+                    height: 440,
+                    imageUrlLarge: 'themes/common/images/adm-tools/Configuration64.png',
+                    imageUrlSmall: 'themes/common/images/adm-tools/Configuration24.png',
+                    widgetGuid: id,
+                    widgetUrl: 'admin/Configuration.gsp',
+                    widgetVersion: '1.0',
+                    width: 900
+                )
+                configurationWidget.addToWidgetTypes(adminWidgetType)
+                configurationWidget = saveInstance(configurationWidget)
+                configurationWidget.addTag('admin')
+            }
 
             // Update preferences
             preferenceService.updateForUser(
@@ -604,7 +602,7 @@ class SecurityFilters {
                 path: 'guid_to_launch',
                 value: userEdit.widgetGuid
             )
-             
+
             preferenceService.updateForUser(
                 path: 'guid_to_launch',
                 namespace: 'owf.admin.WidgetEditCopy',
@@ -630,157 +628,79 @@ class SecurityFilters {
                 value: stackEdit.widgetGuid
             )
 
-            // Create OWF Administrators group if it doesn't already exist
+            // Add admin widgets back to the admin if they are gone for some reason.
             def adminGroup = Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
-            if (adminGroup == null) {
-                // add it
-                adminGroup = new Group(
-                    name: 'OWF Administrators',
-                    description: 'OWF Administrators',
-                    automatic: true,
-                    status: 'active',
-                    displayName: 'OWF Administrators'
-                )
-                adminGroup.people =[admin]
-            } else {
-                // it already exists--update it rather than creating a new one
-                if (admin.groups == null || !adminGroup.people.contains(admin)) {
-                    adminGroup.people << admin
+            if (adminGroup != null) {
+			
+                // Assign the Admin Widgets
+                log.debug "assigning admin widgets......................................................"
+                def mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, userAdmin);
+                if (mapping[0] == null) {
+                    // If none of the admin widgets exist yet, create them
+                    domainMappingService.createMapping(adminGroup, RelationshipType.owns, userAdmin);
                 }
-            }
-            adminGroup.properties = [
-                status: 'active'
-            ]
-            adminGroup = saveInstance(adminGroup)
-			
-            // Assign the Admin Widgets
-            log.debug "assigning admin widgets......................................................"
-            def mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, userAdmin);
-            if (mapping[0] == null) {
-                // If none of the admin widgets exist yet, create them
-                domainMappingService.createMapping(adminGroup, RelationshipType.owns, userAdmin);
-            }
-			
-            mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, userEdit);
-            if (mapping[0] == null) {
-                // If none of the admin widgets exist yet, create them
-                domainMappingService.createMapping(adminGroup, RelationshipType.owns, userEdit);
-            }
-			
-            mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, widgetAdmin);
-            if (mapping[0] == null) {
-                // If none of the admin widgets exist yet, create them
-                domainMappingService.createMapping(adminGroup, RelationshipType.owns, widgetAdmin);
-            }
-			
-            mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, widgetEdit);
-            if (mapping[0] == null) {
-                // If none of the admin widgets exist yet, create them
-                domainMappingService.createMapping(adminGroup, RelationshipType.owns, widgetEdit);
-            }
-			
-            mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, groupAdmin);
-            if (mapping[0] == null) {
-                // If none of the admin widgets exist yet, create them
-                domainMappingService.createMapping(adminGroup, RelationshipType.owns, groupAdmin);
-            }
-			
-            mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, groupEdit);
-            if (mapping[0] == null) {
-                // If none of the admin widgets exist yet, create them
-                domainMappingService.createMapping(adminGroup, RelationshipType.owns, groupEdit);
-            }
-			
-            mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, dashboardAdmin);
-            if (mapping[0] == null) {
-                // If none of the admin widgets exist yet, create them
-                domainMappingService.createMapping(adminGroup, RelationshipType.owns, dashboardAdmin);
-            }
-			
-            mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, dashboardEdit);
-            if (mapping[0] == null) {
-                // If none of the admin widgets exist yet, create them
-                domainMappingService.createMapping(adminGroup, RelationshipType.owns, dashboardEdit);
-            }
-            
-            mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, stackAdmin);
-            if (mapping[0] == null) {
-                // If none of the admin widgets exist yet, create them
-                domainMappingService.createMapping(adminGroup, RelationshipType.owns, stackAdmin);
-            }
-            
-            mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, stackEdit);
-            if (mapping[0] == null) {
-                // If none of the admin widgets exist yet, create them
-                domainMappingService.createMapping(adminGroup, RelationshipType.owns, stackEdit);
-            }
-
-            mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, configurationWidget);
-            if (mapping[0] == null) {
-                // If none of the admin widgets exist yet, create them
-                domainMappingService.createMapping(adminGroup, RelationshipType.owns, configurationWidget);
-            }
-			
-        } else {
-            //User isn't an admin, remove them from the OWF Administrators group if they are in it
-            def adminGroup = Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
-            if(adminGroup != null) {
-                if(admin.groups?.contains(adminGroup)) {
-                    admin.groups.remove(adminGroup)
+    			
+                mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, userEdit);
+                if (mapping[0] == null) {
+                    // If none of the admin widgets exist yet, create them
+                    domainMappingService.createMapping(adminGroup, RelationshipType.owns, userEdit);
                 }
-                if(adminGroup.people.contains(admin)) {
-                    adminGroup.people.remove(admin)
+    			
+                mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, widgetAdmin);
+                if (mapping[0] == null) {
+                    // If none of the admin widgets exist yet, create them
+                    domainMappingService.createMapping(adminGroup, RelationshipType.owns, widgetAdmin);
                 }
-            }
-        }
-		
-        /*if (userAdmin) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, userAdmin)?.delete(flush: true);
-        if (userEdit) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, userEdit)?.delete(flush: true);
-        if (widgetAdmin) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, widgetAdmin)?.delete(flush: true);
-        if (widgetEdit) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, widgetEdit)?.delete(flush: true);
-        if (groupAdmin) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, groupAdmin)?.delete(flush: true);
-        if (groupEdit) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, groupEdit)?.delete(flush: true);
-        if (dashboardAdmin) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, dashboardAdmin)?.delete(flush: true);
-        if (dashboardEdit) PersonWidgetDefinition.findByPersonAndWidgetDefinition(admin, dashboardEdit)?.delete(flush: true);*/
-    }
-    
-    private loadUserData(user) {
-        
-        if (user) {
-            def allUsers = Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
-
-            if (allUsers == null) {
-                // add it
-                allUsers = new Group(
-                    name: 'OWF Users',
-                    description: 'OWF Users',
-                    automatic: true,
-                    status: 'active',
-                    displayName: 'OWF Users'
-                )
-                allUsers.people = [user]
+    			
+                mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, widgetEdit);
+                if (mapping[0] == null) {
+                    // If none of the admin widgets exist yet, create them
+                    domainMappingService.createMapping(adminGroup, RelationshipType.owns, widgetEdit);
+                }
+    			
+                mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, groupAdmin);
+                if (mapping[0] == null) {
+                    // If none of the admin widgets exist yet, create them
+                    domainMappingService.createMapping(adminGroup, RelationshipType.owns, groupAdmin);
+                }
+    			
+                mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, groupEdit);
+                if (mapping[0] == null) {
+                    // If none of the admin widgets exist yet, create them
+                    domainMappingService.createMapping(adminGroup, RelationshipType.owns, groupEdit);
+                }
+    			
+                mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, dashboardAdmin);
+                if (mapping[0] == null) {
+                    // If none of the admin widgets exist yet, create them
+                    domainMappingService.createMapping(adminGroup, RelationshipType.owns, dashboardAdmin);
+                }
+    			
+                mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, dashboardEdit);
+                if (mapping[0] == null) {
+                    // If none of the admin widgets exist yet, create them
+                    domainMappingService.createMapping(adminGroup, RelationshipType.owns, dashboardEdit);
+                }
                 
-            } else {
-                // it already exists--update it rather than creating a new one
-                if (user.groups == null || !user.groups.contains(allUsers)) {
-                    // Search for the OWF Users group using a join to cache the people (necessary
-                    // to avoid N+1 select problem on addToPeople
-                    def allUsersCachePeople = Group.withCriteria {
-                        and {
-                            eq "name", "OWF Users"
-                            eq "automatic", true
-                        }
-                        join "people"
-                    }
+                mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, stackAdmin);
+                if (mapping[0] == null) {
+                    // If none of the admin widgets exist yet, create them
+                    domainMappingService.createMapping(adminGroup, RelationshipType.owns, stackAdmin);
+                }
+                
+                mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, stackEdit);
+                if (mapping[0] == null) {
+                    // If none of the admin widgets exist yet, create them
+                    domainMappingService.createMapping(adminGroup, RelationshipType.owns, stackEdit);
+                }
 
-                    allUsers.addToPeople(user);
+                mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, configurationWidget);
+                if (mapping[0] == null) {
+                    // If none of the admin widgets exist yet, create them
+                    domainMappingService.createMapping(adminGroup, RelationshipType.owns, configurationWidget);
                 }
             }
-            allUsers.properties = [
-                status: 'active'
-            ]
-            allUsers = saveInstance(allUsers)
-        }
+		}
     }
 
     private generateId() {
