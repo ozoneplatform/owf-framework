@@ -44,8 +44,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     },
 
     disableAppComponentsBtn: function() {
-        if (this.appComponentsView.isVisible()) {
-            this.appComponentsView.close();
+        if (this.dashboardContainer.appComponentsView && this.dashboardContainer.appComponentsView.isVisible()) {
+            this.dashboardContainer.appComponentsView.close();
         }
         this.getComponent('appComponentsBtn').disable();
         if (this.popOutToolbar) {
