@@ -179,6 +179,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 Ext.getCmp(this.activeDashboard.id).saveToServer(true);
             }
 
+            if(this.appComponentsView) {
+                this.appComponentsView.save(true);
+            }
+
             //tell History to shutdown cleanly because the browser is leaving OWFs
             if (!this.shareButtonClicked) {
                 Ext.History.shutDown();
@@ -843,8 +847,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
 
         if(!me.appComponentsView) {
+            var standardAppComponents = OWF.Collections.AppComponents.filter(function(appComponent) {
+                return appComponent.get('widgetTypes')[0].name === 'standard';
+            });
             me.appComponentsView = new Ozone.components.appcomponents.AppComponentsView({
-                collection: OWF.Collections.AppComponents,
+                collection: new Ozone.data.collections.Widgets(standardAppComponents),
                 dashboardContainer: me
             });
             appComponentsBtn = me.getBanner().getComponent('appComponentsBtn');
