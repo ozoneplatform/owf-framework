@@ -246,7 +246,7 @@ class GroupService {
                         'description': dash.description,
                         'type': dash.type,
                         'locked': dash.locked,
-
+                        'iconImageUrl': dash.iconImageUrl,
                         'layoutConfig': dash.layoutConfig,
                         // If given a stack override, use that.  Otherwise, use the stack already associated
                         // with the dashboard to copy.
