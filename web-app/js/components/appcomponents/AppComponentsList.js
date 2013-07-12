@@ -34,7 +34,7 @@
         selected: null,
 
         events: {
-            'click .widget': '_onClick',
+            'click .widget': '_onClick'
         },
 
         initialize: function () {

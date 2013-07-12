@@ -1020,7 +1020,9 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         if(!isLocked) {
             var $shims = $('.paneshim', this.el.dom);
 
-            $shims.on('mouseover.launch', function () {
+            // mouseover doesn't fire in IE7 after mouse is already over the element
+            // use movemove instead
+            $shims.on('mousemove.launch', function () {
                 $shims.addClass('highlight-dashboard-designer-drop');
                 $(this).removeClass('highlight-dashboard-designer-drop');
             });

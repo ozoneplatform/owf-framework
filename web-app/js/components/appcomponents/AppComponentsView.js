@@ -114,36 +114,43 @@
             var me = this,
                 $slides = me.carousel.getSlides();
 
-            $slides
-                .sortable({
-                    helper: 'clone',
-                    appendTo: $('body'),
-                    connectWith: '.bx-slide',
-                    tolerance: "pointer",
-                    cursorAt: { left: -25, top: -25 },
+            if($slides) {
+                $slides
+                    .sortable({
+                        helper: 'clone',
+                        appendTo: $('body'),
+                        connectWith: '.bx-slide',
+                        tolerance: "pointer",
+                        cursorAt: { left: -25, top: -25 },
 
-                    start: function(event, ui) {
-                        var model = ui.item.data('view').model;
+                        start: function(event, ui) {
+                            var model = ui.item.data('view').model;
 
-                        me.$el.on('mouseleave.launch', function () {
-                            me._dragging = true;
-                            me.launch(model, false, true);
-                        });
-                    },
+                            // mouseleave doesn't fire in IE7 when using sortable
+                            // manually check for mouseleav by checking evt.target
+                            me.$el.on('mouseout.launch', function (evt) {
+                                if(me.$el[0] === evt.target) {
+                                    me._dragging = true;
+                                    me.launch(model, false, true);
+                                }
+                            });
+                        },
 
-                    stop: function () {
-                        if(me._dragging) {
-                            $slides.sortable('cancel');
+                        stop: function () {
+                            if(me._dragging) {
+                                $slides.sortable('cancel');
+                            }
+                            me.$el.off('.launch');
+                            delete me._dragging;
                         }
-                        me.$el.off('.launch');
-                        delete me._dragging;
-                    }
-                });
+                    });
+            }
             return this;
         },
 
         _destroySortable: function () {
-            this.carousel.getSlides().sortable('destroy');
+            var $slides = this.carousel.getSlides()
+            $slides && $slides.sortable('destroy');
             return this;
         }
 

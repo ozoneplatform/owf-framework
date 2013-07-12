@@ -42,7 +42,7 @@
         },
 
         initCarousel: function (force) {
-            if(this.collection.length > 0 && (this.autoInit || this.force)) {
+            if(this.views.length > 0 && (this.autoInit || this.force)) {
                 this._carousel = true;
                 this.$el.bxSlider({
                     oneItemPerSlide: false,
@@ -54,7 +54,9 @@
         },
 
         getSlides: function () {
-            return this.$el.getSlides();
+            if(this._carousel) {
+                return this.$el.getSlides();    
+            }
         },
 
         reloadCarousel: function (evt) {

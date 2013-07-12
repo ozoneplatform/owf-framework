@@ -19,6 +19,7 @@
     Ozone.components.appcomponents = Ozone.components.appcomponents || {};
 
     var SuperClass = Ozone.components.BaseView;
+    var ondragstart;
 
     Ozone.components.appcomponents.IntentsWindow = SuperClass.extend({
 
@@ -40,8 +41,8 @@
         noOfNewComponentsToShowAtOnce: 18,
 
         headerText: {
-            openInstances: 'Select the component to which you would like to send this action: ',
-            allInstances: 'Select the new component to which you would like to send this action:'
+            openInstances: 'Select the App Component to receive the information: ',
+            allInstances: 'Open a different App Component to receive the information. To open, click or drag the App Component into a highlighted pane in the Application.'
         },
 
         initialize: function () {
@@ -68,6 +69,9 @@
             this.renderSubView()
                 .renderFooter();
 
+            ondragstart = document.ondragstart;
+            document.ondragstart = function () { return false; };
+
             return this;
         },
 
@@ -83,7 +87,7 @@
         renderFooter: function () {
             var footerHTML = '';
             if(this.isShowingOpenInstances) {
-                footerHTML += '<p>OR Choose a <a href="#" class="show-new-component">new component</a></p>';
+                footerHTML += '<p>Send the information to a different <a href="#" class="show-new-component">App Component</a></p>';
             }
             
             footerHTML += '<input type="checkbox" class="remember-checkbox">' +
@@ -117,6 +121,11 @@
         cancel: function () {
             this.hide();
             this.$el.trigger('cancel');
+        },
+
+        hide: function () {
+            document.ondragstart = ondragstart;
+            return SuperClass.prototype.hide.call(this);
         },
 
         remove: function () {
