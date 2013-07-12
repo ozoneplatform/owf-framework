@@ -1090,13 +1090,29 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         }, 100);
     },
 
-
     createNewApp: function (evt) {
         var me = this,
             createDashWindow = Ext.widget('createdashboardwindow', {
                 stackId: null,
                 title: Ozone.ux.DashboardMgmtString.createNewAppTitle,
                 headerText: Ozone.ux.DashboardMgmtString.createNewAppHeader,
+                itemId: 'createDashWindow',
+                dashboardContainer: me.dashboardContainer,
+                ownerCt: me.dashboardContainer
+            });
+
+        createDashWindow.show();
+        me.close();
+    },
+
+    addPageToApp: function (evt) {
+        var me = this,
+            $stack = this.getElByClassFromEvent(evt, 'stack'),
+            stack = this.getStack($stack),
+            createDashWindow = Ext.widget('createdashboardwindow', {
+                stackId: stack.id,
+                title: Ozone.ux.DashboardMgmtString.createNewPageTitle,
+                headerText: Ozone.ux.DashboardMgmtString.createNewPageHeader,
                 itemId: 'createDashWindow',
                 dashboardContainer: me.dashboardContainer,
                 ownerCt: me.dashboardContainer

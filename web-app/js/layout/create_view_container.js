@@ -49,6 +49,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
     },
 
     initComponent: function() {
+        var me = this;
         this.config = this.dashboardContainer.activeDashboard.config;
         this.views = this.dashboardContainer.dashboards;
         
@@ -687,7 +688,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                                         Ext.create('Ozone.data.Dashboard', {
                                             "name": title,
                                             "description": desc,
-                                            "iconImageUrl": iconImageUrl
+                                            "iconImageUrl": iconImageUrl,
+                                            "stack": me.stackId ? {"id": me.stackId } : null
                                         })
                                 );
                                 this.close();
