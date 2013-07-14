@@ -40,7 +40,7 @@ class StackService {
 
     def list(params) {
         
-        def criteria = ozone.owf.grails.domain.Stack.createCriteria()
+        def criteria = Stack.createCriteria()
         def opts = [:]
         
         if (params?.offset != null) opts.offset = (params.offset instanceof String ? Integer.parseInt(params.offset) : params.offset)
@@ -203,7 +203,7 @@ class StackService {
                 throw new OwfException(message: 'Stack ' + params.id + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
             }
         } else { // New Stack
-            stack = new ozone.owf.grails.domain.Stack()
+            stack = new Stack()
             def dfltGroup = new Group(name: java.util.UUID.randomUUID().toString(), stackDefault: true)
             stack.addToGroups(dfltGroup)
 
