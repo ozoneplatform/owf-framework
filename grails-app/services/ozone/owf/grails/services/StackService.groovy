@@ -209,11 +209,12 @@ class StackService {
 
         }
 
-        if("createAndAdd" == originalParams.update_action) {
-            params = JSON.parse(oringalParams.stack_data)
+        if("createAndAddDashboard" == originalParams.update_action) {
+            params = JSON.parse(originalParams.stackData)[0]
         }
 
-        if (!params.update_action) {
+        if (!params.update_action || "createAndAddDashboard" == originalParams.update_action) {
+
             //If context was modified and it already exists, throw a unique constrain error
             if(params.stackContext && params.stackContext != stack.stackContext) {
                 if(Stack.findByStackContext(params.stackContext)) {
@@ -225,19 +226,21 @@ class StackService {
             stack.properties = [
                 name: params.name ?: stack.name,
                 description: params.description ?: stack.description,
-                stackContext: params.stackContext ?: stack.stackContext,
+                stackContext: params.stackContext ?: stack.stackContext ?: params.name ?: stack.name,
                 imageUrl: params.imageUrl ?: stack.imageUrl,
                 descriptorUrl: params.descriptorUrl ?: stack.descriptorUrl,
                 owner: params.owner ?: (params.id  >= 0 ? stack.owner : accountService.getLoggedInUser())
             ]
-            
+
             stack = stack.save(flush: true, failOnError: true)
-            
+
             def stackDefaultGroup = stack.findStackDefaultGroup()
+
             //OP-70 adding owner to users by default
             if(stackDefaultGroup && accountService.getLoggedInUser()) {
                 stackDefaultGroup.addToPeople(accountService.getLoggedInUser())
             }
+
             def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
 
             returnValue = serviceModelService.createServiceModel(stack,[
@@ -246,16 +249,23 @@ class StackService {
                 totalGroups: stack.groups ? stack.groups.size() - 1 : 0, // Don't include the default stack group
                 totalWidgets: 0
             ])
-    
         } 
 
-        if("createAndAdd" == originalParams.update_action) {
-            params = oringalParams
-            params.data = originalParams.dashboard_data
+
+
+        if("createAndAddDashboard" == originalParams.update_action) {
+            params = originalParams
+
+            def dashboard_data = JSON.parse(originalParams.dashboardData)
+
+            dashboard_data[0].put('stack', stack)
+            
+            dashboard_data[0].put('guid', null)
+
+            params.data = (dashboard_data as JSON).toString()
         }
 
-        if(params.update_action) {
-            
+        if(params.update_action) {            
             if ('groups' == params.tab) {
                 
                 def updatedGroups = []
@@ -311,11 +321,12 @@ class StackService {
                 def updatedDashboards = []
                 def dashboardsToCopy = []
                 def dashboards = JSON.parse(params.data)
+
                 def stackDefaultGroup = stack.findStackDefaultGroup()
-                
-                
+                      
                 dashboards?.each { it ->
-                    def dashboard = Dashboard.findByGuid(it.guid)
+                    def dashboard = (it.guid ? Dashboard.findByGuid(it.guid) : it)
+
                     if (dashboard) {
                         if (params.update_action == 'remove') {       
                             // Find all clones.
@@ -335,7 +346,7 @@ class StackService {
                             dashboard.delete(flush: true)
                             updatedDashboards << dashboard
                         }
-                        else if (params.update_action == 'add') {
+                        else if (params.update_action == 'add' || params.update_action == "createAndAddDashboard") {
                             dashboardsToCopy << it
                         }
                     }
