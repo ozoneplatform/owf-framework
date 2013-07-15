@@ -18,6 +18,12 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     viewId: 'dashboard-switcher-dashboard-view',
 
+    width: 720,
+    height: 600,
+
+    expandedHeight: 720,
+    normalHeight: 600,
+
     dashboardContainer: null,
 
     //dashboard unit sizes
@@ -221,6 +227,12 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     if (slideCount === 3) {
                         $('.bx-pager').hide();
                     }
+                }, me),
+                onSlideNext: Ext.bind(function($slideEl, oldIndex, newIndex) {
+                    me.hideStackDashboards();
+                }, me),
+                onSlidePrev: Ext.bind(function($slideEl, oldIndex, newIndex) {
+                    me.hideStackDashboards();
                 }, me)
             });
         });
@@ -848,9 +860,12 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             left = parentPosition.left + (clickedStackElWidth / 2) - (this.stackDashboardsAnchorTipWidth / 2);
         
         this.stackDashboardsAnchorTip.css({
-            //top: top + 'px',
             left: left + 'px'
         });
+
+        me.setHeight(720);
+        $(parent).height(480);
+        // $('.bx-viewport', me.el.dom).height(480);
 
         if(Ext.isIE7 || Ext.isIE8) {
             this.$stackDashboards.show();
@@ -872,6 +887,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             dfd.resolve();
             return dfd.promise();
         }
+
+        me.setHeight(600);
+        // $('.bx-viewport', me.el).height(360);
+        $('div.bx-slide').height(360);
 
         if(Ext.isIE7 || Ext.isIE8) {
             var dfd = $.Deferred();

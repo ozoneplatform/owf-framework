@@ -4,10 +4,6 @@
 }
 
 #dashboard-switcher {
-
-    width: $dashboard-switcher-width !important;
-    height: $dashboard-switcher-height !important;
-
     border: 0px none black;
 
     &-body {
@@ -88,22 +84,16 @@
         bottom: 20px !important;
         position: relative;
         text-align: left;
+        padding-left: 16px;
     }
 
     #dashboard-switcher-body {
-        width: 95% !important;
-        height: 90% !important;
-
         text-align: center;
         margin-left: auto;
         margin-right: auto;
 
         /**** BEGIN slider styling ****/
         .bx-wrapper {
-            // Must be set explicitly to remain constant
-            // regardless of how many children per slide in the viewport
-            height: 360px !important;
-            width: 100% !important;
             margin-bottom: 30px !important;
 
             .bx-viewport {
@@ -113,9 +103,8 @@
                 border: 0px;
                 margin-left: 84px;
                 margin-right: 75px;
-                // overflow: hidden;
                 width: 480px !important;
-                height: 360px !important;
+                height: 360px;
             }
         }
         
