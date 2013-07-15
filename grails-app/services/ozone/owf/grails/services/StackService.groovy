@@ -596,23 +596,20 @@ class StackService {
     }
     
     private def changeWidgetInstanceIds(layoutConfig) {
-        
-        def widgets = layoutConfig.widgets
-        for(def i = 0; i < widgets?.size(); i++) {
-            widgets[i].put("uniqueId", java.util.UUID.randomUUID().toString())
-        }
-        
-        def items = layoutConfig.items
-        for(def i = 0; i < items?.size(); i++) {
-            changeWidgetInstanceIds(items[i])
-        }
-    }
-    
-    def export(params) {
-        
-        // Only admins may export Stacks
-        ensureAdmin()
-        
+		
+		def widgets = layoutConfig.widgets
+		for(def i = 0; i < widgets?.size(); i++) {
+			widgets[i].put("uniqueId", java.util.UUID.randomUUID().toString())
+		}
+		
+		def items = layoutConfig.items
+		for(def i = 0; i < items?.size(); i++) {
+			changeWidgetInstanceIds(items[i])
+		}
+	}
+
+    private def createStackData(params) {
+
         def stack = Stack.findById(params.id, [cache: true])
 
         //Construct the list of dashboards for the descriptor
@@ -625,14 +622,14 @@ class StackService {
 
                 //Get only the parameters required for a dashboard definition
                 def dashboardData = [
-                    'name': dashboard.name,
-                    'guid': dashboard.guid,
-                    'description': dashboard.description,
-                    'type': dashboard.type,
-                    'isdefault': dashboard.isdefault,
-                    'locked': dashboard.locked,
-                    'dashboardPosition': dashboard.dashboardPosition,
-                    'layoutConfig': JSON.parse(dashboard.layoutConfig)
+                        'name': dashboard.name,
+                        'guid': dashboard.guid,
+                        'description': dashboard.description,
+                        'type': dashboard.type,
+                        'isdefault': dashboard.isdefault,
+                        'locked': dashboard.locked,
+                        'dashboardPosition': dashboard.dashboardPosition,
+                        'layoutConfig': JSON.parse(dashboard.layoutConfig)
                 ]
 
                 dashboards.push(dashboardData)
@@ -646,22 +643,22 @@ class StackService {
 
             //Get only the values required for a widget definition
             def widgetData = [
-                "widgetGuid": widget.id,
-                "descriptorUrl": widgetDefinition.descriptorUrl,
-                "universalName": widgetDefinition.universalName,
-                "displayName": widgetDefinition.namespace,
-                "description": widgetDefinition.description,
-                "widgetVersion": widgetDefinition.widgetVersion,
-                "widgetUrl": widgetDefinition.url,
-                "imageUrlSmall": widgetDefinition.smallIconUrl,
-                "imageUrlLarge": widgetDefinition.largeIconUrl,
-                "width": widgetDefinition.width,
-                "height": widgetDefinition.height,
-                "visible": widgetDefinition.visible,
-                "singleton": widgetDefinition.singleton,
-                "background": widgetDefinition.background,
-                "widgetTypes": [widgetDefinition.widgetTypes[0].name],
-                "intents": widgetDefinition.intents
+                    "widgetGuid": widget.id,
+                    "descriptorUrl": widgetDefinition.descriptorUrl,
+                    "universalName": widgetDefinition.universalName,
+                    "displayName": widgetDefinition.namespace,
+                    "description": widgetDefinition.description,
+                    "widgetVersion": widgetDefinition.widgetVersion,
+                    "widgetUrl": widgetDefinition.url,
+                    "imageUrlSmall": widgetDefinition.smallIconUrl,
+                    "imageUrlLarge": widgetDefinition.largeIconUrl,
+                    "width": widgetDefinition.width,
+                    "height": widgetDefinition.height,
+                    "visible": widgetDefinition.visible,
+                    "singleton": widgetDefinition.singleton,
+                    "background": widgetDefinition.background,
+                    "widgetTypes": [widgetDefinition.widgetTypes[0].name],
+                    "intents": widgetDefinition.intents
             ]
             def tags = []
             widgetDefinition.tags.each { tags.push(it.name) }
@@ -671,14 +668,32 @@ class StackService {
         }
 
         //Get only the parameters required for a stack descriptor
-        def stackData = [
-            'name': stack.name,
-            'stackContext': stack.stackContext,
-            'description': stack.description,
-            'dashboards': dashboards,
-            'widgets': widgets
+        return [
+                'name': stack.name,
+                'stackContext': stack.stackContext,
+                'description': stack.description,
+                'dashboards': dashboards,
+                'widgets': widgets
         ]
-        //Pretty print the JSON
+
+
+    }
+    
+    def share(params)  {
+
+        def stackData = createStackData(params)
+        stackData =  (stackData as JSON).toString()
+        return stackData
+    }
+
+    def export(params) {
+        
+        // Only admins may export Stacks
+        ensureAdmin()
+        
+        def stackData = createStackData(params)
+
+        //Pretty print the JSON to be put as part of descriptor
         stackData = (stackData as JSON).toString(true)
 
         // Get the empty descriptor with appropriate JavaScript
@@ -696,6 +711,7 @@ class StackService {
         stackDescriptor = stackDescriptor.replaceFirst("var data;", java.util.regex.Matcher.quoteReplacement("var data = ${stackData};"))
 
         return stackDescriptor
+
     }
 
     //If a user is no longer assigned to a stack directly or through a group, this method

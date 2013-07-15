@@ -93,6 +93,38 @@ class StackController extends BaseOwfRestController {
             log.info("Executed stackService: delete in " + stopWatch);
         }
     }
+
+    def share = {
+
+        def jsonResult
+
+        StopWatch stopWatch = null;
+
+        if (log.isInfoEnabled()) {
+            stopWatch = new StopWatch();
+            stopWatch.start();
+            log.info("Executing stackService: share");
+        }
+
+        try {
+
+            jsonResult =  stackService.share(params)
+
+        } catch (Exception e) {
+
+            jsonResult = handleError(e)
+
+        }
+
+        renderResult(jsonResult, 200)
+
+        if (log.isInfoEnabled()) {
+            stopWatch.stop();
+            log.info("Executed stackService: share in " + stopWatch);
+        }
+
+
+    }
     
     def export = {
         def result
