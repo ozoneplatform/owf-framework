@@ -621,3 +621,9 @@ img.widget-drag-proxy {
     background-repeat: no-repeat;
     height: 31px;
 }
+
+.bx-wrapper .bx-pager.bx-default-pager {
+    a:hover, a.active {
+        background: $owf-focus-color;
+    }
+}

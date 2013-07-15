@@ -15,12 +15,23 @@
     width: 100%;
 
     .body {
+        overflow: hidden;
+    }
+
+    .app-components {
+        overflow: hidden;
         height: 150px;
     }
-}
 
-.appcomponents-carousel {
-    overflow-y: auto;
+    .ui-resizable-s {
+        position: relative;
+        height: 25px;
+        bottom: auto;
+    }
+
+    .bx-slide {
+        height: 100%;
+    }
 }
 
 .widget {

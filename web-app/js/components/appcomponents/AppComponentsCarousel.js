@@ -22,13 +22,25 @@
 
     Ozone.components.appcomponents.AppComponentsCarousel = SuperClass.extend({
 
-        className: 'appcomponents-carousel',
-
         // auto instantiate carousel
         autoInit: true,
 
         // boolean flag indicating whether or not carousel is instantiated
         _carousel: false,
+
+        tpl: '<div class="app-components"></div>',
+
+        // container element
+        $container: null,
+
+        render: function () {
+            var $el = $(this.tpl);
+            this.$el.html($el);
+            this.$container = this.$el;
+            this.setElement($el);
+
+            return SuperClass.prototype.render.call(this);
+        },
 
         filter: function (query) {
             this.destroyCarousel();
@@ -38,7 +50,37 @@
 
         shown: function () {
             this.initCarousel();
+            this.initResizable();
             return this;
+        },
+
+        initResizable: function () {
+            // leave bottom 64px visible
+            var maxHeight = $(window).height() - this.$container.offset().top - 64
+
+            this.$container.resizable({
+                handles: 's',
+                maxHeight: maxHeight,
+                stop: _.bind(this.doLayout, this)
+            });
+        },
+
+        doLayout: function (evt, ui) {
+            var size = ui.size,
+                $resizable = this.$container.children('.ui-resizable-s'),
+                marginBottom = parseInt(this.$container.children('.bx-wrapper').css('margin-bottom'), 10),
+                height = size.height - $resizable.height();
+
+            this.destroyCarousel();
+
+            // substract margin bottom for carousel pager to show
+            this.$el.height(height - marginBottom);
+
+            this.initCarousel();
+        },
+
+        destroyResizable: function () {
+            this.$container.resizable('destroy');
         },
 
         initCarousel: function (startSlide, force) {
@@ -47,9 +89,11 @@
                 this.$el.bxSlider({
                     startSlide: startSlide,
                     oneItemPerSlide: false,
-                    infiniteLoop: true,
+                    infiniteLoop: false,
                     touchEnabled: false
-                });
+                }); 
+
+                this.$el.trigger('initcarousel')
             }
             return this;
         },
@@ -68,7 +112,8 @@
 
         destroyCarousel: function () {
             if(this._carousel) {
-                this.$el.destroySlider();
+                this.$el.trigger('beforedestroycarousel')
+                        .destroySlider();
             }
             this._carousel = false;
             return this;
@@ -76,6 +121,7 @@
 
         remove: function () {
             this.destroyCarousel();
+            this.destroyResizable();
 
             return SuperClass.prototype.remove.call(this);
         }

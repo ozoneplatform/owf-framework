@@ -19,6 +19,8 @@
         <p:javascript src='owf-server'/>
         <!-- include our server bundle, in dev mode a full list of js includes will appear -->
 
+        <link rel="stylesheet" type="text/css" href="./js-lib/jquery-ui-1.10.3/themes/base/jquery.ui.resizable.css">
+
         <script language="javascript">
             owfdojo.config.dojoBlankHtmlUrl =  './js-lib/dojo-1.5.0-windowname-only/dojo/resources/blank.html';
         </script>

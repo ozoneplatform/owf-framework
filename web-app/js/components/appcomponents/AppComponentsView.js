@@ -20,6 +20,10 @@
 
     var SuperClass = Ozone.components.BaseView;
 
+    var $window = $(window),
+        windowWidth = $window.width(),
+        windowHeight = $window.height();
+
     Ozone.components.appcomponents.AppComponentsView = SuperClass.extend({
 
         id: 'appcomponents-view',
@@ -29,7 +33,11 @@
             'click .widget': '_onDblClick',
             'click .x-tool': 'hide',
             'mouseover .bx-prev': '_goToPrevSlide',
-            'mouseover .bx-next': '_goToNextSlide'
+            'mouseover .bx-next': '_goToNextSlide',
+            'mousedown .ui-resizable-handle': '_shim',
+            'resizestop': '_unshim',
+            'sortstart': '_shim',
+            'sortstop': '_unshim'
         }),
 
         // flag indicating whether launch is being performed
@@ -83,7 +91,11 @@
                     return true;
                 }
             });
-            this.carousel.render();
+
+            this.carousel.render().$el.on({
+                beforedestroycarousel: _.bind(this._destroySortable, this),
+                initcarousel: _.bind(this._initSortable, this)
+            });
 
             _.bindAll(this, 'refresh');
             $(window).on('resize', this.refresh);
@@ -92,17 +104,15 @@
         },
 
         filter: function (query) {
-            this._destroySortable();
             this.searchQuery = query;
             this.carousel.filter(query);
-            this._initSortable();
         },
 
         launch: function (app, isEnterPressed, isDragAndDrop) {
             var me = this;
 
             me.hide();
-            me.options.dashboardContainer
+            me.dashboardContainer
                 .launchWidgets(app, isEnterPressed, isDragAndDrop)
                 .always(function () {
                     me.show();
@@ -110,14 +120,20 @@
         },
 
         refresh: _.debounce(function (evt) {
-            this._destroySortable();
-            this.carousel.reloadCarousel();
-            this._initSortable();
+            var newWindowHeight = $window.height(),
+                newWindowWidth = $window.width();
+
+            // dont refresh if size hasn't changed
+            if(newWindowWidth !== windowWidth || newWindowHeight !== windowHeight) {
+                windowWidth = newWindowWidth;
+                windowHeight = newWindowHeight;
+
+                this.carousel.reloadCarousel();
+            }
         }, 1000),
 
         shown: function () {
             this.carousel.shown();
-            this._initSortable();
             return this;
         },
 
@@ -141,7 +157,6 @@
         },
 
         remove: function () {
-            this._destroySortable();
             this.carousel.remove();
             this.carousel = null;
 
@@ -161,6 +176,7 @@
 
         _initSortable: function () {
             var me = this,
+                $doc = $(document),
                 $slides;
 
             if(this.searchQuery !== '') {
@@ -186,14 +202,12 @@
 
                             ui.helper.addClass('selected');
 
-                            // mouseleave doesn't fire in IE7 when using sortable
-                            // manually check for mouseleav by checking evt.target
-                            me.$el.on('mouseout.launch', function (evt) {
-                                if(me.$el[0] === evt.target) {
-                                    me._sorting = false;
-                                    me._launching = true;
-                                    me.launch(model, false, true);
-                                }
+                            // checking for mouseout or mouseleave on current $el doesn't work
+                            // check for mouseout by checking for mousemove on paneshims
+                            $doc.on('mousemove.launch', '.paneshim', function (evt) {
+                                me._sorting = false;
+                                me._launching = true;
+                                me.launch(model, false, true);
                             });
                         },
 
@@ -219,15 +233,16 @@
                                 me.collection.move(itemView.model, newIndex);
                                 me._reordered = true;
                             }
+
+                            // remove event handlers
                             me.$el.off('.launch');
+                            $doc.off('.launch');
 
                             me._sorting = false;
                             me._launching = false;
 
                             setTimeout(function () {
-                                me._destroySortable();
                                 me.carousel.reloadCarousel(me.carousel.$el.getCurrentSlide());
-                                me._initSortable();
                             }, 0);
                         }
                     });
@@ -254,6 +269,14 @@
 
         _goToNextSlide: function (argument) {
             this._sorting && this.carousel.$el.goToNextSlide();
+        },
+
+        _shim: function () {
+            this.dashboardContainer.activeDashboard.shimPanes();
+        },
+
+        _unshim: function () {
+            this.dashboardContainer.activeDashboard.unshimPanes();
         }
 
     });
