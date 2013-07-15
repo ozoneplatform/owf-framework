@@ -77,6 +77,8 @@
 
         renderSubView: function () {
             this.list = new Ozone.components.appcomponents.AppComponentsList({
+                // hide details link
+                details: false,
                 collection: this.isShowingOpenInstances ? this.matchingOpenedAppComponents : this.matchingAppComponents
             });
 
@@ -87,7 +89,7 @@
         renderFooter: function () {
             var footerHTML = '';
             if(this.isShowingOpenInstances) {
-                footerHTML += '<p>Send the information to a different <a href="#" class="show-new-component">App Component</a></p>';
+                footerHTML += '<p>OR send the information to a different <a href="#" class="show-new-component">App Component</a></p>';
             }
             
             footerHTML += '<input type="checkbox" class="remember-checkbox">' +
@@ -187,7 +189,7 @@
             $doc.on('mousemove.launch', function (evt) {
                     // create proxy if not created
                     if(!$proxy) {
-                        $proxy = view.copy().$el;
+                        $proxy = view.copy().$el.addClass('selected');
                         $('body').append($proxy);
                     }
 

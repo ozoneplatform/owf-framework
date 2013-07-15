@@ -41,10 +41,11 @@
             return this;
         },
 
-        initCarousel: function (force) {
+        initCarousel: function (startSlide, force) {
             if(this.views.length > 0 && (this.autoInit || this.force)) {
                 this._carousel = true;
                 this.$el.bxSlider({
+                    startSlide: startSlide,
                     oneItemPerSlide: false,
                     infiniteLoop: true,
                     touchEnabled: false
@@ -59,9 +60,10 @@
             }
         },
 
-        reloadCarousel: function (evt) {
+        reloadCarousel: function (startSlide, force) {
             this.destroyCarousel()
-                .initCarousel();
+                .initCarousel(startSlide, force)
+                ._removeDetailsTip();
         },
 
         destroyCarousel: function () {

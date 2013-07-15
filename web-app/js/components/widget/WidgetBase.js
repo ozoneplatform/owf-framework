@@ -309,7 +309,9 @@ Ext.define('Ozone.components.widget.WidgetBase', {
 		saveState: function() {
 			if (Ext.state.Manager && this.stateful !== false) {
 				var id = this.getStateId();
-				if (id != null) {
+
+				// only save if person still has access
+				if (id && Ext.StoreManager.lookup('widgetStore').findRecord('widgetGuid', this.widgetGuid)) {
 					var state = this.getState();
 					if (this.fireEvent('beforestatesave', this, state) !== false) {
 						Ext.state.Manager.set(state.uniqueId, state);

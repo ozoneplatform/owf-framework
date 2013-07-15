@@ -41,9 +41,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     //dashboards will refresh before the switcher opens
     dashboardsNeedRefresh: false,
 
-    // flag indicating whether or not to fetch app components from server
-    fetchAppComponents: false,
-
     // private
     initComponent: function() {
         var me = this,
@@ -179,6 +176,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 Ext.getCmp(this.activeDashboard.id).saveToServer(true);
             }
 
+            if(this.appComponentsView) {
+                this.appComponentsView.save(true);
+            }
+
             //tell History to shutdown cleanly because the browser is leaving OWFs
             if (!this.shareButtonClicked) {
                 Ext.History.shutDown();
@@ -206,6 +207,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         this.initLoad();
 
         this.setupDashboardChangeListeners();
+        OWF.Collections.AppComponents.on('remove', this.removeAppComponent, this);
     },
 
     onWidgetMouseDown: function(evt, target) {
@@ -805,7 +807,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     refreshAppComponentsView: function () {
-        this.fetchAppComponents = true;
+        var me = this;
+        OWF.Collections.AppComponents.fetch().done(function (resp) {
+            me.widgetStore.loadRecords(me.widgetStore.proxy.reader.read(resp.rows).records);
+        });
     },
 
     showAppComponentsView: function () {
@@ -815,31 +820,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         if (me.activeDashboard.configRecord.get('locked') === true ||
             me.activeDashboard.configRecord.isMarketplaceDashboard()) {
             return;
-        }
-
-        if(me.fetchAppComponents) {
-            if(me.appComponentsView && me.appComponentsView.isVisible()) {
-                me.appComponentsView.hide();
-                return;
-            }
-            else {
-                me.fetchAppComponents = false;
-                me.loadMask.show();
-
-                // remove existing view
-                if(me.appComponentsView) {
-                    me.appComponentsView.$el.off('.toggle');
-                    me.appComponentsView.remove();
-                    me.appComponentsView = null;
-                }
-
-                // fetch and show view
-                OWF.Collections.AppComponents.fetch().done(function () {
-                    me.showAppComponentsView();
-                    me.loadMask.hide();
-                });
-                return;
-            }
         }
 
         if(!me.appComponentsView) {
@@ -2133,6 +2113,41 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             btn.enableMarketplaceMenu();
         } else {
             btn.disableMarketplaceMenu();
+        }
+    },
+
+    removeAppComponent: function (model, collection, options) {
+        var me = this,
+            appComponentGuid = model.get('widgetGuid');
+
+        Ozone.pref.PrefServer.updateAndDeleteWidgets({
+            widgetsToUpdate:[],
+            widgetGuidsToDelete: [appComponentGuid],
+            updateOrder:false,
+            onSuccess:function() {
+                var widgetStoreRecord = me.widgetStore.findRecord('widgetGuid', appComponentGuid);
+                me.widgetStore.remove(widgetStoreRecord);
+
+                removeAppComponentInstances(appComponentGuid);
+            },
+            onFailure: $.noop
+        });
+
+        function removeAppComponentInstances (appComponentGuid) {
+            var dashboardCardPanel = Ext.getCmp('dashboardCardPanel');
+
+            // Iterate through all the open dashboards
+            dashboardCardPanel.items.each(function(dashboard) {
+                // Access state store for each dashboard describing the state of the widgets running inside that dashboard
+                dashboard.stateStore.each(function(widgetState) {
+                    // Compare widget GUID to that of the one being removed
+                    if (widgetState.get('widgetGuid') == appComponentGuid) {
+                        // Remove the widget in question from its dashboard
+                        var uniqueId = widgetState.get('uniqueId');
+                        dashboard.closeWidget(uniqueId);
+                    }
+                });
+            });
         }
     }
 });
