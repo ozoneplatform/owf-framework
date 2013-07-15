@@ -595,13 +595,11 @@ class DashboardService extends BaseService {
 
         try
         {
+            // Determine whether to delete the dashboard or only mark it for deletion
+            if (!markForDeletion(dashboard)) {
+                deletePersonalAndGroupDashboards(dashboard)
+            }
 
-            // TODO: see if we need to delete all private copies of this dashboard
-
-            //delete all mappings for this dashboard
-            domainMappingService.purgeAllMappings(dashboard)
-
-            dashboard.delete(flush:true)
             ensureDefault(dashboard.user)
             return [success: true, dashboard: dashboard]
         }
@@ -609,6 +607,45 @@ class DashboardService extends BaseService {
         {
             log.error(e)
             throw new OwfException (message: 'A fatal error occurred while trying to delete a dashboard. Params: ' + params.toString(),exceptionType: OwfExceptionTypes.Database)
+        }
+    }
+
+    /**
+     * If the personal dashboard has a corresponding group dashboard that is published to store, the two are
+     * marked for deletion.
+     * @param personalDashboard
+     * @return True if the dashboards are marked for deletion, false otherwise.
+     */
+    private boolean markForDeletion(Dashboard personalDashboard) {
+        Dashboard groupDashboard = getGroupDashboard(personalDashboard)
+        if (groupDashboard && groupDashboard.publishedToStore) {
+            groupDashboard.markedForDeletion = true
+            groupDashboard.save()
+            personalDashboard.markedForDeletion = true
+            personalDashboard.save()
+            true
+        } else {
+            false
+        }
+    }
+
+    /**
+     * Deletes a personal dashboard along with its stack dashboard. Corresponds to the case of App owner
+     * deleting a page from the app.
+     * @param personalDashboard
+     */
+    def deletePersonalAndGroupDashboards(Dashboard personalDashboard) {
+        Dashboard groupDashboard = getGroupDashboard(personalDashboard)
+
+        // TODO: see if we need to delete all private copies of this dashboard
+        //delete all mappings for this dashboard
+        domainMappingService.purgeAllMappings(personalDashboard)
+
+        personalDashboard.delete()
+
+        // If this is the page of the user's app, delete the group dashboard
+        if (accountService.getLoggedInUsername().equals(groupDashboard?.stack?.owner?.username)) {
+            groupDashboard.delete()
         }
     }
 
@@ -1103,4 +1140,12 @@ class DashboardService extends BaseService {
         return (queryReturn[0] != null)? queryReturn[0] : -1
     }
 
+    private getGroupDashboard(Dashboard personalDashboard) {
+        List<DomainMapping> groupDashboardMappings = domainMappingService.getMappings(personalDashboard, RelationshipType.cloneOf, Dashboard.TYPE)
+        Dashboard groupDashboard = null
+        if (groupDashboardMappings) {
+            groupDashboard = Dashboard.get(groupDashboardMappings[0].destId)
+        }
+        groupDashboard
+    }
 }

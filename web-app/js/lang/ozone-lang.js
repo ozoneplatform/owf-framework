@@ -210,7 +210,12 @@ Ozone.layout.admin = {
 };
 
 Ozone.ux.DashboardMgmtString = {
-    createNewHeader : 'Create a new App description words. I like words. They help explain what is going on.',
+    createNewAppTitle: 			    'Create New App',
+    createNewPageTitle: 			'Create New Page',
+    createNewAppHeader: 		    'Enter a title and image location, then describe the new App:',
+    createNewPageHeader: 		    'Enter a title and image location, then describe the new Page:',
+
+    createNewHeader : 'Enter a title and image location, then describe the new App',
     titleBlankText: 'Title',
     iconBlankText: 'Icon URL',
     descriptionBlankText : 'Description',

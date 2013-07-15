@@ -210,10 +210,18 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
             me.bindEvents(cmp);
 
-            $('.all-dashboards').bxSlider({
+            me.slider = $('.all-dashboards').bxSlider({
                 oneItemPerSlide: false,
                 infiniteLoop: true,
-                touchEnabled: false
+                touchEnabled: false,
+                onSliderLoad: Ext.bind(function(currentIndex) {
+                    var slideCount = $('.bx-slide').length;
+
+                    // 1 slide of actual content + a clone slide on each side auto-created by the plugin
+                    if (slideCount === 3) {
+                        $('.bx-pager').hide();
+                    }
+                }, me)
             });
         });
 
@@ -243,7 +251,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('click', '.dashboard .edit', $.proxy(me.editDashboard, me))
             .on('click', '.dashboard .delete', $.proxy(me.deleteDashboard, me))
             .on('click', '.stack .restore', $.proxy(me.restoreStack, me))
-            .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
+            .on('click', '.stack .delete', $.proxy(me.deleteStack, me))
+            .on('click', '.createLink', $.proxy(me.createNewApp, me));
 
         me.initKeyboardNav();
 
@@ -1031,13 +1040,48 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         }, 100);
     },
 
+    createNewApp: function (evt) {
+        var me = this,
+            createDashWindow = Ext.widget('createdashboardwindow', {
+                stackId: null,
+                title: Ozone.ux.DashboardMgmtString.createNewAppTitle,
+                headerText: Ozone.ux.DashboardMgmtString.createNewAppHeader,
+                itemId: 'createDashWindow',
+                dashboardContainer: me.dashboardContainer,
+                ownerCt: me.dashboardContainer
+            });
+
+        createDashWindow.show();
+        me.close();
+    },
+
+    addPageToApp: function (evt) {
+        var me = this,
+            $stack = this.getElByClassFromEvent(evt, 'stack'),
+            stack = this.getStack($stack),
+            createDashWindow = Ext.widget('createdashboardwindow', {
+                stackId: stack.id,
+                title: Ozone.ux.DashboardMgmtString.createNewPageTitle,
+                headerText: Ozone.ux.DashboardMgmtString.createNewPageHeader,
+                itemId: 'createDashWindow',
+                dashboardContainer: me.dashboardContainer,
+                ownerCt: me.dashboardContainer
+            });
+
+        createDashWindow.show();
+        me.close();
+    },
+
     createDashboard: function (evt) {
         var me = this,
             createDashWindow = Ext.widget('createdashboardwindow', {
-            itemId: 'createDashWindow',
-            dashboardContainer: me.dashboardContainer,
-            ownerCt: me.dashboardContainer
-        });
+                createNewApp: false,
+                title: Ozone.ux.DashboardMgmtString.createNewPageTitle,
+                headerText: Ozone.ux.DashboardMgmtString.createNewPageHeader,
+                itemId: 'createDashWindow',
+                dashboardContainer: me.dashboardContainer,
+                ownerCt: me.dashboardContainer
+            });
 
         createDashWindow.show();
         me.close();
@@ -1074,32 +1118,33 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         function focusEl () {
             evt.currentTarget.focus();
         }
-        
-        if(dashboard.stack) {
-            this.warn('Users cannot remove individual dashboards from a stack. Please contact your administrator.', focusEl);
+
+        // Only allow the App owner to delete an App page
+        if(dashboard.stack && Ozone.config.user.displayName !== dashboard.stack.owner.username) {
+            this.warn('Users cannot remove individual pages from an App. Please contact your administrator.', focusEl);
             return;
         }
 
-        if(dashboard.groups && dashboard.groups.length > 0) {
+        // Only allow deleting a dashboard if its only group is a stack (and we applied the stack membership rule before)
+        if(!dashboard.groups || dashboard.groups.length == 0 || (dashboard.groups.length == 1 && dashboard.groups[0].stackDefault)) {
+            msg = 'This action will permanently delete <span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span>.';
+
+            this.warn(msg, function () {
+                me.dashboardStore.remove(dashboard.model);
+                me.dashboardStore.save();
+                me.notify('Delete Dashboard', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> deleted!');
+
+                me._deletedStackOrDashboards.push(dashboard);
+                me.reloadDashboards = true;
+
+                var $prev = $dashboard.prev();
+                $dashboard.remove();
+                $prev.focus();
+
+            }, focusEl);
+        } else {
             this.warn('Users cannot remove dashboards assigned to a group. Please contact your administrator.', focusEl);
-            return;
         }
-
-        msg = 'This action will permanently delete <span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span>.';
-
-        this.warn(msg, function () {
-            me.dashboardStore.remove(dashboard.model);
-            me.dashboardStore.save();
-            me.notify('Delete Dashboard', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> deleted!');
-
-            me._deletedStackOrDashboards.push(dashboard);
-            me.reloadDashboards = true;
-
-            var $prev = $dashboard.prev();
-            $dashboard.remove();
-            $prev.focus();
-
-        }, focusEl);
     },
 
     restoreStack: function (evt) {

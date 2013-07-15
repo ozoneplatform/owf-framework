@@ -282,6 +282,50 @@ Ozone.pref = Ozone.pref || {};
           return postParams;
       };
 
+      var generateStackPostParamsJSON = function (json) {
+          var postParams = {
+              'id': json.stack.id || -1,
+              'name': json.stack.name,
+              'description': json.stack.description,
+              'imageUrl': json.stack.imageUrl,
+              'stackContext': json.stack.stackContext
+          };
+          return postParams;
+      };
+
+      /**
+       * @private
+       * @description Create JSON object with params. This should generally not be called from user code.
+       * @param cfg config object see below for properties
+       * @param cfg.dashboardId
+       * @param cfg.value
+       * @param cfg.type
+       * @param cfg.isDefault
+       * @return the JSON object
+       */
+      var generateAppPostParamsJSON = function (json) {
+          var postParams
+          if (json.stack.id) {
+              postParams = {
+                  'stack_id': json.stack.id,
+                  'data': JSON.stringify([generateDashboardPostParamsJSON(json)]),
+                  'tab': 'dashboards',
+                  'update_action': 'add'
+              };
+          } else {
+              postParams = {
+                  'stackData': JSON.stringify([generateStackPostParamsJSON(json)]),
+                  'dashboardData': JSON.stringify([generateDashboardPostParamsJSON(json)]),
+                  'tab': 'dashboards',
+                  'update_action': 'createAndAddDashboard'
+              };
+          }
+          postParams.adminEnabled = true;
+          postParams._method= 'POST';
+
+          return postParams;
+      };
+
       return /** @lends Ozone.pref.PrefServer.prototype */{
 
           version: Ozone.version.owfversion + Ozone.version.preference,
@@ -763,10 +807,31 @@ Ozone.pref = Ozone.pref || {};
            * });
            */
           createOrUpdateDashboard : function (cfg){
+              // New dashboard is added to its stack, existing dashboard is updated
+              if (cfg.saveAsNew) {
+                  this.createDashboard(cfg);
+              } else {
+                  this.updateDashboard(cfg);
+              }
+          },
+
+          createDashboard : function(cfg) {
+              Ext.Ajax.request({
+                  url: Ozone.util.contextPath() + '/stack',
+                  method: 'POST',
+                  params: generateAppPostParamsJSON(cfg.json),
+                  success: cfg.onSuccess,
+                  failure: cfg.onFailure,
+                  scope: this
+              });
+          },
+
+          updateDashboard : function(cfg) {
+              var postParams
               cfg.url = _url + "/" + 'dashboard' + "/" + cfg.json.guid;
-              var postParams = generateDashboardPostParamsJSON(cfg.json);
+              postParams = generateDashboardPostParamsJSON(cfg.json);
+              cfg.method = 'PUT';
               postParams.bypassLayoutRearrange = true;
-              cfg.method = cfg.saveAsNew ? 'POST' : 'PUT';
               cfg.jsonObject = postParams;
               setValuesViaJSONObject(cfg);
           },

@@ -5,7 +5,8 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
         'widget.Ozone.components.window.CreateDashboardWindow'
     ],
 
-    title: Ozone.layout.tooltipString.createDashboardTitle,
+    title: null,
+    headerText: null,
 
     constrain: Ext.isIE,
     constrainHeader: true,
@@ -20,6 +21,7 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
     dashboardContainer: null,
     existingDashboardModel: null,
     ownerCt: null,
+    stackId: null, // id of the parent Stack
     
     initComponent: function() {
         var me = this;
@@ -48,7 +50,9 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
             dashboardContainer: me.dashboardContainer,
             hideViewSelectRadio: me.hideViewSelectRadio,
             winId: me.id,
-            existingDashboardRecord: me.existingDashboardRecord
+            existingDashboardRecord: me.existingDashboardRecord,
+            headerText: me.headerText,
+            stackId: me.stackId
         }];
 
         me.callParent();

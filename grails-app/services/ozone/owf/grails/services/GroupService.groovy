@@ -235,7 +235,7 @@ class GroupService {
 
             //loop through dashboards and create a group dashboard
             JSON.parse(params.dashboards).each {
-                def dash = Dashboard.findByGuid(it.guid)
+                def dash = (it.guid ? Dashboard.findByGuid(it.guid) : it)
                 if (dash != null) {
                     def dashConfig = [
                         //use a new guid
@@ -246,7 +246,7 @@ class GroupService {
                         'description': dash.description,
                         'type': dash.type,
                         'locked': dash.locked,
-
+                        'iconImageUrl': dash.iconImageUrl,
                         'layoutConfig': dash.layoutConfig,
                         // If given a stack override, use that.  Otherwise, use the stack already associated
                         // with the dashboard to copy.

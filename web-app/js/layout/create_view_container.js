@@ -21,6 +21,21 @@ Ext.define('Ozone.layout.CreateViewContainer', {
     afterRenderInitComplete: false,
     createViewContainer_FormValid: true,
     hideViewSelectRadio: false,
+    stackId: null, // parent stack id
+    premadeLayouts: {
+        premadeDesktop: {"paneType":"desktoppane","widgets":[],"xtype":"container","flex":1,"height":"100%","items":[]},
+        premadeFit: {"paneType":"fitpane","widgets":[],"xtype":"container","flex":1,"height":"100%","items":[]},
+        premadeTabbed: {"paneType":"tabbedpane","widgets":[],"xtype":"container","flex":1,"height":"100%","items":[]},
+        premade2ColumnFit: {"xtype":"container","cls":"hbox ","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"dashboarddesignerpane","cls":"left","flex":1,"htmlText":"50%","items":[],"widgets":[],"paneType":"fitpane"},{"xtype":"dashboardsplitter"},{"xtype":"dashboarddesignerpane","cls":"right","flex":1,"htmlText":"50%","items":[],"paneType":"fitpane"}],"flex":3},
+        premade2RowFit: {"xtype":"container","cls":"vbox ","layout":{"type":"vbox","align":"stretch"},"items":[{"xtype":"dashboarddesignerpane","cls":"top","flex":1,"htmlText":"50%","items":[],"widgets":[],"paneType":"fitpane"},{"xtype":"dashboardsplitter"},{"xtype":"dashboarddesignerpane","cls":"bottom","flex":1,"htmlText":"50%","items":[],"paneType":"fitpane"}],"flex":3},
+        premade4Fit: {"xtype":"container","cls":"hbox ","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"container","cls":"vbox left","layout":{"type":"vbox","align":"stretch"},"items":[{"xtype":"dashboarddesignerpane","cls":"top","flex":1,"htmlText":"50%","items":[],"widgets":[],"paneType":"fitpane"},{"xtype":"dashboardsplitter"},{"xtype":"dashboarddesignerpane","cls":"bottom","flex":1,"htmlText":"50%","items":[],"paneType":"fitpane"}],"flex":1},{"xtype":"dashboardsplitter"},{"xtype":"container","cls":"vbox right","layout":{"type":"vbox","align":"stretch"},"items":[{"xtype":"dashboarddesignerpane","cls":"top","flex":1,"htmlText":"50%","items":[],"widgets":[],"paneType":"fitpane"},{"xtype":"dashboardsplitter"},{"xtype":"dashboarddesignerpane","cls":"bottom","flex":1,"htmlText":"50%","items":[],"paneType":"fitpane"}],"flex":1}],"flex":3},
+        premade2ColumnPortal: {"xtype":"container","cls":"hbox ","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"dashboarddesignerpane","cls":"left","flex":1,"htmlText":"50%","items":[],"widgets":[],"paneType":"portalpane"},{"xtype":"dashboardsplitter"},{"xtype":"dashboarddesignerpane","cls":"right","flex":1,"htmlText":"50%","items":[],"paneType":"portalpane"}],"flex":3},
+        premadeAccordionFit: {"xtype":"container","cls":"hbox ","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"dashboarddesignerpane","cls":"left","flex":1,"htmlText":"50%","items":[],"widgets":[],"paneType":"accordionpane"},{"xtype":"dashboardsplitter"},{"xtype":"dashboarddesignerpane","cls":"right","flex":1,"htmlText":"50%","items":[],"paneType":"fitpane"}],"flex":3},
+        premadeTabbedAccordion: {"xtype":"container","cls":"hbox ","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"dashboarddesignerpane","cls":"left","flex":1,"htmlText":"50%","items":[],"widgets":[],"paneType":"tabbedpane"},{"xtype":"dashboardsplitter"},{"xtype":"dashboarddesignerpane","cls":"right","flex":1,"htmlText":"50%","items":[],"paneType":"accordionpane"}],"flex":3},
+        premade2RowFitTabbed: {"xtype":"container","cls":"vbox ","layout":{"type":"vbox","align":"stretch"},"items":[{"xtype":"dashboarddesignerpane","cls":"top","flex":1,"htmlText":"50%","items":[],"widgets":[],"paneType":"fitpane"},{"xtype":"dashboardsplitter"},{"xtype":"dashboarddesignerpane","cls":"bottom","flex":1,"htmlText":"50%","items":[],"paneType":"tabbedpane"}],"flex":3},
+        premadeAccordion2RowFit: {"xtype":"container","cls":"hbox ","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"dashboarddesignerpane","cls":"left","flex":1,"htmlText":"50%","items":[],"widgets":[],"paneType":"accordionpane"},{"xtype":"dashboardsplitter"},{"xtype":"container","cls":"vbox right","layout":{"type":"vbox","align":"stretch"},"items":[{"xtype":"dashboarddesignerpane","cls":"top","flex":1,"htmlText":"50%","items":[],"widgets":[],"paneType":"fitpane"},{"xtype":"dashboardsplitter"},{"xtype":"dashboarddesignerpane","cls":"bottom","flex":1,"htmlText":"50%","items":[],"paneType":"fitpane"}],"flex":1}],"flex":3},
+        premadeTabbed2Fit: {"xtype":"container","cls":"vbox ","layout":{"type":"vbox","align":"stretch"},"items":[{"xtype":"dashboarddesignerpane","cls":"top","flex":1,"htmlText":"50%","items":[],"widgets":[],"paneType":"tabbedpane"},{"xtype":"dashboardsplitter"},{"xtype":"container","cls":"hbox bottom","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"dashboarddesignerpane","cls":"left","flex":1,"htmlText":"50%","items":[],"widgets":[],"paneType":"fitpane"},{"xtype":"dashboardsplitter"},{"xtype":"dashboarddesignerpane","cls":"right","flex":1,"htmlText":"50%","items":[],"paneType":"fitpane"}],"flex":1}],"flex":3}
+    },
 
     /**
     *
@@ -48,9 +63,10 @@ Ext.define('Ozone.layout.CreateViewContainer', {
     },
 
     initComponent: function() {
+        var me = this;
         this.config = this.dashboardContainer.activeDashboard.config;
         this.views = this.dashboardContainer.dashboards;
-        
+
         this.addEvents('saved', 'failed');
 
         this.headerLabel = {
@@ -58,7 +74,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             name: 'headerLabel',
             forId: 'myFieldId',
             cls: 'createNewHeaderLabel',
-            text: Ozone.ux.DashboardMgmtString.createNewHeader,
+            text: this.headerText,
             margins: '0 0 0 10'
         };
 
@@ -70,11 +86,11 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             height: 54,
             width: 54,
             margin: '4 0 0 5',
-           listeners: {
-               show: function(a,b,c,d) {
-                   alert('showing it');
-               }
-           }
+            listeners: {
+                show: function(a,b,c,d) {
+                    alert('showing it');
+                }
+            }
         });
 
         var iconImage = this.iconImage;
@@ -219,7 +235,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             }
         };
 
-        this.existingViewRadio = { 
+        this.existingViewRadio = {
             boxLabel: Ozone.layout.CreateViewWindowString.createFromExisting,
             name: 'viewSelectRadio',
             inputValue: "copiedDashboard",
@@ -239,7 +255,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             vtype: 'copiedDashboard',
             copiedDashboardField: 'existViewCb' // id of the field to validate
         };
-		
+
         this.premadeLayoutRadio = {
             boxLabel: Ozone.ux.DashboardMgmtString.premadeLayout,
             name: 'viewSelectRadio',
@@ -359,6 +375,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         this.premadeViewContainer = {
             xtype: 'container',
             name: 'premadeViewContainer',
+            itemId: 'premadeViewContainer',
             layout: {
                 type: 'vbox',
                 align: 'stretch'
@@ -369,7 +386,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                 this.premadeViewRow2
             ]
         };
-		
+
         this.existingView = {
             xtype: 'combo',
             itemId: 'existViewCb',
@@ -387,7 +404,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             forceSelection: true,
             disabled: true,
             padding: '0, 0, 5, 0',
-            margin: '0, 5, 0, 17'            
+            margin: '0, 5, 0, 17'
         };
         this.existingView.value = this.views[0].guid;
 
@@ -401,7 +418,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         var container = this;
         var dashboardJson = null;
         var isSubmittingForm = false;
-        
+
         this.importedView = {
             xtype: 'filefield',
             itemId: 'importFileupload',
@@ -459,14 +476,14 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                     //override the reset function
                     cmp._reset = cmp.reset;
                     cmp.reset = function() {
-                        
+
                         if (!isSubmittingForm) {
                             this._reset.apply(this, arguments);
                             dashboardJson = null;
                         }
                         // this small block does exactly what the extjs reset does, except
                         // it does not clear out the inputEl value because we want to see
-                        // the file in the input text field after selecting it.  if the 
+                        // the file in the input text field after selecting it.  if the
                         // fileInputEl is not removed then created again, the browse button
                         // will not work a second time.
                         else {
@@ -476,7 +493,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                             }
                             this.callParent();
                         }
-                        
+
                         this.setupFocus();
                     }
                 },
@@ -491,16 +508,16 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                         success: function (fp, action) {
 
                             dashboardJson = Ozone.util.parseJson(action.response.responseText).value;
-                            
+
                             if (!Ozone.util.validateDashboardJSON(dashboardJson)) {
                                 handleInvalidFileUpload();
                             }
                             else {
-                                
+
                                 // if the description field is empty, fill it in with the imported description field, otherwise do nothing
                                 if (container.down('#description').getValue() == null || container.down('#description').getValue() == "") {
                                     container.down('#description').setValue(dashboardJson.description);
-                                }   
+                                }
                             }
                             isSubmittingForm = false;
                         },
@@ -548,7 +565,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         };
 
         this.layout = {
-        	type: 'fit'
+            type: 'fit'
         };
 
         this.defaults = {
@@ -558,19 +575,19 @@ Ext.define('Ozone.layout.CreateViewContainer', {
 
         this.margin = '0 0 0 0';
         this.items = [{
-        	xtype: 'container',
-        	layout: {
-        		type: 'vbox',
-        		align: 'stretch'
-        	},
-        	padding: '0, 5, 0, 0',
-        	items: [
-                    this.headerLabel,
-                    this.appInfoContainer,
-        	        this.description,
-        	        this.viewSelectRadio
-        	]
-    	}];
+            xtype: 'container',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
+            padding: '0, 5, 0, 0',
+            items: [
+                this.headerLabel,
+                this.appInfoContainer,
+                this.description,
+                this.viewSelectRadio
+            ]
+        }];
 
         this.dockedItems = [{
             xtype: 'toolbar',
@@ -589,18 +606,19 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                 //tabIndex: 4,
                 handler: function (button, event) {
                     if (this.getForm().isValid() && this.createViewContainer_FormValid) {
+                        var dashboardContainer = Ext.getCmp('mainPanel');
                         var titleTextField = this.down('#titleTextField'),
                             descriptionBox = this.down('#description'),
                             iconImageUrlField = this.down('#iconURLField');
 
                         Ozone.util.formField.removeLeadingTrailingSpaces(titleTextField);
                         //make sure name is unique
-                        Ext.getCmp('mainPanel').saveActiveDashboardToServer();
+                        dashboardContainer.saveActiveDashboardToServer();
 
                         var title = titleTextField.getValue();
                         var desc = descriptionBox.getValue();
                         var iconImageUrl = iconImageUrlField.getValue();
-                        
+
                         // add a space to the field if it is empty or null so that it will
                         // store an empty string to the db instead of it thinking its a null value
                         if (desc == null || desc == '')
@@ -620,8 +638,9 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                         else {
 
                             var radioSelection = this.down('#viewSelect').getValue().viewSelectRadio;
-                            var isCreateFromExisting = (radioSelection == "copiedDashboard") ? true : false;
-                            var isImport = (radioSelection == "importedDashboard") ? true : false;
+                            var isCreateFromExisting = radioSelection == "copiedDashboard";
+                            var isImport = radioSelection == "importedDashboard";
+                            var usePremadeLayout = radioSelection == "premadeLayout";
 
                             //create new from existing
                             if (isCreateFromExisting) {
@@ -630,22 +649,20 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                                 if (Ext.isEmpty(existingViewSelected)) {
                                     this.down('#existViewCb').markInvalid("This field cannot be blank.");
                                     Ozone.Msg.alert(Ozone.util.ErrorMessageString.invalidForm, Ozone.util.ErrorMessageString.invalidFormMsg, function () {
-                                            this.focusTitleBox();
-                                        }, this, null, this.dashboardContainer.modalWindowManager);
+                                        this.focusTitleBox();
+                                    }, this, null, this.dashboardContainer.modalWindowManager);
                                     return;
                                 }
 
                                 var existingViewToDuplicate = this.dashboardContainer.dashboardStore.getById(existingViewSelected).data;
                                 existingViewToDuplicate = Ozone.util.cloneDashboard(existingViewToDuplicate, true);
-                                
+
                                 existingViewToDuplicate.name = title;
                                 existingViewToDuplicate.description = desc;
                                 existingViewToDuplicate.iconImageUrl = iconImageUrl;
                                 existingViewToDuplicate.isdefault = false;
 
-                                Ext.getCmp('mainPanel').createDashboard(
-                                        Ext.create('Ozone.data.Dashboard', existingViewToDuplicate)
-                                );
+                                dashboardContainer.createDashboard(this.createDashboardModel(existingViewToDuplicate));
 
                                 this.close();
                             }
@@ -653,7 +670,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                             else if (isImport) {
                                 //check if the dashboardJson has been set from file upload
                                 if (dashboardJson != null) {
-                                    
+
                                     // Reset title
                                     dashboardJson.name = title;
                                     dashboardJson.description = desc;
@@ -668,9 +685,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                                     else {
                                         delete dashboardJson.state;
 
-                                        Ext.getCmp('mainPanel').createDashboard(
-                                            Ext.create('Ozone.data.Dashboard', Ozone.util.cloneDashboard(dashboardJson, true))
-                                            );
+                                        dashboardContainer.createDashboard(this.createDashboardModel(Ozone.util.cloneDashboard(dashboardJson, true)));
+
                                         this.close();
                                     }
                                 }
@@ -680,14 +696,32 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                                     }, this, null, this.dashboardContainer.modalWindowManager);
                                 }
                             }
+                            else if (usePremadeLayout) {
+                                var dashboardModel = this.createDashboardModel({
+                                        name: title,
+                                        description: desc,
+                                        iconImageUrl: iconImageUrl,
+                                        layoutConfig: me.getPremadeLayout()
+                                });
+
+                                // DO not open dashboard designer, just save the dashboard with the pre-made layout
+                                dashboardContainer.saveDashboard(dashboardModel.data, 'create', function() {
+
+                                    // activate new dashboard
+                                    var guid = dashboardModel.get('guid');
+                                    dashboardContainer.activateDashboard(guid);
+                                });
+
+                                this.close();
+                            }
                             //create new using name, and description
                             else {
-                                Ext.getCmp('mainPanel').createDashboard(
-                                        Ext.create('Ozone.data.Dashboard', {
-                                            "name": title,
-                                            "description": desc,
-                                            "iconImageUrl": iconImageUrl
-                                        })
+                                dashboardContainer.createDashboard(
+                                    this.createDashboardModel({
+                                        name: title,
+                                        description: desc,
+                                        iconImageUrl: iconImageUrl
+                                    })
                                 );
                                 this.close();
                             }
@@ -717,19 +751,19 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                 handler: this.cancel
             }]
         }];
-		
+
         //Need this to get rid of destory errors with ExtJS
         this.on('beforedestroy', function(cmp){
             cmp.dockedItems = null;
         });
 
-        //        this.on("afterrender", function(cmp) {
-        //        	cmp.focusTitleBox();
-        //        });
+        this.on("afterrender", function(cmp) {
+            // Register handler for pre-made layout buttons
+            this.handlePremadeLayoutButtons();
+        });
 
         this.callParent();
     },
-
     refreshData: function(){
         this.config = this.dashboardContainer.activeDashboard.config;
         this.views = this.dashboardContainer.dashboards;
@@ -766,7 +800,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
 
     focusTitleBox: function() {
         /*
-         * Have to defer this so that it happens after a focus that Ext does 
+         * Have to defer this so that it happens after a focus that Ext does
          * internally that is also deffered
          */
         Ext.defer(function() {
@@ -780,5 +814,37 @@ Ext.define('Ozone.layout.CreateViewContainer', {
 
     close: function() {
         Ext.getCmp(this.winId).close();
+    },
+
+    handlePremadeLayoutButtons: function() {
+        var me = this;
+        var layoutButtons = this.query('container#premadeViewContainer')[0].query('button');
+
+        Ext.Array.each(layoutButtons, function(button) {
+            // Select the clicked button
+            button.on("click", function(evt) {
+                if (me.selectedButton) me.selectedButton.removeCls('selected');
+                this.addCls('selected');
+                me.selectedLayoutName = this.itemId;
+                me.selectedButton = this;
+            });
+        });
+    },
+
+    getPremadeLayout: function() {
+        // Get the pre-defined layout for that selection
+        return this.premadeLayouts[this.selectedLayoutName];
+    },
+
+    createDashboardModel: function(config) {
+        config.stack = this.stackId ?
+        {"id": this.stackId } :
+        {
+            "name": config.name,
+            "description": config.description,
+            "imageUrl": config.iconImageUrl
+        }
+
+        return Ext.create('Ozone.data.Dashboard', config)
     }
 });

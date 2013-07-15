@@ -41,9 +41,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     //dashboards will refresh before the switcher opens
     dashboardsNeedRefresh: false,
 
-    // flag indicating whether or not to fetch app components from server
-    fetchAppComponents: false,
-
     // private
     initComponent: function() {
         var me = this,
@@ -810,7 +807,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     refreshAppComponentsView: function () {
-        this.fetchAppComponents = true;
+        var me = this;
+        OWF.Collections.AppComponents.fetch().done(function (resp) {
+            me.widgetStore.loadRecords(me.widgetStore.proxy.reader.read(resp.rows).records);
+        });
     },
 
     showAppComponentsView: function () {
@@ -820,31 +820,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         if (me.activeDashboard.configRecord.get('locked') === true ||
             me.activeDashboard.configRecord.isMarketplaceDashboard()) {
             return;
-        }
-
-        if(me.fetchAppComponents) {
-            if(me.appComponentsView && me.appComponentsView.isVisible()) {
-                me.appComponentsView.hide();
-                return;
-            }
-            else {
-                me.fetchAppComponents = false;
-                me.loadMask.show();
-
-                // remove existing view
-                if(me.appComponentsView) {
-                    me.appComponentsView.$el.off('.toggle');
-                    me.appComponentsView.remove();
-                    me.appComponentsView = null;
-                }
-
-                // fetch and show view
-                OWF.Collections.AppComponents.fetch().done(function () {
-                    me.showAppComponentsView();
-                    me.loadMask.hide();
-                });
-                return;
-            }
         }
 
         if(!me.appComponentsView) {

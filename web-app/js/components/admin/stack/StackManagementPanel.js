@@ -146,6 +146,24 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                                     me.showAlert('Error', 'You must select a stack to export.');
                                 }
                             }
+                        } ,
+
+                        {
+                            xtype: 'owfmenuitem',
+                            text: 'Share',
+                            handler: function(button) {
+                                var records = me.gridStacks.getSelectionModel().getSelection();
+                                if(records && records.length === 1) {
+                                    me.doShare('stack', records[0]);
+                                }
+                                else if(records && records.length > 1) {
+                                    me.showAlert('Error', 'You must select only one stack to share.');
+                                }
+
+                                else {
+                                    me.showAlert('Error', 'You must select a stack first');
+                                }
+                            }
                         }
                     ]
                 }

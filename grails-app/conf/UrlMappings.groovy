@@ -261,7 +261,7 @@ class UrlMappings {
             controller = "dashboard"
             action = UrlMappings.handleDashboardAction
         }
-        
+
         "/prefs/widgetDefinition/dependents" {
             controller = "widgetDefinition"
             action = "dependents"
@@ -303,6 +303,13 @@ class UrlMappings {
             controller = "stack"
             action = "export"
         }
+
+        "/stack/share" {
+            controller = "stack"
+            action = "share"
+        }
+
+
         "/stack/import" {
             controller = "stack"
             action = "importStack"
