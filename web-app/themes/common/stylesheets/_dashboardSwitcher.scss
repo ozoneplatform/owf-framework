@@ -53,9 +53,9 @@
         }
         
         .create {
-        	 bottom: -45px;
-			 left: 35px;
-			 position: relative;
+        	 top: 493px;
+			 right: -5px;
+			 position: absolute;
         }
 
         .create-link-text, .store-link-text {
@@ -129,8 +129,9 @@
         .bx-wrapper {
             // Must be set explicitly to remain constant
             // regardless of how many children per slide in the viewport
-            height: 380px !important;
+            height: 360px !important;
             width: 100% !important;
+            margin-bottom: 30px !important;
 
             .bx-viewport {
                 @include box-shadow(none);
@@ -339,12 +340,12 @@
     overflow: hidden;
 }
 
-.stack-dashboards {
+.stack-dashboards-container {
     clear: both;
     position: relative;
     top: -30px;
 
-    .dashboards {
+    .stack-dashboards {
         background: darken($dashboard-switcher-dashboard-background-color, 10%);
         overflow: hidden;
 
@@ -352,6 +353,8 @@
             display: none;
         }
     }
+
+
 }
 .stack-dashboards-anchor-tip {
     position: relative;
