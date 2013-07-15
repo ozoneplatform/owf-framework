@@ -260,8 +260,6 @@ class StackService {
 
             dashboard_data[0].put('stack', stack)
             
-            dashboard_data[0].put('guid', null)
-
             params.data = (dashboard_data as JSON).toString()
         }
 
@@ -326,6 +324,7 @@ class StackService {
                       
                 dashboards?.each { it ->
                     def dashboard = (it.guid ? Dashboard.findByGuid(it.guid) : it)
+                    dashboard = dashboard ?: it
 
                     if (dashboard) {
                         if (params.update_action == 'remove') {       
