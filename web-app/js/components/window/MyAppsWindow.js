@@ -118,7 +118,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 return values.isStack ? 'stack' : 'dashboard';
             },
             getIcon: function(values) {
-                if (values.iconImageUrl) {
+                if (values.iconImageUrl && !Ext.isEmpty(values.iconImageUrl.trim())) {
                     return '<div class="thumb" style="background-image: url(' + values.iconImageUrl + ') !important"></div>';
                 } else {
                     return '<div class="thumb"></div>';
