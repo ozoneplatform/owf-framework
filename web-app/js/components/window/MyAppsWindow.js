@@ -1,7 +1,7 @@
 Ext.define('Ozone.components.window.MyAppsWindow', {
     extend: 'Ozone.components.window.ModalWindow',
     alias: 'widget.myappswindow',
-    
+
     closeAction: 'hide',
     modal: true,
     preventHeader: false,
@@ -158,7 +158,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             getActions: function (values) {
                 return values.isStack ? 
                         '<ul class="stack-actions hide">'+
-                            '<li></li>'+
+                            '<li class="share icon-share" tabindex="0" data-qtip="Share"></li>'+
                             '<li class="restore icon-refresh" tabindex="0" data-qtip="Restore"></li>'+
                             '<li class="delete icon-remove" tabindex="0" data-qtip="Delete"></li>'+
                             '<li></li>'+
@@ -251,6 +251,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('click', '.dashboard .share', $.proxy(me.shareDashboard, me))
             .on('click', '.dashboard .edit', $.proxy(me.editDashboard, me))
             .on('click', '.dashboard .delete', $.proxy(me.deleteDashboard, me))
+            .on('click', '.stack .share', $.proxy(me.pushToStore, me))
             .on('click', '.stack .restore', $.proxy(me.restoreStack, me))
             .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
             
@@ -1039,7 +1040,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         }, 100);
     },
 
-    createNewApp: function (evt) {
+
+
+
+        createNewApp: function (evt) {
         var me = this,
             createDashWindow = Ext.widget('createdashboardwindow', {
                 stackId: null,
@@ -1144,6 +1148,94 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         } else {
             this.warn('Users cannot remove dashboards assigned to a group. Please contact your administrator.', focusEl);
         }
+    },
+
+
+    pushToStore: function (evt) {
+        evt.stopPropagation();
+        var me = this,
+            $stack = this.getElByClassFromEvent(evt, 'stack'),
+            stack = this.getStack($stack),
+            dashboardContainer = me.activeDashboard.dashboardContainer,
+            banner = dashboardContainer.getBanner(),
+            mpLauncher;
+
+        if (!banner.hasMarketplaceButton)  {
+            console.log ('Error', 'You do not have a Marketplace widget defined');
+            return;
+        }
+
+        mpLauncher = banner.getMarketplaceLauncher();
+
+        // Get the stack json
+
+        Ozone.util.Transport.send({
+
+            url : Ozone.util.contextPath()  + '/stack/share?id=' + stack.id,
+            method : "POST",
+            onSuccess: Ext.bind(function (json){
+
+                if (banner.marketplaceWidget) {
+
+                    me.sendRequest(banner.marketplaceWidget.data.url, json, mpLauncher, banner.marketplaceWidget);
+
+                } else {
+
+                    var chooser = Ext.widget('marketplacewindow', {
+                        dashboardContainer: dashboardContainer,
+                        callback: function(marketplaceWidget) {
+                            me.sendRequest(marketplaceWidget.data.url, json, mpLauncher, marketplaceWidget);
+                        }
+                    });
+
+                    chooser.show();
+                }
+            }, me) ,
+
+            onFailure: function (errorMsg){
+                var msg = 'The sharing of ' + ' ' + Ext.htmlEncode(record.get('name')) + ' failed.';
+                console.log('Error', errorMsg ? errorMsg : msg);
+
+            },
+            autoSendVersion : false
+
+        });
+
+        me.close();
+
+    },
+
+    sendRequest: function(url, json, mpLauncher, myMarketplace) {
+
+        var me = this,
+            urlString = url.replace(/\/$/, "");
+
+        urlString += '/listing';
+
+        Ozone.util.Transport.send({
+            url : urlString,
+            method : "POST",
+            content: {
+                data: json,
+                windowname: true
+            },
+
+            onSuccess: Ext.bind(function(result) {
+
+                 console.log("success", "ID is " + result.data.id + ", New item created? " + result.data.isNew) ;
+                 mpLauncher.gotoMarketplace(myMarketplace);
+
+
+            }, me) ,
+
+            onFailure: function (errorMsg){
+                 var msg = 'The sharing of ' + 'shareItem' + ' ' + Ext.htmlEncode(record.get('name')) + ' failed.';
+                 console.log('Error', errorMsg ? errorMsg : msg);
+            },
+            autoSendVersion : false
+
+        })
+
     },
 
     restoreStack: function (evt) {
