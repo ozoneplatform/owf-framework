@@ -808,14 +808,14 @@ Ozone.pref = Ozone.pref || {};
            */
           createOrUpdateDashboard : function (cfg){
               // New dashboard is added to its stack, existing dashboard is updated
-              if (cfg.saveAsNew) {
-                  this.createDashboard(cfg);
+              if (cfg.saveAsNew && cfg.json.type != 'marketplace') {
+                  this.createDashboardWithStack(cfg);
               } else {
-                  this.updateDashboard(cfg);
+                  this.createOrUpdateDashboardInternal(cfg);
               }
           },
 
-          createDashboard : function(cfg) {
+          createDashboardWithStack: function(cfg) {
               Ext.Ajax.request({
                   url: Ozone.util.contextPath() + '/stack',
                   method: 'POST',
@@ -826,12 +826,11 @@ Ozone.pref = Ozone.pref || {};
               });
           },
 
-          updateDashboard : function(cfg) {
-              var postParams
+          createOrUpdateDashboardInternal : function (cfg){
               cfg.url = _url + "/" + 'dashboard' + "/" + cfg.json.guid;
-              postParams = generateDashboardPostParamsJSON(cfg.json);
-              cfg.method = 'PUT';
+              var postParams = generateDashboardPostParamsJSON(cfg.json);
               postParams.bypassLayoutRearrange = true;
+              cfg.method = cfg.saveAsNew ? 'POST' : 'PUT';
               cfg.jsonObject = postParams;
               setValuesViaJSONObject(cfg);
           },
