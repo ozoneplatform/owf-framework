@@ -235,7 +235,7 @@ class GroupService {
 
             //loop through dashboards and create a group dashboard
             JSON.parse(params.dashboards).each {
-                def dash = Dashboard.findByGuid(it.guid)
+                def dash = (it.guid ? Dashboard.findByGuid(it.guid) : it)
                 if (dash != null) {
                     def dashConfig = [
                         //use a new guid
@@ -255,7 +255,12 @@ class GroupService {
                         'isGroupDashboard': params.isGroupDashboard  ?: false
                     ]
                     
+                    try {
                     newGroupDashboards << dashboardService.create(dashConfig).dashboard
+                    } catch(e) {
+                        println e
+                    }
+
                 }
             }
 

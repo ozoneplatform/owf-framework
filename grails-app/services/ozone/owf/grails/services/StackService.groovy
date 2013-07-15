@@ -40,7 +40,7 @@ class StackService {
 
     def list(params) {
         
-        def criteria = ozone.owf.grails.domain.Stack.createCriteria()
+        def criteria = Stack.createCriteria()
         def opts = [:]
         
         if (params?.offset != null) opts.offset = (params.offset instanceof String ? Integer.parseInt(params.offset) : params.offset)
@@ -147,7 +147,7 @@ class StackService {
         def stacks = []
 
         if (params.update_action) {
-			if(params.id >= 0 || params.stack_id >= 0) {
+            if(params.id >= 0 || params.stack_id >= 0) {
                 ensureAdminOrOwner(params.id >= 0 ? params.id: params.stack_id);
             }
 
@@ -188,6 +188,7 @@ class StackService {
     }
     
     private def updateStack(params) {
+        def originalParams = params
 
         def stack, returnValue = null
 
@@ -202,13 +203,18 @@ class StackService {
                 throw new OwfException(message: 'Stack ' + params.id + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
             }
         } else { // New Stack
-            stack = new ozone.owf.grails.domain.Stack()
+            stack = new Stack()
             def dfltGroup = new Group(name: java.util.UUID.randomUUID().toString(), stackDefault: true)
             stack.addToGroups(dfltGroup)
 
         }
 
-        if (!params.update_action) {
+        if("createAndAddDashboard" == originalParams.update_action) {
+            params = JSON.parse(originalParams.stackData)[0]
+        }
+
+        if (!params.update_action || "createAndAddDashboard" == originalParams.update_action) {
+
             //If context was modified and it already exists, throw a unique constrain error
             if(params.stackContext && params.stackContext != stack.stackContext) {
                 if(Stack.findByStackContext(params.stackContext)) {
@@ -220,19 +226,21 @@ class StackService {
             stack.properties = [
                 name: params.name ?: stack.name,
                 description: params.description ?: stack.description,
-                stackContext: params.stackContext ?: stack.stackContext,
+                stackContext: params.stackContext ?: stack.stackContext ?: params.name ?: stack.name,
                 imageUrl: params.imageUrl ?: stack.imageUrl,
                 descriptorUrl: params.descriptorUrl ?: stack.descriptorUrl,
                 owner: params.owner ?: (params.id  >= 0 ? stack.owner : accountService.getLoggedInUser())
             ]
-            
-            stack.save(flush: true, failOnError: true)
-            
+
+            stack = stack.save(flush: true, failOnError: true)
+
             def stackDefaultGroup = stack.findStackDefaultGroup()
-			//OP-70 adding owner to users by default
-			if(stackDefaultGroup && accountService.getLoggedInUser()) {
-				stackDefaultGroup.addToPeople(accountService.getLoggedInUser())
-			}
+
+            //OP-70 adding owner to users by default
+            if(stackDefaultGroup && accountService.getLoggedInUser()) {
+                stackDefaultGroup.addToPeople(accountService.getLoggedInUser())
+            }
+
             def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
 
             returnValue = serviceModelService.createServiceModel(stack,[
@@ -241,9 +249,23 @@ class StackService {
                 totalGroups: stack.groups ? stack.groups.size() - 1 : 0, // Don't include the default stack group
                 totalWidgets: 0
             ])
-    
-        } else {
+        } 
+
+
+
+        if("createAndAddDashboard" == originalParams.update_action) {
+            params = originalParams
+
+            def dashboard_data = JSON.parse(originalParams.dashboardData)
+
+            dashboard_data[0].put('stack', stack)
             
+            dashboard_data[0].put('guid', null)
+
+            params.data = (dashboard_data as JSON).toString()
+        }
+
+        if(params.update_action) {            
             if ('groups' == params.tab) {
                 
                 def updatedGroups = []
@@ -299,11 +321,12 @@ class StackService {
                 def updatedDashboards = []
                 def dashboardsToCopy = []
                 def dashboards = JSON.parse(params.data)
+
                 def stackDefaultGroup = stack.findStackDefaultGroup()
-                
-                
+                      
                 dashboards?.each { it ->
-                    def dashboard = Dashboard.findByGuid(it.guid)
+                    def dashboard = (it.guid ? Dashboard.findByGuid(it.guid) : it)
+
                     if (dashboard) {
                         if (params.update_action == 'remove') {       
                             // Find all clones.
@@ -323,7 +346,7 @@ class StackService {
                             dashboard.delete(flush: true)
                             updatedDashboards << dashboard
                         }
-                        else if (params.update_action == 'add') {
+                        else if (params.update_action == 'add' || params.update_action == "createAndAddDashboard") {
                             dashboardsToCopy << it
                         }
                     }
@@ -362,30 +385,30 @@ class StackService {
 
         return returnValue
     }
-	
-	def restore(params) {
-		def stack = Stack.findById(params.id)
-		
-		if (stack == null) {
-			throw new OwfException(message:'Stack ' + params.guid + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
-		}
-		def user = accountService.getLoggedInUser()
-		def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
-		def updatedDashboards = []
-		userStackDashboards?.each { userStackDashboard ->
-			
-			updatedDashboards.push(dashboardService.restore([
-					guid: userStackDashboard.guid
-				]).data[0])
-		}
+    
+    def restore(params) {
+        def stack = Stack.findById(params.id)
+        
+        if (stack == null) {
+            throw new OwfException(message:'Stack ' + params.guid + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
+        }
+        def user = accountService.getLoggedInUser()
+        def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
+        def updatedDashboards = []
+        userStackDashboards?.each { userStackDashboard ->
+            
+            updatedDashboards.push(dashboardService.restore([
+                    guid: userStackDashboard.guid
+                ]).data[0])
+        }
                 
                 reorderUserDashboards(params)
-		
-		def stackDefaultGroup = stack.findStackDefaultGroup()
-		def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
-		
-		return [success:true, updatedDashboards: updatedDashboards]
-	}
+        
+        def stackDefaultGroup = stack.findStackDefaultGroup()
+        def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
+        
+        return [success:true, updatedDashboards: updatedDashboards]
+    }
         
     def reorderUserDashboards(params) {
         def stack = Stack.findById(params.id)
@@ -505,7 +528,7 @@ class StackService {
 
         // create widgets from stack descriptor json
         def widgets = params.data.widgets
-		def oldToNewGuids = [:]
+        def oldToNewGuids = [:]
         widgets.each {
             def widget = WidgetDefinition.findByWidgetGuid(it.widgetGuid)
 
@@ -526,37 +549,37 @@ class StackService {
             if(!tags.isEmpty()){
                 it.tags = tags
             }
-			def types = []
-			if(it.widgetTypes){
-				def type = WidgetType.findByName(it.widgetTypes[0])
-				def t = [:]
-				t.put("id", type.id)
-				t.put("name", type.name)
-				types.push(new JSONObject(t))
-				it.widgetTypes = types
-			}
+            def types = []
+            if(it.widgetTypes){
+                def type = WidgetType.findByName(it.widgetTypes[0])
+                def t = [:]
+                t.put("id", type.id)
+                t.put("name", type.name)
+                types.push(new JSONObject(t))
+                it.widgetTypes = types
+            }
             it.stackDescriptor = true
             if(widget) {
                 it.id = it.widgetGuid
             }
-			def oldGuid = it.widgetGuid
+            def oldGuid = it.widgetGuid
             widget = widgetDefinitionService.createOrUpdate(it)
-			if(!(oldGuid.equals(widget.data[0].id))){
-				oldToNewGuids[oldGuid] = widget.data[0].id
-			}
+            if(!(oldGuid.equals(widget.data[0].id))){
+                oldToNewGuids[oldGuid] = widget.data[0].id
+            }
         }
 
         // create dashboards from stack descriptor json
         def dashboards = params.data.dashboards
-	
+    
         dashboards.each {
-			def json = it.toString()
-			oldToNewGuids.each {old, changed ->
-				json = json.replace(old, changed)
-			}
-			json = json.replace(it.guid, java.util.UUID.randomUUID().toString())
-			it = new JSONObject(json)
-			changeWidgetInstanceIds(it.layoutConfig)
+            def json = it.toString()
+            oldToNewGuids.each {old, changed ->
+                json = json.replace(old, changed)
+            }
+            json = json.replace(it.guid, java.util.UUID.randomUUID().toString())
+            it = new JSONObject(json)
+            changeWidgetInstanceIds(it.layoutConfig)
             it.isGroupDashboard = true
             it.isdefault = false
             it.stack = stack
@@ -564,15 +587,15 @@ class StackService {
             domainMappingService.createMapping(stackDefaultGroup, RelationshipType.owns, dashboard)
         }
 
-		// Add any widgets to the stack's default group if not already there.
-		widgetDefinitionService.reconcileGroupWidgetsFromDashboards(stackDefaultGroup, false)
-		
+        // Add any widgets to the stack's default group if not already there.
+        widgetDefinitionService.reconcileGroupWidgetsFromDashboards(stackDefaultGroup, false)
+        
         //Update the uniqueWidgetCount of the stack
         stack.uniqueWidgetCount = widgets.length()
         stack.save(flush: true, failOnError: true)
     }
-	
-	private def changeWidgetInstanceIds(layoutConfig) {
+    
+    private def changeWidgetInstanceIds(layoutConfig) {
 		
 		def widgets = layoutConfig.widgets
 		for(def i = 0; i < widgets?.size(); i++) {
@@ -584,12 +607,9 @@ class StackService {
 			changeWidgetInstanceIds(items[i])
 		}
 	}
-    
-    def export(params) {
-        
-        // Only admins may export Stacks
-        ensureAdmin()
-        
+
+    private def createStackData(params) {
+
         def stack = Stack.findById(params.id, [cache: true])
 
         //Construct the list of dashboards for the descriptor
@@ -602,14 +622,14 @@ class StackService {
 
                 //Get only the parameters required for a dashboard definition
                 def dashboardData = [
-                    'name': dashboard.name,
-                    'guid': dashboard.guid,
-                    'description': dashboard.description,
-                    'type': dashboard.type,
-                    'isdefault': dashboard.isdefault,
-                    'locked': dashboard.locked,
-                    'dashboardPosition': dashboard.dashboardPosition,
-                    'layoutConfig': JSON.parse(dashboard.layoutConfig)
+                        'name': dashboard.name,
+                        'guid': dashboard.guid,
+                        'description': dashboard.description,
+                        'type': dashboard.type,
+                        'isdefault': dashboard.isdefault,
+                        'locked': dashboard.locked,
+                        'dashboardPosition': dashboard.dashboardPosition,
+                        'layoutConfig': JSON.parse(dashboard.layoutConfig)
                 ]
 
                 dashboards.push(dashboardData)
@@ -623,22 +643,22 @@ class StackService {
 
             //Get only the values required for a widget definition
             def widgetData = [
-                "widgetGuid": widget.id,
-                "descriptorUrl": widgetDefinition.descriptorUrl,
-                "universalName": widgetDefinition.universalName,
-                "displayName": widgetDefinition.namespace,
-                "description": widgetDefinition.description,
-                "widgetVersion": widgetDefinition.widgetVersion,
-                "widgetUrl": widgetDefinition.url,
-                "imageUrlSmall": widgetDefinition.smallIconUrl,
-                "imageUrlLarge": widgetDefinition.largeIconUrl,
-                "width": widgetDefinition.width,
-                "height": widgetDefinition.height,
-                "visible": widgetDefinition.visible,
-                "singleton": widgetDefinition.singleton,
-                "background": widgetDefinition.background,
-                "widgetTypes": [widgetDefinition.widgetTypes[0].name],
-                "intents": widgetDefinition.intents
+                    "widgetGuid": widget.id,
+                    "descriptorUrl": widgetDefinition.descriptorUrl,
+                    "universalName": widgetDefinition.universalName,
+                    "displayName": widgetDefinition.namespace,
+                    "description": widgetDefinition.description,
+                    "widgetVersion": widgetDefinition.widgetVersion,
+                    "widgetUrl": widgetDefinition.url,
+                    "imageUrlSmall": widgetDefinition.smallIconUrl,
+                    "imageUrlLarge": widgetDefinition.largeIconUrl,
+                    "width": widgetDefinition.width,
+                    "height": widgetDefinition.height,
+                    "visible": widgetDefinition.visible,
+                    "singleton": widgetDefinition.singleton,
+                    "background": widgetDefinition.background,
+                    "widgetTypes": [widgetDefinition.widgetTypes[0].name],
+                    "intents": widgetDefinition.intents
             ]
             def tags = []
             widgetDefinition.tags.each { tags.push(it.name) }
@@ -648,14 +668,32 @@ class StackService {
         }
 
         //Get only the parameters required for a stack descriptor
-        def stackData = [
-            'name': stack.name,
-            'stackContext': stack.stackContext,
-            'description': stack.description,
-            'dashboards': dashboards,
-            'widgets': widgets
+        return [
+                'name': stack.name,
+                'stackContext': stack.stackContext,
+                'description': stack.description,
+                'dashboards': dashboards,
+                'widgets': widgets
         ]
-        //Pretty print the JSON
+
+
+    }
+    
+    def share(params)  {
+
+        def stackData = createStackData(params)
+        stackData =  (stackData as JSON).toString()
+        return stackData
+    }
+
+    def export(params) {
+        
+        // Only admins may export Stacks
+        ensureAdmin()
+        
+        def stackData = createStackData(params)
+
+        //Pretty print the JSON to be put as part of descriptor
         stackData = (stackData as JSON).toString(true)
 
         // Get the empty descriptor with appropriate JavaScript
@@ -673,6 +711,7 @@ class StackService {
         stackDescriptor = stackDescriptor.replaceFirst("var data;", java.util.regex.Matcher.quoteReplacement("var data = ${stackData};"))
 
         return stackDescriptor
+
     }
 
     //If a user is no longer assigned to a stack directly or through a group, this method
