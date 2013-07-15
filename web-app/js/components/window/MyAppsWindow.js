@@ -186,7 +186,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             }
         });
 
-        me.stackDashboardsTpl = '<div class="stack-dashboards"><div class="stack-dashboards-anchor-tip x-tip-anchor x-tip-anchor-top"></div><div class="dashboards"></div></div>';
+        me.stackDashboardsTpl = '<div class="stack-dashboards-container"><div class="stack-dashboards-anchor-tip x-tip-anchor x-tip-anchor-top"></div><div class="stack-dashboards"></div></div>';
         
         me.on('afterrender', function (cmp) {
             me.tpl.overwrite( cmp.body, stackOrDashboards );
@@ -807,7 +807,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         // get last element in the clikced stack's row
         var numItemsInRow = Math.round( parentWidth / clickedStackElWidth ),
-            totalItems = $(me.body.dom).children('.all-dashboards').children('.dashboard, .stack').length,
+            totalItems = $(parent).children('.dashboard, .stack').length,
             clickedStackIndex = $clickedStack.index() + 1;
 
         if( clickedStackIndex === totalItems || (clickedStackIndex % numItemsInRow) === 0 ) {
@@ -824,9 +824,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             lastElInRow = parent.children().eq(i-1);
         }
 
+
         // compile template and add to dom
         this.$stackDashboards = $( this.stackDashboardsTpl );
-        this.$stackDashboards.children('.dashboards').html( this.tpl.applyTemplate( stack.dashboards ) )
+        this.$stackDashboards.children('.stack-dashboards').html( this.tpl.applyTemplate( stack.dashboards ) )
         this.$stackDashboards.insertAfter( lastElInRow );
 
         this.stackDashboardsAnchorTip = $( '.stack-dashboards-anchor-tip' , this.$stackDashboards );
@@ -850,7 +851,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             //top: top + 'px',
             left: left + 'px'
         });
-        
+
         if(Ext.isIE7 || Ext.isIE8) {
             this.$stackDashboards.show();
             dfd.resolve();
