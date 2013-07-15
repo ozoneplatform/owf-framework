@@ -255,12 +255,7 @@ class GroupService {
                         'isGroupDashboard': params.isGroupDashboard  ?: false
                     ]
                     
-                    try {
                     newGroupDashboards << dashboardService.create(dashConfig).dashboard
-                    } catch(e) {
-                        println e
-                    }
-
                 }
             }
 
