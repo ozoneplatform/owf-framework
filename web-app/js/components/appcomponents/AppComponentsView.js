@@ -44,6 +44,20 @@
         // current search query
         searchQuery: '',
 
+        // collection of all app components person has access to
+        allAppComponents: null,
+
+        initialize: function () {
+            SuperClass.prototype.initialize.apply(this, arguments);
+            this.allAppComponents = this.collection;
+
+            var standardAppComponents = this.allAppComponents.filter(function(appComponent) {
+                return appComponent.get('widgetTypes')[0].name === 'standard';
+            });
+
+            this.collection = new Ozone.data.collections.Widgets(standardAppComponents);
+        },
+
         render: function () {
             this.$el.html(  '<div class="header">' +
                                 '<a class="x-tool">' +
@@ -59,7 +73,8 @@
 
             this.carousel = new Ozone.components.appcomponents.AppComponentsCarousel({
                 el: this.$body,
-                collection: this.options.collection,
+                collection: this.collection,
+                allAppComponents: this.allAppComponents,
                 selectable: false,
                 addFilterFn: function (model, index) {
                     if(model.get('name').indexOf(this.searchQuery) < 0) {
