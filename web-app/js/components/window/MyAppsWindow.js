@@ -13,7 +13,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     closable: true,
     title: 'My Apps',
     cls: 'system-window',
-    resizable: false,
+    resizable: true,
     draggable: false,
 
     viewId: 'dashboard-switcher-dashboard-view',
@@ -194,15 +194,15 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             Ext.DomHelper.append( cmp.body,
             '<div class="actions">'+
                 '<ul>'+
-                	'<li class="storeLink">'+
-                        '<span class="storeImg"></span>'+
-                        '<span class="store-link-text">Discover More </br> in the Store</span>'+
+                	'<li class="store-link-btn">'+
+                        '<span class="store-link-btn-img"></span>'+
+                        '<span class="store-link-btn-text">Discover More </br> in the Store</span>'+
                     '</li>'+
-            		'<li class="createLink">'+
-                        '<span class="createImg"></span>'+
-                        '<span class="create-link-text">Create New App</span>'+
+            		'<li class="create-link-btn">'+
+                        '<span class="create-link-btn-img"></span>'+
+                        '<span class="create-link-btn-text">Create New App</span>'+
                     '</li>'+
-                    '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-qtip="Name, describe and design a new dashboard.">+</li>'+
+                    '<li class="create-new-dashboard-btn" tabindex="0" data-qtitle="Create Dashboard" data-qtip="Name, describe and design a new dashboard.">+</li>'+
                 '</ul>'+
             '</div>');
 
@@ -240,8 +240,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         $dom
             .on('click', '.dashboard', $.proxy(me.onDashboardClick, me))
             .on('click', '.stack', $.proxy(me.onStackClick, me))
-            .on('click', '.create', $.proxy(me.createDashboard, me))
-            .on('click', '.storeLink',  $.proxy(me.switchToMarketplace,me))
+            .on('click', '.store-link-btn',  $.proxy(me.switchToMarketplace,me))
+            .on('click', '.create-link-btn', $.proxy(me.createNewApp, me))
+            .on('click', '.create-new-dashboard-btn', $.proxy(me.createDashboard, me))
             .on('mouseover', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
             .on('mouseout', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
             .on('focus', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
@@ -251,8 +252,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('click', '.dashboard .edit', $.proxy(me.editDashboard, me))
             .on('click', '.dashboard .delete', $.proxy(me.deleteDashboard, me))
             .on('click', '.stack .restore', $.proxy(me.restoreStack, me))
-            .on('click', '.stack .delete', $.proxy(me.deleteStack, me))
-            .on('click', '.createLink', $.proxy(me.createNewApp, me));
+            .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
+            
 
         me.initKeyboardNav();
 
@@ -804,7 +805,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             parentWidth = parent.outerWidth( true ),
             lastElInRow;
 
-
         // get last element in the clikced stack's row
         var numItemsInRow = Math.round( parentWidth / clickedStackElWidth ),
             totalItems = $(parent).children('.dashboard, .stack').length,
@@ -926,23 +926,21 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     switchToMarketplace: function() {
     	var mpButton = $('.marketBtn')
     	
-    	if(mpButton.is(':visible')) {
+    	if(mpButton && mpButton.is(':visible')) {
     		mpButton.click()
     		this.close();
     	}
     },
     
     verifyDiscoverMoreButton: function() {
-    	var discoverMoreButton = $('.storeLink')
-    	var createButton = $('.createLink')
+        var discoverMoreButton = $('.store-link-btn');
+        var marketBtn = $('.marketBtn');
     	
-    	if($('.marketBtn').is(':visible')) {
-    		discoverMoreButton.show();
-    		createButton.removeClass('createLinkShift');
-    	} else {
-    		discoverMoreButton.hide();
-    		createButton.addClass('createLinkShift');
-    	}
+        if(marketBtn && $(marketBtn).is(':visible')) {
+        	discoverMoreButton.show();
+        } else {
+        	discoverMoreButton.hide();
+        }
     },
 
     restoreDashboard: function (evt) {
