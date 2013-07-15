@@ -35,21 +35,6 @@
         float: right;
         text-align: right;
 
-        ul li {
-            color: $dashboard-switcher-dashboard-text-color;
-            
-            &:hover, &.selected {
-                background: $dashboard-switcher-dashboard-over-background-color;
-                color: $dashboard-switcher-dashboard-over-text-color;
-            }
-        }    
-    }
-
-    .actions {
-        height: auto;
-        float: right;
-        text-align: right;
-
         ul {
             color: $dashboard-switcher-dashboard-text-color;
             float: right;
@@ -127,7 +112,6 @@
 
     .dashboard-switcher-descriptor {
         color: $dashboard-switcher-dashboard-text-color;
-        padding: 0 15px;
         bottom: 20px !important;
         position: relative;
         text-align: left;
@@ -146,22 +130,33 @@
             // Must be set explicitly to remain constant
             // regardless of how many children per slide in the viewport
             height: 380px !important;
+            width: 100% !important;
 
             .bx-viewport {
                 @include box-shadow(none);
 
                 background: transparent !important;
-                border: 0px !important;
-                margin: 0 60px;
+                border: 0px;
+                margin-left: 84px;
+                margin-right: 75px;
                 overflow: hidden;
-                width: auto !important;
-                height: 95% !important;
+                width: 480px !important;
+                height: 360px !important;
             }
         }
         
         .bx-wrapper .bx-pager, .bx-wrapper .bx-controls-auto {
-    			bottom: -20px;
+    		bottom: -20px;
     	}
+
+        .bx-wrapper {
+            .bx-prev {
+                left: 0px !important;
+            }
+            .bx-next {
+                right: 0px !important;
+            }
+        }
         /***** END slider styling  ****/
     }
 
@@ -191,7 +186,7 @@
 }
 
 #dashboard-switcher .dashboard, #dashboard-switcher .stack, .stack.drag-proxy, .dashboard.drag-proxy {
-    $dashboard-width: 78px;
+    $dashboard-width: 80px;
     $dashboard-height: 120px;
 
     //For these elements, it is more useful
@@ -209,7 +204,7 @@
     cursor: pointer;
     width: $dashboard-width;
     height: $dashboard-height;
-    
+
     .thumb-wrap {
         text-align: center;
         white-space: nowrap;
