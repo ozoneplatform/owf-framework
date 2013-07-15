@@ -210,6 +210,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         this.initLoad();
 
         this.setupDashboardChangeListeners();
+        OWF.Collections.AppComponents.on('remove', this.removeAppComponent, this);
     },
 
     onWidgetMouseDown: function(evt, target) {
@@ -847,11 +848,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
 
         if(!me.appComponentsView) {
-            var standardAppComponents = OWF.Collections.AppComponents.filter(function(appComponent) {
-                return appComponent.get('widgetTypes')[0].name === 'standard';
-            });
             me.appComponentsView = new Ozone.components.appcomponents.AppComponentsView({
-                collection: new Ozone.data.collections.Widgets(standardAppComponents),
+                collection: OWF.Collections.AppComponents,
                 dashboardContainer: me
             });
             appComponentsBtn = me.getBanner().getComponent('appComponentsBtn');
@@ -2140,6 +2138,41 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             btn.enableMarketplaceMenu();
         } else {
             btn.disableMarketplaceMenu();
+        }
+    },
+
+    removeAppComponent: function (model, collection, options) {
+        var me = this,
+            appComponentGuid = model.get('widgetGuid');
+
+        Ozone.pref.PrefServer.updateAndDeleteWidgets({
+            widgetsToUpdate:[],
+            widgetGuidsToDelete: [appComponentGuid],
+            updateOrder:false,
+            onSuccess:function() {
+                var widgetStoreRecord = me.widgetStore.findRecord('widgetGuid', appComponentGuid);
+                me.widgetStore.remove(widgetStoreRecord);
+
+                removeAppComponentInstances(appComponentGuid);
+            },
+            onFailure: $.noop
+        });
+
+        function removeAppComponentInstances (appComponentGuid) {
+            var dashboardCardPanel = Ext.getCmp('dashboardCardPanel');
+
+            // Iterate through all the open dashboards
+            dashboardCardPanel.items.each(function(dashboard) {
+                // Access state store for each dashboard describing the state of the widgets running inside that dashboard
+                dashboard.stateStore.each(function(widgetState) {
+                    // Compare widget GUID to that of the one being removed
+                    if (widgetState.get('widgetGuid') == appComponentGuid) {
+                        // Remove the widget in question from its dashboard
+                        var uniqueId = widgetState.get('uniqueId');
+                        dashboard.closeWidget(uniqueId);
+                    }
+                });
+            });
         }
     }
 });

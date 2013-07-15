@@ -37,7 +37,7 @@
 
         events: {
             'click .widget': '_onClick',
-            'click .widget': '_showDetails',
+            'click .widget-details': '_showDetails',
             'mouseenter .widget': '_showDetailsOption',
             'mouseleave .widget': '_hideDetailsOption'
         },
@@ -48,9 +48,20 @@
         // array of managed views
         views: null,
 
+        // collection of all app components person has access to
+        allAppComponents: null,
+
         initialize: function () {
             SuperClass.prototype.initialize.apply(this, arguments);
             _.bindAll(this, 'addOne');
+
+            this.allAppComponents = this.collection;
+
+            var standardAppComponents = this.allAppComponents.filter(function(appComponent) {
+                return appComponent.get('widgetTypes')[0].name === 'standard';
+            });
+
+            this.collection = new Ozone.data.collections.Widgets(standardAppComponents);
         },
 
         render: function () {
@@ -86,6 +97,16 @@
         },
 
         removeAppComponent: function (view, tip) {
+            var model = view.model;
+
+            // remove model from internal filtered collection
+            this.collection.remove(model);
+
+            // remove model from global collection
+            this.allAppComponents.remove(model);
+
+            // remove view and tip
+            view.remove();
             tip.remove();
             tip = null;
         },
@@ -115,7 +136,7 @@
 
         _showDetails: function (evt) {
             var me = this,
-                view = $(evt.currentTarget).data('view');
+                view = $(evt.currentTarget).parent().data('view');
 
             evt.preventDefault();
             evt.stopPropagation();
