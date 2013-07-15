@@ -303,6 +303,13 @@ class UrlMappings {
             controller = "stack"
             action = "export"
         }
+
+        "/stack/share" {
+            controller = "stack"
+            action = "share"
+        }
+
+
         "/stack/import" {
             controller = "stack"
             action = "importStack"
