@@ -62,7 +62,8 @@
 
         reloadCarousel: function (startSlide, force) {
             this.destroyCarousel()
-                .initCarousel(startSlide, force);
+                .initCarousel(startSlide, force)
+                ._removeDetailsTip();
         },
 
         destroyCarousel: function () {

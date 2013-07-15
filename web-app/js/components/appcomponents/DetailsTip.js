@@ -47,6 +47,33 @@
             return this;
         },
 
+        shown: function () {
+            // constrain tooltip in viewport
+            var offset = this.$el.offset(),
+                width = this.$el.width(),
+                height = this.$el.height(),
+                $parent = this.$el.parent(),
+                parentWidth = $parent.width(),
+                parentHeight = $parent.height(),
+                css = {};
+
+            if(offset.left < 0) {
+                css.left = 0;
+            }
+            
+            if(offset.left + width > parentWidth) {
+                css.left = parentWidth - width;
+            }
+            
+            if(offset.top + height > parentHeight) {
+                css.top = parentHeight - height;
+            }
+
+            this.$el.css(css);
+
+            return this;
+        },
+
         hide: function () {
             SuperClass.prototype.hide.call(this);
             return this.remove();

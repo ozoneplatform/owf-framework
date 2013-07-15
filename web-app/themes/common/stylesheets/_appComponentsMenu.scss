@@ -142,10 +142,11 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 200px;
+    width: 400px;
     background-color: #222;
     color: $widget-launcher-widget-text-color;
     @include border-radius(4px);
+    overflow-y: auto;
 
     .widget-description {
         margin: 0 1em 0 1em;

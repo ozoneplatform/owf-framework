@@ -37,8 +37,8 @@
 
         events: {
             'click .widget': '_onClick',
-            'click .widget-details': '_showDetails',
-            'mouseenter .widget': '_showDetailsOption',
+            'click .widget-details': '_showDetailsTip',
+            'mouseenter .widget': '_showDetailsTipOption',
             'mouseleave .widget': '_hideDetailsOption'
         },
 
@@ -107,15 +107,14 @@
 
             // remove view and tip
             view.remove();
-            tip.remove();
-            tip = null;
+            this._removeDetailsTip();
         },
 
         remove: function () {
             _.invoke(this.views, 'remove');
             this.views = null;
 
-            tip && tip.remove();
+            this._removeDetailsTip();
 
             this.$el.enableSelection()
 
@@ -134,14 +133,14 @@
             }
         },
 
-        _showDetails: function (evt) {
+        _showDetailsTip: function (evt) {
             var me = this,
                 view = $(evt.currentTarget).parent().data('view');
 
             evt.preventDefault();
             evt.stopPropagation();
 
-            tip && tip.remove();
+            this._removeDetailsTip();
             
             tip = new DetailsTip({
                 model: view.model
@@ -158,9 +157,15 @@
                     evt.preventDefault();
                     me.removeAppComponent(view, tip);
                 });
+            tip.shown();
         },
 
-        _showDetailsOption: function (evt) {
+        _removeDetailsTip: function () {
+            tip && tip.remove();
+            tip = null;
+        },
+
+        _showDetailsTipOption: function (evt) {
             this.$el.find('.widget-details').css('visibility', 'hidden');
             $(evt.currentTarget).children('.widget-details').css('visibility', '');
         },

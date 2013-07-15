@@ -252,7 +252,9 @@ Ext.define('Ozone.components.pane.Pane', {
     // used when a drag and drop is performed from widget launch menu
     launchWidgets: function(models, x, y, launchPosition) {
         var widgetModel,
-            deferreds = [];
+            deferreds = [],
+            widgetStore = Ext.StoreManager.lookup('widgetStore');
+
         if(!models)
             return;
         
@@ -268,17 +270,20 @@ Ext.define('Ozone.components.pane.Pane', {
             if(!(widgetModel instanceof Ozone.data.WidgetDefinition || widgetModel instanceof Ozone.data.State)) {
                 widgetModel = Ext.create('Ozone.data.State', widgetModel.attributes || widgetModel);
             }
-            
 
-            if(this.fireEvent(OWF.Events.Widget.BEFORE_LAUNCH, this, widgetModel) !== false) {
-                if(widgetModel.get('floatingWidget')) {
-                    deferreds.push(this.launchFloatingWidget(widgetModel, x, y, null, null, launchPosition));
+            // validate access
+            if(widgetStore.findRecord('widgetGuid', widgetModel.get('widgetGuid'))) {
+                if(this.fireEvent(OWF.Events.Widget.BEFORE_LAUNCH, this, widgetModel) !== false) {
+                    if(widgetModel.get('floatingWidget')) {
+                        deferreds.push(this.launchFloatingWidget(widgetModel, x, y, null, null, launchPosition));
+                    }
+                    else {
+                        deferreds.push(this.launchWidget(widgetModel, x, y, null, null, launchPosition));
+                    }
+                    Ext.isNumber(launchPosition) && launchPosition++;
                 }
-                else {
-                    deferreds.push(this.launchWidget(widgetModel, x, y, null, null, launchPosition));
-                }
-                Ext.isNumber(launchPosition) && launchPosition++;
             }
+            
         }
 
         return deferreds;
