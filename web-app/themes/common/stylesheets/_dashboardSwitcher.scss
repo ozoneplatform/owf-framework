@@ -407,6 +407,11 @@
   background-position: center;
 }
 
+.premadeLayoutButton.selected {
+  border-style:solid;
+  border-width:2px;
+}
+
 .premadeDesktop {
   background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_1-Desktop.png');
 }
