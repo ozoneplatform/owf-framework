@@ -611,9 +611,10 @@ class DashboardService extends BaseService {
     }
 
     /**
-     * If the personal dashboard has a corresponding group dashboard that is published to store, the
+     * If the personal dashboard has a corresponding group dashboard that is published to store, the two are
+     * marked for deletion.
      * @param personalDashboard
-     * @return
+     * @return True if the dashboards are marked for deletion, false otherwise.
      */
     private boolean markForDeletion(Dashboard personalDashboard) {
         Dashboard groupDashboard = getGroupDashboard(personalDashboard)
@@ -628,7 +629,12 @@ class DashboardService extends BaseService {
         }
     }
 
-    private deletePersonalAndGroupDashboards(Dashboard personalDashboard) {
+    /**
+     * Deletes a personal dashboard along with its stack dashboard. Corresponds to the case of App owner
+     * deleting a page from the app.
+     * @param personalDashboard
+     */
+    def deletePersonalAndGroupDashboards(Dashboard personalDashboard) {
         Dashboard groupDashboard = getGroupDashboard(personalDashboard)
 
         // TODO: see if we need to delete all private copies of this dashboard
