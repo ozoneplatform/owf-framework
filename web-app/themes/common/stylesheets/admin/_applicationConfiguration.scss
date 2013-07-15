@@ -243,8 +243,20 @@ body.configuration_widget {
         &:hover {
             background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Hover.png');    
         }
+        
         &.active {
             background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Active.png');    
+        }
+    }
+
+    .branding {
+        background-image: theme-image($theme-name, 'applicationConfiguration/Branding_Inactive.png');
+        &:hover {
+            background-image: theme-image($theme-name, 'applicationConfiguration/Branding_Hover.png');    
+        }
+
+        &.active {
+            background-image: theme-image($theme-name, 'applicationConfiguration/Branding_Active.png');    
         }
     }
 }
