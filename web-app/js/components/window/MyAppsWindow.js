@@ -19,10 +19,13 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     viewId: 'dashboard-switcher-dashboard-view',
 
     width: 720,
-    height: 600,
+    height: 525,
 
-    expandedHeight: 720,
-    normalHeight: 600,
+    normalModalHeight: 525,
+    expandedModalHeight: 655,
+
+    normalSlideHeight: 360,
+    expandedSlideHeight: 490,
 
     dashboardContainer: null,
 
@@ -34,6 +37,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     minDashboardsWidth: 0,
     maxDashboardsWidth: 6,
     maxDashboardsHeight: 3,
+
+    numDashboardsNeededToExpandModal: 12,
 
     storeLengthChanged: true,
 
@@ -192,7 +197,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             }
         });
 
-        me.stackDashboardsTpl = '<div class="stack-dashboards-container"><div class="stack-dashboards-anchor-tip x-tip-anchor x-tip-anchor-top"></div><div class="stack-dashboards"></div></div>';
+        me.stackDashboardsTpl = '<div class="stack-dashboards-container">'+
+                                    // '<div class="stack-dashboards-anchor-tip x-tip-anchor x-tip-anchor-top"></div>'+
+                                    '<div class="stack-dashboards"></div>'+
+                                '</div>';
         
         me.on('afterrender', function (cmp) {
             me.tpl.overwrite( cmp.body, stackOrDashboards );
@@ -836,7 +844,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             lastElInRow = parent.children().eq(i-1);
         }
 
-
         // compile template and add to dom
         this.$stackDashboards = $( this.stackDashboardsTpl );
         this.$stackDashboards.children('.stack-dashboards').html( this.tpl.applyTemplate( stack.dashboards ) )
@@ -863,9 +870,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             left: left + 'px'
         });
 
-        me.setHeight(720);
-        $(parent).height(480);
-        // $('.bx-viewport', me.el.dom).height(480);
+        if (totalItems > me.numDashboardsNeededToExpandModal) {
+            me.expandModal();
+        }
 
         if(Ext.isIE7 || Ext.isIE8) {
             this.$stackDashboards.show();
@@ -880,6 +887,22 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         this._lastExpandedStack = stack;
     },
 
+    expandModal: function(containerSlide) {
+        var me = this;
+
+        me.setHeight(me.expandedModalHeight);
+        $(parent).height(me.expandedSlideHeight);
+        $('.bx-viewport', me.el.dom).height(me.expandedSlideHeight);
+    },
+
+    collapseModal: function(containerSlide) {
+        var me = this;
+
+        me.setHeight(me.normalModalHeight);
+        $(containerSlide).height(me.normalSlideHeight);
+        $('.bx-viewport', me.el.dom).height(me.normalSlideHeight);
+    },
+
     hideStackDashboards: function () {
         var me = this;
         if(!this.$stackDashboards) {
@@ -888,9 +911,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             return dfd.promise();
         }
 
-        me.setHeight(600);
-        // $('.bx-viewport', me.el).height(360);
-        $('div.bx-slide').height(360);
+        me.collapseModal();
 
         if(Ext.isIE7 || Ext.isIE8) {
             var dfd = $.Deferred();

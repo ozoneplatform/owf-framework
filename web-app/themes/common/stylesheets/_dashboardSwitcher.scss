@@ -23,7 +23,7 @@
     .actions {
         height: auto;
         text-align: left;
-        padding-top: 90px;
+        padding-top: 10px;
 
         ul {
             color: $dashboard-switcher-dashboard-text-color;
@@ -305,7 +305,7 @@
 .stack-dashboards-container {
     clear: both;
     position: relative;
-    top: -30px;
+    top: -7px;
 
     .stack-dashboards {
         background: darken($dashboard-switcher-dashboard-background-color, 10%);
