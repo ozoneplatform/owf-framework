@@ -100,8 +100,8 @@
             });
 
             this.carousel.render().$el.on({
-                beforedestroycarousel: _.bind(this._destroySortable, this),
-                initcarousel: _.bind(this._initSortable, this)
+                'beforedestroycarousel.carousel': _.bind(this._destroySortable, this),
+                'initcarousel.carousel': _.bind(this._initSortable, this)
             });
 
             return this;
@@ -138,13 +138,11 @@
 
         show: function () {
             $(window).on('resize', this.refresh);
-            console.log('show resize')
             return SuperClass.prototype.show.call(this);
         },
 
         hide: function () {
             $(window).off('resize', this.refresh);
-            console.log('hide resize')
             return SuperClass.prototype.hide.call(this);
         },
 
@@ -186,6 +184,7 @@
             this.carousel.remove();
             this.carousel = null;
 
+            this.$el.off('.carousel');
             $(window).off('resize', this.refresh);
 
             return SuperClass.prototype.remove.call(this);
@@ -204,10 +203,6 @@
             var me = this,
                 $doc = $(document),
                 $slides;
-
-            if(this.searchQuery !== '') {
-                return;
-            }
 
             $slides = me.carousel.getSlides();
 
@@ -241,7 +236,8 @@
                             if(me._launching) {
                                 $slides.sortable('cancel');
                             }
-                            else {
+                            // dont perform sort if view is filtered
+                            else if(me.searchQuery === '') {
                                 var $item = ui.item,
                                     $prev = ui.item.prev(),
                                     $next = ui.item.next(),
@@ -278,10 +274,6 @@
 
         _destroySortable: function () {
             var $slides;
-
-            if(this.searchQuery !== '') {
-                return;
-            }
             
             $slides = this.carousel.getSlides();
             $slides && $slides.sortable('destroy');

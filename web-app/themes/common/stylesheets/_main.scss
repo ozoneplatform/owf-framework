@@ -627,3 +627,7 @@ img.widget-drag-proxy {
         background: $owf-focus-color;
     }
 }
+
+.ui-sortable-helper {
+    z-index: 10000002 !important;
+}

@@ -114,7 +114,7 @@
                     touchEnabled: false
                 }); 
 
-                this.$el.trigger('initcarousel')
+                this.$el.trigger('initcarousel');
             }
             return this;
         },
