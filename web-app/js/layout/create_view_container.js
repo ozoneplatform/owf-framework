@@ -705,11 +705,10 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                                 });
 
                                 // DO not open dashboard designer, just save the dashboard with the pre-made layout
-                                dashboardContainer.saveDashboard(dashboardModel.data, 'create', function() {
+                                dashboardContainer.saveDashboard(dashboardModel.data, 'create', function(json) {
 
                                     // activate new dashboard
-                                    var guid = dashboardModel.get('guid');
-                                    dashboardContainer.activateDashboard(guid);
+                                    dashboardContainer.activateDashboard(json.guid);
                                 });
 
                                 this.close();

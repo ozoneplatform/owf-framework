@@ -64,16 +64,16 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         var me = this,
             $ = jQuery;
-        // Push to store handler
-        $('.pushButton').on('click', me.pushToStore);
 
+        $(document).on('click', '.pushButton', $.proxy(me.pushToStore, me));
     },
 
     pushToStore: function (evt) {
         evt.stopPropagation();
         var me = this,
             stack = me.clickedStackOrDashboard,
-            dashboardContainer = me.activeDashboard.dashboardContainer,
+            mainCmp = Ext.getCmp('mainPanel'),
+            dashboardContainer = mainCmp.activeDashboard.dashboardContainer,
             banner = dashboardContainer.getBanner(),
             mpLauncher;
 
