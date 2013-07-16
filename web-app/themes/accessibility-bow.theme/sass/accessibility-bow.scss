@@ -463,22 +463,8 @@ textarea.x-form-focus {
 }
 
 .x-form-invalid-tip-default {
-  background-color: $owfblue1;
-  border-color: $owfblue3;
-}
-
-
-/* Widget Launcher Code */ 
-
-#widget-launcher {
-
-    .search-panel{
-        background: $search-panel-background-color;
-        border-color: $widget-launcher-border-color;
-        position: absolute;
-        padding: 7px;
-}
-
+    background-color: $owfblue1;    
+    border-color: $owfblue3;
 }
 
 
