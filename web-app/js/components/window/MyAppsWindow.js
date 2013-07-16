@@ -215,7 +215,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         me.on('beforeclose', me.onClose, me);
         me.on('show', me.verifyDiscoverMoreButton, me);
         me.on('show', me.initCircularFocus, me, {single: true});
-        me.on('show', me.goToActiveStackSlide, me, {single: true});
+        me.on('show', me.goToActiveStackSlide, me);
         me.on('show', me.focusActiveDashboard, me);
         me.mon(me.dashboardContainer, OWF.Events.Dashboard.CHANGED, me.onDashboardChanged, me);
     },
@@ -343,11 +343,20 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         return stackId;
     },
 
-    goToActiveStackSlide: function() {
+    getActiveStackSlideIndex: function() {
         var me = this,
-            stackId = me.getActiveStackId();
+            stackId = me.getActiveStackId(),
+            $stackEl = $("#stack" + stackId, '.bx-slide:not(.bx-clone)'),
+            $stackElSlide = $stackEl.parent()
+            slideIndexOfActiveStack = $('.bx-slide:not(.bx-clone)').index($stackElSlide);
 
-        stackId && me.slider.goToSlide(Math.floor(stackId / me.maxStacksPerSlide));
+        return slideIndexOfActiveStack;
+    },
+
+    goToActiveStackSlide: function() {
+        var me = this;
+
+        me.slider.goToSlide(me.getActiveStackSlideIndex());
     },
 
     onSlideTransition: function($slideElement, oldIndex, newIndex) {
@@ -361,8 +370,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         }
     },
 
-    slideHasActiveStack: function(slideIndex, stackId) {
-        return slideIndex === Math.floor(stackId / this.maxStacksPerSlide);
+    slideHasActiveStack: function(slideIndex) {
+        return slideIndex === this.getActiveStackSlideIndex();
     },
 
     _hideStackDashboardsOnMove: function ($el) {
