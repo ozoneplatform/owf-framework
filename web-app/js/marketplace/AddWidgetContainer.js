@@ -234,6 +234,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             width: (!serviceItem.ozoneAware  ? 200 : serviceItem.owfProperties.width),
             //FIXME this ternary is a hack for AML-3148
             universalName: (!serviceItem.ozoneAware ? "" : (serviceItem.owfProperties.universalName || "" )),
+            descriptorUrl: (!serviceItem.ozoneAware ? "" : (serviceItem.owfProperties.descriptorUrl || "" )),
             isExtAjaxFormat: true,
             //FIXME this ternary is a hack for AML-3148
             widgetTypes: [(!serviceItem.ozoneAware ? "fullscreen" : serviceItem.owfProperties.owfWidgetType)],

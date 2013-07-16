@@ -18,6 +18,15 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     viewId: 'dashboard-switcher-dashboard-view',
 
+    width: 720,
+    height: 525,
+
+    normalModalHeight: 525,
+    expandedModalHeight: 655,
+
+    normalSlideHeight: 360,
+    expandedSlideHeight: 490,
+
     dashboardContainer: null,
 
     //dashboard unit sizes
@@ -28,6 +37,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     minDashboardsWidth: 0,
     maxDashboardsWidth: 6,
     maxDashboardsHeight: 3,
+
+    maxStacksPerSlide: 18,
+    numDashboardsNeededToExpandModal: 12,
+
+    isAnAppExpanded: false,
 
     storeLengthChanged: true,
 
@@ -110,16 +124,21 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             getId: function (values) {
                 return values.isStack ? values.id : values.guid;
             },
+            
             getClass: function (values) {
                 var name = this.getName(values);
                 return values.guid === me.activeDashboard.id ? name + ' ' + me.selectedItemCls: name;
             },
+            
             getName: function (values) {
                 return values.isStack ? 'stack' : 'dashboard';
             },
+
             getIcon: function(values) {
-                if (values.iconImageUrl && !Ext.isEmpty(values.iconImageUrl.trim())) {
-                    return '<div class="thumb" style="background-image: url(' + values.iconImageUrl + ') !important"></div>';
+                var url = values.isStack ? values.imageUrl : values.iconImageUrl;
+
+                if (url && !Ext.isEmpty(url.trim())) {
+                    return '<div class="thumb" style="background-image: url(' + url + ') !important"></div>';
                 } else {
                     return '<div class="thumb"></div>';
                 }
@@ -130,6 +149,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 			'<li id="'+values.name+'-li" class="detail-action">Details'+
                         '</ul>'
             },
+            
             encodeAndEllipsize: function(str) {
                 //html encode the result since ellipses are special characters
                 return Ext.util.Format.htmlEncode(
@@ -146,7 +166,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             }
         });
 
-        me.stackDashboardsTpl = '<div class="stack-dashboards-container"><div class="stack-dashboards-anchor-tip x-tip-anchor x-tip-anchor-top"></div><div class="stack-dashboards"></div></div>';
+        me.stackDashboardsTpl = '<div class="stack-dashboards-container">'+
+                                    '<div class="stack-dashboards-anchor-tip x-tip-anchor x-tip-anchor-top"></div>'+
+                                    '<div class="stack-dashboards"></div>'+
+                                '</div>';
         
         me.on('afterrender', function (cmp) {
             me.tpl.overwrite( cmp.body, stackOrDashboards );
@@ -175,12 +198,16 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 infiniteLoop: true,
                 touchEnabled: false,
                 onSliderLoad: Ext.bind(function(currentIndex) {
-                    var slideCount = $('.bx-slide').length;
-
                     // 1 slide of actual content + a clone slide on each side auto-created by the plugin
-                    if (slideCount === 3) {
+                    if ($('.bx-slide:not(.bx-clone)').length === 1) {
                         $('.bx-pager').hide();
                     }
+                }, me),
+                onSlideNext: Ext.bind(function() {
+                    me.onSlideTransition.apply(me, arguments);
+                }, me),
+                onSlidePrev: Ext.bind(function() {
+                    me.onSlideTransition.apply(me, arguments);
                 }, me)
             });
         });
@@ -188,6 +215,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         me.on('beforeclose', me.onClose, me);
         me.on('show', me.verifyDiscoverMoreButton, me);
         me.on('show', me.initCircularFocus, me, {single: true});
+        me.on('show', me.goToActiveStackSlide, me, {single: true});
         me.on('show', me.focusActiveDashboard, me);
         me.mon(me.dashboardContainer, OWF.Events.Dashboard.CHANGED, me.onDashboardChanged, me);
     },
@@ -207,7 +235,13 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('mouseout', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
             .on('focus', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
             .on('blur', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
-        
+            .on('click', '.dashboard .restore', $.proxy(me.restoreDashboard, me))
+            .on('click', '.dashboard .share', $.proxy(me.shareDashboard, me))
+            .on('click', '.dashboard .edit', $.proxy(me.editDashboard, me))
+            .on('click', '.dashboard .delete', $.proxy(me.deleteDashboard, me))
+            .on('click', '.stack .restore', $.proxy(me.restoreStack, me))
+            .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
+
 
         me.initKeyboardNav();
 
@@ -299,6 +333,36 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 $dom.off('.reorder');
             });
         });
+    },
+
+    getActiveStackId: function() {
+        var me = this,
+            stack = this.activeDashboard.configRecord.get('stack');
+            stackId = stack ? stack.id : null;
+
+        return stackId;
+    },
+
+    goToActiveStackSlide: function() {
+        var me = this,
+            stackId = me.getActiveStackId();
+
+        stackId && me.slider.goToSlide(Math.floor(stackId / me.maxStacksPerSlide));
+    },
+
+    onSlideTransition: function($slideElement, oldIndex, newIndex) {
+        var me = this,
+            stackId = me.getActiveStackId();
+
+        if (stackId && me.slideHasActiveStack(newIndex, stackId)) {
+            me.focusActiveDashboard();
+        } else {
+            me.hideStackDashboards();
+        }
+    },
+
+    slideHasActiveStack: function(slideIndex, stackId) {
+        return slideIndex === Math.floor(stackId / this.maxStacksPerSlide);
     },
 
     _hideStackDashboardsOnMove: function ($el) {
@@ -661,7 +725,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             stackId = stack ? stack.id : null;
 
             if (stack) {
-                this.toggleStack(this.stacks[stackId], $('#stack'+stackId)).then(function () {
+                this.toggleStack(this.stacks[stackId], $('#stack'+stackId, '.bx-slide:not(.bx-clone)')).then(function () {
                     me.focusActiveDashboard();
                 });
             }
@@ -694,6 +758,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         	
         	Ext.widget('myapptip', {
         		clickedStackOrDashboard:dashboard,
+                dashboardContainer: this.dashboardContainer,
+                appsWindow: this,
         		event:evt
         	}).showAt([evt.clientX,evt.clientY]);
         	
@@ -739,6 +805,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             	
             	Ext.widget('myapptip', {
             		clickedStackOrDashboard:stack,
+                    dashboardContainer: me.dashboardContainer,
+                    appsWindow: me,
             		event:evt
             	}).showAt([evt.clientX,evt.clientY]);
             	
@@ -800,7 +868,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             lastElInRow = parent.children().eq(i-1);
         }
 
-
         // compile template and add to dom
         this.$stackDashboards = $( this.stackDashboardsTpl );
         this.$stackDashboards.children('.stack-dashboards').html( this.tpl.applyTemplate( stack.dashboards ) )
@@ -824,9 +891,14 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             left = parentPosition.left + (clickedStackElWidth / 2) - (this.stackDashboardsAnchorTipWidth / 2);
         
         this.stackDashboardsAnchorTip.css({
-            //top: top + 'px',
             left: left + 'px'
         });
+
+        if (totalItems > me.numDashboardsNeededToExpandModal) {
+            me.expandModal(parent);
+        }
+
+        me.isAnAppExpanded = true;
 
         if(Ext.isIE7 || Ext.isIE8) {
             this.$stackDashboards.show();
@@ -837,8 +909,22 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 dfd.resolve();
             });
         }
-        
+
         this._lastExpandedStack = stack;
+    },
+
+    expandModal: function(containerSlide) {
+        var me = this;
+
+        me.setHeight(me.expandedModalHeight);
+        $('.bx-wrapper, .bx-viewport, .bx-slide:not(.bx-clone)', me.el.dom).height(me.expandedSlideHeight);
+    },
+
+    collapseModal: function(containerSlide) {
+        var me = this;
+
+        me.setHeight(me.normalModalHeight);
+        $('.bx-wrapper, .bx-viewport, .bx-slide:not(.bx-clone)', me.el.dom).height(me.normalSlideHeight);
     },
 
     hideStackDashboards: function () {
@@ -849,11 +935,14 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             return dfd.promise();
         }
 
+        me.isAnAppExpanded = false;
+
         if(Ext.isIE7 || Ext.isIE8) {
             var dfd = $.Deferred();
             this.$stackDashboards && this.$stackDashboards.hide();
             dfd.resolve();
 
+            me.collapseModal();
             this.$stackDashboards.remove();
             this._lastExpandedStack = null;
             
@@ -862,6 +951,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         else {
             var promise = this.$stackDashboards.slideUp('fast').promise();
             promise.then(function () {
+                me.collapseModal();
                 me.$stackDashboards.remove();
                 me._lastExpandedStack = null;
             });
@@ -872,19 +962,25 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     onMouseOver: function (evt) {
         var el = $(evt.currentTarget);
 
-        if (this._previouslyHoveredStackOrDashboard != null) {
-            $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');    
+        if ( this.isAnAppExpanded || 
+            !this.isAnAppExpanded && $(el).hasClass('stack')) {
+
+            if (this._previouslyHoveredStackOrDashboard != null) {
+                $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');
+            }
+            
+            $('.detail-actions', el).removeClass('hide');
         }
-        
-        $('.detail-actions', el).removeClass('hide');    
-        
+
         this._previouslyHoveredStackOrDashboard = el;
     },
 
     onMouseLeave: function(evt) {
         var el = $(evt.currentTarget);
 
-        $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');    
+        if (this._previouslyHoveredStackOrDashboard) {
+            $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');
+        }
     },
 
     updateDashboardEl: function ($dashboard, dashboard) {
@@ -1125,13 +1221,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         }
     },
 
-
-
-
     restoreStack: function (evt) {
         evt.stopPropagation();
         var me = this,
-        	$stack = this.getElByClassFromEvent(evt, 'stack'),
+            $stack = this.getElByClassFromEvent(evt, 'stack'),
             stack = this.getStack($stack);
         
         this.warn('This action will return the stack <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any dashboard in the stack after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {

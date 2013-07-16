@@ -4,19 +4,22 @@ Ext.define('Ozone.components.window.MyAppTip', {
     clickedStackOrDashboard:null,
     event:null,
     cls: 'ozonequicktip itemTip',
-	shadow: false,
-	closable:true,
-	autoHide:false,
-	draggable:true,
+    shadow: false,
+    closable:true,
+    autoHide:false,
+    draggable:true,
     listeners: {
-    	'close':function(){
-    		this.destroy()
-    	}
+        'close':function(){
+            this.destroy();
+        }
     },
-	
-	getToolTip: function () {
-		var me = this;
-    	var icn = me.clickedStackOrDashboard.iconImageUrl && me.clickedStackOrDashboard.iconImageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'padding-right:15px;\' src=\''+me.clickedStackOrDashboard.iconImageUrl+'\' />':'';
+
+    dashboardContainer: null,
+    appsWindow: null,
+    
+    getToolTip: function () {
+        var me = this;
+        var icn = me.clickedStackOrDashboard.iconImageUrl && me.clickedStackOrDashboard.iconImageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'padding-right:15px;\' src=\''+me.clickedStackOrDashboard.iconImageUrl+'\' />':'';
         var str = '<div class=\'dashboard-tooltip-content\'>' + 
                 '<h3 class=\'name\'>' + icn + Ext.htmlEncode(Ext.htmlEncode(me.clickedStackOrDashboard.name)) + '</h3>';
 
@@ -24,58 +27,58 @@ Ext.define('Ozone.components.window.MyAppTip', {
         
         // append buttons
         str += '<ul>' +
-	                '<li class=\'addButton actionButton\'>'+
-		                '<span class=\'createImg\'></span>'+
-		                '<p class=\'actionText\'>Add Page</p>'+
-	                '</li>'+
-	                '<li class=\'pushButton actionButton\'>'+
-		                '<span class=\'pushImg\'></span>'+
-		                '<p class=\'actionText\'>Push to Store</p>'+
-	                '</li>'+
-	                '<li class=\'restoreButton actionButton\'>'+
-		                '<span class=\'restoreImg\'></span>'+
-		                '<p class=\'actionText\'>Restore</p>'+
-	                '</li>'+
-	                '<li class=\'editButton actionButton\'>'+
-		                '<span class=\'editImg\'></span>'+
-		                '<p class=\'actionText\'>Edit</p>'+
-	                '</li>'+
-	                '<li class=\'deleteButton actionButton\'>'+
-		                '<span class=\'deleteImg\'></span>'+
-		                '<p class=\'actionText\'>Delete</p>'+
-	                '</li>'+
-        	   '</ul>' +
-        	  '</div>';
+                    '<li class=\'addButton actionButton\'>'+
+                        '<span class=\'createImg\'></span>'+
+                        '<p class=\'actionText\'>Add Page</p>'+
+                    '</li>'+
+                    '<li class=\'pushButton actionButton\'>'+
+                        '<span class=\'pushImg\'></span>'+
+                        '<p class=\'actionText\'>Push to Store</p>'+
+                    '</li>'+
+                    '<li class=\'restoreButton actionButton\'>'+
+                        '<span class=\'restoreImg\'></span>'+
+                        '<p class=\'actionText\'>Restore</p>'+
+                    '</li>'+
+                    '<li class=\'editButton actionButton\'>'+
+                        '<span class=\'editImg\'></span>'+
+                        '<p class=\'actionText\'>Edit</p>'+
+                    '</li>'+
+                    '<li class=\'deleteButton actionButton\'>'+
+                        '<span class=\'deleteImg\'></span>'+
+                        '<p class=\'actionText\'>Delete</p>'+
+                    '</li>'+
+               '</ul>' +
+              '</div>';
          
-        return str
+        return str;
     },
     
-	initComponent: function() {
-		var me = this;
-		
-		me.target = me.event.target.parentElement.id;
-	    me.html = me.getToolTip();
+    initComponent: function() {
+        var me = this;
+        
+        me.target = me.event.target.parentElement.id;
+        me.html = me.getToolTip();
 
         me.setupClickHandlers();
-	    
-	    me.callParent(arguments);
-	},
+        
+        me.callParent(arguments);
+    },
 
     setupClickHandlers : function() {
 
         var me = this,
             $ = jQuery;
 
-        $(document).on('click', '.pushButton', me.pushToStore);
+        $(document).on('click', '.pushButton', $.proxy(me.pushToStore, me));
     },
 
     pushToStore: function (evt) {
         evt.stopPropagation();
         var me = this,
             stack = me.clickedStackOrDashboard,
-            dashboardContainer = me.activeDashboard.dashboardContainer,
-            banner = dashboardContainer.getBanner(),
+            banner = me.dashboardContainer.getBanner(),
             mpLauncher;
+
 
         if (!banner.hasMarketplaceButton)  {
             console.log ('Error', 'You do not have a Marketplace widget defined');
@@ -99,7 +102,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 } else {
 
                     var chooser = Ext.widget('marketplacewindow', {
-                        dashboardContainer: dashboardContainer,
+                        dashboardContainer: me.dashboardContainer,
                         callback: function(marketplaceWidget) {
                             me.sendRequest(marketplaceWidget.data.url, json, mpLauncher, marketplaceWidget);
                         }
@@ -119,41 +122,54 @@ Ext.define('Ozone.components.window.MyAppTip', {
         });
 
         me.close();
-
+        me.appsWindow.close();
     },
 
     sendRequest: function(url, json, mpLauncher, myMarketplace) {
-
         var me = this,
             urlString = url.replace(/\/$/, "");
 
         urlString += '/listing';
 
-        Ozone.util.Transport.send({
-            url : urlString,
-            method : "POST",
-            content: {
-                data: json,
-                windowname: true
-            },
 
-            onSuccess: Ext.bind(function(result) {
+        mpLauncher.gotoMarketplace(myMarketplace);
+        mpLauncher.on(OWF.Events.Marketplace.OPENED, function(instance) {
+            me.dashboardContainer.loadMask.show();
 
-                console.log("success", "ID is " + result.data.id + ", New item created? " + result.data.isNew +
-                    ", Message: " + result.data.msg) ;
-                mpLauncher.gotoMarketplace(myMarketplace);
+            Ozone.util.Transport.send({
+                url : urlString,
+                method : "POST",
+                content: {
+                    data: json,
+                    windowname: true
+                },
 
+                onSuccess: function(result) {
+                    var id = result.data && result.data.id;
 
-            }, me) ,
+                    console.log("success", "ID is " + id + ", New item created? " + 
+                        result.data.isNew);
+                    
+                    //send only to this mp widget
+                    Ozone.eventing.Container.publish('ozone.marketplace.show', id, 
+                        Ozone.eventing.Container.getIframeId(instance.data.uniqueId)); 
 
-            onFailure: function (errorMsg){
-                var msg = 'The sharing of ' + 'shareItem' + ' ' + Ext.htmlEncode(record.get('name')) + ' failed.';
-                console.log('Error', errorMsg ? errorMsg : msg);
-            },
-            autoSendVersion : false
+                    //hide loading mask once the widget has refreshed
+                    Ozone.eventing.Container.subscribe('ozone.marketplace.pageLoaded', 
+                            function() {
+                        me.dashboardContainer.loadMask.hide();
+                        Ozone.eventing.Container.unsubscribe('ozone.marketplace.pageLoaded');
+                    });
+                },
+                onFailure: function (errorMsg){
+                     //var msg = 'The sharing of ' + 'shareItem' + ' ' + 
+                        //Ext.htmlEncode(record.get('name')) + ' failed.';
+                     console.log('Error', errorMsg /*? errorMsg : msg*/);
 
-        })
-
-    },
-    
+                     me.dashboardContainer.loadMask.hide();
+                },
+                autoSendVersion : false
+            });
+        }, {single: true}); 
+    }
 });
