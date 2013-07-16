@@ -225,7 +225,7 @@
 
                             // checking for mouseout or mouseleave on current $el doesn't work
                             // check for mouseout by checking for mousemove on paneshims
-                            $doc.on('mousemove.launch', '.paneshim', function (evt) {
+                            $doc.one('mousemove.launch', '.paneshim', function (evt) {
                                 me._sorting = false;
                                 me._launching = true;
                                 me.launch(model, false, true);
@@ -254,6 +254,10 @@
 
                                 me.collection.move(itemView.model, newIndex);
                                 me._reordered = true;
+
+                                setTimeout(function () {
+                                    me.carousel.reloadCarousel(me.carousel.$el.getCurrentSlide());
+                                }, 0);
                             }
 
                             // remove event handlers
@@ -262,10 +266,6 @@
 
                             me._sorting = false;
                             me._launching = false;
-
-                            setTimeout(function () {
-                                me.carousel.reloadCarousel(me.carousel.$el.getCurrentSlide());
-                            }, 0);
                         }
                     });
             }
