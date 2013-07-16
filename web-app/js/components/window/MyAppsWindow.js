@@ -94,7 +94,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             '<div class="dashboard-switcher-descriptor">All of your applications appear here. To start an App, click it. To edit or delete, hover over it and select \'Details\'.</div>',
             '<div class="all-dashboards">',
                 '<tpl for=".">',
-                    '<div id="{[this.getName(values)+this.getId(values)]}" class="{[this.getClass(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}" {[this.getToolTip(values)]}>',
+                    '<div id="{[this.getName(values)+this.getId(values)]}" class="{[this.getClass(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}">',
                         '<div class="thumb-wrap">',
                             '{[this.getIcon(values)]}',
                         '</div>',
@@ -125,50 +125,45 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 }
             },
             getToolTip: function (values) {
-                var str = 'data-qtip="<div class=\'dashboard-tooltip-content\'>' +
-                        '<h3 class=\'name\'>' + Ext.htmlEncode(Ext.htmlEncode(values.name)) + '</h3>';
+            	var icn = values.iconImageUrl && values.iconImageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'padding-right:15px;\' src=\''+values.iconImageUrl+'\' />':'';
+                var str = '<div class=\'dashboard-tooltip-content\'>' + 
+                        '<h3 class=\'name\'>' + icn + Ext.htmlEncode(Ext.htmlEncode(values.name)) + '</h3>';
 
                 values.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(values.description)) +'</p><br>');
                 
-                if (values.isStack) {
-                    return str + '</div>"';
-                }
-                else { 
-                    // If we have groups, display a groups listing in the tooltip.
-                    if (values.groups && values.groups.length > 0) {
-                        var groupStr = '';
-                        for (var i = -1; ++i < values.groups.length;) {
-                            // Only display groups that are not stack defaults.
-                            if (!values.groups[i].stackDefault) {
-                                groupStr += Ext.htmlEncode(Ext.htmlEncode(values.groups[i].name)) + ', ';
-                            }                           
-                        }
-                        // Include the group listing only if there are groups to list.
-                        if (groupStr.length > 0) {
-                            str = str + '<p class=\'group\'><label>Group(s): </label>';
-                            groupStr = groupStr.substring(0, groupStr.length - 2);
-                            str = str + groupStr + '</p>';
-                        }
-                    } 
-                    str += '<div class=\'dashboard-metadata\'>';
+                // append buttons
+                str += '<ul>' +
+			                '<li class=\'addButton actionButton\'>'+
+				                '<span class=\'createImg\'></span>'+
+				                '<p class=\'actionText\'>Add Page</p>'+
+			                '</li>'+
+			                '<li class=\'pushButton actionButton\'>'+
+				                '<span class=\'pushImg\'></span>'+
+				                '<p class=\'actionText\'>Push to Store</p>'+
+			                '</li>'+
+			                '<li class=\'restoreButton actionButton\'>'+
+				                '<span class=\'restoreImg\'></span>'+
+				                '<p class=\'actionText\'>Restore</p>'+
+			                '</li>'+
+			                '<li class=\'editButton actionButton\'>'+
+				                '<span class=\'editImg\'></span>'+
+				                '<p class=\'actionText\'>Edit</p>'+
+			                '</li>'+
+			                '<li class=\'deleteButton actionButton\'>'+
+				                '<span class=\'deleteImg\'></span>'+
+				                '<p class=\'actionText\'>Delete</p>'+
+			                '</li>'+
+                	   '</ul>' +
+                	  '</div>';
                  
-                }
+                return str
             },
             
             getActions: function (values) {
-                return values.isStack ? 
-                        '<ul class="stack-actions hide">'+
-                            '<li class="share icon-share" tabindex="0" data-qtip="Share"></li>'+
-                            '<li class="restore icon-refresh" tabindex="0" data-qtip="Restore"></li>'+
-                            '<li class="delete icon-remove" tabindex="0" data-qtip="Delete"></li>'+
-                            '<li></li>'+
-                        '</ul>' :
-                        '<ul class="dashboard-actions hide">'+
-                            '<li class="share icon-share" tabindex="0" data-qtip="Share"></li>'+
-                            '<li class="restore icon-refresh" tabindex="0" data-qtip="Restore"></li>'+
-                            '<li class="edit icon-edit" tabindex="0" data-qtip="Edit"></li>'+
-                            '<li class="delete icon-remove" tabindex="0" data-qtip="Delete"></li>'+
-                        '</ul>';
+                return	'<ul class="detail-actions hide">'+
+                			'<li id="'+values.name+'-li" class="detail-action">Details'+
+                			'<input type="hidden" class="tip" value="'+this.getToolTip(values)+'"></li>'+
+                        '</ul>'
             },
             encodeAndEllipsize: function(str) {
                 //html encode the result since ellipses are special characters
@@ -202,7 +197,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                         '<span class="create-link-btn-img"></span>'+
                         '<span class="create-link-btn-text">Create New App</span>'+
                     '</li>'+
-                    '<li class="create-new-dashboard-btn" tabindex="0" data-qtitle="Create Dashboard" data-qtip="Name, describe and design a new dashboard.">+</li>'+
+                    '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-tip="Name, describe and design a new dashboard.">+</li>'+
                 '</ul>'+
             '</div>');
 
@@ -247,14 +242,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('mouseout', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
             .on('focus', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
             .on('blur', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
-            .on('click', '.dashboard .restore', $.proxy(me.restoreDashboard, me))
-            .on('click', '.dashboard .share', $.proxy(me.shareDashboard, me))
-            .on('click', '.dashboard .edit', $.proxy(me.editDashboard, me))
-            .on('click', '.dashboard .delete', $.proxy(me.deleteDashboard, me))
-            .on('click', '.stack .share', $.proxy(me.pushToStore, me))
-            .on('click', '.stack .restore', $.proxy(me.restoreStack, me))
-            .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
-            
+        
 
         me.initKeyboardNav();
 
@@ -733,6 +721,25 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         if (evt.type !== 'click' && evt.which !== Ext.EventObject.ENTER)
             return;
 
+        if ($(evt.target).hasClass('detail-action')) {
+        	Ext.select('.itemTip').destroy()
+        	
+        	Ext.create('Ext.tip.ToolTip', {
+	        		cls: 'ozonequicktip itemTip',
+	        		shadow: false,
+	        		closable:true,
+	        		autoHide:false,
+	        		target:evt.target.parentElement.id,
+	        	    html: evt.target.children[0].value,
+	        	    listeners: {
+	        	    	'close':function(){
+	        	    		this.destroy()
+	        	    	}
+	        	    }
+	        }).showAt([evt.clientX,evt.clientY]);
+        	return;
+        }
+        
         var $clickedDashboard = $(evt.currentTarget),
             dashboard = this.getDashboard( $clickedDashboard );
             
@@ -898,10 +905,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var el = $(evt.currentTarget);
 
         if (this._previouslyHoveredStackOrDashboard != null) {
-            $('ul', this._previouslyHoveredStackOrDashboard).addClass('hide');    
+            $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');    
         }
         
-        $('ul', el).removeClass('hide');    
+        $('.detail-actions', el).removeClass('hide');    
         
         this._previouslyHoveredStackOrDashboard = el;
     },
@@ -909,7 +916,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     onMouseLeave: function(evt) {
         var el = $(evt.currentTarget);
 
-        $('ul', this._previouslyHoveredStackOrDashboard).addClass('hide');    
+        $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');    
     },
 
     updateDashboardEl: function ($dashboard, dashboard) {
