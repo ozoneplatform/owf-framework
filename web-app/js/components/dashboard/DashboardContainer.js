@@ -853,6 +853,12 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
     },
 
+    hideAppComponentsView: function () {
+        if(this.appComponentsView) {
+            this.appComponentsView.hide();
+        }
+    },
+
     showDashboardSwitcherButtonHandler: function() {
         return this.showDashboardSwitcher(false);
     },
@@ -1442,6 +1448,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             bodyEl = Ext.getBody(),
             maskEl = bodyEl.mask().addCls('intent-modal-mask');
         
+        this.hideAppComponentsView();
+
         function onHide() {
             isRememberSelection = me.intentsWindow.isRememberSelection();
 
