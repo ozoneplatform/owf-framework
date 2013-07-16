@@ -12,6 +12,9 @@ Ext.define('Ozone.components.window.MyAppTip', {
             this.destroy();
         }
     },
+
+    dashboardContainer: null,
+    appsWindow: null,
     
     getToolTip: function () {
         var me = this;
@@ -72,10 +75,9 @@ Ext.define('Ozone.components.window.MyAppTip', {
         evt.stopPropagation();
         var me = this,
             stack = me.clickedStackOrDashboard,
-            mainCmp = Ext.getCmp('mainPanel'),
-            dashboardContainer = mainCmp.activeDashboard.dashboardContainer,
-            banner = dashboardContainer.getBanner(),
+            banner = me.dashboardContainer.getBanner(),
             mpLauncher;
+
 
         if (!banner.hasMarketplaceButton)  {
             console.log ('Error', 'You do not have a Marketplace widget defined');
@@ -99,7 +101,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 } else {
 
                     var chooser = Ext.widget('marketplacewindow', {
-                        dashboardContainer: dashboardContainer,
+                        dashboardContainer: me.dashboardContainer,
                         callback: function(marketplaceWidget) {
                             me.sendRequest(marketplaceWidget.data.url, json, mpLauncher, marketplaceWidget);
                         }
@@ -119,7 +121,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         });
 
         me.close();
-
+        me.appsWindow.close();
     },
 
     sendRequest: function(url, json, mpLauncher, myMarketplace) {
@@ -128,8 +130,10 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         urlString += '/listing';
 
+
         mpLauncher.gotoMarketplace(myMarketplace);
         mpLauncher.on(OWF.Events.Marketplace.OPENED, function(instance) {
+            me.dashboardContainer.loadMask.show();
 
             Ozone.util.Transport.send({
                 url : urlString,
@@ -149,11 +153,19 @@ Ext.define('Ozone.components.window.MyAppTip', {
                     Ozone.eventing.Container.publish('ozone.marketplace.show', id, 
                         Ozone.eventing.Container.getIframeId(instance.data.uniqueId)); 
 
+                    //hide loading mask once the widget has refreshed
+                    Ozone.eventing.Container.subscribe('ozone.marketplace.pageLoaded', 
+                            function() {
+                        me.dashboardContainer.loadMask.hide();
+                        Ozone.eventing.Container.unsubscribe('ozone.marketplace.pageLoaded');
+                    });
                 },
                 onFailure: function (errorMsg){
                      //var msg = 'The sharing of ' + 'shareItem' + ' ' + 
                         //Ext.htmlEncode(record.get('name')) + ' failed.';
                      console.log('Error', errorMsg /*? errorMsg : msg*/);
+
+                     me.dashboardContainer.loadMask.hide();
                 },
                 autoSendVersion : false
             });

@@ -758,6 +758,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         	
         	Ext.widget('myapptip', {
         		clickedStackOrDashboard:dashboard,
+                dashboardContainer: this.dashboardContainer,
+                appsWindow: this,
         		event:evt
         	}).showAt([evt.clientX,evt.clientY]);
         	
@@ -803,6 +805,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             	
             	Ext.widget('myapptip', {
             		clickedStackOrDashboard:stack,
+                    dashboardContainer: me.dashboardContainer,
+                    appsWindow: me,
             		event:evt
             	}).showAt([evt.clientX,evt.clientY]);
             	
