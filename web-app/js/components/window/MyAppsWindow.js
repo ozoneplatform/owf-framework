@@ -729,6 +729,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 	        		shadow: false,
 	        		closable:true,
 	        		autoHide:false,
+	        		draggable:true,
 	        		target:evt.target.parentElement.id,
 	        	    html: evt.target.children[0].value,
 	        	    listeners: {
@@ -776,6 +777,26 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 $ = jQuery,
                 $clickedStack = $(evt.currentTarget),
                 stack = me.getStack( $clickedStack );
+            
+            if ($(evt.target).hasClass('detail-action')) {
+            	Ext.select('.itemTip').destroy()
+            	
+            	Ext.create('Ext.tip.ToolTip', {
+    	        		cls: 'ozonequicktip itemTip',
+    	        		shadow: false,
+    	        		closable:true,
+    	        		autoHide:false,
+    	        		draggable:true,
+    	        		target:evt.target.parentElement.id,
+    	        	    html: evt.target.children[0].value,
+    	        	    listeners: {
+    	        	    	'close':function(){
+    	        	    		this.destroy()
+    	        	    	}
+    	        	    }
+    	        }).showAt([evt.clientX,evt.clientY]);
+            	return;
+            }
 
             if( stack ) {
                 me.toggleStack(stack, $clickedStack);
@@ -1474,6 +1495,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     onClose: function() {
         var me = this;
+        
+        Ext.select('.itemTip').destroy();
 
         //me.tearDownCircularFocus();
 
