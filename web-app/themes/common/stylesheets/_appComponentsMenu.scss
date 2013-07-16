@@ -103,7 +103,6 @@
 #appcomponents-view, #intents-window {
     color: #fff;
     background: $widget-launcher-background-color;
-    z-index: 10000000;
 
     .search-input {
         float: right;
@@ -122,6 +121,7 @@
 }
 
 #appcomponents-view, #intents-window, #widget-details-tip {
+    z-index: 10000000;
 
     .header, .footer {
         padding: 0.5em 0;
