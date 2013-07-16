@@ -102,57 +102,7 @@ Ext.define('Ozone.components.admin.ManagementPanel', {
     return cmp;
   },
 
-    // Push to store
 
-    doShare: function(shareItem, record) {
-        var me = this;
-
-        // show mp dashboard if more than one mp - user chooses
-        // launch mp
-        // Send mp event to edit/create listing page & populate page
-        // Get json for stack or widget - done
-        // Send rest call to MP to create - return guid or json of service item
-
-
-
-        Ozone.util.Transport.send({
-
-            url : Ozone.util.contextPath()  + '/' + shareItem + '/share?id=' + record.get('id'),
-            method : "POST",
-            onSuccess: Ext.bind(function (json){
-
-                Ozone.util.Transport.send({
-                    url : 'https://localhost:9443/marketplace/listing/',
-                    method : "POST",
-                    content: {
-                         data: json,
-                         windowname: true
-                    },
-                    onSuccess: Ext.bind(function(result) {
-
-                          me.showAlert("success", "ID is " + result.data.id + ", New item created? " + result.data.isNew) ;
-                    }, me) ,
-
-                    onFailure: function (errorMsg){
-                        var msg = 'The sharing of ' + shareItem + ' ' + Ext.htmlEncode(record.get('name')) + ' failed.';
-                        me.showAlert('Error', errorMsg ? errorMsg : msg);
-                    },
-                    autoSendVersion : false
-                })
-
-            },me),
-            onFailure: function (errorMsg){
-                var msg = 'The sharing of ' + shareItem + ' ' + Ext.htmlEncode(record.get('name')) + ' failed.';
-                me.showAlert('Error', errorMsg ? errorMsg : msg);
-
-            },
-            autoSendVersion : false
-
-        });
-
-
-
-    },
     
     //Can export a widget or stack descriptor
     doExport: function(exportItem, record) {

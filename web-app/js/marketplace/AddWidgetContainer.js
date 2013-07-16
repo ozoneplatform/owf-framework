@@ -287,8 +287,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             },
             load:function (response, ioArgs) {
 
-                var widgetLauncher = Ext.getCmp('widget-launcher');
-                widgetLauncher.loadLauncherState();
+                // var widgetLauncher = Ext.getCmp('widget-launcher');
+                // widgetLauncher.loadLauncherState();
 
                 var stack_bottomright = {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25};
 

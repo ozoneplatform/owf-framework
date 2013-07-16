@@ -260,8 +260,6 @@ class StackService {
 
             dashboard_data[0].put('stack', stack)
             
-            dashboard_data[0].put('guid', null)
-
             params.data = (dashboard_data as JSON).toString()
         }
 
@@ -326,6 +324,7 @@ class StackService {
                       
                 dashboards?.each { it ->
                     def dashboard = (it.guid ? Dashboard.findByGuid(it.guid) : it)
+                    dashboard = dashboard ?: it
 
                     if (dashboard) {
                         if (params.update_action == 'remove') {       
@@ -712,6 +711,53 @@ class StackService {
 
         return stackDescriptor
 
+    }
+
+    def addPage(params) {
+
+        def stackParams = JSON.parse(params.stackData)
+        def dashboardParams = JSON.parse(params.dashboardData)
+
+        // Extract stack id
+        int stackId = stackParams?.stackData?.id as int
+
+        Stack stack
+
+        Person currentUser = accountService.getLoggedInUser()
+
+        // If adding page to an existing stack, assure the user has permission to do so.
+        if (stackId) {
+            ensureAdminOrOwner(stackId)
+            stack = Stack.get(stackId)
+        } else {
+            // If the stack is new, create it
+            stack = new Stack(stackParams)
+            def defaultGroup = new Group(name: java.util.UUID.randomUUID().toString(), stackDefault: true)
+            stack.addToGroups(defaultGroup)
+
+            stack.setOwner(currentUser)
+            if (!stack.stackContext) stack.setStackContext(stackParams.name)
+            stack = stack.save(flush: true, failOnError: true)
+        }
+
+        def stackDefaultGroup = stack.findStackDefaultGroup()
+
+        // Adding owner to users by default
+        if(stackDefaultGroup) {
+            stackDefaultGroup.addToPeople(currentUser)
+        }
+
+        // Add the page to the stack as a stack dashboard
+        dashboardParams.cloned = true
+        dashboardParams.isGroupDashboard = true
+        dashboardParams.isdefault = false
+        dashboardParams.stack = stack
+        def result = dashboardService.create(dashboardParams)
+        def groupDashboard = result.dashboard
+
+        // Create a personal dashboard clone for the user
+        int maxPosition = Math.max(dashboardService.getMaxDashboardPosition(currentUser), 0)
+        dashboardService.cloneGroupDashboardAndCreateMapping(groupDashboard, currentUser.id, maxPosition)
     }
 
     //If a user is no longer assigned to a stack directly or through a group, this method
