@@ -52,7 +52,6 @@
                 // substract margin bottom and grabber height for carousel pager to show
                 this.$el.height(height - 60 - 25);
             }
-            
 
             return SuperClass.prototype.render.call(this);
         },
@@ -64,8 +63,8 @@
         },
 
         shown: function () {
-            this.initCarousel();
             this.initResizable();
+            this.initCarousel();
             return this;
         },
 
@@ -76,11 +75,14 @@
         },
 
         initResizable: function () {
-            // leave bottom 64px visible
-            var maxHeight = $(window).height() - this.$container.offset().top - 64
+            var elHeight = this.views[0].$el.outerHeight(true) + 1,
+                minHeight = elHeight + 60 + 25,
+                // leave bottom 64px visible
+                maxHeight = $(window).height() - this.$container.offset().top - 64;
 
             this.$container.resizable({
                 handles: 's',
+                minHeight: minHeight,
                 maxHeight: maxHeight,
                 stop: _.bind(this.doLayout, this)
             });
