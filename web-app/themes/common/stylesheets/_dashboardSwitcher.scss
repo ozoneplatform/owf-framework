@@ -4,10 +4,6 @@
 }
 
 #dashboard-switcher {
-
-    width: $dashboard-switcher-width !important;
-    height: $dashboard-switcher-height !important;
-
     border: 0px none black;
 
     &-body {
@@ -27,7 +23,7 @@
     .actions {
         height: auto;
         text-align: left;
-        padding-top: 90px;
+        padding-top: 10px;
 
         ul {
             color: $dashboard-switcher-dashboard-text-color;
@@ -89,23 +85,19 @@
         bottom: 20px !important;
         position: relative;
         text-align: left;
+        padding-left: 16px;
     }
 
     #dashboard-switcher-body {
-        width: 95% !important;
-        height: 90% !important;
-
         text-align: center;
         margin-left: auto;
         margin-right: auto;
 
         /**** BEGIN slider styling ****/
         .bx-wrapper {
-            // Must be set explicitly to remain constant
-            // regardless of how many children per slide in the viewport
-            height: 360px !important;
-            width: 100% !important;
             margin-bottom: 30px !important;
+            min-height: 360px;
+            max-height: 490px;
 
             .bx-viewport {
                 @include box-shadow(none);
@@ -114,9 +106,9 @@
                 border: 0px;
                 margin-left: 84px;
                 margin-right: 75px;
-                // overflow: hidden;
                 width: 480px !important;
-                height: 360px !important;
+                height: 360px;
+                min-height: 360px;
             }
         }
         
@@ -241,7 +233,7 @@
     }
     &.dashboard-selected {
         .thumb {
-            background-image: $dashboard-switcher-layout-stack-default-icon-over !important;
+            // background-image: $dashboard-switcher-layout-stack-default-icon-over !important;
         }
     }
 }
@@ -322,7 +314,7 @@
 .stack-dashboards-container {
     clear: both;
     position: relative;
-    top: -30px;
+    top: -7px;
 
     .stack-dashboards {
         background: darken($dashboard-switcher-dashboard-background-color, 10%);
@@ -337,7 +329,7 @@
 }
 .stack-dashboards-anchor-tip {
     position: relative;
-    border-width: 20px;
+    border-width: 10px;
     border-bottom-color: darken($dashboard-switcher-dashboard-background-color, 10%);
 }
 

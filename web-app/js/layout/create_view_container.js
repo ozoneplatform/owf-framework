@@ -761,7 +761,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
 //
 //                                    // activate new dashboard
 //                                    var guid = dashboardModel.get('guid');
-//                                    dashboardContainer.activateDashboard(guid);
+//                                    dashboardContainer.activateDashboard(json.guid);
 //                                });
 
                                 this.close();

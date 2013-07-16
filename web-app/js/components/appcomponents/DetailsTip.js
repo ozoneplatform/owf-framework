@@ -34,7 +34,7 @@
                     '<p class="widget-description" ><%= description %></p>' +
                 '<% } %>' +
                 '<div class="footer">' +
-                    '<a href="#" class="widget-remove">Remove</a>' +
+                    '<a href="#" class="widget-remove"><span>Remove</span></a>' +
                 '</div>',
 
         events: {

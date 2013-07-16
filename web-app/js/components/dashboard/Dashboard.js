@@ -761,9 +761,9 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
      * @member Ozone.components.dashboard.Dashboard
      * @param params JSON object containing the guid of the widget to close.
      */
-    refreshWidgetLaunchMenu: function() {
+    refreshWidgetLaunchMenu: _.debounce(function() {
         this.dashboardContainer.refreshAppComponentsView();
-    },
+    }, 1000),
 
     /**
      * @description Defines what to do when launchWidgetInstance method was called on a widget

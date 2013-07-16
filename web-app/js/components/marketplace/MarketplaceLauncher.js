@@ -74,13 +74,33 @@ Ext.define('Ozone.components.marketplace.MarketplaceLauncher', {
     },
 
     launchMarketplaceOnActiveDashboard: function() {
-        var widget = this.dashboardContainer.activeDashboard.findWidgetInstance(this.marketplaceWidget.data.widgetGuid);
-        if (widget) {
-            this.dashboardContainer.activeDashboard.activateWidget(widget.data.uniqueId);
-        } else {
-            this.dashboardContainer.launchWidgets(this.marketplaceWidget, this.keyboard);
+        var me = this;
+
+        function getWidget() {
+            return me.dashboardContainer.activeDashboard.findWidgetInstance(
+                me.marketplaceWidget.data.widgetGuid);
         }
-        this.fireEvent(OWF.Events.Marketplace.OPENED);
+
+        /**
+         * wait until the widget is done launching and fire the opened event
+         * @param widget The Ext model of the marketplace widget
+         */
+        function fireOpenedEvent(widget) {
+            Ozone.eventing.rpc.onReady(widget.data.uniqueId, function() {
+                me.fireEvent(OWF.Events.Marketplace.OPENED, widget);
+            });
+        }
+
+        var widget = getWidget();
+        if (widget) {
+            me.dashboardContainer.activeDashboard.activateWidget(widget.data.uniqueId);
+            fireOpenedEvent(widget);
+        } else {
+            me.dashboardContainer.launchWidgets(me.marketplaceWidget, me.keyboard)
+                .done(function() {
+                    fireOpenedEvent(getWidget());
+                });
+        }
     },
 
     createMarketplaceDashboardAndLaunch: function() {

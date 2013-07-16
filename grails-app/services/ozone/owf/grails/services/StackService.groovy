@@ -719,7 +719,7 @@ class StackService {
         def dashboardParams = JSON.parse(params.dashboardData)
 
         // Extract stack id
-        int stackId = stackParams?.stackData?.id as int
+        int stackId = stackParams?.id as int
 
         Stack stack
 
@@ -754,6 +754,7 @@ class StackService {
         dashboardParams.stack = stack
         def result = dashboardService.create(dashboardParams)
         def groupDashboard = result.dashboard
+        domainMappingService.createMapping(stackDefaultGroup, RelationshipType.owns, groupDashboard)
 
         // Create a personal dashboard clone for the user
         int maxPosition = Math.max(dashboardService.getMaxDashboardPosition(currentUser), 0)

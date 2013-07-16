@@ -10,11 +10,13 @@ import ozone.owf.grails.OwfException
 class IndexController {
     def dashboardService;
     def personWidgetDefinitionService;
+    def preferenceService;
 
     def index = {
         
         def dashboardsResult,
             widgetsResult,
+            appComponentsViewState,
             dashboards = [],
             widgets = [];
         StopWatch stopWatch = null;
@@ -46,14 +48,32 @@ class IndexController {
         catch(OwfException owe) {
             handleError(owe)
         }
-        
+
         if (log.isInfoEnabled()) {
             log.info("Executed personWidgetDefinitionService: widgetList in " + stopWatch);
+            stopWatch.reset();
+            log.info("Executing preferenceService: showForUser");
+        }
+
+        try {
+            appComponentsViewState = preferenceService.showForUser([
+                namespace: "owf",
+                path: "appcomponent-view"
+            ]);
+            appComponentsViewState?.preference = appComponentsViewState?.preference?.value;
+        }
+        catch(OwfException owe) {
+            handleError(owe)
+        }
+
+        if (log.isInfoEnabled()) {
+            log.info("Executed preferenceService: showForUser in " + stopWatch);
         }
 
         render(view: "index", model: [
             dashboards: dashboards,
-            widgets: widgets
+            widgets: widgets,
+            appComponentsViewState: appComponentsViewState as JSON
         ]);
 
 

@@ -171,9 +171,9 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             content: {
                 id: widgetId
             },
+
             onSuccess: function(jsonData) {
                 var widgetListJson = [], data = jsonData.data;
-
                 for (var i = 0, len = data.length; i < len; i++) {
                     var serviceItem = data[i];
 
@@ -213,7 +213,6 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         for (var j = 0; j < serviceItem.requires.length; j++) {
             directRequired.push(serviceItem.requires[j].uuid);
         }
-
         var widgetJson = {
             displayName: serviceItem.title,
             description: serviceItem.description ? serviceItem.description : '',
@@ -235,14 +234,12 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             width: (!serviceItem.ozoneAware  ? 200 : serviceItem.owfProperties.width),
             //FIXME this ternary is a hack for AML-3148
             universalName: (!serviceItem.ozoneAware ? "" : (serviceItem.owfProperties.universalName || "" )),
+            descriptorUrl: (!serviceItem.ozoneAware ? "" : (serviceItem.owfProperties.descriptorUrl || "" )),
             isExtAjaxFormat: true,
             //FIXME this ternary is a hack for AML-3148
-            widgetTypes: [(!serviceItem.ozoneAware ? "fullscreen" : serviceItem.owfProperties.owfWidgetType)]
-//                ,
-//                tags: Ext.JSON.encode([this.createApprovalTag()])
+            widgetTypes: [(!serviceItem.ozoneAware ? "fullscreen" : serviceItem.owfProperties.owfWidgetType)],
+            listingIntents: (!serviceItem.ozoneAware ? [] : serviceItem.intents)
         };
-        
-        
         if (directRequired.length > 0) {
             widgetJson.directRequired = Ext.JSON.encode(directRequired);
         }
@@ -307,7 +304,6 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                         // Have to load the store first. Add a listener so we can work with the newly loaded store
                         load: {
                             fn: function(store, records, success, operation, eOpts) {
-
                                 // Get the widget definition
                                 widgetDefs = self.dashboardContainer.widgetStore.queryBy(function(record,id) {
                                     return record.data.widgetGuid == widgetGuid;
@@ -367,14 +363,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
                     self.dashboardContainer.loadMask.hide();
                 }
-
-
-
-
                 // End AML-2924
-
-
-
             },
             error:function (response, ioArgs) {
                 Ozone.Msg.alert(Ozone.layout.DialogMessages.error, Ozone.layout.DialogMessages.marketplaceWindow_AddWidget, null, null, {
