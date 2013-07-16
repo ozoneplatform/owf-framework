@@ -154,7 +154,7 @@
     top: 0;
     left: 0;
     width: 400px;
-    background-color: $widget-launcher-widget-selected-background-color;
+    background-color: $widget-launcher-widget-over-background-color;
     color: $widget-launcher-widget-text-color;
     @include border-radius(4px);
     overflow-y: auto;
