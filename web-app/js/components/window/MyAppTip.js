@@ -72,8 +72,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
     pushToStore: function (evt) {
         evt.stopPropagation();
         var me = this,
-            $stack = this.getElByClassFromEvent(evt, 'stack'),
-            stack = this.getStack($stack),
+            stack = me.clickedStackOrDashboard,
             dashboardContainer = me.activeDashboard.dashboardContainer,
             banner = dashboardContainer.getBanner(),
             mpLauncher;
