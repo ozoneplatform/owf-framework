@@ -1,7 +1,7 @@
 Ext.define('Ozone.components.window.MyAppsWindow', {
     extend: 'Ozone.components.window.ModalWindow',
     alias: 'widget.myappswindow',
-    
+
     closeAction: 'hide',
     modal: true,
     preventHeader: false,
@@ -107,7 +107,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             '<div class="dashboard-switcher-descriptor">All of your applications appear here. To start an App, click it. To edit or delete, hover over it and select \'Details\'.</div>',
             '<div class="all-dashboards">',
                 '<tpl for=".">',
-                    '<div id="{[this.getName(values)+this.getId(values)]}" class="{[this.getClass(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}" {[this.getToolTip(values)]}>',
+                    '<div id="{[this.getName(values)+this.getId(values)]}" class="{[this.getClass(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}">',
                         '<div class="thumb-wrap">',
                             '{[this.getIcon(values)]}',
                         '</div>',
@@ -137,51 +137,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     return '<div class="thumb"></div>';
                 }
             },
-            getToolTip: function (values) {
-                var str = 'data-qtip="<div class=\'dashboard-tooltip-content\'>' +
-                        '<h3 class=\'name\'>' + Ext.htmlEncode(Ext.htmlEncode(values.name)) + '</h3>';
-
-                values.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(values.description)) +'</p><br>');
-                
-                if (values.isStack) {
-                    return str + '</div>"';
-                }
-                else { 
-                    // If we have groups, display a groups listing in the tooltip.
-                    if (values.groups && values.groups.length > 0) {
-                        var groupStr = '';
-                        for (var i = -1; ++i < values.groups.length;) {
-                            // Only display groups that are not stack defaults.
-                            if (!values.groups[i].stackDefault) {
-                                groupStr += Ext.htmlEncode(Ext.htmlEncode(values.groups[i].name)) + ', ';
-                            }                           
-                        }
-                        // Include the group listing only if there are groups to list.
-                        if (groupStr.length > 0) {
-                            str = str + '<p class=\'group\'><label>Group(s): </label>';
-                            groupStr = groupStr.substring(0, groupStr.length - 2);
-                            str = str + groupStr + '</p>';
-                        }
-                    } 
-                    str += '<div class=\'dashboard-metadata\'>';
-                 
-                }
-            },
             
             getActions: function (values) {
-                return values.isStack ? 
-                        '<ul class="stack-actions hide">'+
-                            '<li></li>'+
-                            '<li class="restore icon-refresh" tabindex="0" data-qtip="Restore"></li>'+
-                            '<li class="delete icon-remove" tabindex="0" data-qtip="Delete"></li>'+
-                            '<li></li>'+
-                        '</ul>' :
-                        '<ul class="dashboard-actions hide">'+
-                            '<li class="share icon-share" tabindex="0" data-qtip="Share"></li>'+
-                            '<li class="restore icon-refresh" tabindex="0" data-qtip="Restore"></li>'+
-                            '<li class="edit icon-edit" tabindex="0" data-qtip="Edit"></li>'+
-                            '<li class="delete icon-remove" tabindex="0" data-qtip="Delete"></li>'+
-                        '</ul>';
+                return	'<ul class="detail-actions hide">'+
+                			'<li id="'+values.name+'-li" class="detail-action">Details'+
+                        '</ul>'
             },
             encodeAndEllipsize: function(str) {
                 //html encode the result since ellipses are special characters
@@ -218,7 +178,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                         '<span class="create-link-btn-img"></span>'+
                         '<span class="create-link-btn-text">Create New App</span>'+
                     '</li>'+
-                    '<li class="create-new-dashboard-btn" tabindex="0" data-qtitle="Create Dashboard" data-qtip="Name, describe and design a new dashboard.">+</li>'+
+                    '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-tip="Name, describe and design a new dashboard.">+</li>'+
                 '</ul>'+
             '</div>');
 
@@ -275,6 +235,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('click', '.dashboard .delete', $.proxy(me.deleteDashboard, me))
             .on('click', '.stack .restore', $.proxy(me.restoreStack, me))
             .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
+
 
         me.initKeyboardNav();
 
@@ -752,9 +713,20 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     onDashboardClick: function (evt) {
         if (evt.type !== 'click' && evt.which !== Ext.EventObject.ENTER)
             return;
-
+        
         var $clickedDashboard = $(evt.currentTarget),
-            dashboard = this.getDashboard( $clickedDashboard );
+        dashboard = this.getDashboard( $clickedDashboard );
+
+        if ($(evt.target).hasClass('detail-action')) {
+        	Ext.select('.itemTip').destroy()
+        	
+        	Ext.widget('myapptip', {
+        		clickedStackOrDashboard:dashboard,
+        		event:evt
+        	}).showAt([evt.clientX,evt.clientY]);
+        	
+        	return;
+        }
             
         var stackContext = dashboard.stack ? dashboard.stack.stackContext : null;
 
@@ -789,6 +761,17 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 $ = jQuery,
                 $clickedStack = $(evt.currentTarget),
                 stack = me.getStack( $clickedStack );
+            
+            if ($(evt.target).hasClass('detail-action')) {
+            	Ext.select('.itemTip').destroy()
+            	
+            	Ext.widget('myapptip', {
+            		clickedStackOrDashboard:stack,
+            		event:evt
+            	}).showAt([evt.clientX,evt.clientY]);
+            	
+            	return;
+            }
 
             if( stack ) {
                 me.toggleStack(stack, $clickedStack);
@@ -945,10 +928,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             !this.isAnAppExpanded && $(el).hasClass('stack')) {
 
             if (this._previouslyHoveredStackOrDashboard != null) {
-                $('ul', this._previouslyHoveredStackOrDashboard).addClass('hide');
+                $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');
             }
             
-            $('ul', el).removeClass('hide');
+            $('.detail-actions', el).removeClass('hide');
             
             this._previouslyHoveredStackOrDashboard = el;
         }
@@ -958,7 +941,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var el = $(evt.currentTarget);
 
         if (this._previouslyHoveredStackOrDashboard) {
-            $('ul', this._previouslyHoveredStackOrDashboard).addClass('hide');    
+            $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');
         }
     },
 
@@ -1090,7 +1073,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         }, 100);
     },
 
-    createNewApp: function (evt) {
+
+
+
+        createNewApp: function (evt) {
         var me = this,
             createDashWindow = Ext.widget('createdashboardwindow', {
                 stackId: null,
@@ -1196,6 +1182,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             this.warn('Users cannot remove dashboards assigned to a group. Please contact your administrator.', focusEl);
         }
     },
+
+
+
 
     restoreStack: function (evt) {
         evt.stopPropagation();
@@ -1426,6 +1415,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     onClose: function() {
         var me = this;
+        
+        Ext.select('.itemTip').destroy();
 
         //me.tearDownCircularFocus();
 

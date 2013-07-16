@@ -309,6 +309,10 @@ class UrlMappings {
             action = "share"
         }
 
+        "/stack/addPage" {
+            controller = "stack"
+            action = "addPage"
+        }
 
         "/stack/import" {
             controller = "stack"

@@ -81,6 +81,7 @@
 
     .dashboard-switcher-descriptor {
         color: $dashboard-switcher-dashboard-text-color;
+        padding: 0;
         bottom: 20px !important;
         position: relative;
         text-align: left;
@@ -176,8 +177,8 @@
         width: 100%;
         
         .thumb {
-            height: 70px;
-            width: 70px;
+            height: 64px;
+            width: 64px;
 
             margin-left: auto;
             margin-right: auto;
@@ -275,6 +276,11 @@
         -webkit-animation-delay: 1s;
 }
 
+.detail-actions {
+	padding-top:5px; 
+	color:white;
+}
+
 .x-ie7 {
     #dashboard-switcher {
         ul.actions li{
@@ -324,11 +330,100 @@
     border-bottom-color: darken($dashboard-switcher-dashboard-background-color, 10%);
 }
 
+.itemTip {
+	z-index: 79001 !important;
+}
+
 .ozonequicktip {
-    max-width: 720px;
+    width: 300px;
 
     .dashboard-tooltip-content {
-        padding: 1.25em;
+        
+        ul {
+            color: $dashboard-switcher-dashboard-text-color;
+			
+            li {
+                display: inline-block;
+                margin: 0 1px;
+               	width:55px;
+               	height:55px;
+               	font-size:.75em;
+                background: $dashboard-switcher-dashboard-over-background-color;
+                color: $dashboard-switcher-dashboard-over-text-color;
+                
+                .actionText {
+                	text-align:center;
+                	 margin-left:auto;
+                	 margin-right:auto; 
+                	 font-size:.8em;
+    }
+
+                .createImg {
+		        	background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-out.png'); 
+		        	display: inline-block;
+		        	width:20px;
+		        	height:20px;
+		        	margin-left:35%;
+		        	margin-top:30%;
+                	 
+		        	&:hover, &.hover {
+				        background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-over.png'); 
+				    }
+		        }
+		        
+		        .pushImg {
+		        	background-image: theme-image($theme-name, 'myappswindow/PushtoStore-out.png'); 
+		        	display: inline-block;
+		        	width:20px;
+		        	height:20px;
+		        	margin-left:35%;
+		        	margin-top:30%;
+                	 
+		        	&:hover, &.hover {
+				        background-image: theme-image($theme-name, 'myappswindow/PushtoStore-over.png'); 
+				    }
+		        }
+		       
+		       	.restoreImg {
+		        	background-image: theme-image($theme-name, 'myappswindow/Restore-out.png'); 
+		        	display: inline-block;
+		        	width:20px;
+		        	height:20px;
+		        	margin-left:35%;
+		        	margin-top:30%;
+                	 
+		        	&:hover, &.hover {
+				        background-image: theme-image($theme-name, 'myappswindow/Restore-over.png'); 
+				    }
+		        }
+		        
+		        .editImg {
+		        	background-image: theme-image($theme-name, 'myappswindow/Edit-out.png'); 
+		        	display: inline-block;
+		        	width:20px;
+		        	height:20px;
+		        	margin-left:35%;
+		        	margin-top:30%;
+                	 
+		        	&:hover, &.hover {
+				        background-image: theme-image($theme-name, 'myappswindow/Edit-over.png'); 
+				    }
+		        }
+		        
+		        .deleteImg {
+		        	background-image: theme-image($theme-name, 'myappswindow/Delete-out.png'); 
+		        	display: inline-block;
+		        	width:20px;
+		        	height:20px;
+		        	margin-left:35%;
+		        	margin-top:30%;
+                	 
+		        	&:hover, &.hover {
+				        background-image: theme-image($theme-name, 'myappswindow/Delete-over.png'); 
+				    }
+		        }
+            }
+        }
     }
 
     label {
@@ -348,7 +443,7 @@
 
     .tip-description {
         line-height: (14/12);
-        max-width: 720px;
+        max-width: 250px;
     }
 
     .dashboard-metadata {

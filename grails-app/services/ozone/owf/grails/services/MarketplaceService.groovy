@@ -40,7 +40,6 @@ class MarketplaceService extends BaseService {
     def addListingsToDatabase(stMarketplaceJson) {
         // The set could be greater than one in length because widgets do have
         // dependencies.
-        //log.info("addListingsToDatabase")
         def updatedWidgets = stMarketplaceJson.collect { obj ->
             if (obj?.widgetGuid) {
                 return addWidgetToDatabase(obj)
@@ -145,6 +144,8 @@ class MarketplaceService extends BaseService {
             widgetDefinition.addTag(tagName, true, -1, true)
         }
 
+        // This is the MP-Sync intents that are part of the listing's custom field definitions
+        // TODO: Remove this when everyone has switched to the new Intents code (seen below in the else block)
         // Marketplace may not be configured to provide intents. In such
         // a case the send and receive lists are empty. DO NOT overwrite
         // intents that are already in OWF if MP is not providing them.
@@ -222,6 +223,35 @@ class MarketplaceService extends BaseService {
             obj.intents.receive?.each { addIntent(it, false, true) }
             obj.intents.send?.each { addIntent(it, true, false) }
         }
+        //OP-31: Intents as part of a listing. These are the intents directly from the ServiceItem
+        else if (obj.listingIntents && obj.listingIntents.size() > 0) {
+            //Convert the AppsMall listing's intents to OWF's intents and add them to the widget definition
+            obj.listingIntents.each { 
+                def dataType
+                dataType = IntentDataType.findByDataType(it.dataType.title)
+                if (!dataType) {
+                    dataType = new IntentDataType(dataType: it.dataType.title)
+                }
+                def intentModel = Intent.findByAction(it.action.title)
+                if (!intentModel) {
+                    intentModel = new Intent(action: it.action.title, dataTypes: [dataType])
+                } else {
+                    intentModel.dataTypes.add(dataType)
+                }
+                intentModel.save()
+
+                def newWidgetDefinitionIntent = new WidgetDefinitionIntent(
+                        widgetDefinition: widgetDefinition,
+                        intent: intentModel,
+                        send: it.send,
+                        receive: it.receive,
+                        dataTypes: [dataType]
+                )
+                widgetDefinition.addToWidgetDefinitionIntents(newWidgetDefinitionIntent)
+            }
+        }
+
+
 
         widgetDefinition.save(flush: true)
         return widgetDefinition
