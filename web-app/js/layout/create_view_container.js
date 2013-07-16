@@ -98,7 +98,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         this.titleTextField = {
             xtype: 'textfield',
             name: 'titleTextField',
-            cls: 'titleTextField',
+            cls: 'titleTextField createAppField',
+            emptyCls: 'empty-text-field',
             itemId: 'titleTextField',
             usePlaceholderIfAvailable: false,
             emptyText: Ozone.ux.DashboardMgmtString.titleBlankText,
@@ -113,8 +114,9 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         this.iconURLField = {
             xtype: 'textfield',
             name: 'iconURLField',
-            cls: 'iconURLField',
+            cls: 'iconURLField createAppField',
             itemId: 'iconURLField',
+            emptyCls: 'empty-text-field',
             usePlaceholderIfAvailable: false,
             emptyText: Ozone.ux.DashboardMgmtString.iconBlankText,
             allowBlank: true,
@@ -188,7 +190,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         this.description = {
             xtype: 'textareafield',
             name: 'description',
-            cls: 'description',
+            cls: 'description createAppField',
+            emptyCls: 'empty-text-field',
             itemId: 'description',
             usePlaceholderIfAvailable: false,
             emptyText: Ozone.ux.DashboardMgmtString.descriptionBlankText,
@@ -218,6 +221,48 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             component.disable();
         };
 
+        var enablePremadeLayoutView = function(container) {
+            enablePremadeLayoutButton(container.down('#premadeDesktop'));
+            enablePremadeLayoutButton(container.down('#premadeFit'));
+            enablePremadeLayoutButton(container.down('#premadeTabbed'));
+            enablePremadeLayoutButton(container.down('#premade2ColumnFit'));
+            enablePremadeLayoutButton(container.down('#premade2RowFit'));
+            enablePremadeLayoutButton(container.down('#premade4Fit'));
+            enablePremadeLayoutButton(container.down('#premade2ColumnPortal'));
+            enablePremadeLayoutButton(container.down('#premadeAccordionFit'));
+            enablePremadeLayoutButton(container.down('#premadeTabbedAccordion'));
+            enablePremadeLayoutButton(container.down('#premade2RowFitTabbed'));
+            enablePremadeLayoutButton(container.down('#premadeAccordion2RowFit'));
+            enablePremadeLayoutButton(container.down('#premadeTabbed2Fit'));
+        };
+
+        var disablePremadeLayoutView = function() {
+            disablePremadeLayoutButton(container.down('#premadeDesktop'));
+            disablePremadeLayoutButton(container.down('#premadeFit'));
+            disablePremadeLayoutButton(container.down('#premadeTabbed'));
+            disablePremadeLayoutButton(container.down('#premade2ColumnFit'));
+            disablePremadeLayoutButton(container.down('#premade2RowFit'));
+            disablePremadeLayoutButton(container.down('#premade4Fit'));
+            disablePremadeLayoutButton(container.down('#premade2ColumnPortal'));
+            disablePremadeLayoutButton(container.down('#premadeAccordionFit'));
+            disablePremadeLayoutButton(container.down('#premadeTabbedAccordion'));
+            disablePremadeLayoutButton(container.down('#premade2RowFitTabbed'));
+            disablePremadeLayoutButton(container.down('#premadeAccordion2RowFit'));
+            disablePremadeLayoutButton(container.down('#premadeTabbed2Fit'));
+        };
+
+        var enablePremadeLayoutButton = function(component) {
+            component.removeCls('premadeButtonInactive');
+            component.enable();
+
+        };
+
+        var disablePremadeLayoutButton = function(component) {
+            component.removeCls('selected');
+            component.addCls('premadeButtonInactive');
+            component.disable();
+        };
+
         this.newViewRadio = {
             boxLabel: Ozone.layout.CreateViewWindowString.createNew,
             name: 'viewSelectRadio',
@@ -228,6 +273,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                         if(newValue)
                         {
                             disableInputComponent(this.down('#existViewCb'));
+                            disablePremadeLayoutView(this);
                         }
                     },
                     scope: this
@@ -247,6 +293,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                         if(newValue)
                         {
                             enableInputComponent(this.down('#existViewCb'));
+                            disablePremadeLayoutView(this);
                         }
                     },
                     scope: this
@@ -268,6 +315,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                     fn: function(radio, newValue) {
                         if(newValue) {
                             disableInputComponent(this.down('#existViewCb'));
+                            enablePremadeLayoutView(this);
+                            this.down('#premadeDesktop').fireEvent('click');
                         }
                     },
                     scope: this
@@ -600,6 +649,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             },{
                 xtype:'button',
                 scale: 'small',
+                cls: 'okbutton',
                 text: Ozone.layout.DialogMessages.ok,
                 itemId: 'saveButton',
                 //iconCls: 'okSaveBtnIcon',
@@ -704,13 +754,15 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                                         layoutConfig: me.getPremadeLayout()
                                 });
 
-                                // DO not open dashboard designer, just save the dashboard with the pre-made layout
-                                dashboardContainer.saveDashboard(dashboardModel.data, 'create', function() {
+                                dashboardContainer.createDashboard(dashboardModel);
 
-                                    // activate new dashboard
-                                    var guid = dashboardModel.get('guid');
-                                    dashboardContainer.activateDashboard(guid);
-                                });
+//                                // DO not open dashboard designer, just save the dashboard with the pre-made layout
+//                                dashboardContainer.saveDashboard(dashboardModel.data, 'create', function() {
+//
+//                                    // activate new dashboard
+//                                    var guid = dashboardModel.get('guid');
+//                                    dashboardContainer.activateDashboard(guid);
+//                                });
 
                                 this.close();
                             }
@@ -741,14 +793,19 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                         });
                     }
                 }
-            },{
+            },
+            {
                 xtype:'button',
                 scale: 'small',
                 text: 'Cancel',
+                cls: 'cancelbutton',
                 itemId: 'cancelBtn',
 //                iconCls: 'cancelBtnIcon',
                 scope: this,
                 handler: this.cancel
+            },
+            {
+                xtype: 'tbfill'
             }]
         }];
 
@@ -758,8 +815,10 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         });
 
         this.on("afterrender", function(cmp) {
-            // Register handler for pre-made layout buttons
+            // Register handler for pre-made layout buttons and select the first one by default
             this.handlePremadeLayoutButtons();
+            var layoutButtons = this.query('container#premadeViewContainer')[0].query('button');
+            layoutButtons[0].fireEvent('click');
         });
 
         this.callParent();
@@ -804,7 +863,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
          * internally that is also deffered
          */
         Ext.defer(function() {
-            this.down('#titleBox').focus();
+            this.down('#titleTextField').focus();
         }, 500, this);
     },
 

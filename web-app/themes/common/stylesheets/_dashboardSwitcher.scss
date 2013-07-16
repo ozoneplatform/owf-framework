@@ -467,19 +467,22 @@
 }
 
 .premadeLayoutButton {
-  margin: 5px 5px 5px 5px;
-  height: 45px;
-  width: 59px;
+  margin: 3px 3px 3px 3px;
+  height: 49px;
+  width: 63px;
   background-position: center;
+  padding: 2px;
 }
 
 .premadeLayoutButton.selected {
   border-style:solid;
   border-width:2px;
+  border-color: #7dc242;
 }
 
 .premadeDesktop {
   background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_1-Desktop.png');
+  opacity: 25 !important;
 }
 
 .premadeFit {
@@ -525,3 +528,43 @@
 .premadeTabbed2Fit {
   background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_3-Tab-Fit-Fit.png');
 }
+
+.premadeButtonInactive {
+  opacity: 0.4 !important;
+  filter: alpha(opacity=40) !important; /* for ie7 */
+  cursor: default !important;
+}
+
+[id*="owfCreateDashboardsContainer"], [id*="owfCreateDashboardsContainer"] .x-toolbar, .createAppField input, .createAppField textArea, {
+  color: #ffffff;
+  background: #2f2f2f;
+}
+
+.createAppField input:focus, .createAppField textArea:focus {
+  border-color: #a0a9ad;
+}
+
+[id*="owfCreateDashboardsContainer"] {
+
+  .empty-text-field {
+    color: gray;
+    font-style: italic;
+  }
+
+  .okbutton{
+    background: #7dc242;
+  }
+
+  .cancelbutton {
+    background: #ababab;
+  }
+
+  .x-btn-default-toolbar-small span{
+    background-image: none;
+    color: #FFFFFF;
+    font-size: 14px;
+    //font-weight: bold;
+    text-shadow: -2px 2px 2px #000000;
+  }
+}
+
