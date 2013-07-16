@@ -41,6 +41,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     //dashboards will refresh before the switcher opens
     dashboardsNeedRefresh: false,
 
+    // state of app component menu
+    appComponentsViewState: null,
+
     // private
     initComponent: function() {
         var me = this,
@@ -475,10 +478,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 deferred: deferred
             });
 
-            this.el.on('click', this._selectPaneOnClick, this, {
+            this.activeDashboard.el.on('click', this._selectPaneOnClick, this, {
                 deferred: deferred
             });
-            this.el.on('mouseup', this._selectPaneOnClick, this, {
+            this.activeDashboard.el.on('mouseup', this._selectPaneOnClick, this, {
                 deferred: deferred
             });
 
@@ -815,7 +818,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     showAppComponentsView: function () {
         var me = this,
-            appComponentsBtn;
+            appComponentsBtn,
+            size;
 
         if (me.activeDashboard.configRecord.get('locked') === true ||
             me.activeDashboard.configRecord.isMarketplaceDashboard()) {
@@ -823,10 +827,16 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
 
         if(!me.appComponentsView) {
+            size = _.isString(this.appComponentsViewState.preference) ? 
+                        Ozone.util.parseJson(this.appComponentsViewState.preference) :
+                        this.appComponentsViewState.preference;
+
             me.appComponentsView = new Ozone.components.appcomponents.AppComponentsView({
                 collection: OWF.Collections.AppComponents,
-                dashboardContainer: me
+                dashboardContainer: me,
+                size: size
             });
+
             appComponentsBtn = me.getBanner().getComponent('appComponentsBtn');
             me.appComponentsView.$el.on('hide.toggle', function () {
                 appComponentsBtn.toggle(false, true);
@@ -836,7 +846,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             });
 
             $('#dashboardCardPanel').append(me.appComponentsView.render().el);
-            me.appComponentsView.shown();
+            me.appComponentsView.show().shown();
         }
         else {
             me.appComponentsView.toggle();

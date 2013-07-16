@@ -124,6 +124,7 @@
                     anchor: '100% ' + heightOffset,
                     dashboardStore: dashboardStore,
                     widgetStore: widgetStore,
+                    appComponentsViewState: ${appComponentsViewState},
                     floatingWidgetManager: floatingWidgetManager,
                     bannerManager: bannerManager,
                     dashboardDesignerManager: dashboardDesignerManager,

@@ -27,6 +27,9 @@
         position: relative;
         height: 25px;
         bottom: auto;
+        background-image: theme-image($theme-name, 'grabber.png');
+        background-repeat: no-repeat;
+        background-position: center;
     }
 
     .bx-slide {
@@ -100,6 +103,7 @@
 #appcomponents-view, #intents-window {
     color: #fff;
     background: $widget-launcher-background-color;
+    z-index: 10000000;
 
     .search-input {
         float: right;
@@ -154,7 +158,7 @@
     top: 0;
     left: 0;
     width: 400px;
-    background-color: #222;
+    background-color: $widget-launcher-widget-selected-background-color;
     color: $widget-launcher-widget-text-color;
     @include border-radius(4px);
     overflow-y: auto;

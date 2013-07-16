@@ -35,6 +35,7 @@
             'mouseover .bx-prev': '_goToPrevSlide',
             'mouseover .bx-next': '_goToNextSlide',
             'mousedown .ui-resizable-handle': '_shim',
+            'resizestart': '_onResizeStart',
             'resizestop': '_unshim',
             'sortstart': '_shim',
             'sortstop': '_unshim'
@@ -48,6 +49,9 @@
 
         // flag indicating whether reorder has been performed
         _reordered: false,
+
+        // flag indicating whether resize has been performed
+        _resized: false,
 
         // current search query
         searchQuery: '',
@@ -64,6 +68,8 @@
             });
 
             this.collection = new Ozone.data.collections.Widgets(standardAppComponents);
+
+            _.bindAll(this, 'refresh');
         },
 
         render: function () {
@@ -84,6 +90,7 @@
                 collection: this.collection,
                 allAppComponents: this.allAppComponents,
                 selectable: false,
+                size: this.size,
                 addFilterFn: function (model, index) {
                     if(model.get('name').indexOf(this.searchQuery) < 0) {
                         return false;
@@ -96,9 +103,6 @@
                 beforedestroycarousel: _.bind(this._destroySortable, this),
                 initcarousel: _.bind(this._initSortable, this)
             });
-
-            _.bindAll(this, 'refresh');
-            $(window).on('resize', this.refresh);
 
             return this;
         },
@@ -132,28 +136,50 @@
             }
         }, 1000),
 
+        show: function () {
+            $(window).on('resize', this.refresh);
+            console.log('show resize')
+            return SuperClass.prototype.show.call(this);
+        },
+
+        hide: function () {
+            $(window).off('resize', this.refresh);
+            console.log('hide resize')
+            return SuperClass.prototype.hide.call(this);
+        },
+
         shown: function () {
             this.carousel.shown();
             return this;
         },
 
         save: function (sync) {
-            if(!this._reordered) {
-                return;
+            if(this._resized) {
+                console.log(Ozone.util.toString(this.carousel.state()))
+                Ozone.pref.PrefServer.setUserPreference({
+                    namespace: "owf",
+                    name: "appcomponent-view",
+                    async: !sync,
+                    value: Ozone.util.toString(this.carousel.state()),
+                    onSuccess: $.noop,
+                    onFailure: $.noop
+                });
             }
 
-            Ozone.pref.PrefServer.updateAndDeleteWidgets({
-                widgetsToUpdate: this.collection.map(function (appComponent) {
-                    return {
-                        guid: appComponent.get('widgetGuid')
-                    };
-                }),
-                widgetGuidsToDelete: [],
-                updateOrder: true,
-                async: !sync,
-                onSuccess: $.noop,
-                onFailure: $.noop
-            });
+            if(this._reordered) {
+                Ozone.pref.PrefServer.updateAndDeleteWidgets({
+                    widgetsToUpdate: this.collection.map(function (appComponent) {
+                        return {
+                            guid: appComponent.get('widgetGuid')
+                        };
+                    }),
+                    widgetGuidsToDelete: [],
+                    updateOrder: true,
+                    async: !sync,
+                    onSuccess: $.noop,
+                    onFailure: $.noop
+                });
+            }
         },
 
         remove: function () {
@@ -269,6 +295,10 @@
 
         _goToNextSlide: function (argument) {
             this._sorting && this.carousel.$el.goToNextSlide();
+        },
+
+        _onResizeStart: function () {
+            this._resized = true;
         },
 
         _shim: function () {

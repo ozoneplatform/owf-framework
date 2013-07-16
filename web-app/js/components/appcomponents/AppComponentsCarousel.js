@@ -33,11 +33,26 @@
         // container element
         $container: null,
 
+        // default size to user
+        size: null,
+
         render: function () {
-            var $el = $(this.tpl);
+            var height,
+                $el = $(this.tpl);
+
             this.$el.html($el);
             this.$container = this.$el;
             this.setElement($el);
+
+            if(this.size && this.size.height) {
+                height = this.size.height * $(window).height();
+
+                this.$container.height(height);
+
+                // substract margin bottom and grabber height for carousel pager to show
+                this.$el.height(height - 60 - 25);
+            }
+            
 
             return SuperClass.prototype.render.call(this);
         },
@@ -54,6 +69,12 @@
             return this;
         },
 
+        state: function () {
+            return {
+                height: (this.$container.height() / $(window).height())
+            };
+        },
+
         initResizable: function () {
             // leave bottom 64px visible
             var maxHeight = $(window).height() - this.$container.offset().top - 64
@@ -63,24 +84,24 @@
                 maxHeight: maxHeight,
                 stop: _.bind(this.doLayout, this)
             });
+            return this;
         },
 
         doLayout: function (evt, ui) {
             var size = ui.size,
-                $resizable = this.$container.children('.ui-resizable-s'),
-                marginBottom = parseInt(this.$container.children('.bx-wrapper').css('margin-bottom'), 10),
-                height = size.height - $resizable.height();
+                height = size.height;
 
             this.destroyCarousel();
 
-            // substract margin bottom for carousel pager to show
-            this.$el.height(height - marginBottom);
+            // substract margin bottom and grabber height for carousel pager to show
+            this.$el.height(height - 60 - 25);
 
             this.initCarousel();
         },
 
         destroyResizable: function () {
             this.$container.resizable('destroy');
+            return this;
         },
 
         initCarousel: function (startSlide, force) {
@@ -105,8 +126,10 @@
         },
 
         reloadCarousel: function (startSlide, force) {
-            this.destroyCarousel()
+            this.destroyResizable()
+                .destroyCarousel()
                 .initCarousel(startSlide, force)
+                .initResizable()
                 ._removeDetailsTip();
         },
 
