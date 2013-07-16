@@ -747,16 +747,6 @@ class StackService {
             stackDefaultGroup.addToPeople(currentUser)
         }
 
-
-        // Copy the new dashboard to the default group
-        def copyParams = [:]
-        copyParams.dashboards = ([dashboardParams as JSON]).toString()
-        copyParams.groups = [serviceModelService.createServiceModel(stackDefaultGroup)]
-        copyParams.groups = (copyParams.groups as JSON).toString()
-        copyParams.isGroupDashboard = true;
-        copyParams.stack = stack
-        groupService.copyDashboard(copyParams);
-
         // Add the page to the stack as a stack dashboard
         dashboardParams.cloned = true
         dashboardParams.isGroupDashboard = true
@@ -764,6 +754,7 @@ class StackService {
         dashboardParams.stack = stack
         def result = dashboardService.create(dashboardParams)
         def groupDashboard = result.dashboard
+        domainMappingService.createMapping(stackDefaultGroup, RelationshipType.owns, groupDashboard)
 
         // Create a personal dashboard clone for the user
         int maxPosition = Math.max(dashboardService.getMaxDashboardPosition(currentUser), 0)
