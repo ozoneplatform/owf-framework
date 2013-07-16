@@ -88,43 +88,10 @@
         padding-left: 16px;
     }
 
-    #dashboard-switcher-body {
+    > #dashboard-switcher-body {
         text-align: center;
         margin-left: auto;
         margin-right: auto;
-
-        /**** BEGIN slider styling ****/
-        .bx-wrapper {
-            margin-bottom: 30px !important;
-            min-height: 360px;
-            max-height: 490px;
-
-            .bx-viewport {
-                @include box-shadow(none);
-
-                background: transparent !important;
-                border: 0px;
-                margin-left: 84px;
-                margin-right: 75px;
-                width: 480px !important;
-                height: 360px;
-                min-height: 360px;
-            }
-        }
-        
-        .bx-wrapper .bx-pager, .bx-wrapper .bx-controls-auto {
-    		bottom: -20px;
-    	}
-
-        .bx-wrapper {
-            .bx-prev {
-                left: 0px !important;
-            }
-            .bx-next {
-                right: 0px !important;
-            }
-        }
-        /***** END slider styling  ****/
     }
 
     .all-dashboards {
@@ -151,6 +118,70 @@
 	     background-position: 0 !important;
 	}
 }
+
+/**** BEGIN slider styling ****/
+.bx-wrapper {
+    margin-bottom: 30px !important;
+    min-height: 360px;
+    max-height: 490px;
+
+    .bx-viewport {
+        @include box-shadow(none);
+
+        background: transparent !important;
+        border: 0px;
+        margin-left: 84px;
+        margin-right: 75px;
+        width: 480px !important;
+        height: 360px;
+        min-height: 360px;
+    }
+}
+
+.bx-wrapper .bx-pager, .bx-wrapper .bx-controls-auto {
+    bottom: -20px;
+}
+
+.bx-wrapper {
+    .bx-prev {
+        left: 0px !important;
+    }
+    .bx-next {
+        right: 0px !important;
+    }
+}
+
+.bx-wrapper.mini {
+    min-height: 120px !important;
+    max-height: 120px !important;
+    width: 400px !important;
+
+    .bx-viewport.mini {
+        @include box-shadow(none);
+
+        background: transparent !important;
+        margin-left: 0px;
+        margin-right: 0px;
+        border: 0px;
+        width: 400px !important;
+        height: 120px !important;
+        min-height: 120px !important;
+    }
+}
+
+.bx-wrapper.mini .bx-pager, .bx-wrapper .bx-controls-auto {
+    bottom: -20px;
+}
+
+.bx-wrapper.mini {
+    .bx-prev {
+        left: 0px !important;
+    }
+    .bx-next {
+        right: 0px !important;
+    }
+}
+/***** END slider styling  ****/
 
 #dashboard-switcher .dashboard, #dashboard-switcher .stack, .stack.drag-proxy, .dashboard.drag-proxy {
     $dashboard-width: 80px;
@@ -324,8 +355,6 @@
             display: none;
         }
     }
-
-
 }
 .stack-dashboards-anchor-tip {
     position: relative;

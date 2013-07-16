@@ -879,7 +879,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         // compile template and add to dom
         this.$stackDashboards = $( this.stackDashboardsTpl );
-        this.$stackDashboards.children('.stack-dashboards').html( this.tpl.applyTemplate( stack.dashboards ) )
+        this.$stackDashboards.children('.stack-dashboards').html( this.tpl.applyTemplate( stack.dashboards ) );
         this.$stackDashboards.insertAfter( lastElInRow );
 
         this.stackDashboardsAnchorTip = $( '.stack-dashboards-anchor-tip' , this.$stackDashboards );
@@ -919,7 +919,22 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             });
         }
 
+        me.buildAppPageCarousel(me.$stackDashboards);
+
         this._lastExpandedStack = stack;
+    },
+
+    buildAppPageCarousel: function($stackDashboardContainer) {
+        var me = this;
+
+        $('.all-dashboards', $stackDashboardContainer).bxSlider({
+            oneItemPerSlide: false,
+            infiniteLoop: true,
+            touchEnabled: false,
+            onSliderLoad: Ext.bind(function(currentIndex) {
+                $('.bx-wrapper, .bx-viewport', $stackDashboardContainer).addClass('mini');
+            }, me)
+        });
     },
 
     expandModal: function(containerSlide) {
