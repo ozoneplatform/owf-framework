@@ -64,9 +64,8 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         var me = this,
             $ = jQuery;
-        // Push to store handler
-        $('.pushButton').on('click', me.pushToStore);
 
+        $(document).on('click', '.pushButton', me.pushToStore);
     },
 
     pushToStore: function (evt) {
