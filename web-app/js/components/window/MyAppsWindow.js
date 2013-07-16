@@ -40,6 +40,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     numDashboardsNeededToExpandModal: 12,
 
+    isAnAppExpanded: false,
+
     storeLengthChanged: true,
 
     selectedItemCls : 'dashboard-selected',
@@ -273,7 +275,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('click', '.dashboard .delete', $.proxy(me.deleteDashboard, me))
             .on('click', '.stack .restore', $.proxy(me.restoreStack, me))
             .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
-            
 
         me.initKeyboardNav();
 
@@ -883,12 +884,14 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 dfd.resolve();
             });
         }
-        
+
         this._lastExpandedStack = stack;
     },
 
     expandModal: function(containerSlide) {
         var me = this;
+
+        me.isAnAppExpanded = true;
 
         me.setHeight(me.expandedModalHeight);
         $(parent).height(me.expandedSlideHeight);
@@ -897,6 +900,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     collapseModal: function(containerSlide) {
         var me = this;
+
+        me.isAnAppExpanded = false;
 
         me.setHeight(me.normalModalHeight);
         $(containerSlide).height(me.normalSlideHeight);
@@ -936,19 +941,25 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     onMouseOver: function (evt) {
         var el = $(evt.currentTarget);
 
-        if (this._previouslyHoveredStackOrDashboard != null) {
-            $('ul', this._previouslyHoveredStackOrDashboard).addClass('hide');    
+        if ( this.isAnAppExpanded || 
+            !this.isAnAppExpanded && $(el).hasClass('stack')) {
+
+            if (this._previouslyHoveredStackOrDashboard != null) {
+                $('ul', this._previouslyHoveredStackOrDashboard).addClass('hide');
+            }
+            
+            $('ul', el).removeClass('hide');
+            
+            this._previouslyHoveredStackOrDashboard = el;
         }
-        
-        $('ul', el).removeClass('hide');    
-        
-        this._previouslyHoveredStackOrDashboard = el;
     },
 
     onMouseLeave: function(evt) {
         var el = $(evt.currentTarget);
 
-        $('ul', this._previouslyHoveredStackOrDashboard).addClass('hide');    
+        if (this._previouslyHoveredStackOrDashboard) {
+            $('ul', this._previouslyHoveredStackOrDashboard).addClass('hide');    
+        }
     },
 
     updateDashboardEl: function ($dashboard, dashboard) {
