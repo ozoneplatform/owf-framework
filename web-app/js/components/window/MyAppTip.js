@@ -70,6 +70,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             $ = jQuery;
 
         $(document).on('click', '.pushButton', $.proxy(me.pushToStore, me));
+        $(document).on('click', '.addButton', $.proxy(me.addPageToApp, me));
     },
 
     pushToStore: function (evt) {
@@ -171,5 +172,22 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 autoSendVersion : false
             });
         }, {single: true}); 
+    },
+
+    addPageToApp: function (evt) {
+        var stack = this.clickedStackOrDashboard;
+
+        var createDashWindow = Ext.widget('createdashboardwindow', {
+            stackId: stack.id,
+            title: Ozone.ux.DashboardMgmtString.createNewPageTitle,
+            headerText: Ozone.ux.DashboardMgmtString.createNewPageHeader,
+            itemId: 'createDashWindow',
+            dashboardContainer: this.dashboardContainer,
+            ownerCt: this.dashboardContainer
+        });
+
+        createDashWindow.show();
+        this.close();
     }
+
 });

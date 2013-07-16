@@ -756,7 +756,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         if ($(evt.target).hasClass('detail-action')) {
         	Ext.select('.itemTip').destroy()
         	
-        	Ext.widget('myapptip', {
+        	Ext.widget('mypagetip', {
         		clickedStackOrDashboard:dashboard,
                 dashboardContainer: this.dashboardContainer,
                 appsWindow: this,
