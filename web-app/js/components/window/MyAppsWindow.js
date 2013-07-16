@@ -124,45 +124,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     return '<div class="thumb"></div>';
                 }
             },
-            getToolTip: function (values) {
-            	var icn = values.iconImageUrl && values.iconImageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'padding-right:15px;\' src=\''+values.iconImageUrl+'\' />':'';
-                var str = '<div class=\'dashboard-tooltip-content\'>' + 
-                        '<h3 class=\'name\'>' + icn + Ext.htmlEncode(Ext.htmlEncode(values.name)) + '</h3>';
-
-                values.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(values.description)) +'</p><br>');
-                
-                // append buttons
-                str += '<ul>' +
-			                '<li class=\'addButton actionButton\'>'+
-				                '<span class=\'createImg\'></span>'+
-				                '<p class=\'actionText\'>Add Page</p>'+
-			                '</li>'+
-			                '<li class=\'pushButton actionButton\'>'+
-				                '<span class=\'pushImg\'></span>'+
-				                '<p class=\'actionText\'>Push to Store</p>'+
-			                '</li>'+
-			                '<li class=\'restoreButton actionButton\'>'+
-				                '<span class=\'restoreImg\'></span>'+
-				                '<p class=\'actionText\'>Restore</p>'+
-			                '</li>'+
-			                '<li class=\'editButton actionButton\'>'+
-				                '<span class=\'editImg\'></span>'+
-				                '<p class=\'actionText\'>Edit</p>'+
-			                '</li>'+
-			                '<li class=\'deleteButton actionButton\'>'+
-				                '<span class=\'deleteImg\'></span>'+
-				                '<p class=\'actionText\'>Delete</p>'+
-			                '</li>'+
-                	   '</ul>' +
-                	  '</div>';
-                 
-                return str
-            },
             
             getActions: function (values) {
                 return	'<ul class="detail-actions hide">'+
                 			'<li id="'+values.name+'-li" class="detail-action">Details'+
-                			'<input type="hidden" class="tip" value="'+this.getToolTip(values)+'"></li>'+
                         '</ul>'
             },
             encodeAndEllipsize: function(str) {
@@ -720,29 +685,20 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     onDashboardClick: function (evt) {
         if (evt.type !== 'click' && evt.which !== Ext.EventObject.ENTER)
             return;
+        
+        var $clickedDashboard = $(evt.currentTarget),
+        dashboard = this.getDashboard( $clickedDashboard );
 
         if ($(evt.target).hasClass('detail-action')) {
         	Ext.select('.itemTip').destroy()
         	
-        	Ext.create('Ext.tip.ToolTip', {
-	        		cls: 'ozonequicktip itemTip',
-	        		shadow: false,
-	        		closable:true,
-	        		autoHide:false,
-	        		draggable:true,
-	        		target:evt.target.parentElement.id,
-	        	    html: evt.target.children[0].value,
-	        	    listeners: {
-	        	    	'close':function(){
-	        	    		this.destroy()
-	        	    	}
-	        	    }
-	        }).showAt([evt.clientX,evt.clientY]);
+        	Ext.widget('myapptip', {
+        		clickedStackOrDashboard:dashboard,
+        		event:evt
+        	}).showAt([evt.clientX,evt.clientY]);
+        	
         	return;
         }
-        
-        var $clickedDashboard = $(evt.currentTarget),
-            dashboard = this.getDashboard( $clickedDashboard );
             
         var stackContext = dashboard.stack ? dashboard.stack.stackContext : null;
 
@@ -781,20 +737,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             if ($(evt.target).hasClass('detail-action')) {
             	Ext.select('.itemTip').destroy()
             	
-            	Ext.create('Ext.tip.ToolTip', {
-    	        		cls: 'ozonequicktip itemTip',
-    	        		shadow: false,
-    	        		closable:true,
-    	        		autoHide:false,
-    	        		draggable:true,
-    	        		target:evt.target.parentElement.id,
-    	        	    html: evt.target.children[0].value,
-    	        	    listeners: {
-    	        	    	'close':function(){
-    	        	    		this.destroy()
-    	        	    	}
-    	        	    }
-    	        }).showAt([evt.clientX,evt.clientY]);
+            	Ext.widget('myapptip', {
+            		clickedStackOrDashboard:stack,
+            		event:evt
+            	}).showAt([evt.clientX,evt.clientY]);
+            	
             	return;
             }
 
