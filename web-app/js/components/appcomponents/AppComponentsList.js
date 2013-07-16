@@ -54,14 +54,6 @@
         initialize: function () {
             SuperClass.prototype.initialize.apply(this, arguments);
             _.bindAll(this, 'addOne');
-
-            this.allAppComponents = this.collection;
-
-            var standardAppComponents = this.allAppComponents.filter(function(appComponent) {
-                return appComponent.get('widgetTypes')[0].name === 'standard';
-            });
-
-            this.collection = new Ozone.data.collections.Widgets(standardAppComponents);
         },
 
         render: function () {

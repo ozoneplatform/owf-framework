@@ -109,7 +109,7 @@ class DashboardService extends BaseService {
 
         //loop through group dashboards
         def bulkMappings = domainMappingService.getBulkMappings(groups, RelationshipType.owns, Dashboard.TYPE)
-        bulkMappings.each { dm ->
+        bulkMappings.each { DomainMapping dm ->
 
             //if there is no user then there is no need to create private user copies
             if (user != null) {
@@ -118,30 +118,10 @@ class DashboardService extends BaseService {
 
                 //create private copy of the group dashboard for the user if they don't have one
                 if (privateGroupDashboards.isEmpty()) {
-                    def args = [:]
-                    def groupDash = Dashboard.get(dm.destId)
+                    Dashboard groupDash = Dashboard.get(dm.destId)
                     if (groupDash != null) {
-                        
-                        args.with {
-                            //use a new guid
-                            guid = java.util.UUID.randomUUID().toString()
-                            isdefault = groupDash.isdefault
-                            dashboardPosition = maxPosition + (groupDash.dashboardPosition ?: 0)
-                            name = groupDash.name
-                            description = groupDash.description
-                            iconImageUrl = groupDash.iconImageUrl
-                            type = groupDash.type
-                            locked = groupDash.locked
-                            layoutConfig = groupDash.layoutConfig
-                            stack = groupDash.stack
-                            markedForDeletion = groupDash.markedForDeletion
-                            publishedToStore = groupDash.publishedToStore
-                        }
 
-                        def privateDash = deepClone(args,user.id)
-
-                        //save mapping
-                        domainMappingService.createMapping(privateDash.dashboard,RelationshipType.cloneOf,[id:dm.destId,TYPE:dm.destType])
+                        def privateDash = cloneGroupDashboardAndCreateMapping(groupDash, user.id, maxPosition)
 
                         //save privateGroupDashboardInfo
                         addGroupToDashboardToGroupsMap(dm.srcId, privateGroupDashboardToGroupsMap, privateDash.dashboard.id)
@@ -160,6 +140,39 @@ class DashboardService extends BaseService {
             addGroupToDashboardToGroupsMap(dm.srcId, privateGroupDashboardToGroupsMap, dm.destId)
         }
         return privateGroupDashboardToGroupsMap
+    }
+
+    /**
+     * Creates a personal dashboard clone of the given group dashboard as well as the domain mapping linking the two
+     * @param groupDash
+     * @param userId
+     * @param maxPosition
+     * @return
+     */
+    def cloneGroupDashboardAndCreateMapping(Dashboard groupDashboard, long userId, int maxPosition) {
+        def args = [:]
+        args.with {
+            //use a new guid
+            guid = java.util.UUID.randomUUID().toString()
+            isdefault = groupDashboard.isdefault
+            dashboardPosition = maxPosition + (groupDashboard.dashboardPosition ?: 0)
+            name = groupDashboard.name
+            description = groupDashboard.description
+            iconImageUrl = groupDashboard.iconImageUrl
+            type = groupDashboard.type
+            locked = groupDashboard.locked
+            layoutConfig = groupDashboard.layoutConfig
+            stack = groupDashboard.stack
+            markedForDeletion = groupDashboard.markedForDeletion
+            publishedToStore = groupDashboard.publishedToStore
+        }
+
+        def privateDashboard = deepClone(args, userId)
+
+        //save mapping
+        domainMappingService.createMapping(privateDashboard.dashboard, RelationshipType.cloneOf, [id: groupDashboard.id, TYPE: 'dashboard'])
+
+        privateDashboard
     }
 
     private def addGroupToDashboardToGroupsMap(def groupId, def groupDashboardToGroupsMap, def mapKey){
@@ -1129,7 +1142,7 @@ class DashboardService extends BaseService {
         }
     }
     
-    private def getMaxDashboardPosition(person) {
+    def getMaxDashboardPosition(person) {
         def queryReturn
         if(!person) {
             queryReturn = Dashboard.executeQuery("SELECT MAX(d.dashboardPosition) AS retVal FROM Dashboard d WHERE d.user = null")

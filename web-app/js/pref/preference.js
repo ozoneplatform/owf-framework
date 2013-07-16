@@ -283,14 +283,16 @@ Ozone.pref = Ozone.pref || {};
       };
 
       var generateStackPostParamsJSON = function (json) {
-          var postParams = {
-              'id': json.stack.id || -1,
-              'name': json.stack.name,
-              'description': json.stack.description,
-              'imageUrl': json.stack.imageUrl,
-              'stackContext': json.stack.stackContext
-          };
-          return postParams;
+          if (json.stack.id) {
+              return { 'id': json.stack.id }
+          } else {
+              return {
+                  'name': json.stack.name,
+                  'description': json.stack.description,
+                  'imageUrl': json.stack.imageUrl,
+                  'stackContext': json.stack.stackContext
+              };
+          }
       };
 
       /**
@@ -304,26 +306,14 @@ Ozone.pref = Ozone.pref || {};
        * @return the JSON object
        */
       var generateAppPostParamsJSON = function (json) {
-          var postParams
-          if (json.stack.id) {
-              postParams = {
-                  'stack_id': json.stack.id,
-                  'data': JSON.stringify([generateDashboardPostParamsJSON(json)]),
-                  'tab': 'dashboards',
-                  'update_action': 'add'
-              };
-          } else {
-              postParams = {
-                  'stackData': JSON.stringify([generateStackPostParamsJSON(json)]),
-                  'dashboardData': JSON.stringify([generateDashboardPostParamsJSON(json)]),
-                  'tab': 'dashboards',
-                  'update_action': 'createAndAddDashboard'
-              };
-          }
-          postParams.adminEnabled = true;
-          postParams._method= 'POST';
-
-          return postParams;
+          return {
+              'stackData': JSON.stringify(generateStackPostParamsJSON(json)),
+              'dashboardData': JSON.stringify(generateDashboardPostParamsJSON(json)),
+              'tab': 'dashboards',
+              'update_action': 'createAndAddDashboard',
+              'adminEnabled': false,
+              '_method': 'POST'
+          };
       };
 
       return /** @lends Ozone.pref.PrefServer.prototype */{
@@ -808,30 +798,25 @@ Ozone.pref = Ozone.pref || {};
            */
           createOrUpdateDashboard : function (cfg){
               // New dashboard is added to its stack, existing dashboard is updated
-              if (cfg.saveAsNew) {
-                  this.createDashboard(cfg);
+              if (cfg.saveAsNew && cfg.json.type != 'marketplace') {
+                  this.createDashboardWithStack(cfg);
               } else {
-                  this.updateDashboard(cfg);
+                  this.createOrUpdateDashboardInternal(cfg);
               }
           },
 
-          createDashboard : function(cfg) {
-              Ext.Ajax.request({
-                  url: Ozone.util.contextPath() + '/stack',
-                  method: 'POST',
-                  params: generateAppPostParamsJSON(cfg.json),
-                  success: cfg.onSuccess,
-                  failure: cfg.onFailure,
-                  scope: this
-              });
+          createDashboardWithStack: function(cfg) {
+              cfg.url = Ozone.util.contextPath()  + '/stack/addPage';
+              cfg.method = 'POST';
+              cfg.content = generateAppPostParamsJSON(cfg.json);
+              setValueBase(cfg);
           },
 
-          updateDashboard : function(cfg) {
-              var postParams
+          createOrUpdateDashboardInternal : function (cfg){
               cfg.url = _url + "/" + 'dashboard' + "/" + cfg.json.guid;
-              postParams = generateDashboardPostParamsJSON(cfg.json);
-              cfg.method = 'PUT';
+              var postParams = generateDashboardPostParamsJSON(cfg.json);
               postParams.bypassLayoutRearrange = true;
+              cfg.method = cfg.saveAsNew ? 'POST' : 'PUT';
               cfg.jsonObject = postParams;
               setValuesViaJSONObject(cfg);
           },
