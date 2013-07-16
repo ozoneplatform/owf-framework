@@ -720,7 +720,7 @@ class StackService {
         def dashboardParams = JSON.parse(params.dashboardData)
 
         // Extract stack id
-        int stackId = stackParams?.stackData?.id as int
+        int stackId = stackParams?.id as int
 
         Stack stack
 
