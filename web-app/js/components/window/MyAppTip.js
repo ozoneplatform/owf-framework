@@ -1,7 +1,8 @@
 Ext.define('Ozone.components.window.MyAppTip', {
     extend: 'Ext.tip.ToolTip',
     alias: 'widget.myapptip',
-    
+    clickedStackOrDashboard:null,
+    event:null,
     cls: 'ozonequicktip itemTip',
 	shadow: false,
 	closable:true,
