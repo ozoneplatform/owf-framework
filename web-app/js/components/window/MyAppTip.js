@@ -3,19 +3,19 @@ Ext.define('Ozone.components.window.MyAppTip', {
     alias: 'widget.myapptip',
     
     cls: 'ozonequicktip itemTip',
-	shadow: false,
-	closable:true,
-	autoHide:false,
-	draggable:true,
+    shadow: false,
+    closable:true,
+    autoHide:false,
+    draggable:true,
     listeners: {
-    	'close':function(){
-    		this.destroy()
-    	}
+        'close':function(){
+            this.destroy();
+        }
     },
-	
-	getToolTip: function () {
-		var me = this;
-    	var icn = me.clickedStackOrDashboard.iconImageUrl && me.clickedStackOrDashboard.iconImageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'padding-right:15px;\' src=\''+me.clickedStackOrDashboard.iconImageUrl+'\' />':'';
+    
+    getToolTip: function () {
+        var me = this;
+        var icn = me.clickedStackOrDashboard.iconImageUrl && me.clickedStackOrDashboard.iconImageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'padding-right:15px;\' src=\''+me.clickedStackOrDashboard.iconImageUrl+'\' />':'';
         var str = '<div class=\'dashboard-tooltip-content\'>' + 
                 '<h3 class=\'name\'>' + icn + Ext.htmlEncode(Ext.htmlEncode(me.clickedStackOrDashboard.name)) + '</h3>';
 
@@ -23,42 +23,42 @@ Ext.define('Ozone.components.window.MyAppTip', {
         
         // append buttons
         str += '<ul>' +
-	                '<li class=\'addButton actionButton\'>'+
-		                '<span class=\'createImg\'></span>'+
-		                '<p class=\'actionText\'>Add Page</p>'+
-	                '</li>'+
-	                '<li class=\'pushButton actionButton\'>'+
-		                '<span class=\'pushImg\'></span>'+
-		                '<p class=\'actionText\'>Push to Store</p>'+
-	                '</li>'+
-	                '<li class=\'restoreButton actionButton\'>'+
-		                '<span class=\'restoreImg\'></span>'+
-		                '<p class=\'actionText\'>Restore</p>'+
-	                '</li>'+
-	                '<li class=\'editButton actionButton\'>'+
-		                '<span class=\'editImg\'></span>'+
-		                '<p class=\'actionText\'>Edit</p>'+
-	                '</li>'+
-	                '<li class=\'deleteButton actionButton\'>'+
-		                '<span class=\'deleteImg\'></span>'+
-		                '<p class=\'actionText\'>Delete</p>'+
-	                '</li>'+
-        	   '</ul>' +
-        	  '</div>';
+                    '<li class=\'addButton actionButton\'>'+
+                        '<span class=\'createImg\'></span>'+
+                        '<p class=\'actionText\'>Add Page</p>'+
+                    '</li>'+
+                    '<li class=\'pushButton actionButton\'>'+
+                        '<span class=\'pushImg\'></span>'+
+                        '<p class=\'actionText\'>Push to Store</p>'+
+                    '</li>'+
+                    '<li class=\'restoreButton actionButton\'>'+
+                        '<span class=\'restoreImg\'></span>'+
+                        '<p class=\'actionText\'>Restore</p>'+
+                    '</li>'+
+                    '<li class=\'editButton actionButton\'>'+
+                        '<span class=\'editImg\'></span>'+
+                        '<p class=\'actionText\'>Edit</p>'+
+                    '</li>'+
+                    '<li class=\'deleteButton actionButton\'>'+
+                        '<span class=\'deleteImg\'></span>'+
+                        '<p class=\'actionText\'>Delete</p>'+
+                    '</li>'+
+               '</ul>' +
+              '</div>';
          
-        return str
+        return str;
     },
     
-	initComponent: function() {
-		var me = this;
-		
-		me.target = me.event.target.parentElement.id;
-	    me.html = me.getToolTip();
+    initComponent: function() {
+        var me = this;
+        
+        me.target = me.event.target.parentElement.id;
+        me.html = me.getToolTip();
 
         me.setupClickHandlers();
-	    
-	    me.callParent(arguments);
-	},
+        
+        me.callParent(arguments);
+    },
 
     setupClickHandlers : function() {
 
@@ -123,37 +123,40 @@ Ext.define('Ozone.components.window.MyAppTip', {
     },
 
     sendRequest: function(url, json, mpLauncher, myMarketplace) {
-
         var me = this,
             urlString = url.replace(/\/$/, "");
 
         urlString += '/listing';
 
-        Ozone.util.Transport.send({
-            url : urlString,
-            method : "POST",
-            content: {
-                data: json,
-                windowname: true
-            },
+        mpLauncher.gotoMarketplace(myMarketplace);
+        mpLauncher.on(OWF.Events.Marketplace.OPENED, function(instance) {
 
-            onSuccess: Ext.bind(function(result) {
+            Ozone.util.Transport.send({
+                url : urlString,
+                method : "POST",
+                content: {
+                    data: json,
+                    windowname: true
+                },
 
-                console.log("success", "ID is " + result.data.id + ", New item created? " + result.data.isNew +
-                    ", Message: " + result.data.msg) ;
-                mpLauncher.gotoMarketplace(myMarketplace);
+                onSuccess: function(result) {
+                    var id = result.data && result.data.id;
 
+                    console.log("success", "ID is " + id + ", New item created? " + 
+                        result.data.isNew);
+                    
+                    //send only to this mp widget
+                    Ozone.eventing.Container.publish('ozone.marketplace.show', id, 
+                        Ozone.eventing.Container.getIframeId(instance.data.uniqueId)); 
 
-            }, me) ,
-
-            onFailure: function (errorMsg){
-                var msg = 'The sharing of ' + 'shareItem' + ' ' + Ext.htmlEncode(record.get('name')) + ' failed.';
-                console.log('Error', errorMsg ? errorMsg : msg);
-            },
-            autoSendVersion : false
-
-        })
-
-    },
-    
+                },
+                onFailure: function (errorMsg){
+                     //var msg = 'The sharing of ' + 'shareItem' + ' ' + 
+                        //Ext.htmlEncode(record.get('name')) + ' failed.';
+                     console.log('Error', errorMsg /*? errorMsg : msg*/);
+                },
+                autoSendVersion : false
+            });
+        }, {single: true}); 
+    }
 });

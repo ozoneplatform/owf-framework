@@ -1217,13 +1217,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         }
     },
 
-
-
-
     restoreStack: function (evt) {
         evt.stopPropagation();
         var me = this,
-        	$stack = this.getElByClassFromEvent(evt, 'stack'),
+            $stack = this.getElByClassFromEvent(evt, 'stack'),
             stack = this.getStack($stack);
         
         this.warn('This action will return the stack <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any dashboard in the stack after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
