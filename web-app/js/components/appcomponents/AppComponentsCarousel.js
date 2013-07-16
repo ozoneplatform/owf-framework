@@ -75,7 +75,7 @@
         },
 
         initResizable: function () {
-            var elHeight = this.views[0].$el.outerHeight(true) + 1,
+            var elHeight = this.$el.children(':first-child').outerHeight(true) + 1,
                 minHeight = elHeight + 60 + 25,
                 // leave bottom 64px visible
                 maxHeight = $(window).height() - this.$container.offset().top - 64;

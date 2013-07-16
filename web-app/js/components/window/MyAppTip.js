@@ -154,6 +154,6 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         })
 
-    },
+    }
     
 });
