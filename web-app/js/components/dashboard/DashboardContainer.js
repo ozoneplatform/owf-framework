@@ -811,7 +811,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     refreshAppComponentsView: function () {
         var me = this;
-        OWF.Collections.AppComponents.fetch().done(function (resp) {
+        OWF.Collections.AppComponents.fetch({fetch: true}).done(function (resp) {
+            if(me.appComponentsView) {
+                var isVisible = me.appComponentsView.$el.is(':visible');
+                me.appComponentsView.hide().remove();
+                me.appComponentsView = null;
+                isVisible && me.showAppComponentsView();
+            }
             me.widgetStore.loadRecords(me.widgetStore.proxy.reader.read(resp.rows).records);
         });
     },
@@ -2012,12 +2018,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             if (newTitle) {
                 records[i].data.name = newTitle;
             }
-            if (records[i].data.widgetTypes[0].name == 'marketplace') {
-                hasMpWidget = true;
-                mpWidgets.push(records[i]);
-            }
-            if (records[i].data.widgetTypes[0].name == 'metric') {
-                hasMetricWidget = true;
+            if(records[i].data.widgetTypes.length > 0) {
+                if (records[i].data.widgetTypes[0].name == 'marketplace') {
+                    hasMpWidget = true;
+                    mpWidgets.push(records[i]);
+                }
+                if (records[i].data.widgetTypes[0].name == 'metric') {
+                    hasMetricWidget = true;
+                }
             }
 
         }
@@ -2142,21 +2150,25 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         var me = this,
             appComponentGuid = model.get('widgetGuid');
 
-        Ozone.pref.PrefServer.updateAndDeleteWidgets({
-            widgetsToUpdate:[],
-            widgetGuidsToDelete: [appComponentGuid],
-            updateOrder:false,
-            onSuccess:function() {
-                var widgetStoreRecord = me.widgetStore.findRecord('widgetGuid', appComponentGuid);
-                me.widgetStore.remove(widgetStoreRecord);
+        // if fetching collection, dont update or delete on server
+        if(options.fetch) {
+            removeAppComponents();
+        }
+        else {
+            Ozone.pref.PrefServer.updateAndDeleteWidgets({
+                widgetsToUpdate:[],
+                widgetGuidsToDelete: [appComponentGuid],
+                updateOrder:false,
+                onSuccess: removeAppComponents,
+                onFailure: $.noop
+            });
+        }
 
-                removeAppComponentInstances(appComponentGuid);
-            },
-            onFailure: $.noop
-        });
+        function removeAppComponents () {
+            var widgetStoreRecord = me.widgetStore.findRecord('widgetGuid', appComponentGuid),
+                dashboardCardPanel = Ext.getCmp('dashboardCardPanel');
 
-        function removeAppComponentInstances (appComponentGuid) {
-            var dashboardCardPanel = Ext.getCmp('dashboardCardPanel');
+            me.widgetStore.remove(widgetStoreRecord);
 
             // Iterate through all the open dashboards
             dashboardCardPanel.items.each(function(dashboard) {
