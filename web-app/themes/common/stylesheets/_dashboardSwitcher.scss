@@ -96,6 +96,8 @@
         /**** BEGIN slider styling ****/
         .bx-wrapper {
             margin-bottom: 30px !important;
+            min-height: 360px;
+            max-height: 490px;
 
             .bx-viewport {
                 @include box-shadow(none);
@@ -106,6 +108,7 @@
                 margin-right: 75px;
                 width: 480px !important;
                 height: 360px;
+                min-height: 360px;
             }
         }
         
@@ -326,7 +329,7 @@
 }
 .stack-dashboards-anchor-tip {
     position: relative;
-    border-width: 20px;
+    border-width: 10px;
     border-bottom-color: darken($dashboard-switcher-dashboard-background-color, 10%);
 }
 

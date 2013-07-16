@@ -38,6 +38,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     maxDashboardsWidth: 6,
     maxDashboardsHeight: 3,
 
+    maxStacksPerSlide: 18,
     numDashboardsNeededToExpandModal: 12,
 
     isAnAppExpanded: false,
@@ -123,16 +124,21 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             getId: function (values) {
                 return values.isStack ? values.id : values.guid;
             },
+            
             getClass: function (values) {
                 var name = this.getName(values);
                 return values.guid === me.activeDashboard.id ? name + ' ' + me.selectedItemCls: name;
             },
+            
             getName: function (values) {
                 return values.isStack ? 'stack' : 'dashboard';
             },
+
             getIcon: function(values) {
-                if (values.iconImageUrl && !Ext.isEmpty(values.iconImageUrl.trim())) {
-                    return '<div class="thumb" style="background-image: url(' + values.iconImageUrl + ') !important"></div>';
+                var url = values.isStack ? values.imageUrl : values.iconImageUrl;
+
+                if (url && !Ext.isEmpty(url.trim())) {
+                    return '<div class="thumb" style="background-image: url(' + url + ') !important"></div>';
                 } else {
                     return '<div class="thumb"></div>';
                 }
@@ -143,6 +149,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 			'<li id="'+values.name+'-li" class="detail-action">Details'+
                         '</ul>'
             },
+            
             encodeAndEllipsize: function(str) {
                 //html encode the result since ellipses are special characters
                 return Ext.util.Format.htmlEncode(
@@ -160,7 +167,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         });
 
         me.stackDashboardsTpl = '<div class="stack-dashboards-container">'+
-                                    // '<div class="stack-dashboards-anchor-tip x-tip-anchor x-tip-anchor-top"></div>'+
+                                    '<div class="stack-dashboards-anchor-tip x-tip-anchor x-tip-anchor-top"></div>'+
                                     '<div class="stack-dashboards"></div>'+
                                 '</div>';
         
@@ -191,18 +198,16 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 infiniteLoop: true,
                 touchEnabled: false,
                 onSliderLoad: Ext.bind(function(currentIndex) {
-                    var slideCount = $('.bx-slide').length;
-
                     // 1 slide of actual content + a clone slide on each side auto-created by the plugin
-                    if (slideCount === 3) {
+                    if ($('.bx-slide:not(.bx-clone)').length === 1) {
                         $('.bx-pager').hide();
                     }
                 }, me),
-                onSlideNext: Ext.bind(function($slideEl, oldIndex, newIndex) {
-                    me.hideStackDashboards();
+                onSlideNext: Ext.bind(function() {
+                    me.onSlideTransition.apply(me, arguments);
                 }, me),
-                onSlidePrev: Ext.bind(function($slideEl, oldIndex, newIndex) {
-                    me.hideStackDashboards();
+                onSlidePrev: Ext.bind(function() {
+                    me.onSlideTransition.apply(me, arguments);
                 }, me)
             });
         });
@@ -210,6 +215,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         me.on('beforeclose', me.onClose, me);
         me.on('show', me.verifyDiscoverMoreButton, me);
         me.on('show', me.initCircularFocus, me, {single: true});
+        me.on('show', me.goToActiveStackSlide, me, {single: true});
         me.on('show', me.focusActiveDashboard, me);
         me.mon(me.dashboardContainer, OWF.Events.Dashboard.CHANGED, me.onDashboardChanged, me);
     },
@@ -327,6 +333,36 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 $dom.off('.reorder');
             });
         });
+    },
+
+    getActiveStackId: function() {
+        var me = this,
+            stack = this.activeDashboard.configRecord.get('stack');
+            stackId = stack ? stack.id : null;
+
+        return stackId;
+    },
+
+    goToActiveStackSlide: function() {
+        var me = this,
+            stackId = me.getActiveStackId();
+
+        stackId && me.slider.goToSlide(Math.floor(stackId / me.maxStacksPerSlide));
+    },
+
+    onSlideTransition: function($slideElement, oldIndex, newIndex) {
+        var me = this,
+            stackId = me.getActiveStackId();
+
+        if (stackId && me.slideHasActiveStack(newIndex, stackId)) {
+            me.focusActiveDashboard();
+        } else {
+            me.hideStackDashboards();
+        }
+    },
+
+    slideHasActiveStack: function(slideIndex, stackId) {
+        return slideIndex === Math.floor(stackId / this.maxStacksPerSlide);
     },
 
     _hideStackDashboardsOnMove: function ($el) {
@@ -689,7 +725,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             stackId = stack ? stack.id : null;
 
             if (stack) {
-                this.toggleStack(this.stacks[stackId], $('#stack'+stackId)).then(function () {
+                this.toggleStack(this.stacks[stackId], $('#stack'+stackId, '.bx-slide:not(.bx-clone)')).then(function () {
                     me.focusActiveDashboard();
                 });
             }
@@ -855,8 +891,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         });
 
         if (totalItems > me.numDashboardsNeededToExpandModal) {
-            me.expandModal();
+            me.expandModal(parent);
         }
+
+        me.isAnAppExpanded = true;
 
         if(Ext.isIE7 || Ext.isIE8) {
             this.$stackDashboards.show();
@@ -874,21 +912,15 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     expandModal: function(containerSlide) {
         var me = this;
 
-        me.isAnAppExpanded = true;
-
         me.setHeight(me.expandedModalHeight);
-        $(parent).height(me.expandedSlideHeight);
-        $('.bx-viewport', me.el.dom).height(me.expandedSlideHeight);
+        $('.bx-wrapper, .bx-viewport, .bx-slide:not(.bx-clone)', me.el.dom).height(me.expandedSlideHeight);
     },
 
     collapseModal: function(containerSlide) {
         var me = this;
 
-        me.isAnAppExpanded = false;
-
         me.setHeight(me.normalModalHeight);
-        $(containerSlide).height(me.normalSlideHeight);
-        $('.bx-viewport', me.el.dom).height(me.normalSlideHeight);
+        $('.bx-wrapper, .bx-viewport, .bx-slide:not(.bx-clone)', me.el.dom).height(me.normalSlideHeight);
     },
 
     hideStackDashboards: function () {
@@ -899,13 +931,14 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             return dfd.promise();
         }
 
-        me.collapseModal();
+        me.isAnAppExpanded = false;
 
         if(Ext.isIE7 || Ext.isIE8) {
             var dfd = $.Deferred();
             this.$stackDashboards && this.$stackDashboards.hide();
             dfd.resolve();
 
+            me.collapseModal();
             this.$stackDashboards.remove();
             this._lastExpandedStack = null;
             
@@ -914,6 +947,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         else {
             var promise = this.$stackDashboards.slideUp('fast').promise();
             promise.then(function () {
+                me.collapseModal();
                 me.$stackDashboards.remove();
                 me._lastExpandedStack = null;
             });
@@ -932,9 +966,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             }
             
             $('.detail-actions', el).removeClass('hide');
-            
-            this._previouslyHoveredStackOrDashboard = el;
         }
+
+        this._previouslyHoveredStackOrDashboard = el;
     },
 
     onMouseLeave: function(evt) {
