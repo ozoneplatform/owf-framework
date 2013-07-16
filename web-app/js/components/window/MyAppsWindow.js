@@ -1250,7 +1250,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
             onSuccess: Ext.bind(function(result) {
 
-                 console.log("success", "ID is " + result.data.id + ", New item created? " + result.data.isNew) ;
+                 console.log("success", "ID is " + result.data.id + ", New item created? " + result.data.isNew +
+                              ", Message: " + result.data.msg) ;
                  mpLauncher.gotoMarketplace(myMarketplace);
 
 
