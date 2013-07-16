@@ -15,12 +15,26 @@
     width: 100%;
 
     .body {
+        overflow: hidden;
+    }
+
+    .app-components {
+        overflow: hidden;
         height: 150px;
     }
-}
 
-.appcomponents-carousel {
-    overflow-y: auto;
+    .ui-resizable-s {
+        position: relative;
+        height: 25px;
+        bottom: auto;
+        background-image: theme-image($theme-name, 'grabber.png');
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .bx-slide {
+        height: 100%;
+    }
 }
 
 .widget {
@@ -107,6 +121,7 @@
 }
 
 #appcomponents-view, #intents-window, #widget-details-tip {
+    z-index: 10000000;
 
     .header, .footer {
         padding: 0.5em 0;
@@ -143,7 +158,7 @@
     top: 0;
     left: 0;
     width: 400px;
-    background-color: #222;
+    background-color: $widget-launcher-widget-selected-background-color;
     color: $widget-launcher-widget-text-color;
     @include border-radius(4px);
     overflow-y: auto;

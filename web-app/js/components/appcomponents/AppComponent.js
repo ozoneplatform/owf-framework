@@ -29,7 +29,7 @@
             '</div>' +
             '<div class="thumb-text"><%= name %></div>'+
             '<% if (details) { %>' +
-                '<a href="#" class="widget-details" style="visibility: hidden;">details<a>' +
+                '<a href="#" class="widget-details" style="visibility: hidden;">details</a>' +
             '<% } %>',
 
         // boolean flag indicating whether or not to show details link

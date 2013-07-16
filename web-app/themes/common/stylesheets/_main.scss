@@ -5,7 +5,7 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
 */
 
 a {
-    color: $link-color;
+    color: $owf-focus-color;
 }
 
 .hide {
@@ -620,4 +620,14 @@ img.widget-drag-proxy {
     background-position: center;
     background-repeat: no-repeat;
     height: 31px;
+}
+
+.bx-wrapper .bx-pager.bx-default-pager {
+    a:hover, a.active {
+        background: $owf-focus-color;
+    }
+}
+
+.ui-sortable-helper {
+    z-index: 10000002 !important;
 }

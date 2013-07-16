@@ -22,13 +22,39 @@
 
     Ozone.components.appcomponents.AppComponentsCarousel = SuperClass.extend({
 
-        className: 'appcomponents-carousel',
-
         // auto instantiate carousel
         autoInit: true,
 
         // boolean flag indicating whether or not carousel is instantiated
         _carousel: false,
+
+        tpl: '<div class="app-components"></div>',
+
+        // container element
+        $container: null,
+
+        // default size to user
+        size: null,
+
+        render: function () {
+            var height,
+                $el = $(this.tpl);
+
+            this.$el.html($el);
+            this.$container = this.$el;
+            this.setElement($el);
+
+            if(this.size && this.size.height) {
+                height = this.size.height * $(window).height();
+
+                this.$container.height(height);
+
+                // substract margin bottom and grabber height for carousel pager to show
+                this.$el.height(height - 60 - 25);
+            }
+
+            return SuperClass.prototype.render.call(this);
+        },
 
         filter: function (query) {
             this.destroyCarousel();
@@ -37,7 +63,46 @@
         },
 
         shown: function () {
+            this.initResizable();
             this.initCarousel();
+            return this;
+        },
+
+        state: function () {
+            return {
+                height: (this.$container.height() / $(window).height())
+            };
+        },
+
+        initResizable: function () {
+            var elHeight = this.views[0].$el.outerHeight(true) + 1,
+                minHeight = elHeight + 60 + 25,
+                // leave bottom 64px visible
+                maxHeight = $(window).height() - this.$container.offset().top - 64;
+
+            this.$container.resizable({
+                handles: 's',
+                minHeight: minHeight,
+                maxHeight: maxHeight,
+                stop: _.bind(this.doLayout, this)
+            });
+            return this;
+        },
+
+        doLayout: function (evt, ui) {
+            var size = ui.size,
+                height = size.height;
+
+            this.destroyCarousel();
+
+            // substract margin bottom and grabber height for carousel pager to show
+            this.$el.height(height - 60 - 25);
+
+            this.initCarousel();
+        },
+
+        destroyResizable: function () {
+            this.$container.resizable('destroy');
             return this;
         },
 
@@ -47,9 +112,11 @@
                 this.$el.bxSlider({
                     startSlide: startSlide,
                     oneItemPerSlide: false,
-                    infiniteLoop: true,
+                    infiniteLoop: false,
                     touchEnabled: false
-                });
+                }); 
+
+                this.$el.trigger('initcarousel');
             }
             return this;
         },
@@ -61,14 +128,17 @@
         },
 
         reloadCarousel: function (startSlide, force) {
-            this.destroyCarousel()
+            this.destroyResizable()
+                .destroyCarousel()
                 .initCarousel(startSlide, force)
+                .initResizable()
                 ._removeDetailsTip();
         },
 
         destroyCarousel: function () {
             if(this._carousel) {
-                this.$el.destroySlider();
+                this.$el.trigger('beforedestroycarousel')
+                        .destroySlider();
             }
             this._carousel = false;
             return this;
@@ -76,6 +146,7 @@
 
         remove: function () {
             this.destroyCarousel();
+            this.destroyResizable();
 
             return SuperClass.prototype.remove.call(this);
         }
