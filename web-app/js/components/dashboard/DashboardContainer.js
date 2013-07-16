@@ -893,6 +893,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 me.loadMask.hide();
             };
 
+        if(this.appComponentsView) {
+            this.appComponentsView.hide();
+        }
+
         // If it already is open, close it
         if (dashboardSwitcher && dashboardSwitcher.isVisible()) {
             dashboardSwitcher.close();

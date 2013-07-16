@@ -137,6 +137,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         if (this.helpWindow.isVisible()) {
             this.helpWindow.close();
         } else {
+            this.dashboardContainer.appComponentsView && this.dashboardContainer.appComponentsView.hide();
             this.helpWindow.show();
         }
     },
