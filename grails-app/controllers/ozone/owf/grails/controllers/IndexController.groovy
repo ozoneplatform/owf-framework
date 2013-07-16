@@ -58,7 +58,7 @@ class IndexController {
         try {
             appComponentsViewState = preferenceService.showForUser([
                 namespace: "owf",
-                name: "appcomponent-view"
+                path: "appcomponent-view"
             ]);
             appComponentsViewState?.preference = appComponentsViewState?.preference?.value;
         }

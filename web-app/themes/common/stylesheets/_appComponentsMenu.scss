@@ -127,10 +127,6 @@
         padding: 0.5em 0;
         margin: 0 1em 0 1em;
         line-height: 2em;
-
-        span {
-            font-weight: bold;
-        }
     }
 
     .footer {
@@ -173,6 +169,23 @@
 }
 
 .widget-remove {
-    color: #f00;
     float: right;
+    color: $widget-launcher-widget-text-color;
+
+    background-image: theme-image($theme-name, 'myappswindow/Delete-out.png'); 
+    background-repeat: no-repeat;
+
+
+    span {
+        margin-left: 25px;
+    }
+     
+    &:hover, &.hover {
+        background-image: theme-image($theme-name, 'myappswindow/Delete-over.png'); 
+    }
+}
+
+.widget-details {
+    font-size: $owf-font-size - 1;
+    color: $widget-details-color;
 }
