@@ -105,7 +105,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             url : Ozone.util.contextPath()  + '/stack/share?id=' + stack.id,
             method : "POST",
             onSuccess: function (json){
-                me.sendRequest(json, mpLauncher);
+                me.sendRequest(json, mpLauncher, banner.marketplaceWidget);
             },
 
             onFailure: function (errorMsg){
@@ -121,10 +121,14 @@ Ext.define('Ozone.components.window.MyAppTip', {
         me.appsWindow.close();
     },
 
-    sendRequest: function(json, mpLauncher) {
+    /**
+     * @param widget the Marketplace wiget to launch. If undefined, the marketplace
+     * switcher will be shown, allowing the user to choose
+     */
+    sendRequest: function(json, mpLauncher, widget) {
         var me = this;
 
-        mpLauncher.gotoMarketplace();
+        mpLauncher.gotoMarketplace(widget);
         mpLauncher.on(OWF.Events.Marketplace.OPENED, function(instance, mpUrl) {
             var urlString = mpUrl.replace(/\/$/, "") + '/listing';
 
