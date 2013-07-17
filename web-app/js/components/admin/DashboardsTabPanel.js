@@ -149,7 +149,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
                 self.guid_DashboardEditCopyWidget = result.value;
             },
             onFailure: function(err) { /* No op */
-                self.editPanel.showAlert('Preferences Error', 'Error looking up Dashboard Editor: ' + err);
+                self.editPanel.showAlert('Preferences Error', 'Error looking up Page Editor: ' + err);
             }
         });
 
@@ -158,7 +158,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
 
     launchFailedHandler: function(response) {
         if (response && response.error) {
-            this.editPanel.showAlert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
+            this.editPanel.showAlert('Launch Error', 'Page Editor Launch Failed: ' + response.message);
         }
     },
 
@@ -225,7 +225,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             }
         }
         else {
-            this.editPanel.showAlert("Error", "You must select at least one dashboard to edit");
+            this.editPanel.showAlert("Error", "You must select at least one page to edit");
         }
     },
 
@@ -237,7 +237,7 @@ Ext.define('Ozone.components.admin.DashboardsTabPanel', {
             store.remove(records);
             store.save();
         } else {
-            this.editPanel.showAlert("Error", "You must select at least one dashboard to remove.");
+            this.editPanel.showAlert("Error", "You must select at least one page to remove.");
         }
     }
 });

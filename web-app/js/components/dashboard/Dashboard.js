@@ -18,7 +18,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     type: null,
     configRecord: null,
     config: {
-        "name": "Default Dashboard",
+        "name": "Default Page",
         "alteredByAdmin": "false",
         "user": null,
         "isdefault": false,

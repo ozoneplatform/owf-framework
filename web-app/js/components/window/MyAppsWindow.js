@@ -1266,7 +1266,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             $stack = this.getElByClassFromEvent(evt, 'stack'),
             stack = this.getStack($stack);
         
-        this.warn('This action will return the stack <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any dashboard in the stack after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
+        this.warn('This action will return the stack <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any page in the stack after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
             Ext.Ajax.request({
                 url: Ozone.util.contextPath() + '/stack/restore',
                 params: {
@@ -1299,7 +1299,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     }
                 },
                 failure: function(response, opts) {
-                    Ozone.Msg.alert('Dashboard Manager', "Error restoring stack.", function() {
+                    Ozone.Msg.alert('Page Manager', "Error restoring stack.", function() {
                         Ext.defer(function() {
                             $stack[0].focus();
                         }, 200, me);

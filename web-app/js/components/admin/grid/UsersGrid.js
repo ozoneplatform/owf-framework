@@ -71,7 +71,7 @@ Ext.define('Ozone.components.UsersGrid', {
             sortable: false,
             editable: false
         }, {
-            header: 'Dashboards',
+            header: 'Pages',
             dataIndex: 'totalDashboards',
             flex: 1,
             sortable: false,

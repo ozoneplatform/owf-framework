@@ -26,7 +26,7 @@ Ext.apply(Ext.form.field.VTypes, {
         return true;
     },
 
-    copiedDashboardText: 'You must select a dashboard to copy.',  
+    copiedDashboardText: 'You must select a page to copy.',
     
     importedDashboard: function(val, field) {
     	if (val) {

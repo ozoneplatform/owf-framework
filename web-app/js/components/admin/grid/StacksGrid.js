@@ -51,7 +51,7 @@ Ext.define('Ozone.components.admin.StacksGrid', {
                 return  Ext.htmlEncode(value);
             }
         }, {
-            header: 'Dashboards',
+            header: 'Pages',
             dataIndex: 'totalDashboards',
             flex: 3,
             sortable: false

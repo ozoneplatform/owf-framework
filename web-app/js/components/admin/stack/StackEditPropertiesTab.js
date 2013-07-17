@@ -70,7 +70,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     name: 'descriptorUrlInfoMsg',
                     cls: 'descriptorUrlInfoMsg',
                     hidden: true,
-                    html: 'Enter the URL of a Stack Descriptor and click the Load button. Stack data, including dashboard and widget definitions, is automatically retrieved from a Web-accessible location. To create the stack in OWF, click Apply.'
+                    html: 'Enter the URL of a Stack Descriptor and click the Load button. Stack data, including page and widget definitions, is automatically retrieved from a Web-accessible location. To create the stack in OWF, click Apply.'
                 },
                 {
                     xtype: 'urlfield',
@@ -475,7 +475,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
 	            else {
 	            	me.editPanel.showAlert("Error", "Error while " +
                             "creating stack: " + 
-                            "invalid dashboard json.");
+                            "invalid page json.");
 	            }
 	        }
 	        else {

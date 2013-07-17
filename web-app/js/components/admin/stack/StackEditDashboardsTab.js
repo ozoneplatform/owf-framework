@@ -151,7 +151,7 @@ Ext.define('Ozone.components.admin.stack.StackEditDashboardsTab', {
         }
         
         Ext.create('Ozone.components.admin.EditDashboardWindow', {
-            title: 'Dashboard Editor - ' + data.name ? Ext.htmlEncode(data.name) : '',
+            title: 'Page Editor - ' + data.name ? Ext.htmlEncode(data.name) : '',
             guid: data.guid ? data.guid : '',
             name: data.name ? data.name : '',
             description: data.description ? data.description : '',
@@ -219,7 +219,7 @@ Ext.define('Ozone.components.admin.stack.StackEditDashboardsTab', {
             if (store.reorder) { store.reorder(); }
             store.save();
         } else {
-            this.editPanel.showAlert("Error", "You must select at least one dashboard to remove.");
+            this.editPanel.showAlert("Error", "You must select at least one page to remove.");
         }
     },
     

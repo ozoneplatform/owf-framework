@@ -1836,7 +1836,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         if (!failure) {
             failure = function() {
-                Ozone.Msg.alert('Dashboard Manager', "Error creating or updating dashboard.", null, null, null, me.modalWindowManager);
+                Ozone.Msg.alert('Dashboard Manager', "Error creating or updating page.", null, null, null, me.modalWindowManager);
                 return;
             }
         }
