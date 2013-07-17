@@ -23,7 +23,9 @@ Ext.define('Ozone.components.marketplace.MarketplaceLauncher', {
             if (!me.mpModalWindow || me.mpModalWindow.isDestroyed) {
                 me.mpModalWindow = Ext.widget('marketplacewindow', {
                     dashboardContainer: me.dashboardContainer,
-                    callback: function(marketplaceWidget, keyboard) { me.launch(marketplaceWidget, keyboard); }
+                    callback: function(marketplaceWidget, keyboard) { 
+                        me.launch(marketplaceWidget, keyboard); 
+                    }
                 });
             }
             me.mpModalWindow.show();
@@ -87,7 +89,8 @@ Ext.define('Ozone.components.marketplace.MarketplaceLauncher', {
          */
         function fireOpenedEvent(widget) {
             Ozone.eventing.rpc.onReady(widget.data.uniqueId, function() {
-                me.fireEvent(OWF.Events.Marketplace.OPENED, widget);
+                me.fireEvent(OWF.Events.Marketplace.OPENED, widget, 
+                    me.marketplaceWidget.get('url'));
             });
         }
 

@@ -94,24 +94,24 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
             url : Ozone.util.contextPath()  + '/stack/share?id=' + stack.id,
             method : "POST",
-            onSuccess: Ext.bind(function (json){
+            onSuccess: function (json){
+                me.sendRequest(json, mpLauncher);
+                //if (banner.marketplaceWidget) {
 
-                if (banner.marketplaceWidget) {
+                    //me.sendRequest(banner.marketplaceWidget.data.url, json, mpLauncher, banner.marketplaceWidget);
 
-                    me.sendRequest(banner.marketplaceWidget.data.url, json, mpLauncher, banner.marketplaceWidget);
+                //} else {
 
-                } else {
+                    //var chooser = Ext.widget('marketplacewindow', {
+                        //dashboardContainer: me.dashboardContainer,
+                        //callback: function(marketplaceWidget) {
+                            //me.sendRequest(marketplaceWidget.data.url, json, mpLauncher, marketplaceWidget);
+                        //}
+                    //});
 
-                    var chooser = Ext.widget('marketplacewindow', {
-                        dashboardContainer: me.dashboardContainer,
-                        callback: function(marketplaceWidget) {
-                            me.sendRequest(marketplaceWidget.data.url, json, mpLauncher, marketplaceWidget);
-                        }
-                    });
-
-                    chooser.show();
-                }
-            }, me) ,
+                    //chooser.show();
+                //}
+            },
 
             onFailure: function (errorMsg){
                 var msg = 'The sharing of ' + ' ' + Ext.htmlEncode(record.get('name')) + ' failed.';
@@ -126,15 +126,13 @@ Ext.define('Ozone.components.window.MyAppTip', {
         me.appsWindow.close();
     },
 
-    sendRequest: function(url, json, mpLauncher, myMarketplace) {
-        var me = this,
-            urlString = url.replace(/\/$/, "");
+    sendRequest: function(json, mpLauncher) {
+        var me = this;
 
-        urlString += '/listing';
+        mpLauncher.gotoMarketplace();
+        mpLauncher.on(OWF.Events.Marketplace.OPENED, function(instance, mpUrl) {
+            var urlString = mpUrl.replace(/\/$/, "") + '/listing';
 
-
-        mpLauncher.gotoMarketplace(myMarketplace);
-        mpLauncher.on(OWF.Events.Marketplace.OPENED, function(instance) {
             me.dashboardContainer.loadMask.show();
 
             Ozone.util.Transport.send({
