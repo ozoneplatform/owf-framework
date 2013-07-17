@@ -43,7 +43,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         
         // append buttons
         str += '<ul class=\''+ulAdjustCls+'\'>'+
-                    '<li class=\'addButton actionButton '+liAdjustCls+'\'>'+
+                    '<li class=\'addButton actionButton '+liAdjustCls+'\' style=\'border-radius: 0 0 0 10px;\'>'+
                         '<span class=\'createPageImg  '+imgAdjustCls+'\'></span>'+
                         '<p class=\'actionText\'>Add Page</p>'+
                     '</li>'+
@@ -56,7 +56,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                         '<span class=\'editImg  '+imgAdjustCls+'\'></span>'+
                         '<p class=\'actionText\'>Edit</p>'+
                     '</li>'+
-                    '<li class=\'deleteButton actionButton '+liAdjustCls+'\'>'+
+                    '<li class=\'deleteButton actionButton '+liAdjustCls+'\' style=\'border-radius: 0 0 10px 0;\'>'+
                         '<span class=\'deleteImg '+imgAdjustCls+'\'></span>'+
                         '<p class=\'actionText\'>Delete</p>'+
                     '</li>'+

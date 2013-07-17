@@ -281,8 +281,7 @@
 
 .detail-actions {
 	padding-top:5px; 
-	color: $widget-details-color;
-    font-size: 11px;
+	color: $dashboard-switcher-dashboard-text-color;
 }
 
 .x-ie7 {
@@ -340,6 +339,8 @@
 	
 	 .x-tool .x-tool-close {
 	    background-image: theme-image($theme-name, 'tools/close-out.png') !important;
+	    right: 5px;
+	    position:relative;
 	}
 	
 	.x-tool-over .x-tool-close {
@@ -351,12 +352,21 @@
 	     background-image: theme-image($theme-name, 'tools/close-down.png') !important;
 	     background-position: 0 !important;
 	}
+	
+	.x-box-inner {
+		top:5px !important;
+		height: 25px !important;
+	}
 }
 
 .ozonequicktip {
     width: 300px;
-
+	background-color: $widget-launcher-background-color;
+	
     .dashboard-tooltip-content {
+        h3 {
+        	color: $dashboard-switcher-dashboard-text-color;
+        }
         
         ul {
             color: $dashboard-switcher-dashboard-text-color;
@@ -374,7 +384,8 @@
                 	text-align:center;
                 	 margin-left:auto;
                 	 margin-right:auto; 
-                	 font-size:.8em;
+                	 margin-top: 2px;
+                	 font-size:.94em;
     			}
 
                 .createImg {
@@ -466,16 +477,18 @@
             }
             
             .liStoreAdjust{
-            	width:24% !important;
+            	width:24.3% !important;
+            	font-size: 1em !important;
             }
             
             .liPageAdjust{
-            	width:32% !important;
+            	width:32.6% !important;
+            	font-size: 1em !important;
             }
         }
         
         .ulStoreAdjust {
-        	padding-bottom:2%;
+        	padding-top:2%;
         }
     }
 
