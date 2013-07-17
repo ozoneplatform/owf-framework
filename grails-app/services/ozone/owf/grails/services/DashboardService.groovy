@@ -186,9 +186,11 @@ class DashboardService extends BaseService {
             boolean userIsTheOwner = groupDashboard?.stack?.owner == user
             if (groupDashboard?.markedForDeletion && userIsTheOwner) {
                 return false
-            } else if (!groupDashboard.publishedToStore && !userIsTheOwner) {
-                return false
             }
+            //TODO: enable the code below after sample data are converted to work with Applications/Pages.
+//            else if (!groupDashboard.publishedToStore && !userIsTheOwner) {
+//                return false
+//            }
             return true
         }
         return false
