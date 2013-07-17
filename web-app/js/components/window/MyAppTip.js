@@ -8,9 +8,17 @@ Ext.define('Ozone.components.window.MyAppTip', {
 	autoHide:false,
 	draggable:true,
     listeners: {
-    	'close':function(){
-    		this.destroy()
+    	'close': {
+    		fn: function(){
+    			this.destroy()
+    		}
+    	},
+    	'afterRender': {
+    		fn: function() {
+    			this.bindHandlers()
+    		}
     	}
+
     },
 	
 	getToolTip: function () {
@@ -55,7 +63,145 @@ Ext.define('Ozone.components.window.MyAppTip', {
 		me.target = me.event.target.parentElement.id;
 	    me.html = me.getToolTip();
 	    
+
+
 	    me.callParent(arguments);
-	}
+	},
+
+	bindHandlers: function() {
+		var me = this;
+
+
+
+		if(me.clickedStackOrDashboard.isStack) {
+
+			$('.addButton').on('click', me.handleStackAdd);
+			$('.restoreButton').on('click', me.handleStackRestore);
+			$('.editButton').on('click', me.handleStackEdit);
+			$('.deleteButton').on('click', function(evt) {
+				me.handleStackDelete(evt, me);
+			});
+		}
+	},
+
+	handleStackAdd: function(evnt) {
+
+	},
+
+	handleStackRestore: function(evnt) {
+
+	},
+
+	handleStackEdit: function(evnt) {
+
+	},
+
+	handleStackDelete: function (evt, parent) {
+		evt.stopPropagation();
+
+		var me = parent;
+
+		var msg = 'This action will permanently delete stack <span class="heading-bold">' + 
+        		Ext.htmlEncode(me.clickedStackOrDashboard.name) + '</span> and its dashboards.';
+
+        var stackGroups = me.clickedStackOrDashboard.groups
+        var userGroups = Ozone.config.user.groups
+        var groupAssignment = false;
+        
+        if(stackGroups && userGroups && stackGroups.length > 0 && userGroups.length > 0) {
+            for (var i = 0, len1 = stackGroups.length; i < len1; i++) {
+                var stackGroup = stackGroups[i];
+                
+                for (var j = 0, len2 = userGroups.length; j < len2; j++) {
+                    var userGroup = userGroups[j];
+                    if(stackGroup.id === userGroup.id) {
+                        groupAssignment = true;
+                        break;
+                    }
+                }
+
+                if(groupAssignment === true)
+                    break;
+            }
+        }
+
+        if(groupAssignment) {
+            me.update('');
+            me.removeAll();
+
+            me.add({
+            	xtype: 'panel',
+            	html: 'Users in a group cannot remove stacks assigned to the group. Please contact your administrator.',
+            	bbar: ['->', {
+            		text: 'OK',
+            		handler: function() {
+            			me.close();
+            			me.destroy();
+            		}
+            	}]
+            });
+
+            me.doLayout();
+
+            return;
+        }
+
+
+        me.update('');
+        me.removeAll();
+
+        me.add({
+        	xtype: 'panel',
+        	html: msg,
+        	bbar: ['->', {
+        		text: 'OK',
+        		handler: function() {
+        			console.log(me.dashboardContainer.stackStore);
+        			me.dashboardContainer.stackStore.remove( me.dashboardContainer.stackStore.getById(me.clickedStackOrDashboard.id) );
+		            me.dashboardContainer.stackStore.save();
+		            console.log(me.dashboardContainer.stackStore);
+
+		            if( me._lastExpandedStack === me.clickedStackOrDashboard) {
+		                me.hideStackDashboards();
+		            }
+
+		            var $prev = me.target;
+		            me.target.remove();
+		            $prev.focus();
+		            
+		            me._deletedStackOrDashboards.push(me.clickedStackOrDashboard);
+		            me.reloadDashboards = true;
+		        }
+        	},{
+        		text: 'Cancel',
+        		handler: function() {
+        			me.close();
+            		me.destroy();
+        		}
+        	}]
+        });
+        /*this.warn(msg, function () {
+            me.dashboardContainer.stackStore.remove( me.dashboardContainer.stackStore.getById(stack.id) );
+            me.dashboardContainer.stackStore.save();
+
+            if( me._lastExpandedStack === stack) {
+                me.hideStackDashboards();
+            }
+
+            var $prev = $stack.prev();
+            $stack.remove();
+            $prev.focus();
+            
+            me._deletedStackOrDashboards.push(stack);
+            me.reloadDashboards = true;
+
+        }, focusEl);*/
+    },
+
+
+
+
+
+
     
 });
