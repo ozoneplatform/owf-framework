@@ -25,8 +25,10 @@ public enum OwfApplicationSetting implements ApplicationSetting{
     CUSTOM_HEADER_HEIGHT("owf.custom.header.height"),
     CUSTOM_FOOTER_HEIGHT("owf.custom.footer.height"),
     CUSTOM_JS_IMPORTS("owf.custom.jss"),
-    CUSTOM_CSS_IMPORTS("owf.custom.css")
+    CUSTOM_CSS_IMPORTS("owf.custom.css"),
 
+    //OP-2015
+    CUSTOM_BACKGROUND_URL("owf.custom.background.url")
 
 	OwfApplicationSetting(String code) {
 		this.code = code;

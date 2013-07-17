@@ -156,13 +156,26 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
     private void createRequiredUserAccountConfigurations(){
         createRequiredSessionConfigurations() 
         createRequiredInactiveAccountConfigurations()
+        createRequiredCustomBackgroundConfigurations()
         createRequiredCustomHeaderFooterConfigurations()
+    }
+
+    //OP-2015
+    private void createRequiredCustomBackgroundConfigurations(){
+        def GROUP_NAME=BRANDING
+        def SUB_GROUP_NAME= "Custom Background"
+        int subGroupCtr = 1
+
+        // OP-2015
+        createOrUpdateApplicationConfig(CUSTOM_BACKGROUND_URL, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
+
     }
 
     private void createRequiredCustomHeaderFooterConfigurations() {
         def GROUP_NAME=BRANDING
         def SUB_GROUP_NAME = "Custom Header and Footer"
         int subGroupCtr = 1
+
 
         createOrUpdateApplicationConfig(CUSTOM_HEADER_URL, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
         createOrUpdateApplicationConfig(CUSTOM_HEADER_HEIGHT, GROUP_NAME, "Integer", 0, subGroupCtr++, SUB_GROUP_NAME)
