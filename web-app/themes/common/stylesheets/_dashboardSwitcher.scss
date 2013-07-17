@@ -30,6 +30,8 @@
 
             li {
                 display: inline-block;
+                zoom: 1;
+                *display: inline;
                 padding: 5px 10px;
 
                 &:hover, &.selected {
