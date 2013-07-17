@@ -810,7 +810,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     refreshAppComponentsView: function () {
-        var me = this;
+        var me = this,
+            dfd = $.Deferred();
+
         OWF.Collections.AppComponents.fetch({fetch: true}).done(function (resp) {
             if(me.appComponentsView) {
                 var isVisible = me.appComponentsView.$el.is(':visible');
@@ -819,7 +821,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 isVisible && me.showAppComponentsView();
             }
             me.widgetStore.loadRecords(me.widgetStore.proxy.reader.read(resp.rows).records);
+
+            dfd.resolve();
         });
+
+        return dfd.promise();
     },
 
     showAppComponentsView: function () {
