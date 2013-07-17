@@ -8,7 +8,6 @@ Ext.define('Ozone.components.window.MyAppTip', {
     closable:true,
     autoHide:false,
     target: null,
-    anchor: 'top',
 
     listeners: {
     	'close': {
@@ -192,7 +191,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         }));
 
         me.doLayout();
-    }
+    },
  
     onDestroy: function() {
         //clean up inner dom, including event handlers
