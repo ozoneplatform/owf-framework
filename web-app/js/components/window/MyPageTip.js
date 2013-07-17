@@ -7,7 +7,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
     shadow: false,
     closable:true,
     autoHide:false,
-    draggable:true,
+    draggable:false,
     listeners: {
         'close':function(){
             this.destroy();
@@ -27,17 +27,17 @@ Ext.define('Ozone.components.window.MyPageTip', {
         me.clickedStackOrDashboard.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedStackOrDashboard.description)) +'</p><br>');
         
         // append buttons
-        str += '<ul>' +
-                    '<li class=\'restoreButton actionButton\'>'+
-                        '<span class=\'restoreImg\'></span>'+
+        str += '<ul style=\'padding-bottom:2%;\'>' +
+                    '<li class=\'restoreButton actionButton liPageAdjust\'>'+
+                        '<span class=\'restoreImg imgPageAdjust\' ></span>'+
                         '<p class=\'actionText\'>Restore</p>'+
                     '</li>'+
-                    '<li class=\'editButton actionButton\'>'+
-                        '<span class=\'editImg\'></span>'+
+                    '<li class=\'editButton actionButton liPageAdjust\'>'+
+                        '<span class=\'editImg imgPageAdjust\'></span>'+
                         '<p class=\'actionText\'>Edit</p>'+
                     '</li>'+
-                    '<li class=\'deleteButton actionButton\'>'+
-                        '<span class=\'deleteImg\'></span>'+
+                    '<li class=\'deleteButton actionButton liPageAdjust\'>'+
+                        '<span class=\'deleteImg imgPageAdjust\'></span>'+
                         '<p class=\'actionText\'>Delete</p>'+
                     '</li>'+
                '</ul>' +
