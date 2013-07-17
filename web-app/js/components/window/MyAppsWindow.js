@@ -763,7 +763,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         dashboard = this.getDashboard( $clickedDashboard );
 
         if ($(evt.target).hasClass('detail-action')) {
-        	Ext.select('.itemTip').destroy()
+        	Ext.select('.itemTip').destroy();
         	
         	Ext.widget('mypagetip', {
         		clickedStackOrDashboard:dashboard,
@@ -811,7 +811,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 stack = me.getStack( $clickedStack );
             
             if ($(evt.target).hasClass('detail-action')) {
-            	Ext.select('.itemTip').destroy()
+            	Ext.select('.itemTip').destroy();
             	
             	Ext.widget('myapptip', {
             		clickedStackOrDashboard:stack,

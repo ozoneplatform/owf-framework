@@ -8,6 +8,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
     closable:true,
     autoHide:false,
     draggable:true,
+    target: null,
     listeners: {
     	'close': {
     		fn: function(){
@@ -16,7 +17,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
     	},
     	'afterRender': {
     		fn: function() {
-    			this.bindHandlers()
+                this.bindHandlers();
     		}
     	}
     },
@@ -27,11 +28,9 @@ Ext.define('Ozone.components.window.MyAppTip', {
     initComponent: function() {
         var me = this;
         
-        me.target = me.event.target.parentElement.id;
+        me.target = jQuery(me.event.target.parentElement);
         me.html = me.getToolTip();
 
-        me.setupClickHandlers();
-        
         me.callParent(arguments);
     },
     
@@ -75,14 +74,16 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var me = this;
         var $ = jQuery;
 
+        console.log(me);
+
 
         if(me.clickedStackOrDashboard.isStack) {
 
             $('.addButton').on('click', $.proxy(me.addPageToApp, me));
-            $('.restoreButton').on('click', me.handleStackRestore);
-            $('.pushButton').ON('click', $.proxy(me.handlePushToStore, me));
-            $('.editButton').on('click', me.handleStackEdit);
-            $('.deleteButton').on('click', $.proxt(me.handleStackDelete, me);
+            $('.restoreButton').on('click', $.proxy(me.handleStackRestore, me));
+            $('.pushButton').on('click', $.proxy(me.handlePushToStore, me));
+            $('.editButton').on('click', $.proxy(me.handleStackEdit, me));
+            $('.deleteButton').on('click', $.proxy(me.handleStackDelete, me));
                 /*function(evt) {
                 me.handleStackDelete(evt, me);
             });*/
@@ -108,7 +109,78 @@ Ext.define('Ozone.components.window.MyAppTip', {
     },
 
     handleStackRestore: function(evnt) {
+        evnt.stopPropagation();
+        var me = this;
 
+        var stack = me.clickedStackOrDashboard;
+
+        var msg = 'This action will return the stack <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any dashboard in the stack after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.'
+        me.warn('ok_cancel', jQuery.proxy(me.restoreStack, me), msg);
+    },
+
+    restoreStack: function() {
+        var me = this;
+
+        var stack = this.clickedStackOrDashboard;
+
+        Ext.Ajax.request({
+            url: Ozone.util.contextPath() + '/stack/restore',
+            params: {
+                id: stack.id
+            },
+            success: function(response, opts) {
+                var json = Ext.decode(response.responseText);
+                
+                if (json != null && json.updatedDashboards != null && json.updatedDashboards.length > 0) {
+                    me.appsWindow.notify('Restore Stack', '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is restored successfully to its default state!');
+                    
+                    var dashboards = stack.dashboards;
+                    for(var i = 0; i < dashboards.length; i++) {
+                        for(var j = 0; j < json.updatedDashboards.length; j++) {
+                            var dash = json.updatedDashboards[j];
+                            if(dash.guid == dashboards[i].guid) {
+                                dashboards[i].model.set({
+                                    'name': dash.name,
+                                    'description': dash.description
+                                });
+                                dashboards[i].name = dash.name;
+                                dashboards[i].description = dash.description;
+                            }
+                        }
+                    }
+                    
+                    me.appsWindow.updateStackDashboardsEl(stack);
+                    me.reloadDashboards = true;
+                    //$stack.focus();
+                }
+            },
+            failure: function(response, opts) {
+                Ozone.Msg.alert('Dashboard Manager', "Error restoring stack.", function() {
+                    Ext.defer(function() {
+                        $stack[0].focus();
+                    }, 200, me);
+                }, me, null, me.dashboardContainer.modalWindowManager);
+                return;
+            }
+        });
+    },
+
+    warn: function(buttons, button_handler, text) {
+        var me = this;
+
+        console.log(me);
+
+        me.update('');
+        me.removeAll();
+
+        me.add(Ext.create('Ozone.components.window.TipWarning', {
+            tip: me,
+            buttonConfig: buttons,
+            buttonHandler: button_handler,
+            text: text
+        }));
+
+        me.doLayout();
     },
 
     handlePushToStore: function (evt) {
@@ -168,10 +240,10 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
     },
 
-    handleStackDelete: function (evt, parent) {
+    handleStackDelete: function (evt) {
         evt.stopPropagation();
 
-        var me = parent;
+        var me = this;
 
         var msg = 'This action will permanently delete stack <span class="heading-bold">' + 
                 Ext.htmlEncode(me.clickedStackOrDashboard.name) + '</span> and its dashboards.';
@@ -198,60 +270,36 @@ Ext.define('Ozone.components.window.MyAppTip', {
         }
 
         if(groupAssignment) {
-            me.update('');
-            me.removeAll();
-
-            me.add({
-                xtype: 'panel',
-                html: 'Users in a group cannot remove stacks assigned to the group. Please contact your administrator.',
-                bbar: ['->', {
-                    text: 'OK',
-                    handler: function() {
-                        me.close();
-                        me.destroy();
-                    }
-                }]
-            });
-
-            me.doLayout();
-
+            msg = 'Users in a group cannot remove stacks assigned to the group. Please contact your administrator.'
+            me.warn('ok', null, msg);
             return;
         }
 
 
-        me.update('');
-        me.removeAll();
+        me.warn('ok_cancel', jQuery.proxy(me.removeStack, me), msg);
+    },
 
-        me.add({
-            xtype: 'panel',
-            html: msg,
-            bbar: ['->', {
-                text: 'OK',
-                handler: function() {
-                    console.log(me.dashboardContainer.stackStore);
-                    me.dashboardContainer.stackStore.remove( me.dashboardContainer.stackStore.getById(me.clickedStackOrDashboard.id) );
-                    me.dashboardContainer.stackStore.save();
-                    console.log(me.dashboardContainer.stackStore);
+    removeStack:function() {
+        var me = this;
 
-                    if( me.appsWindow._lastExpandedStack === me.clickedStackOrDashboard) {
-                        me.hideStackDashboards();
-                    }
+        console.log(me);
 
-                    var $prev = me.target;
-                    me.target.remove();
-                    $prev.focus();
-                    
-                    me.appsWindow._deletedStackOrDashboards.push(me.clickedStackOrDashboard);
-                    me.reloadDashboards = true;
-                }
-            },{
-                text: 'Cancel',
-                handler: function() {
-                    me.close();
-                    me.destroy();
-                }
-            }]
-        });
+        me.dashboardContainer.stackStore.remove( me.dashboardContainer.stackStore.getById(me.clickedStackOrDashboard.id) );
+        me.dashboardContainer.stackStore.save();
+        
+        if( me.appsWindow._lastExpandedStack === me.clickedStackOrDashboard) {
+            me.hideStackDashboards();
+        }
+
+        var $target = jQuery(me.event.target.parentElement.parentElement);
+        var $prev = $target.prev();
+        $target.remove();
+        //$prev.focus(); //for keyboard nav which is no longet supported.
+        
+        me.appsWindow._deletedStackOrDashboards.push(me.clickedStackOrDashboard);
+        me.appsWindow.reloadDashboards = true;
+
+        me.close();
     },
 
     sendRequest: function(json, mpLauncher) {
