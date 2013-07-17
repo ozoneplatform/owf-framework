@@ -181,7 +181,7 @@
     > .bx-wrapper
     > .bx-viewport
     > .all-dashboards
-    > .bx-slide:not(.bx-clone)
+    > .bx-slide
     > .stack-dashboards-container {
 
         > .stack-dashboards {
@@ -196,12 +196,19 @@
                 @include box-shadow(none);
 
                 background: transparent !important;
+
                 margin-left: 5px;
                 margin-right: 20px;
+
                 border: 0px;
+
                 width: 400px !important;
+
                 height: 105px !important;
+                *height: 110px !important;
+
                 min-height: 105px !important;
+                *min-height: 110px !important;
 
                 .dashboard {
                     padding-top: 5px;
