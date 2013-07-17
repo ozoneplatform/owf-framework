@@ -407,7 +407,7 @@
 		        	width:20px;
 		        	height:20px;
 		        	margin-left:35%;
-		        	margin-top:30%;
+		        	margin-top:20%;
                 	 
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/CreateNewPage-over.png'); 
@@ -420,7 +420,7 @@
 		        	width:20px;
 		        	height:20px;
 		        	margin-left:35%;
-		        	margin-top:30%;
+		        	margin-top:20%;
                 	 
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/PushtoStore-over.png'); 
@@ -433,7 +433,7 @@
 		        	width:20px;
 		        	height:20px;
 		        	margin-left:35%;
-		        	margin-top:30%;
+		        	margin-top:20%;
                 	 
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/Restore-over.png'); 
@@ -446,7 +446,7 @@
 		        	width:20px;
 		        	height:20px;
 		        	margin-left:35%;
-		        	margin-top:30%;
+		        	margin-top:20%;
                 	 
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/Edit-over.png'); 
@@ -459,7 +459,7 @@
 		        	width:20px;
 		        	height:20px;
 		        	margin-left:35%;
-		        	margin-top:30%;
+		        	margin-top:20%;
                 	 
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/Delete-over.png'); 
@@ -468,11 +468,11 @@
 		        
 		        .imgPageAdjust { 
     				margin-left: 38% !important; 
-    				margin-top: 15% !important;
+    				margin-top: 10% !important;
     			}
     			
     			.imgStoreAdjust { 
-    				margin-top: 20% !important;
+    				margin-top: 15% !important;
     			}
             }
             
