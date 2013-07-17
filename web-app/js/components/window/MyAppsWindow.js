@@ -235,12 +235,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('mouseout', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
             .on('focus', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
             .on('blur', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
-            .on('click', '.dashboard .restore', $.proxy(me.restoreDashboard, me))
-            .on('click', '.dashboard .share', $.proxy(me.shareDashboard, me))
-            .on('click', '.dashboard .edit', $.proxy(me.editDashboard, me))
-            .on('click', '.dashboard .delete', $.proxy(me.deleteDashboard, me))
-            .on('click', '.stack .restore', $.proxy(me.restoreStack, me))
-            .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
 
 
         me.initKeyboardNav();
