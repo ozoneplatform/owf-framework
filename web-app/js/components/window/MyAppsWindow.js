@@ -185,7 +185,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                         '<span class="create-link-btn-img"></span>'+
                         '<span class="create-link-btn-text">Create New App</span>'+
                     '</li>'+
-                    '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-tip="Name, describe and design a new dashboard.">+</li>'+
                 '</ul>'+
             '</div>');
 

@@ -335,6 +335,21 @@
 
 .itemTip {
 	z-index: 79001 !important;
+	border-radius: 10px;
+	
+	 .x-tool .x-tool-close {
+	    background-image: theme-image($theme-name, 'tools/close-out.png') !important;
+	}
+	
+	.x-tool-over .x-tool-close {
+	     background-image: theme-image($theme-name, 'tools/close-over.png') !important;
+	     background-position: 0 !important;
+	}
+	
+	.x-tool-pressed .x-tool-close {
+	     background-image: theme-image($theme-name, 'tools/close-down.png') !important;
+	     background-position: 0 !important;
+	}
 }
 
 .ozonequicktip {
@@ -359,7 +374,7 @@
                 	 margin-left:auto;
                 	 margin-right:auto; 
                 	 font-size:.8em;
-    }
+    			}
 
                 .createImg {
 		        	background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-out.png'); 
@@ -371,6 +386,19 @@
                 	 
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-over.png'); 
+				    }
+		        }
+		        
+		        .createPageImg {
+		        	background-image: theme-image($theme-name, 'myappswindow/CreateNewPage-out.png'); 
+		        	display: inline-block;
+		        	width:20px;
+		        	height:20px;
+		        	margin-left:35%;
+		        	margin-top:30%;
+                	 
+		        	&:hover, &.hover {
+				        background-image: theme-image($theme-name, 'myappswindow/CreateNewPage-over.png'); 
 				    }
 		        }
 		        
@@ -425,7 +453,28 @@
 				        background-image: theme-image($theme-name, 'myappswindow/Delete-over.png'); 
 				    }
 		        }
+		        
+		        .imgPageAdjust { 
+    				margin-left: 38% !important; 
+    				margin-top: 15% !important;
+    			}
+    			
+    			.imgStoreAdjust { 
+    				margin-top: 20% !important;
+    			}
             }
+            
+            .liStoreAdjust{
+            	width:24% !important;
+            }
+            
+            .liPageAdjust{
+            	width:32% !important;
+            }
+        }
+        
+        .ulStoreAdjust {
+        	padding-bottom:2%;
         }
     }
 

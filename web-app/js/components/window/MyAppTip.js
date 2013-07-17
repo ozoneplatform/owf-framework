@@ -7,7 +7,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
     shadow: false,
     closable:true,
     autoHide:false,
-    draggable:true,
+    draggable:false,
     listeners: {
         'close':function(){
             this.destroy();
@@ -19,32 +19,45 @@ Ext.define('Ozone.components.window.MyAppTip', {
     
     getToolTip: function () {
         var me = this;
+    	var banner = me.dashboardContainer.getBanner();
         var icn = me.clickedStackOrDashboard.iconImageUrl && me.clickedStackOrDashboard.iconImageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'padding-right:15px;\' src=\''+me.clickedStackOrDashboard.iconImageUrl+'\' />':'';
         var str = '<div class=\'dashboard-tooltip-content\'>' + 
                 '<h3 class=\'name\'>' + icn + Ext.htmlEncode(Ext.htmlEncode(me.clickedStackOrDashboard.name)) + '</h3>';
 
         me.clickedStackOrDashboard.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedStackOrDashboard.description)) +'</p><br>');
         
-        // append buttons
-        str += '<ul>' +
-                    '<li class=\'addButton actionButton\'>'+
-                        '<span class=\'createImg\'></span>'+
-                        '<p class=\'actionText\'>Add Page</p>'+
-                    '</li>'+
-                    '<li class=\'pushButton actionButton\'>'+
+        var pushBtn = '',
+        	ulAdjustCls = 'ulStoreAdjust',
+        	liAdjustCls = 'liStoreAdjust',
+        	imgAdjustCls = 'imgStoreAdjust';
+        	
+        if (banner.hasMarketplaceButton)  {
+        	ulStoreAdjustCls = '';
+        	liAdjustCls = '';
+        	imgAdjustCls = '';
+        	pushBtn = '<li class=\'pushButton actionButton\'>'+
                         '<span class=\'pushImg\'></span>'+
                         '<p class=\'actionText\'>Push to Store</p>'+
+                    '</li>';
+        }
+        
+        // append buttons
+        str += '<ul class=\''+ulAdjustCls+'\'>'+
+                    '<li class=\'addButton actionButton '+liAdjustCls+'\'>'+
+                        '<span class=\'createPageImg  '+imgAdjustCls+'\'></span>'+
+                        '<p class=\'actionText\'>Add Page</p>'+
                     '</li>'+
-                    '<li class=\'restoreButton actionButton\'>'+
-                        '<span class=\'restoreImg\'></span>'+
+                    pushBtn+
+                    '<li class=\'restoreButton actionButton '+liAdjustCls+'\'>'+
+                        '<span class=\'restoreImg  '+imgAdjustCls+'\'></span>'+
                         '<p class=\'actionText\'>Restore</p>'+
                     '</li>'+
-                    '<li class=\'editButton actionButton\'>'+
-                        '<span class=\'editImg\'></span>'+
+                    '<li class=\'editButton actionButton '+liAdjustCls+'\'>'+
+                        '<span class=\'editImg  '+imgAdjustCls+'\'></span>'+
                         '<p class=\'actionText\'>Edit</p>'+
                     '</li>'+
-                    '<li class=\'deleteButton actionButton\'>'+
-                        '<span class=\'deleteImg\'></span>'+
+                    '<li class=\'deleteButton actionButton '+liAdjustCls+'\'>'+
+                        '<span class=\'deleteImg '+imgAdjustCls+'\'></span>'+
                         '<p class=\'actionText\'>Delete</p>'+
                     '</li>'+
                '</ul>' +
