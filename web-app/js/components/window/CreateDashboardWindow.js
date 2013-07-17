@@ -10,8 +10,9 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
 
     constrain: Ext.isIE,
     constrainHeader: true,
-    cls: "manageContainer",
-    draggable: true,
+    cls: "manageContainer x-window-system-window",
+    draggable: false,
+    shadow: false,
     closeAction: 'destroy',
     
     mixins: {
@@ -30,7 +31,7 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
 
         // Decide between two window sizes, accommodating regular- and large-text themes.
         var windowWidth = themeFontSize <= 12 ? 500 : 700;
-        var windowHeight = themeFontSize <= 12 ? 550 : 630;
+        var windowHeight = 600;
 
         var dashPanelHeight = me.ownerCt.getHeight();
         var dashPanelWidth = me.ownerCt.getWidth();

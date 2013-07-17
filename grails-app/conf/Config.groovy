@@ -656,6 +656,7 @@ uiperformance.bundles = [
                         'components/window/DashboardSwitcher',
 						'components/window/MyAppsWindow',
 						'components/window/MyAppTip',
+						'components/window/MyPageTip',
                         'components/window/HelpWindow',
                         'components/view/BaseView',
                         'components/appcomponents/AppComponent',
