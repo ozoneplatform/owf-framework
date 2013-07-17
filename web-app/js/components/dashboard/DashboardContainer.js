@@ -1809,7 +1809,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         me.dashboardStore.load({
             callback: function(records, options, success) {
                 if (success == true) {
-                    me.updateDashboardsFromStore(records, options, success, me.activedashboard.getGuid());
+                    me.updateDashboardsFromStore(records, options, success, me.activeDashboard.getGuid());
                 }
                 callback(success);
             }
