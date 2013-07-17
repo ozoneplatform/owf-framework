@@ -194,6 +194,10 @@
 				rows = Math.floor(height/child.outerHeight(true)),
 				childrenPerSlide = columns * rows,
 				slideChildren, slide;
+
+			if(!rows || !childrenPerSlide) {
+				throw "Rows or childrenPerSlide are not correct."
+			}
 			
 			children.detach();
 			

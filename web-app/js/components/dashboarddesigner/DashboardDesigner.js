@@ -521,11 +521,10 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
             me.dashboard.set('layoutConfig', dashboardLayoutConfig);
             me.dashboard.set('locked', me.locked);
 
-            me.dashboardContainer.saveDashboard(me.dashboard.data, 'create', function() {
+            me.dashboardContainer.saveDashboard(me.dashboard.data, 'create', function(json) {
 
                 // activate new dashboard
-                var guid = me.dashboard.get('guid');
-                me.dashboardContainer.activateDashboard(guid);
+                me.dashboardContainer.activateDashboard(json.guid);
             });
         }
 

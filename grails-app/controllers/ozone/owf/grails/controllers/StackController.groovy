@@ -68,6 +68,22 @@ class StackController extends BaseOwfRestController {
         }
         
     }
+
+    def addPage = {
+        def result
+        int statusCode
+        try {
+            result = stackService.addPage(params)
+            result = getJsonResult(result, 'dashboard', params)
+            statusCode = 200
+        }
+        catch (OwfException owe) {
+            handleError(owe)
+            statusCode = owe.exceptionType.normalReturnCode
+            result = "Error during create: " + owe.exceptionType.generalMessage + " " + owe.message
+        }
+        renderResult(result, statusCode)
+    }
     
     def delete = {
         def jsonResult

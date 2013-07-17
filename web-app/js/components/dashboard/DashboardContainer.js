@@ -41,6 +41,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     //dashboards will refresh before the switcher opens
     dashboardsNeedRefresh: false,
 
+    // state of app component menu
+    appComponentsViewState: null,
+
     // private
     initComponent: function() {
         var me = this,
@@ -475,10 +478,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 deferred: deferred
             });
 
-            this.el.on('click', this._selectPaneOnClick, this, {
+            this.activeDashboard.el.on('click', this._selectPaneOnClick, this, {
                 deferred: deferred
             });
-            this.el.on('mouseup', this._selectPaneOnClick, this, {
+            this.activeDashboard.el.on('mouseup', this._selectPaneOnClick, this, {
                 deferred: deferred
             });
 
@@ -808,14 +811,21 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     refreshAppComponentsView: function () {
         var me = this;
-        OWF.Collections.AppComponents.fetch().done(function (resp) {
+        OWF.Collections.AppComponents.fetch({fetch: true}).done(function (resp) {
+            if(me.appComponentsView) {
+                var isVisible = me.appComponentsView.$el.is(':visible');
+                me.appComponentsView.hide().remove();
+                me.appComponentsView = null;
+                isVisible && me.showAppComponentsView();
+            }
             me.widgetStore.loadRecords(me.widgetStore.proxy.reader.read(resp.rows).records);
         });
     },
 
     showAppComponentsView: function () {
         var me = this,
-            appComponentsBtn;
+            appComponentsBtn,
+            size;
 
         if (me.activeDashboard.configRecord.get('locked') === true ||
             me.activeDashboard.configRecord.isMarketplaceDashboard()) {
@@ -823,10 +833,16 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
 
         if(!me.appComponentsView) {
+            size = _.isString(this.appComponentsViewState.preference) ? 
+                        Ozone.util.parseJson(this.appComponentsViewState.preference) :
+                        this.appComponentsViewState.preference;
+
             me.appComponentsView = new Ozone.components.appcomponents.AppComponentsView({
                 collection: OWF.Collections.AppComponents,
-                dashboardContainer: me
+                dashboardContainer: me,
+                size: size
             });
+
             appComponentsBtn = me.getBanner().getComponent('appComponentsBtn');
             me.appComponentsView.$el.on('hide.toggle', function () {
                 appComponentsBtn.toggle(false, true);
@@ -836,10 +852,16 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             });
 
             $('#dashboardCardPanel').append(me.appComponentsView.render().el);
-            me.appComponentsView.shown();
+            me.appComponentsView.show().shown();
         }
         else {
             me.appComponentsView.toggle();
+        }
+    },
+
+    hideAppComponentsView: function () {
+        if(this.appComponentsView) {
+            this.appComponentsView.hide();
         }
     },
 
@@ -882,6 +904,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                 me.loadMask.hide();
             };
+
+        if(this.appComponentsView) {
+            this.appComponentsView.hide();
+        }
 
         // If it already is open, close it
         if (dashboardSwitcher && dashboardSwitcher.isVisible()) {
@@ -1428,6 +1454,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             bodyEl = Ext.getBody(),
             maskEl = bodyEl.mask().addCls('intent-modal-mask');
         
+        this.hideAppComponentsView();
+
         function onHide() {
             isRememberSelection = me.intentsWindow.isRememberSelection();
 
@@ -1990,12 +2018,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             if (newTitle) {
                 records[i].data.name = newTitle;
             }
-            if (records[i].data.widgetTypes[0].name == 'marketplace') {
-                hasMpWidget = true;
-                mpWidgets.push(records[i]);
-            }
-            if (records[i].data.widgetTypes[0].name == 'metric') {
-                hasMetricWidget = true;
+            if(records[i].data.widgetTypes.length > 0) {
+                if (records[i].data.widgetTypes[0].name == 'marketplace') {
+                    hasMpWidget = true;
+                    mpWidgets.push(records[i]);
+                }
+                if (records[i].data.widgetTypes[0].name == 'metric') {
+                    hasMetricWidget = true;
+                }
             }
 
         }
@@ -2120,21 +2150,25 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         var me = this,
             appComponentGuid = model.get('widgetGuid');
 
-        Ozone.pref.PrefServer.updateAndDeleteWidgets({
-            widgetsToUpdate:[],
-            widgetGuidsToDelete: [appComponentGuid],
-            updateOrder:false,
-            onSuccess:function() {
-                var widgetStoreRecord = me.widgetStore.findRecord('widgetGuid', appComponentGuid);
-                me.widgetStore.remove(widgetStoreRecord);
+        // if fetching collection, dont update or delete on server
+        if(options.fetch) {
+            removeAppComponents();
+        }
+        else {
+            Ozone.pref.PrefServer.updateAndDeleteWidgets({
+                widgetsToUpdate:[],
+                widgetGuidsToDelete: [appComponentGuid],
+                updateOrder:false,
+                onSuccess: removeAppComponents,
+                onFailure: $.noop
+            });
+        }
 
-                removeAppComponentInstances(appComponentGuid);
-            },
-            onFailure: $.noop
-        });
+        function removeAppComponents () {
+            var widgetStoreRecord = me.widgetStore.findRecord('widgetGuid', appComponentGuid),
+                dashboardCardPanel = Ext.getCmp('dashboardCardPanel');
 
-        function removeAppComponentInstances (appComponentGuid) {
-            var dashboardCardPanel = Ext.getCmp('dashboardCardPanel');
+            me.widgetStore.remove(widgetStoreRecord);
 
             // Iterate through all the open dashboards
             dashboardCardPanel.items.each(function(dashboard) {

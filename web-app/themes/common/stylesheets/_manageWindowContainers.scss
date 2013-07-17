@@ -36,11 +36,45 @@ directly overriding the base ExtJS 4.0.1 rules.
           background-image: theme-image($theme-name, 'settings/WidgetWhiteIcon.png');
       }
 
+      .x-window-header {
+
+        padding: 15px 20px 0px 20px !important;
+
+          .x-window-header-text {
+            font-size: 18px;
+            font-weight: bold;
+          }
+
+          .x-tool .x-tool-close {
+            background-image: theme-image($theme-name, 'tools/close-out.png') !important;
+          }
+
+          .x-tool-over .x-tool-close {
+            background-image: theme-image($theme-name, 'tools/close-over.png') !important;
+            background-position: 0 !important;
+          }
+
+          .x-tool-pressed .x-tool-close {
+            background-image: theme-image($theme-name, 'tools/close-down.png') !important;
+            background-position: 0 !important;
+          }
+      }
+
     //Create Dashboard/Views Container
     .cvc-createNewDashboardContainer {
         $label_width: 50%;
 
-        @extend .owf-manage-window; 
+        @extend .owf-manage-window;
+
+        label {
+          color: #ffffff !important;
+          background: #2f2f2f !important;
+        }
+
+        .x-toolbar {
+          background-image: none;
+          background-color: transparent;
+        }
 
         padding-top: 10px;
         .titleBox {

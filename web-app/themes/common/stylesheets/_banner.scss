@@ -292,6 +292,7 @@
 }
 
 #userMenu {
+    z-index: 10000004 !important;
 
     @include round-bottom;
 

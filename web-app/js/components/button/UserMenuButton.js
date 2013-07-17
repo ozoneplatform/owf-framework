@@ -95,6 +95,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                                 user: me.user
                             });
                         }
+                        me.dashboardContainer.hideAppComponentsView();
                         me.profileWindow.show();
                     }, me)
                 }, {
@@ -103,6 +104,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                     height: 25,
                     clickable: true,
                     handler: Ext.bind(function() {
+                        me.dashboardContainer.hideAppComponentsView();
                         Ext.create('Ozone.components.theming.ThemeSwitcherWindow', {
                             ownerCt: me.dashboardContainer,
                             dashboardContainer: me.dashboardContainer,
@@ -137,6 +139,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                     if (me.metricWindow.isVisible()) {
                         me.metricWindow.close();
                     } else {
+                        me.dashboardContainer.hideAppComponentsView();
                         me.metricWindow.show();
                     }
                 }, me)
@@ -157,6 +160,8 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                         }
 
                         if (!aboutWindow.isVisible()) {
+                            me.dashboardContainer.hideAppComponentsView();
+
                             aboutWindow.show();
                             aboutWindow.center();
                         } else {
@@ -192,6 +197,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                     if (me.administrationWindow.isVisible()) {
                         me.administrationWindow.hide();
                     } else {
+                        me.dashboardContainer.hideAppComponentsView();
                         me.administrationWindow.show();
                     }
                 }, me)
