@@ -119,7 +119,7 @@ class DashboardService extends BaseService {
                 //create private copy of the group dashboard for the user if they don't have one
                 if (privateGroupDashboards.isEmpty()) {
                     Dashboard groupDash = Dashboard.get(dm.destId)
-                    if (groupDash != null) {
+                    if (shouldCloneGroupDashboard(groupDash, user)) {
 
                         def privateDash = cloneGroupDashboardAndCreateMapping(groupDash, user.id, maxPosition)
 
@@ -173,6 +173,25 @@ class DashboardService extends BaseService {
         domainMappingService.createMapping(privateDashboard.dashboard, RelationshipType.cloneOf, [id: groupDashboard.id, TYPE: 'dashboard'])
 
         privateDashboard
+    }
+
+    /**
+     * Returns true if this group dashboard should be cloned as a personal dashboard for the given user.
+     * @param groupDashboard
+     * @param user
+     * @return
+     */
+    private boolean shouldCloneGroupDashboard(Dashboard groupDashboard, Person user) {
+        if (groupDashboard) {
+            boolean userIsTheOwner = groupDashboard?.stack?.owner == user
+            if (groupDashboard?.markedForDeletion && userIsTheOwner) {
+                return false
+            } else if (!groupDashboard.publishedToStore && !userIsTheOwner) {
+                return false
+            }
+            return true
+        }
+        return false
     }
 
     private def addGroupToDashboardToGroupsMap(def groupId, def groupDashboardToGroupsMap, def mapKey){
@@ -583,7 +602,7 @@ class DashboardService extends BaseService {
 
     def deleteForUser(params)
     {
-        def dashboard = null
+        def dashboard
         if(params.dashboard != null){
             dashboard = params.dashboard
         }else{
@@ -624,8 +643,8 @@ class DashboardService extends BaseService {
     }
 
     /**
-     * If the personal dashboard has a corresponding group dashboard that is published to store, the two are
-     * marked for deletion.
+     * If the personal dashboard has a corresponding group dashboard that is published to store, the personal dashboard is deleted,
+     * while the group dashboard is marked for deletion.
      * @param personalDashboard
      * @return True if the dashboards are marked for deletion, false otherwise.
      */
@@ -634,8 +653,12 @@ class DashboardService extends BaseService {
         if (groupDashboard && groupDashboard.publishedToStore) {
             groupDashboard.markedForDeletion = true
             groupDashboard.save()
-            personalDashboard.markedForDeletion = true
-            personalDashboard.save()
+
+            // Delete all mappings for personal dashboard
+            domainMappingService.purgeAllMappings(personalDashboard)
+
+            personalDashboard.delete()
+
             true
         } else {
             false
