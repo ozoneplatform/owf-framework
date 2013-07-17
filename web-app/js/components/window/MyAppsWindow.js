@@ -980,8 +980,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             this.$stackDashboards && this.$stackDashboards.hide();
             dfd.resolve();
 
-            me.collapseModal();
             this.$stackDashboards.remove();
+            
+            me.collapseModal();
             this._lastExpandedStack = null;
             
             return dfd.promise();
