@@ -16,6 +16,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
 
     dashboardContainer: null,
     appsWindow: null,
+    $dashboard: null,
     
     getToolTip: function () {
         var me = this;
@@ -62,6 +63,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
             $ = jQuery;
 
         $(document).on('click', '.editButton', $.proxy(me.editPage, me));
+        $(document).on('click', '.deleteButton', $.proxy(me.deletePage, me));
     },
 
     editPage: function (evt) {
@@ -80,6 +82,44 @@ Ext.define('Ozone.components.window.MyPageTip', {
         }).show();
 
         this.close();
+    },
+
+    deletePage: function (evt) {
+        evt.stopPropagation();
+
+        var dashboard = this.clickedStackOrDashboard,
+            dashboardStore = this.appsWindow.dashboardStore,
+            me = this,
+            msg;
+
+        function focusEl () {
+            evt.currentTarget.focus();
+        }
+
+        // Only allow the App owner to delete an App page
+        if(dashboard.stack && Ozone.config.user.displayName !== dashboard.stack.owner.username) {
+            this.appsWindow.warn('Users cannot remove individual pages from an App. Please contact your administrator.', focusEl);
+            return;
+        }
+
+        // Only allow deleting a dashboard if its only group is a stack (and we applied the stack membership rule before)
+        if(!dashboard.groups || dashboard.groups.length == 0 || (dashboard.groups.length == 1 && dashboard.groups[0].stackDefault)) {
+            msg = 'This action will permanently delete <span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span>.';
+
+            this.appsWindow.warn(msg, function () {
+                dashboardStore.remove(dashboard.model);
+                dashboardStore.save();
+                me.appsWindow.notify('Delete Dashboard', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> deleted!');
+                var $prev = me.$dashboard.prev();
+                me.$dashboard.remove();
+                $prev.focus();
+
+            }, focusEl);
+        } else {
+            this.appsWindow.warn('Users cannot remove dashboards assigned to a group. Please contact your administrator.', focusEl);
+        }
+        this.close();
     }
+
 
 });
