@@ -66,7 +66,6 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
                 validator = grailsApplication.mainContext.getBean("securityLevelValidator")
             } catch(NoSuchBeanDefinitionException nbe) {
                 log.debug("No security level validation bean found: The security level will not be validated")
-                return
             }
 
             if(validator && !validator.validate(value)) {
