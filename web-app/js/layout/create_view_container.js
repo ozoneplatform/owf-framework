@@ -157,7 +157,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             xtype: 'container',
             name: 'appInfoContainer',
             layout: {
-                type: 'hbox',
+                type: 'hbox'
             },
             padding: '0, 5, 0, 0',
             items: [

@@ -192,7 +192,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         }));
 
         me.doLayout();
-    }
+    },
  
     onDestroy: function() {
         //clean up inner dom, including event handlers
