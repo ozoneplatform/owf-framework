@@ -92,7 +92,7 @@
                 selectable: false,
                 size: this.size,
                 addFilterFn: function (model, index) {
-                    if(model.get('name').indexOf(this.searchQuery) < 0) {
+                    if(model.get('name').toLowerCase().indexOf(this.searchQuery.toLowerCase()) < 0) {
                         return false;
                     }
                     return true;

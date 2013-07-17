@@ -72,18 +72,28 @@ Ext.define('Ozone.components.window.MyAppTip', {
         me.target = me.event.target.parentElement.id;
         me.html = me.getToolTip();
 
-        me.setupClickHandlers();
-        
         me.callParent(arguments);
     },
 
     setupClickHandlers : function() {
-
         var me = this,
             $ = jQuery;
 
-        $(document).on('click', '.pushButton', $.proxy(me.pushToStore, me));
-        $(document).on('click', '.addButton', $.proxy(me.addPageToApp, me));
+        $(me.getEl().dom)
+            .on('click', '.pushButton', $.proxy(me.pushToStore, me))
+            .on('click', '.addButton', $.proxy(me.addPageToApp, me));
+    },
+
+    onRender: function() {
+        this.callParent(arguments);
+        this.setupClickHandlers();
+    },
+
+    onDestroy: function() {
+        //clean up inner dom, including event handlers
+        $(this.getEl().dom).empty();
+
+        this.callParent(arguments);
     },
 
     pushToStore: function (evt) {
@@ -108,22 +118,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             url : Ozone.util.contextPath()  + '/stack/share?id=' + stack.id,
             method : "POST",
             onSuccess: function (json){
-                me.sendRequest(json, mpLauncher);
-                //if (banner.marketplaceWidget) {
-
-                    //me.sendRequest(banner.marketplaceWidget.data.url, json, mpLauncher, banner.marketplaceWidget);
-
-                //} else {
-
-                    //var chooser = Ext.widget('marketplacewindow', {
-                        //dashboardContainer: me.dashboardContainer,
-                        //callback: function(marketplaceWidget) {
-                            //me.sendRequest(marketplaceWidget.data.url, json, mpLauncher, marketplaceWidget);
-                        //}
-                    //});
-
-                    //chooser.show();
-                //}
+                me.sendRequest(json, mpLauncher, banner.marketplaceWidget);
             },
 
             onFailure: function (errorMsg){
@@ -139,10 +134,14 @@ Ext.define('Ozone.components.window.MyAppTip', {
         me.appsWindow.close();
     },
 
-    sendRequest: function(json, mpLauncher) {
+    /**
+     * @param widget the Marketplace wiget to launch. If undefined, the marketplace
+     * switcher will be shown, allowing the user to choose
+     */
+    sendRequest: function(json, mpLauncher, widget) {
         var me = this;
 
-        mpLauncher.gotoMarketplace();
+        mpLauncher.gotoMarketplace(widget);
         mpLauncher.on(OWF.Events.Marketplace.OPENED, function(instance, mpUrl) {
             var urlString = mpUrl.replace(/\/$/, "") + '/listing';
 

@@ -145,7 +145,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 });
 
                 addStackCallback && addStackCallback("The stack");
-                self.dashboardContainer.widgetStore.load();
+                self.dashboardContainer.refreshAppComponentsView();
                 self.dashboardContainer.loadMask.hide();
             },
             error: function(jsonData) {
@@ -300,53 +300,44 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     var widgetGuid = result.data[0].widgetGuid,
                         widgetDefs;
 
-                    self.dashboardContainer.widgetStore.on({
-                        // Have to load the store first. Add a listener so we can work with the newly loaded store
-                        load: {
-                            fn: function(store, records, success, operation, eOpts) {
-                                // Get the widget definition
-                                widgetDefs = self.dashboardContainer.widgetStore.queryBy(function(record,id) {
-                                    return record.data.widgetGuid == widgetGuid;
-                                });
+                    self.dashboardContainer.refreshAppComponentsView().then(function () {
+                        // Get the widget definition
+                        widgetDefs = self.dashboardContainer.widgetStore.queryBy(function(record,id) {
+                            return record.data.widgetGuid == widgetGuid;
+                        });
 
-                                // The widget is in the store
-                                if (widgetDefs && widgetDefs.getCount() > 0)  {
+                        // The widget is in the store
+                        if (widgetDefs && widgetDefs.getCount() > 0)  {
 
-                                    // If the widget is to be launched
-                                    if (doLaunch) {
-                                        // It will be the first item if there is more than one (the remaining are required items)
-                                        var widgetDef = widgetDefs.get(0);
+                            // If the widget is to be launched
+                            if (doLaunch) {
+                                // It will be the first item if there is more than one (the remaining are required items)
+                                var widgetDef = widgetDefs.get(0);
 
-                                        notifyText = self.launchWidget(widgetDef, doLaunchCallback);
+                                notifyText = self.launchWidget(widgetDef, doLaunchCallback);
 
-                                    } else {
-                                        notifyText = "The widget was successfully added.";
-                                        addWidgetCallback && addWidgetCallback(widgetDefs.get(0).get('name'));
-                                    }
-                                } else {
-                                    // Failure message
-                                    notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddWidget;
-                                }
-                                //Display the message
-                                notifyText && $.pnotify({
-                                    title: Ozone.layout.DialogMessages.added,
-                                    text: notifyText,
-                                    type: 'success',
-                                    addclass: "stack-bottomright",
-                                    stack: stack_bottomright,
-                                    history: false,
-                                    sticker: false,
-                                    icon: false
-                                });
-
-                                self.dashboardContainer.loadMask.hide();
-                            } ,
-                            scope: this,
-                            single: true
+                            } else {
+                                notifyText = "The widget was successfully added.";
+                                addWidgetCallback && addWidgetCallback(widgetDefs.get(0).get('name'));
+                            }
+                        } else {
+                            // Failure message
+                            notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddWidget;
                         }
-                    });
+                        //Display the message
+                        notifyText && $.pnotify({
+                            title: Ozone.layout.DialogMessages.added,
+                            text: notifyText,
+                            type: 'success',
+                            addclass: "stack-bottomright",
+                            stack: stack_bottomright,
+                            history: false,
+                            sticker: false,
+                            icon: false
+                        });
 
-                    self.dashboardContainer.widgetStore.load();
+                        self.dashboardContainer.loadMask.hide();
+                    });
 
                 }   else {
                     notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddWidget;

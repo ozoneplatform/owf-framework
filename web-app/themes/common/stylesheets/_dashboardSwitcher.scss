@@ -609,3 +609,47 @@
   }
 }
 
+div.premadeViewRow {
+  height: 60px !important;
+}
+
+#premadeViewContainer .x-box-inner {
+  height: 120px !important;
+}
+
+div#premadeViewContainer {
+  transition: height .5s;
+  -moz-transition: height .5s; /* Firefox 4 */
+  -webkit-transition: height .5s; /* Safari and Chrome */
+  -o-transition: height .5s; /* Opera */
+
+  &.collapseView {
+    height: 0px !important;
+  }
+
+  &.expandView {
+    height: 120px !important;
+  }
+}
+
+div#existViewCb {
+
+  transition: height .5s;
+  -moz-transition: height .5s; /* Firefox 4 */
+  -webkit-transition: height .5s; /* Safari and Chrome */
+  -o-transition: height .5s; /* Opera */
+
+  &.collapseView {
+    height: 0px !important;
+    padding: 0px !important;
+    overflow: hidden !important;
+  }
+
+  &.expandView {
+    height: 30px !important;
+  }
+
+  input {
+    width: 396px !important;
+  }
+}

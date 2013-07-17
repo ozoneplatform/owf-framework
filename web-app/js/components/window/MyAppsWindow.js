@@ -137,7 +137,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             getIcon: function(values) {
                 var url = values.isStack ? values.imageUrl : values.iconImageUrl;
 
-                if (url && !Ext.isEmpty(url.trim())) {
+                if (url && !Ext.isEmpty(Ext.String.trim(url))) {
                     return '<div class="thumb" style="background-image: url(' + url + ') !important"></div>';
                 } else {
                     return '<div class="thumb"></div>';
@@ -466,11 +466,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('blur', '.dashboard-actions li, .stack-actions li', function (evt) {
                 $(evt.currentTarget).removeClass('hover');
             })
-            .on('keyup', '.dashboard-actions .restore', function (evt) {
-                if(evt.which === Ext.EventObject.ENTER) {
-                    me.restoreDashboard(evt);
-                }
-            })
+//            .on('keyup', '.dashboard-actions .restore', function (evt) {
+//                if(evt.which === Ext.EventObject.ENTER) {
+//                    me.restoreDashboard(evt);
+//                }
+//            })
             .on('keyup', '.dashboard-actions .share', function (evt) {
                 if(evt.which === Ext.EventObject.ENTER) {
                     me.shareDashboard(evt);
@@ -759,7 +759,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         	Ext.select('.itemTip').destroy()
         	
         	Ext.widget('mypagetip', {
-        		clickedStackOrDashboard:dashboard,
+                clickedDashboard:dashboard,
                 $dashboard: $clickedDashboard,
                 dashboardContainer: this.dashboardContainer,
                 appsWindow: this,
@@ -1018,53 +1018,53 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         }
     },
 
-    restoreDashboard: function (evt) {
-        evt.stopPropagation();
-        var me = this,
-            $dashboard = this.getElByClassFromEvent(evt, 'dashboard'),
-            dashboard = this.getDashboard($dashboard),
-            dashboardGuid = dashboard.guid;
-
-        this.warn('This action will return the dashboard <span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> to its current default state. If an administrator changed the dashboard after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
-            Ext.Ajax.request({
-                url: Ozone.util.contextPath() + '/dashboard/restore',
-                params: {
-                    guid: dashboardGuid,
-                    isdefault: dashboardGuid == me.activeDashboard.guid
-                },
-                success: function(response, opts) {
-                    var json = Ext.decode(response.responseText);
-                    if (json != null && json.data != null && json.data.length > 0) {
-                        me.notify('Restore Dashboard', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> is restored successfully to its default state!');
-
-                        var name = json.data[0].name,
-                            description = json.data[0].description;
-
-                        dashboard.model.set({
-                            'name': name,
-                            'description': description
-                        });
-                        dashboard.name = name;
-                        dashboard.description = name;
-
-                        me.updateDashboardEl($dashboard, dashboard);
-
-                        me.reloadDashboards = true;
-                    }
-                },
-                failure: function(response, opts) {
-                    Ozone.Msg.alert('Dashboard Manager', "Error restoring dashboard.", function() {
-                        Ext.defer(function() {
-                            $dashboard[0].focus();
-                        }, 200, me);
-                    }, me, null, me.dashboardContainer.modalWindowManager);
-                    return;
-                }
-            });
-        }, function () {
-            evt.currentTarget.focus();
-        });
-    },
+//    restoreDashboard: function (evt) {
+//        evt.stopPropagation();
+//        var me = this,
+//            $dashboard = this.getElByClassFromEvent(evt, 'dashboard'),
+//            dashboard = this.getDashboard($dashboard),
+//            dashboardGuid = dashboard.guid;
+//
+//        this.warn('This action will return the dashboard <span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> to its current default state. If an administrator changed the dashboard after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
+//            Ext.Ajax.request({
+//                url: Ozone.util.contextPath() + '/dashboard/restore',
+//                params: {
+//                    guid: dashboardGuid,
+//                    isdefault: dashboardGuid == me.activeDashboard.guid
+//                },
+//                success: function(response, opts) {
+//                    var json = Ext.decode(response.responseText);
+//                    if (json != null && json.data != null && json.data.length > 0) {
+//                        me.notify('Restore Dashboard', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> is restored successfully to its default state!');
+//
+//                        var name = json.data[0].name,
+//                            description = json.data[0].description;
+//
+//                        dashboard.model.set({
+//                            'name': name,
+//                            'description': description
+//                        });
+//                        dashboard.name = name;
+//                        dashboard.description = name;
+//
+//                        me.updateDashboardEl($dashboard, dashboard);
+//
+//                        me.reloadDashboards = true;
+//                    }
+//                },
+//                failure: function(response, opts) {
+//                    Ozone.Msg.alert('Dashboard Manager', "Error restoring dashboard.", function() {
+//                        Ext.defer(function() {
+//                            $dashboard[0].focus();
+//                        }, 200, me);
+//                    }, me, null, me.dashboardContainer.modalWindowManager);
+//                    return;
+//                }
+//            });
+//        }, function () {
+//            evt.currentTarget.focus();
+//        });
+//    },
 
     shareDashboard: function (evt) {
         evt.stopPropagation();
