@@ -9,6 +9,7 @@ public enum OwfApplicationSetting implements ApplicationSetting{
 	CEF_LOG_LOCATION("owf.cef.log.location"),
 	CEF_LOG_SWEEP_LOCATION("owf.cef.sweep.log.location"),
 	CEF_LOG_SWEEP_ENABLED("owf.enable.cef.log.sweep"),
+    SECURITY_LEVEL("owf.security.level"),
 	
     // OP-727
     DISABLE_INACTIVE_ACCOUNTS("owf.disable.inactive.accounts"),
