@@ -204,11 +204,11 @@
     > .bx-wrapper {
         .bx-prev {
             left: -50px !important;
-            top: 65%
+            top: 65%;
         }
         .bx-next {
             right: -50px !important;
-            top: 65%
+            top: 65%;
         }
     }
 }
@@ -296,7 +296,7 @@
     }
     &.dashboard-selected {
         .thumb {
-            // background-image: $dashboard-switcher-layout-stack-default-icon-over !important;
+            background-image: $dashboard-switcher-layout-stack-default-icon-over !important;
         }
     }
 }

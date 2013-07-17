@@ -196,12 +196,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 oneItemPerSlide: false,
                 infiniteLoop: true,
                 touchEnabled: false,
-                onSliderLoad: Ext.bind(function(currentIndex) {
-                    // 1 slide of actual content + a clone slide on each side auto-created by the plugin
-                    if ($('.bx-slide:not(.bx-clone)').length === 1) {
-                        $('.bx-pager').hide();
-                    }
-                }, me),
                 onSlideNext: Ext.bind(function() {
                     me.onSlideTransition.apply(me, arguments);
                 }, me),
