@@ -468,10 +468,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             deferred.resolve(panes[0]);
         } else {
 
-            this.activeDashboard.enableWidgetMove();
-
-            // if using keyboard, highlight first pane
-            isUsingKeyboard === true && panes[0].focus();
+            this.activeDashboard.enableWidgetMove(isUsingKeyboard === true && panes[0]);
 
             doc.on('keydown', this._selectPaneOnKeyDown, this, {
                 capture: true,
@@ -1812,7 +1809,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         me.dashboardStore.load({
             callback: function(records, options, success) {
                 if (success == true) {
-                    me.updateDashboardsFromStore(records, options, success, me.activedashboard.getGuid());
+                    me.updateDashboardsFromStore(records, options, success, me.activeDashboard.getGuid());
                 }
                 callback(success);
             }

@@ -432,15 +432,6 @@ Ext.define('Ozone.components.pane.Pane', {
         this.dashboard.stateStore.add(model);
     },
 
-    focus: function() {
-        this.enableDrop();
-        this.callParent(arguments);
-    },
-
-    blur: function() {
-        this.disableDrop();
-    },
-
     shim: function() {
         if(!this.shimEl) {
             this.shimEl = Ext.DomHelper.append(this.el, '<div></div>', true);
