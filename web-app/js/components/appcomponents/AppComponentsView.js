@@ -236,8 +236,8 @@
                             if(me._launching) {
                                 $slides.sortable('cancel');
                             }
-                            // dont perform sort if view is filtered
-                            else if(me.searchQuery === '') {
+                            // dont perform sort if view is filtered and if user only has 1 app component
+                            else if(me.searchQuery === '' && me.collection.size() > 1) {
                                 var $item = ui.item,
                                     $prev = ui.item.prev(),
                                     $next = ui.item.next(),
