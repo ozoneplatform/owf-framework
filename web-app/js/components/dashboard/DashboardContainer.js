@@ -468,10 +468,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             deferred.resolve(panes[0]);
         } else {
 
-            this.activeDashboard.enableWidgetMove();
-
-            // if using keyboard, highlight first pane
-            isUsingKeyboard === true && panes[0].focus();
+            this.activeDashboard.enableWidgetMove(isUsingKeyboard === true && panes[0]);
 
             doc.on('keydown', this._selectPaneOnKeyDown, this, {
                 capture: true,
@@ -810,7 +807,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     refreshAppComponentsView: function () {
-        var me = this;
+        var me = this,
+            dfd = $.Deferred();
+
         OWF.Collections.AppComponents.fetch({fetch: true}).done(function (resp) {
             if(me.appComponentsView) {
                 var isVisible = me.appComponentsView.$el.is(':visible');
@@ -819,7 +818,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 isVisible && me.showAppComponentsView();
             }
             me.widgetStore.loadRecords(me.widgetStore.proxy.reader.read(resp.rows).records);
+
+            dfd.resolve();
         });
+
+        return dfd.promise();
     },
 
     showAppComponentsView: function () {
@@ -1806,7 +1809,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         me.dashboardStore.load({
             callback: function(records, options, success) {
                 if (success == true) {
-                    me.updateDashboardsFromStore(records, options, success, me.activedashboard.getGuid());
+                    me.updateDashboardsFromStore(records, options, success, me.activeDashboard.getGuid());
                 }
                 callback(success);
             }

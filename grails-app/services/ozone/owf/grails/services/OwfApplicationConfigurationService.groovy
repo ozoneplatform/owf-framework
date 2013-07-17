@@ -148,8 +148,8 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 		createOrUpdateApplicationConfig(CEF_OBJECT_ACCESS_LOGGING_ENABLED, GROUP_NAME,  "Boolean", "false", subGroupCtr++, SUB_GROUP_NAME)
 
 		createOrUpdateApplicationConfig(CEF_LOG_SWEEP_ENABLED, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
-		createOrUpdateApplicationConfig(CEF_LOG_LOCATION, GROUP_NAME,  "String", "", subGroupCtr++, SUB_GROUP_NAME)
-		createOrUpdateApplicationConfig(CEF_LOG_SWEEP_LOCATION, GROUP_NAME,  "String", "", subGroupCtr++, SUB_GROUP_NAME)	
+		createOrUpdateApplicationConfig(CEF_LOG_LOCATION, GROUP_NAME,  "String", "/usr/share/tomcat6", subGroupCtr++, SUB_GROUP_NAME)
+		createOrUpdateApplicationConfig(CEF_LOG_SWEEP_LOCATION, GROUP_NAME,  "String", "/var/log/cef", subGroupCtr++, SUB_GROUP_NAME)	
 	}
 
     @Transactional(readOnly=false)

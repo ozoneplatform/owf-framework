@@ -38,7 +38,8 @@ directly overriding the base ExtJS 4.0.1 rules.
 
       .x-window-header {
 
-        padding: 15px 20px 0px 20px !important;
+        padding: 15px 0px 0px 34px !important;
+        width: 475px !important;
 
           .x-window-header-text {
             font-size: 18px;
@@ -67,6 +68,7 @@ directly overriding the base ExtJS 4.0.1 rules.
         @extend .owf-manage-window;
 
         label {
+          padding-left: 0px !important;
           color: #ffffff !important;
           background: #2f2f2f !important;
         }
@@ -76,7 +78,6 @@ directly overriding the base ExtJS 4.0.1 rules.
           background-color: transparent;
         }
 
-        padding-top: 10px;
         .titleBox {
             padding-left: 4px;
             height: 22px;
@@ -119,11 +120,7 @@ directly overriding the base ExtJS 4.0.1 rules.
         .viewSelect {
             padding-left: 4px;
             height: 155px!important;
-            .x-form-item-body {
-                .x-container {
-                    height: 155px!important;
-                }
-            }
+
             .newViewRadio,
             .existingViewRadio,
             .importedViewRadio {

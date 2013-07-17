@@ -7,8 +7,9 @@ Ext.define('Ozone.components.window.MyAppTip', {
     shadow: false,
     closable:true,
     autoHide:false,
-    draggable:true,
     target: null,
+    anchor: 'top',
+
     listeners: {
     	'close': {
     		fn: function(){
@@ -36,32 +37,45 @@ Ext.define('Ozone.components.window.MyAppTip', {
     
     getToolTip: function () {
         var me = this;
+    	var banner = me.dashboardContainer.getBanner();
         var icn = me.clickedStackOrDashboard.iconImageUrl && me.clickedStackOrDashboard.iconImageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'padding-right:15px;\' src=\''+me.clickedStackOrDashboard.iconImageUrl+'\' />':'';
         var str = '<div class=\'dashboard-tooltip-content\'>' + 
                 '<h3 class=\'name\'>' + icn + Ext.htmlEncode(Ext.htmlEncode(me.clickedStackOrDashboard.name)) + '</h3>';
 
         me.clickedStackOrDashboard.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedStackOrDashboard.description)) +'</p><br>');
         
-        // append buttons
-        str += '<ul>' +
-                    '<li class=\'addButton actionButton\'>'+
-                        '<span class=\'createImg\'></span>'+
-                        '<p class=\'actionText\'>Add Page</p>'+
-                    '</li>'+
-                    '<li class=\'pushButton actionButton\'>'+
+        var pushBtn = '',
+        	ulAdjustCls = 'ulStoreAdjust',
+        	liAdjustCls = 'liStoreAdjust',
+        	imgAdjustCls = 'imgStoreAdjust';
+        	
+        if (banner.hasMarketplaceButton)  {
+        	ulStoreAdjustCls = '';
+        	liAdjustCls = '';
+        	imgAdjustCls = '';
+        	pushBtn = '<li class=\'pushButton actionButton\'>'+
                         '<span class=\'pushImg\'></span>'+
                         '<p class=\'actionText\'>Push to Store</p>'+
+                    '</li>';
+        }
+        
+        // append buttons
+        str += '<ul class=\''+ulAdjustCls+'\'>'+
+                    '<li class=\'addButton actionButton '+liAdjustCls+'\' style=\'border-radius: 0 0 0 10px;\'>'+
+                        '<span class=\'createPageImg  '+imgAdjustCls+'\'></span>'+
+                        '<p class=\'actionText\'>Add Page</p>'+
                     '</li>'+
-                    '<li class=\'restoreButton actionButton\'>'+
-                        '<span class=\'restoreImg\'></span>'+
+                    pushBtn+
+                    '<li class=\'restoreButton actionButton '+liAdjustCls+'\'>'+
+                        '<span class=\'restoreImg  '+imgAdjustCls+'\'></span>'+
                         '<p class=\'actionText\'>Restore</p>'+
                     '</li>'+
-                    '<li class=\'editButton actionButton\'>'+
-                        '<span class=\'editImg\'></span>'+
+                    '<li class=\'editButton actionButton '+liAdjustCls+'\'>'+
+                        '<span class=\'editImg  '+imgAdjustCls+'\'></span>'+
                         '<p class=\'actionText\'>Edit</p>'+
                     '</li>'+
-                    '<li class=\'deleteButton actionButton\'>'+
-                        '<span class=\'deleteImg\'></span>'+
+                    '<li class=\'deleteButton actionButton '+liAdjustCls+'\' style=\'border-radius: 0 0 10px 0;\'>'+
+                        '<span class=\'deleteImg '+imgAdjustCls+'\'></span>'+
                         '<p class=\'actionText\'>Delete</p>'+
                     '</li>'+
                '</ul>' +
@@ -73,9 +87,6 @@ Ext.define('Ozone.components.window.MyAppTip', {
     bindHandlers: function() {
         var me = this;
         var $ = jQuery;
-
-        console.log(me);
-
 
         if(me.clickedStackOrDashboard.isStack) {
 
@@ -181,6 +192,13 @@ Ext.define('Ozone.components.window.MyAppTip', {
         }));
 
         me.doLayout();
+    }
+ 
+    onDestroy: function() {
+        //clean up inner dom, including event handlers
+        $(this.getEl().dom).empty();
+
+        this.callParent(arguments);
     },
 
     handlePushToStore: function (evt) {
@@ -205,22 +223,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             url : Ozone.util.contextPath()  + '/stack/share?id=' + stack.id,
             method : "POST",
             onSuccess: function (json){
-                me.sendRequest(json, mpLauncher);
-                //if (banner.marketplaceWidget) {
-
-                    //me.sendRequest(banner.marketplaceWidget.data.url, json, mpLauncher, banner.marketplaceWidget);
-
-                //} else {
-
-                    //var chooser = Ext.widget('marketplacewindow', {
-                        //dashboardContainer: me.dashboardContainer,
-                        //callback: function(marketplaceWidget) {
-                            //me.sendRequest(marketplaceWidget.data.url, json, mpLauncher, marketplaceWidget);
-                        //}
-                    //});
-
-                    //chooser.show();
-                //}
+                me.sendRequest(json, mpLauncher, banner.marketplaceWidget);
             },
 
             onFailure: function (errorMsg){
@@ -302,10 +305,14 @@ Ext.define('Ozone.components.window.MyAppTip', {
         me.close();
     },
 
-    sendRequest: function(json, mpLauncher) {
+    /**
+     * @param widget the Marketplace wiget to launch. If undefined, the marketplace
+     * switcher will be shown, allowing the user to choose
+     */
+    sendRequest: function(json, mpLauncher, widget) {
         var me = this;
 
-        mpLauncher.gotoMarketplace();
+        mpLauncher.gotoMarketplace(widget);
         mpLauncher.on(OWF.Events.Marketplace.OPENED, function(instance, mpUrl) {
             var urlString = mpUrl.replace(/\/$/, "") + '/listing';
 

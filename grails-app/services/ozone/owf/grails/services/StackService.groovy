@@ -653,7 +653,35 @@ class StackService {
         if(stackGroup != null) {
             domainMappingService.getMappings(stackGroup, RelationshipType.owns, Dashboard.TYPE).eachWithIndex { it, i ->
 
+                // This gets each stack (group) dashboard for the stack
+                // If a group dashboard is marked for deletion, just delete it and don't add it to the JSON
+                // Set publishedToStore to true
+                // For each group dashboard, find the associated personal dashboards.
+                //     For each personal dashboard
+                //         if it is the owner's personal dashboard, update the group dashboard with the personal
+                //            dashboard's description, layoutconfig, ... (user-changeable fields)
+                //         Are changes to group dashboard propagated to other personal dashboards?
+                // Save the group dashboard
+                // Create the JSON for the group dashboard and add to the stack JSON
+
                 def dashboard = Dashboard.findById(it.destId)
+
+                // Find clones of group dashboard
+                // Note - probably don't have to go through all the clones - just get the owner clone... code is
+                // being changed elsewhere so we don't have to delete personal dashboards marked for deletions (they will
+                // be deleted at the time the group dashboard is deleted, so that all we have to do is delete group
+                // dashboards)
+                domainMappingService.getMappings(dashboard, RelationshipType.cloneOf, Dashboard.TYPE, 'dest').each {
+                    def personalDashboard = Dashboard.findById(it.srcId)
+
+                        // If it belongs to the owner, create JSON of description, layoutconfig, name(?) and use it to
+                        // update the associated group dashboard
+
+
+                }
+
+                // Save the group dashboard
+                // what to do if push eventually fails? Can we roll back changes?
 
                 //Get only the parameters required for a dashboard definition
                 def dashboardData = [
@@ -717,6 +745,8 @@ class StackService {
     
     def share(params)  {
 
+        // Only owner of stack can push to store
+        ensureOwner(params.id)
         def stackData = createStackData(params)
         stackData =  (stackData as JSON).toString()
         return stackData
@@ -829,7 +859,7 @@ class StackService {
     private def ensureAdminOrOwner(stackId) {
         if(!stackId && !accountService.getLoggedInUserIsAdmin()) {
             throw new OwfException(message: "Cannot verify ownership of a stack without the stack ID", exceptionType: OwfExceptionTypes.NotFound)
-        } 
+        }
 
         def stackInstance = Stack.get(stackId)
 
@@ -837,8 +867,25 @@ class StackService {
             throw new OwfException(message: "Cannot find a stack with id ${stackId}", exceptionType: OwfExceptionTypes.NotFound)
         } else if((!stackInstance.owner || accountService.getLoggedInUser().id != stackInstance.owner.id) && !accountService.getLoggedInUserIsAdmin()) {
             throw new OwfException(message: "You must be an administrator or owner of a stack to edit it.",
-                exceptionType: OwfExceptionTypes.Authorization)
-        } 
+                    exceptionType: OwfExceptionTypes.Authorization)
+        }
+
+
+    }
+
+    private def ensureOwner(stackId) {
+        if(!stackId && !accountService.getLoggedInUserIsAdmin()) {
+            throw new OwfException(message: "Cannot verify ownership of a stack without the stack ID", exceptionType: OwfExceptionTypes.NotFound)
+        }
+
+        def stackInstance = Stack.get(stackId)
+
+        if(!stackInstance) {
+            throw new OwfException(message: "Cannot find a stack with id ${stackId}", exceptionType: OwfExceptionTypes.NotFound)
+        } else if((!stackInstance.owner || accountService.getLoggedInUser().id != stackInstance.owner.id)) {
+            throw new OwfException(message: "You must be an owner of a stack to push it to the store.",
+                    exceptionType: OwfExceptionTypes.Authorization)
+        }
 
 
     }
