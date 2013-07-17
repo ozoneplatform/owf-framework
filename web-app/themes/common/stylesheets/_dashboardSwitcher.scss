@@ -202,7 +202,7 @@
         margin-top: 2px;
         margin-left: auto;
         margin-right: auto;
-        font-size: 10px;
+        //font-size: 10px;
     }
     
     &:hover {
@@ -282,6 +282,7 @@
 .detail-actions {
 	padding-top:5px; 
 	color: $widget-details-color;
+    font-size: 11px;
 }
 
 .x-ie7 {
