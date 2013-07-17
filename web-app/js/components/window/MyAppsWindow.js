@@ -342,9 +342,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     },
 
     getActiveDashboardMiniSlideIndex: function() {
-        if (this.activeDashboard.configRecord.isMarketplaceDashboard()) {
+        if (!this.getActiveStackId() || this.activeDashboard.configRecord.isMarketplaceDashboard()) {
             return;
         }
+        
         var me = this,
             activeDashboardId = this.activeDashboard.id,
             $dashboardEl = $('#dashboard' + activeDashboardId, '.stack-dashboards'),
@@ -357,7 +358,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     goToActiveStackSlide: function() {
         var me = this;
 
-        if (me.activeDashboard.configRecord.isMarketplaceDashboard()) {
+        if (!me.getActiveStackId() || me.activeDashboard.configRecord.isMarketplaceDashboard()) {
             me.slider.goToSlide(0);
         } else {
             me.slider.goToSlide(me.getActiveStackSlideIndex());            
