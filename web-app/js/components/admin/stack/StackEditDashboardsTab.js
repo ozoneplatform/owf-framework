@@ -16,7 +16,7 @@ Ext.define('Ozone.components.admin.stack.StackEditDashboardsTab', {
         Ext.applyIf(this, {
             layout: 'fit',
             itemId: 'tabDashboards',
-            title: 'Dashboards',
+            title: 'Pages',
             iconCls: 'dashboard-tab',
             editor: 'Stack',
             componentId: 'stack_id',

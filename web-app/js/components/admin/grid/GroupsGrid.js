@@ -36,7 +36,7 @@ Ext.define('Ozone.components.admin.GroupsGrid', {
                 return this.renderCell(value, metaData, record);
             }
         }, {
-            header: 'Stacks',
+            header: 'Applications',
             dataIndex: 'totalStacks',
             flex: 1,
             sortable: false,

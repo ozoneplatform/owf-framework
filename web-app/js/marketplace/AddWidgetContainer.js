@@ -135,7 +135,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
                 $.pnotify({
                     title: Ozone.layout.DialogMessages.added,
-                    text: "The stack was successfully added.",
+                    text: "The application was successfully added.",
                     type: 'success',
                     addclass: "stack-bottomright",
                     stack: stack_bottomright,

@@ -5,7 +5,7 @@ Ext.define('Ozone.components.admin.StacksGrid', {
 
     cls: 'grid-stack',
 
-    title: 'Stacks',
+    title: 'Applications',
     columns: [
         {
           itemId: 'id',

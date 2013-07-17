@@ -77,7 +77,7 @@ Ext.define('Ozone.components.UsersGrid', {
             sortable: false,
             editable: false
         }, {
-            header: 'Stacks',
+            header: 'Applications',
             dataIndex: 'totalStacks',
             flex: 1,
             sortable: false,

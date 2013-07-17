@@ -30,7 +30,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                     xtype:'tbtext',
                     itemId: 'lblStacksGrid',
                     cls: 'tbStacksGridHdr',
-                    text:'Stacks'
+                    text:'Applications'
                 },'->',{
                     xtype: 'searchbox',
                     listeners: {
@@ -82,7 +82,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                 store.save();
                             }
                             else {
-                                self.editPanel.showAlert("Error", "You must select at least one stack to remove.")
+                                self.editPanel.showAlert("Error", "You must select at least one application to remove.")
                             }
                         }
                     },
@@ -138,7 +138,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                             cmp.guid_EditCopyWidget = result.value;
                         },
                         onFailure: function(err) { /* No op */
-                            self.editPanel.showAlert('Preferences Error', 'Error looking up Stack Editor: ' + err);
+                            self.editPanel.showAlert('Preferences Error', 'Error looking up Application Editor: ' + err);
                         }
                     });
                     
@@ -159,7 +159,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                         }
                                     }
                                     else {
-                                        self.editPanel.showAlert("Error", "You must select at least one stack to edit.");
+                                        self.editPanel.showAlert("Error", "You must select at least one application to edit.");
                                     }
                                 },
                                 scope: this
@@ -228,7 +228,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
             data: dataString
         }, function(response) {
             if (response && response.error) {
-                self.editPanel.showAlert('Launch Error', 'Stack Editor Launch Failed: ' + response.message);
+                self.editPanel.showAlert('Launch Error', 'Application Editor Launch Failed: ' + response.message);
             }
         });
     },

@@ -26,7 +26,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                                 '<div class="descriptorUrlTitle">{descriptorUrlTitle}</div><button class="descriptorUrlInfoIcon" ></button>' + 
                                 '</div>',
                     renderData: {
-                        descriptorUrlTitle: 'Import Stack from Descriptor URL'
+                        descriptorUrlTitle: 'Import Applifcation from Descriptor URL'
                     },
                     renderSelectors: {
                         iconEl: '.descriptorUrlInfoIcon',
@@ -70,7 +70,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     name: 'descriptorUrlInfoMsg',
                     cls: 'descriptorUrlInfoMsg',
                     hidden: true,
-                    html: 'Enter the URL of a Stack Descriptor and click the Load button. Stack data, including page and widget definitions, is automatically retrieved from a Web-accessible location. To create the stack in OWF, click Apply.'
+                    html: 'Enter the URL of a Application Descriptor and click the Load button. Application data, including page and widget definitions, is automatically retrieved from a Web-accessible location. To create the applifcation in OWF, click Apply.'
                 },
                 {
                     xtype: 'urlfield',
@@ -113,7 +113,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     defaults: {minWidth: 75},
                     items: [
                         { 
-                            text: '<u>Don\'t have a stack descriptor?</u>',
+                            text: '<u>Don\'t have an application descriptor?</u>',
                             itemId: 'manualEntryLinkBtn',
                             cls: 'manualEntryLinkBtn',
                             handler: function(btn) {
@@ -166,7 +166,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     name: 'descriptorUrlErrorMsg',
                     cls: 'descriptorUrlErrorMsg',
                     hidden: true,
-                    html: 'Unable to retrieve stack information. Please check your descriptor and try again.'
+                    html: 'Unable to retrieve application information. Please check your descriptor and try again.'
                 },
                 {
                     xtype: 'component',
@@ -182,7 +182,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     name: 'manualEntryTitle',
                     cls: 'manualEntryTitle',
                     hidden: true,
-                    html: 'Enter Stack Description'
+                    html: 'Enter Application Description'
                 },
                 {
                     xtype: 'textfield',
@@ -284,8 +284,8 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
             }
 
             //Update the descriptorUrlInfo title and help message for editing an existing widget
-            this.getComponent('descriptorUrlInfo').titleEl.dom.innerHTML = 'Update Stack from Descriptor URL';
-            this.getComponent('descriptorUrlInfoMsg').update('Click Load to update the stack. If the stack descriptor file changed since it was added to your instance of OWF, clicking Load will retrieve the latest stack data. To upload it to your OWF, click Apply.');
+            this.getComponent('descriptorUrlInfo').titleEl.dom.innerHTML = 'Update Application from Descriptor URL';
+            this.getComponent('descriptorUrlInfoMsg').update('Click Load to update the application. If the application descriptor file changed since it was added to your instance of OWF, clicking Load will retrieve the latest application data. To upload it to your OWF, click Apply.');
 
             if(data.descriptorUrl && this.getComponent('descriptorUrlErrorMsg').isHidden()) {
                 this.loadedFromDescriptor = true;
