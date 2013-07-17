@@ -14,6 +14,7 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
     draggable: false,
     shadow: false,
     closeAction: 'destroy',
+    resizable: false,
     
     mixins: {
         escHelper: 'Ozone.components.focusable.EscCloseHelper'
@@ -31,7 +32,7 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
 
         // Decide between two window sizes, accommodating regular- and large-text themes.
         var windowWidth = themeFontSize <= 12 ? 500 : 700;
-        var windowHeight = 600;
+        var windowHeight = 515;
 
         var dashPanelHeight = me.ownerCt.getHeight();
         var dashPanelWidth = me.ownerCt.getWidth();
