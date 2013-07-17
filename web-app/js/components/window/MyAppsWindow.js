@@ -338,19 +338,43 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     },
 
     getActiveStackSlideIndex: function() {
-        var me = this,
-            stackId = me.getActiveStackId(),
+        var me = this;
+
+        var stackId = me.getActiveStackId(),
             $stackEl = $("#stack" + stackId, '.bx-slide:not(.bx-clone)'),
-            $stackElSlide = $stackEl.parent()
-            slideIndexOfActiveStack = $('.bx-slide:not(.bx-clone)').index($stackElSlide);
+            $stackElSlide = $stackEl.parent(),
+            slideIndexOfActiveStack = $('.bx-slide:not(.bx-clone)', me.el.dom).index($stackElSlide);
 
         return slideIndexOfActiveStack;
+    },
+
+    getActiveDashboardMiniSlideIndex: function() {
+        if (this.activeDashboard.configRecord.isMarketplaceDashboard()) {
+            return;
+        }
+        var me = this,
+            activeDashboardId = this.activeDashboard.id,
+            $dashboardEl = $('#dashboard' + activeDashboardId, '.stack-dashboards'),
+            $dashboardElSlide = $dashboardEl.parent(),
+            slideIndexOfActiveDashboard = $('.bx-slide:not(.bx-clone)', '.stack-dashboard').index($dashboardElSlide);
+
+        return slideIndexOfActiveDashboard;
     },
 
     goToActiveStackSlide: function() {
         var me = this;
 
-        me.slider.goToSlide(me.getActiveStackSlideIndex());
+        if (me.activeDashboard.configRecord.isMarketplaceDashboard()) {
+            me.slider.goToSlide(0);
+        } else {
+            me.slider.goToSlide(me.getActiveStackSlideIndex());            
+        }
+    },
+
+    goToActiveDashboardSlideinMiniSlider: function() {
+        var me = this;
+
+        me.appPageCarousel.goToSlide(me.getActiveDashboardMiniSlideIndex);
     },
 
     onSlideTransition: function($slideElement, oldIndex, newIndex) {
@@ -922,13 +946,14 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     buildAppPageCarousel: function($stackDashboardContainer) {
         var me = this;
 
-        $('.all-dashboards', $stackDashboardContainer).bxSlider({
+        if (me.appPageCarousel) {
+            me.appPageCarousel.destroySlider();
+        }
+
+        me.appPageCarousel = $('.all-dashboards', $stackDashboardContainer).bxSlider({
             oneItemPerSlide: false,
             infiniteLoop: true,
-            touchEnabled: false,
-            onSliderLoad: Ext.bind(function(currentIndex) {
-                $('.bx-wrapper, .bx-viewport', $stackDashboardContainer).addClass('mini');
-            }, me)
+            touchEnabled: false
         });
     },
 

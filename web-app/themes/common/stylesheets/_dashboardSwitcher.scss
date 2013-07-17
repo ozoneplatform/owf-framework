@@ -70,11 +70,19 @@
             }
 
             .store-link-btn-img {
-                background-image: theme-image($theme-name, 'myappswindow/moreInStore.png');
+                background-image: theme-image($theme-name, 'myappswindow/MoreinStore-out.png');
+
+                &:hover {
+                    background-image: theme-image($theme-name, 'myappswindow/MoreinStore-over.png');                    
+                }
             }
 
             .create-link-btn-img {
-                background-image: theme-image($theme-name, 'myappswindow/createNewApp.png');
+                background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-out.png');
+
+                &:hover {
+                    background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-over.png');
+                }
             }
         }
     }
@@ -120,72 +128,95 @@
 }
 
 /**** BEGIN slider styling ****/
-.bx-wrapper {
-    margin-bottom: 30px !important;
-    min-height: 360px;
-    max-height: 490px;
+#dashboard-switcher
+    > #dashboard-switcher-body {
 
-    .bx-viewport {
-        @include box-shadow(none);
-
-        background: transparent !important;
-        border: 0px;
-        margin-left: 84px;
-        margin-right: 75px;
-        width: 480px !important;
-        height: 360px;
+    > .bx-wrapper {
+        margin-bottom: 30px !important;
         min-height: 360px;
+        max-height: 490px;
+
+        > .bx-viewport {
+            @include box-shadow(none);
+
+            background: transparent !important;
+            border: 0px;
+            margin-left: 72px;
+            margin-right: 75px;
+            width: 540px !important;
+            height: 360px;
+            min-height: 360px;
+        }
+    }
+
+    > .bx-wrapper .bx-pager, > .bx-wrapper .bx-controls-auto {
+        bottom: -20px;
+    }
+
+    > .bx-wrapper {
+        .bx-prev {
+            left: 0px !important;
+        }
+        .bx-next {
+            right: 0px !important;
+        }
     }
 }
 
-.bx-wrapper .bx-pager, .bx-wrapper .bx-controls-auto {
-    bottom: -20px;
-}
+#dashboard-switcher
+    > #dashboard-switcher-body
+    > .bx-wrapper
+    > .bx-viewport
+    > .all-dashboards
+    > .bx-slide:not(.bx-clone)
+    > .stack-dashboards-container
+    > .stack-dashboards {
 
-.bx-wrapper {
-    .bx-prev {
-        left: 0px !important;
-    }
-    .bx-next {
-        right: 0px !important;
-    }
-}
-
-.bx-wrapper.mini {
-    min-height: 120px !important;
-    max-height: 120px !important;
-    width: 400px !important;
-
-    .bx-viewport.mini {
-        @include box-shadow(none);
-
-        background: transparent !important;
-        margin-left: 0px;
-        margin-right: 0px;
-        border: 0px;
+    > .bx-wrapper {
+        min-height: 105px !important;
+        max-height: 105px !important;
         width: 400px !important;
-        height: 120px !important;
-        min-height: 120px !important;
-    }
-}
+        margin-bottom: 30px;
 
-.bx-wrapper.mini .bx-pager, .bx-wrapper .bx-controls-auto {
-    bottom: -20px;
-}
+        > .bx-viewport {
 
-.bx-wrapper.mini {
-    .bx-prev {
-        left: 0px !important;
+            .dashboard {
+                padding-top: 5px;
+                margin-bottom: 0px;
+                width: 80px;
+            }
+            @include box-shadow(none);
+
+            background: transparent !important;
+            margin-left: 5px;
+            margin-right: 20px;
+            border: 0px;
+            width: 400px !important;
+            height: 105px !important;
+            min-height: 105px !important;
+        }
     }
-    .bx-next {
-        right: 0px !important;
+
+    > .bx-wrapper .bx-pager, > .bx-wrapper .bx-controls-auto {
+        bottom: -20px;
+    }
+
+    > .bx-wrapper {
+        .bx-prev {
+            left: -50px !important;
+            top: 65%
+        }
+        .bx-next {
+            right: -50px !important;
+            top: 65%
+        }
     }
 }
 /***** END slider styling  ****/
 
 #dashboard-switcher .dashboard, #dashboard-switcher .stack, .stack.drag-proxy, .dashboard.drag-proxy {
-    $dashboard-width: 80px;
-    $dashboard-height: 120px;
+    $dashboard-width: 90px;
+    $dashboard-height: 100px;
 
     //For these elements, it is more useful
     //to compute content width not overall box 
@@ -202,6 +233,7 @@
     cursor: pointer;
     width: $dashboard-width;
     height: $dashboard-height;
+    margin-bottom: 5px;
 
     .thumb-wrap {
         text-align: center;
