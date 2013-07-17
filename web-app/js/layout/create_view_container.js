@@ -754,15 +754,12 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                                         layoutConfig: me.getPremadeLayout()
                                 });
 
-                                dashboardContainer.createDashboard(dashboardModel);
+                                // DO not open dashboard designer, just save the dashboard with the pre-made layout
+                                dashboardContainer.saveDashboard(dashboardModel.data, 'create', function(json) {
 
-//                                // DO not open dashboard designer, just save the dashboard with the pre-made layout
-//                                dashboardContainer.saveDashboard(dashboardModel.data, 'create', function() {
-//
-//                                    // activate new dashboard
-//                                    var guid = dashboardModel.get('guid');
-//                                    dashboardContainer.activateDashboard(json.guid);
-//                                });
+                                    // activate new dashboard
+                                    dashboardContainer.activateDashboard(json.guid);
+                                });
 
                                 this.close();
                             }
