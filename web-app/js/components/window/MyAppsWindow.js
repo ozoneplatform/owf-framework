@@ -137,7 +137,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             getIcon: function(values) {
                 var url = values.isStack ? values.imageUrl : values.iconImageUrl;
 
-                if (url && !Ext.isEmpty(url.trim())) {
+                if (url && !Ext.isEmpty(Ext.String.trim(url))) {
                     return '<div class="thumb" style="background-image: url(' + url + ') !important"></div>';
                 } else {
                     return '<div class="thumb"></div>';
