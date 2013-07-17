@@ -185,7 +185,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                         '<span class="create-link-btn-img"></span>'+
                         '<span class="create-link-btn-text">Create New App</span>'+
                     '</li>'+
-                    '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-tip="Name, describe and design a new dashboard.">+</li>'+
                 '</ul>'+
             '</div>');
 
@@ -781,7 +780,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         dashboard = this.getDashboard( $clickedDashboard );
 
         if ($(evt.target).hasClass('detail-action')) {
-        	Ext.select('.itemTip').destroy()
+        	Ext.select('.itemTip').destroy();
         	
         	Ext.widget('mypagetip', {
                 clickedDashboard:dashboard,
@@ -829,7 +828,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 stack = me.getStack( $clickedStack );
             
             if ($(evt.target).hasClass('detail-action')) {
-            	Ext.select('.itemTip').destroy()
+            	Ext.select('.itemTip').destroy();
             	
             	Ext.widget('myapptip', {
             		clickedStackOrDashboard:stack,
@@ -1317,62 +1316,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         });
     },
 
-    deleteStack: function (evt) {
-        evt.stopPropagation();
-
-        var me = this,
-            $stack = this.getElByClassFromEvent(evt, 'stack'),
-            stack = this.getStack($stack),
-            msg = 'This action will permanently delete stack <span class="heading-bold">' 
-                    + Ext.htmlEncode(stack.name) + '</span> and its dashboards.';
-
-        function focusEl () {
-            evt.currentTarget.focus();
-        }
-
-        var stackGroups = stack.groups,
-            userGroups = Ozone.config.user.groups,
-            groupAssignment = false;
-        
-        if(stackGroups && userGroups && stackGroups.length > 0 && userGroups.length > 0) {
-            for (var i = 0, len1 = stackGroups.length; i < len1; i++) {
-                var stackGroup = stackGroups[i];
-                
-                for (var j = 0, len2 = userGroups.length; j < len2; j++) {
-                    var userGroup = userGroups[j];
-                    if(stackGroup.id === userGroup.id) {
-                        groupAssignment = true;
-                        break;
-                    }
-                }
-
-                if(groupAssignment === true)
-                    break;
-            }
-        }
-
-        if(groupAssignment) {
-            this.warn('Users in a group cannot remove stacks assigned to the group. Please contact your administrator.', focusEl);
-            return;
-        }
-
-        this.warn(msg, function () {
-            me.dashboardContainer.stackStore.remove( me.dashboardContainer.stackStore.getById(stack.id) );
-            me.dashboardContainer.stackStore.save();
-
-            if( me._lastExpandedStack === stack) {
-                me.hideStackDashboards();
-            }
-
-            var $prev = $stack.prev();
-            $stack.remove();
-            $prev.focus();
-            
-            me._deletedStackOrDashboards.push(stack);
-            me.reloadDashboards = true;
-
-        }, focusEl);
-    },
+    
 
     warn: function (msg, okFn, cancelFn) {
         Ext.widget('alertwindow',{

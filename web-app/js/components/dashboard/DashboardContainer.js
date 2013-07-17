@@ -468,10 +468,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             deferred.resolve(panes[0]);
         } else {
 
-            this.activeDashboard.enableWidgetMove();
-
-            // if using keyboard, highlight first pane
-            isUsingKeyboard === true && panes[0].focus();
+            this.activeDashboard.enableWidgetMove(isUsingKeyboard === true && panes[0]);
 
             doc.on('keydown', this._selectPaneOnKeyDown, this, {
                 capture: true,
@@ -1745,6 +1742,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         var defaultTabGuid = storeRecords[0].get('guid');
         var stack = storeRecords[0].get('stack');
         var stackContext = stack ? stack.stackContext : null;
+        var dashboardGuidFound = false;
 
         // Clear 'this.dashboards' array.
         this.dashboards.length = 0;
@@ -1764,6 +1762,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             for (var i1 = 0, len = storeRecords.length; i1 < len; i1++) {
 
                 var dsRecord = storeRecords[i1];
+
+                dashboardGuidFound = dashboardGuidToActivate === dsRecord.get('guid');
 
                 // Add dashboard object to local array.
                 me.dashboards.push(me.createDashboardConfig(dsRecord));
@@ -1786,9 +1786,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 addedDash.disableCssAnimations();
                 dashboards.push(addedDash);
             }
+
+            // validate dashboardGuidToActivate
+            dashboardGuidToActivate = dashboardGuidFound === true ? dashboardGuidToActivate : defaultTabGuid;
+
             // activate dashboard
-            me._activateDashboard(dashboardGuidToActivate || defaultTabGuid); // Focus the default dashboard.
-            me.activateDashboard(dashboardGuidToActivate || defaultTabGuid, true, stackContext);
+            me._activateDashboard(dashboardGuidToActivate); // Focus the default dashboard.
+            me.activateDashboard(dashboardGuidToActivate, true, stackContext);
 
             //If browser uses animations, enable them now that dashboards are added to card layout
             if (Modernizr.cssanimations) {
@@ -1812,9 +1816,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         me.dashboardStore.load({
             callback: function(records, options, success) {
                 if (success == true) {
-                    me.updateDashboardsFromStore(records, options, success, me.activedashboard.getGuid());
+                    me.updateDashboardsFromStore(records, options, success, me.activeDashboard.getGuid());
                 }
-                callback(success);
+                Ext.isFunction(callback) && callback(success);
             }
         });
     },

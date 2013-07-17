@@ -1032,6 +1032,11 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                     .removeClass('highlight-dashboard-designer-drop')
                     .off('.launch');
             });
+
+            if(sourcePane && sourcePane.el) {
+                var $sourcePaneShim = $(sourcePane.el.dom).children('.paneshim');
+                $shims.not($sourcePaneShim).addClass('highlight-dashboard-designer-drop');
+            }
         }
     },
 

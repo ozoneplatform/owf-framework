@@ -7,7 +7,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
     shadow: false,
     closable:true,
     autoHide:false,
-    draggable:true,
+    draggable:false,
     listeners: {
         'close':function(){
             this.destroy();
@@ -26,18 +26,18 @@ Ext.define('Ozone.components.window.MyPageTip', {
 
         me.clickedDashboard.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedDashboard.description)) +'</p><br>');
         
-        // append buttons
-        str += '<ul>' +
-                    '<li class=\'restoreButton actionButton\'>'+
-                        '<span class=\'restoreImg\'></span>'+
+        // append buttons 
+        str += '<ul style=\'padding-top:2%;\'>' +
+                    '<li class=\'restoreButton actionButton liPageAdjust\' style=\'border-radius: 0 0 0 10px;\'>'+
+                        '<span class=\'restoreImg imgPageAdjust\' ></span>'+
                         '<p class=\'actionText\'>Restore</p>'+
                     '</li>'+
-                    '<li class=\'editButton actionButton\'>'+
-                        '<span class=\'editImg\'></span>'+
+                    '<li class=\'editButton actionButton liPageAdjust\'>'+
+                        '<span class=\'editImg imgPageAdjust\'></span>'+
                         '<p class=\'actionText\'>Edit</p>'+
                     '</li>'+
-                    '<li class=\'deleteButton actionButton\'>'+
-                        '<span class=\'deleteImg\'></span>'+
+                    '<li class=\'deleteButton actionButton liPageAdjust\'  style=\'border-radius: 0 0 10px; 0\'>'+
+                        '<span class=\'deleteImg imgPageAdjust\'></span>'+
                         '<p class=\'actionText\'>Delete</p>'+
                     '</li>'+
                '</ul>' +
@@ -79,7 +79,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
         var editDashWindow = Ext.widget('createdashboardwindow', {
             itemId: 'editDashWindow',
             title: 'Edit Dashboard',
-            height: 250,
+            height: 300,
             dashboardContainer: this.dashboardContainer,
             ownerCt: this.dashboardContainer,
             hideViewSelectRadio: true,
