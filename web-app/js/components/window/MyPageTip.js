@@ -26,9 +26,9 @@ Ext.define('Ozone.components.window.MyPageTip', {
 
         me.clickedDashboard.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedDashboard.description)) +'</p><br>');
         
-        // append buttons
-        str += '<ul style=\'padding-bottom:2%;\'>' +
-                    '<li class=\'restoreButton actionButton liPageAdjust\'>'+
+        // append buttons 
+        str += '<ul style=\'padding-top:2%;\'>' +
+                    '<li class=\'restoreButton actionButton liPageAdjust\' style=\'border-radius: 0 0 0 10px;\'>'+
                         '<span class=\'restoreImg imgPageAdjust\' ></span>'+
                         '<p class=\'actionText\'>Restore</p>'+
                     '</li>'+
@@ -36,7 +36,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
                         '<span class=\'editImg imgPageAdjust\'></span>'+
                         '<p class=\'actionText\'>Edit</p>'+
                     '</li>'+
-                    '<li class=\'deleteButton actionButton liPageAdjust\'>'+
+                    '<li class=\'deleteButton actionButton liPageAdjust\'  style=\'border-radius: 0 0 10px; 0\'>'+
                         '<span class=\'deleteImg imgPageAdjust\'></span>'+
                         '<p class=\'actionText\'>Delete</p>'+
                     '</li>'+
