@@ -458,12 +458,12 @@ class StackService {
     private def isStackOwner(stacks) {
         def stackOwnerOfAll = true
 
-        def userId = accountService.getLoggedInUser().id
+        def userId = accountService.getLoggedInUser()?.id
         def stack
 
         stacks.each{
             stack = Stack.get(it.id)
-            if(!stack.owner || userId != stack.owner.id) {
+            if(!stack || !stack.owner || !userId || userId != stack.owner.id) {
                 stackOwnerOfAll = false
             }
         }
@@ -477,12 +477,13 @@ class StackService {
 
         stacks.each {
             stack = Stack.get(it.id)
-            Dashboard.findAllWhere(user: null, stack: stack).each {
-                if(it.publishedToStore) {
-                    canDeleteAll = false;
+            if(stack) {
+                Dashboard.findAllWhere(user: null, stack: stack).each {
+                    if(it.publishedToStore) {
+                        canDeleteAll = false;
+                    }
                 }
             }
-
         }
     }
 
