@@ -238,6 +238,9 @@ class StackServiceTests extends GroovyTestCase {
             "tab": "users",
             "update_action": "add"
         ])
+
+        // Assign owner to stack to enable creation of a personal dashboard
+        Stack.get(stackIds[0])?.owner = Person.get(personId)
         
         // delete previous user dashboard to ensure only one will return from list in next step
         dashboardService.delete([
