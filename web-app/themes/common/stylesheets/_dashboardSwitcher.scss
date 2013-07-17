@@ -584,6 +584,7 @@ div#premadeViewContainer {
 }
 
 div#existViewCb {
+
   transition: height .5s;
   -moz-transition: height .5s; /* Firefox 4 */
   -webkit-transition: height .5s; /* Safari and Chrome */
@@ -597,5 +598,9 @@ div#existViewCb {
 
   &.expandView {
     height: 30px !important;
+  }
+
+  input {
+    width: 396px !important;
   }
 }
