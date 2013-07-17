@@ -2,6 +2,7 @@ package ozone.owf.grails.services
 
 import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
 import org.ozoneplatform.appconfig.server.service.impl.ApplicationConfigurationServiceImpl
+import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.transaction.annotation.Transactional
 import static ozone.owf.enums.OwfApplicationSetting.*
 import static ozone.owf.enums.OwfApplicationSettingType.*
@@ -56,6 +57,22 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
                 applicationConfiguration.errors.rejectValue('value', "application.configuration.custom.headerfooter.height.exceeds.max")
             }
             return
+        }
+
+        if(applicationConfiguration.code == SECURITY_LEVEL.code) {
+            def value = applicationConfiguration.value
+            def validator
+            try {
+                validator = grailsApplication.mainContext.getBean("securityLevelValidator")
+            } catch(NoSuchBeanDefinitionException nbe) {
+                log.debug("No security level validation bean found: The security level will not be validated")
+                return
+            }
+
+            if(validator && !validator.validate(value)) {
+                applicationConfiguration.errors.rejectValue('value', "application.configuration.owf.security.level.invalid")
+                return
+            }
         }
 
         super.validate(applicationConfiguration)
@@ -149,20 +166,34 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 
 		createOrUpdateApplicationConfig(CEF_LOG_SWEEP_ENABLED, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
 		createOrUpdateApplicationConfig(CEF_LOG_LOCATION, GROUP_NAME,  "String", "/usr/share/tomcat6", subGroupCtr++, SUB_GROUP_NAME)
-		createOrUpdateApplicationConfig(CEF_LOG_SWEEP_LOCATION, GROUP_NAME,  "String", "/var/log/cef", subGroupCtr++, SUB_GROUP_NAME)	
+		createOrUpdateApplicationConfig(CEF_LOG_SWEEP_LOCATION, GROUP_NAME,  "String", "/var/log/cef", subGroupCtr++, SUB_GROUP_NAME)
+        createOrUpdateApplicationConfig(SECURITY_LEVEL, GROUP_NAME, "String", "", subGroupCtr, SUB_GROUP_NAME)
 	}
 
     @Transactional(readOnly=false)
     private void createRequiredUserAccountConfigurations(){
         createRequiredSessionConfigurations() 
         createRequiredInactiveAccountConfigurations()
+        createRequiredCustomBackgroundConfigurations()
         createRequiredCustomHeaderFooterConfigurations()
+    }
+
+    //OP-2015
+    private void createRequiredCustomBackgroundConfigurations(){
+        def GROUP_NAME=BRANDING
+        def SUB_GROUP_NAME= "Custom Background"
+        int subGroupCtr = 1
+
+        // OP-2015
+        createOrUpdateApplicationConfig(CUSTOM_BACKGROUND_URL, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
+
     }
 
     private void createRequiredCustomHeaderFooterConfigurations() {
         def GROUP_NAME=BRANDING
         def SUB_GROUP_NAME = "Custom Header and Footer"
         int subGroupCtr = 1
+
 
         createOrUpdateApplicationConfig(CUSTOM_HEADER_URL, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
         createOrUpdateApplicationConfig(CUSTOM_HEADER_HEIGHT, GROUP_NAME, "Integer", 0, subGroupCtr++, SUB_GROUP_NAME)
@@ -247,5 +278,14 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
                 job.cancel(quartzScheduler)
             }    
         }
+    }
+
+    //Allows retrieval of a String configuration value using the name of the setting (vice the setting)
+    @Transactional (readOnly=true)
+    public String valueOf(String settingKey) {
+        def setting = ozone.owf.enums.OwfApplicationSetting."$settingKey"
+        ApplicationConfiguration config = getApplicationConfiguration(setting)
+
+        config.value
     }
 }

@@ -1,8 +1,8 @@
 package org.ozoneplatform.auditing
 
+import org.springframework.beans.factory.NoSuchBeanDefinitionException
+
 import static ozone.owf.enums.OwfApplicationSetting.*
-import grails.converters.JSON
-import grails.util.Environment
 
 import javax.servlet.http.HttpServletRequest
 
@@ -23,7 +23,7 @@ class OwfAuditingFilters extends AbstractAuditingFilters {
 
 	OwfApplicationConfigurationService owfApplicationConfigurationService
 	
-	String hostCls
+	//String hostCls
 	
     public String getApplicationVersion() {
         return grailsApplication.metadata['app.version']
@@ -49,15 +49,15 @@ class OwfAuditingFilters extends AbstractAuditingFilters {
 
     @Override
     public String getHostClassification() {
-		if(!hostCls){
-			def host = 'http://localhost:8080/jblocks-banner/config/getConfigs'
-			try{
-				hostCls = JSON.parse(new URL(host)?.text)?.hostCls ?: Extension.UNKOWN_VALUE
-			} catch (IOException ioe){
-				hostCls = Extension.UNKOWN_VALUE
-			}			
-		}		
-		hostCls
+		String hostCls
+        try {
+            ApplicationConfiguration securityLevel = owfApplicationConfigurationService.getApplicationConfiguration(SECURITY_LEVEL)
+            hostCls = securityLevel?.value ?: Extension.UNKOWN_VALUE
+        } catch(NoSuchBeanDefinitionException nbe) {
+            hostCls = Extension.UNKOWN_VALUE
+        }
+
+        hostCls
     }
 
 	@Override

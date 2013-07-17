@@ -8,7 +8,6 @@ Ext.define('Ozone.components.window.MyAppTip', {
     closable:true,
     autoHide:false,
     target: null,
-    anchor: 'top',
 
     listeners: {
     	'close': {
