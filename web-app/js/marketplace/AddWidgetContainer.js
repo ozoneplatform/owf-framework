@@ -400,18 +400,23 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                         items: [],
                         paneType: 'fitpane',
                         widgets: []
-                    }
-
+                    },
+                    stack: {
+                        "name": widgetDef.data.title,
+                        "owner": null //explicitly null owner so the backend doesn't auto-assign
+                    },
+                    publishedToStore: true  //allow the user to get their own copy of the 
+                                            //dashboard
                 });
 
-                self.dashboardContainer.saveDashboard(dashboard.data, 'create', function() {
+                self.dashboardContainer.saveDashboard(dashboard.data, 'create', function(json) {
                     self.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
                         self.dashboardContainer.launchWidgets(widgetDef, true);
                         self.dashboardContainer.activeDashboard.config.locked = true;
                         self.dashboardContainer.saveDashboard(self.dashboardContainer.activeDashboard, 'update', function() {});
                         self.dashboardContainer.getBanner().disableAppComponentsBtn();
                     }, self.dashboardContainer, {/*delay:2000,*/ single:true});
-                    self.dashboardContainer.activateDashboard(dashboard.data.guid);
+                    self.dashboardContainer.activateDashboard(json.guid);
                 });
 
                 notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_WebappLaunchSuccessful;

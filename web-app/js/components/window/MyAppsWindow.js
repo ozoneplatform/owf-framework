@@ -787,9 +787,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             stackId = stack ? stack.id : null;
 
             if (stack) {
-                this.toggleStack(this.stacks[stackId], $('#stack'+stackId, '.bx-slide:not(.bx-clone)')).then(function () {
-                    me.focusActiveDashboard();
-                });
+                if (this.stacks[stackId]) {
+                    this.toggleStack(this.stacks[stackId], $('#stack'+stackId, '.bx-slide:not(.bx-clone)')).then(function () {
+                        me.focusActiveDashboard();
+                    });
+                }
             }
             return;
         }

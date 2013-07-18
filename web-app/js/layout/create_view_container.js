@@ -850,14 +850,10 @@ Ext.define('Ozone.layout.CreateViewContainer', {
     },
 
     createDashboardModel: function(config) {
-        config.stack = this.stackId ?
-        {"id": this.stackId } :
-        {
-            "name": config.name,
-            "description": config.description,
-            "imageUrl": config.iconImageUrl
+        if (this.stackId) {
+            config.stack = {"id": this.stackId };
         }
 
-        return Ext.create('Ozone.data.Dashboard', config)
+        return Ext.create('Ozone.data.Dashboard', config);
     }
 });

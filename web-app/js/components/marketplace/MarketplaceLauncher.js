@@ -120,7 +120,12 @@ Ext.define('Ozone.components.marketplace.MarketplaceLauncher', {
                 widgets: []
             }
         });
-        me.dashboardContainer.saveDashboard(me.dashboard.data, 'create', function() {me.switchToDashboardAndLaunchWidget();});
+        me.dashboardContainer.saveDashboard(me.dashboard.data, 'create', function(json) {
+            if (json.guid) {
+                me.dashboard.set('guid', json.guid);
+            }
+            me.switchToDashboardAndLaunchWidget();
+        });
     },
 
     reloadDashboardsAndLaunchMarketplace: function() {

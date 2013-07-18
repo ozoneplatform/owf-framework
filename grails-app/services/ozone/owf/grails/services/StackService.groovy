@@ -204,7 +204,7 @@ class StackService {
             }
         } else { // New Stack
             stack = new Stack()
-            def dfltGroup = new Group(name: java.util.UUID.randomUUID().toString(), stackDefault: true)
+            def dfltGroup = new Group(name: UUID.randomUUID().toString(), stackDefault: true)
             stack.addToGroups(dfltGroup)
 
         }
@@ -226,7 +226,7 @@ class StackService {
             stack.properties = [
                 name: params.name ?: stack.name,
                 description: params.description ?: stack.description,
-                stackContext: params.stackContext ?: stack.stackContext ?: params.name ?: stack.name,
+                stackContext: params.stackContext ?: stack.stackContext ?: UUID.randomUUID().toString(),
                 imageUrl: params.imageUrl ?: stack.imageUrl,
                 descriptorUrl: params.descriptorUrl ?: stack.descriptorUrl,
                 owner: params.owner ?: (params.id  >= 0 ? stack.owner : accountService.getLoggedInUser())
@@ -613,7 +613,7 @@ class StackService {
             oldToNewGuids.each {old, changed ->
                 json = json.replace(old, changed)
             }
-            json = json.replace(it.guid, java.util.UUID.randomUUID().toString())
+            json = json.replace(it.guid, UUID.randomUUID().toString())
             it = new JSONObject(json)
             changeWidgetInstanceIds(it.layoutConfig)
             it.isGroupDashboard = true
@@ -635,7 +635,7 @@ class StackService {
 		
 		def widgets = layoutConfig.widgets
 		for(def i = 0; i < widgets?.size(); i++) {
-			widgets[i].put("uniqueId", java.util.UUID.randomUUID().toString())
+			widgets[i].put("uniqueId", UUID.randomUUID().toString())
 		}
 		
 		def items = layoutConfig.items
@@ -778,11 +778,18 @@ class StackService {
         } else {
             // If the stack is new, create it
             stack = new Stack(stackParams)
-            def defaultGroup = new Group(name: java.util.UUID.randomUUID().toString(), stackDefault: true)
+            def defaultGroup = new Group(name: UUID.randomUUID().toString(), stackDefault: true)
             stack.addToGroups(defaultGroup)
 
-            stack.setOwner(currentUser)
-            if (!stack.stackContext) stack.setStackContext(stackParams.name)
+            //If owner param is present (including explicitly null), set it to that,
+            //otherwise, on update do not change, and on create set to current user
+            def owner = params.owner ?: (params.id  >= 0 ? stack.owner : 
+                accountService.getLoggedInUser())
+            if (owner == JSONObject.NULL) {
+                owner = null
+            }
+            stack.setOwner(owner)
+            if (!stack.stackContext) stack.setStackContext(UUID.randomUUID().toString())
             stack = stack.save(flush: true, failOnError: true)
         }
 
