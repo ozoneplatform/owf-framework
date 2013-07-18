@@ -141,8 +141,8 @@
 
     > .bx-wrapper {
         margin-bottom: 30px !important;
-        min-height: 360px;
-        max-height: 490px;
+        min-height: 340px;
+        max-height: 470px;
 
         > .bx-viewport {
             @include box-shadow(none);
@@ -153,8 +153,7 @@
             margin-left: 72px;
             margin-right: 75px;
             width: 540px !important;
-            height: 360px;
-            min-height: 360px;
+            height: 340px;
         }
     }
 

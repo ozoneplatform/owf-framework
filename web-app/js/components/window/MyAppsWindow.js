@@ -24,8 +24,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     normalModalHeight: 525,
     expandedModalHeight: 655,
 
-    normalSlideHeight: 360,
-    expandedSlideHeight: 490,
+    normalSlideHeight: 340,
+    expandedSlideHeight: 470,
 
     dashboardContainer: null,
 
@@ -146,7 +146,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             
             getActions: function (values) {
                 return	'<ul class="detail-actions hide">'+
-                			'<li id="'+values.name+'-li" class="detail-action">Details'+
+                			'<li class="detail-action">Details</li>'+
                         '</ul>'
             },
             
