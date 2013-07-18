@@ -178,8 +178,6 @@ Ext.define('Ozone.components.window.MyAppTip', {
     warn: function(buttons, button_handler, text) {
         var me = this;
 
-        console.log(me);
-
         me.update('');
         me.removeAll();
 
@@ -239,6 +237,11 @@ Ext.define('Ozone.components.window.MyAppTip', {
     },
 
     handleStackEdit: function(evnt) {
+        var me = this;
+
+        me.update('');
+        me.removeAll();
+
 
     },
 
@@ -284,13 +287,11 @@ Ext.define('Ozone.components.window.MyAppTip', {
     removeStack:function() {
         var me = this;
 
-        console.log(me);
-
         me.dashboardContainer.stackStore.remove( me.dashboardContainer.stackStore.getById(me.clickedStackOrDashboard.id) );
         me.dashboardContainer.stackStore.save();
         
         if( me.appsWindow._lastExpandedStack === me.clickedStackOrDashboard) {
-            me.hideStackDashboards();
+            me.appsWindow.hideStackDashboards();
         }
 
         var $target = jQuery(me.event.target.parentElement.parentElement);
