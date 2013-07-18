@@ -1001,15 +1001,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     onMouseOver: function (evt) {
         var el = $(evt.currentTarget);
 
-        //if ( this.isAnAppExpanded || 
-         //   !this.isAnAppExpanded && $(el).hasClass('stack')) {
-
-            if (this._previouslyHoveredStackOrDashboard != null) {
-                $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');
-            }
+        if (this._previouslyHoveredStackOrDashboard != null) {
+            $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');
+        }
             
-            $('.detail-actions', el).removeClass('hide');
-       // }
+        $('.detail-actions', el).removeClass('hide');
 
         this._previouslyHoveredStackOrDashboard = el;
     },
