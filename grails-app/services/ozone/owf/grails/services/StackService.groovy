@@ -647,6 +647,7 @@ class StackService {
     private def createStackData(params) {
 
         def stack = Stack.findById(params.id, [cache: true])
+        def owner = stack.owner
 
         //Construct the list of dashboards for the descriptor
         def dashboards = []
@@ -654,35 +655,8 @@ class StackService {
         if(stackGroup != null) {
             domainMappingService.getMappings(stackGroup, RelationshipType.owns, Dashboard.TYPE).eachWithIndex { it, i ->
 
-                // This gets each stack (group) dashboard for the stack
-                // If a group dashboard is marked for deletion, just delete it and don't add it to the JSON
-                // Set publishedToStore to true
-                // For each group dashboard, find the associated personal dashboards.
-                //     For each personal dashboard
-                //         if it is the owner's personal dashboard, update the group dashboard with the personal
-                //            dashboard's description, layoutconfig, ... (user-changeable fields)
-                //         Are changes to group dashboard propagated to other personal dashboards?
-                // Save the group dashboard
-                // Create the JSON for the group dashboard and add to the stack JSON
-
-                def dashboard = Dashboard.findById(it.destId)
-
-                // Find clones of group dashboard
-                // Note - probably don't have to go through all the clones - just get the owner clone... code is
-                // being changed elsewhere so we don't have to delete personal dashboards marked for deletions (they will
-                // be deleted at the time the group dashboard is deleted, so that all we have to do is delete group
-                // dashboards)
-                domainMappingService.getMappings(dashboard, RelationshipType.cloneOf, Dashboard.TYPE, 'dest').each {
-                    def personalDashboard = Dashboard.findById(it.srcId)
-
-                        // If it belongs to the owner, create JSON of description, layoutconfig, name(?) and use it to
-                        // update the associated group dashboard
-
-
-                }
-
-                // Save the group dashboard
-                // what to do if push eventually fails? Can we roll back changes?
+                def dashboard = Dashboard.findById(it.destId);
+                dashboardService.syncDashboardForPublish(dashboard, owner)
 
                 //Get only the parameters required for a dashboard definition
                 def dashboardData = [
@@ -740,10 +714,14 @@ class StackService {
                 'dashboards': dashboards,
                 'widgets': widgets
         ]
-
-
     }
     
+    /**
+     * Generates a stack JSON structure for sharing.  Also performs any internal
+     * cleanup needed in order to sync the owner's view of the stack with others.
+     * This includes deleting dashboards that are marked for deletion and setting
+     * isPublished on all pages (dashboards)
+     */
     def share(params)  {
 
         // Only owner of stack can push to store
