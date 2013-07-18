@@ -153,9 +153,7 @@ $dashboard-switcher-slider-height: 320px;
             background: transparent !important;
             *background: inherit !important;
             border: 0px;
-            margin-left: 72px;
-            margin-right: 75px;
-            width: 540px !important;
+            width: 570px !important;
             height: $dashboard-switcher-slider-height;
             min-height: $dashboard-switcher-slider-height !important;
         }
@@ -177,9 +175,21 @@ $dashboard-switcher-slider-height: 320px;
     > .bx-wrapper {
         .bx-prev {
             left: 0px !important;
+            background: theme-image($theme-name, 'myappswindow/carousel_arrows_left-out.png') 0 0 no-repeat !important;
+            height: 42px !important;
+
+            &:hover {
+                background: theme-image($theme-name, 'myappswindow/carousel_arrows_left-over.png') 0 0 no-repeat !important;
+            }
         }
         .bx-next {
             right: 0px !important;
+            background: theme-image($theme-name, 'myappswindow/carousel_arrows_right-out.png') 0 0 no-repeat !important;
+            height: 42px !important;
+
+            &:hover {
+                background: theme-image($theme-name, 'myappswindow/carousel_arrows_right-over.png') 0 0 no-repeat !important;
+            }
         }
     }
 }
@@ -194,60 +204,75 @@ $dashboard-switcher-slider-height: 320px;
 
         > .stack-dashboards {
 
-        > .bx-wrapper {
-            min-height: 105px !important;
-            max-height: 105px !important;
-            width: 400px !important;
-            margin-bottom: 30px;
-
-            > .bx-viewport {
-                @include box-shadow(none);
-
-                background: transparent !important;
-
-                margin-left: 5px;
-                margin-right: 20px;
-
-                border: 0px;
-
-                width: 400px !important;
-
-                height: 105px !important;
-                *height: 110px !important;
-
+            > .bx-wrapper {
                 min-height: 105px !important;
-                *min-height: 110px !important;
+                max-height: 105px !important;
+                width: 430px !important;
+                margin-bottom: 30px;
 
-                .dashboard {
-                    padding-top: 5px;
-                    margin-bottom: 0px;
-                    width: 80px;
+                > .bx-viewport {
+                    @include box-shadow(none);
+
+                    background: transparent !important;
+
+                    margin: 0px;
+
+                    border: 0px;
+
+                    width: 430px !important;
+
+                    height: 105px !important;
+                    *height: 110px !important;
+
+                    min-height: 105px !important;
+                    *min-height: 110px !important;
+
+                    .dashboard {
+                        padding-top: 5px;
+                        margin-bottom: 0px;
+                        width: 80px;
+                    }
                 }
             }
-        }
 
-        > .bx-wrapper .bx-pager, > .bx-wrapper .bx-controls-auto {
-            bottom: -20px;
-            zoom: 1;
-            *text-align: left;
-            *display: inline;
-
-            .bx-pager-item {
+            > .bx-wrapper .bx-pager, > .bx-wrapper .bx-controls-auto {
+                bottom: -20px;
                 zoom: 1;
+                *text-align: left;
                 *display: inline;
-            }
-        }
 
-        > .bx-wrapper {
-            .bx-prev {
-                left: -50px !important;
-                top: 65%;
+                .bx-pager-item {
+                    zoom: 1;
+                    *display: inline;
+                }
             }
-            .bx-next {
-                right: -50px !important;
-                top: 65%;
+
+            > .bx-wrapper {
+                
+                .bx-prev, .bx-prev:hover, .bx-next, .bx-next:hover {
+                    top: 65%;
+                    background-size: 75% !important;
+                    height: 42px !important;
+                }
+
+                .bx-prev {
+                    left: -63px !important;
+                    background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_left-out.png') !important;
+
+                    &:hover {
+                        background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_left-over.png') !important;
+                    }
+                }
+
+                .bx-next {
+                    right: -70px !important;
+                    background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_right-out.png') !important;
+                    
+                    &:hover {
+                        background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_right-over.png') !important;
+                    }
+                }
             }
-        }
     }
 }
 /***** END slider styling  ****/
@@ -272,6 +297,7 @@ $dashboard-switcher-slider-height: 320px;
     width: $dashboard-width;
     height: $dashboard-height;
     margin-bottom: 5px;
+    margin-right: 5px;
 
     .thumb-wrap {
         text-align: center;
