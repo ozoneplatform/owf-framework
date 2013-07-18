@@ -19,12 +19,12 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     viewId: 'dashboard-switcher-dashboard-view',
 
     width: 720,
-    height: 525,
+    height: 495,
 
-    normalModalHeight: 525,
-    expandedModalHeight: 655,
+    normalModalHeight: 495,
+    expandedModalHeight: 645,
 
-    normalSlideHeight: 340,
+    normalSlideHeight: 320,
     expandedSlideHeight: 470,
 
     dashboardContainer: null,
@@ -183,7 +183,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     '</li>'+
             		'<li class="create-link-btn">'+
                         '<span class="create-link-btn-img"></span>'+
-                        '<span class="create-link-btn-text">Create New App</span>'+
+                        '<span class="create-link-btn-text">Create <br>New App</span>'+
                     '</li>'+
                 '</ul>'+
             '</div>');
