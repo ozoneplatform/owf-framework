@@ -21,16 +21,6 @@ Ext.define('Ozone.components.admin.stack.StackEditPanel', {
 	            store: Ext.create('Ozone.data.StackStore', {}),
                 items: [
                   {
-                    xtype: 'stackeditproperties',
-                    itemId: 'stackeditproperties',
-                    editPanel: self
-                  },
-                  {
-                    xtype: 'stackeditdashboards',
-                    itemId: 'stackeditdashboards',
-                    editPanel: self
-                  },
-                  {
                     xtype: 'stackeditwidgets',
                     itemId: 'stackeditwidgets',
                     editPanel: self

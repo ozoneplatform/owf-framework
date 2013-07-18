@@ -28,15 +28,15 @@ Ext.define('Ozone.components.admin.GroupsGrid', {
                 return this.renderCell(value, metaData, record);
             }
         }, {
-            header: 'Widgets',
+            header: 'App Components',
             dataIndex: 'totalWidgets',
-            flex: 1,
+            flex: 2,
             sortable: false,
             renderer: function(value, metaData, record, rowIndex, colIndex, store) {
                 return this.renderCell(value, metaData, record);
             }
         }, {
-            header: 'Stacks',
+            header: 'Apps',
             dataIndex: 'totalStacks',
             flex: 1,
             sortable: false,

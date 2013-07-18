@@ -40,7 +40,7 @@ Ext.define('Ozone.components.admin.grid.DashboardGroupsGrid', {
           }
         },{
           itemId: 'name',
-          header: 'Dashboard Title',
+          header: 'Page Title',
           dataIndex: 'name',
           flex: 3,
           minWidth: 200,

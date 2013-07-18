@@ -41,7 +41,7 @@ Ext.define('Ozone.components.admin.grid.DashboardsGrid', {
         },
         {
           itemId: 'name',
-          header: 'Dashboard Title',
+          header: 'Page Title',
           dataIndex: 'name',
           flex: 1,
           minWidth: 200,
@@ -251,7 +251,7 @@ Ext.define('Ozone.components.admin.grid.DashboardsGrid', {
             }
         }
         else {
-            this.showAlert('Error', 'You must select at least one dashboard to move.');
+            this.showAlert('Error', 'You must select at least one page to move.');
         }
     }
 

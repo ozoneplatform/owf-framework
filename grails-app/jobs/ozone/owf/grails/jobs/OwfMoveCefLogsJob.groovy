@@ -10,7 +10,7 @@ class OwfMoveCefLogsJob extends  AbstractFileMovementJob{
 	
 	OwfApplicationConfigurationService owfApplicationConfigurationService
 	
-	def group = "owfFileMoverGroup"
+	def group = "cefLogSweepingGroup"
 	
 	
 	static triggers = { 
