@@ -157,7 +157,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             xtype: 'container',
             name: 'appInfoContainer',
             layout: {
-                type: 'hbox',
+                type: 'hbox'
             },
             padding: '0, 5, 0, 0',
             items: [
@@ -207,7 +207,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             this.iconURLField.value = this.existingDashboardRecord.get('iconImageUrl');
             this.description.value = this.existingDashboardRecord.get('description');
 
-            if (this.iconURLField.value != '' && this.iconURLField.value != null && this.iconURLField.value != undefined) {
+            if (jQuery.trim(this.iconURLField.value)) {
                 this.iconImage.setSrc(this.iconURLField.value);
             }
         }

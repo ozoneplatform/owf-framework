@@ -112,7 +112,7 @@
                 this.$el.bxSlider({
                     startSlide: startSlide,
                     oneItemPerSlide: false,
-                    infiniteLoop: false,
+                    infiniteLoop: true,
                     touchEnabled: false
                 }); 
 

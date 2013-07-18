@@ -455,6 +455,38 @@ class StackService {
         return [success: true, data: stacks];
     }
     
+    private def isStackOwner(stacks) {
+        def stackOwnerOfAll = true
+
+        def userId = accountService.getLoggedInUser()?.id
+        def stack
+
+        stacks.each{
+            stack = Stack.get(it.id)
+            if(!stack || !stack.owner || !userId || userId != stack.owner.id) {
+                stackOwnerOfAll = false
+            }
+        }
+
+        return stackOwnerOfAll
+    }
+
+    private def stackOwnerCanDelete(stacks) {
+        def canDeleteAll = true
+        def stack
+
+        stacks.each {
+            stack = Stack.get(it.id)
+            if(stack) {
+                Dashboard.findAllWhere(user: null, stack: stack).each {
+                    if(it.publishedToStore) {
+                        canDeleteAll = false;
+                    }
+                }
+            }
+        }
+    }
+
     def delete(params) {
         def stacks = []
         
@@ -468,9 +500,14 @@ class StackService {
         }
         
         // Handle user deletion of their stack association and data.
-        if((!accountService.getLoggedInUserIsAdmin()) || (params.adminEnabled != true  && params.adminEnabled != 'true')) {
+        def isAdmin = accountService.getLoggedInUserIsAdmin()
+        def adminEnabled = (params.adminEnabled == true  || params.adminEnabled == 'true')
+        def isOwner = isStackOwner(stacks)
+        def ownerCanDelete = stackOwnerCanDelete(stacks)
+
+        if((isOwner && !ownerCanDelete) || (!isOwner && (!isAdmin || !adminEnabled))) {
             return deleteUserStack(stacks);
-        }
+        } 
         
         // Handle administrative removal of stacks.
         stacks.each {
@@ -697,6 +734,7 @@ class StackService {
         //Get only the parameters required for a stack descriptor
         return [
                 'name': stack.name,
+                'owner': stack.owner,
                 'stackContext': stack.stackContext,
                 'description': stack.description,
                 'dashboards': dashboards,

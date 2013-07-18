@@ -196,12 +196,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 oneItemPerSlide: false,
                 infiniteLoop: true,
                 touchEnabled: false,
-                onSliderLoad: Ext.bind(function(currentIndex) {
-                    // 1 slide of actual content + a clone slide on each side auto-created by the plugin
-                    if ($('.bx-slide:not(.bx-clone)').length === 1) {
-                        $('.bx-pager').hide();
-                    }
-                }, me),
                 onSlideNext: Ext.bind(function() {
                     me.onSlideTransition.apply(me, arguments);
                 }, me),
@@ -337,19 +331,44 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     },
 
     getActiveStackSlideIndex: function() {
-        var me = this,
-            stackId = me.getActiveStackId(),
+        var me = this;
+
+        var stackId = me.getActiveStackId(),
             $stackEl = $("#stack" + stackId, '.bx-slide:not(.bx-clone)'),
-            $stackElSlide = $stackEl.parent()
-            slideIndexOfActiveStack = $('.bx-slide:not(.bx-clone)').index($stackElSlide);
+            $stackElSlide = $stackEl.parent(),
+            slideIndexOfActiveStack = $('.bx-slide:not(.bx-clone)', me.el.dom).index($stackElSlide);
 
         return slideIndexOfActiveStack;
+    },
+
+    getActiveDashboardMiniSlideIndex: function() {
+        if (!this.getActiveStackId() || this.activeDashboard.configRecord.isMarketplaceDashboard()) {
+            return;
+        }
+        
+        var me = this,
+            activeDashboardId = this.activeDashboard.id,
+            $dashboardEl = $('#dashboard' + activeDashboardId, '.stack-dashboards'),
+            $dashboardElSlide = $dashboardEl.parent(),
+            slideIndexOfActiveDashboard = $('.bx-slide:not(.bx-clone)', '.stack-dashboard').index($dashboardElSlide);
+
+        return slideIndexOfActiveDashboard;
     },
 
     goToActiveStackSlide: function() {
         var me = this;
 
-        me.slider.goToSlide(me.getActiveStackSlideIndex());
+        if (!me.getActiveStackId() || me.activeDashboard.configRecord.isMarketplaceDashboard()) {
+            me.slider.goToSlide(0);
+        } else {
+            me.slider.goToSlide(me.getActiveStackSlideIndex());            
+        }
+    },
+
+    goToActiveDashboardSlideinMiniSlider: function() {
+        var me = this;
+
+        me.appPageCarousel.goToSlide(me.getActiveDashboardMiniSlideIndex);
     },
 
     onSlideTransition: function($slideElement, oldIndex, newIndex) {
@@ -756,7 +775,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         dashboard = this.getDashboard( $clickedDashboard );
 
         if ($(evt.target).hasClass('detail-action')) {
-        	Ext.select('.itemTip').destroy()
+        	Ext.select('.itemTip').destroy();
         	
         	Ext.widget('mypagetip', {
                 clickedDashboard:dashboard,
@@ -804,7 +823,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 stack = me.getStack( $clickedStack );
             
             if ($(evt.target).hasClass('detail-action')) {
-            	Ext.select('.itemTip').destroy()
+            	Ext.select('.itemTip').destroy();
             	
             	Ext.widget('myapptip', {
             		clickedStackOrDashboard:stack,
@@ -873,7 +892,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         // compile template and add to dom
         this.$stackDashboards = $( this.stackDashboardsTpl );
-        this.$stackDashboards.children('.stack-dashboards').html( this.tpl.applyTemplate( stack.dashboards ) )
+        this.$stackDashboards.children('.stack-dashboards').html( this.tpl.applyTemplate( stack.dashboards ) );
         this.$stackDashboards.insertAfter( lastElInRow );
 
         this.stackDashboardsAnchorTip = $( '.stack-dashboards-anchor-tip' , this.$stackDashboards );
@@ -913,7 +932,23 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             });
         }
 
+        me.buildAppPageCarousel(me.$stackDashboards);
+
         this._lastExpandedStack = stack;
+    },
+
+    buildAppPageCarousel: function($stackDashboardContainer) {
+        var me = this;
+
+        if (me.appPageCarousel) {
+            me.appPageCarousel.destroySlider();
+        }
+
+        me.appPageCarousel = $('.all-dashboards', $stackDashboardContainer).bxSlider({
+            oneItemPerSlide: false,
+            infiniteLoop: true,
+            touchEnabled: false
+        });
     },
 
     expandModal: function(containerSlide) {
@@ -945,8 +980,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             this.$stackDashboards && this.$stackDashboards.hide();
             dfd.resolve();
 
-            me.collapseModal();
             this.$stackDashboards.remove();
+            
+            me.collapseModal();
             this._lastExpandedStack = null;
             
             return dfd.promise();
@@ -1276,62 +1312,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         });
     },
 
-    deleteStack: function (evt) {
-        evt.stopPropagation();
-
-        var me = this,
-            $stack = this.getElByClassFromEvent(evt, 'stack'),
-            stack = this.getStack($stack),
-            msg = 'This action will permanently delete stack <span class="heading-bold">' 
-                    + Ext.htmlEncode(stack.name) + '</span> and its dashboards.';
-
-        function focusEl () {
-            evt.currentTarget.focus();
-        }
-
-        var stackGroups = stack.groups,
-            userGroups = Ozone.config.user.groups,
-            groupAssignment = false;
-        
-        if(stackGroups && userGroups && stackGroups.length > 0 && userGroups.length > 0) {
-            for (var i = 0, len1 = stackGroups.length; i < len1; i++) {
-                var stackGroup = stackGroups[i];
-                
-                for (var j = 0, len2 = userGroups.length; j < len2; j++) {
-                    var userGroup = userGroups[j];
-                    if(stackGroup.id === userGroup.id) {
-                        groupAssignment = true;
-                        break;
-                    }
-                }
-
-                if(groupAssignment === true)
-                    break;
-            }
-        }
-
-        if(groupAssignment) {
-            this.warn('Users in a group cannot remove stacks assigned to the group. Please contact your administrator.', focusEl);
-            return;
-        }
-
-        this.warn(msg, function () {
-            me.dashboardContainer.stackStore.remove( me.dashboardContainer.stackStore.getById(stack.id) );
-            me.dashboardContainer.stackStore.save();
-
-            if( me._lastExpandedStack === stack) {
-                me.hideStackDashboards();
-            }
-
-            var $prev = $stack.prev();
-            $stack.remove();
-            $prev.focus();
-            
-            me._deletedStackOrDashboards.push(stack);
-            me.reloadDashboards = true;
-
-        }, focusEl);
-    },
+    
 
     warn: function (msg, okFn, cancelFn) {
         Ext.widget('alertwindow',{
