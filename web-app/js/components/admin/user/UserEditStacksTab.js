@@ -12,7 +12,7 @@ Ext.define('Ozone.components.admin.user.UserEditStacksTab', {
       iconCls: 'stacks-tab',
       editor: 'Stack',
       componentId: 'user_id',
-      title: 'Applications',
+      title: 'Apps',
       storeCfg: {
                 api: {
                     read: '/stack',

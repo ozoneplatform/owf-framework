@@ -56,9 +56,9 @@ Ext.define('Ozone.components.admin.StacksGrid', {
             flex: 3,
             sortable: false
         }, {
-            header: 'Widgets',
+            header: 'App Components',
             dataIndex: 'totalWidgets',
-            flex: 3,
+            flex: 4,
             sortable: false
         }, {
             header: 'Groups',

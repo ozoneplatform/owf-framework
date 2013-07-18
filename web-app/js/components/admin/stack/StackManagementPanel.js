@@ -120,7 +120,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                             me.doEdit(records[i].data.id, records[i].data.name);
                         }
                     } else {
-                        me.showAlert('Error', 'You must select at least one application to edit.');
+                        me.showAlert('Error', 'You must select at least one App to edit.');
                     }
                 },
                 menu: {
@@ -294,7 +294,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                 }
             });
         } else {
-            this.showAlert('Error', 'You must select at least one application to delete.');
+            this.showAlert('Error', 'You must select at least one App to delete.');
         }
     }
 });

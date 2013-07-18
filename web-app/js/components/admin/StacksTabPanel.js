@@ -82,7 +82,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                 store.save();
                             }
                             else {
-                                self.editPanel.showAlert("Error", "You must select at least one application to remove.")
+                                self.editPanel.showAlert("Error", "You must select at least one App to remove.")
                             }
                         }
                     },
@@ -159,7 +159,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                         }
                                     }
                                     else {
-                                        self.editPanel.showAlert("Error", "You must select at least one application to edit.");
+                                        self.editPanel.showAlert("Error", "You must select at least one App to edit.");
                                     }
                                 },
                                 scope: this
@@ -197,7 +197,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
             itemName = record.get('name') ? record.get('name') : record.get('userRealName');
 
         var win = Ext.widget('admineditoraddwindow', {
-            addType: 'Stack',
+            addType: 'App',
             itemName: itemName,
             editor: this.editor,
             focusOnClose: this.down(),

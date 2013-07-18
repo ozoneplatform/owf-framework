@@ -65,9 +65,9 @@ Ext.define('Ozone.components.UsersGrid', {
             sortable: false,
             editable: false
         }, {
-            header: 'Widgets',
+            header: 'App Components',
             dataIndex: 'totalWidgets',
-            flex: 1,
+            flex: 2,
             sortable: false,
             editable: false
         }, {
@@ -77,7 +77,7 @@ Ext.define('Ozone.components.UsersGrid', {
             sortable: false,
             editable: false
         }, {
-            header: 'Applications',
+            header: 'Apps',
             dataIndex: 'totalStacks',
             flex: 1,
             sortable: false,
