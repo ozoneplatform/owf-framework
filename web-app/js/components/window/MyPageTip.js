@@ -78,11 +78,12 @@ Ext.define('Ozone.components.window.MyPageTip', {
 
         var editDashWindow = Ext.widget('createdashboardwindow', {
             itemId: 'editDashWindow',
-            title: 'Edit Dashboard',
             height: 300,
             dashboardContainer: this.dashboardContainer,
             ownerCt: this.dashboardContainer,
             hideViewSelectRadio: true,
+            closable: false,
+            constrainHeader: false,
             existingDashboardRecord: dashboard.model
         }).show();
 
