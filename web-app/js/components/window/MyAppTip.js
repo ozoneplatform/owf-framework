@@ -20,7 +20,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
     getToolTip: function () {
         var me = this;
     	var banner = me.dashboardContainer.getBanner();
-        var icn = me.clickedStackOrDashboard.iconImageUrl && me.clickedStackOrDashboard.iconImageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'padding-right:15px;\' src=\''+me.clickedStackOrDashboard.iconImageUrl+'\' />':'';
+        var icn = me.clickedStackOrDashboard.imageUrl && me.clickedStackOrDashboard.imageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'margin-right:15px;\' src=\''+me.clickedStackOrDashboard.imageUrl+'\' />':'';
         var str = '<div class=\'dashboard-tooltip-content\'>' + 
                 '<h3 class=\'name\'>' + icn + Ext.htmlEncode(Ext.htmlEncode(me.clickedStackOrDashboard.name)) + '</h3>';
 
