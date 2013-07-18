@@ -388,7 +388,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     _hideStackDashboardsOnMove: function ($el) {
         // hide stack dashboards if moving root stack or dashboard
-        if( !($el.parent().hasClass('dashboards')) ) {
+        if( $el.parents('.stack-dashboards').length === 0 ) {
             this.hideStackDashboards();
         }
     },
