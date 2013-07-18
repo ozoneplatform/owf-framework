@@ -32,7 +32,7 @@ Ext.define('Ozone.components.admin.stack.StackDetailPanel', {
                                 '</div>',
                             '</div>',
                             '<div class="detail-block">',
-                                '<div><span class="detail-label">Stack URL:</span></div>',
+                                '<div><span class="detail-label">Application URL:</span></div>',
                                 '<div><span class="detail-link">{stackContext:this.renderStackUrl}</span></div>',
                             '</div>',
                             '<div class="detail-block">',
@@ -64,7 +64,7 @@ Ext.define('Ozone.components.admin.stack.StackDetailPanel', {
                     }
                 }
             ),
-			emptyText: 'No stack selected',
+			emptyText: 'No application selected',
             itemSelector: 'div.selector',
             autoScroll: 'true'
         });

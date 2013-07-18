@@ -10,16 +10,23 @@
         @include border-radius($dashboard-switcher-body-radius);
     }
 
+    $dashboard-switcher-header-height: 26px;
+
     .x-window-header {
         margin-bottom: 5px;
         width: 100% !important;
         *overflow: hidden;
         zoom: 1;
+        height: $dashboard-switcher-header-height !important;
         
         .x-window-header-text {
-			font-size: 18px;
-			padding-left: 30px;
+			font-size: 24px;
+			padding-left: 68px;
 		}
+
+        .x-window-header-body {
+            height: $dashboard-switcher-header-height !important;
+        }
     }
 
     .actions {
@@ -36,7 +43,7 @@
                 *display: inline;
                 padding: 5px 10px;
 
-                &:hover, &.selected {
+                &:hover, &.hover, &.selected {
                     background: $dashboard-switcher-dashboard-over-background-color;
                     color: $dashboard-switcher-dashboard-over-text-color;
                 }
@@ -57,8 +64,12 @@
 
             .store-link-btn-text, .create-link-btn-text {
                 display: inline-block;
-                width: 85px;
+                width: 140px;
                 padding-left: 7px;
+                font: {
+                    size: 13pt;
+                    weight: normal;
+                }
             }
 
             .store-link-btn-img, .create-link-btn-img {
@@ -66,17 +77,18 @@
                 width: 20px;
                 height: 20px; 
                 display: inline-block;
+                margin-top: 9px;
                 float: left;
             }
 
             .create-link-btn-text {
-                width: 60px;
+                width: 110px;
             }
 
             .store-link-btn-img {
                 background-image: theme-image($theme-name, 'myappswindow/MoreinStore-out.png');
 
-                &:hover {
+                &:hover, &.hover {
                     background-image: theme-image($theme-name, 'myappswindow/MoreinStore-over.png');                    
                 }
             }
@@ -84,7 +96,7 @@
             .create-link-btn-img {
                 background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-out.png');
 
-                &:hover {
+                &:hover, &.hover {
                     background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-over.png');
                 }
             }
@@ -93,11 +105,11 @@
 
     .dashboard-switcher-descriptor {
         color: $dashboard-switcher-dashboard-text-color;
-        padding: 0;
         bottom: 20px !important;
         position: relative;
         text-align: left;
-        padding-left: 16px;
+        padding-top: 10px;
+        padding-left: 53px;
     }
 
     > #dashboard-switcher-body {
@@ -131,14 +143,16 @@
 	}
 }
 
+$dashboard-switcher-slider-height: 320px;
+
 /**** BEGIN slider styling ****/
 #dashboard-switcher
     > #dashboard-switcher-body {
 
     > .bx-wrapper {
         margin-bottom: 30px !important;
-        min-height: 360px;
-        max-height: 490px;
+        min-height: $dashboard-switcher-slider-height;
+        max-height: 470px;
 
         > .bx-viewport {
             @include box-shadow(none);
@@ -146,17 +160,17 @@
             background: transparent !important;
             *background: inherit !important;
             border: 0px;
-            margin-left: 72px;
-            margin-right: 75px;
-            width: 540px !important;
-            height: 360px;
-            min-height: 360px;
+            // padding-left: 5px !important;
+            width: 600px !important;
+            height: $dashboard-switcher-slider-height;
+            min-height: $dashboard-switcher-slider-height !important;
         }
     }
 
     > .bx-wrapper .bx-pager, > .bx-wrapper .bx-controls-auto {
         bottom: -20px;
         zoom: 1;
+        padding-top: 0px;
         *text-align: left;
         *display: inline;
 
@@ -168,10 +182,22 @@
 
     > .bx-wrapper {
         .bx-prev {
-            left: 0px !important;
+            left: 10px !important;
+            background: theme-image($theme-name, 'myappswindow/carousel_arrows_left-out.png') 0 0 no-repeat !important;
+            height: 42px !important;
+
+            &:hover, &.hover {
+                background: theme-image($theme-name, 'myappswindow/carousel_arrows_left-over.png') 0 0 no-repeat !important;
+            }
         }
         .bx-next {
-            right: 0px !important;
+            right: 4px !important;
+            background: theme-image($theme-name, 'myappswindow/carousel_arrows_right-out.png') 0 0 no-repeat !important;
+            height: 42px !important;
+
+            &:hover, &.hover {
+                background: theme-image($theme-name, 'myappswindow/carousel_arrows_right-over.png') 0 0 no-repeat !important;
+            }
         }
     }
 }
@@ -186,60 +212,75 @@
 
         > .stack-dashboards {
 
-        > .bx-wrapper {
-            min-height: 105px !important;
-            max-height: 105px !important;
-            width: 400px !important;
-            margin-bottom: 30px;
-
-            > .bx-viewport {
-                @include box-shadow(none);
-
-                background: transparent !important;
-
-                margin-left: 5px;
-                margin-right: 20px;
-
-                border: 0px;
-
-                width: 400px !important;
-
-                height: 105px !important;
-                *height: 110px !important;
-
+            > .bx-wrapper {
                 min-height: 105px !important;
-                *min-height: 110px !important;
+                max-height: 105px !important;
+                width: 460px !important;
+                margin-bottom: 30px;
 
-                .dashboard {
-                    padding-top: 5px;
-                    margin-bottom: 0px;
-                    width: 80px;
+                > .bx-viewport {
+                    @include box-shadow(none);
+
+                    background: transparent !important;
+
+                    margin: 0px;
+
+                    border: 0px;
+
+                    width: 460px !important;
+
+                    height: 105px !important;
+                    *height: 110px !important;
+
+                    min-height: 105px !important;
+                    *min-height: 110px !important;
+
+                    .dashboard {
+                        padding-top: 5px;
+                        margin-bottom: 0px;
+                        width: 80px;
+                    }
                 }
             }
-        }
 
-        > .bx-wrapper .bx-pager, > .bx-wrapper .bx-controls-auto {
-            bottom: -20px;
-            zoom: 1;
-            *text-align: left;
-            *display: inline;
-
-            .bx-pager-item {
+            > .bx-wrapper .bx-pager, > .bx-wrapper .bx-controls-auto {
+                bottom: -20px;
                 zoom: 1;
+                *text-align: left;
                 *display: inline;
-            }
-        }
 
-        > .bx-wrapper {
-            .bx-prev {
-                left: -50px !important;
-                top: 65%;
+                .bx-pager-item {
+                    zoom: 1;
+                    *display: inline;
+                }
             }
-            .bx-next {
-                right: -50px !important;
-                top: 65%;
+
+            > .bx-wrapper {
+                
+                .bx-prev, .bx-prev:hover, .bx-next, .bx-next:hover {
+                    top: 65%;
+                    background-size: 75% !important;
+                    height: 42px !important;
+                }
+
+                .bx-prev {
+                    left: -63px !important;
+                    background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_left-out.png') !important;
+
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_left-over.png') !important;
+                    }
+                }
+
+                .bx-next {
+                    right: -70px !important;
+                    background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_right-out.png') !important;
+                    
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_right-over.png') !important;
+                    }
+                }
             }
-        }
     }
 }
 /***** END slider styling  ****/
@@ -255,7 +296,6 @@
     @include box-sizing(content-box);
 
     float: left;
-    margin: 0px;
     padding: 0px;
     position: relative;
     text-align: center;
@@ -263,8 +303,10 @@
     cursor: pointer;
     width: $dashboard-width;
     height: $dashboard-height;
+    margin-left: 5px;
+    margin-right: 5px;
     margin-bottom: 5px;
-
+    
     .thumb-wrap {
         text-align: center;
         white-space: nowrap;
@@ -285,7 +327,6 @@
             background-repeat: no-repeat;
             background-position: center center;
             background-image: $dashboard-switcher-layout-default-icon;
-            background-size: 70%;
         }
     }
 
@@ -293,14 +334,16 @@
         color: $dashboard-switcher-dashboard-text-color;
         height: 15px;
         width: 100%;
-        margin-top: 2px;
+        margin-top: 4px;
         margin-left: auto;
         margin-right: auto;
     }
     
-    &:hover {
-        @include border-top-radius($dashboard-item-body-radius);
-        @include border-bottom-radius($dashboard-item-body-radius);
+    &:hover, &.hover {
+        // @include border-top-radius($dashboard-item-body-radius);
+        // @include border-bottom-radius($dashboard-item-body-radius);
+        @include border-radius($dashboard-item-body-radius);
+        // border: 1px solid $dashboard-switcher-dashboard-over-border-color !important;
 
         background-color: $dashboard-switcher-dashboard-over-background-color !important;
         border-color: $dashboard-switcher-dashboard-over-border-color !important;
@@ -375,6 +418,7 @@
 .detail-actions {
 	padding-top:5px; 
 	color: $dashboard-switcher-dashboard-text-color;
+    font-size: 11px;
 }
 
 .x-ie7 {

@@ -32,7 +32,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                         '<div class="descriptorUrlTitle">{descriptorUrlTitle}</div><button class="descriptorUrlInfoIcon" ></button>' +
                         '</div>',
                     renderData: {
-                        descriptorUrlTitle: 'Import Widget from Descriptor URL'
+                        descriptorUrlTitle: 'Import App Component from Descriptor URL'
                     },
                     renderSelectors: {
                         iconEl: '.descriptorUrlInfoIcon',
@@ -76,7 +76,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     name: 'descriptorUrlInfoMsg',
                     cls: 'descriptorUrlInfoMsg',
                     hidden: true,
-                    html: 'Enter the URL of a Widget Descriptor and click the Load button. Widget data is automatically retrieved from a Web-accessible location. To create the Widget Definition in OWF, click Apply.'
+                    html: 'Enter the URL of a App Component Descriptor and click the Load button. App Component data is automatically retrieved from a Web-accessible location. To create the App Component Definition in OWF, click Apply.'
                 },
                 {
                     xtype: 'urlfield',
@@ -87,7 +87,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     maxLength: 2083,
                     enableKeyEvents: true,
                     preventMark: true,
-                    emptyText: 'https://mycompany.com/widget/descriptor.html',
+                    emptyText: 'https://mycompany.com/appcomponent/descriptor.html',
                     usePlaceholderIfAvailable: false,
                     value: '',
                     rawValue: '',
@@ -172,7 +172,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     name: 'descriptorUrlErrorMsg',
                     cls: 'descriptorUrlErrorMsg',
                     hidden: true,
-                    html: 'Unable to retrieve widget information. Please check your descriptor and try again.'
+                    html: 'Unable to retrieve App Component information. Please check your descriptor and try again.'
                 },
                 {
                     xtype: 'component',
@@ -188,7 +188,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     name: 'manualEntryTitle',
                     cls: 'manualEntryTitle',
                     hidden: true,
-                    html: 'Enter Widget Description'
+                    html: 'Enter App Component Description'
                 },
                 {
                     xtype: 'hidden',
@@ -205,7 +205,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     allowBlank: false,
                     blankText: Ozone.layout.DialogMessages.widgetDefinition_displayNameField_blankText,
                     maxLength: 256,
-                    emptyText: 'MyWidget',
+                    emptyText: 'MyAppComponent',
                     usePlaceholderIfAvailable: false,
                     fieldLabel: Ozone.util.createRequiredLabel('Name')
                 },
@@ -216,7 +216,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     hidden: true,
                     allowBlank: true,
                     maxLength: 4000,
-                    emptyText: 'Describe the widget',
+                    emptyText: 'Describe the App Component',
                     usePlaceholderIfAvailable: false,
                     fieldLabel: 'Description'
                 },
@@ -238,7 +238,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     itemId: 'universalName',
                     hidden: true,
                     allowBlank: true,
-                    emptyText: 'MyWidget.mycompany.com',
+                    emptyText: 'MyAppComponent.mycompany.com',
                     usePlaceholderIfAvailable: false,
                     fieldLabel: 'Universal Name'
                 },
@@ -258,7 +258,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     allowBlank: false,
                     blankText: Ozone.layout.DialogMessages.widgetDefinition_widgetUrlField_blankText,
                     fieldLabel: Ozone.util.createRequiredLabel('URL'),
-                    emptyText: 'https://mycompany.com/widget/MyWidget.html',
+                    emptyText: 'https://mycompany.com/appcomponent/MyAppComponent.html',
                     usePlaceholderIfAvailable: false,
                     maxLength: 2083
                 },
@@ -270,7 +270,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     allowBlank: false,
                     blankText: Ozone.layout.DialogMessages.widgetDefinition_imageUrlSmallField_blankText,
                     maxLength: 2083,
-                    emptyText: 'https://mycompany.com/widget/images/containerIcon.png',
+                    emptyText: 'https://mycompany.com/appcomponent/images/containerIcon.png',
                     usePlaceholderIfAvailable: false,
                     fieldLabel: Ozone.util.createRequiredLabel('Small Icon URL')
                 },
@@ -282,7 +282,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     allowBlank: false,
                     blankText: Ozone.layout.DialogMessages.widgetDefinition_imageLargeUrlField_blankText,
                     maxLength: 2083,
-                    emptyText: 'https://mycompany.com/widget/images/launchMenuIcon.png',
+                    emptyText: 'https://mycompany.com/appcomponent/images/launchMenuIcon.png',
                     usePlaceholderIfAvailable: false,
                     fieldLabel: Ozone.util.createRequiredLabel('Large Icon URL')
                 },
@@ -324,8 +324,8 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     name: '_types',
                     itemId: '_types',
                     hidden: true,
-                    fieldLabel: Ozone.util.createRequiredLabel('Widget Type'),
-                    valueNotFoundText: 'invalid widget type',
+                    fieldLabel: Ozone.util.createRequiredLabel('App Component Type'),
+                    valueNotFoundText: 'invalid App Component type',
                     forceSelection: true,
                     allowBlank: false,
                     editable: false,
@@ -459,8 +459,8 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             this.setWidgetType();
 
             //Update the descriptorUrlInfo title and help message for editing an existing widget
-            component.getComponent('descriptorUrlInfo').titleEl.dom.innerHTML = 'Update Widget from Descriptor URL';
-            component.getComponent('descriptorUrlInfoMsg').update('Click Load to update the widget. If the widget descriptor file changed since it was added to your instance of OWF, clicking Load will retrieve the latest widget data. To upload it to your OWF, click Apply.');
+            component.getComponent('descriptorUrlInfo').titleEl.dom.innerHTML = 'Update App Component from Descriptor URL';
+            component.getComponent('descriptorUrlInfoMsg').update('Click Load to update the App Component. If the App Component file changed since it was added to your instance of OWF, clicking Load will retrieve the latest App Component data. To upload it to your OWF, click Apply.');
 
             //Enable all the intent CRUD buttons
             var intentsTab = component.ownerCt.down('#intents-tab');

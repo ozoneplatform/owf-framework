@@ -11,7 +11,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
     ui: 'system-window',
     store: null,
     closable: true,
-    title: 'Dashboards',
+    title: 'Pages',
     iconCls: 'dashboard-switcher-header-icon',
     cls: 'system-window',
     resizable: false,
@@ -198,7 +198,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             Ext.DomHelper.append( cmp.body,
             '<ul class="actions">'+
                 '<li class="manage" tabindex="0" data-qtitle="Manage" data-qtip="Activates the Share, Restore, Edit and Delete manager buttons.">Manage</li>'+
-                '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-qtip="Name, describe and design a new dashboard.">+</li>'+
+                '<li class="create" tabindex="0" data-qtitle="Create Page" data-qtip="Name, describe and design a new page.">+</li>'+
             '</ul>');
 
             cmp.actionsEl = cmp.body.select('> .actions').first();
@@ -975,7 +975,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
             dashboard = this.getDashboard($dashboard),
             dashboardGuid = dashboard.guid;
 
-        this.warn('This action will return the dashboard <span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> to its current default state. If an administrator changed the dashboard after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
+        this.warn('This action will return the page <span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> to its current default state. If an administrator changed the page after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
             Ext.Ajax.request({
                 url: Ozone.util.contextPath() + '/dashboard/restore',
                 params: {
@@ -985,7 +985,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                 success: function(response, opts) {
                     var json = Ext.decode(response.responseText);
                     if (json != null && json.data != null && json.data.length > 0) {
-                        me.notify('Restore Dashboard', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> is restored successfully to its default state!');
+                        me.notify('Restore Page', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> is restored successfully to its default state!');
 
                         var name = json.data[0].name,
                             description = json.data[0].description;
@@ -1003,7 +1003,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                     }
                 },
                 failure: function(response, opts) {
-                    Ozone.Msg.alert('Dashboard Manager', "Error restoring dashboard.", function() {
+                    Ozone.Msg.alert('Page Manager', "Error restoring page.", function() {
                         Ext.defer(function() {
                             $dashboard[0].focus();
                         }, 200, me);
@@ -1109,12 +1109,12 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         }
         
         if(dashboard.stack) {
-            this.warn('Users cannot remove individual dashboards from a stack. Please contact your administrator.', focusEl);
+            this.warn('Users cannot remove individual pages from an application. Please contact your administrator.', focusEl);
             return;
         }
 
         if(dashboard.groups && dashboard.groups.length > 0) {
-            this.warn('Users cannot remove dashboards assigned to a group. Please contact your administrator.', focusEl);
+            this.warn('Users cannot remove pages assigned to a group. Please contact your administrator.', focusEl);
             return;
         }
 
@@ -1141,7 +1141,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         	$stack = this.getElByClassFromEvent(evt, 'stack'),
             stack = this.getStack($stack);
         
-        this.warn('This action will return the stack <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any dashboard in the stack after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
+        this.warn('This action will return the application <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any page in the application after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
             Ext.Ajax.request({
                 url: Ozone.util.contextPath() + '/stack/restore',
                 params: {
@@ -1151,7 +1151,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                     var json = Ext.decode(response.responseText);
                     
                     if (json != null && json.updatedDashboards != null && json.updatedDashboards.length > 0) {
-                        me.notify('Restore Stack', '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is restored successfully to its default state!');
+                        me.notify('Restore Application', '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is restored successfully to its default state!');
                         
                         var dashboards = stack.dashboards;
                         for(var i = 0; i < dashboards.length; i++) {
@@ -1174,7 +1174,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
                     }
                 },
                 failure: function(response, opts) {
-                    Ozone.Msg.alert('Dashboard Manager', "Error restoring stack.", function() {
+                    Ozone.Msg.alert('Page Manager', "Error restoring application.", function() {
                         Ext.defer(function() {
                             $stack[0].focus();
                         }, 200, me);
@@ -1193,7 +1193,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         var me = this,
             $stack = this.getElByClassFromEvent(evt, 'stack'),
             stack = this.getStack($stack),
-            msg = 'This action will permanently delete stack <span class="heading-bold">' 
+            msg = 'This action will permanently delete application <span class="heading-bold">'
                     + Ext.htmlEncode(stack.name) + '</span> and its dashboards.';
 
         function focusEl () {
@@ -1222,7 +1222,7 @@ Ext.define('Ozone.components.window.DashboardSwitcher', {
         }
 
         if(groupAssignment) {
-            this.warn('Users in a group cannot remove stacks assigned to the group. Please contact your administrator.', focusEl);
+            this.warn('Users in a group cannot remove applications assigned to the group. Please contact your administrator.', focusEl);
             return;
         }
 

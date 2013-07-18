@@ -9,6 +9,7 @@ import ozone.owf.grails.domain.RelationshipType
 import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.grails.domain.WidgetType
+import ozone.owf.grails.domain.Person
 
 class StackControllerTests extends OWFGroovyTestCase {
     
@@ -19,10 +20,14 @@ class StackControllerTests extends OWFGroovyTestCase {
     
     protected void setUp() {
         super.setUp()
+
+        def owner = Person.findByUsername('testAdmin1')
+        assertNotNull owner
+        assertNotNull owner.id
         
-        def stack1 = ozone.owf.grails.domain.Stack.build(name: 'Stack One', description: 'Stack One description', stackContext: 'one', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
+        def stack1 = ozone.owf.grails.domain.Stack.build(name: 'Stack One', description: 'Stack One description', stackContext: 'one', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor', owner: owner)
         stack1.addToGroups(Group.build(name: 'Group1', automatic: false, status: 'active', stackDefault: true))
-        def stack2 = ozone.owf.grails.domain.Stack.build(name: 'Stack Two', description: 'Stack Two description', stackContext: 'two', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
+        def stack2 = ozone.owf.grails.domain.Stack.build(name: 'Stack Two', description: 'Stack Two description', stackContext: 'two', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor', owner: owner)
         stack2.addToGroups(Group.build(name: 'Group2', automatic: false, status: 'active', stackDefault: true))
         stackIds = [stack1.id, stack2.id]
     }
@@ -76,7 +81,7 @@ class StackControllerTests extends OWFGroovyTestCase {
     
     void testUpdate() {
         
-        loginAsUsernameAndRole('testAdmin', ERoleAuthority.ROLE_ADMIN.strVal)
+        loginAsAdmin()
         
         stackController = new StackController()
         stackController.stackService = stackService

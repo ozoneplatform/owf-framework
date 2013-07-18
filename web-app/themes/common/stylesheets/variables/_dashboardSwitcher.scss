@@ -4,10 +4,10 @@ $dashboard-switcher-body-radius: 25px !default;
 $dashboard-switcher-background-color: $owf-base-color !default;
 $dashboard-switcher-opacity: 0.90 !default;
 
-$dashboard-item-body-radius: 10px !default;
+$dashboard-item-body-radius: 5px !default;
 
 $dashboard-switcher-dashboard-background-color: $dashboard-switcher-background-color !default;
-$dashboard-switcher-dashboard-over-background-color: darken($dashboard-switcher-dashboard-background-color, 15) !default;
+$dashboard-switcher-dashboard-over-background-color: darken($dashboard-switcher-dashboard-background-color, 10) !default;
 $dashboard-switcher-dashboard-selected-background-color: lighten($dashboard-switcher-dashboard-background-color, 10) !default;
 
 $dashboard-switcher-dashboard-border-color: $dashboard-switcher-background-color !default;

@@ -38,7 +38,7 @@ if (Ozone.layout.ToolbarString) {
 
 if (Ozone.layout.DesktopWindowManagerString) {
     Ext.apply(Ozone.layout.DesktopWindowManagerString, {
-	    configureDashboard : 'Configure Dashboard', 
+	    configureDashboard : 'Configure Page',
 	    toggleCarousel : 'Toggle Carousel',
 	    welcomeMessage : 'Welcome'
     });
@@ -46,30 +46,30 @@ if (Ozone.layout.DesktopWindowManagerString) {
 
 if (Ozone.ux.DashboardMgmtString) {
     Ext.apply(Ozone.ux.DashboardMgmtString, {
-	    createDashboard : 'Create a Dashboard', 
-	    selectDashboardDotDot : 'Select a dashboard...',
-	    deleteDashboard : 'Delete a Dashboard', 
-	    importaDashboard : 'Import a Dashboard',
-	    exportDashboard : 'Export Current Dashboard', 
-	    exportDashboardConfig : 'Export Dashboard Configuration', 
+	    createDashboard : 'Create a Page',
+	    selectDashboardDotDot : 'Select a page...',
+	    deleteDashboard : 'Delete a Page',
+	    importaDashboard : 'Import a Page',
+	    exportDashboard : 'Export Current Page',
+	    exportDashboardConfig : 'Export Page Configuration',
 	    uploadConfig : 'Upload...', 
 	    setAsDefault : 'Set as default', 
 	    dashboards : 'Dashboards', 
-	    selectDashboard : 'Select Dashboard', 
+	    selectDashboard : 'Select Page',
 	    accordion : 'Accordion', 
 	    portal : 'Portal', 
 	    tabbed : 'Tabbed', 
 	    desktop : 'Desktop', 
-		tooltipManageDashboards: 'Dashboard Settings',
-		tooltipCreateDashboard: 'Create Dashboard',
+		tooltipManageDashboards: 'Page Settings',
+		tooltipCreateDashboard: 'Create Page',
 		
 	    ok : 'OK', 
 	    reset : 'Reset',
 	    about: 'About', 
 	    logout: 'Logout', 
-	    importDashboard : 'Import Dashboard', 
-	    dashboardTitle : 'Dashboard Title', 
-	    enterDashboardTitle : 'Enter Dashboard Title...',
+	    importDashboard : 'Import Page',
+	    dashboardTitle : 'Page Title',
+	    enterDashboardTitle : 'Enter Page Title...',
 	    browse : 'Browse...', 
 		
 		loadDefaultMsg : 'Load Default Configuration?',
@@ -111,7 +111,7 @@ if (Ozone.layout.TabbedWindowManagerString) {
 
 if (Ozone.util.ErrorMessageString) {
     Ext.apply(Ozone.util.ErrorMessageString , {
-    	dashboardConfig : 'Dashboard Configuration',
+    	dashboardConfig : 'Page Configuration',
     	widgetConfiguration : 'Widget Configuration', 
     	noWidgets : 'There are no widgets to which you have access.', 
     	configurationMsg : 'Failed to retrieve configuration data', 
@@ -125,7 +125,7 @@ if (Ozone.util.ErrorMessageString) {
     	storeErrorMsg : 'Store Error Message',
     	sendAndForget : 'Send and Forget',
     	userName : 'User Name',
-    	updateDashboardMsg : 'Error updating dashboard'
+    	updateDashboardMsg : 'Error updating page'
     });
 }
 

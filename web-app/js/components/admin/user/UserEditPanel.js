@@ -36,11 +36,6 @@ Ext.define('Ozone.components.admin.user.UserEditPanel', {
                         editPanel: self
                     },
                     {
-                        xtype: 'usereditdashboards',
-                        itemId: 'usereditdashboards',
-                        editPanel: self
-                    },
-                    {
                         xtype: 'usereditstacks',
                         itemId: 'usereditstacks',
                         editPanel: self

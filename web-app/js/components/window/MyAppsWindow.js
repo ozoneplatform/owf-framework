@@ -18,14 +18,14 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     viewId: 'dashboard-switcher-dashboard-view',
 
-    width: 720,
-    height: 525,
+    width: 750,
+    height: 495,
 
-    normalModalHeight: 525,
-    expandedModalHeight: 655,
+    normalModalHeight: 495,
+    expandedModalHeight: 645,
 
-    normalSlideHeight: 360,
-    expandedSlideHeight: 490,
+    normalSlideHeight: 320,
+    expandedSlideHeight: 470,
 
     dashboardContainer: null,
 
@@ -146,7 +146,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             
             getActions: function (values) {
                 return	'<ul class="detail-actions hide">'+
-                			'<li id="'+values.name+'-li" class="detail-action">Details'+
+                			'<li class="detail-action">Details</li>'+
                         '</ul>'
             },
             
@@ -183,7 +183,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     '</li>'+
             		'<li class="create-link-btn">'+
                         '<span class="create-link-btn-img"></span>'+
-                        '<span class="create-link-btn-text">Create New App</span>'+
+                        '<span class="create-link-btn-text">Create <br>New App</span>'+
                     '</li>'+
                 '</ul>'+
             '</div>');
@@ -1001,15 +1001,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     onMouseOver: function (evt) {
         var el = $(evt.currentTarget);
 
-        //if ( this.isAnAppExpanded || 
-         //   !this.isAnAppExpanded && $(el).hasClass('stack')) {
-
-            if (this._previouslyHoveredStackOrDashboard != null) {
-                $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');
-            }
+        if (this._previouslyHoveredStackOrDashboard != null) {
+            $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');
+        }
             
-            $('.detail-actions', el).removeClass('hide');
-       // }
+        $('.detail-actions', el).removeClass('hide');
 
         this._previouslyHoveredStackOrDashboard = el;
     },
@@ -1266,7 +1262,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             $stack = this.getElByClassFromEvent(evt, 'stack'),
             stack = this.getStack($stack);
         
-        this.warn('This action will return the stack <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any dashboard in the stack after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
+        this.warn('This action will return the application <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any page in the application after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
             Ext.Ajax.request({
                 url: Ozone.util.contextPath() + '/stack/restore',
                 params: {
@@ -1276,7 +1272,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     var json = Ext.decode(response.responseText);
                     
                     if (json != null && json.updatedDashboards != null && json.updatedDashboards.length > 0) {
-                        me.notify('Restore Stack', '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is restored successfully to its default state!');
+                        me.notify('Restore Application', '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is restored successfully to its default state!');
                         
                         var dashboards = stack.dashboards;
                         for(var i = 0; i < dashboards.length; i++) {
@@ -1299,7 +1295,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     }
                 },
                 failure: function(response, opts) {
-                    Ozone.Msg.alert('Dashboard Manager', "Error restoring stack.", function() {
+                    Ozone.Msg.alert('Page Manager', "Error restoring application.", function() {
                         Ext.defer(function() {
                             $stack[0].focus();
                         }, 200, me);

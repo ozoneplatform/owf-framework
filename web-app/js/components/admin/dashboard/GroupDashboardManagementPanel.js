@@ -16,7 +16,7 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
     dragAndDrop: true,
     launchesWidgets: true,
     channel: 'AdminChannel',
-    defaultTitle: 'Group Dashboards',
+    defaultTitle: 'Group Pages',
     minButtonWidth: 80,
     detailsAutoOpen: true,
     
@@ -236,7 +236,7 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
     
     onLaunchFailed: function(response) {
         if (response && response.error) {
-            this.showAlert('Launch Error', 'Dashboard Editor Launch Failed: ' + response.message);
+            this.showAlert('Launch Error', 'Page Editor Launch Failed: ' + response.message);
         }
     },
 
@@ -275,7 +275,7 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
 		        }, this.onLaunchFailed);
             }
         } else {
-            this.showAlert("Error", "You must select at least one dashboard to edit");
+            this.showAlert("Error", "You must select at least one page to edit");
         }
     },
     
@@ -317,7 +317,7 @@ Ext.define('Ozone.components.admin.dashboard.GroupDashboardManagementPanel', {
                 }
             });
         } else {
-            this.showAlert("Error", "You must select at least one dashboard to delete");
+            this.showAlert("Error", "You must select at least one page to delete");
         }
     }
 });
