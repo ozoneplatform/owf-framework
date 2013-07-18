@@ -203,6 +203,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     me.onSlideTransition.apply(me, arguments);
                 }, me)
             });
+            me.slider.disableSelection();
         });
 
         me.on('beforeclose', me.onClose, me);
@@ -641,7 +642,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         }
 
-        $draggedItem.focus();
+        // focusing dragged item breaks carousel in Firefox
+        //$draggedItem.focus();
+
         me.initCircularFocus();
         me.reordered = true;
     },
@@ -979,7 +982,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var me = this;
 
         if (me.appPageCarousel) {
-            me.appPageCarousel.destroySlider();
+            me.appPageCarousel.enableSelection().destroySlider();
         }
 
         me.appPageCarousel = $('.all-dashboards', $stackDashboardContainer).bxSlider({
@@ -987,6 +990,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             infiniteLoop: true,
             touchEnabled: false
         });
+
+        me.appPageCarousel.disableSelection();
     },
 
     expandModal: function(containerSlide) {
