@@ -659,7 +659,7 @@ class DashboardService extends BaseService {
             // Delete all mappings for personal dashboard
             domainMappingService.purgeAllMappings(personalDashboard)
 
-            personalDashboard.delete()
+            personalDashboard.delete(flush:true)
 
             true
         } else {
@@ -679,12 +679,12 @@ class DashboardService extends BaseService {
         //delete all mappings for this dashboard
         domainMappingService.purgeAllMappings(personalDashboard)
 
-        personalDashboard.delete()
-
         // If this is the page of the user's app, delete the group dashboard
         if (accountService.getLoggedInUsername().equals(groupDashboard?.stack?.owner?.username)) {
             groupDashboard.delete()
         }
+
+        personalDashboard.delete(flush:true)
     }
 
     def bulkDeleteAndUpdate(params){
