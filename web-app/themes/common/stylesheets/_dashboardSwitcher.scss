@@ -4,7 +4,7 @@
 }
 
 #dashboard-switcher {
-    border: 0px none black;
+    border: 0px;
 
     &-body {
         @include border-radius($dashboard-switcher-body-radius);
@@ -16,16 +16,20 @@
         margin-bottom: 5px;
         width: 100% !important;
         *overflow: hidden;
+        *width: 97% !important;
+        *margin-bottom: 0px;
         zoom: 1;
         height: $dashboard-switcher-header-height !important;
         
         .x-window-header-text {
 			font-size: 24px;
 			padding-left: 68px;
+            *line-height: 24px;
 		}
 
         .x-window-header-body {
             height: $dashboard-switcher-header-height !important;
+            zoom: 1;
         }
     }
 
@@ -109,6 +113,7 @@
         position: relative;
         text-align: left;
         padding-top: 10px;
+        *padding-top: 0px;
         padding-left: 53px;
     }
 
@@ -340,13 +345,8 @@ $dashboard-switcher-slider-height: 320px;
     }
     
     &:hover, &.hover {
-        // @include border-top-radius($dashboard-item-body-radius);
-        // @include border-bottom-radius($dashboard-item-body-radius);
         @include border-radius($dashboard-item-body-radius);
-        // border: 1px solid $dashboard-switcher-dashboard-over-border-color !important;
-
         background-color: $dashboard-switcher-dashboard-over-background-color !important;
-        border-color: $dashboard-switcher-dashboard-over-border-color !important;
 
         .dashboard-name {
             color: $dashboard-switcher-dashboard-over-text-color  !important;
@@ -363,6 +363,18 @@ $dashboard-switcher-slider-height: 320px;
         }
     }
 }
+
+#dashboard-switcher .dashboard, .dashboard.drag-proxy {
+    &:hover, &.hover {
+        @include border-radius($dashboard-item-body-radius);
+        background-color: darken($dashboard-switcher-dashboard-over-background-color, 10) !important;
+
+        .dashboard-name {
+            color: $dashboard-switcher-dashboard-over-text-color !important;
+        }
+    }
+}
+
 #dashboard-switcher .stack, .stack.drag-proxy {
     .thumb {
         background-image: $dashboard-switcher-layout-stack-default-icon !important;
@@ -424,18 +436,16 @@ $dashboard-switcher-slider-height: 320px;
 .x-ie7 {
     #dashboard-switcher {
         ul.actions li{
-            zoom: 1; display: inline;
-        }
-
-        .dashboard, .stack{
-            margin: 5px auto;
+            display: inline;
+            zoom: 1; 
         }
     }
+
     .dashboard-actions, .stack-actions {
-            li {
-                display: inline;
-                font-size: 1.5em;
-            }
+        li {
+            display: inline;
+            font-size: 1.5em;
+        }
     }
 }
 .dashboard-actions, .stack-actions {
