@@ -10,16 +10,23 @@
         @include border-radius($dashboard-switcher-body-radius);
     }
 
+    $dashboard-switcher-header-height: 26px;
+
     .x-window-header {
         margin-bottom: 5px;
         width: 100% !important;
         *overflow: hidden;
         zoom: 1;
+        height: $dashboard-switcher-header-height !important;
         
         .x-window-header-text {
-			font-size: 18px;
-			padding-left: 30px;
+			font-size: 24px;
+			padding-left: 68px;
 		}
+
+        .x-window-header-body {
+            height: $dashboard-switcher-header-height !important;
+        }
     }
 
     .actions {
@@ -36,7 +43,7 @@
                 *display: inline;
                 padding: 5px 10px;
 
-                &:hover, &.selected {
+                &:hover, &.hover, &.selected {
                     background: $dashboard-switcher-dashboard-over-background-color;
                     color: $dashboard-switcher-dashboard-over-text-color;
                 }
@@ -81,7 +88,7 @@
             .store-link-btn-img {
                 background-image: theme-image($theme-name, 'myappswindow/MoreinStore-out.png');
 
-                &:hover {
+                &:hover, &.hover {
                     background-image: theme-image($theme-name, 'myappswindow/MoreinStore-over.png');                    
                 }
             }
@@ -89,7 +96,7 @@
             .create-link-btn-img {
                 background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-out.png');
 
-                &:hover {
+                &:hover, &.hover {
                     background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-over.png');
                 }
             }
@@ -98,11 +105,11 @@
 
     .dashboard-switcher-descriptor {
         color: $dashboard-switcher-dashboard-text-color;
-        padding: 0;
         bottom: 20px !important;
         position: relative;
         text-align: left;
-        padding-left: 16px;
+        padding-top: 10px;
+        padding-left: 53px;
     }
 
     > #dashboard-switcher-body {
@@ -153,7 +160,8 @@ $dashboard-switcher-slider-height: 320px;
             background: transparent !important;
             *background: inherit !important;
             border: 0px;
-            width: 570px !important;
+            // padding-left: 5px !important;
+            width: 600px !important;
             height: $dashboard-switcher-slider-height;
             min-height: $dashboard-switcher-slider-height !important;
         }
@@ -174,20 +182,20 @@ $dashboard-switcher-slider-height: 320px;
 
     > .bx-wrapper {
         .bx-prev {
-            left: 0px !important;
+            left: 10px !important;
             background: theme-image($theme-name, 'myappswindow/carousel_arrows_left-out.png') 0 0 no-repeat !important;
             height: 42px !important;
 
-            &:hover {
+            &:hover, &.hover {
                 background: theme-image($theme-name, 'myappswindow/carousel_arrows_left-over.png') 0 0 no-repeat !important;
             }
         }
         .bx-next {
-            right: 0px !important;
+            right: 4px !important;
             background: theme-image($theme-name, 'myappswindow/carousel_arrows_right-out.png') 0 0 no-repeat !important;
             height: 42px !important;
 
-            &:hover {
+            &:hover, &.hover {
                 background: theme-image($theme-name, 'myappswindow/carousel_arrows_right-over.png') 0 0 no-repeat !important;
             }
         }
@@ -207,7 +215,7 @@ $dashboard-switcher-slider-height: 320px;
             > .bx-wrapper {
                 min-height: 105px !important;
                 max-height: 105px !important;
-                width: 430px !important;
+                width: 460px !important;
                 margin-bottom: 30px;
 
                 > .bx-viewport {
@@ -219,7 +227,7 @@ $dashboard-switcher-slider-height: 320px;
 
                     border: 0px;
 
-                    width: 430px !important;
+                    width: 460px !important;
 
                     height: 105px !important;
                     *height: 110px !important;
@@ -259,7 +267,7 @@ $dashboard-switcher-slider-height: 320px;
                     left: -63px !important;
                     background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_left-out.png') !important;
 
-                    &:hover {
+                    &:hover, &.hover {
                         background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_left-over.png') !important;
                     }
                 }
@@ -268,7 +276,7 @@ $dashboard-switcher-slider-height: 320px;
                     right: -70px !important;
                     background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_right-out.png') !important;
                     
-                    &:hover {
+                    &:hover, &.hover {
                         background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_right-over.png') !important;
                     }
                 }
@@ -288,7 +296,6 @@ $dashboard-switcher-slider-height: 320px;
     @include box-sizing(content-box);
 
     float: left;
-    margin: 0px;
     padding: 0px;
     position: relative;
     text-align: center;
@@ -296,9 +303,10 @@ $dashboard-switcher-slider-height: 320px;
     cursor: pointer;
     width: $dashboard-width;
     height: $dashboard-height;
-    margin-bottom: 5px;
+    margin-left: 5px;
     margin-right: 5px;
-
+    margin-bottom: 5px;
+    
     .thumb-wrap {
         text-align: center;
         white-space: nowrap;
@@ -331,9 +339,11 @@ $dashboard-switcher-slider-height: 320px;
         margin-right: auto;
     }
     
-    &:hover {
-        @include border-top-radius($dashboard-item-body-radius);
-        @include border-bottom-radius($dashboard-item-body-radius);
+    &:hover, &.hover {
+        // @include border-top-radius($dashboard-item-body-radius);
+        // @include border-bottom-radius($dashboard-item-body-radius);
+        @include border-radius($dashboard-item-body-radius);
+        // border: 1px solid $dashboard-switcher-dashboard-over-border-color !important;
 
         background-color: $dashboard-switcher-dashboard-over-background-color !important;
         border-color: $dashboard-switcher-dashboard-over-border-color !important;

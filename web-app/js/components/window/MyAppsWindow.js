@@ -18,7 +18,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     viewId: 'dashboard-switcher-dashboard-view',
 
-    width: 720,
+    width: 750,
     height: 495,
 
     normalModalHeight: 495,
