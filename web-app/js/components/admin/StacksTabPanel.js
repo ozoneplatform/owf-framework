@@ -30,7 +30,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                     xtype:'tbtext',
                     itemId: 'lblStacksGrid',
                     cls: 'tbStacksGridHdr',
-                    text:'Applications'
+                    text:'Apps'
                 },'->',{
                     xtype: 'searchbox',
                     listeners: {
