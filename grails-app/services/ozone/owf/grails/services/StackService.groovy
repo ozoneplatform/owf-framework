@@ -455,6 +455,38 @@ class StackService {
         return [success: true, data: stacks];
     }
     
+    private def isStackOwner(stacks) {
+        def stackOwnerOfAll = true
+
+        def userId = accountService.getLoggedInUser()?.id
+        def stack
+
+        stacks.each{
+            stack = Stack.get(it.id)
+            if(!stack || !stack.owner || !userId || userId != stack.owner.id) {
+                stackOwnerOfAll = false
+            }
+        }
+
+        return stackOwnerOfAll
+    }
+
+    private def stackOwnerCanDelete(stacks) {
+        def canDeleteAll = true
+        def stack
+
+        stacks.each {
+            stack = Stack.get(it.id)
+            if(stack) {
+                Dashboard.findAllWhere(user: null, stack: stack).each {
+                    if(it.publishedToStore) {
+                        canDeleteAll = false;
+                    }
+                }
+            }
+        }
+    }
+
     def delete(params) {
         def stacks = []
         
@@ -468,9 +500,14 @@ class StackService {
         }
         
         // Handle user deletion of their stack association and data.
-        if((!accountService.getLoggedInUserIsAdmin()) || (params.adminEnabled != true  && params.adminEnabled != 'true')) {
+        def isAdmin = accountService.getLoggedInUserIsAdmin()
+        def adminEnabled = (params.adminEnabled == true  || params.adminEnabled == 'true')
+        def isOwner = isStackOwner(stacks)
+        def ownerCanDelete = stackOwnerCanDelete(stacks)
+
+        if((isOwner && !ownerCanDelete) || (!isOwner && (!isAdmin || !adminEnabled))) {
             return deleteUserStack(stacks);
-        }
+        } 
         
         // Handle administrative removal of stacks.
         stacks.each {
@@ -610,6 +647,7 @@ class StackService {
     private def createStackData(params) {
 
         def stack = Stack.findById(params.id, [cache: true])
+        def owner = stack.owner
 
         //Construct the list of dashboards for the descriptor
         def dashboards = []
@@ -617,7 +655,8 @@ class StackService {
         if(stackGroup != null) {
             domainMappingService.getMappings(stackGroup, RelationshipType.owns, Dashboard.TYPE).eachWithIndex { it, i ->
 
-                def dashboard = Dashboard.findById(it.destId)
+                def dashboard = Dashboard.findById(it.destId);
+                dashboardService.syncDashboardForPublish(dashboard, owner)
 
                 //Get only the parameters required for a dashboard definition
                 def dashboardData = [
@@ -669,17 +708,24 @@ class StackService {
         //Get only the parameters required for a stack descriptor
         return [
                 'name': stack.name,
+                'owner': stack.owner,
                 'stackContext': stack.stackContext,
                 'description': stack.description,
                 'dashboards': dashboards,
                 'widgets': widgets
         ]
-
-
     }
     
+    /**
+     * Generates a stack JSON structure for sharing.  Also performs any internal
+     * cleanup needed in order to sync the owner's view of the stack with others.
+     * This includes deleting dashboards that are marked for deletion and setting
+     * isPublished on all pages (dashboards)
+     */
     def share(params)  {
 
+        // Only owner of stack can push to store
+        ensureOwner(params.id)
         def stackData = createStackData(params)
         stackData =  (stackData as JSON).toString()
         return stackData
@@ -792,7 +838,7 @@ class StackService {
     private def ensureAdminOrOwner(stackId) {
         if(!stackId && !accountService.getLoggedInUserIsAdmin()) {
             throw new OwfException(message: "Cannot verify ownership of a stack without the stack ID", exceptionType: OwfExceptionTypes.NotFound)
-        } 
+        }
 
         def stackInstance = Stack.get(stackId)
 
@@ -800,8 +846,25 @@ class StackService {
             throw new OwfException(message: "Cannot find a stack with id ${stackId}", exceptionType: OwfExceptionTypes.NotFound)
         } else if((!stackInstance.owner || accountService.getLoggedInUser().id != stackInstance.owner.id) && !accountService.getLoggedInUserIsAdmin()) {
             throw new OwfException(message: "You must be an administrator or owner of a stack to edit it.",
-                exceptionType: OwfExceptionTypes.Authorization)
-        } 
+                    exceptionType: OwfExceptionTypes.Authorization)
+        }
+
+
+    }
+
+    private def ensureOwner(stackId) {
+        if(!stackId && !accountService.getLoggedInUserIsAdmin()) {
+            throw new OwfException(message: "Cannot verify ownership of a stack without the stack ID", exceptionType: OwfExceptionTypes.NotFound)
+        }
+
+        def stackInstance = Stack.get(stackId)
+
+        if(!stackInstance) {
+            throw new OwfException(message: "Cannot find a stack with id ${stackId}", exceptionType: OwfExceptionTypes.NotFound)
+        } else if((!stackInstance.owner || accountService.getLoggedInUser().id != stackInstance.owner.id)) {
+            throw new OwfException(message: "You must be an owner of a stack to push it to the store.",
+                    exceptionType: OwfExceptionTypes.Authorization)
+        }
 
 
     }

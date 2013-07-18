@@ -92,7 +92,7 @@
                 selectable: false,
                 size: this.size,
                 addFilterFn: function (model, index) {
-                    if(model.get('name').indexOf(this.searchQuery) < 0) {
+                    if(model.get('name').toLowerCase().indexOf(this.searchQuery.toLowerCase()) < 0) {
                         return false;
                     }
                     return true;
@@ -245,19 +245,22 @@
                                     itemView = $item.data('view'),
                                     newIndex;
 
-                                if(prevIndex > -1) {
-                                    newIndex = me.collection.indexOf($prev.data('view').model);
-                                }
-                                else {
-                                    newIndex = me.collection.indexOf($next.data('view').model);
-                                }
+                                // only reorder if page has more than 1 item
+                                if($prev.length > 0 || $next.length > 0) {
+                                    if(prevIndex > -1) {
+                                        newIndex = me.collection.indexOf($prev.data('view').model);
+                                    }
+                                    else {
+                                        newIndex = me.collection.indexOf($next.data('view').model);
+                                    }
 
-                                me.collection.move(itemView.model, newIndex);
-                                me._reordered = true;
+                                    me.collection.move(itemView.model, newIndex);
+                                    me._reordered = true;
 
-                                setTimeout(function () {
-                                    me.carousel.reloadCarousel(me.carousel.$el.getCurrentSlide());
-                                }, 0);
+                                    setTimeout(function () {
+                                        me.carousel.reloadCarousel(me.carousel.$el.getCurrentSlide());
+                                    }, 0);
+                                }
                             }
 
                             // remove event handlers

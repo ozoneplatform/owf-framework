@@ -13,6 +13,8 @@
     .x-window-header {
         margin-bottom: 5px;
         width: 100% !important;
+        *overflow: hidden;
+        zoom: 1;
         
         .x-window-header-text {
 			font-size: 18px;
@@ -30,6 +32,8 @@
 
             li {
                 display: inline-block;
+                zoom: 1;
+                *display: inline;
                 padding: 5px 10px;
 
                 &:hover, &.selected {
@@ -70,11 +74,19 @@
             }
 
             .store-link-btn-img {
-                background-image: theme-image($theme-name, 'myappswindow/moreInStore.png');
+                background-image: theme-image($theme-name, 'myappswindow/MoreinStore-out.png');
+
+                &:hover {
+                    background-image: theme-image($theme-name, 'myappswindow/MoreinStore-over.png');                    
+                }
             }
 
             .create-link-btn-img {
-                background-image: theme-image($theme-name, 'myappswindow/createNewApp.png');
+                background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-out.png');
+
+                &:hover {
+                    background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-over.png');
+                }
             }
         }
     }
@@ -88,43 +100,10 @@
         padding-left: 16px;
     }
 
-    #dashboard-switcher-body {
+    > #dashboard-switcher-body {
         text-align: center;
         margin-left: auto;
         margin-right: auto;
-
-        /**** BEGIN slider styling ****/
-        .bx-wrapper {
-            margin-bottom: 30px !important;
-            min-height: 360px;
-            max-height: 490px;
-
-            .bx-viewport {
-                @include box-shadow(none);
-
-                background: transparent !important;
-                border: 0px;
-                margin-left: 84px;
-                margin-right: 75px;
-                width: 480px !important;
-                height: 360px;
-                min-height: 360px;
-            }
-        }
-        
-        .bx-wrapper .bx-pager, .bx-wrapper .bx-controls-auto {
-    		bottom: -20px;
-    	}
-
-        .bx-wrapper {
-            .bx-prev {
-                left: 0px !important;
-            }
-            .bx-next {
-                right: 0px !important;
-            }
-        }
-        /***** END slider styling  ****/
     }
 
     .all-dashboards {
@@ -152,9 +131,123 @@
 	}
 }
 
+/**** BEGIN slider styling ****/
+#dashboard-switcher
+    > #dashboard-switcher-body {
+
+    > .bx-wrapper {
+        margin-bottom: 30px !important;
+        min-height: 360px;
+        max-height: 490px;
+
+        > .bx-viewport {
+            @include box-shadow(none);
+
+            background: transparent !important;
+            *background: inherit !important;
+            border: 0px;
+            margin-left: 72px;
+            margin-right: 75px;
+            width: 540px !important;
+            height: 360px;
+            min-height: 360px;
+        }
+    }
+
+    > .bx-wrapper .bx-pager, > .bx-wrapper .bx-controls-auto {
+        bottom: -20px;
+        zoom: 1;
+        padding-top: 0px;
+        *text-align: left;
+        *display: inline;
+
+        .bx-pager-item {
+            zoom: 1;
+            *display: inline;
+        }
+    }
+
+    > .bx-wrapper {
+        .bx-prev {
+            left: 0px !important;
+        }
+        .bx-next {
+            right: 0px !important;
+        }
+    }
+}
+
+#dashboard-switcher
+    > #dashboard-switcher-body
+    > .bx-wrapper
+    > .bx-viewport
+    > .all-dashboards
+    > .bx-slide
+    > .stack-dashboards-container {
+
+        > .stack-dashboards {
+
+        > .bx-wrapper {
+            min-height: 105px !important;
+            max-height: 105px !important;
+            width: 400px !important;
+            margin-bottom: 30px;
+
+            > .bx-viewport {
+                @include box-shadow(none);
+
+                background: transparent !important;
+
+                margin-left: 5px;
+                margin-right: 20px;
+
+                border: 0px;
+
+                width: 400px !important;
+
+                height: 105px !important;
+                *height: 110px !important;
+
+                min-height: 105px !important;
+                *min-height: 110px !important;
+
+                .dashboard {
+                    padding-top: 5px;
+                    margin-bottom: 0px;
+                    width: 80px;
+                }
+            }
+        }
+
+        > .bx-wrapper .bx-pager, > .bx-wrapper .bx-controls-auto {
+            bottom: -20px;
+            zoom: 1;
+            *text-align: left;
+            *display: inline;
+
+            .bx-pager-item {
+                zoom: 1;
+                *display: inline;
+            }
+        }
+
+        > .bx-wrapper {
+            .bx-prev {
+                left: -50px !important;
+                top: 65%;
+            }
+            .bx-next {
+                right: -50px !important;
+                top: 65%;
+            }
+        }
+    }
+}
+/***** END slider styling  ****/
+
 #dashboard-switcher .dashboard, #dashboard-switcher .stack, .stack.drag-proxy, .dashboard.drag-proxy {
-    $dashboard-width: 80px;
-    $dashboard-height: 120px;
+    $dashboard-width: 90px;
+    $dashboard-height: 100px;
 
     //For these elements, it is more useful
     //to compute content width not overall box 
@@ -171,6 +264,7 @@
     cursor: pointer;
     width: $dashboard-width;
     height: $dashboard-height;
+    margin-bottom: 5px;
 
     .thumb-wrap {
         text-align: center;
@@ -178,6 +272,7 @@
         margin-left: auto;
         margin-right: auto;
         width: 100%;
+        *overflow: hidden;
         
         .thumb {
             height: 64px;
@@ -202,7 +297,6 @@
         margin-top: 2px;
         margin-left: auto;
         margin-right: auto;
-        font-size: 10px;
     }
     
     &:hover {
@@ -233,7 +327,7 @@
     }
     &.dashboard-selected {
         .thumb {
-            // background-image: $dashboard-switcher-layout-stack-default-icon-over !important;
+            background-image: $dashboard-switcher-layout-stack-default-icon-over !important;
         }
     }
 }
@@ -281,7 +375,7 @@
 
 .detail-actions {
 	padding-top:5px; 
-	color:white;
+	color: $dashboard-switcher-dashboard-text-color;
 }
 
 .x-ie7 {
@@ -324,8 +418,6 @@
             display: none;
         }
     }
-
-
 }
 .stack-dashboards-anchor-tip {
     position: relative;
@@ -335,12 +427,40 @@
 
 .itemTip {
 	z-index: 79001 !important;
+	border-radius: 10px;
+	
+	 .x-tool .x-tool-close {
+	    background-image: theme-image($theme-name, 'tools/close-out.png') !important;
+	    right: 5px;
+	    position:relative;
+	}
+	
+	.x-tool-over .x-tool-close {
+	     background-image: theme-image($theme-name, 'tools/close-over.png') !important;
+	     background-position: 0 !important;
+	}
+	
+	.x-tool-pressed .x-tool-close {
+	     background-image: theme-image($theme-name, 'tools/close-down.png') !important;
+	     background-position: 0 !important;
+	}
+	
+	.x-box-inner {
+		top:5px !important;
+		height: 25px !important;
+	}
 }
 
 .ozonequicktip {
     width: 300px;
-
+    padding: 0;
+	background-color: $widget-launcher-background-color;
+	
     .dashboard-tooltip-content {
+        h3 {
+        	color: $dashboard-switcher-dashboard-text-color;
+        	padding-left: 5px;
+        }
         
         ul {
             color: $dashboard-switcher-dashboard-text-color;
@@ -358,8 +478,9 @@
                 	text-align:center;
                 	 margin-left:auto;
                 	 margin-right:auto; 
-                	 font-size:.8em;
-    }
+                	 margin-top: 2px;
+                	 font-size:.94em;
+    			}
 
                 .createImg {
 		        	background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-out.png'); 
@@ -374,13 +495,26 @@
 				    }
 		        }
 		        
+		        .createPageImg {
+		        	background-image: theme-image($theme-name, 'myappswindow/CreateNewPage-out.png'); 
+		        	display: inline-block;
+		        	width:20px;
+		        	height:20px;
+		        	margin-left:35%;
+		        	margin-top:20%;
+                	 
+		        	&:hover, &.hover {
+				        background-image: theme-image($theme-name, 'myappswindow/CreateNewPage-over.png'); 
+				    }
+		        }
+		        
 		        .pushImg {
 		        	background-image: theme-image($theme-name, 'myappswindow/PushtoStore-out.png'); 
 		        	display: inline-block;
 		        	width:20px;
 		        	height:20px;
 		        	margin-left:35%;
-		        	margin-top:30%;
+		        	margin-top:20%;
                 	 
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/PushtoStore-over.png'); 
@@ -393,7 +527,7 @@
 		        	width:20px;
 		        	height:20px;
 		        	margin-left:35%;
-		        	margin-top:30%;
+		        	margin-top:20%;
                 	 
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/Restore-over.png'); 
@@ -406,7 +540,7 @@
 		        	width:20px;
 		        	height:20px;
 		        	margin-left:35%;
-		        	margin-top:30%;
+		        	margin-top:20%;
                 	 
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/Edit-over.png'); 
@@ -419,13 +553,36 @@
 		        	width:20px;
 		        	height:20px;
 		        	margin-left:35%;
-		        	margin-top:30%;
+		        	margin-top:20%;
                 	 
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/Delete-over.png'); 
 				    }
 		        }
+		        
+		        .imgPageAdjust { 
+    				margin-left: 38% !important; 
+    				margin-top: 10% !important;
+    			}
+    			
+    			.imgStoreAdjust { 
+    				margin-top: 15% !important;
+    			}
             }
+            
+            .liStoreAdjust{
+            	width:24.3% !important;
+            	font-size: 1em !important;
+            }
+            
+            .liPageAdjust{
+            	width:32.6% !important;
+            	font-size: 1em !important;
+            }
+        }
+        
+        .ulStoreAdjust {
+        	padding-top:2%;
         }
     }
 
@@ -447,6 +604,7 @@
     .tip-description {
         line-height: (14/12);
         max-width: 250px;
+        padding-left: 5px;
     }
 
     .dashboard-metadata {
@@ -560,3 +718,47 @@
   }
 }
 
+div.premadeViewRow {
+  height: 60px !important;
+}
+
+#premadeViewContainer .x-box-inner {
+  height: 120px !important;
+}
+
+div#premadeViewContainer {
+  transition: height .5s;
+  -moz-transition: height .5s; /* Firefox 4 */
+  -webkit-transition: height .5s; /* Safari and Chrome */
+  -o-transition: height .5s; /* Opera */
+
+  &.collapseView {
+    height: 0px !important;
+  }
+
+  &.expandView {
+    height: 120px !important;
+  }
+}
+
+div#existViewCb {
+
+  transition: height .5s;
+  -moz-transition: height .5s; /* Firefox 4 */
+  -webkit-transition: height .5s; /* Safari and Chrome */
+  -o-transition: height .5s; /* Opera */
+
+  &.collapseView {
+    height: 0px !important;
+    padding: 0px !important;
+    overflow: hidden !important;
+  }
+
+  &.expandView {
+    height: 30px !important;
+  }
+
+  input {
+    width: 396px !important;
+  }
+}

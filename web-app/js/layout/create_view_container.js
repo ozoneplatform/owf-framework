@@ -38,10 +38,10 @@ Ext.define('Ozone.layout.CreateViewContainer', {
     },
 
     /**
-    *
-    * Returns a dashboard store with non marketplace dashboards
-    *
-    **/
+     *
+     * Returns a dashboard store with non marketplace dashboards
+     *
+     **/
     getDashboardStore: function () {
         var dashboard,
             dashboards = [],
@@ -54,7 +54,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                 dashboards.push(dashboard.data);
             }
         }
-        
+
         var store = Ext.create('Ozone.data.DashboardStore', {
             data: dashboards
         });
@@ -73,6 +73,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             xtype: 'label',
             name: 'headerLabel',
             forId: 'myFieldId',
+            height: 22,
             cls: 'createNewHeaderLabel',
             text: this.headerText,
             margins: '0 0 0 10'
@@ -198,7 +199,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             value: '',
             maxLength: 4000,
             enforceMaxLength: true,
-            margin: '10 10 10 10'
+            margin: '10 5 10 5'
         };
 
         if (this.existingDashboardRecord != null) {
@@ -206,62 +207,10 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             this.iconURLField.value = this.existingDashboardRecord.get('iconImageUrl');
             this.description.value = this.existingDashboardRecord.get('description');
 
-            if (this.iconURLField.value != '' && this.iconURLField.value != null && this.iconURLField.value != undefined) {
+            if (jQuery.trim(this.iconURLField.value)) {
                 this.iconImage.setSrc(this.iconURLField.value);
             }
         }
-
-        var enableInputComponent = function(component) {
-            component.enable();
-            component.validate();
-        };
-
-        var disableInputComponent = function(component) {
-            component.reset();
-            component.disable();
-        };
-
-        var enablePremadeLayoutView = function(container) {
-            enablePremadeLayoutButton(container.down('#premadeDesktop'));
-            enablePremadeLayoutButton(container.down('#premadeFit'));
-            enablePremadeLayoutButton(container.down('#premadeTabbed'));
-            enablePremadeLayoutButton(container.down('#premade2ColumnFit'));
-            enablePremadeLayoutButton(container.down('#premade2RowFit'));
-            enablePremadeLayoutButton(container.down('#premade4Fit'));
-            enablePremadeLayoutButton(container.down('#premade2ColumnPortal'));
-            enablePremadeLayoutButton(container.down('#premadeAccordionFit'));
-            enablePremadeLayoutButton(container.down('#premadeTabbedAccordion'));
-            enablePremadeLayoutButton(container.down('#premade2RowFitTabbed'));
-            enablePremadeLayoutButton(container.down('#premadeAccordion2RowFit'));
-            enablePremadeLayoutButton(container.down('#premadeTabbed2Fit'));
-        };
-
-        var disablePremadeLayoutView = function() {
-            disablePremadeLayoutButton(container.down('#premadeDesktop'));
-            disablePremadeLayoutButton(container.down('#premadeFit'));
-            disablePremadeLayoutButton(container.down('#premadeTabbed'));
-            disablePremadeLayoutButton(container.down('#premade2ColumnFit'));
-            disablePremadeLayoutButton(container.down('#premade2RowFit'));
-            disablePremadeLayoutButton(container.down('#premade4Fit'));
-            disablePremadeLayoutButton(container.down('#premade2ColumnPortal'));
-            disablePremadeLayoutButton(container.down('#premadeAccordionFit'));
-            disablePremadeLayoutButton(container.down('#premadeTabbedAccordion'));
-            disablePremadeLayoutButton(container.down('#premade2RowFitTabbed'));
-            disablePremadeLayoutButton(container.down('#premadeAccordion2RowFit'));
-            disablePremadeLayoutButton(container.down('#premadeTabbed2Fit'));
-        };
-
-        var enablePremadeLayoutButton = function(component) {
-            component.removeCls('premadeButtonInactive');
-            component.enable();
-
-        };
-
-        var disablePremadeLayoutButton = function(component) {
-            component.removeCls('selected');
-            component.addCls('premadeButtonInactive');
-            component.disable();
-        };
 
         this.newViewRadio = {
             boxLabel: Ozone.layout.CreateViewWindowString.createNew,
@@ -272,8 +221,10 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                     fn: function(radio, newValue) {
                         if(newValue)
                         {
-                            disableInputComponent(this.down('#existViewCb'));
-                            disablePremadeLayoutView(this);
+                            this.down('#existViewCb').removeCls('expandView');
+                            this.down('#existViewCb').addCls('collapseView');
+                            this.down('#premadeViewContainer').removeCls('expandView');
+                            this.down('#premadeViewContainer').addCls('collapseView');
                         }
                     },
                     scope: this
@@ -292,8 +243,10 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                     fn: function(radio, newValue) {
                         if(newValue)
                         {
-                            enableInputComponent(this.down('#existViewCb'));
-                            disablePremadeLayoutView(this);
+                            this.down('#existViewCb').removeCls('collapseView');
+                            this.down('#existViewCb').addCls('expandView');
+                            this.down('#premadeViewContainer').removeCls('expandView');
+                            this.down('#premadeViewContainer').addCls('collapseView');
                         }
                     },
                     scope: this
@@ -314,9 +267,10 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                 'change': {
                     fn: function(radio, newValue) {
                         if(newValue) {
-                            disableInputComponent(this.down('#existViewCb'));
-                            enablePremadeLayoutView(this);
-                            this.down('#premadeDesktop').fireEvent('click');
+                            this.down('#existViewCb').removeCls('expandView');
+                            this.down('#existViewCb').addCls('collapseView');
+                            this.down('#premadeViewContainer').removeCls('collapseView');
+                            this.down('#premadeViewContainer').addCls('expandView');
                         }
                     },
                     scope: this
@@ -424,6 +378,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         this.premadeViewContainer = {
             xtype: 'container',
             name: 'premadeViewContainer',
+            cls: 'expandView',
+            id: 'premadeViewContainer',
             itemId: 'premadeViewContainer',
             layout: {
                 type: 'vbox',
@@ -439,6 +395,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         this.existingView = {
             xtype: 'combo',
             itemId: 'existViewCb',
+            cls: 'collapseView',
+            id: 'existViewCb',
             store: this.getDashboardStore(),
             valueField:'guid',
             displayField:'name',
@@ -451,7 +409,6 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             selectOnFocus:true,
             allowBlank:true,
             forceSelection: true,
-            disabled: true,
             padding: '0, 0, 5, 0',
             margin: '0, 5, 0, 17'
         };
@@ -591,7 +548,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             region: 'center',
             allowBlank: false,
             hidden: this.hideViewSelectRadio,
-            padding: '10, 0, 0, 0',
+            padding: '0, 0, 0, 6',
             items: [
                 {
                     xtype: 'radiogroup',
@@ -629,7 +586,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                 type: 'vbox',
                 align: 'stretch'
             },
-            padding: '0, 5, 0, 0',
+            padding: '0, 0, 0, 0',
             items: [
                 this.headerLabel,
                 this.appInfoContainer,
@@ -748,17 +705,16 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                             }
                             else if (usePremadeLayout) {
                                 var dashboardModel = this.createDashboardModel({
-                                        name: title,
-                                        description: desc,
-                                        iconImageUrl: iconImageUrl,
-                                        layoutConfig: me.getPremadeLayout()
+                                    name: title,
+                                    description: desc,
+                                    iconImageUrl: iconImageUrl,
+                                    layoutConfig: me.getPremadeLayout()
                                 });
 
                                 // DO not open dashboard designer, just save the dashboard with the pre-made layout
-                                dashboardContainer.saveDashboard(dashboardModel.data, 'create', function() {
+                                dashboardContainer.saveDashboard(dashboardModel.data, 'create', function(json) {
 
                                     // activate new dashboard
-                                    var guid = dashboardModel.get('guid');
                                     dashboardContainer.activateDashboard(json.guid);
                                 });
 
@@ -792,19 +748,19 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                     }
                 }
             },
-            {
-                xtype:'button',
-                scale: 'small',
-                text: 'Cancel',
-                cls: 'cancelbutton',
-                itemId: 'cancelBtn',
+                {
+                    xtype:'button',
+                    scale: 'small',
+                    text: 'Cancel',
+                    cls: 'cancelbutton',
+                    itemId: 'cancelBtn',
 //                iconCls: 'cancelBtnIcon',
-                scope: this,
-                handler: this.cancel
-            },
-            {
-                xtype: 'tbfill'
-            }]
+                    scope: this,
+                    handler: this.cancel
+                },
+                {
+                    xtype: 'tbfill'
+                }]
         }];
 
         //Need this to get rid of destory errors with ExtJS

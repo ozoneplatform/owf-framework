@@ -137,7 +137,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             getIcon: function(values) {
                 var url = values.isStack ? values.imageUrl : values.iconImageUrl;
 
-                if (url && !Ext.isEmpty(url.trim())) {
+                if (url && !Ext.isEmpty(Ext.String.trim(url))) {
                     return '<div class="thumb" style="background-image: url(' + url + ') !important"></div>';
                 } else {
                     return '<div class="thumb"></div>';
@@ -185,7 +185,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                         '<span class="create-link-btn-img"></span>'+
                         '<span class="create-link-btn-text">Create New App</span>'+
                     '</li>'+
-                    '<li class="create" tabindex="0" data-qtitle="Create Dashboard" data-tip="Name, describe and design a new dashboard.">+</li>'+
                 '</ul>'+
             '</div>');
 
@@ -197,12 +196,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 oneItemPerSlide: false,
                 infiniteLoop: true,
                 touchEnabled: false,
-                onSliderLoad: Ext.bind(function(currentIndex) {
-                    // 1 slide of actual content + a clone slide on each side auto-created by the plugin
-                    if ($('.bx-slide:not(.bx-clone)').length === 1) {
-                        $('.bx-pager').hide();
-                    }
-                }, me),
                 onSlideNext: Ext.bind(function() {
                     me.onSlideTransition.apply(me, arguments);
                 }, me),
@@ -235,12 +228,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('mouseout', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
             .on('focus', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
             .on('blur', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
-            .on('click', '.dashboard .restore', $.proxy(me.restoreDashboard, me))
-            .on('click', '.dashboard .share', $.proxy(me.shareDashboard, me))
-            .on('click', '.dashboard .edit', $.proxy(me.editDashboard, me))
-            .on('click', '.dashboard .delete', $.proxy(me.deleteDashboard, me))
-            .on('click', '.stack .restore', $.proxy(me.restoreStack, me))
-            .on('click', '.stack .delete', $.proxy(me.deleteStack, me));
 
 
         me.initKeyboardNav();
@@ -344,19 +331,44 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     },
 
     getActiveStackSlideIndex: function() {
-        var me = this,
-            stackId = me.getActiveStackId(),
+        var me = this;
+
+        var stackId = me.getActiveStackId(),
             $stackEl = $("#stack" + stackId, '.bx-slide:not(.bx-clone)'),
-            $stackElSlide = $stackEl.parent()
-            slideIndexOfActiveStack = $('.bx-slide:not(.bx-clone)').index($stackElSlide);
+            $stackElSlide = $stackEl.parent(),
+            slideIndexOfActiveStack = $('.bx-slide:not(.bx-clone)', me.el.dom).index($stackElSlide);
 
         return slideIndexOfActiveStack;
+    },
+
+    getActiveDashboardMiniSlideIndex: function() {
+        if (!this.getActiveStackId() || this.activeDashboard.configRecord.isMarketplaceDashboard()) {
+            return;
+        }
+        
+        var me = this,
+            activeDashboardId = this.activeDashboard.id,
+            $dashboardEl = $('#dashboard' + activeDashboardId, '.stack-dashboards'),
+            $dashboardElSlide = $dashboardEl.parent(),
+            slideIndexOfActiveDashboard = $('.bx-slide:not(.bx-clone)', '.stack-dashboard').index($dashboardElSlide);
+
+        return slideIndexOfActiveDashboard;
     },
 
     goToActiveStackSlide: function() {
         var me = this;
 
-        me.slider.goToSlide(me.getActiveStackSlideIndex());
+        if (!me.getActiveStackId() || me.activeDashboard.configRecord.isMarketplaceDashboard()) {
+            me.slider.goToSlide(0);
+        } else {
+            me.slider.goToSlide(me.getActiveStackSlideIndex());            
+        }
+    },
+
+    goToActiveDashboardSlideinMiniSlider: function() {
+        var me = this;
+
+        me.appPageCarousel.goToSlide(me.getActiveDashboardMiniSlideIndex);
     },
 
     onSlideTransition: function($slideElement, oldIndex, newIndex) {
@@ -473,11 +485,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('blur', '.dashboard-actions li, .stack-actions li', function (evt) {
                 $(evt.currentTarget).removeClass('hover');
             })
-            .on('keyup', '.dashboard-actions .restore', function (evt) {
-                if(evt.which === Ext.EventObject.ENTER) {
-                    me.restoreDashboard(evt);
-                }
-            })
+//            .on('keyup', '.dashboard-actions .restore', function (evt) {
+//                if(evt.which === Ext.EventObject.ENTER) {
+//                    me.restoreDashboard(evt);
+//                }
+//            })
             .on('keyup', '.dashboard-actions .share', function (evt) {
                 if(evt.which === Ext.EventObject.ENTER) {
                     me.shareDashboard(evt);
@@ -763,10 +775,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         dashboard = this.getDashboard( $clickedDashboard );
 
         if ($(evt.target).hasClass('detail-action')) {
-        	Ext.select('.itemTip').destroy()
+        	Ext.select('.itemTip').destroy();
         	
         	Ext.widget('mypagetip', {
-        		clickedStackOrDashboard:dashboard,
+                clickedDashboard:dashboard,
                 $dashboard: $clickedDashboard,
                 dashboardContainer: this.dashboardContainer,
                 appsWindow: this,
@@ -811,7 +823,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 stack = me.getStack( $clickedStack );
             
             if ($(evt.target).hasClass('detail-action')) {
-            	Ext.select('.itemTip').destroy()
+            	Ext.select('.itemTip').destroy();
             	
             	Ext.widget('myapptip', {
             		clickedStackOrDashboard:stack,
@@ -880,7 +892,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         // compile template and add to dom
         this.$stackDashboards = $( this.stackDashboardsTpl );
-        this.$stackDashboards.children('.stack-dashboards').html( this.tpl.applyTemplate( stack.dashboards ) )
+        this.$stackDashboards.children('.stack-dashboards').html( this.tpl.applyTemplate( stack.dashboards ) );
         this.$stackDashboards.insertAfter( lastElInRow );
 
         this.stackDashboardsAnchorTip = $( '.stack-dashboards-anchor-tip' , this.$stackDashboards );
@@ -920,7 +932,23 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             });
         }
 
+        me.buildAppPageCarousel(me.$stackDashboards);
+
         this._lastExpandedStack = stack;
+    },
+
+    buildAppPageCarousel: function($stackDashboardContainer) {
+        var me = this;
+
+        if (me.appPageCarousel) {
+            me.appPageCarousel.destroySlider();
+        }
+
+        me.appPageCarousel = $('.all-dashboards', $stackDashboardContainer).bxSlider({
+            oneItemPerSlide: false,
+            infiniteLoop: true,
+            touchEnabled: false
+        });
     },
 
     expandModal: function(containerSlide) {
@@ -952,8 +980,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             this.$stackDashboards && this.$stackDashboards.hide();
             dfd.resolve();
 
-            me.collapseModal();
             this.$stackDashboards.remove();
+            
+            me.collapseModal();
             this._lastExpandedStack = null;
             
             return dfd.promise();
@@ -1025,53 +1054,53 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         }
     },
 
-    restoreDashboard: function (evt) {
-        evt.stopPropagation();
-        var me = this,
-            $dashboard = this.getElByClassFromEvent(evt, 'dashboard'),
-            dashboard = this.getDashboard($dashboard),
-            dashboardGuid = dashboard.guid;
-
-        this.warn('This action will return the dashboard <span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> to its current default state. If an administrator changed the dashboard after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
-            Ext.Ajax.request({
-                url: Ozone.util.contextPath() + '/dashboard/restore',
-                params: {
-                    guid: dashboardGuid,
-                    isdefault: dashboardGuid == me.activeDashboard.guid
-                },
-                success: function(response, opts) {
-                    var json = Ext.decode(response.responseText);
-                    if (json != null && json.data != null && json.data.length > 0) {
-                        me.notify('Restore Dashboard', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> is restored successfully to its default state!');
-
-                        var name = json.data[0].name,
-                            description = json.data[0].description;
-
-                        dashboard.model.set({
-                            'name': name,
-                            'description': description
-                        });
-                        dashboard.name = name;
-                        dashboard.description = name;
-
-                        me.updateDashboardEl($dashboard, dashboard);
-
-                        me.reloadDashboards = true;
-                    }
-                },
-                failure: function(response, opts) {
-                    Ozone.Msg.alert('Dashboard Manager', "Error restoring dashboard.", function() {
-                        Ext.defer(function() {
-                            $dashboard[0].focus();
-                        }, 200, me);
-                    }, me, null, me.dashboardContainer.modalWindowManager);
-                    return;
-                }
-            });
-        }, function () {
-            evt.currentTarget.focus();
-        });
-    },
+//    restoreDashboard: function (evt) {
+//        evt.stopPropagation();
+//        var me = this,
+//            $dashboard = this.getElByClassFromEvent(evt, 'dashboard'),
+//            dashboard = this.getDashboard($dashboard),
+//            dashboardGuid = dashboard.guid;
+//
+//        this.warn('This action will return the dashboard <span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> to its current default state. If an administrator changed the dashboard after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
+//            Ext.Ajax.request({
+//                url: Ozone.util.contextPath() + '/dashboard/restore',
+//                params: {
+//                    guid: dashboardGuid,
+//                    isdefault: dashboardGuid == me.activeDashboard.guid
+//                },
+//                success: function(response, opts) {
+//                    var json = Ext.decode(response.responseText);
+//                    if (json != null && json.data != null && json.data.length > 0) {
+//                        me.notify('Restore Dashboard', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> is restored successfully to its default state!');
+//
+//                        var name = json.data[0].name,
+//                            description = json.data[0].description;
+//
+//                        dashboard.model.set({
+//                            'name': name,
+//                            'description': description
+//                        });
+//                        dashboard.name = name;
+//                        dashboard.description = name;
+//
+//                        me.updateDashboardEl($dashboard, dashboard);
+//
+//                        me.reloadDashboards = true;
+//                    }
+//                },
+//                failure: function(response, opts) {
+//                    Ozone.Msg.alert('Dashboard Manager', "Error restoring dashboard.", function() {
+//                        Ext.defer(function() {
+//                            $dashboard[0].focus();
+//                        }, 200, me);
+//                    }, me, null, me.dashboardContainer.modalWindowManager);
+//                    return;
+//                }
+//            });
+//        }, function () {
+//            evt.currentTarget.focus();
+//        });
+//    },
 
     shareDashboard: function (evt) {
         evt.stopPropagation();
@@ -1283,62 +1312,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         });
     },
 
-    deleteStack: function (evt) {
-        evt.stopPropagation();
-
-        var me = this,
-            $stack = this.getElByClassFromEvent(evt, 'stack'),
-            stack = this.getStack($stack),
-            msg = 'This action will permanently delete stack <span class="heading-bold">' 
-                    + Ext.htmlEncode(stack.name) + '</span> and its dashboards.';
-
-        function focusEl () {
-            evt.currentTarget.focus();
-        }
-
-        var stackGroups = stack.groups,
-            userGroups = Ozone.config.user.groups,
-            groupAssignment = false;
-        
-        if(stackGroups && userGroups && stackGroups.length > 0 && userGroups.length > 0) {
-            for (var i = 0, len1 = stackGroups.length; i < len1; i++) {
-                var stackGroup = stackGroups[i];
-                
-                for (var j = 0, len2 = userGroups.length; j < len2; j++) {
-                    var userGroup = userGroups[j];
-                    if(stackGroup.id === userGroup.id) {
-                        groupAssignment = true;
-                        break;
-                    }
-                }
-
-                if(groupAssignment === true)
-                    break;
-            }
-        }
-
-        if(groupAssignment) {
-            this.warn('Users in a group cannot remove stacks assigned to the group. Please contact your administrator.', focusEl);
-            return;
-        }
-
-        this.warn(msg, function () {
-            me.dashboardContainer.stackStore.remove( me.dashboardContainer.stackStore.getById(stack.id) );
-            me.dashboardContainer.stackStore.save();
-
-            if( me._lastExpandedStack === stack) {
-                me.hideStackDashboards();
-            }
-
-            var $prev = $stack.prev();
-            $stack.remove();
-            $prev.focus();
-            
-            me._deletedStackOrDashboards.push(stack);
-            me.reloadDashboards = true;
-
-        }, focusEl);
-    },
+    
 
     warn: function (msg, okFn, cancelFn) {
         Ext.widget('alertwindow',{

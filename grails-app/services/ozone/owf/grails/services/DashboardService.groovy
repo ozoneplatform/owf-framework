@@ -119,7 +119,7 @@ class DashboardService extends BaseService {
                 //create private copy of the group dashboard for the user if they don't have one
                 if (privateGroupDashboards.isEmpty()) {
                     Dashboard groupDash = Dashboard.get(dm.destId)
-                    if (groupDash != null) {
+                    if (shouldCloneGroupDashboard(groupDash, user)) {
 
                         def privateDash = cloneGroupDashboardAndCreateMapping(groupDash, user.id, maxPosition)
 
@@ -173,6 +173,27 @@ class DashboardService extends BaseService {
         domainMappingService.createMapping(privateDashboard.dashboard, RelationshipType.cloneOf, [id: groupDashboard.id, TYPE: 'dashboard'])
 
         privateDashboard
+    }
+
+    /**
+     * Returns true if this group dashboard should be cloned as a personal dashboard for the given user.
+     * @param groupDashboard
+     * @param user
+     * @return
+     */
+    private boolean shouldCloneGroupDashboard(Dashboard groupDashboard, Person user) {
+        if (groupDashboard) {
+            boolean userIsTheOwner = groupDashboard?.stack?.owner == user
+            if (groupDashboard?.markedForDeletion && userIsTheOwner) {
+                return false
+            }
+            //TODO: enable the code below after sample data are converted to work with Applications/Pages.
+//            else if (!groupDashboard.publishedToStore && !userIsTheOwner) {
+//                return false
+//            }
+            return true
+        }
+        return false
     }
 
     private def addGroupToDashboardToGroupsMap(def groupId, def groupDashboardToGroupsMap, def mapKey){
@@ -583,7 +604,7 @@ class DashboardService extends BaseService {
 
     def deleteForUser(params)
     {
-        def dashboard = null
+        def dashboard
         if(params.dashboard != null){
             dashboard = params.dashboard
         }else{
@@ -624,8 +645,8 @@ class DashboardService extends BaseService {
     }
 
     /**
-     * If the personal dashboard has a corresponding group dashboard that is published to store, the two are
-     * marked for deletion.
+     * If the personal dashboard has a corresponding group dashboard that is published to store, the personal dashboard is deleted,
+     * while the group dashboard is marked for deletion.
      * @param personalDashboard
      * @return True if the dashboards are marked for deletion, false otherwise.
      */
@@ -634,8 +655,12 @@ class DashboardService extends BaseService {
         if (groupDashboard && groupDashboard.publishedToStore) {
             groupDashboard.markedForDeletion = true
             groupDashboard.save()
-            personalDashboard.markedForDeletion = true
-            personalDashboard.save()
+
+            // Delete all mappings for personal dashboard
+            domainMappingService.purgeAllMappings(personalDashboard)
+
+            personalDashboard.delete()
+
             true
         } else {
             false
@@ -1161,4 +1186,59 @@ class DashboardService extends BaseService {
         }
         groupDashboard
     }
+
+    /**
+     * Given a dashboard in a stack, syncs up that dashboard in preparation
+     * for publishing the stack.  This includes deleting if marked for deletion, and
+     * syncing attributes from the owner's copy of the dashboard
+     * @param dashboard The stack's copy of the dashboard (not a personal copy)
+     * @param owner The owner of the stack that this dashboard belongs to
+     */
+    void syncDashboardForPublish(dashboard, owner) {
+        def clonedDashboards = domainMappingService.getMappings(
+            dashboard, 
+            RelationshipType.cloneOf, 
+            Dashboard.TYPE, 
+            'dest'
+        )
+
+        if (dashboard.markedForDeletion) {
+            clonedDashboards.each { it.delete() }
+            domainMappingService.purgeAllMappings(dashboard)
+            dashboard.delete(flush:true)
+        }
+        else {
+            //the stack owner's personal copy of this dashboard
+            Dashboard ownerDashboard = clonedDashboards.collect { 
+                Dashboard.findById(it.srcId) 
+            }.find { 
+                it.user == owner 
+            }
+
+            if (ownerDashboard) {
+                //sync dashboard from owner's copy
+                dashboard.with {
+                    name = ownerDashboard.name
+                    description = ownerDashboard.description
+                    type = ownerDashboard.type
+                    isdefault = ownerDashboard.isdefault
+                    locked = ownerDashboard.locked
+                    dashboardPosition = ownerDashboard.dashboardPosition
+                    layoutConfig = ownerDashboard.layoutConfig
+                }
+            }
+
+            //set publishedToStore to true
+            dashboard.publishedToStore = true
+
+            if (!dashboard.save()) {
+                def message = "Dashboard ${dashboard.name} failed validation" 
+                dashboard.errors.each { log.error it }
+
+                throw new OwfException(exceptionType: OwfExceptionTypes.Validation, 
+                    message: message) 
+            }
+        }
+    }
+
 }
