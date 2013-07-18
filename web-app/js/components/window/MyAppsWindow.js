@@ -1000,14 +1000,14 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var me = this;
 
         me.setHeight(me.expandedModalHeight);
-        $('.bx-wrapper, .bx-viewport, .bx-slide:not(.bx-clone)', me.el.dom).height(me.expandedSlideHeight);
+        $('.bx-wrapper, .bx-viewport', me.el.dom).addClass('expanded');
     },
 
     collapseModal: function(containerSlide) {
         var me = this;
 
         me.setHeight(me.normalModalHeight);
-        $('.bx-wrapper, .bx-viewport, .bx-slide:not(.bx-clone)', me.el.dom).height(me.normalSlideHeight);
+        $('.bx-wrapper, .bx-viewport', me.el.dom).removeClass('expanded');
     },
 
     hideStackDashboards: function () {

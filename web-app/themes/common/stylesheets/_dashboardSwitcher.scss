@@ -149,6 +149,7 @@
 }
 
 $dashboard-switcher-slider-height: 320px;
+$dashboard-switcher-slider-expanded-height: 470px;
 
 /**** BEGIN slider styling ****/
 #dashboard-switcher
@@ -165,10 +166,21 @@ $dashboard-switcher-slider-height: 320px;
             background: transparent !important;
             *background: inherit !important;
             border: 0px;
-            // padding-left: 5px !important;
             width: 600px !important;
             height: $dashboard-switcher-slider-height;
             min-height: $dashboard-switcher-slider-height !important;
+
+            .bx-slide.expanded {
+                height: $dashboard-switcher-slider-expanded-height;
+            }
+
+            &.expanded {
+                height: $dashboard-switcher-slider-expanded-height !important;
+            }
+        }
+
+        &.expanded {
+            height: $dashboard-switcher-slider-expanded-height !important;
         }
     }
 
