@@ -57,8 +57,12 @@
 
             .store-link-btn-text, .create-link-btn-text {
                 display: inline-block;
-                width: 85px;
+                width: 140px;
                 padding-left: 7px;
+                font: {
+                    size: 14pt;
+                    weight: normal;
+                }
             }
 
             .store-link-btn-img, .create-link-btn-img {
@@ -70,7 +74,7 @@
             }
 
             .create-link-btn-text {
-                width: 60px;
+                width: 110px;
             }
 
             .store-link-btn-img {
