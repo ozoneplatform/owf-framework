@@ -20,7 +20,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
     
     getToolTip: function () {
         var me = this;
-        var icn = me.clickedDashboard.iconImageUrl && me.clickedDashboard.iconImageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'padding-right:15px;\' src=\''+me.clickedDashboard.iconImageUrl+'\' />':'';
+        var icn = me.clickedDashboard.iconImageUrl && me.clickedDashboard.iconImageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'margin-right:15px;\' src=\''+me.clickedDashboard.iconImageUrl+'\' />':'';
         var str = '<div class=\'dashboard-tooltip-content\'>' + 
                 '<h3 class=\'name\'>' + icn + Ext.htmlEncode(Ext.htmlEncode(me.clickedDashboard.name)) + '</h3>';
 
@@ -78,11 +78,12 @@ Ext.define('Ozone.components.window.MyPageTip', {
 
         var editDashWindow = Ext.widget('createdashboardwindow', {
             itemId: 'editDashWindow',
-            title: 'Edit Dashboard',
             height: 300,
             dashboardContainer: this.dashboardContainer,
             ownerCt: this.dashboardContainer,
             hideViewSelectRadio: true,
+            closable: false,
+            constrainHeader: false,
             existingDashboardRecord: dashboard.model
         }).show();
 
@@ -110,9 +111,9 @@ Ext.define('Ozone.components.window.MyPageTip', {
 
         // Only allow deleting a dashboard if its only group is a stack (and we applied the stack membership rule before)
         if(!dashboard.groups || dashboard.groups.length == 0 || (dashboard.groups.length == 1 && dashboard.groups[0].stackDefault)) {
-            msg = 'This action will permanently delete <span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span>.';
+            msg = 'Are you sure you want to delete this Page?';
 
-            this.appsWindow.warn(msg, function () {
+            var deletePageHandler = function () {
                 dashboardStore.remove(dashboard.model);
                 dashboardStore.save();
                 me.appsWindow.notify('Delete Dashboard', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> deleted!');
@@ -120,12 +121,13 @@ Ext.define('Ozone.components.window.MyPageTip', {
                 var $prev = me.$dashboard.prev();
                 me.$dashboard.remove();
                 $prev.focus();
+            }
 
-            }, focusEl);
+            me.warn('ok_cancel', deletePageHandler, msg);
+
         } else {
             this.appsWindow.warn('Users cannot remove dashboards assigned to a group. Please contact your administrator.', focusEl);
         }
-        this.close();
     },
 
     restorePage: function (evt) {
@@ -135,7 +137,9 @@ Ext.define('Ozone.components.window.MyPageTip', {
             dashboard = this.clickedDashboard,
             dashboardGuid = dashboard.guid;
 
-        this.appsWindow.warn('This action will return the dashboard <span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> to its current default state. If an administrator changed the dashboard after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
+        var msg = 'Click OK to delete changes you made to this Page and restore its default settings.';
+
+        var restorePageHandler = function () {
             Ext.Ajax.request({
                 url: Ozone.util.contextPath() + '/dashboard/restore',
                 params: {
@@ -171,9 +175,25 @@ Ext.define('Ozone.components.window.MyPageTip', {
                     return;
                 }
             });
-        }, function () {
-            evt.currentTarget.focus();
-        });
-        this.close();
+        }
+
+        me.warn('ok_cancel', restorePageHandler, msg);
+    },
+
+    warn: function(buttons, button_handler, text) {
+        var me = this;
+
+        me.update('');
+        me.removeAll();
+
+        me.add(Ext.create('Ozone.components.window.TipWarning', {
+            tip: me,
+            buttonConfig: buttons,
+            buttonHandler: button_handler,
+            text: text
+        }));
+
+        me.doLayout();
     }
+
 });

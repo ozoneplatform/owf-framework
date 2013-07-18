@@ -42,6 +42,10 @@ class BootStrap {
 
         println 'BootStrap running!'
 
+        //Register an alias to the configuration service. This provides a common convention for accessing
+        //the service from, for example, a grails plugin
+        grailsApplication.mainContext.registerAlias('owfApplicationConfigurationService', 'ozoneConfiguration')
+
         //configure custom marshallers
         JSON.registerObjectMarshaller(new ServiceModelObjectMarshaller()) 
         JSOND.registerObjectMarshaller(new ServiceModelObjectMarshaller()) 
