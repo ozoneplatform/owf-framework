@@ -37,11 +37,13 @@ Ext.define('Ozone.components.window.MyAppTip', {
     getToolTip: function () {
         var me = this;
     	var banner = me.dashboardContainer.getBanner();
-        var icn = me.clickedStackOrDashboard.imageUrl && me.clickedStackOrDashboard.imageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'margin-right:15px;\' src=\''+me.clickedStackOrDashboard.imageUrl+'\' />':'';
-        var str = '<div class=\'dashboard-tooltip-content\'>' + 
-                '<h3 class=\'name\'>' + icn + Ext.htmlEncode(Ext.htmlEncode(me.clickedStackOrDashboard.name)) + '</h3>';
+        var icn = me.clickedStackOrDashboard.imageUrl && me.clickedStackOrDashboard.imageUrl !=' ' ? '<img class=\'tipIcon\'src=\''+me.clickedStackOrDashboard.imageUrl+'\' />':
+        																							 '<div class=\'tipIcon noIconGivenStack\'></div>';
+        var str = '<div class=\'dashboard-tooltip-content\'>' + icn +
+                '<h3 class=\'name\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedStackOrDashboard.name)) + '</h3>';
 
-        me.clickedStackOrDashboard.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedStackOrDashboard.description)) +'</p><br>');
+        me.clickedStackOrDashboard.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedStackOrDashboard.description)) +'</p></div>'):
+        										 (str += '<p class=\'tip-description\'>  </p>');
         
         var pushBtn = '',
         	ulAdjustCls = 'ulStoreAdjust',

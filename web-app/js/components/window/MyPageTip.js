@@ -20,14 +20,16 @@ Ext.define('Ozone.components.window.MyPageTip', {
     
     getToolTip: function () {
         var me = this;
-        var icn = me.clickedDashboard.iconImageUrl && me.clickedDashboard.iconImageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'margin-right:15px;\' src=\''+me.clickedDashboard.iconImageUrl+'\' />':'';
-        var str = '<div class=\'dashboard-tooltip-content\'>' + 
-                '<h3 class=\'name\'>' + icn + Ext.htmlEncode(Ext.htmlEncode(me.clickedDashboard.name)) + '</h3>';
+        var icn = me.clickedDashboard.iconImageUrl && me.clickedDashboard.iconImageUrl !=' ' ? '<img class=\'tipIcon\' src=\''+me.clickedDashboard.iconImageUrl+'\' />':
+        						   															   '<div class=\'tipIcon noIconGivenPage\'></div>';
+        var str = '<div class=\'dashboard-tooltip-content\'>' + icn + 
+                '<h3 class=\'name\'>'+ Ext.htmlEncode(Ext.htmlEncode(me.clickedDashboard.name)) + '</h3>';
 
-        me.clickedDashboard.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedDashboard.description)) +'</p><br>');
+        me.clickedDashboard.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedDashboard.description)) +'  </p></div>') :
+        								  (str += '<p class=\'tip-description\'>  </p>');
         
         // append buttons 
-        str += '<ul style=\'padding-top:2%;\'>' +
+        str += '<ul style=\'padding-top:1.5%;\'>' +
                     '<li class=\'restoreButton actionButton liPageAdjust\' style=\'border-radius: 0 0 0 10px;\'>'+
                         '<span class=\'restoreImg imgPageAdjust\' ></span>'+
                         '<p class=\'actionText\'>Restore</p>'+
