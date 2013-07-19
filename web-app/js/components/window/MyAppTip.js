@@ -249,8 +249,9 @@ Ext.define('Ozone.components.window.MyAppTip', {
         }
 
         Ext.Msg.show({
-            title: 'Continue?',
-            msg: 'Click OK to push the App to a store. Click OK to cancel.',
+            title: 'Push App to store',
+            msg: 'You are pushing this App to a store. If you have more than one store defined, you will ' +
+                'be prompted to choose one of them. To continue, click OK. Otherwise, click Cancel.',
             buttons: Ext.Msg.OKCANCEL,
             closable: false,
             modal: true,
@@ -503,6 +504,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
                 onSuccess: function(result) {
                     var id = result.data && result.data.id;
+
 
                     //send only to this mp widget
                     Ozone.eventing.Container.publish('ozone.marketplace.show', id, 
