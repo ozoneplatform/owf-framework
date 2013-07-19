@@ -54,6 +54,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     dashboardSelectionDeferred: null,
 
+    // flag to indicate whether person is dragging apps or pages
+    _dragging: false,
+
     initComponent: function() {
 
         var me = this,
@@ -246,6 +249,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         // reorder dashboards
         $dom.on('mousedown', '.dashboard, .stack', function (evt) {
+            me._dragging = true;
             $draggedItem = $(this);
             $draggedItemParent = $draggedItem.parents('.stack-dashboards');
 
@@ -344,6 +348,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
             // cleanup on mouseup
             $doc.on('mouseup.reorder', function (evt) {
+                me._dragging = false;
                 $draggedItem =  null;
                 $draggedItemParent = null;
                 $dragProxy.remove();
@@ -407,7 +412,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var me = this,
             stackId = me.getActiveStackId();
 
-        if (stackId && me.slideHasActiveStack(newIndex, stackId)) {
+        if (stackId && me.slideHasActiveStack(newIndex, stackId) && me._dragging === false) {
             me.focusActiveDashboard();
         } else {
             me.hideStackDashboards();
@@ -677,7 +682,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
                 var $next = $stack.next();
 
-                if($next.length === 1 && !$next.hasClass('dashboard') && !$next.hasClass('stack')) {
+                if($next.length === 1 && !$next.hasClass('stack-dashboards') && !$next.hasClass('stack')) {
                     $next = $next.next();
                 }
 
@@ -760,6 +765,12 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         me.initCircularFocus();
         me.reordered = true;
+
+        setTimeout(function() {
+            
+            me.slider.reloadSlider();
+
+        }, 100);
     },
 
     initCircularFocus: function () {
