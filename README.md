@@ -22,13 +22,13 @@ Numbered releases are tested on IE7, IE8, IE9, Firefox 3.6 and the latest public
 ## Copyrights
 > Software (c) 2012 [Next Century Corporation](http://www.nextcentury.com/ "Next Century")
 
-> Portions (c) 2009 [TexelTek Inc.](http://www.texeltek.com/"TexelTek")
+> Portions (c) 2009 [TexelTek Inc.](http://www.texeltek.com/ "TexelTek")
 
 > The United States Government has unlimited rights in this software, pursuant to the contracts under which it was developed.  
  
-The Ozone Widget Framework is released to the public as Open Source Software, because it's the Right Thing To Do. Also, it was required by [Section 924 of the 2012 National Defense Authorization Act.](http://www.gpo.gov/fdsys/pkg/PLAW-112publ81/pdf/PLAW-112publ81.pdf "NDAA FY12")
+The Ozone Widget Framework is released to the public as Open Source Software, because it's the Right Thing To Do. Also, it was required by [Section 924 of the 2012 National Defense Authorization Act](http://www.gpo.gov/fdsys/pkg/PLAW-112publ81/pdf/PLAW-112publ81.pdf "NDAA FY12").
 
-Released under the [Apache License, Version 2.](http://www.apache.org/licenses/LICENSE-2.0.html "Apache Licence v2")
+Released under the [Apache License, Version 2](http://www.apache.org/licenses/LICENSE-2.0.html "Apache License v2").
  
 ## Community
 
