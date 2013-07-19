@@ -73,7 +73,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             xtype: 'label',
             name: 'headerLabel',
             forId: 'myFieldId',
-            height: 22,
+            height: 35,
             cls: 'createNewHeaderLabel',
             text: this.headerText,
             margins: '0 0 0 10'

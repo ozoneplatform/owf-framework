@@ -151,58 +151,6 @@
 }
 
 /**** BEGIN slider styling ****/
-#dashboard-switcher .bx-wrapper {
-    .bx-pager, .bx-controls-auto {
-        bottom: -20px;
-        zoom: 1;
-        padding-top: 0px;
-        *text-align: left;
-        *display: inline;
-
-        .bx-pager-item {
-            zoom: 1;
-            *display: inline;
-
-            .bx-pager-link {
-                background: theme-image($theme-name, 'myappswindow/carousel_dot_empty-out.png');
-                &:hover, &.hover {
-                    background: theme-image($theme-name, 'myappswindow/carousel_dot_empty-over.png');
-                }
-
-                &.active {
-                    background: theme-image($theme-name, 'myappswindow/carousel_dot_filled-out.png');
-                    &:hover, &.hover {
-                        background: theme-image($theme-name, 'myappswindow/carousel_dot_filled-over.png');
-                    }    
-                }
-            }
-        }
-    }
-}
-
-#dashboard-switcher .bx-wrapper {
-    .bx-prev {
-        left: 10px !important;
-        background: theme-image($theme-name, 'myappswindow/carousel_arrows_left-out.png') 0 0 no-repeat !important;
-        height: 42px !important;
-
-        &:hover, &.hover {
-            background: theme-image($theme-name, 'myappswindow/carousel_arrows_left-over.png') 0 0 no-repeat !important;
-        }
-    }
-
-    .bx-next {
-        right: 4px !important;
-        background: theme-image($theme-name, 'myappswindow/carousel_arrows_right-out.png') 0 0 no-repeat !important;
-        height: 42px !important;
-
-        &:hover, &.hover {
-            background: theme-image($theme-name, 'myappswindow/carousel_arrows_right-over.png') 0 0 no-repeat !important;
-        }
-    }
-}
-
-/*** Main My Apps carousel ***/
 #dashboard-switcher
     > #dashboard-switcher-body {
 
@@ -236,64 +184,121 @@
             height: $dashboard-switcher-slider-expanded-height !important;
         }
     }
+
+    > .bx-wrapper .bx-pager, > .bx-wrapper .bx-controls-auto {
+        bottom: -20px;
+        zoom: 1;
+        padding-top: 0px;
+        *text-align: left;
+        *display: inline;
+
+        .bx-pager-item {
+            zoom: 1;
+            *display: inline;
+        }
+    }
+
+    > .bx-wrapper {
+        .bx-prev {
+            left: 10px !important;
+            background: theme-image($theme-name, 'myappswindow/carousel_arrows_left-out.png') 0 0 no-repeat !important;
+            height: 42px !important;
+
+            &:hover, &.hover {
+                background: theme-image($theme-name, 'myappswindow/carousel_arrows_left-over.png') 0 0 no-repeat !important;
+            }
+        }
+        .bx-next {
+            right: 4px !important;
+            background: theme-image($theme-name, 'myappswindow/carousel_arrows_right-out.png') 0 0 no-repeat !important;
+            height: 42px !important;
+
+            &:hover, &.hover {
+                background: theme-image($theme-name, 'myappswindow/carousel_arrows_right-over.png') 0 0 no-repeat !important;
+            }
+        }
+    }
 }
 
-/*** Mini app carousel ***/
 #dashboard-switcher
-> #dashboard-switcher-body
-> .bx-wrapper
-> .bx-viewport
-> .all-dashboards
-> .bx-slide
-> .stack-dashboards-container {
+    > #dashboard-switcher-body
+    > .bx-wrapper
+    > .bx-viewport
+    > .all-dashboards
+    > .bx-slide
+    > .stack-dashboards-container {
 
-    > .stack-dashboards {
+        > .stack-dashboards {
 
-        > .bx-wrapper {
-            min-height: $dashboard-mini-slider-height !important;
-            max-height: $dashboard-mini-slider-height !important;
-            width: $dashboard-mini-slider-width !important;
-            margin-bottom: 30px;
-
-            > .bx-viewport {
-                @include box-shadow(none);
-
-                background: transparent !important;
-
-                margin: 0px;
-
-                border: 0px;
-
+            > .bx-wrapper {
+                min-height: $dashboard-mini-slider-height !important;
+                max-height: $dashboard-mini-slider-height !important;
                 width: $dashboard-mini-slider-width !important;
+                margin-bottom: 30px;
 
-                height: $dashboard-mini-slider-viewport-height !important;
-                *height: $dashboard-mini-slider-viewport-height-ie7 !important;
+                > .bx-viewport {
+                    @include box-shadow(none);
 
-                min-height: $dashboard-mini-slider-viewport-height !important;
-                *min-height: $dashboard-mini-slider-viewport-height-ie7 !important;
+                    background: transparent !important;
 
-                .dashboard {
-                    padding-top: 10px;
-                    margin-bottom: 0px;
-                    width: 80px;
+                    margin: 0px;
+
+                    border: 0px;
+
+                    width: $dashboard-mini-slider-width !important;
+
+                    height: $dashboard-mini-slider-viewport-height !important;
+                    *height: $dashboard-mini-slider-viewport-height-ie7 !important;
+
+                    min-height: $dashboard-mini-slider-viewport-height !important;
+                    *min-height: $dashboard-mini-slider-viewport-height-ie7 !important;
+
+                    .dashboard {
+                        padding-top: 10px;
+                        margin-bottom: 0px;
+                        width: 80px;
+                    }
                 }
             }
-        }
 
-        > .bx-wrapper {
-            .bx-prev, .bx-prev:hover, .bx-next, .bx-next:hover {
-                top: 65%;
-                background-size: 75% !important;
+            > .bx-wrapper .bx-pager, > .bx-wrapper .bx-controls-auto {
+                bottom: -20px;
+                zoom: 1;
+                *text-align: left;
+                *display: inline;
+
+                .bx-pager-item {
+                    zoom: 1;
+                    *display: inline;
+                }
             }
 
-            .bx-prev {
-                left: -63px !important;
-            }
+            > .bx-wrapper {
+                
+                .bx-prev, .bx-prev:hover, .bx-next, .bx-next:hover {
+                    top: 65%;
+                    background-size: 75% !important;
+                    height: 42px !important;
+                }
 
-            .bx-next {
-                right: -70px !important;
+                .bx-prev {
+                    left: -63px !important;
+                    background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_left-out.png') !important;
+
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_left-over.png') !important;
+                    }
+                }
+
+                .bx-next {
+                    right: -70px !important;
+                    background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_right-out.png') !important;
+                    
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/carousel_arrows_right-over.png') !important;
+                    }
+                }
             }
-        }
     }
 }
 /***** END slider styling  ****/
@@ -337,6 +342,10 @@
             background-repeat: no-repeat;
             background-position: center center;
             background-image: $dashboard-switcher-layout-default-icon;
+
+            &.default {
+                background-size: 95%;
+            }
         }
     }
 
@@ -819,15 +828,41 @@
 }
 
 [id*="owfCreateDashboardsContainer"], [id*="owfCreateDashboardsContainer"] .x-toolbar, .createAppField input, .createAppField textArea, {
-  color: #ffffff;
-  background: $system-window-background-color;
+  color: $dashboard-switcher-dashboard-text-color;
+  background: $dashboard-switcher-background-color;
 }
 
 .createAppField input:focus, .createAppField textArea:focus {
   border-color: #a0a9ad;
 }
 
-[id*="owfCreateDashboardsContainer"] {
+[id*="createdashboardwindow"].manageContainer {
+
+  border-width: 0px !important;
+  background-color: $dashboard-switcher-background-color;
+
+  .x-window-header {
+    border-width: 0px !important;
+    background-color: $dashboard-switcher-background-color;
+    margin-bottom: 5px;
+    width: 95% !important;
+    *overflow: hidden;
+    *width: 97% !important;
+    *margin-bottom: 0px;
+    zoom: 1;
+    height: $dashboard-switcher-header-height !important;
+
+    .x-window-header-text {
+      font-size: 24px;
+      padding-left: 33px;
+      *line-height: 24px;
+    }
+
+    .x-window-header-body {
+      height: $dashboard-switcher-header-height !important;
+      zoom: 1;
+    }
+  }
 
   .empty-text-field {
     color: gray;
@@ -904,8 +939,9 @@ div#existViewCb {
 
     label {
       padding-left: 0px !important;
-      color: #ffffff !important;
-      background: $system-window-background-color !important;
+      color: $dashboard-switcher-dashboard-text-color !important;
+      background: $dashboard-switcher-background-color !important;
+      height: 28px !important;
     }
   }
 }
