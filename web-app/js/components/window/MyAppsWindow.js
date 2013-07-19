@@ -175,11 +175,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             '<div class="actions">'+
                 '<ul>'+
                 	'<li class="store-link-btn">'+
-                        '<span class="store-link-btn-img"></span>'+
+                        '<div class="store-link-btn-img"></div>'+
                         '<span class="store-link-btn-text">Discover More </br> in the Store</span>'+
                     '</li>'+
             		'<li class="create-link-btn">'+
-                        '<span class="create-link-btn-img"></span>'+
+                        '<div class="create-link-btn-img"></div>'+
                         '<span class="create-link-btn-text">Create <br>New App</span>'+
                     '</li>'+
                 '</ul>'+
@@ -222,12 +222,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('click', '.stack', $.proxy(me.onStackClick, me))
             .on('click', '.store-link-btn',  $.proxy(me.switchToMarketplace,me))
             .on('click', '.create-link-btn', $.proxy(me.createNewApp, me))
-            .on('click', '.create-new-dashboard-btn', $.proxy(me.createDashboard, me))
             .on('mouseover', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
             .on('mouseout', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
             .on('focus', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
             .on('blur', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
-
 
         me.initKeyboardNav();
 
