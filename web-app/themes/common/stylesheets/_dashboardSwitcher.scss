@@ -438,7 +438,7 @@
 .detail-actions {
 	padding-top:5px; 
 	color: $dashboard-switcher-dashboard-text-color;
-    font-size: 11px;
+    font-size: 10px;
 }
 
 .x-ie7 {
@@ -538,20 +538,24 @@
         .name {
         	color: $dashboard-switcher-dashboard-text-color;
         	padding-left: 35%;
-        	padding-top: 10%;
+        	padding-top: 8%;
         	margin-bottom: 0;
         }
         
         ul {
             color: $dashboard-switcher-dashboard-text-color;
+			background: $dashboard-switcher-dashboard-over-background-color;
+			border-radius: 0 0 10px 10px;
+			margin-top: 5.5%;
 			
             li {
                 display: inline-block;
+                *display: inline;
                 margin: 0 1px;
                	width:55px;
                	height:55px;
+               	padding-top: 3.5%;
                	font-size:.75em;
-                background: $dashboard-switcher-dashboard-over-background-color;
                 color: $dashboard-switcher-dashboard-over-text-color;
                 
                 .actionText {
@@ -567,9 +571,8 @@
 		        	display: inline-block;
 		        	width:20px;
 		        	height:20px;
-		        	margin-left:35%;
-		        	margin-top:30%;
-                	 
+                	margin-left: 35%;
+                	
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-over.png'); 
 				    }
@@ -580,8 +583,7 @@
 		        	display: inline-block;
 		        	width:20px;
 		        	height:20px;
-		        	margin-left:35%;
-		        	margin-top:20%;
+                	margin-left: 35%;
                 	 
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/CreateNewPage-over.png'); 
@@ -593,9 +595,8 @@
 		        	display: inline-block;
 		        	width:20px;
 		        	height:20px;
-		        	margin-left:35%;
-		        	margin-top:20%;
-                	 
+                   	margin-left: 35%;
+                   	 
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/PushtoStore-over.png'); 
 				    }
@@ -606,8 +607,7 @@
 		        	display: inline-block;
 		        	width:20px;
 		        	height:20px;
-		        	margin-left:35%;
-		        	margin-top:20%;
+                	margin-left: 32%;
                 	 
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/Restore-over.png'); 
@@ -619,8 +619,7 @@
 		        	display: inline-block;
 		        	width:20px;
 		        	height:20px;
-		        	margin-left:35%;
-		        	margin-top:20%;
+                	margin-left: 35%;
                 	 
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/Edit-over.png'); 
@@ -632,37 +631,21 @@
 		        	display: inline-block;
 		        	width:20px;
 		        	height:20px;
-		        	margin-left:35%;
-		        	margin-top:20%;
+                	margin-left: 32%;
                 	 
 		        	&:hover, &.hover {
 				        background-image: theme-image($theme-name, 'myappswindow/Delete-over.png'); 
 				    }
 		        }
-		        
-		        .imgPageAdjust { 
-    				margin-left: 38% !important; 
-    				margin-top: 10% !important;
-    			}
-    			
-    			.imgStoreAdjust { 
-    				margin-top: 15% !important;
-    			}
             }
             
             .liStoreAdjust{
-            	width:24.3% !important;
             	font-size: 1em !important;
             }
             
             .liPageAdjust{
-            	width:32.6% !important;
             	font-size: 1em !important;
             }
-        }
-        
-        .ulStoreAdjust {
-        	padding-top:1.5%;
         }
     }
 

@@ -45,38 +45,32 @@ Ext.define('Ozone.components.window.MyAppTip', {
         me.clickedStack.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedStack.description)) +'</p></div>'):
         										 (str += '<p class=\'tip-description\'>  </p>');
         
-        var pushBtn = '',
-        	ulAdjustCls = 'ulStoreAdjust',
-        	liAdjustCls = 'liStoreAdjust',
-        	imgAdjustCls = 'imgStoreAdjust';
+        var liAdjustCls = 'liStoreAdjust';
         	
-        if (banner.hasMarketplaceButton)  {
-        	ulStoreAdjustCls = '';
+        if (banner.hasMarketplaceButton)
         	liAdjustCls = '';
-        	imgAdjustCls = '';
-        	pushBtn = '<li class=\'pushButton actionButton\'>'+
-                        '<span class=\'pushImg\'></span>'+
-                        '<p class=\'actionText\'>Push to Store</p>'+
-                    '</li>';
-        }
+
         
         // append buttons
-        str += '<ul class=\''+ulAdjustCls+'\'>'+
-                    '<li class=\'addButton actionButton '+liAdjustCls+'\' style=\'border-radius: 0 0 0 10px;\'>'+
-                        '<span class=\'createPageImg  '+imgAdjustCls+'\'></span>'+
+        str += '<ul class=\'buttonBar\'>'+
+                    '<li class=\'addButton actionButton '+liAdjustCls+'\'>'+
+                        '<span class=\'createPageImg  \'></span>'+
                         '<p class=\'actionText\'>Add Page</p>'+
                     '</li>'+
-                    pushBtn+
+                    '<li class=\'pushButton actionButton\'>'+
+                    	'<span class=\'pushImg\'></span>'+
+                    	'<p class=\'actionText\'>Push to Store</p>'+
+                    '</li>'+
                     '<li class=\'restoreButton actionButton '+liAdjustCls+'\'>'+
-                        '<span class=\'restoreImg  '+imgAdjustCls+'\'></span>'+
+                        '<span class=\'restoreImg  \'></span>'+
                         '<p class=\'actionText\'>Restore</p>'+
                     '</li>'+
                     '<li class=\'editButton actionButton '+liAdjustCls+'\'>'+
-                        '<span class=\'editImg  '+imgAdjustCls+'\'></span>'+
+                        '<span class=\'editImg \'></span>'+
                         '<p class=\'actionText\'>Edit</p>'+
                     '</li>'+
-                    '<li class=\'deleteButton actionButton '+liAdjustCls+'\' style=\'border-radius: 0 0 10px 0;\'>'+
-                        '<span class=\'deleteImg '+imgAdjustCls+'\'></span>'+
+                    '<li class=\'deleteButton actionButton '+liAdjustCls+'\'>'+
+                        '<span class=\'deleteImg \'></span>'+
                         '<p class=\'actionText\'>Delete</p>'+
                     '</li>'+
                '</ul>' +
@@ -88,7 +82,11 @@ Ext.define('Ozone.components.window.MyAppTip', {
     bindHandlers: function() {
         var me = this;
         var $ = jQuery;
+    	var banner = me.dashboardContainer.getBanner();
 
+        if (!banner.hasMarketplaceButton)
+        	me.hideButton('.pushButton');
+        
         if(me.clickedStack.isStack) {
 
             $('.addButton').on('click', $.proxy(me.addPageToApp, me));
@@ -102,6 +100,23 @@ Ext.define('Ozone.components.window.MyAppTip', {
             
             
         }
+        
+        $('#dashboard-switcher').click(function() {
+        	  //Hide the tip if outside click 
+        	this.destroy()
+        });
+    },
+    
+    hideButton: function(className) {
+    	var $ = jQuery;
+    	
+    	$(className).hide();
+    },
+    
+    showButton: function(className) {
+    	var $ = jQuery; 
+    	
+    	$(className).show();
     },
 
     addPageToApp: function (evt) {
