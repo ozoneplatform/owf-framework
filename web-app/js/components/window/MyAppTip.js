@@ -449,7 +449,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
     sendRequest: function(json, mpLauncher, widget) {
         var me = this;
 
-        mpLauncher.gotoMarketplace(widget);
+
         mpLauncher.on(OWF.Events.Marketplace.OPENED, function(instance, mpUrl) {
             var urlString = mpUrl.replace(/\/$/, "") + '/listing';
 
@@ -505,6 +505,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             });
 
         }, this, {single: true});
+        mpLauncher.gotoMarketplace(widget);
     }
 
 });
