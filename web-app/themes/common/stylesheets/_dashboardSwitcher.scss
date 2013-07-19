@@ -241,14 +241,14 @@
 
                     width: $dashboard-mini-slider-width !important;
 
-                    height: $dashboard-height + 5 !important;
-                    *height: $dashboard-height + 10 !important;
+                    height: $dashboard-mini-slider-viewport-height !important;
+                    *height: $dashboard-mini-slider-viewport-height-ie7 !important;
 
-                    min-height: $dashboard-height + 5 !important;
-                    *min-height: $dashboard-height + 10 !important;
+                    min-height: $dashboard-mini-slider-viewport-height !important;
+                    *min-height: $dashboard-mini-slider-viewport-height-ie7 !important;
 
                     .dashboard {
-                        padding-top: 5px;
+                        padding-top: 10px;
                         margin-bottom: 0px;
                         width: 80px;
                     }
@@ -305,7 +305,7 @@
     @include box-sizing(content-box);
 
     float: left;
-    padding: 0px;
+    padding-top: $dashboard-padding-top;
     position: relative;
     text-align: center;
     overflow: hidden;
@@ -336,6 +336,10 @@
             background-repeat: no-repeat;
             background-position: center center;
             background-image: $dashboard-switcher-layout-default-icon;
+
+            &.default {
+                background-size: 95%;
+            }
         }
     }
 

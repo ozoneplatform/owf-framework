@@ -19,13 +19,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     viewId: 'dashboard-switcher-dashboard-view',
 
     width: 750,
-    height: 495,
+    height: 555,
 
-    normalModalHeight: 495,
-    expandedModalHeight: 645,
-
-    normalSlideHeight: 320,
-    expandedSlideHeight: 470,
+    normalModalHeight: 555,
+    expandedModalHeight: 715,
 
     dashboardContainer: null,
 
@@ -140,7 +137,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 if (url && !Ext.isEmpty(Ext.String.trim(url))) {
                     return '<div class="thumb" style="background-image: url(' + url + ') !important"></div>';
                 } else {
-                    return '<div class="thumb"></div>';
+                    return '<div class="thumb default"></div>';
                 }
             },
             
