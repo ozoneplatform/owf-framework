@@ -20,14 +20,16 @@ Ext.define('Ozone.components.window.MyPageTip', {
     
     getToolTip: function () {
         var me = this;
-        var icn = me.clickedDashboard.iconImageUrl && me.clickedDashboard.iconImageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'margin-right:15px;\' src=\''+me.clickedDashboard.iconImageUrl+'\' />':'';
-        var str = '<div class=\'dashboard-tooltip-content\'>' + 
-                '<h3 class=\'name\'>' + icn + Ext.htmlEncode(Ext.htmlEncode(me.clickedDashboard.name)) + '</h3>';
+        var icn = me.clickedDashboard.iconImageUrl && me.clickedDashboard.iconImageUrl !=' ' ? '<img class=\'tipIcon\' src=\''+me.clickedDashboard.iconImageUrl+'\' />':
+        						   															   '<div class=\'tipIcon noIconGivenPage\'></div>';
+        var str = '<div class=\'dashboard-tooltip-content\'>' + icn + 
+                '<h3 class=\'name\'>'+ Ext.htmlEncode(Ext.htmlEncode(me.clickedDashboard.name)) + '</h3>';
 
-        me.clickedDashboard.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedDashboard.description)) +'</p><br>');
+        me.clickedDashboard.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedDashboard.description)) +'  </p></div>') :
+        								  (str += '<p class=\'tip-description\'>  </p>');
         
         // append buttons 
-        str += '<ul style=\'padding-top:2%;\'>' +
+        str += '<ul style=\'padding-top:1.5%;\'>' +
                     '<li class=\'restoreButton actionButton liPageAdjust\' style=\'border-radius: 0 0 0 10px;\'>'+
                         '<span class=\'restoreImg imgPageAdjust\' ></span>'+
                         '<p class=\'actionText\'>Restore</p>'+
@@ -78,6 +80,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
 
         var editDashWindow = Ext.widget('createdashboardwindow', {
             itemId: 'editDashWindow',
+            title: 'Edit Page',
             height: 300,
             dashboardContainer: this.dashboardContainer,
             ownerCt: this.dashboardContainer,
@@ -116,7 +119,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
             var deletePageHandler = function () {
                 dashboardStore.remove(dashboard.model);
                 dashboardStore.save();
-                me.appsWindow.notify('Delete Dashboard', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> deleted!');
+                me.appsWindow.notify('Delete Page', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> deleted!');
                 me.appsWindow.reloadDashboards = true;
                 var $prev = me.$dashboard.prev();
                 me.$dashboard.remove();
@@ -126,7 +129,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
             me.warn('ok_cancel', deletePageHandler, msg);
 
         } else {
-            this.appsWindow.warn('Users cannot remove dashboards assigned to a group. Please contact your administrator.', focusEl);
+            this.appsWindow.warn('Users cannot remove pages assigned to a group. Please contact your administrator.', focusEl);
         }
     },
 
@@ -149,7 +152,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
                 success: function(response, opts) {
                     var json = Ext.decode(response.responseText);
                     if (json != null && json.data != null && json.data.length > 0) {
-                        me.appsWindow.notify('Restore Dashboard', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> is restored successfully to its default state!');
+                        me.appsWindow.notify('Restore Page', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> is restored successfully to its default state!');
 
                         var name = json.data[0].name,
                             description = json.data[0].description;
@@ -167,7 +170,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
                     }
                 },
                 failure: function(response, opts) {
-                    Ozone.Msg.alert('Dashboard Manager', "Error restoring dashboard.", function() {
+                    Ozone.Msg.alert('Page Manager', "Error restoring page.", function() {
                         Ext.defer(function() {
                             $dashboard[0].focus();
                         }, 200, me);

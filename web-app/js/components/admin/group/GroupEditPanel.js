@@ -36,11 +36,6 @@ Ext.define('Ozone.components.admin.group.GroupEditPanel', {
                     editPanel: self
                   },
                   {
-                    xtype: 'groupeditdashboards',
-                    itemId: 'groupeditdashboards',
-                    editPanel: self
-                  },
-                  {
                     xtype: 'groupeditstacks',
                     itemId: 'groupeditstacks',
                     editPanel: self

@@ -46,25 +46,29 @@ public class SessionBinderJobListener extends JobListenerSupport {
     }
 
     public void jobToBeExecuted(JobExecutionContext context) {
-        Session session = SessionFactoryUtils.getSession(sessionFactory, true);
-        session.setFlushMode(FlushMode.AUTO);
-        TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
-        if (LOG.isDebugEnabled()) LOG.debug("Hibernate Session is bounded to Job thread");
+    	if(doBindSessionToThread(context)){
+            Session session = SessionFactoryUtils.getSession(sessionFactory, true);
+            session.setFlushMode(FlushMode.AUTO);
+            TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
+            if (LOG.isDebugEnabled()) LOG.debug("Hibernate Session is bounded to Job thread");    		
+    	}
     }
 
-    public void jobWasExecuted(JobExecutionContext context, JobExecutionException exception) {
-        SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);
-        try {
-            if (!FlushMode.MANUAL.equals(sessionHolder.getSession().getFlushMode())) {
-                sessionHolder.getSession().flush();
-            }
-        } catch (Exception e) {
-            if(LOG.isErrorEnabled()) LOG.error("Cannot flush Hibernate Sesssion, error will be ignored", e);
-        } finally {
-            TransactionSynchronizationManager.unbindResource(sessionFactory);
-            SessionFactoryUtils.closeSession(sessionHolder.getSession());
-            if (LOG.isDebugEnabled()) LOG.debug("Hibernate Session is unbounded from Job thread and closed");
-        }
+    public void jobWasExecuted(JobExecutionContext context, JobExecutionException exception) {    	
+    	if(doBindSessionToThread(context)){
+            SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);
+            try {
+                if (!FlushMode.MANUAL.equals(sessionHolder.getSession().getFlushMode())) {
+                    sessionHolder.getSession().flush();
+                }
+            } catch (Exception e) {
+                if(LOG.isErrorEnabled()) LOG.error("Cannot flush Hibernate Sesssion, error will be ignored", e);
+            } finally {
+                TransactionSynchronizationManager.unbindResource(sessionFactory);
+                SessionFactoryUtils.closeSession(sessionHolder.getSession());
+                if (LOG.isDebugEnabled()) LOG.debug("Hibernate Session is unbounded from Job thread and closed");
+            }    		
+    	}
     }
 
     public SessionFactory getSessionFactory() {
@@ -73,5 +77,14 @@ public class SessionBinderJobListener extends JobListenerSupport {
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+    }
+
+    //Not every job needs a hibernate session. 
+    protected boolean  doBindSessionToThread(JobExecutionContext context){
+    	if("cefLogSweepingGroup".equalsIgnoreCase(context.getJobDetail().getGroup())){
+    		if (LOG.isDebugEnabled()) LOG.debug("Hibernate Session is not being bound to the thread for job '" + context.getJobDetail().getGroup() + "'.");
+    		return false;
+    	}
+    	return true;
     }
 }

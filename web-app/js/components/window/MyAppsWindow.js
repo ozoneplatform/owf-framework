@@ -18,14 +18,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     viewId: 'dashboard-switcher-dashboard-view',
 
-    width: 720,
-    height: 525,
+    width: 750,
+    height: 555,
 
-    normalModalHeight: 525,
-    expandedModalHeight: 655,
-
-    normalSlideHeight: 360,
-    expandedSlideHeight: 490,
+    normalModalHeight: 555,
+    expandedModalHeight: 715,
 
     dashboardContainer: null,
 
@@ -140,13 +137,13 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 if (url && !Ext.isEmpty(Ext.String.trim(url))) {
                     return '<div class="thumb" style="background-image: url(' + url + ') !important"></div>';
                 } else {
-                    return '<div class="thumb"></div>';
+                    return '<div class="thumb default"></div>';
                 }
             },
             
             getActions: function (values) {
                 return	'<ul class="detail-actions hide">'+
-                			'<li id="'+values.name+'-li" class="detail-action">Details'+
+                			'<li class="detail-action">Details</li>'+
                         '</ul>'
             },
             
@@ -183,7 +180,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     '</li>'+
             		'<li class="create-link-btn">'+
                         '<span class="create-link-btn-img"></span>'+
-                        '<span class="create-link-btn-text">Create New App</span>'+
+                        '<span class="create-link-btn-text">Create <br>New App</span>'+
                     '</li>'+
                 '</ul>'+
             '</div>');
@@ -203,6 +200,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     me.onSlideTransition.apply(me, arguments);
                 }, me)
             });
+            me.slider.disableSelection();
         });
 
         me.on('beforeclose', me.onClose, me);
@@ -216,7 +214,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     bindEvents: function () {
         var me = this,
             $ = jQuery,
-            $dom = $(me.el.dom);
+            $dom = $(me.el.dom),
+            $doc = $(document);
 
         $dom
             .on('click', '.dashboard', $.proxy(me.onDashboardClick, me))
@@ -235,18 +234,22 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         // drag and drop
         var $draggedItem,
             $draggedItemParent,
-            $dragProxy;
+            $dragProxy,
+            carousel
+            isDraggingStackDashboard = false;
 
         // disable selection while dragging
         $dom
             .attr('unselectable', 'on')
             .css('user-select', 'none')
-            .on('selectstart', false);
+            .on('selectstart.reorder', false);
 
         // reorder dashboards
         $dom.on('mousedown', '.dashboard, .stack', function (evt) {
             $draggedItem = $(this);
-            $draggedItemParent = $draggedItem.parent();
+            $draggedItemParent = $draggedItem.parents('.stack-dashboards');
+
+            isDraggingStackDashboard = $draggedItemParent.length === 1;
 
             $dragProxy = $draggedItem.clone().addClass('x-dd-drag-proxy drag-proxy');
             $('ul, .dashboard-name, .stack-name', $dragProxy).remove();
@@ -258,7 +261,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 evt.stopPropagation();
             });
 
-            $(document).on('mousemove.reorder', function (evt) { 
+            $doc.on('mousemove.reorder', function (evt) { 
                 var pageX = evt.pageX,      // The mouse position relative to the left edge of the document.
                     pageY = evt.pageY;      // The mouse position relative to the top edge of the document.
 
@@ -269,8 +272,34 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             });
 
             $dom.one('mousemove.reorder', '.dashboard, .stack', function (evt) {
-                var $el = $(this);
+                var $el = $(this),
+                    $parent;
+                
                 me._hideStackDashboardsOnMove($el);
+
+                $parent = $el.parents('.stack-dashboards');
+
+                // dragging pages in an application
+                if($parent.length === 1) {
+                    carousel = me.appPageCarousel;
+                }
+                // dragging application
+                else {
+                    $parent = $dom;
+                    carousel = me.slider;
+                }
+
+                $parent.on('mousemove.reorder', '.bx-next', function (evt) {
+                    carousel.goToNextSlide();
+                });
+
+                $parent.on('mousemove.reorder', '.bx-prev', function (evt) {
+                    carousel.goToPrevSlide();
+                });
+
+                $doc.one('mouseup.reorder', function () {
+                    $parent.off('.reorder');
+                });
             });
 
             $dom.on('mousemove.reorder', '.dashboard, .stack', function (evt) { 
@@ -278,8 +307,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
                 // only allow reordering if parents match and 
                 // prevent reordering stack dashboards outside of stack and vice versa.
-                if($draggedItemParent[0] !== $el.parent()[0])
+                // if($draggedItemParent[0] !== $el.parent()[0])
+                //     return;
+                if(isDraggingStackDashboard && $el.parents('.stack-dashboards').length === 0) {
                     return;
+                }
 
                 var pageX = evt.pageX,      // The mouse position relative to the left edge of the document.
                     pageY = evt.pageY,      // The mouse position relative to the top edge of the document.
@@ -311,12 +343,12 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             });
 
             // cleanup on mouseup
-            $(document).on('mouseup.reorder', function (evt) {
+            $doc.on('mouseup.reorder', function (evt) {
                 $draggedItem =  null;
                 $draggedItemParent = null;
                 $dragProxy.remove();
 
-                $(document).off('.reorder');
+                $doc.off('.reorder');
                 $dom.off('.reorder');
             });
         });
@@ -388,7 +420,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     _hideStackDashboardsOnMove: function ($el) {
         // hide stack dashboards if moving root stack or dashboard
-        if( !($el.parent().hasClass('dashboards')) ) {
+        if( $el.parents('.stack-dashboards').length === 0 ) {
             this.hideStackDashboards();
         }
     },
@@ -543,8 +575,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var droppedLeft = $dashboard.hasClass(me.DROP_LEFT_CLS);
         var store = me.dashboardStore, newIndex, oldIndex;
 
-        oldIndex = $draggedItem.index();
-
         if ( droppedLeft ) {
             $dashboard.removeClass(me.DROP_LEFT_CLS);
             $draggedItem.insertBefore( $dashboard );
@@ -554,12 +584,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             $draggedItem.insertAfter( $dashboard );
         }
 
-        newIndex = $draggedItem.index();
-
-        //console.log(oldIndex, newIndex);
-
         // dropping dashboard on a dashboard
         if( $draggedItem.hasClass('dashboard') ) {
+
             draggedItem = me.getDashboard( $draggedItem );
 
             store.remove(draggedItem.model, true);
@@ -575,7 +602,14 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             // if stack, reorder internal cache as well.
             if(draggedItem.stack) {
                 var stack = me.stacks[draggedItem.stack.id];
+
+                oldIndex = _.indexOf(stack.dashboards, draggedItem);
+                newIndex = _.indexOf(stack.dashboards, dashboard);
+
                 stack.dashboards.splice(newIndex, 0, stack.dashboards.splice(oldIndex, 1)[0]);
+
+                // refresh carousel
+                me.appPageCarousel.reloadSlider();
             }
 
         }
@@ -605,7 +639,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         }
 
-        $draggedItem.focus();
+        // focusing dragged item breaks carousel in Firefox
+        //$draggedItem.focus();
+
         me.initCircularFocus();
         me.reordered = true;
     },
@@ -719,17 +755,19 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             $draggedItem.insertAfter( $stack );
         }
 
-        $draggedItem.focus();
+        // focusing dragged item breaks carousel in Firefox
+        //$draggedItem.focus();
+
         me.initCircularFocus();
         me.reordered = true;
     },
 
     initCircularFocus: function () {
-        var firstEl = this.body.down('.all-dashboards').first(),
-            addBtnEl = this.body.down('.actions').last();
+        // var firstEl = this.body.down('.all-dashboards').first(),
+        //     addBtnEl = this.body.down('.actions').last();
 
-        this.tearDownCircularFocus();
-        this.setupFocus(firstEl, addBtnEl);
+        // this.tearDownCircularFocus();
+        // this.setupFocus(firstEl, addBtnEl);
     },
 
     focusActiveDashboard: function () {
@@ -746,9 +784,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             stackId = stack ? stack.id : null;
 
             if (stack) {
-                this.toggleStack(this.stacks[stackId], $('#stack'+stackId, '.bx-slide:not(.bx-clone)')).then(function () {
-                    me.focusActiveDashboard();
-                });
+                if (this.stacks[stackId]) {
+                    this.toggleStack(this.stacks[stackId], $('#stack'+stackId, '.bx-slide:not(.bx-clone)')).then(function () {
+                        me.focusActiveDashboard();
+                    });
+                }
             }
             return;
         }
@@ -941,7 +981,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var me = this;
 
         if (me.appPageCarousel) {
-            me.appPageCarousel.destroySlider();
+            me.appPageCarousel.enableSelection().destroySlider();
         }
 
         me.appPageCarousel = $('.all-dashboards', $stackDashboardContainer).bxSlider({
@@ -949,20 +989,22 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             infiniteLoop: true,
             touchEnabled: false
         });
+
+        me.appPageCarousel.disableSelection();
     },
 
     expandModal: function(containerSlide) {
         var me = this;
 
         me.setHeight(me.expandedModalHeight);
-        $('.bx-wrapper, .bx-viewport, .bx-slide:not(.bx-clone)', me.el.dom).height(me.expandedSlideHeight);
+        $('.bx-wrapper, .bx-viewport', me.el.dom).addClass('expanded');
     },
 
     collapseModal: function(containerSlide) {
         var me = this;
 
         me.setHeight(me.normalModalHeight);
-        $('.bx-wrapper, .bx-viewport, .bx-slide:not(.bx-clone)', me.el.dom).height(me.normalSlideHeight);
+        $('.bx-wrapper, .bx-viewport', me.el.dom).removeClass('expanded');
     },
 
     hideStackDashboards: function () {
@@ -1001,15 +1043,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     onMouseOver: function (evt) {
         var el = $(evt.currentTarget);
 
-        //if ( this.isAnAppExpanded || 
-         //   !this.isAnAppExpanded && $(el).hasClass('stack')) {
-
-            if (this._previouslyHoveredStackOrDashboard != null) {
-                $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');
-            }
+        if (this._previouslyHoveredStackOrDashboard != null) {
+            $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');
+        }
             
-            $('.detail-actions', el).removeClass('hide');
-       // }
+        $('.detail-actions', el).removeClass('hide');
 
         this._previouslyHoveredStackOrDashboard = el;
     },
@@ -1266,7 +1304,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             $stack = this.getElByClassFromEvent(evt, 'stack'),
             stack = this.getStack($stack);
         
-        this.warn('This action will return the stack <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any dashboard in the stack after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
+        this.warn('This action will return the application <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any page in the application after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
             Ext.Ajax.request({
                 url: Ozone.util.contextPath() + '/stack/restore',
                 params: {
@@ -1276,7 +1314,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     var json = Ext.decode(response.responseText);
                     
                     if (json != null && json.updatedDashboards != null && json.updatedDashboards.length > 0) {
-                        me.notify('Restore Stack', '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is restored successfully to its default state!');
+                        me.notify('Restore Application', '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is restored successfully to its default state!');
                         
                         var dashboards = stack.dashboards;
                         for(var i = 0; i < dashboards.length; i++) {
@@ -1299,7 +1337,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     }
                 },
                 failure: function(response, opts) {
-                    Ozone.Msg.alert('Dashboard Manager', "Error restoring stack.", function() {
+                    Ozone.Msg.alert('Page Manager', "Error restoring application.", function() {
                         Ext.defer(function() {
                             $stack[0].focus();
                         }, 200, me);

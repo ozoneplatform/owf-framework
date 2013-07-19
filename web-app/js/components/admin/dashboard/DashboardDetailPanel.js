@@ -98,7 +98,7 @@ Ext.define('Ozone.components.admin.dashboard.DashboardDetailPanel', {
                     }
                 }
             ),
-			emptyText: 'No dashboard selected',
+			emptyText: 'No page selected',
             itemSelector: 'div.selector',
             autoScroll: 'true'
         });

@@ -1836,10 +1836,16 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         if (!failure) {
             failure = function() {
-                Ozone.Msg.alert('Dashboard Manager', "Error creating or updating dashboard.", null, null, null, me.modalWindowManager);
+                Ozone.Msg.alert('Dashboard Manager', "Error creating or updating page.", null, null, null, me.modalWindowManager);
                 return;
-            }
+            };
         }
+
+        json.stack = json.stack || {
+            "name": json.name,
+            "description": json.description,
+            "imageUrl": json.iconImageUrl
+        };
 
         Ozone.pref.PrefServer.createOrUpdateDashboard({
             json: json,
@@ -1866,7 +1872,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             "name": 'Untitled',
             "guid": newGuid,
             "isdefault": setAsDefault,
-            "state": []
+            "state": [],
+            "publishedToStore": true  //allow the user to get their own copy of the 
+                                    //dashboard
         };
 
         this.saveDashboard(newJson, 'create');
@@ -1883,9 +1891,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             state: []
             //user:             userNameObj
         };
-        this.dashboardStore.add(dash);
+        //this.dashboardStore.add(dash);
 
-        return this.dashboardStore.getAt(this.dashboardStore.getCount() - 1);
+        //return this.dashboardStore.getAt(this.dashboardStore.getCount() - 1);
+        return Ext.create('Ozone.data.Dashboard', dash);
 
     },
 

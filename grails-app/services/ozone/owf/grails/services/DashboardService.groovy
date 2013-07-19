@@ -659,7 +659,7 @@ class DashboardService extends BaseService {
             // Delete all mappings for personal dashboard
             domainMappingService.purgeAllMappings(personalDashboard)
 
-            personalDashboard.delete()
+            personalDashboard.delete(flush:true)
 
             true
         } else {
@@ -679,12 +679,12 @@ class DashboardService extends BaseService {
         //delete all mappings for this dashboard
         domainMappingService.purgeAllMappings(personalDashboard)
 
-        personalDashboard.delete()
-
         // If this is the page of the user's app, delete the group dashboard
         if (accountService.getLoggedInUsername().equals(groupDashboard?.stack?.owner?.username)) {
             groupDashboard.delete()
         }
+
+        personalDashboard.delete(flush:true)
     }
 
     def bulkDeleteAndUpdate(params){
@@ -1186,4 +1186,59 @@ class DashboardService extends BaseService {
         }
         groupDashboard
     }
+
+    /**
+     * Given a dashboard in a stack, syncs up that dashboard in preparation
+     * for publishing the stack.  This includes deleting if marked for deletion, and
+     * syncing attributes from the owner's copy of the dashboard
+     * @param dashboard The stack's copy of the dashboard (not a personal copy)
+     * @param owner The owner of the stack that this dashboard belongs to
+     */
+    void syncDashboardForPublish(dashboard, owner) {
+        def clonedDashboards = domainMappingService.getMappings(
+            dashboard, 
+            RelationshipType.cloneOf, 
+            Dashboard.TYPE, 
+            'dest'
+        )
+
+        if (dashboard.markedForDeletion) {
+            clonedDashboards.each { it.delete() }
+            domainMappingService.purgeAllMappings(dashboard)
+            dashboard.delete(flush:true)
+        }
+        else {
+            //the stack owner's personal copy of this dashboard
+            Dashboard ownerDashboard = clonedDashboards.collect { 
+                Dashboard.findById(it.srcId) 
+            }.find { 
+                it.user == owner 
+            }
+
+            if (ownerDashboard) {
+                //sync dashboard from owner's copy
+                dashboard.with {
+                    name = ownerDashboard.name
+                    description = ownerDashboard.description
+                    type = ownerDashboard.type
+                    isdefault = ownerDashboard.isdefault
+                    locked = ownerDashboard.locked
+                    dashboardPosition = ownerDashboard.dashboardPosition
+                    layoutConfig = ownerDashboard.layoutConfig
+                }
+            }
+
+            //set publishedToStore to true
+            dashboard.publishedToStore = true
+
+            if (!dashboard.save()) {
+                def message = "Dashboard ${dashboard.name} failed validation" 
+                dashboard.errors.each { log.error it }
+
+                throw new OwfException(exceptionType: OwfExceptionTypes.Validation, 
+                    message: message) 
+            }
+        }
+    }
+
 }

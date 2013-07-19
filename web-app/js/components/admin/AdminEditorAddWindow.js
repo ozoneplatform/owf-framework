@@ -208,7 +208,7 @@ Ext.define('Ozone.components.admin.AdminEditorAddWindow', {
     generateTitle: function() {
         var title = "Add " + this.addType + "(s)";
         if(this.itemName) {
-            if(this.editor === "Group" || this.editor === "Stack" || (this.editor === "User" && this.addType === "Widget")) {
+            if(this.editor === "Group" || this.editor === "Stack" || (this.editor === "User" && this.addType === "App Component")) {
                 title += " to " + this.itemName;
             } else {
                 title = "Add " + this.itemName + " to " + this.addType + "(s)";

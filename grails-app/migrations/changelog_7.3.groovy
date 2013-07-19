@@ -121,4 +121,29 @@ databaseChangeLog = {
 	
 		addForeignKeyConstraint(baseColumnNames: "owner_id", baseTableName: "stack", constraintName: "FK68AC2888656347D", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
 	}
+
+    changeSet(author: "owf", id: "7.3-8", context: "7.3, sampleData, 7.3-sampleData") {
+
+        comment("Change the name of Stack and Widget admin widgets to be Apps and App Component")
+
+        update(tableName: "widget_definition") {
+            column(name: "display_name", value: "App Components")
+            where("display_name='Widgets'")
+        }
+
+        update(tableName: "widget_definition") {
+            column(name: "display_name", value: "App Component Editor")
+            where("display_name='Widget Editor'")
+        }
+
+        update(tableName: "widget_definition") {
+            column(name: "display_name", value: "Apps")
+            where("display_name='Stacks'")
+        }
+
+        update(tableName: "widget_definition") {
+            column(name: "display_name", value: "App Editor")
+            where("display_name='Stack Editor'")
+        }
+    }
 }

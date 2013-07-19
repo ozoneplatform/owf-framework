@@ -14,7 +14,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
     dragAndDrop: true,
     launchesWidgets: true,
     channel: 'AdminChannel',
-    defaultTitle: 'Stacks',
+    defaultTitle: 'Apps',
     minButtonWidth: 80,
     detailsAutoOpen: true,
     
@@ -29,7 +29,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                 me.guid_EditCopyWidget = result.value;
             },
             onFailure: function(err){ /* No op */
-                me.showAlert('Preferences Error', 'Error looking up Stack Editor: ' + err);
+                me.showAlert('Preferences Error', 'Error looking up Application Editor: ' + err);
             }
         });
         
@@ -103,14 +103,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                 minWidth: this.minButtonWidth
             },
             items: [{
-                xtype: 'button', 
-                text: 'Create',
-                handler: function(button, evt) {
-                    evt.stopPropagation();
-                    me.doCreate();
-                }
-            }, {
-                xtype: 'splitbutton',
+                xtype: 'button',
                 text: 'Edit',
                 itemId: 'btnEdit',
                 handler: function() {
@@ -120,34 +113,8 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                             me.doEdit(records[i].data.id, records[i].data.name);
                         }
                     } else {
-                        me.showAlert('Error', 'You must select at least one stack to edit.');
+                        me.showAlert('Error', 'You must select at least one App to edit.');
                     }
-                },
-                menu: {
-                    xtype: 'menu',
-                    plain: true,
-                    hideMode: 'display',
-                    defaults: {
-                        minWidth: this.minButtonWidth
-                    },
-                    items: [
-                        {
-                            xtype: 'owfmenuitem',
-                            text: 'Export',
-                            handler: function(button) {
-                                var records = me.gridStacks.getSelectionModel().getSelection();
-                                if(records && records.length === 1) {
-                                    me.doExport('stack', records[0]);
-                                }
-                                else if(records && records.length > 1) {
-                                    me.showAlert('Error', 'You must select only one stack to export.');
-                                }
-                                else {
-                                    me.showAlert('Error', 'You must select a stack to export.');
-                                }
-                            }
-                        }
-                    ]
                 }
             }, {
                 xtype: 'button', 
@@ -237,7 +204,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
 
     launchFailedHandler: function(response) {
         if (response && response.error) {
-            this.showAlert('Launch Error', 'Stack Editor Launch Failed: ' + response.message);
+            this.showAlert('Launch Error', 'Application Editor Launch Failed: ' + response.message);
         }
     },
     
@@ -265,7 +232,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
               msg += '<span class="heading-bold">' + Ext.htmlEncode(records[0].data.name) + '</span>.';
             }
             else {
-              msg += 'the selected <span class="heading-bold">' + records.length + ' stacks</span>.';
+              msg += 'the selected <span class="heading-bold">' + records.length + ' applications</span>.';
             }
             this.showConfirmation('Warning', msg, function(btn, text, opts) {
                 if (btn == 'ok') {
@@ -294,7 +261,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                 }
             });
         } else {
-            this.showAlert('Error', 'You must select at least one stack to delete.');
+            this.showAlert('Error', 'You must select at least one App to delete.');
         }
     }
 });

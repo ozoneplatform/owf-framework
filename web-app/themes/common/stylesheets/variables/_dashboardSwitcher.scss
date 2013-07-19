@@ -1,13 +1,38 @@
 $dashboard-switcher-header-font-size: 12px !default;
 
+$dashboard-width: 90px;
+$dashboard-height: 110px;
+
+$dashboard-rows: 3;
+$dashboard-columns: 6;
+
+$dashboard-padding-top: 10px;
+$dashboard-margin-left: 5px;
+$dashboard-margin-right: 5px;
+$dashboard-margin-bottom: 5px;
+
+$dashboard-mini-slider-width: 450px;
+$dashboard-mini-slider-height: $dashboard-height + $dashboard-padding-top;
+
+$dashboard-mini-slider-viewport-height: $dashboard-mini-slider-height + $dashboard-padding-top;
+$dashboard-mini-slider-viewport-height-ie7: $dashboard-mini-slider-viewport-height + 5px;
+
 $dashboard-switcher-body-radius: 25px !default;
 $dashboard-switcher-background-color: $owf-base-color !default;
 $dashboard-switcher-opacity: 0.90 !default;
 
-$dashboard-item-body-radius: 10px !default;
+$dashboard-item-body-radius: 5px !default;
+
+$dashboard-switcher-slider-width: ($dashboard-width + $dashboard-margin-right + $dashboard-margin-left) * $dashboard-columns;
+$dashboard-switcher-slider-height: ($dashboard-height + $dashboard-margin-bottom + $dashboard-padding-top) * $dashboard-rows;
+$dashboard-switcher-slider-expanded-height: $dashboard-switcher-slider-height + $dashboard-mini-slider-height + 45px;
+$dashboard-switcher-slider-min-height: $dashboard-switcher-slider-height;
+$dashboard-switcher-slider-max-height: $dashboard-switcher-slider-expanded-height;
+
+$dashboard-switcher-header-height: 26px;
 
 $dashboard-switcher-dashboard-background-color: $dashboard-switcher-background-color !default;
-$dashboard-switcher-dashboard-over-background-color: darken($dashboard-switcher-dashboard-background-color, 15) !default;
+$dashboard-switcher-dashboard-over-background-color: darken($dashboard-switcher-dashboard-background-color, 10) !default;
 $dashboard-switcher-dashboard-selected-background-color: lighten($dashboard-switcher-dashboard-background-color, 10) !default;
 
 $dashboard-switcher-dashboard-border-color: $dashboard-switcher-background-color !default;

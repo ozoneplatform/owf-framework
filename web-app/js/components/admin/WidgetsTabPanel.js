@@ -22,7 +22,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
             widgetEventingController: null,
             widgetStateHandler: null,
             initDisabled: true,
-    
+
             items: [{
                 xtype: 'widgetsgrid',
                 itemId: 'widgetsGrid',
@@ -246,7 +246,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
     
     onAddClicked: function(button, e) {
         var win = Ext.widget('admineditoraddwindow', {
-            addType: 'Widget',
+            addType: 'App Component',
             itemName: this.ownerCt.record.get('title'),
             editor: this.editor,
             focusOnClose: this.down(),

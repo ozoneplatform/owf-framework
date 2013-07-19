@@ -37,11 +37,13 @@ Ext.define('Ozone.components.window.MyAppTip', {
     getToolTip: function () {
         var me = this;
     	var banner = me.dashboardContainer.getBanner();
-        var icn = me.clickedStack.imageUrl && me.clickedStack.imageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'margin-right:15px;\' src=\''+me.clickedStack.imageUrl+'\' />':'';
-        var str = '<div class=\'dashboard-tooltip-content\'>' + 
-                '<h3 class=\'name\'>' + icn + Ext.htmlEncode(Ext.htmlEncode(me.clickedStack.name)) + '</h3>';
+        var icn = me.clickedStack.imageUrl && me.clickedStack.imageUrl !=' ' ? '<img class=\'tipIcon\'src=\''+me.clickedStack.imageUrl+'\' />':
+        																							 '<div class=\'tipIcon noIconGivenStack\'></div>';
+        var str = '<div class=\'dashboard-tooltip-content\'>' + icn +
+                '<h3 class=\'name\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedStack.name)) + '</h3>';
 
-        me.clickedStack.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedStack.description)) +'</p><br>');
+        me.clickedStack.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedStack.description)) +'</p></div>'):
+        										 (str += '<p class=\'tip-description\'>  </p>');
         
         var pushBtn = '',
         	ulAdjustCls = 'ulStoreAdjust',
@@ -211,28 +213,46 @@ Ext.define('Ozone.components.window.MyAppTip', {
             return;
         }
 
-        mpLauncher = banner.getMarketplaceLauncher();
+        Ext.Msg.show({
+            title: 'Continue?',
+            msg: 'Click OK to push the App to a store. Click OK to cancel.',
+            buttons: Ext.Msg.OKCANCEL,
+            closable: false,
+            modal: true,
+            fn: function(btn) {
+                if (btn == 'ok') {
 
-        // Get the stack json
+                    mpLauncher = banner.getMarketplaceLauncher();
 
-        Ozone.util.Transport.send({
+                    // Get the stack json
 
-            url : Ozone.util.contextPath()  + '/stack/share?id=' + stack.id,
-            method : "POST",
-            onSuccess: function (json){
-                me.sendRequest(json, mpLauncher, banner.marketplaceWidget);
-            },
+                    Ozone.util.Transport.send({
 
-            onFailure: function (errorMsg){
-                var msg = 'The sharing of ' + ' ' + Ext.htmlEncode(record.get('name')) + ' failed.';
-                console.log('Error', errorMsg ? errorMsg : msg);
+                        url : Ozone.util.contextPath()  + '/stack/share?id=' + stack.id,
+                        method : "POST",
+                        onSuccess: function (json){
+                            me.sendRequest(json, mpLauncher, banner.marketplaceWidget);
+                        },
 
-            },
-            autoSendVersion : false
+                        onFailure: function (errorMsg){
+                            // Display error message
+                            Ext.Msg.show({
+                                title: 'Error',
+                                msg: errorMsg,
+                                buttons: Ext.Msg.OK,
+                                closable: false,
+                                modal: true
+                            });
+                        },
+                        autoSendVersion : false
 
+                    });
+
+                }
+            }
         });
 
-        me.close();
+      me.close();
         me.appsWindow.close();
     },
 
@@ -244,7 +264,9 @@ Ext.define('Ozone.components.window.MyAppTip', {
         me.update('');
         me.removeAll();
 
-        var iconurlIsSet = (!Ext.isEmpty(Ext.String.trim(me.clickedStack.imageUrl)));
+        var iconurlIsSet = !(me.clickedStack.imageUrl == null ||
+                                me.clickedStack.imageUrl == undefined || 
+                                Ext.isEmpty(Ext.String.trim(me.clickedStack.imageUrl)));
 
         var titleField = Ext.create('Ext.form.field.Text', {
             name: 'title',
@@ -295,7 +317,8 @@ Ext.define('Ozone.components.window.MyAppTip', {
                     xtype: 'image',
                     src: (iconurlIsSet ? me.clickedStack.imageUrl : 'images/dashboardswitcher/StacksIcon.png'),
                     height: 54,
-                    width: 54
+                    width: 54,
+                    margin: '0 2 0 2'
                 },{
                     xtype: 'container',
                     layout: {
@@ -443,9 +466,6 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 onSuccess: function(result) {
                     var id = result.data && result.data.id;
 
-                    console.log("success", "ID is " + id + ", New item created? " + 
-                        result.data.isNew);
-                    
                     //send only to this mp widget
                     Ozone.eventing.Container.publish('ozone.marketplace.show', id, 
                         Ozone.eventing.Container.getIframeId(instance.data.uniqueId)); 
@@ -455,18 +475,36 @@ Ext.define('Ozone.components.window.MyAppTip', {
                             function() {
                         me.dashboardContainer.loadMask.hide();
                         Ozone.eventing.Container.unsubscribe('ozone.marketplace.pageLoaded');
+
+                        // Display completion message
+                        Ext.Msg.show({
+                            title: 'Push to Store Complete',
+                            msg: result.data.msg,
+                            buttons: Ext.Msg.OK,
+                            closable: false,
+                            modal: true
+                        });
+
                     });
                 },
+
                 onFailure: function (errorMsg){
-                     //var msg = 'The sharing of ' + 'shareItem' + ' ' + 
-                        //Ext.htmlEncode(record.get('name')) + ' failed.';
-                     console.log('Error', errorMsg /*? errorMsg : msg*/);
+                    // Display error message
+                    Ext.Msg.show({
+                        title: 'Error',
+                        msg: errorMsg,
+                        buttons: Ext.Msg.OK,
+                        closable: false,
+                        modal: true
+                    });
 
                      me.dashboardContainer.loadMask.hide();
+
                 },
                 autoSendVersion : false
             });
-        }, {single: true}); 
+
+        }, this, {single: true});
     }
 
 });

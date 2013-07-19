@@ -529,7 +529,7 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
 
         var dashboards = this.dashboardContainer.widgetStore.findRecord("widgetGuid", record.get('widgetGuid'));
 
-        htmlMessage += '<p>Deleting this widget will remove it from any dashboards it is a part of.</p><br/> ';
+        htmlMessage += '<p>Deleting this widget will remove it from any pages it is a part of.</p><br/> ';
         // htmlMessage += '<p>' + this.wrapRecordName(recordName) + ' is required by ' + record.get('allRequired').length + ' widgets.</p><br/> ';
         htmlMessage += '<p>Are you sure you want to delete ' + this.wrapRecordName(recordName) + '?</p>';
 

@@ -5,7 +5,7 @@ Ext.define('Ozone.components.admin.widget.WidgetManagementPanel', {
   dragAndDrop: true,
   launchesWidgets: true,
   channel: 'AdminChannel',
-  defaultTitle: 'Widgets',
+  defaultTitle: 'App Components',
   minButtonWidth: 80,
   cls: 'widgetmanagementpanel',
   detailsAutoOpen: true,

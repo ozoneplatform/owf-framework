@@ -12,7 +12,7 @@ Ext.define('Ozone.components.admin.group.GroupEditStacksTab', {
       iconCls: 'stacks-tab',
       editor: 'Group',
       componentId: 'group_id',
-      title: 'Stacks',
+      title: 'Apps',
       storeCfg: {
                 api: {
                     read: '/stack',

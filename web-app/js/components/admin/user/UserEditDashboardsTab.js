@@ -14,7 +14,7 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
         Ext.apply(this,{
             layout: 'fit',
             itemId: 'tabDashboards',
-            title: 'Dashboards',
+            title: 'Pages',
             iconCls: 'dashboard-tab',
             componentId: 'user_id',
             storeCfg: {
@@ -102,7 +102,7 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
         var compId = comp.recordId ? comp.recordId : -1;
         
         Ext.create('Ozone.components.admin.EditDashboardWindow', {
-            title: 'Dashboard Editor',
+            title: 'Page Editor',
             width: Ext.getBody().getViewSize().width * .9,
             height: Ext.getBody().getViewSize().height * .9,
             scope: this,
@@ -169,7 +169,7 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
             }
             
             Ext.create('Ozone.components.admin.EditDashboardWindow', {
-                title: 'Dashboard Editor - ' + data.name ? Ext.htmlEncode(data.name) : '',
+                title: 'Page Editor - ' + data.name ? Ext.htmlEncode(data.name) : '',
                 guid: data.guid ? data.guid : '',
                 name: data.name ? data.name : '',
                 description: data.description ? data.description : '',
@@ -225,7 +225,7 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
             }).show();
         }
         else {
-            this.editPanel.showAlert("Error", "You must select at least one dashboard to edit.");
+            this.editPanel.showAlert("Error", "You must select at least one page to edit.");
         }
     },
     doCopy: function(button, e) {
@@ -246,7 +246,7 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
         var me = this;
         var addTitle = "Select one or more groups and click 'OK':";
         if (me.editor) {
-            addTitle = "To copy the selected dashboards, select one or more groups and click 'OK':";
+            addTitle = "To copy the selected pages, select one or more groups and click 'OK':";
         }
 
         var win = Ext.widget('admineditoraddwindow', {
@@ -285,7 +285,7 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
                             },this),
                             onFailure: function (errorMsg){
                                 me.editPanel.showAlert("Error", "Error while " +
-                                    "copying dashboard(s): " + 
+                                    "copying page(s): " +
                                     errorMsg);
                             },
                             autoSendVersion : false,
@@ -307,13 +307,13 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
             store = grid.getStore()
             records = grid.getSelectedDashboards();
         if (records && records.length > 0) {
-            var msg = 'This action will permanently delete the selected dashboard(s)';
+            var msg = 'This action will permanently delete the selected page(s)';
             if (records.length == 1) {
                 msg = 'This action will permanently delete <span class="heading-bold">' 
                         + Ext.htmlEncode(records[0].data.name) + '</span>.';
             } else {
                 msg = 'This action will permanently delete the selected <span class="heading-bold">' 
-                        + records.length + ' dashboards</span>.';
+                        + records.length + ' pages</span>.';
             }
             var okFn = function(btn, text, opts) {
                 if (btn == 'ok') {
@@ -323,7 +323,7 @@ Ext.define('Ozone.components.admin.user.UserEditDashboardsTab', {
             };
             this.editPanel.showConfirmation('Warning', msg, okFn);
         } else {
-            this.editPanel.showAlert("Error", "You must select at least one dashboard to delete.");
+            this.editPanel.showAlert("Error", "You must select at least one page to delete.");
         }
     }
 

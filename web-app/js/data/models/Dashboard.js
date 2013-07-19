@@ -20,6 +20,7 @@ Ext.define('Ozone.data.Dashboard', {
         'prettyCreatedDate',
         'editedDate',
         'prettyEditedDate',
+        'publishedToStore',
         { name: 'stack', defaultValue: null },
         { name: 'locked', type: 'boolean', defaultValue: false },
         { name: 'layoutConfig', defaultValue: null },
