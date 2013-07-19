@@ -630,7 +630,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                         me.createEmptyDashboard('desktop', true, Ext.bind(function (dash) {
                             var dashModel = me.createDashboardConfig(Ext.create('Ozone.data.Dashboard', dash));
 
-                            me.dashboards.push(dashModel);
+                            me.dashboards = [dashModel];
                             continueInitLoad(dashModel);
                         }, me));
                     }
@@ -697,6 +697,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             });
 
             if (dashboardCardPanel.isLayedOut) {
+                //in case there are already some dashboards in there
+                dashboardCardPanel.removeAll();
+
                 setupInitialDash();
             } else {
                 dashboardCardPanel.on({
@@ -1888,6 +1891,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             "guid": newGuid,
             "isdefault": setAsDefault,
             "state": [],
+            "layoutConfig": Ozone.config.defaultLayoutConfig,
             "publishedToStore": true  //allow the user to get their own copy of the 
                                     //dashboard
         };
