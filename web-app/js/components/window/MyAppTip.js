@@ -46,9 +46,9 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var notOwner = !me.isUserTheOwner();
 
         if(notOwner) {
-            me.appsWindow.hideButton('.addButton');
-            me.appsWindow.hideButton('.editButton');
-            me.appsWindow.hideButton('.pushButton');
+            me.hideButton('.addButton');
+            me.hideButton('.editButton');
+            me.hideButton('.pushButton');
         }
     },
 
