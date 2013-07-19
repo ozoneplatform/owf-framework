@@ -820,7 +820,7 @@
 
 [id*="owfCreateDashboardsContainer"], [id*="owfCreateDashboardsContainer"] .x-toolbar, .createAppField input, .createAppField textArea, {
   color: #ffffff;
-  background: #2f2f2f;
+  background: $system-window-background-color;
 }
 
 .createAppField input:focus, .createAppField textArea:focus {
@@ -836,10 +836,12 @@
 
   .okbutton{
     background: #7dc242;
+    filter: none;
   }
 
   .cancelbutton {
     background: #ababab;
+    filter: none;
   }
 
   .x-btn-default-toolbar-small span{
@@ -893,5 +895,17 @@ div#existViewCb {
 
   input {
     width: 396px !important;
+  }
+}
+
+.manageContainer {
+
+  .cvc-createNewDashboardContainer {
+
+    label {
+      padding-left: 0px !important;
+      color: #ffffff !important;
+      background: $system-window-background-color !important;
+    }
   }
 }
