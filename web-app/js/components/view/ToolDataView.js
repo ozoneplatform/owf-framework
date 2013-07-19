@@ -13,7 +13,7 @@ Ext.define('Ozone.components.view.ToolDataView', {
     initComponent: function() {
         this.tpl = Ext.create('Ext.XTemplate',
             '<tpl for=".">',
-                '<div class="tool" tabindex="0" data-qtip="{[Ext.htmlEncode(Ext.htmlEncode(values.name))]}">',
+                '<div class="tool" tabindex="0">',
                     '<div class="thumb-wrap">',
                         '<img src="{image}" class="thumb">',
                     '</div>',
