@@ -310,7 +310,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         me.dashboardContainer.stackStore.save();
         
         if( me.appsWindow._lastExpandedStack === me.clickedStackOrDashboard) {
-            me.hideStackDashboards();
+            me.appsWindow.hideStackDashboards();
         }
 
         var $target = jQuery(me.event.target.parentElement.parentElement);
