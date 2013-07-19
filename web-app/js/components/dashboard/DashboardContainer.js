@@ -560,11 +560,12 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     initLoad: function() {
+        var me = this;
 
-        var records = this.widgetStore.getRange();
+        var records = me.widgetStore.getRange();
         for (var i = 0; i < records.length; i++) {
             //save widget names
-            this.originalWidgetNames[records[i].data.widgetGuid] = records[i].data.name;
+            me.originalWidgetNames[records[i].data.widgetGuid] = records[i].data.name;
         }
 
         //see if the dashboard guid was specified on the hash
@@ -574,126 +575,140 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         var stackDashboards = [];
         var stackContext = data.stack;
 
-        if (this.dashboardStore.getCount() > 0) {
-            for (var i = 0, len = this.dashboardStore.getCount(); i < len; i++) {
-                var dashRecord = this.dashboardStore.getAt(i);
+        if (me.dashboardStore.getCount() > 0) {
+            for (var i = 0, len = me.dashboardStore.getCount(); i < len; i++) {
+                var dashRecord = me.dashboardStore.getAt(i);
                 var dash = dashRecord.data;
 
-                this.dashboards.push(this.createDashboardConfig(dashRecord));
-                this.originalDashboardStore.add(Ext.JSON.decode(Ext.JSON.encode(dashRecord.data)));
+                me.dashboards.push(me.createDashboardConfig(dashRecord));
+                me.originalDashboardStore.add(Ext.JSON.decode(Ext.JSON.encode(dashRecord.data)));
 
                 // Build an array of dashboards that are in the supplied stack context
                 if (stackContext && dashRecord.data.stack && dashRecord.data.stack.stackContext == stackContext) {
-                    stackDashboards.push(this.createDashboardConfig(dashRecord));
+                    stackDashboards.push(me.createDashboardConfig(dashRecord));
                 }
 
                 if (activeDashboardGuid != null) {
                     if (dash.guid == activeDashboardGuid) {
-                        this.activeDashboard = this.dashboards[this.dashboards.length - 1];
+                        me.activeDashboard = me.dashboards[me.dashboards.length - 1];
                     }
                 }
                 if (dash.isdefault) {
-                    this.defaultDashboard = this.dashboards[this.dashboards.length - 1];
+                    me.defaultDashboard = me.dashboards[me.dashboards.length - 1];
                 }
 
             }
         }
 
         // Set active dashboard
-        if (this.activeDashboard == null) {
+        if (me.activeDashboard == null) {
 
             // Couldn't find a dashboard based on guid
             if (stackDashboards.length > 0) {
                 // If a stack context was supplied, set active dashboard to first dashboard in stack
-                this.activeDashboard = stackDashboards[0];
-                if (this.defaultDashboard) {
+                me.activeDashboard = stackDashboards[0];
+                if (me.defaultDashboard) {
                     // If a default dashboard exists and is part of the stack, activate that one
                     for (var i = 0; i < stackDashboards.length; i++) {
-                        if (this.defaultDashboard.guid == stackDashboards[i].guid) {
-                            this.activeDashboard = stackDashboards[i];
+                        if (me.defaultDashboard.guid == stackDashboards[i].guid) {
+                            me.activeDashboard = stackDashboards[i];
                             break;
                         }
                     }
                 }
-                this.defaultDashboard = this.activeDashboard;
+                continueInitLoad(me.activeDashboard);
             } else {
-                if (this.defaultDashboard != null) {
+                if (me.defaultDashboard != null) {
                     // Otherwise, set active dashboard to default dashboard
-                    this.activeDashboard = this.defaultDashboard;
+                    continueInitLoad(me.defaultDashboard);
                 } else {
-                    if (this.dashboards.length > 0) {
+                    if (me.dashboards.length > 0) {
                         // Otherwise, just pick the first dash
-                        this.activeDashboard = this.dashboards[0];
-                        this.defaultDashboard = this.activeDashboard;
+                        continueInitLoad(me.dashboards[0]);
                     } else {
                         // And if all else fails, create a new active dashboard
-                        this.activeDashboard = this.createDashboardConfig(this.createEmptyDashboard('desktop', true));
-                        this.defaultDashboard = this.activeDashboard;
-                        this.dashboards.push(this.activeDashboard);
+                        me.createEmptyDashboard('desktop', true, Ext.bind(function (dash) {
+                            var dashModel = me.createDashboardConfig(Ext.create('Ozone.data.Dashboard', dash));
+
+                            me.dashboards.push(dashModel);
+                            continueInitLoad(dashModel);
+                        }, me));
                     }
                 }
             }
         }
+        else {
+            continueInitLoad(me.activeDashboard);
+        }
 
-        Ext.state.Manager.setProvider(Ext.create('Ozone.state.WidgetStateStoreProvider', {
-            store: this.activeDashboard ? this.activeDashboard.stateStore : null
-        }));
+        /**
+         * The second half of initLoad.  This is a separate function so that it can
+         * execute asynchronously in the case that no dashboard exists and one needs to be created
+         * and saved
+         */
+        function continueInitLoad(dash) {
+            me.defaultDashboard = me.activeDashboard = dash;
 
-        //attach listener to change dashboard on # change
-        Ext.util.History.on('change', function(hashData) {
-            if (hashData != null) {
+            Ext.state.Manager.setProvider(Ext.create('Ozone.state.WidgetStateStoreProvider', {
+                store: me.activeDashboard ? me.activeDashboard.stateStore : null
+            }));
 
-                var data = Ext.urlDecode(hashData);
-                if (data.guid != null && data.guid != 'notFound') {
-                    this._activateDashboard(data.guid, data.stack);
-                } else
-                if (data.guid == 'notFound') {
-                    //guid was bad
-                    this._activateDashboard(null, data.stack);
+            //attach listener to change dashboard on # change
+            Ext.util.History.on('change', function(hashData) {
+                if (hashData != null) {
+
+                    var data = Ext.urlDecode(hashData);
+                    if (data.guid != null && data.guid != 'notFound') {
+                        me._activateDashboard(data.guid, data.stack);
+                    } else
+                    if (data.guid == 'notFound') {
+                        //guid was bad
+                        me._activateDashboard(null, data.stack);
+                    } else {
+                        //no data specified on the hash -- pass empty string
+                        me._activateDashboard('', data.stack);
+                    }
                 } else {
-                    //no data specified on the hash -- pass empty string
-                    this._activateDashboard('', data.stack);
-                }
-            } else {
-                //goto the default dashboard
-                this._activateDashboard(this.defaultDashboard.guid, data.stack);
-            }
-        }, this);
-
-        var dashboardCardPanel = this.getComponent('dashboardCardPanel');
-
-        this.toggleMarketplaceMenuOnDashboardSwitch(this.activeDashboard);
-
-        var setupInitialDash = Ext.bind(function() {
-            dashboardCardPanel.activeItem = this.activeDashboard.id;
-            dashboardCardPanel.add(this.dashboards);
-
-            this.activeDashboard = dashboardCardPanel.getComponent(this.activeDashboard.id);
-            this.activateDashboard(this.activeDashboard.id, true, this.activeDashboard.stackContext);
-            if (this.activeDashboard.configRecord.get('locked') || this.activeDashboard.configRecord.isMarketplaceDashboard()) {
-                this.getBanner().disableAppComponentsBtn();
-            } else {
-                this.getBanner().enableAppComponentsBtn();
-            }
-
-            if (this.activeDashboard.configRecord.isMarketplaceDashboard()) {
-                this.getBanner().setMarketplaceToggle();
-            }
-
-        }, this);
-
-        if (dashboardCardPanel.isLayedOut) {
-            setupInitialDash();
-        } else {
-            dashboardCardPanel.on({
-                afterlayout: {
-                    fn: function() {
-                        setupInitialDash();
-                    },
-                    scope: this,
-                    single: true
+                    //goto the default dashboard
+                    me._activateDashboard(me.defaultDashboard.guid, data.stack);
                 }
             });
+
+            var dashboardCardPanel = me.getComponent('dashboardCardPanel');
+
+            me.toggleMarketplaceMenuOnDashboardSwitch(me.activeDashboard);
+
+            var setupInitialDash = Ext.bind(function() {
+                dashboardCardPanel.activeItem = me.activeDashboard.id;
+                dashboardCardPanel.add(me.dashboards);
+
+                me.activeDashboard = dashboardCardPanel.getComponent(me.activeDashboard.id);
+                me.activateDashboard(me.activeDashboard.id, true, me.activeDashboard.stackContext);
+                if (me.activeDashboard.configRecord.get('locked') || me.activeDashboard.configRecord.isMarketplaceDashboard()) {
+                    me.getBanner().disableAppComponentsBtn();
+                } else {
+                    me.getBanner().enableAppComponentsBtn();
+                }
+
+                if (me.activeDashboard.configRecord.isMarketplaceDashboard()) {
+                    me.getBanner().setMarketplaceToggle();
+                }
+
+            });
+
+            if (dashboardCardPanel.isLayedOut) {
+                setupInitialDash();
+            } else {
+                dashboardCardPanel.on({
+                    afterlayout: {
+                        fn: function() {
+                            setupInitialDash();
+                        },
+                        scope: me,
+                        single: true
+                    }
+                });
+            }
         }
     },
 
@@ -1862,7 +1877,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     },
 
-    createEmptyDashboard: function(type, setAsDefault) {
+    createEmptyDashboard: function(type, setAsDefault, callback) {
 
         // create a blank dashboard of the specified type and go to it
 
@@ -1877,25 +1892,24 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                                     //dashboard
         };
 
-        this.saveDashboard(newJson, 'create');
+        this.saveDashboard(newJson, 'create', callback);
 
         // add to dashboardStore
 
-        var dash = {
-            id: newGuid,
-            itemId: newGuid,
-            alteredByAdmin: 'false',
-            guid: newGuid,
-            isdefault: setAsDefault,
-            name: 'Untitled',
-            state: []
-            //user:             userNameObj
-        };
+        //var dash = {
+            //id: newGuid,
+            //itemId: newGuid,
+            //alteredByAdmin: 'false',
+            //guid: newGuid,
+            //isdefault: setAsDefault,
+            //name: 'Untitled',
+            //state: []
+            ////user:             userNameObj
+        //};
         //this.dashboardStore.add(dash);
 
         //return this.dashboardStore.getAt(this.dashboardStore.getCount() - 1);
-        return Ext.create('Ozone.data.Dashboard', dash);
-
+        //return Ext.create('Ozone.data.Dashboard', dash);
     },
 
     createDashboard: function(model) {
