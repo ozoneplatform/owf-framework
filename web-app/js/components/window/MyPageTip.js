@@ -47,6 +47,12 @@ Ext.define('Ozone.components.window.MyPageTip', {
          
         return str;
     },
+
+    isUserTheOwner: function() {
+        var currentUserName = Ozone.config.user && Ozone.config.user.displayName;
+        var ownerName = this.clickedDashboard && this.clickedDashboard.stack && this.clickedDashboard.stack.owner && this.clickedDashboard.stack.owner.username;
+        return ownerName === currentUserName;
+    },
     
     initComponent: function() {
         var me = this;
@@ -55,6 +61,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
         me.html = me.getToolTip();
 
         me.callParent(arguments);
+        alert(this.isUserTheOwner());
     },
 
     setupClickHandlers : function() {
