@@ -997,6 +997,8 @@ owf {
 
       useShims = false
 
+      migrateDashboardsToApps = false
+
       //use to specify whether or not to show test features
       // isTestMode = "true"
       // dynamicLaunchOnlyIfClosed = "true"

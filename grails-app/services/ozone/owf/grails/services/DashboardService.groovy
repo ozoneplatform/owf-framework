@@ -478,6 +478,22 @@ class DashboardService extends BaseService {
         }
     }
 
+    /**
+     * Returns the list of personal dashboards linked to the given group dashboard
+     * @param groupDashboard
+     * @return
+     */
+    def List<Dashboard> findPersonalDashboardsForGroupDashboard(Dashboard groupDashboard) {
+        def result = Dashboard.findAll("\
+            from Dashboard as d, DomainMapping as dm \
+            where dm.destId = :groupDashboardId and  \
+                dm.relationshipType = 'cloneOf' and dm.srcType = 'dashboard' and dm.destType = 'dashboard' \
+                and d.id = dm.srcId", [groupDashboardId: groupDashboard.id])
+        // The result of this query is a list, each element of which is a two-element list, first being the Dashboard record, second - DomainMapping record
+        // Extract Dashboards records only
+        result.collect { it[0]}
+    }
+
     private def updateOldDefault(params){
         def isDefault = (params.isdefault == true || params.isdefault == "true" || params.isdefault== "on")
         if ( !isDefault || !isDefaultDashboardExists(params))
