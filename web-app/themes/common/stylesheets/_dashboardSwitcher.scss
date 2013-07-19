@@ -5,12 +5,14 @@
 
 #dashboard-switcher {
     border: 0px;
+    background-color: $dashboard-switcher-background-color;
 
     &-body {
         @include border-radius($dashboard-switcher-body-radius);
     }
 
     .x-window-header {
+        background-color: $dashboard-switcher-background-color;
         margin-bottom: 5px;
         width: 100% !important;
         *overflow: hidden;
@@ -149,6 +151,8 @@
 /**** BEGIN slider styling ****/
 #dashboard-switcher
     > #dashboard-switcher-body {
+
+    background-color: $dashboard-switcher-background-color;
 
     > .bx-wrapper {
         margin-bottom: 30px !important;
