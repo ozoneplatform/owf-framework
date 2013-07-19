@@ -44,6 +44,15 @@
             // OWF-6032
             window.opener = null;
 
+            // apply background image from app configuration
+            if(Ozone.config.backgroundURL) {
+                var css =   '#owf-body { ' +
+                                'background-image: url("' + Ozone.config.backgroundURL + '") !important; ' +
+                            '}';
+
+                Ext.util.CSS.createStyleSheet(css);
+            }
+
             function initLayoutComponents(customHeaderFooter, floatingWidgetManager, 
                     bannerManager, dashboardDesignerManager, modalWindowManager, tooltipManager) {
                 var layoutComponents = [];

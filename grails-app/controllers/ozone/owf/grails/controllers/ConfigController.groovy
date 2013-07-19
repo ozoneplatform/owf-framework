@@ -1,6 +1,7 @@
 package ozone.owf.grails.controllers
 
 import grails.converters.JSON
+import static ozone.owf.enums.OwfApplicationSetting.*
 
 /**
  * User controller.
@@ -13,6 +14,8 @@ class ConfigController {
     def themeService
     def serviceModelService
     def customHeaderFooterService
+    def owfApplicationConfigurationService
+
 
     def config = {
         def curUser = accountService.getLoggedInUser()
@@ -60,6 +63,7 @@ class ConfigController {
         }
 
         conf.customHeaderFooter = customHeaderFooterService.configAsMap
+        conf.backgroundURL =  owfApplicationConfigurationService.getApplicationConfiguration(CUSTOM_BACKGROUND_URL).value
 
         render(view: 'config_js',
                 model: [

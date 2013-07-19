@@ -146,4 +146,30 @@ databaseChangeLog = {
             where("display_name='Stack Editor'")
         }
     }
+
+    changeSet(author: "owf", id: "7.3-9", context: "7.3, sampleData, 7.3-sampleData") {
+
+        comment("Removing all references to Group Dashboards and renaming the Stack and Stack Editor widgets in the Admin dashboard")
+
+        delete(tableName: "widget_definition_widget_types") {
+            where("widget_definition_id=166")
+        }
+
+        delete(tableName: "domain_mapping") {
+            where("id=329")
+        }
+
+        delete(tableName: "person_widget_definition") {
+            where("id=187")
+        }
+
+        delete(tableName: "tag_links") {
+            where("id=169")
+        }
+
+        delete(tableName: "widget_definition") {
+            where("id=166")
+        }
+
+    }
 }

@@ -433,7 +433,7 @@ class SecurityFilters {
             if (widgetAdmin == null) {
                 id = generateId()
                 widgetAdmin = new WidgetDefinition(
-                    displayName: 'Widgets',
+                    displayName: 'App Components',
                     height: 440,
                     imageUrlLarge: 'themes/common/images/adm-tools/Widgets64.png',
                     imageUrlSmall: 'themes/common/images/adm-tools/Widgets24.png',
@@ -451,7 +451,7 @@ class SecurityFilters {
             if (widgetEdit == null) {
                 id = generateId()
                 widgetEdit = new WidgetDefinition(
-                    displayName: 'Widget Editor',
+                    displayName: 'App Component Editor',
                     visible: false,
                     height: 493,
                     imageUrlLarge: 'themes/common/images/adm-tools/Widgets64.png',
@@ -502,30 +502,12 @@ class SecurityFilters {
                 groupEdit = saveInstance(groupEdit)
                 groupEdit.addTag('admin')
             }
-    		
-            def dashboardAdmin = WidgetDefinition.findByWidgetUrl('admin/GroupDashboardManagement.gsp',[cache:true]);
-            if (dashboardAdmin == null) {
-                id = generateId()
-                dashboardAdmin = new WidgetDefinition(
-                    displayName: 'Group Dashboards',
-                    height: 440,
-                    imageUrlLarge: 'themes/common/images/adm-tools/Dashboards64.png',
-                    imageUrlSmall: 'themes/common/images/adm-tools/Dashboards24.png',
-                    widgetGuid: id,
-                    widgetUrl: 'admin/GroupDashboardManagement.gsp',
-                    widgetVersion: '1.0',
-                    width: 818
-                )
-                dashboardAdmin.addToWidgetTypes(adminWidgetType)
-                dashboardAdmin = saveInstance(dashboardAdmin)
-                dashboardAdmin.addTag('admin')
-            }
 
             def dashboardEdit = WidgetDefinition.findByWidgetUrl('admin/DashboardEdit.gsp',[cache:true]);
             if (dashboardEdit == null) {
                 id = generateId()
                 dashboardEdit = new WidgetDefinition(
-                    displayName: 'Dashboard Editor',
+                    displayName: 'Page Editor',
                     visible: false,
                     height: 440,
                     imageUrlLarge: 'themes/common/images/adm-tools/Dashboards64.png',
@@ -544,7 +526,7 @@ class SecurityFilters {
             if (stackAdmin == null) {
                 id = generateId()
                 stackAdmin = new WidgetDefinition(
-                    displayName: 'Stacks',
+                    displayName: 'Apps',
                     height: 440,
                     imageUrlLarge: 'themes/common/images/adm-tools/Stacks64.png',
                     imageUrlSmall: 'themes/common/images/adm-tools/Stacks24.png',
@@ -562,7 +544,7 @@ class SecurityFilters {
             if (stackEdit == null) {
                 id = generateId()
                 stackEdit = new WidgetDefinition(
-                    displayName: 'Stack Editor',
+                    displayName: 'App Editor',
                     visible: false,
                     height: 440,
                     imageUrlLarge: 'themes/common/images/adm-tools/Stacks64.png',
@@ -668,12 +650,6 @@ class SecurityFilters {
                 if (mapping[0] == null) {
                     // If none of the admin widgets exist yet, create them
                     domainMappingService.createMapping(adminGroup, RelationshipType.owns, groupEdit);
-                }
-    			
-                mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, dashboardAdmin);
-                if (mapping[0] == null) {
-                    // If none of the admin widgets exist yet, create them
-                    domainMappingService.createMapping(adminGroup, RelationshipType.owns, dashboardAdmin);
                 }
     			
                 mapping = domainMappingService.getMapping(adminGroup, RelationshipType.owns, dashboardEdit);

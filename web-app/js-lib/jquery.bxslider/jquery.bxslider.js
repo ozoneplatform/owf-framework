@@ -1348,7 +1348,13 @@
 		 * Reload the slider (revert all DOM changes, and re-initialize)
 		 */
 		el.reloadSlider = function(settings){
-			if (settings != undefined) options = settings;
+			if (settings != undefined) {
+				options = settings;
+			}
+			else {
+				options.startSlide = el.getCurrentSlide();
+			}
+			
 			el.destroySlider();
 			init();
 		}
