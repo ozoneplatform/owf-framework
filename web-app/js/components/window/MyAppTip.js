@@ -17,6 +17,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
     	},
     	'afterRender': {
     		fn: function() {
+                this.hideButtons();
                 this.bindHandlers();
     		}
     	}
@@ -33,7 +34,24 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         me.callParent(arguments);
     },
+
+    isUserTheOwner: function() {
+        var currentUserName = Ozone.config.user && Ozone.config.user.displayName;
+        var ownerName = this.clickedStack && this.clickedStack.owner && this.clickedStack.owner.username;
+        return ownerName === currentUserName;
+    },
     
+    hideButtons: function() {
+        var me = this;
+        var notOwner = !me.isUserTheOwner();
+
+        if(notOwner) {
+            me.appsWindow.hideButton('.addButton');
+            me.appsWindow.hideButton('.editButton');
+            me.appsWindow.hideButton('.pushButton');
+        }
+    },
+
     getToolTip: function () {
         var me = this;
     	var banner = me.dashboardContainer.getBanner();
@@ -57,7 +75,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                         '<span class=\'createPageImg  \'></span>'+
                         '<p class=\'actionText\'>Add Page</p>'+
                     '</li>'+
-                    '<li class=\'pushButton actionButton\'>'+
+                    '<li class=\'pushButton actionButton\' data-qtip="<span class=\'tooltipception\'>Add this App to the Store. making it available to all store users.</span>">'+
                     	'<span class=\'pushImg\'></span>'+
                     	'<p class=\'actionText\'>Push to Store</p>'+
                     '</li>'+
@@ -103,7 +121,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         
         $('#dashboard-switcher').click(function() {
         	  //Hide the tip if outside click 
-        	me.destroy();
+        	me.destroy()
         });
     },
     
@@ -141,7 +159,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         var stack = me.clickedStack;
 
-        var msg = 'This action will return the stack <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any dashboard in the stack after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.'
+        var msg = 'Click OK to delete changes you made to <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> and restore its default settings.'
         me.warn('ok_cancel', jQuery.proxy(me.restoreStack, me), msg);
     },
 
@@ -204,6 +222,8 @@ Ext.define('Ozone.components.window.MyAppTip', {
             buttonHandler: button_handler,
             text: text
         }));
+        
+        me.width = 220;
 
         me.doLayout();
     },
@@ -229,8 +249,9 @@ Ext.define('Ozone.components.window.MyAppTip', {
         }
 
         Ext.Msg.show({
-            title: 'Continue?',
-            msg: 'Click OK to push the App to a store. Click OK to cancel.',
+            title: 'Push App to Store',
+            msg: 'You are pushing this App to a Store. If you have access to more than one Store, you will ' +
+                'be prompted to choose. To continue, click OK. Otherwise, click Cancel.',
             buttons: Ext.Msg.OKCANCEL,
             closable: false,
             modal: true,
@@ -314,7 +335,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             buttonHandler: function() {
                 console.log('FFS');
             },
-            height: 160,
+            height: 200,
             layout: {
                 type: 'vbox',
                 align: 'stretch'
@@ -372,6 +393,9 @@ Ext.define('Ozone.components.window.MyAppTip', {
             }]
         });
 
+        
+        me.height = 240;
+        
         me.add(win);
         win.doLayout();
         me.doLayout();
@@ -480,6 +504,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
                 onSuccess: function(result) {
                     var id = result.data && result.data.id;
+
 
                     //send only to this mp widget
                     Ozone.eventing.Container.publish('ozone.marketplace.show', id, 

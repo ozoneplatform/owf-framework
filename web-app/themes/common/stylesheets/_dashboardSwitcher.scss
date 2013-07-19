@@ -59,7 +59,7 @@
                 width: 140px;
                 padding-left: 7px;
                 font: {
-                    size: 13pt;
+                    size: 14px;
                     weight: normal;
                 }
             }
@@ -507,12 +507,19 @@
 		top:5px !important;
 		height: 25px !important;
 	}
+	
 }
 
 .ozonequicktip {
     width: 300px;
+    max-width: 300px;
+    max-height: 500px;
     padding: 0;
 	background-color: $widget-launcher-background-color;
+	
+	.tooltipception {
+		z-index: 79011 !important;
+	}
 	
     .dashboard-tooltip-content {
     	.noIconGivenStack { 
@@ -537,6 +544,10 @@
         	padding-left: 35%;
         	padding-top: 8%;
         	margin-bottom: 0;
+        	max-width:300px !important;
+        	
+        	*padding-left: 0;
+        	*padding-right: 10%;
         }
         
         ul {
@@ -547,6 +558,7 @@
 			
             li {
                 display: inline-block;
+                *zoom:1;
                 *display: inline;
                 margin: 0 1px;
                	width:55px;
@@ -657,7 +669,7 @@
             border: none;
 
             .x-box-inner {
-                height: 25px !important;
+                height: 40px !important;
                 border: none;
             }
 
@@ -666,10 +678,14 @@
 
         .okbutton{
             background: #7dc242;
+            text-align: center;
+            width: 100px;
         }
 
         .cancelbutton {
             background: #ababab;
+            text-align: center;
+            width: 100px;
         }
 
         .x-btn-default-toolbar-small span{
@@ -684,6 +700,7 @@
             background: inherit;
             border: none;
             color: #ffffff;
+            padding: 10px 8px;
 
             .x-form-field.x-form-text {
                 background: $widget-launcher-background-color;
@@ -714,7 +731,7 @@
 
 	.description { 
 		width: 285px;
-		max-height: 400px;
+		max-height: 300px;
     	overflow: auto;
 	}
 

@@ -39,7 +39,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                     xtype: 'tbtext',
                     itemId: 'lblWidgetsGrid',
                     cls: 'tbWidgetsGridHdr',
-                    text: 'Widgets'
+                    text: 'App Components'
                 },
                 '->',
                 {
