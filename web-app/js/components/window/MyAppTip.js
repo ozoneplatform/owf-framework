@@ -1,7 +1,7 @@
 Ext.define('Ozone.components.window.MyAppTip', {
     extend: 'Ext.tip.ToolTip',
     alias: 'widget.myapptip',
-    clickedStackOrDashboard:null,
+    clickedStack:null,
     event:null,
     cls: 'ozonequicktip itemTip',
     shadow: false,
@@ -37,11 +37,11 @@ Ext.define('Ozone.components.window.MyAppTip', {
     getToolTip: function () {
         var me = this;
     	var banner = me.dashboardContainer.getBanner();
-        var icn = me.clickedStackOrDashboard.imageUrl && me.clickedStackOrDashboard.imageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'margin-right:15px;\' src=\''+me.clickedStackOrDashboard.imageUrl+'\' />':'';
+        var icn = me.clickedStack.imageUrl && me.clickedStack.imageUrl !=' ' ? '<img height=\'64\' width=\'64\' style=\'margin-right:15px;\' src=\''+me.clickedStack.imageUrl+'\' />':'';
         var str = '<div class=\'dashboard-tooltip-content\'>' + 
-                '<h3 class=\'name\'>' + icn + Ext.htmlEncode(Ext.htmlEncode(me.clickedStackOrDashboard.name)) + '</h3>';
+                '<h3 class=\'name\'>' + icn + Ext.htmlEncode(Ext.htmlEncode(me.clickedStack.name)) + '</h3>';
 
-        me.clickedStackOrDashboard.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedStackOrDashboard.description)) +'</p><br>');
+        me.clickedStack.description && (str += '<p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedStack.description)) +'</p><br>');
         
         var pushBtn = '',
         	ulAdjustCls = 'ulStoreAdjust',
@@ -87,7 +87,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var me = this;
         var $ = jQuery;
 
-        if(me.clickedStackOrDashboard.isStack) {
+        if(me.clickedStack.isStack) {
 
             $('.addButton').on('click', $.proxy(me.addPageToApp, me));
             $('.restoreButton').on('click', $.proxy(me.handleStackRestore, me));
@@ -103,7 +103,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
     },
 
     addPageToApp: function (evt) {
-        var stack = this.clickedStackOrDashboard;
+        var stack = this.clickedStack;
 
         var createDashWindow = Ext.widget('createdashboardwindow', {
             stackId: stack.id,
@@ -122,7 +122,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         evnt.stopPropagation();
         var me = this;
 
-        var stack = me.clickedStackOrDashboard;
+        var stack = me.clickedStack;
 
         var msg = 'This action will return the stack <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any dashboard in the stack after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.'
         me.warn('ok_cancel', jQuery.proxy(me.restoreStack, me), msg);
@@ -131,7 +131,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
     restoreStack: function() {
         var me = this;
 
-        var stack = this.clickedStackOrDashboard;
+        var stack = this.clickedStack;
 
         Ext.Ajax.request({
             url: Ozone.util.contextPath() + '/stack/restore',
@@ -201,7 +201,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
     handlePushToStore: function (evt) {
         evt.stopPropagation();
         var me = this,
-            stack = me.clickedStackOrDashboard,
+            stack = me.clickedStack,
             banner = me.dashboardContainer.getBanner(),
             mpLauncher;
 
@@ -237,12 +237,126 @@ Ext.define('Ozone.components.window.MyAppTip', {
     },
 
     handleStackEdit: function(evnt) {
+        evnt.stopPropagation();
+
         var me = this;
 
         me.update('');
         me.removeAll();
 
+        var iconurlIsSet = (!Ext.isEmpty(Ext.String.trim(me.clickedStack.imageUrl)));
 
+        var titleField = Ext.create('Ext.form.field.Text', {
+            name: 'title',
+            emptyText: 'Title',
+            usePlaceholderIfAvailable: false,
+            value: me.clickedStack.name
+        });
+
+        var imgurlField = Ext.create('Ext.form.field.Text', {
+            name: 'imageurl',
+            emptyText: 'Icon URL',
+            usePlaceholderIfAvailable: false,
+            value: (iconurlIsSet ? me.clickedStack.imageUrl : '')
+        });
+
+        var descriptionField = Ext.create('Ext.form.field.TextArea', {
+            name: 'description',
+            maxLength: 4000,
+            enforceMaxLength: true,
+            margin: '0, 2, 0, 2',
+            value: Ext.String.trim(me.clickedStack.description),
+            usePlaceholderIfAvailable: false,
+            emptyText: 'Description'
+        })
+
+        var win = Ext.create('Ozone.components.window.TipWarning', {
+            tip: me,
+            text: '',
+            buttonConfig: 'none',
+            buttonHandler: function() {
+                console.log('FFS');
+            },
+            height: 160,
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
+            items: [{
+                xtype: 'container',
+                layout: {
+                    type: 'hbox',
+                    align: 'stretch'
+
+                },
+                height: 54,
+                margin: '2 2 2 2',
+                items:[{
+                    xtype: 'image',
+                    src: (iconurlIsSet ? me.clickedStack.imageUrl : 'images/dashboardswitcher/StacksIcon.png'),
+                    height: 54,
+                    width: 54
+                },{
+                    xtype: 'container',
+                    layout: {
+                        type: 'vbox',
+                        align: 'stretch'
+                    },
+                    margin: '',
+                    flex: 1,
+                    items: [titleField, imgurlField]
+                }]
+            },descriptionField,
+            {
+                xtype: 'toolbar',
+                flex: 1,
+                padding: '0 0 0 0',
+                margin: '2 0 0 0',
+                border: false,
+                layout: {
+                    pack: 'center'
+                },
+                items: [{
+                    xtype: 'button',
+                    text: 'OK',
+                    cls: 'okbutton',
+                    handler: function() {
+                        me.editStack(titleField.value, imgurlField.value, descriptionField.value);
+                    }
+                },{
+                    xtype: 'button',
+                    text: 'Cancel',
+                    cls: 'cancelbutton',
+                    handler: function() {
+                        me.close();
+                    }
+                }]
+            }]
+        });
+
+        me.add(win);
+        win.doLayout();
+        me.doLayout();
+
+    },
+
+    editStack: function(name, url, description) {
+        var me = this;
+        var stack = me.dashboardContainer.stackStore.getById(me.clickedStack.id);
+        stack.set('name', name);
+        stack.set('imageUrl', url);
+        stack.set('description', description);
+        stack.set('context', name);
+
+        me.dashboardContainer.stackStore.save();
+        me.appsWindow.reloadDashboards = true;
+        
+        var $target = jQuery(me.event.target.parentElement.parentElement);
+        var $name = jQuery('.stack-name', $target);
+        $name.text(name);
+
+        me.close();
+        me.appsWindow.close();
     },
 
     handleStackDelete: function (evt) {
@@ -251,9 +365,9 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var me = this;
 
         var msg = 'This action will permanently delete stack <span class="heading-bold">' + 
-                Ext.htmlEncode(me.clickedStackOrDashboard.name) + '</span> and its dashboards.';
+                Ext.htmlEncode(me.clickedStack.name) + '</span> and its dashboards.';
 
-        var stackGroups = me.clickedStackOrDashboard.groups
+        var stackGroups = me.clickedStack.groups
         var userGroups = Ozone.config.user.groups
         var groupAssignment = false;
         
@@ -287,10 +401,10 @@ Ext.define('Ozone.components.window.MyAppTip', {
     removeStack:function() {
         var me = this;
 
-        me.dashboardContainer.stackStore.remove( me.dashboardContainer.stackStore.getById(me.clickedStackOrDashboard.id) );
+        me.dashboardContainer.stackStore.remove( me.dashboardContainer.stackStore.getById(me.clickedStack.id) );
         me.dashboardContainer.stackStore.save();
         
-        if( me.appsWindow._lastExpandedStack === me.clickedStackOrDashboard) {
+        if( me.appsWindow._lastExpandedStack === me.clickedStack) {
             me.appsWindow.hideStackDashboards();
         }
 
@@ -299,7 +413,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         $target.remove();
         //$prev.focus(); //for keyboard nav which is no longet supported.
         
-        me.appsWindow._deletedStackOrDashboards.push(me.clickedStackOrDashboard);
+        me.appsWindow._deletedStackOrDashboards.push(me.clickedStack);
         me.appsWindow.reloadDashboards = true;
 
         me.close();
