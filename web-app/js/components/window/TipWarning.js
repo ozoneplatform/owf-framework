@@ -21,18 +21,25 @@ Ext.define('Ozone.components.window.TipWarning', {
     			})
     		}]
     	} else if(me.buttonConfig == "ok_cancel") {
-    		me.bbar = ['->',{
-    			text: 'OK',
-    			handler: function() {
-    				me.buttonHandler();
-    				me.tip.close();
-    			}
-    		},{
-    			text: 'Cancel',
-    			handler: function() {
-    				me.tip.close();
-    			}
-    		}]
+    		me.bbar = Ext.create('Ext.toolbar.Toolbar', {
+                layout: {
+                    pack: 'center'
+                },
+                items: [{
+        			text: 'OK',
+                    cls: 'okbutton',
+        			handler: function() {
+        				me.buttonHandler();
+        				me.tip.close();
+        			}
+        		},{
+        			text: 'Cancel',
+                    cls: 'cancelbutton',
+        			handler: function() {
+        				me.tip.close();
+        			}
+        		}]
+            });
     	}
 
     	me.callParent(arguments);

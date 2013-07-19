@@ -29,23 +29,29 @@ Ext.define('Ozone.components.window.MyPageTip', {
         								  (str += '<p class=\'tip-description\'>  </p>');
         
         // append buttons 
-        str += '<ul style=\'padding-top:1.5%;\'>' +
-                    '<li class=\'restoreButton actionButton liPageAdjust\' style=\'border-radius: 0 0 0 10px;\'>'+
-                        '<span class=\'restoreImg imgPageAdjust\' ></span>'+
+        str += '<ul style=\'buttonBar \'>' +
+                    '<li class=\'restoreButton actionButton liPageAdjust\'>'+
+                        '<span class=\'restoreImg \' ></span>'+
                         '<p class=\'actionText\'>Restore</p>'+
                     '</li>'+
                     '<li class=\'editButton actionButton liPageAdjust\'>'+
-                        '<span class=\'editImg imgPageAdjust\'></span>'+
+                        '<span class=\'editImg \'></span>'+
                         '<p class=\'actionText\'>Edit</p>'+
                     '</li>'+
-                    '<li class=\'deleteButton actionButton liPageAdjust\'  style=\'border-radius: 0 0 10px; 0\'>'+
-                        '<span class=\'deleteImg imgPageAdjust\'></span>'+
+                    '<li class=\'deleteButton actionButton liPageAdjust\' >'+
+                        '<span class=\'deleteImg \'></span>'+
                         '<p class=\'actionText\'>Delete</p>'+
                     '</li>'+
                '</ul>' +
               '</div>';
          
         return str;
+    },
+
+    isUserTheOwner: function() {
+        var currentUserName = Ozone.config.user && Ozone.config.user.displayName;
+        var ownerName = this.clickedDashboard && this.clickedDashboard.stack && this.clickedDashboard.stack.owner && this.clickedDashboard.stack.owner.username;
+        return ownerName === currentUserName;
     },
     
     initComponent: function() {
@@ -65,6 +71,11 @@ Ext.define('Ozone.components.window.MyPageTip', {
             .on('click', '.editButton', $.proxy(me.editPage, me))
             .on('click', '.deleteButton', $.proxy(me.deletePage, me))
             .on('click', '.restoreButton', $.proxy(me.restorePage, me));
+        
+        $('#dashboard-switcher').click(function() {
+	      	  //Hide the tip if outside click 
+	      	this.destroy()
+	      });
     },
 
     onRender: function() {
@@ -72,6 +83,17 @@ Ext.define('Ozone.components.window.MyPageTip', {
         this.setupClickHandlers();
     },
 
+    hideButton: function(className) {
+    	var $ = jQuery;
+    	
+    	$(className).hide();
+    },
+    
+    showButton: function(className) {
+    	var $ = jQuery; 
+    	
+    	$(className).show();
+    },
 
     editPage: function (evt) {
         evt.stopPropagation();
@@ -80,7 +102,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
 
         var editDashWindow = Ext.widget('createdashboardwindow', {
             itemId: 'editDashWindow',
-            title: 'Edit Page',
+            title: null,
             height: 300,
             dashboardContainer: this.dashboardContainer,
             ownerCt: this.dashboardContainer,

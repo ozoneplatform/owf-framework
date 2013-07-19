@@ -866,7 +866,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             	Ext.select('.itemTip').destroy();
             	
             	Ext.widget('myapptip', {
-            		clickedStackOrDashboard:stack,
+            		clickedStack:stack,
                     dashboardContainer: me.dashboardContainer,
                     appsWindow: me,
             		event:evt
