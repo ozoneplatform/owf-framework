@@ -103,7 +103,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         
         $('#dashboard-switcher').click(function() {
         	  //Hide the tip if outside click 
-        	this.destroy()
+        	me.destroy();
         });
     },
     
