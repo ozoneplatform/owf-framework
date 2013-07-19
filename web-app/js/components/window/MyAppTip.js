@@ -215,28 +215,46 @@ Ext.define('Ozone.components.window.MyAppTip', {
             return;
         }
 
-        mpLauncher = banner.getMarketplaceLauncher();
+        Ext.Msg.show({
+            title: 'Continue?',
+            msg: 'Click OK to push the App to a store. Click OK to cancel.',
+            buttons: Ext.Msg.OKCANCEL,
+            closable: false,
+            modal: true,
+            fn: function(btn) {
+                if (btn == 'ok') {
 
-        // Get the stack json
+                    mpLauncher = banner.getMarketplaceLauncher();
 
-        Ozone.util.Transport.send({
+                    // Get the stack json
 
-            url : Ozone.util.contextPath()  + '/stack/share?id=' + stack.id,
-            method : "POST",
-            onSuccess: function (json){
-                me.sendRequest(json, mpLauncher, banner.marketplaceWidget);
-            },
+                    Ozone.util.Transport.send({
 
-            onFailure: function (errorMsg){
-                var msg = 'The sharing of ' + ' ' + Ext.htmlEncode(record.get('name')) + ' failed.';
-                console.log('Error', errorMsg ? errorMsg : msg);
+                        url : Ozone.util.contextPath()  + '/stack/share?id=' + stack.id,
+                        method : "POST",
+                        onSuccess: function (json){
+                            me.sendRequest(json, mpLauncher, banner.marketplaceWidget);
+                        },
 
-            },
-            autoSendVersion : false
+                        onFailure: function (errorMsg){
+                            // Display error message
+                            Ext.Msg.show({
+                                title: 'Error',
+                                msg: errorMsg,
+                                buttons: Ext.Msg.OK,
+                                closable: false,
+                                modal: true
+                            });
+                        },
+                        autoSendVersion : false
 
+                    });
+
+                }
+            }
         });
 
-        me.close();
+      me.close();
         me.appsWindow.close();
     },
 
@@ -330,9 +348,6 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 onSuccess: function(result) {
                     var id = result.data && result.data.id;
 
-                    console.log("success", "ID is " + id + ", New item created? " + 
-                        result.data.isNew);
-
                     //send only to this mp widget
                     Ozone.eventing.Container.publish('ozone.marketplace.show', id, 
                         Ozone.eventing.Container.getIframeId(instance.data.uniqueId)); 
@@ -342,10 +357,28 @@ Ext.define('Ozone.components.window.MyAppTip', {
                             function() {
                         me.dashboardContainer.loadMask.hide();
                         Ozone.eventing.Container.unsubscribe('ozone.marketplace.pageLoaded');
+
+                        // Display completion message
+                        Ext.Msg.show({
+                            title: 'Push to Store Complete',
+                            msg: result.data.msg,
+                            buttons: Ext.Msg.OK,
+                            closable: false,
+                            modal: true
+                        });
+
                     });
                 },
+
                 onFailure: function (errorMsg){
-                     console.log('Error', errorMsg);
+                    // Display error message
+                    Ext.Msg.show({
+                        title: 'Error',
+                        msg: errorMsg,
+                        buttons: Ext.Msg.OK,
+                        closable: false,
+                        modal: true
+                    });
 
                      me.dashboardContainer.loadMask.hide();
 
