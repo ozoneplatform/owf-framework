@@ -393,7 +393,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         if (!me.getActiveStackId() || me.activeDashboard.configRecord.isMarketplaceDashboard()) {
             me.slider.goToSlide(0);
         } else {
-            me.slider.goToSlide(me.getActiveStackSlideIndex());            
+            me.slider.goToSlide(me.getActiveStackSlideIndex());
         }
     },
 
@@ -791,6 +791,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 }
             }
             return;
+        } else {
+            selectedEl.addClass('selected');
         }
     },
 
@@ -826,8 +828,12 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         	}).showAt([evt.clientX,evt.clientY]);
         	
         	return;
+        } else {
+            this.launchDashboard(dashboard);
         }
-            
+    },
+
+    launchDashboard: function(dashboard) {
         var stackContext = dashboard.stack ? dashboard.stack.stackContext : null;
 
         this.dashboardSelectionDeferred && this.dashboardSelectionDeferred.resolve(dashboard.guid);
@@ -873,11 +879,16 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             	}).showAt([evt.clientX,evt.clientY]);
             	
             	return;
-            }
+            } 
 
             if( stack ) {
-                me.toggleStack(stack, $clickedStack);
+                if (stack.dashboards && stack.dashboards.length === 1) {
+                    me.launchDashboard(stack.dashboards[0])
+                } else {
+                    me.toggleStack(stack, $clickedStack);    
+                }
             }
+
             evt.preventDefault();
         }
     },
@@ -885,6 +896,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     toggleStack: function (stack, $stack) {
         var me = this,
             dfd = $.Deferred();
+
+        // don't expand stacks with one page/dashboard
+        if (stack && stack.dashboards && stack.dashboards.length === 1) {
+            return dfd.promise();
+        }
 
         if( me._lastExpandedStack ) {
             if( me._lastExpandedStack === stack ) {
@@ -895,8 +911,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     me.showStackDashboards(stack, $stack, dfd);
                 });
             }
-        }
-        else  {
+        } else  {
             me.showStackDashboards(stack, $stack, dfd);
         }
 
@@ -910,6 +925,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             parent = $clickedStack.parent(),
             parentWidth = parent.outerWidth( true ),
             lastElInRow;
+
+        $clickedStack.addClass('hover');
 
         // get last element in the clikced stack's row
         var numItemsInRow = Math.round( parentWidth / clickedStackElWidth ),
@@ -1016,6 +1033,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         }
 
         me.isAnAppExpanded = false;
+
+        $('#stack' + me.getActiveStackId()).removeClass('hover');
 
         if(Ext.isIE7 || Ext.isIE8) {
             var dfd = $.Deferred();
