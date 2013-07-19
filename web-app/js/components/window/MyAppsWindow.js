@@ -19,8 +19,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     viewId: 'dashboard-switcher-dashboard-view',
 
     width: 750,
-    height: 555,
-    expandedHeight: 715,
+    height: 595,
+    expandedHeight: 755,
 
     dashboardContainer: null,
 
@@ -910,6 +910,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         }
 
         if( me._lastExpandedStack ) {
+
             if( me._lastExpandedStack === stack ) {
                 return me.hideStackDashboards();
             }
@@ -1043,7 +1044,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         me.isAnAppExpanded = false;
 
-        $('#stack' + me.getActiveStackId()).removeClass('hover');
+        $('#stack' + me._lastExpandedStack.id, '.bx-slide:not(.bx-clone)').removeClass('hover');
 
         if(Ext.isIE7 || Ext.isIE8) {
             var dfd = $.Deferred();
