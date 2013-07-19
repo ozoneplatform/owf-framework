@@ -57,7 +57,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                         '<span class=\'createPageImg  \'></span>'+
                         '<p class=\'actionText\'>Add Page</p>'+
                     '</li>'+
-                    '<li class=\'pushButton actionButton\'>'+
+                    '<li class=\'pushButton actionButton\' data-qtip="<span class=\'tooltipception\'>Add this App to the Store. making it available to all store users.</span>">'+
                     	'<span class=\'pushImg\'></span>'+
                     	'<p class=\'actionText\'>Push to Store</p>'+
                     '</li>'+
@@ -103,7 +103,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         
         $('#dashboard-switcher').click(function() {
         	  //Hide the tip if outside click 
-        	this.destroy()
+        	me.destroy()
         });
     },
     
@@ -141,7 +141,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         var stack = me.clickedStack;
 
-        var msg = 'This action will return the stack <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any dashboard in the stack after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.'
+        var msg = 'Click OK to delete changes you made to <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> and restore its default settings.'
         me.warn('ok_cancel', jQuery.proxy(me.restoreStack, me), msg);
     },
 
@@ -204,6 +204,8 @@ Ext.define('Ozone.components.window.MyAppTip', {
             buttonHandler: button_handler,
             text: text
         }));
+        
+        me.width = 220;
 
         me.doLayout();
     },
@@ -314,7 +316,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             buttonHandler: function() {
                 console.log('FFS');
             },
-            height: 160,
+            height: 200,
             layout: {
                 type: 'vbox',
                 align: 'stretch'
@@ -372,6 +374,9 @@ Ext.define('Ozone.components.window.MyAppTip', {
             }]
         });
 
+        
+        me.height = 240;
+        
         me.add(win);
         win.doLayout();
         me.doLayout();

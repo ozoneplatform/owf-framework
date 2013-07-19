@@ -74,7 +74,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
         
         $('#dashboard-switcher').click(function() {
 	      	  //Hide the tip if outside click 
-	      	this.destroy()
+	      	me.destroy()
 	      });
     },
 
@@ -217,6 +217,8 @@ Ext.define('Ozone.components.window.MyPageTip', {
             buttonHandler: button_handler,
             text: text
         }));
+        
+        me.width = 220;
 
         me.doLayout();
     }
