@@ -20,9 +20,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     width: 750,
     height: 555,
-
-    normalModalHeight: 555,
-    expandedModalHeight: 715,
+    expandedHeight: 715,
 
     dashboardContainer: null,
 
@@ -1022,14 +1020,16 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     expandModal: function(containerSlide) {
         var me = this;
 
-        me.setHeight(me.expandedModalHeight);
+        me.normalModalHeight = me.height;
+
+        me.setHeight(me.expandedHeight);
         $('.bx-wrapper, .bx-viewport', me.el.dom).addClass('expanded');
     },
 
     collapseModal: function(containerSlide) {
         var me = this;
 
-        me.setHeight(me.normalModalHeight);
+        me.setHeight(me.normalModalHeight || me.getHeight());
         $('.bx-wrapper, .bx-viewport', me.el.dom).removeClass('expanded');
     },
 
