@@ -249,9 +249,9 @@ Ext.define('Ozone.components.window.MyAppTip', {
         }
 
         Ext.Msg.show({
-            title: 'Push App to store',
-            msg: 'You are pushing this App to a store. If you have more than one store defined, you will ' +
-                'be prompted to choose one of them. To continue, click OK. Otherwise, click Cancel.',
+            title: 'Push App to Store',
+            msg: 'You are pushing this App to a Store. If you have access to more than one Store, you will ' +
+                'be prompted to choose. To continue, click OK. Otherwise, click Cancel.',
             buttons: Ext.Msg.OKCANCEL,
             closable: false,
             modal: true,
