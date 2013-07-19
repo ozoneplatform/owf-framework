@@ -17,6 +17,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
     	},
     	'afterRender': {
     		fn: function() {
+                this.hideButtons();
                 this.bindHandlers();
     		}
     	}
@@ -33,7 +34,24 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         me.callParent(arguments);
     },
+
+    isUserTheOwner: function() {
+        var currentUserName = Ozone.config.user && Ozone.config.user.displayName;
+        var ownerName = this.clickedStack && this.clickedStack.owner && this.clickedStack.owner.username;
+        return ownerName === currentUserName;
+    },
     
+    hideButtons: function() {
+        var me = this;
+        var notOwner = !me.isUserTheOwner();
+
+        if(notOwner) {
+            me.appsWindow.hideButton('.addButton');
+            me.appsWindow.hideButton('.editButton');
+            me.appsWindow.hideButton('.pushButton');
+        }
+    },
+
     getToolTip: function () {
         var me = this;
     	var banner = me.dashboardContainer.getBanner();
