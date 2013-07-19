@@ -332,7 +332,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
                     console.log("success", "ID is " + id + ", New item created? " + 
                         result.data.isNew);
-                    
+
                     //send only to this mp widget
                     Ozone.eventing.Container.publish('ozone.marketplace.show', id, 
                         Ozone.eventing.Container.getIframeId(instance.data.uniqueId)); 
@@ -345,15 +345,15 @@ Ext.define('Ozone.components.window.MyAppTip', {
                     });
                 },
                 onFailure: function (errorMsg){
-                     //var msg = 'The sharing of ' + 'shareItem' + ' ' + 
-                        //Ext.htmlEncode(record.get('name')) + ' failed.';
-                     console.log('Error', errorMsg /*? errorMsg : msg*/);
+                     console.log('Error', errorMsg);
 
                      me.dashboardContainer.loadMask.hide();
+
                 },
                 autoSendVersion : false
             });
-        }, {single: true}); 
+
+        }, this, {single: true});
     }
 
 });
