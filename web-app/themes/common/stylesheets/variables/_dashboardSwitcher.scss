@@ -43,11 +43,11 @@ $dashboard-switcher-dashboard-text-color: getHighContrastColor($dashboard-switch
 $dashboard-switcher-dashboard-over-text-color: getHighContrastColor($dashboard-switcher-dashboard-over-background-color) !default;
 $dashboard-switcher-dashboard-selected-text-color: getHighContrastColor($dashboard-switcher-dashboard-selected-background-color) !default;
 
-$dashboard-switcher-layout-default-icon: theme-image($theme-name, 'dashboardswitcher/DefaultDashboard.png') !default;
-$dashboard-switcher-layout-default-icon-over: theme-image($theme-name, 'dashboardswitcher/DefaultDashboard_Color.png') !default;
+$dashboard-switcher-layout-default-icon: theme-image($theme-name, 'dashboardswitcher/DashboardIcon64.png') !default;
+$dashboard-switcher-layout-default-icon-over: theme-image($theme-name, 'dashboardswitcher/DashboardIcon64.png') !default;
 
-$dashboard-switcher-layout-stack-default-icon: theme-image($theme-name, 'dashboardswitcher/StacksIcon.png') !default;
-$dashboard-switcher-layout-stack-default-icon-over: theme-image($theme-name, 'dashboardswitcher/StacksIcon_Color.png') !default;
+$dashboard-switcher-layout-stack-default-icon: theme-image($theme-name, 'dashboardswitcher/StacksIcon64.png') !default;
+$dashboard-switcher-layout-stack-default-icon-over: theme-image($theme-name, 'dashboardswitcher/StacksIcon64.png') !default;
 
 $dashboard-switcher-tooltip-heading-color: #acd2ed !default;
 $dashboard-switcher-tooltip-label-color: #ababab !default;
