@@ -61,7 +61,6 @@ Ext.define('Ozone.components.window.MyPageTip', {
         me.html = me.getToolTip();
 
         me.callParent(arguments);
-        alert(this.isUserTheOwner());
     },
 
     setupClickHandlers : function() {
