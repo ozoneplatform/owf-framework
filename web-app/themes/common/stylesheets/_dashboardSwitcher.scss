@@ -5,12 +5,14 @@
 
 #dashboard-switcher {
     border: 0px;
+    background-color: $dashboard-switcher-background-color;
 
     &-body {
         @include border-radius($dashboard-switcher-body-radius);
     }
 
     .x-window-header {
+        background-color: $dashboard-switcher-background-color;
         margin-bottom: 5px;
         width: 100% !important;
         *overflow: hidden;
@@ -44,25 +46,13 @@
                 zoom: 1;
                 *display: inline;
                 padding: 5px 10px;
-
-                &:hover, &.hover, &.selected {
-                    background: $dashboard-switcher-dashboard-over-background-color;
-                    color: $dashboard-switcher-dashboard-over-text-color;
-                }
             }
-        }
-        
-        // '+' button
-        .create-new-dashboard-btn {
-        	 float: right;
         }
         
         // 'Discover More in the Store' button
         // 'Create New App' button
         .store-link-btn, .create-link-btn {
         	text-align: left;
-        	font-weight: bold;
-        	font-size: 10px;
 
             .store-link-btn-text, .create-link-btn-text {
                 display: inline-block;
@@ -76,11 +66,16 @@
 
             .store-link-btn-img, .create-link-btn-img {
                 position: relative;
-                width: 20px;
-                height: 20px; 
+                width: 30px;
+                height: 40px; 
                 display: inline-block;
-                margin-top: 9px;
                 float: left;
+                background-repeat: no-repeat !important;
+                background-position: center center !important;
+
+                &:hover, &.hover {
+                    background-repeat: no-repeat;
+                }
             }
 
             .create-link-btn-text {
@@ -89,16 +84,25 @@
 
             .store-link-btn-img {
                 background-image: theme-image($theme-name, 'myappswindow/MoreinStore-out.png');
-
-                &:hover, &.hover {
-                    background-image: theme-image($theme-name, 'myappswindow/MoreinStore-over.png');                    
-                }
             }
 
             .create-link-btn-img {
                 background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-out.png');
+            }
+        }
 
-                &:hover, &.hover {
+        .store-link-btn {
+            &:hover, &.hover {
+                & .store-link-btn-img {
+                    background-position: 5px 11px !important;
+                    background-image: theme-image($theme-name, 'myappswindow/MoreinStore-over.png');
+                }
+            }
+        }
+
+        .create-link-btn {
+            &:hover, &.hover {
+                & .create-link-btn-img {
                     background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-over.png');
                 }
             }
@@ -149,6 +153,8 @@
 /**** BEGIN slider styling ****/
 #dashboard-switcher
     > #dashboard-switcher-body {
+
+    background-color: $dashboard-switcher-background-color;
 
     > .bx-wrapper {
         margin-bottom: 30px !important;

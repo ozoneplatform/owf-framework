@@ -204,10 +204,12 @@ Ext.define('Ozone.layout.CreateViewContainer', {
 
         if (this.existingDashboardRecord != null) {
             this.titleTextField.value = this.existingDashboardRecord.get('name');
-            this.iconURLField.value = this.existingDashboardRecord.get('iconImageUrl');
-            this.description.value = this.existingDashboardRecord.get('description');
+            var iconImageUrl = this.existingDashboardRecord.get('iconImageUrl') || "";
+            var description = this.existingDashboardRecord.get('description') || "";
+            this.iconURLField.value = jQuery.trim(iconImageUrl);
+            this.description.value = jQuery.trim(description);
 
-            if (jQuery.trim(this.iconURLField.value)) {
+            if (this.iconURLField.value) {
                 this.iconImage.setSrc(this.iconURLField.value);
             }
         }
