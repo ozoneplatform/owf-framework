@@ -188,9 +188,9 @@ class DashboardService extends BaseService {
                 return false
             }
             //TODO: enable the code below after sample data are converted to work with Applications/Pages.
-//            else if (!groupDashboard.publishedToStore && !userIsTheOwner) {
-//                return false
-//            }
+            else if (!groupDashboard.publishedToStore && !userIsTheOwner) {
+                return false
+            }
             return true
         }
         return false
@@ -1219,7 +1219,9 @@ class DashboardService extends BaseService {
         )
 
         if (dashboard.markedForDeletion) {
-            clonedDashboards.each { it.delete() }
+            clonedDashboards.collect { Dashboard.get(it.srcId) }.each { 
+                it.delete() 
+            }
             domainMappingService.purgeAllMappings(dashboard)
             dashboard.delete(flush:true)
         }
