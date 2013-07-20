@@ -123,6 +123,13 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                 handler: function(button) {
                     me.doDelete();
                 }
+            }, {
+                xtype: 'button', 
+                text: 'Assign To Me',
+                itemId: 'btnAssignToMe',
+                handler: function(button) {
+                    me.doAssignToMe();
+                }
             }]
         }];
     
@@ -262,6 +269,40 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
             });
         } else {
             this.showAlert('Error', 'You must select at least one App to delete.');
+        }
+    },
+    
+    doAssignToMe: function() {
+        var records = this.gridStacks.getSelectionModel().getSelection();
+        if (records && records.length === 1) {
+            var record = records[0],
+                msg = 'This action will assign <span class="heading-bold">' + 
+                       Ext.htmlEncode(record.get('name')) + '</span> to you.',
+                owner = record.get('owner');
+
+            if(owner && owner.username === Ozone.config.user.displayName) {
+                this.showAlert('Error', 'You are already the assigned owner of this App.');
+            }
+            else {
+                //If this App has an owner, give a more dire warning
+                if(owner) {
+                    msg += '<br/><br/><b>IMPORTANT:</b> This App is currently owned by <b>' + 
+                           Ext.htmlEncode(owner.username) + '</b> and cannot be reassigned ' +
+                           'to this owner once this action is executed.';
+                }
+                msg += '<br/><br/>Are you sure you want to take ownership of this App?';
+
+                this.showConfirmation('Warning', msg, function(btn, text, opts) {
+                    if (btn == 'ok') {
+                        record.set('owner', {'username': Ozone.config.user.displayName});
+                        this.gridStacks.getStore().save();
+                    }
+                });
+            }
+        } else if(records && records.length > 1) {
+            this.showAlert('Error', 'You may only assign of one App at a time.');
+        } else {
+            this.showAlert('Error', 'You must select an App to assign.');
         }
     }
 });

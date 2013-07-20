@@ -220,13 +220,20 @@ class StackService {
                 }
             }
 
+            def loggedInUser = accountService.getLoggedInUser()
+
             stack.properties = [
                 name: params.name ?: stack.name,
                 description: params.description ?: stack.description,
                 stackContext: params.stackContext ?: stack.stackContext ?: UUID.randomUUID().toString(),
                 imageUrl: params.imageUrl ?: stack.imageUrl,
                 descriptorUrl: params.descriptorUrl ?: stack.descriptorUrl,
-                owner: params.owner ?: (params.id  >= 0 ? stack.owner : accountService.getLoggedInUser())
+                //If param owner isn't null and user is admin, check if previous owner is different 
+                //and new user is the logged in user, if so set user to the owner
+                owner: !params.owner?.equals(null) && accountService.getLoggedInUserIsAdmin() ? 
+                            (stack.owner?.username != params.owner?.username &&
+                            params.owner?.username == loggedInUser?.username ? loggedInUser :
+                            stack.owner) : stack.owner
             ]
 
             stack = stack.save(flush: true, failOnError: true)
@@ -234,8 +241,8 @@ class StackService {
             def stackDefaultGroup = stack.findStackDefaultGroup()
 
             //OP-70 adding owner to users by default
-            if(stackDefaultGroup && accountService.getLoggedInUser()) {
-                stackDefaultGroup.addToPeople(accountService.getLoggedInUser())
+            if(stackDefaultGroup && loggedInUser) {
+                stackDefaultGroup.addToPeople(loggedInUser)
             }
 
             def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
@@ -246,9 +253,7 @@ class StackService {
                 totalGroups: stack.groups ? stack.groups.size() - 1 : 0, // Don't include the default stack group
                 totalWidgets: 0
             ])
-        } 
-
-
+        }
 
         if("createAndAddDashboard" == originalParams.update_action) {
             params = originalParams
