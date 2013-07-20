@@ -1,9 +1,11 @@
 package ozone.owf.grails.test.integration
 
 import ozone.owf.grails.domain.Dashboard
+import ozone.owf.grails.domain.ERoleAuthority
 import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.Intent
 import ozone.owf.grails.domain.IntentDataType
+import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.RelationshipType
 import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.domain.WidgetDefinition
@@ -11,21 +13,32 @@ import ozone.owf.grails.domain.WidgetDefinitionIntent
 import ozone.owf.grails.domain.WidgetType
 import ozone.owf.grails.OwfException
 import grails.converters.JSON
+import ozone.owf.grails.services.AutoLoginAccountService
 
 class WidgetDefinitionServiceTests extends GroovyTestCase {
 
     def domainMappingService
     def grailsApplication
     def widgetDefinitionService
+    def origAccountService
 
     private final samplesArray = ["A","D","C","AA","B","BB"]
     
     protected void setUp() {
         super.setUp()
+        origAccountService = widgetDefinitionService.accountService
+
+        def acctService = new AutoLoginAccountService()
+        Person p = new Person(username:'testWidgetDefinitionServiceTesting', userRealName: 'foo', enabled:true)
+        p.save()
+        acctService.autoAccountName = 'testWidgetDefinitionServiceTesting'
+        acctService.autoRoles = [ERoleAuthority.ROLE_ADMIN.strVal]
+        widgetDefinitionService.accountService = acctService
     }
 
     protected void tearDown() {
         super.tearDown()
+        widgetDefinitionService.accountService = origAccountService
     }
 
     void testCreate()
