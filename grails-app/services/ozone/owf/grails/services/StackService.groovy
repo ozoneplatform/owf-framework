@@ -188,8 +188,6 @@ class StackService {
     }
     
     private def updateStack(params) {
-        def originalParams = params
-
         def stack, returnValue = null
 
         if (params?.stack_id){
@@ -209,11 +207,7 @@ class StackService {
 
         }
 
-        if("createAndAddDashboard" == originalParams.update_action) {
-            params = JSON.parse(originalParams.stackData)[0]
-        }
-
-        if (!params.update_action || "createAndAddDashboard" == originalParams.update_action) {
+        if (!params.update_action) {
 
             //If context was modified and it already exists, throw a unique constrain error
             if(params.stackContext && params.stackContext != stack.stackContext) {
@@ -249,21 +243,7 @@ class StackService {
                 totalGroups: stack.groups ? stack.groups.size() - 1 : 0, // Don't include the default stack group
                 totalWidgets: 0
             ])
-        } 
-
-
-
-        if("createAndAddDashboard" == originalParams.update_action) {
-            params = originalParams
-
-            def dashboard_data = JSON.parse(originalParams.dashboardData)
-
-            dashboard_data[0].put('stack', stack)
-            
-            params.data = (dashboard_data as JSON).toString()
-        }
-
-        if(params.update_action) {            
+        } else {            
             if ('groups' == params.tab) {
                 
                 def updatedGroups = []
@@ -323,8 +303,7 @@ class StackService {
                 def stackDefaultGroup = stack.findStackDefaultGroup()
                       
                 dashboards?.each { it ->
-                    def dashboard = (it.guid ? Dashboard.findByGuid(it.guid) : it)
-                    dashboard = dashboard ?: it
+                    def dashboard = Dashboard.findByGuid(it.guid)
 
                     if (dashboard) {
                         if (params.update_action == 'remove') {       
@@ -345,7 +324,7 @@ class StackService {
                             dashboard.delete(flush: true)
                             updatedDashboards << dashboard
                         }
-                        else if (params.update_action == 'add' || params.update_action == "createAndAddDashboard") {
+                        else if (params.update_action == 'add') {
                             dashboardsToCopy << it
                         }
                     }
