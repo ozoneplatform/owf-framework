@@ -188,9 +188,9 @@ class DashboardService extends BaseService {
                 return false
             }
             //TODO: enable the code below after sample data are converted to work with Applications/Pages.
-//            else if (!groupDashboard.publishedToStore && !userIsTheOwner) {
-//                return false
-//            }
+            else if (!groupDashboard.publishedToStore && !userIsTheOwner) {
+                return false
+            }
             return true
         }
         return false
@@ -476,6 +476,22 @@ class DashboardService extends BaseService {
         else {
             throw new OwfException(message:'You are not authorized to view this dashboard.', exceptionType: OwfExceptionTypes.Authorization)
         }
+    }
+
+    /**
+     * Returns the list of personal dashboards linked to the given group dashboard
+     * @param groupDashboard
+     * @return
+     */
+    def List<Dashboard> findPersonalDashboardsForGroupDashboard(Dashboard groupDashboard) {
+        def result = Dashboard.findAll("\
+            from Dashboard as d, DomainMapping as dm \
+            where dm.destId = :groupDashboardId and  \
+                dm.relationshipType = 'cloneOf' and dm.srcType = 'dashboard' and dm.destType = 'dashboard' \
+                and d.id = dm.srcId", [groupDashboardId: groupDashboard.id])
+        // The result of this query is a list, each element of which is a two-element list, first being the Dashboard record, second - DomainMapping record
+        // Extract Dashboards records only
+        result.collect { it[0]}
     }
 
     private def updateOldDefault(params){
@@ -1203,7 +1219,9 @@ class DashboardService extends BaseService {
         )
 
         if (dashboard.markedForDeletion) {
-            clonedDashboards.each { it.delete() }
+            clonedDashboards.collect { Dashboard.get(it.srcId) }.each { 
+                it.delete() 
+            }
             domainMappingService.purgeAllMappings(dashboard)
             dashboard.delete(flush:true)
         }

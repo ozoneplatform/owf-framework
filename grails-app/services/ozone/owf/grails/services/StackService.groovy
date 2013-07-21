@@ -201,10 +201,7 @@ class StackService {
                 throw new OwfException(message: 'Stack ' + params.id + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
             }
         } else { // New Stack
-            stack = new Stack()
-            def dfltGroup = new Group(name: UUID.randomUUID().toString(), stackDefault: true)
-            stack.addToGroups(dfltGroup)
-
+            stack = createStack()
         }
 
         if (!params.update_action) {
@@ -217,13 +214,20 @@ class StackService {
                 }
             }
 
+            def loggedInUser = accountService.getLoggedInUser()
+
             stack.properties = [
                 name: params.name ?: stack.name,
                 description: params.description ?: stack.description,
                 stackContext: params.stackContext ?: stack.stackContext ?: UUID.randomUUID().toString(),
                 imageUrl: params.imageUrl ?: stack.imageUrl,
                 descriptorUrl: params.descriptorUrl ?: stack.descriptorUrl,
-                owner: params.owner ?: (params.id  >= 0 ? stack.owner : accountService.getLoggedInUser())
+                //If param owner isn't null and user is admin, check if previous owner is different 
+                //and new user is the logged in user, if so set user to the owner
+                owner: !params.owner?.equals(null) && accountService.getLoggedInUserIsAdmin() ? 
+                            (stack.owner?.username != params.owner?.username &&
+                            params.owner?.username == loggedInUser?.username ? loggedInUser :
+                            stack.owner) : stack.owner
             ]
 
             stack = stack.save(flush: true, failOnError: true)
@@ -231,8 +235,8 @@ class StackService {
             def stackDefaultGroup = stack.findStackDefaultGroup()
 
             //OP-70 adding owner to users by default
-            if(stackDefaultGroup && accountService.getLoggedInUser()) {
-                stackDefaultGroup.addToPeople(accountService.getLoggedInUser())
+            if(stackDefaultGroup && loggedInUser) {
+                stackDefaultGroup.addToPeople(loggedInUser)
             }
 
             def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
@@ -363,7 +367,19 @@ class StackService {
 
         return returnValue
     }
-    
+
+    /**
+     * Creates a stack given optional parameters along with tht stack's default group
+     * @param stackParams
+     * @return
+     */
+    def Stack createStack(def stackParams) {
+        Stack stack = stackParams ? new Stack(stackParams) : new Stack()
+        Group defaultGroup = new Group(name: UUID.randomUUID().toString(), stackDefault: true)
+        stack.addToGroups(defaultGroup)
+        stack
+    }
+
     def restore(params) {
         def stack = Stack.findById(params.id)
         
@@ -756,9 +772,7 @@ class StackService {
             stack = Stack.get(stackId)
         } else {
             // If the stack is new, create it
-            stack = new Stack(stackParams)
-            def defaultGroup = new Group(name: UUID.randomUUID().toString(), stackDefault: true)
-            stack.addToGroups(defaultGroup)
+            stack = createStack(stackParams)
 
             //If owner param is present (including explicitly null), set it to that,
             //otherwise, on update do not change, and on create set to current user
@@ -791,6 +805,67 @@ class StackService {
         // Create a personal dashboard clone for the user
         int maxPosition = Math.max(dashboardService.getMaxDashboardPosition(currentUser), 0)
         dashboardService.cloneGroupDashboardAndCreateMapping(groupDashboard, currentUser.id, maxPosition)
+    }
+
+    /**
+     * Create a stack, assigned the group dashboard to that stack.
+     * @param groupDashboard
+     */
+    def createAppForGroupDashboard(Dashboard groupDashboard) {
+        if (!groupDashboard.stack) {
+            Stack newApp = createStack([name: groupDashboard.name,
+                    description: groupDashboard.description,
+                    stackContext: UUID.randomUUID().toString(),
+                    imageUrl: groupDashboard.iconImageUrl,
+                    owner: null])
+            newApp.save()
+            groupDashboard.stack = newApp
+            groupDashboard.publishedToStore = true
+
+            groupDashboard.save()
+
+            // Assign the personal dashboards to the new App
+            List<Dashboard> personalDashboards = dashboardService.findPersonalDashboardsForGroupDashboard(groupDashboard)
+            personalDashboards.each { personalDashboard ->
+                personalDashboard.stack = newApp
+            }
+        }
+    }
+
+    /**
+     * Creates a wrapper App for a personal dashboard not associated with a group dashboard
+     * @param personalDashboard
+     */
+    def createAppForPersonalDashboard(Dashboard personalDashboard) {
+        Stack newApp = createStack([name: personalDashboard.name,
+                description: personalDashboard.description,
+                stackContext: UUID.randomUUID().toString(),
+                imageUrl: personalDashboard.iconImageUrl,
+                owner: personalDashboard.user])
+        newApp.save()
+        personalDashboard.stack = newApp
+        personalDashboard.save()
+
+        // Create group dashboard
+        Map dashboardParams = [:]
+        dashboardParams.with {
+            name = personalDashboard.name
+            guid = personalDashboard.guid
+            description = personalDashboard.description
+            iconImageUrl = personalDashboard.iconImageUrl
+            layoutConfig = personalDashboard.layoutConfig
+            cloned = true
+            isGroupDashboard = true
+            isdefault = false
+            stack = newApp
+        }
+        def result = dashboardService.create(dashboardParams)
+        def groupDashboard = result.dashboard
+        domainMappingService.createMapping(newApp.findStackDefaultGroup(), RelationshipType.owns, groupDashboard)
+
+        // Link the group dashboard with the personal one
+        domainMappingService.createMapping(personalDashboard, RelationshipType.cloneOf, [id: groupDashboard.id, TYPE: 'dashboard'])
+
     }
 
     //If a user is no longer assigned to a stack directly or through a group, this method

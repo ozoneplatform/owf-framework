@@ -35,6 +35,7 @@ class BootStrap {
     def domainMappingService
     def dashboardService
     def quartzScheduler
+    def appMigrationService
 	
     OwfApplicationConfigurationService owfApplicationConfigurationService
 	
@@ -129,7 +130,11 @@ class BootStrap {
         }
 		println 'Creating or updating required database configurations'
 		owfApplicationConfigurationService.createRequired()
-		
+
+        if (grailsApplication.config.owf.migrateDashboardsToApps) {
+            appMigrationService.migrate()
+        }
+
         println 'BootStrap finished!'
     }
     def destroy = {

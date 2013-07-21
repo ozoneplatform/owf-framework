@@ -19,10 +19,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     viewId: 'dashboard-switcher-dashboard-view',
 
     width: 750,
-    height: 555,
-
-    normalModalHeight: 555,
-    expandedModalHeight: 715,
+    height: 595,
+    expandedHeight: 755,
 
     dashboardContainer: null,
 
@@ -906,12 +904,15 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var me = this,
             dfd = $.Deferred();
 
+        me.removeDeletedDashboard(stack);
+
         // don't expand stacks with one page/dashboard
         if (stack && stack.dashboards && stack.dashboards.length === 1) {
             return dfd.promise();
         }
 
         if( me._lastExpandedStack ) {
+
             if( me._lastExpandedStack === stack ) {
                 return me.hideStackDashboards();
             }
@@ -925,6 +926,30 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         }
 
         return dfd.promise();
+    },
+
+    removeDeletedDashboard: function(stack) {
+        var me = this;
+        var removeArrayElement = function(array, element) {
+            var loc = array.indexOf(element);
+            if (loc >= 0) {
+                array.splice(loc, 1);
+                return element
+            }
+            return null
+        }
+
+        // Remove just deleted dashboards from the stack
+        if (me._deletedStackOrDashboards) {
+            var clone = me._deletedStackOrDashboards.slice(0);
+            jQuery.each (me._deletedStackOrDashboards, function(index, deletedDashboard) {
+                if (removeArrayElement(stack.dashboards, deletedDashboard)) {
+                    removeArrayElement(clone, deletedDashboard);
+                }
+            });
+            me._deletedStackOrDashboards = clone;
+        }
+
     },
 
     showStackDashboards: function (stack, $clickedStack, dfd) {
@@ -1022,14 +1047,16 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     expandModal: function(containerSlide) {
         var me = this;
 
-        me.setHeight(me.expandedModalHeight);
+        me.normalModalHeight = me.height;
+
+        me.setHeight(me.expandedHeight);
         $('.bx-wrapper, .bx-viewport', me.el.dom).addClass('expanded');
     },
 
     collapseModal: function(containerSlide) {
         var me = this;
 
-        me.setHeight(me.normalModalHeight);
+        me.setHeight(me.normalModalHeight || me.getHeight());
         $('.bx-wrapper, .bx-viewport', me.el.dom).removeClass('expanded');
     },
 
@@ -1043,7 +1070,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         me.isAnAppExpanded = false;
 
-        $('#stack' + me.getActiveStackId()).removeClass('hover');
+        $('#stack' + me._lastExpandedStack.id, '.bx-slide:not(.bx-clone)').removeClass('hover');
 
         if(Ext.isIE7 || Ext.isIE8) {
             var dfd = $.Deferred();

@@ -133,8 +133,8 @@ Ext.define('Ozone.components.window.MyPageTip', {
         }
 
         // Only allow the App owner to delete an App page
-        if(dashboard.stack && Ozone.config.user.displayName !== dashboard.stack.owner.username) {
-            this.appsWindow.warn('Users cannot remove individual pages from an App. Please contact your administrator.', focusEl);
+        if(!this.isUserTheOwner()) {
+            me.warn('ok', null, 'Users cannot remove individual pages from an App. Please contact your administrator.');
             return;
         }
 
@@ -146,6 +146,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
                 dashboardStore.remove(dashboard.model);
                 dashboardStore.save();
                 me.appsWindow.notify('Delete Page', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> deleted!');
+                me.appsWindow._deletedStackOrDashboards.push(dashboard);
                 me.appsWindow.reloadDashboards = true;
                 var $prev = me.$dashboard.prev();
                 me.$dashboard.remove();
@@ -155,7 +156,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
             me.warn('ok_cancel', deletePageHandler, msg);
 
         } else {
-            this.appsWindow.warn('Users cannot remove pages assigned to a group. Please contact your administrator.', focusEl);
+            this.warn('ok', null, 'Users cannot remove pages assigned to a group. Please contact your administrator.');
         }
     },
 

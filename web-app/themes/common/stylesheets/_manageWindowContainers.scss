@@ -38,7 +38,7 @@ directly overriding the base ExtJS 4.0.1 rules.
 
       .x-window-header {
 
-        padding: 15px 0px 0px 34px !important;
+        padding: 15px 0px 0px 0px !important;
         width: 475px !important;
 
           .x-window-header-text {
@@ -67,15 +67,10 @@ directly overriding the base ExtJS 4.0.1 rules.
 
         @extend .owf-manage-window;
 
-        label {
-          padding-left: 0px !important;
-          color: #ffffff !important;
-          background: #2f2f2f !important;
-        }
-
         .x-toolbar {
           background-image: none;
           background-color: transparent;
+          filter: none;
         }
 
         .titleBox {
