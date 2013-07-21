@@ -9,8 +9,16 @@ Ext.define('Ozone.components.window.MyPageTip', {
     autoHide:false,
     draggable:false,
     listeners: {
-        'close':function(){
-            this.destroy();
+        'close': {
+            fn: function(){
+                this.destroy();
+            }
+        },
+        'afterRender': {
+            fn: function() {
+                this.hideButtons();
+                this.setupClickHandlers();
+            }
         }
     },
 
@@ -53,6 +61,15 @@ Ext.define('Ozone.components.window.MyPageTip', {
         var ownerName = this.clickedDashboard && this.clickedDashboard.stack && this.clickedDashboard.stack.owner && this.clickedDashboard.stack.owner.username;
         return ownerName === currentUserName;
     },
+
+    hideButtons: function() {
+        var me = this;
+        var notOwner = !me.isUserTheOwner();
+
+        if(notOwner) {
+            me.appsWindow.hideButton('.deleteButton');
+        }
+    },
     
     initComponent: function() {
         var me = this;
@@ -80,19 +97,6 @@ Ext.define('Ozone.components.window.MyPageTip', {
 
     onRender: function() {
         this.callParent(arguments);
-        this.setupClickHandlers();
-    },
-
-    hideButton: function(className) {
-    	var $ = jQuery;
-    	
-    	$(className).hide();
-    },
-    
-    showButton: function(className) {
-    	var $ = jQuery; 
-    	
-    	$(className).show();
     },
 
     editPage: function (evt) {

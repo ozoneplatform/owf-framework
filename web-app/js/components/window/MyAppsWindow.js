@@ -1541,5 +1541,16 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         // destroy view so that it will be recreated when opened next setTimeout
         return this.callParent();
+    },
+    hideButton: function(className) {
+        var $ = jQuery;
+        
+        $(className).hide();
+    },
+    
+    showButton: function(className) {
+        var $ = jQuery; 
+        
+        $(className).show();
     }
 });
