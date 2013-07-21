@@ -904,6 +904,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var me = this,
             dfd = $.Deferred();
 
+        me.removeDeletedDashboard(stack);
+
         // don't expand stacks with one page/dashboard
         if (stack && stack.dashboards && stack.dashboards.length === 1) {
             return dfd.promise();
@@ -924,6 +926,30 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         }
 
         return dfd.promise();
+    },
+
+    removeDeletedDashboard: function(stack) {
+        var me = this;
+        var removeArrayElement = function(array, element) {
+            var loc = array.indexOf(element);
+            if (loc >= 0) {
+                array.splice(loc, 1);
+                return element
+            }
+            return null
+        }
+
+        // Remove just deleted dashboards from the stack
+        if (me._deletedStackOrDashboards) {
+            var clone = me._deletedStackOrDashboards.slice(0);
+            jQuery.each (me._deletedStackOrDashboards, function(index, deletedDashboard) {
+                if (removeArrayElement(stack.dashboards, deletedDashboard)) {
+                    removeArrayElement(clone, deletedDashboard);
+                }
+            });
+            me._deletedStackOrDashboards = clone;
+        }
+
     },
 
     showStackDashboards: function (stack, $clickedStack, dfd) {

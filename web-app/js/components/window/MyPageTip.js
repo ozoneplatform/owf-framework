@@ -142,6 +142,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
                 dashboardStore.remove(dashboard.model);
                 dashboardStore.save();
                 me.appsWindow.notify('Delete Page', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> deleted!');
+                me.appsWindow._deletedStackOrDashboards.push(dashboard);
                 me.appsWindow.reloadDashboards = true;
                 var $prev = me.$dashboard.prev();
                 me.$dashboard.remove();
