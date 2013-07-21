@@ -759,17 +759,27 @@
 }
 
 .premadeLayoutButton {
-  margin: 3px 3px 3px 3px;
+  margin: 3px;
+  *margin: 1px;
   height: 49px;
   width: 63px;
   background-position: center;
   padding: 2px;
+  *padding: 0px;
 }
 
 .premadeLayoutButton.selected {
   border-style:solid;
   border-width:2px;
   border-color: #7dc242;
+}
+
+.premadeLayoutButton.collapseView {
+    *height: 0px !important;
+}
+
+.premadeViewRow.collapseView {
+    *height: 0px !important;
 }
 
 .premadeDesktop {
@@ -890,6 +900,7 @@
 
 div.premadeViewRow {
   height: 60px !important;
+  *margin-bottom: 3px;
 }
 
 #premadeViewContainer .x-box-inner {

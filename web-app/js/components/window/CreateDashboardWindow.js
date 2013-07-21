@@ -32,7 +32,7 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
 
         // Decide between two window sizes, accommodating regular- and large-text themes.
         var windowWidth = themeFontSize <= 12 ? 500 : 700;
-        var windowHeight = 530;
+        var windowHeight =  Ext.isIE7 ? 550 : 530;
 
         var dashPanelHeight = me.ownerCt.getHeight();
         var dashPanelWidth = me.ownerCt.getWidth();

@@ -227,6 +227,10 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                             this.down('#existViewCb').addCls('collapseView');
                             this.down('#premadeViewContainer').removeCls('expandView');
                             this.down('#premadeViewContainer').addCls('collapseView');
+                            jQuery('.premadeViewRow').removeClass('expandView');
+                            jQuery('.premadeViewRow').addClass('collapseView');
+                            jQuery('.premadeLayoutButton').removeClass('expandView');
+                            jQuery('.premadeLayoutButton').addClass('collapseView');
                         }
                     },
                     scope: this
@@ -249,6 +253,10 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                             this.down('#existViewCb').addCls('expandView');
                             this.down('#premadeViewContainer').removeCls('expandView');
                             this.down('#premadeViewContainer').addCls('collapseView');
+                            jQuery('.premadeViewRow').removeClass('expandView');
+                            jQuery('.premadeViewRow').addClass('collapseView');
+                            jQuery('.premadeLayoutButton').removeClass('expandView');
+                            jQuery('.premadeLayoutButton').addClass('collapseView');
                         }
                     },
                     scope: this
@@ -273,6 +281,10 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                             this.down('#existViewCb').addCls('collapseView');
                             this.down('#premadeViewContainer').removeCls('collapseView');
                             this.down('#premadeViewContainer').addCls('expandView');
+                            jQuery('.premadeViewRow').removeClass('collapseView');
+                            jQuery('.premadeViewRow').addClass('expandView');
+                            jQuery('.premadeLayoutButton').removeClass('collapseView');
+                            jQuery('.premadeLayoutButton').addClass('expandView');
                         }
                     },
                     scope: this
@@ -773,6 +785,11 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         this.on("afterrender", function(cmp) {
             // Register handler for pre-made layout buttons and select the first one by default
             this.handlePremadeLayoutButtons();
+        });
+        
+        // had to add this here instead of after render because the selected first item would 
+        // mess up the layout in ie7.
+        this.on("afterlayout", function(cmp) {
             var layoutButtons = this.query('container#premadeViewContainer')[0].query('button');
             layoutButtons[0].fireEvent('click');
         });
