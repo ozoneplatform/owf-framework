@@ -418,7 +418,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         $name.text(name);
 
         me.close();
-        me.appsWindow.close();
+        //me.appsWindow.close();
     },
 
     handleStackDelete: function (evt) {
