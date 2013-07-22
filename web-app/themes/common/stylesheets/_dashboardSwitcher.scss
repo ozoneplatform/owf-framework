@@ -360,7 +360,7 @@
     
     &:hover, &.hover {
         @include border-radius($dashboard-item-body-radius);
-        background-color: $dashboard-switcher-dashboard-over-background-color !important;
+        background-color: $my-apps-hover-color !important;
 
         .dashboard-name {
             color: $dashboard-switcher-dashboard-over-text-color  !important;
@@ -515,6 +515,8 @@
 	.x-box-inner {
 		top:5px !important;
 		height: 25px !important;
+		
+		*overflow:visible;
 	}
 	
 }
@@ -524,7 +526,7 @@
     max-width: 300px;
     max-height: 500px;
     padding: 0;
-	background-color: $widget-launcher-background-color;
+	background-color: $my-apps-tooltip-color;
 	
 	.tooltipception {
 		z-index: 79011 !important;
@@ -561,7 +563,7 @@
         
         ul {
             color: $dashboard-switcher-dashboard-text-color;
-			background: $dashboard-switcher-dashboard-over-background-color;
+			background: $my-apps-tooltip-bar-color;
 			border-radius: 0 0 10px 10px;
 			margin-top: 5.5%;
 			
