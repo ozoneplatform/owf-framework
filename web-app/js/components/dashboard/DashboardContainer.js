@@ -1999,25 +1999,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
     },
 
-    retrieveUpdatedWidgets: function() {
-        //Ext.getCmp('launchMenuWindow').setLoading(true);
-        this.widgetStore.load({
-            scope: this,
-            callback: function(wrecords, woptions, wsuccess) {
-                if (wrecords.length >= 0) {
-                    if (!wsuccess) {
-                        Ozone.Msg.alert(Ozone.util.ErrorMessageString.retrieveUpdatedWidgets, Ozone.util.ErrorMessageString.retrieveUpdatedWidgetsMsg,
-                            null, null, null, this.modalWindowManager);
-                    }
-                } else {
-                    Ozone.Msg.alert(Ozone.util.ErrorMessageString.retrieveUpdatedWidgets, Ozone.util.ErrorMessageString.retrieveUpdatedWidgetsMsg,
-                        null, null, null, this.modalWindowManager);
-                }
-                //Ext.getCmp('widget-launcher').loadLauncherState();
-            }
-        });
-    },
-
     storeContains: function(widgetGuid) {
         var store = this.activeDashboard.stateStore;
         if (store) {

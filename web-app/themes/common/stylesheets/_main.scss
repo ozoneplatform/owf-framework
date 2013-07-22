@@ -54,6 +54,11 @@ a {
     @include owf-manage-window();
 }
 
+#delete-widgets-window {
+    z-index: 10000004 !important;
+}
+
+
 .x-css-shadow {
     //change border radius to match our custom windows
     @include owf-border-radius;

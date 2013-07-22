@@ -27,7 +27,7 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
         this.delTitlePanel = Ext.create('Ext.panel.Panel', {
             layout: 'fit',
             border: false,
-            html: 'You have selected to delete 0 widgets:'
+            html: 'You have selected to delete 0 App Components:'
         });
         
         this.delView = Ext.create('Ext.grid.Panel', {
@@ -68,7 +68,7 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
             layout: 'fit',
             hidden: true,
             border: false,
-            html: 'These widgets are required by other widgets in OWF. Deleting these widgets will additionally delete the widgets listed below.'
+            html: 'This App Component is required by other App Component(s) in OWF. Deleting this App Component will additionally delete the App Components listed below.'
         });
         
         this.reqGrid = Ext.create('Ext.grid.Panel', {
@@ -167,7 +167,7 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
             }
             ],
             viewConfig: {
-                emptyText: 'No additional widgets to delete'
+                emptyText: 'No additional App Components to delete'
             },
             autoScroll: true,
             foreceFilt: true,
@@ -224,7 +224,7 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
             delStore.loadData(r, true);
         }
         
-        this.delTitlePanel.update('You have selected to delete ' + delStore.getCount() + ' widgets:');
+        this.delTitlePanel.update('You have selected to delete ' + delStore.getCount() + ' App Component:');
         
         Ozone.pref.PrefServer.getDependentPersonWidgets({
             content: {'ids': ids},
@@ -316,7 +316,7 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
             updateOrder: false,
             onSuccess: function(ret) {
                 //Call method to refresh the 'widget launch menu' widgets.
-                scope.dashboardContainer.retrieveUpdatedWidgets();
+                scope.dashboardContainer.refreshAppComponentsView();
             },
             onFailure: function() {
                 Ozone.Msg.alert(Ozone.util.ErrorMessageString.saveUpdatedWidgets, Ozone.util.ErrorMessageString.saveUpdatedWidgetsMsg,

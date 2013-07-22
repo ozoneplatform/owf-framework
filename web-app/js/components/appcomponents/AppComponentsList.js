@@ -89,16 +89,49 @@
         },
 
         removeAppComponent: function (view, tip) {
-            var model = view.model;
+            var me = this,
+                model = view.model,
+                dashboardContainer = Ext.getCmp('mainPanel'),
+                widgetsToDelete = [];
 
-            // remove model from internal filtered collection
-            this.collection.remove(model);
+            widgetsToDelete.push({
+                guid: model.get('widgetGuid'),
+                name: model.get('name'),
+                headerIcon: model.get('headerIcon'),
+                image: model.get('image')
+            });
 
-            // remove model from global collection
-            this.allAppComponents.remove(model);
-
-            // remove view and tip
-            view.remove();
+            Ext.create('Ext.window.Window', {
+                id: 'delete-widgets-window',
+                title: 'Deleting App Components',
+                cls: 'delete-widgets-window',
+                height: 550,
+                ownerCt: dashboardContainer,
+                dashboardContainer: dashboardContainer,
+                constrain: Ext.isIE,
+                constrainHeader: true,
+                width: 600,
+                layout: 'fit',
+                resizable: false,
+                modal: true,
+                items: {
+                    xtype: 'deletewidgetspanel',
+                    delWidgets: widgetsToDelete,
+                    dashboardContainer: dashboardContainer
+                },
+                listeners: {
+                    show: function (cmp) {
+                        /*
+                         * Needs to be deferred or it will happen before the
+                         * window close in IE
+                         */
+                        Ext.defer(function() {
+                            this.focus();
+                        }, 100, cmp.getComponent('topdeletepanel').okBtn);
+                    }
+                }
+            }).show();
+            
             this._removeDetailsTip();
         },
 
