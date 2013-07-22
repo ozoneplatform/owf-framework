@@ -151,6 +151,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         createDashWindow.show();
         this.close();
+        this.appsWindow.close();
     },
 
     handleStackRestore: function(evnt) {
