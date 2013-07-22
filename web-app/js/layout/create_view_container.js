@@ -682,6 +682,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                                 existingViewToDuplicate.description = desc;
                                 existingViewToDuplicate.iconImageUrl = iconImageUrl;
                                 existingViewToDuplicate.isdefault = false;
+                                existingViewToDuplicate.stack = null;
 
                                 dashboardContainer.createDashboard(this.createDashboardModel(existingViewToDuplicate));
 
