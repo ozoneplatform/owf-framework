@@ -15,6 +15,7 @@
 /staging
 /build-base*
 #/src
+/out
 target
 /build.number
 /cobertura.ser

@@ -64,7 +64,13 @@ class MarketplaceService extends BaseService {
                 def widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache: true])
                 domainMappingService.deleteAllMappings(widgetDefinition, RelationshipType.requires, 'src')
 
-                obj.directRequired.each {
+                def directRequired = obj.directRequired
+
+                if(directRequired instanceof String) {
+                    directRequired = JSON.parse(directRequired)
+                }
+
+                directRequired.each {
                     if (log.isDebugEnabled()) {
                         log.debug "obj.directRequired.each.it -> ${it}"
                     }
@@ -375,29 +381,31 @@ class MarketplaceService extends BaseService {
 
         // OZP-476: MP Synchronization
         // The following block of code is functionally contained within the
-        // MarketplaceService.addListingsToDatabase call. As with the tags,
-        // we support an older marketplace baseline by bracketing the call
-        // with the usedMpPath.
+        // MarketplaceService.addListingsToDatabase call. 
         //
-        // Add requirements after all widgets have been added
-        if (!usedMpPath) {
-            params.widgets?.each {
-                def obj = JSON.parse(it)
-                if (obj.directRequired != null) {
-                    // delete and the recreate requirements
-                    widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache: true])
-                    domainMappingService.deleteAllMappings(widgetDefinition, RelationshipType.requires, 'src')
+        // Yes, re-reading the set.  We need to add requirements after all widgets have been added
+        params.widgets?.each {
+            def obj = JSON.parse(it)
+            if (obj.directRequired != null) {
+                // delete and the recreate requirements
+                widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache: true])
+                domainMappingService.deleteAllMappings(widgetDefinition, RelationshipType.requires, 'src')
 
-                    def requiredArr = JSON.parse(obj.directRequired)
-                    requiredArr.each {
-                        def requiredWidget = WidgetDefinition.findByWidgetGuid(it, [cache: true])
-                        if (requiredWidget != null) {
-                            domainMappingService.createMapping(widgetDefinition, RelationshipType.requires, requiredWidget)
-                        }
+                def requiredArr = obj.directRequired
+
+                if(requiredArr instanceof String) {
+                    requiredArr = JSON.parse(requiredArr)
+                }
+
+                requiredArr.each {
+                    def requiredWidget = WidgetDefinition.findByWidgetGuid(it, [cache: true])
+                    if (requiredWidget != null) {
+                        domainMappingService.createMapping(widgetDefinition, RelationshipType.requires, requiredWidget)
                     }
                 }
             }
         }
+
         return [success: true, data: widgetDefinitions]
     }
 
