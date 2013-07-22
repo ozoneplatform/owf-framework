@@ -1116,8 +1116,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     },
 
     updateDashboardEl: function ($dashboard, dashboard) {
-        var $el = $(this.tpl.apply([dashboard])).insertBefore($dashboard);
-        $dashboard.remove();
+        var $el = $(this.tpl.apply([dashboard])).before($dashboard);
+        //$dashboard.remove();
         $el.focus();
     },
     
