@@ -818,7 +818,19 @@ class StackService {
                     stackContext: UUID.randomUUID().toString(),
                     imageUrl: groupDashboard.iconImageUrl,
                     owner: null])
+
+            // Obtain the group dashboard's groups
+            List<Group> groups = dashboardService.getGroupDashboardsGroups(groupDashboard)
+
+            // Assign the new App to all the group dashboard's groups
+            groups.each { group ->
+                newApp.addToGroups(group)
+                // Disassociate the group dashboard from all of its groups
+                dashboardService.removeGroupDashboardFromGroup(groupDashboard, group)
+            }
+
             newApp.save()
+
             groupDashboard.stack = newApp
             groupDashboard.publishedToStore = true
 
@@ -828,6 +840,7 @@ class StackService {
             List<Dashboard> personalDashboards = dashboardService.findPersonalDashboardsForGroupDashboard(groupDashboard)
             personalDashboards.each { personalDashboard ->
                 personalDashboard.stack = newApp
+                personalDashboard.save()
             }
         }
     }
