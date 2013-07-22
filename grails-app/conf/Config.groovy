@@ -997,7 +997,7 @@ owf {
 
       useShims = false
 
-      migrateDashboardsToApps = false
+      migrateDashboardsToApps = true
 
       //use to specify whether or not to show test features
       // isTestMode = "true"

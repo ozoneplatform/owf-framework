@@ -58,6 +58,9 @@ class AppMigrationService {
         criteria.list {
             isNull('user')
             isNotNull('stack')
+            stack {
+                isNull('owner')
+            }
         }
     }
 
