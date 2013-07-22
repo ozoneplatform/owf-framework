@@ -554,11 +554,11 @@
 	
     .dashboard-tooltip-content {
     	.noIconGivenStack { 
-    		background-image: theme-image($theme-name, 'dashboardswitcher/StacksIcon.png'); 
+    		background-image: $dashboard-switcher-layout-stack-default-icon; 
     	}
     	
     	.noIconGivenPage { 
-    		background-image: theme-image($theme-name, 'dashboardswitcher/DefaultDashboard.png'); 
+    		background-image: $dashboard-switcher-layout-default-icon; 
     	}
     	
     	.tipIcon {
