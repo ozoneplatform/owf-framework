@@ -382,7 +382,7 @@
     
     &:hover, &.hover {
         @include border-radius($dashboard-item-body-radius);
-        background-color: $my-apps-hover-color !important;
+        background-color: $dashboard-switcher-dashboard-over-background-color !important;
 
         .dashboard-name {
             color: $dashboard-switcher-dashboard-over-text-color  !important;
@@ -585,7 +585,7 @@
         
         ul {
             color: $dashboard-switcher-dashboard-text-color;
-			background: $my-apps-tooltip-bar-color;
+			background: $dashboard-switcher-dashboard-over-background-color;
 			border-radius: 0 0 10px 10px;
 			margin-top: 5.5%;
 			
