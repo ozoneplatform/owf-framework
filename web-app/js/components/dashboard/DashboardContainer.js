@@ -1940,6 +1940,12 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         var dashboard = Ext.create('Ozone.data.Dashboard', json);
         this.dashboardStore.add(dashboard);
 
+        // If the stack was created, add it to the store
+        var stack = dashboard.get('stack');
+        if (stack && stack.id && !this.stackStore.getById(stack.id)) {
+            this.stackStore.add(stack);
+        }
+
         // Add new dashboard object to local array.
         this.dashboards.push(this.createDashboardConfig(dashboard));
 

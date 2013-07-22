@@ -466,24 +466,17 @@ class StackService {
         return stackOwnerOfAll
     }
 
-    private def stackOwnerCanDelete(stacks) {
-        def canDeleteAll = true
-        def stack
+    private boolean stackOwnerCanDelete(stacks) {
 
-        stacks.each {
-            stack = Stack.get(it.id)
-            if(stack) {
-                Dashboard.findAllWhere(user: null, stack: stack).each {
-                    if(it.publishedToStore) {
-                        canDeleteAll = false;
-                    }
-                }
-            }
+        def found = stacks.find { stackParams ->
+            Stack stack = Stack.get(stackParams.id)
+            stack ? Dashboard.findWhere(user: null, stack: stack, publishedToStore: true) : null
         }
+        !found
     }
 
     def delete(params) {
-        def stacks = []
+        def stacks
         
         if (params.data) {
             def json = JSON.parse(params.data)
@@ -500,47 +493,57 @@ class StackService {
         def isOwner = isStackOwner(stacks)
         def ownerCanDelete = stackOwnerCanDelete(stacks)
 
+        // If the user is the owner, he can delete the stack only if the stack has no published dashboards
         if((isOwner && !ownerCanDelete) || (!isOwner && (!isAdmin || !adminEnabled))) {
+            // The user cannot delete the stacks - remove that user and his dashboards from the stack
             return deleteUserStack(stacks);
         } 
         
-        // Handle administrative removal of stacks.
+        // Handle administrative (or owner's) removal of stacks.
         stacks.each {
             def stack = Stack.findById(it.id)
-            def dashboards = Dashboard.findAllByStack(stack)
-            def defaultDashboards = []
-            // Delete the association with any existing dashboard instances.
-            dashboards.each { dashboard ->
-                // Remove and clean up any user instances of stack dashboards.
-                if (dashboard.user != null) {
-                    domainMappingService.deleteMappings(dashboard, RelationshipType.cloneOf, Dashboard.TYPE)
-                    dashboard.delete()
-                }
-                // Save the stack's master copy of its dashboards for deletion after associated group/stack 
-                // mappings have been cleared.
-                else {
-                    defaultDashboards << dashboard
-                }
-            }
-            // Remove the default stack group
-            Group defaultStackGroup = stack?.groups?.find {it.stackDefault}
-            if (defaultStackGroup) {
-                stack.removeFromGroups(defaultStackGroup);
-                stack.save()
-                groupService.delete(["data": "{id: ${defaultStackGroup.id}}"])
-            }
-
-            // Delete the stacks's master dashboards.
-            defaultDashboards?.each { dashboard ->
-                dashboard.delete()
-            }
-            
-            // Delete the stack.
-            stack?.delete(flush: true, failOnError: true)
+            deleteStack(stack)
       
         }
         
         return [success: true, data: stacks]
+    }
+
+    /**
+     * Deletes the given stack
+     * @param stack
+     */
+    protected void deleteStack(Stack stack) {
+        def dashboards = Dashboard.findAllByStack(stack)
+        def defaultDashboards = []
+        // Delete the association with any existing dashboard instances.
+        dashboards.each { dashboard ->
+            // Remove and clean up any user instances of stack dashboards.
+            if (dashboard.user != null) {
+                domainMappingService.deleteMappings(dashboard, RelationshipType.cloneOf, Dashboard.TYPE)
+                dashboard.delete()
+            }
+            // Save the stack's master copy of its dashboards for deletion after associated group/stack
+            // mappings have been cleared.
+            else {
+                defaultDashboards << dashboard
+            }
+        }
+        // Remove the default stack group
+        Group defaultStackGroup = stack?.groups?.find { it.stackDefault }
+        if (defaultStackGroup) {
+            stack.removeFromGroups(defaultStackGroup);
+            stack.save()
+            groupService.delete(["data": "{id: ${defaultStackGroup.id}}"])
+        }
+
+        // Delete the stacks's master dashboards.
+        defaultDashboards?.each { dashboard ->
+            dashboard.delete()
+        }
+
+        // Delete the stack.
+        stack?.delete(flush: true, failOnError: true)
     }
 
     def importStack(params) {
