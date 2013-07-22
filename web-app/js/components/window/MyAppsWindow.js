@@ -1070,7 +1070,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         me.isAnAppExpanded = false;
 
-        $('#stack' + me._lastExpandedStack.id, '.bx-slide:not(.bx-clone)').removeClass('hover');
+        $('.stack.hover', '.bx-slide:not(.bx-clone)').removeClass('hover');
 
         if(Ext.isIE7 || Ext.isIE8) {
             var dfd = $.Deferred();
