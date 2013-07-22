@@ -122,7 +122,7 @@ databaseChangeLog = {
 		addForeignKeyConstraint(baseColumnNames: "owner_id", baseTableName: "stack", constraintName: "FK68AC2888656347D", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
 	}
 
-    changeSet(author: "owf", id: "7.3-8", context: "7.3, sampleData, 7.3-sampleData") {
+    changeSet(author: "owf", id: "7.3-8", context: "create, upgrade, 7.3, sampleData, 7.3-sampleData") {
 
         comment("Change the name of Stack and Widget admin widgets to be Apps and App Component")
 
@@ -147,7 +147,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3-9", context: "7.3, sampleData, 7.3-sampleData") {
+    changeSet(author: "owf", id: "7.3-9", context: "create, upgrade, 7.3, sampleData, 7.3-sampleData") {
 
         comment("Removing all references to Group Dashboards and renaming the Stack and Stack Editor widgets in the Admin dashboard")
 
@@ -173,7 +173,7 @@ databaseChangeLog = {
 
     }
 
-    changeSet(author: "owf", id: "7.3-10", context: "7.3, sampleData, 7.3-sampleData") {
+    changeSet(author: "owf", id: "7.3-10", context: "create, upgrade, 7.3, sampleData, 7.3-sampleData") {
 
         comment("Updating the existing widgets on the admin dash to use the new terms for stacks and widgets")
 
