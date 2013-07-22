@@ -828,7 +828,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         var me = this,
             dfd = $.Deferred();
 
-        OWF.Collections.AppComponents.fetch({fetch: true}).done(function (resp) {
+        var search_params = {
+            limitParam: undefined,
+            pageParam: undefined,
+            startParam: undefined
+        };
+
+        OWF.Collections.AppComponents.fetch({fetch: true, data: $.param(search_params)}).done(function (resp) {
             if(me.appComponentsView) {
                 var isVisible = me.appComponentsView.$el.is(':visible');
                 me.appComponentsView.hide().remove();
@@ -836,6 +842,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 isVisible && me.showAppComponentsView();
             }
             me.widgetStore.loadRecords(me.widgetStore.proxy.reader.read(resp.rows).records);
+
 
             dfd.resolve();
         });
