@@ -653,7 +653,6 @@ uiperformance.bundles = [
                         'components/theming/ThemeSwitcherWindow',
                         'components/dashboard/DashboardContainer',
                         'components/dashboard/Dashboard',
-                        'components/window/DashboardSwitcher',
 						'components/window/MyAppsWindow',
 						'components/window/MyAppTip',
                         'components/window/TipWarning',
