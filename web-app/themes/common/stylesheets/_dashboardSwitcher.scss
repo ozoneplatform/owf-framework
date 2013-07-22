@@ -697,25 +697,32 @@
             width: 100px;
         }
 
-        .x-btn-default-toolbar-small span{
-            background-image: none;
-            color: #FFFFFF;
-            font-size: 14px;
-            //font-weight: bold;
-            text-shadow: -2px 2px 2px #000000;
+        .x-btn-default-toolbar-small {
+            span{
+                background-image: none;
+                color: #FFFFFF;
+                font-size: 14px;
+                //font-weight: bold;
+                text-shadow: -2px 2px 2px #000000;
+            }
+            filter: none;
         }
 
         .x-panel-body {
-            background: inherit;
+            background: $widget-launcher-background-color;
             border: none;
-            color: #ffffff;
+            color: getHighContrastColor($widget-launcher-background-color);
             padding: 10px 8px;
 
             .x-form-field.x-form-text {
                 background: $widget-launcher-background-color;
                 border-color: #a0a9ad;
-                color: #ffffff;
+                color: getHighContrastColor($widget-launcher-background-color);
             }
+        }
+
+        .x-toolbar {
+            filter: none;
         }
 
         background: $widget-launcher-background-color;
