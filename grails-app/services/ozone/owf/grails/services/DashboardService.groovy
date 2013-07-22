@@ -43,10 +43,10 @@ class DashboardService extends BaseService {
 
                 if (group) {
                     if (params.update_action == 'add') {
-                        domainMappingService.createMapping(group, RelationshipType.owns, dashboard)
+                        addGroupDashboardToGroup(dashboard, group)
                     }
                     else if (params.update_action == 'remove') {
-                        domainMappingService.deleteMapping(group, RelationshipType.owns, dashboard)
+                        removeGroupDashboardFromGroup(dashboard, group)
                     }
                     updatedGroups << group
                 }
@@ -58,6 +58,14 @@ class DashboardService extends BaseService {
 
 
         return [success:true, data:returnValue]
+    }
+
+    def addGroupDashboardToGroup(Dashboard groupDashboard, Group group) {
+        domainMappingService.createMapping(group, RelationshipType.owns, groupDashboard)
+    }
+
+    def removeGroupDashboardFromGroup(Dashboard groupDashboard, Group group) {
+        domainMappingService.deleteMapping(group, RelationshipType.owns, groupDashboard)
     }
 
     private def getUserPrivateDashboards(user, dmParentId) {
@@ -1257,6 +1265,10 @@ class DashboardService extends BaseService {
                     message: message) 
             }
         }
+    }
+
+    List<Group> getGroupDashboardsGroups(Dashboard groupDashboard) {
+        []
     }
 
 }
