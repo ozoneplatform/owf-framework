@@ -792,7 +792,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         this.on("afterlayout", function(cmp) {
             var layoutButtons = this.query('container#premadeViewContainer')[0].query('button');
             layoutButtons[0].fireEvent('click');
-        });
+        }, this, {single: true});
 
         this.callParent();
     },
