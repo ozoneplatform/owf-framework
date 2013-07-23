@@ -63,6 +63,7 @@
         },
 
         shown: function () {
+            this.$el.find('.ellipsis').ellipsis();
             this.initResizable();
             this.initCarousel();
             return this;

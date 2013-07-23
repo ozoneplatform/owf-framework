@@ -484,6 +484,7 @@ uiperformance.bundles = [
                         '../js-lib/lodash/lodash-1.3.1',
                         '../js-lib/ext-4.0.7/ext-all-debug',
                         '../js-lib/jquery/jquery-1.8.0',
+                        '../js-lib/jquery/jquery.ellipsis',
                         '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.core',
                         '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.widget',
                         '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.mouse',

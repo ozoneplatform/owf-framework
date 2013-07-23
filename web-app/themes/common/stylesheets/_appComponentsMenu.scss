@@ -46,6 +46,7 @@
 
     .thumb-text {
         color: $widget-launcher-widget-text-color;
+        overflow: hidden;
     }
 
     &:hover {
