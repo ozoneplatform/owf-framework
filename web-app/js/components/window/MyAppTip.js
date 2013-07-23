@@ -53,11 +53,12 @@ Ext.define('Ozone.components.window.MyAppTip', {
     },
 
     getToolTip: function () {
-        var me = this;
-    	var banner = me.dashboardContainer.getBanner();
-        var icn = me.clickedStack.imageUrl && me.clickedStack.imageUrl !=' ' ? '<img class=\'tipIcon\'src=\''+me.clickedStack.imageUrl+'\' />':
-        																							 '<div class=\'tipIcon noIconGivenStack\'></div>';
-        var str = '<div class=\'dashboard-tooltip-content\'>' + icn +
+        var me = this,
+            banner = me.dashboardContainer.getBanner(),
+            icn = me.clickedStack.imageUrl && me.clickedStack.imageUrl != ' ' ? 
+                '<img class=\'tipIcon\'src=\'' + encodeURI(decodeURI(me.clickedStack.imageUrl)) + 
+                '\' />' : '<div class=\'tipIcon noIconGivenStack\'></div>',
+            str = '<div class=\'dashboard-tooltip-content\'>' + icn +
                 '<h3 class=\'name\'>' + Ext.htmlEncode(me.clickedStack.name) + '</h3>';
 
         me.clickedStack.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedStack.description) +'</p></div>'):
@@ -359,7 +360,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 margin: '2 2 2 2',
                 items:[{
                     xtype: 'image',
-                    src: (isIconUrlSet ? me.clickedStack.imageUrl : 'images/dashboardswitcher/StacksIcon.png'),
+                    src: (isIconUrlSet ? encodeURI(decodeURI(me.clickedStack.imageUrl)) : 'images/dashboardswitcher/StacksIcon.png'),
                     height: 54,
                     width: 54,
                     margin: '0 2 0 2'

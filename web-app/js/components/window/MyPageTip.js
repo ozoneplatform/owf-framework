@@ -27,10 +27,11 @@ Ext.define('Ozone.components.window.MyPageTip', {
     $dashboard: null,
     
     getToolTip: function () {
-        var me = this;
-        var icn = me.clickedDashboard.iconImageUrl && me.clickedDashboard.iconImageUrl !=' ' ? '<img class=\'tipIcon\' src=\''+me.clickedDashboard.iconImageUrl+'\' />':
-        						   															   '<div class=\'tipIcon noIconGivenPage\'></div>';
-        var str = '<div class=\'dashboard-tooltip-content\'>' + icn + 
+        var me = this,
+            icn = me.clickedDashboard.iconImageUrl && me.clickedDashboard.iconImageUrl != ' ' ? 
+                '<img class=\'tipIcon\' src=\'' + encodeURI(decodeURI(me.clickedDashboard.iconImageUrl)) + 
+                '\' />' : '<div class=\'tipIcon noIconGivenPage\'></div>',
+            str = '<div class=\'dashboard-tooltip-content\'>' + icn + 
                 '<h3 class=\'name\'>'+ Ext.htmlEncode(me.clickedDashboard.name) + '</h3>';
 
         me.clickedDashboard.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedDashboard.description) +'  </p></div>') :

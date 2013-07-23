@@ -86,12 +86,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             src: OWF.getContainerUrl() + Ozone.ux.DashboardMgmtString.dashboardIconPath,
             height: 54,
             width: 54,
-            margin: '4 0 0 5',
-            listeners: {
-                show: function(a,b,c,d) {
-                    alert('showing it');
-                }
-            }
+            margin: '4 0 0 5'
         });
 
         var iconImage = this.iconImage;
@@ -131,7 +126,6 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                     // Remove leading and tailing spaces
                     var val = field.getValue().replace(new RegExp(Ozone.lang.regexLeadingTailingSpaceChars), '');
                     field.setValue(val);
-                    //$.get(val).done(function() { alert('it worked');}).fail(function() { alert('it failed');});
                     iconImage.setSrc(field.getValue());
                 }
             }
@@ -210,7 +204,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             this.description.value = jQuery.trim(description);
 
             if (this.iconURLField.value) {
-                this.iconImage.setSrc(this.iconURLField.value);
+                this.iconImage.setSrc(encodeURI(decodeURI(this.iconURLField.value)));
             }
         }
 

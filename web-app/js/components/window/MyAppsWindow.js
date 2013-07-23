@@ -136,7 +136,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 var url = values.isStack ? values.imageUrl : values.iconImageUrl;
 
                 if (url && !Ext.isEmpty(Ext.String.trim(url))) {
-                    return '<div class="thumb" style="background-image: url(' + url + ') !important"></div>';
+                    return '<div class="thumb" style="background-image: url(' + encodeURI(decodeURI(url)) + ') !important"></div>';
                 } else {
                     return '<div class="thumb default"></div>';
                 }
@@ -1239,10 +1239,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         }, 100);
     },
 
-
-
-
-        createNewApp: function (evt) {
+    createNewApp: function (evt) {
         var me = this,
             createDashWindow = Ext.widget('createdashboardwindow', {
                 stackId: null,
