@@ -17,7 +17,6 @@
 		// GENERAL
 		mode: 'horizontal',
 		slideSelector: '',
-		oneItemPerSlide: true,
 		infiniteLoop: true,
 		hideControlOnEnd: false,
 		speed: 500,
@@ -34,6 +33,8 @@
 		useCSS: true,
 		preloadImages: 'visible',
 		responsive: true,
+		oneItemPerSlide: true,
+		cacheBust: false,
 
 		// TOUCH
 		touchEnabled: true,
@@ -296,6 +297,10 @@
 		}
 
 		var loadElements = function(selector, callback){
+			if(slider.settings.cacheBust === false) {
+				callback();
+				return;
+			}
 			var total = selector.find('img, iframe').length;
 			if (total == 0){
 				callback();
