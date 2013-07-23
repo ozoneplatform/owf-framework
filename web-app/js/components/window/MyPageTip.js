@@ -31,9 +31,9 @@ Ext.define('Ozone.components.window.MyPageTip', {
         var icn = me.clickedDashboard.iconImageUrl && me.clickedDashboard.iconImageUrl !=' ' ? '<img class=\'tipIcon\' src=\''+me.clickedDashboard.iconImageUrl+'\' />':
         						   															   '<div class=\'tipIcon noIconGivenPage\'></div>';
         var str = '<div class=\'dashboard-tooltip-content\'>' + icn + 
-                '<h3 class=\'name\'>'+ Ext.htmlEncode(Ext.htmlEncode(me.clickedDashboard.name)) + '</h3>';
+                '<h3 class=\'name\'>'+ Ext.htmlEncode(me.clickedDashboard.name) + '</h3>';
 
-        me.clickedDashboard.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedDashboard.description)) +'  </p></div>') :
+        me.clickedDashboard.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedDashboard.description) +'  </p></div>') :
         								  (str += '<p class=\'tip-description\'>  </p>');
         
         // append buttons 

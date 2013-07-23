@@ -58,9 +58,9 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var icn = me.clickedStack.imageUrl && me.clickedStack.imageUrl !=' ' ? '<img class=\'tipIcon\'src=\''+me.clickedStack.imageUrl+'\' />':
         																							 '<div class=\'tipIcon noIconGivenStack\'></div>';
         var str = '<div class=\'dashboard-tooltip-content\'>' + icn +
-                '<h3 class=\'name\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedStack.name)) + '</h3>';
+                '<h3 class=\'name\'>' + Ext.htmlEncode(me.clickedStack.name) + '</h3>';
 
-        me.clickedStack.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(Ext.htmlEncode(me.clickedStack.description)) +'</p></div>'):
+        me.clickedStack.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedStack.description) +'</p></div>'):
         										 (str += '<p class=\'tip-description\'>  </p>');
         
         var liAdjustCls = 'liStoreAdjust';
@@ -281,7 +281,8 @@ Ext.define('Ozone.components.window.MyAppTip', {
                                 modal: true
                             });
                         },
-                        autoSendVersion : false
+                        autoSendVersion : false,
+                        handleAs: 'text'
 
                     });
 

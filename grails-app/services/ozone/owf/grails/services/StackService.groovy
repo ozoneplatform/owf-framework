@@ -725,7 +725,7 @@ class StackService {
         // Only owner of stack can push to store
         ensureOwner(params.id)
         def stackData = createStackData(params)
-        stackData =  (stackData as JSON).toString()
+        stackData =  (stackData as JSON)
         return stackData
     }
 
