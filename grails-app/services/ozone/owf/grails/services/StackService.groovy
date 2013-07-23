@@ -146,6 +146,13 @@ class StackService {
     def createOrUpdate(params) {
         def stacks = []
 
+        if (params.id) {
+            params.id = params.id as Integer
+        }
+        if (params.stack_id) {
+            params.stack_id = params.stack_id as Integer
+        }
+
         if (params.update_action) {
             if(params.id >= 0 || params.stack_id >= 0) {
                 ensureAdminOrOwner(params.id >= 0 ? params.id: params.stack_id);
