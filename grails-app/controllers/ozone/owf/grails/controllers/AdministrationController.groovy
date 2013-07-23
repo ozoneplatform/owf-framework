@@ -15,6 +15,7 @@ class AdministrationController extends BaseOwfRestController {
 	def preferenceService
 	def dashboardService
 	def personWidgetDefinitionService
+    def appMigrationService
 
 	def admin= {
 		render(view:'admin',model:[accountService:accountService])
@@ -843,5 +844,16 @@ class AdministrationController extends BaseOwfRestController {
 //        	log.info("Executed personWidgetDefinitionService: " + methodName + " in "+stopWatch);
 //		}
 //	}
+
+    def migrateToApps = {
+        Map result = appMigrationService.migrate()
+        Closure printDashboardInfo = { "$it.name : $it.guid" }
+        String report = ""
+        report += result.stackDashboards ? "<br/><b>Stack dashboards:</b><br/>${result.stackDashboards.collect(printDashboardInfo).join(',<br/>')} " : ""
+        report += result.groupDashboards ? "<br/><br/><b>Group dashboards:</b><br/>${result.groupDashboards.collect(printDashboardInfo).join(',<br/>')} " : ""
+        report += result.personalDashboards ? "<br/><br/><b>Personal dashboards:</b><br/>${result.personalDashboards.collect(printDashboardInfo).join(',<br/>')} " : ""
+        report = report ? "<h1>Migration Report</h1><br/>$report" : "No dashboards to process"
+        render("<html>$report</html>")
+    }
 	 
 }

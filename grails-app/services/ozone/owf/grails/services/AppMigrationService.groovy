@@ -15,42 +15,53 @@ class AppMigrationService {
         processDashboards()
     }
 
-    private void processDashboards() {
+    private Map processDashboards() {
+
+        Map results = [:]
+        List<Dashboard> result
 
         // Process group dashboards that belong to a stack
-        processStackDashboards()
+        result = processStackDashboards()
+        results.stackDashboards = result
 
         // Process remaining group dashboards
-        processGroupDashboards()
+        result = processGroupDashboards()
+        results.groupDashboards = result
 
         // Process personal dashboards that are not links to group dashboards
-        processPersonalDashboards()
+        result = processPersonalDashboards()
+        results.personalDashboards = result
 
+        results
     }
 
-    private void processStackDashboards() {
+    private List<Dashboard> processStackDashboards() {
         List<Dashboard> stackDashboards = getAllStackDashboards()
+        stackDashboards = stackDashboards.findAll { !it.publishedToStore }
         stackDashboards.each {
             it.publishedToStore = true
             log.info("Processed stack dashboard $it")
             it.save()
         }
+        stackDashboards
     }
 
-    private void processGroupDashboards() {
+    private List<Dashboard> processGroupDashboards() {
         List<Dashboard> groupDashboards = getAllNonStackGroupDashboards()
         groupDashboards.each {
             convertGroupDashboardToPage(it)
             log.info("Processed group dashboard $it")
         }
+        groupDashboards
     }
 
-    private void processPersonalDashboards() {
+    private List<Dashboard> processPersonalDashboards() {
         List<Dashboard> personalDashboards = getAllStandalonePersonalDashboards()
         personalDashboards.each {
             convertPersonalDashboardToPage(it)
             log.info("Processed personal dashboard $it")
         }
+        personalDashboards
     }
 
     def List<Dashboard> getAllStackDashboards() {
