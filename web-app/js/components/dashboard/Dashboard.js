@@ -1018,16 +1018,23 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         this.shimPanes();
 
         if(!isLocked) {
-            var $shims = $('.paneshim', this.el.dom);
+            var $shims = $('.paneshim', this.el.dom),
+                $doc = $(document);
 
-            // mouseover doesn't fire in IE7 after mouse is already over the element
-            // use movemove instead
-            $shims.on('mousemove.launch', function () {
+            // TODO: find out why does this not work in IE7
+            // $shims.on('mousemove.launch', function () {
+            //     $shims.addClass('highlight-dashboard-designer-drop');
+            //     $(this).removeClass('highlight-dashboard-designer-drop');
+            // });
+
+            $doc.on('mousemove.launch', '.paneshim', function (evt) {
                 $shims.addClass('highlight-dashboard-designer-drop');
-                $(this).removeClass('highlight-dashboard-designer-drop');
+                $(evt.target).removeClass('highlight-dashboard-designer-drop');
             });
 
-            $(document).one('mouseup', function () {
+            $doc.one('mouseup', function () {
+                $doc.off('.launch');
+
                 $shims
                     .removeClass('highlight-dashboard-designer-drop')
                     .off('.launch');

@@ -475,10 +475,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 deferred: deferred
             });
 
-            this.activeDashboard.el.on('click', this._selectPaneOnClick, this, {
+            this.el.on('click', this._selectPaneOnClick, this, {
                 deferred: deferred
             });
-            this.activeDashboard.el.on('mouseup', this._selectPaneOnClick, this, {
+            this.el.on('mouseup', this._selectPaneOnClick, this, {
                 deferred: deferred
             });
 

@@ -195,8 +195,15 @@
         }, 500),
 
         _onDblClick: function (evt) {
-            var model = $(evt.currentTarget).data('view').model;
-            this.launch(model, false, false);
+            var me = this,
+                model = $(evt.currentTarget).data('view').model;
+
+            // delay call to launch to allow click event to bubble up so that it is not
+            // considered as a pane click
+            setTimeout(function () {
+                me.launch(model, false, false);
+            }, 200);
+            
         },
 
         _initSortable: function () {
