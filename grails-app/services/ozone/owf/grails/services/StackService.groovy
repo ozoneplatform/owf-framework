@@ -216,11 +216,12 @@ class StackService {
 
             def loggedInUser = accountService.getLoggedInUser()
 
+            // In Groovy, an empty string evaluates to false, so check params explicitly for null
             stack.properties = [
-                name: params.name ?: stack.name,
-                description: params.description ?: stack.description,
+                name: params.name != null ? params.name : stack.name,
+                description: params.description != null ? params.description : stack.description,
+                imageUrl: params.imageUrl != null ? params.imageUrl : stack.imageUrl,
                 stackContext: params.stackContext ?: stack.stackContext ?: UUID.randomUUID().toString(),
-                imageUrl: params.imageUrl ?: stack.imageUrl,
                 descriptorUrl: params.descriptorUrl ?: stack.descriptorUrl,
                 //If param owner isn't null and user is admin, check if previous owner is different 
                 //and new user is the logged in user, if so set user to the owner

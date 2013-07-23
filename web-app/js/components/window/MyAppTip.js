@@ -294,6 +294,12 @@ Ext.define('Ozone.components.window.MyAppTip', {
         me.appsWindow.close();
     },
 
+    isAttributeSet: function(attr) {
+        return !(attr == null ||
+                 attr == undefined || 
+                 Ext.isEmpty(Ext.String.trim(attr)));
+    },
+
     handleStackEdit: function(evnt) {
         evnt.stopPropagation();
 
@@ -302,22 +308,22 @@ Ext.define('Ozone.components.window.MyAppTip', {
         me.update('');
         me.removeAll();
 
-        var iconurlIsSet = !(me.clickedStack.imageUrl == null ||
-                                me.clickedStack.imageUrl == undefined || 
-                                Ext.isEmpty(Ext.String.trim(me.clickedStack.imageUrl)));
+        var isNameSet = me.isAttributeSet(me.clickedStack.name);
+        var isIconUrlSet = me.isAttributeSet(me.clickedStack.imageUrl);
+        var isDescriptionSet = me.isAttributeSet(me.clickedStack.description);
 
         var titleField = Ext.create('Ext.form.field.Text', {
             name: 'title',
             emptyText: 'Title',
             usePlaceholderIfAvailable: false,
-            value: me.clickedStack.name
+            value: (isNameSet ? me.clickedStack.name : '')
         });
 
         var imgurlField = Ext.create('Ext.form.field.Text', {
             name: 'imageurl',
             emptyText: 'Icon URL',
             usePlaceholderIfAvailable: false,
-            value: (iconurlIsSet ? me.clickedStack.imageUrl : '')
+            value: (isIconUrlSet ? me.clickedStack.imageUrl : '')
         });
 
         var descriptionField = Ext.create('Ext.form.field.TextArea', {
@@ -325,7 +331,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             maxLength: 4000,
             enforceMaxLength: true,
             margin: '0, 2, 0, 2',
-            value: Ext.String.trim(me.clickedStack.description),
+            value: (isDescriptionSet ? me.clickedStack.description : ''),
             usePlaceholderIfAvailable: false,
             emptyText: 'Description'
         })
@@ -353,7 +359,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 margin: '2 2 2 2',
                 items:[{
                     xtype: 'image',
-                    src: (iconurlIsSet ? me.clickedStack.imageUrl : 'images/dashboardswitcher/StacksIcon.png'),
+                    src: (isIconUrlSet ? me.clickedStack.imageUrl : 'images/dashboardswitcher/StacksIcon.png'),
                     height: 54,
                     width: 54,
                     margin: '0 2 0 2'
