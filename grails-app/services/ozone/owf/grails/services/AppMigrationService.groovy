@@ -88,7 +88,7 @@ class AppMigrationService {
             from Dashboard as d \
             where d.user is not null \
                 and d.stack is null \
-                and not exists ( from DomainMapping as dm where d.id = dm.srcId) ")
+                and not exists ( from DomainMapping as dm where d.id = dm.srcId and dm.srcType = 'dashboard' and dm.relationshipType = 'cloneOf') ")
     }
 
     private void convertGroupDashboardToPage(Dashboard groupDashboard) {
