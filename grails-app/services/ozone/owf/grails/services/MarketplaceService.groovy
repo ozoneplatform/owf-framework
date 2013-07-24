@@ -46,6 +46,7 @@ class MarketplaceService extends BaseService {
             } else if (obj?.stackContext) {
                 def stack = Stack.findByStackContext(obj.stackContext)
                 if (!stack) {
+                    obj.dashboards?.each { it.publishedToStore = true }
                     accountService.runAsAdmin {
                         stack = stackService.importStack([data: obj.toString()])
                     }
