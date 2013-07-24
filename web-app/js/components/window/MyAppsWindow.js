@@ -13,7 +13,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     closable: true,
     title: 'My Apps',
     cls: 'system-window',
-    resizable: true,
+    resizable: false,
     draggable: false,
 
     viewId: 'dashboard-switcher-dashboard-view',
