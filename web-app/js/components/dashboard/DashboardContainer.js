@@ -683,6 +683,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 dashboardCardPanel.add(me.dashboards);
 
                 me.activeDashboard = dashboardCardPanel.getComponent(me.activeDashboard.id);
+
+                // add to buffer to keep removal consistent to respect cardBufferSize set
+                dashboardCardPanel.layout.cardBuffer.add(me.activeDashboard);
+                
                 me.activateDashboard(me.activeDashboard.id, true, me.activeDashboard.stackContext);
                 if (me.activeDashboard.configRecord.get('locked') || me.activeDashboard.configRecord.isMarketplaceDashboard()) {
                     me.getBanner().disableAppComponentsBtn();
