@@ -202,7 +202,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
             editor: this.editor,
             focusOnClose: this.down(),
             existingItemsStore: this.getComponent('stacksgrid').getStore(),
-            searchFields: ['displayName'],
+            searchFields: ['name'],
             grid: Ext.widget('stacksgrid', {
                 itemId: 'stacksaddgrid',
                 border: false,
