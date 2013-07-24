@@ -27,7 +27,8 @@ class WidgetDefinitionService {
     def grailsApplication
 
     //TODO: implement ignoreCase and fetch params
-    def list(params) {
+    //@param returnDomainObjects If true, returns domain objects instead of service items
+    def list(params=null, returnDomainObjects=false) {
         def widgetDefinition = null
         def opts = [:]
         if (params?.offset) opts.offset = (params.offset instanceof String ? Integer.parseInt(params.offset) : params.offset)
@@ -259,7 +260,11 @@ class WidgetDefinitionService {
                     totalGroups: domainMappingService.countMappings(w, RelationshipType.owns, Group.TYPE, 'dest')
                 ])
         }
-        return [success:true, results: widgetDefinition.totalCount, data : processedWidgets]
+        return [
+            success:true, 
+            results: widgetDefinition.totalCount, 
+            data : returnDomainObjects ? widgetDefinition : processedWidgets
+        ]
     }
     
     def listUserAndGroupWidgets(params) {

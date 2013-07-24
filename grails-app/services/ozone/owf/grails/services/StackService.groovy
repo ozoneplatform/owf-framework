@@ -679,9 +679,10 @@ class StackService {
         }
 
         def widgets = []
-        widgetDefinitionService.list([stack_id: stack.id]).data.eachWithIndex { widget, i ->
+        widgetDefinitionService.list([stack_id: stack.id], true).data.eachWithIndex { widget, i ->
 
-            def widgetDefinition = widget.toDataMap().value
+            def widgetDefinition = serviceModelService.createServiceModel(widget)
+                .toDataMap().value
 
             //Get only the values required for a widget definition
             def widgetData = [
@@ -707,6 +708,9 @@ class StackService {
             widgetData.put("defaultTags", tags)
 
             widgets.push(widgetData)
+
+            //add the widget to the stack's group
+            domainMappingService.createMapping(stackGroup, RelationshipType.owns, widget)
         }
 
         //Get only the parameters required for a stack descriptor
