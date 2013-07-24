@@ -386,9 +386,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         
         var me = this,
             activeDashboardId = this.activeDashboard.id,
-            $dashboardEl = $('#dashboard' + activeDashboardId, '.stack-dashboards'),
+            $dashboardEl = $('#dashboard' + activeDashboardId, '.stack-dashboards .bx-slide:not(.bx-clone)'),
             $dashboardElSlide = $dashboardEl.parent(),
-            slideIndexOfActiveDashboard = $('.bx-slide:not(.bx-clone)', '.stack-dashboard').index($dashboardElSlide);
+            slideIndexOfActiveDashboard = $('.bx-slide:not(.bx-clone)', '.stack-dashboards').index($dashboardElSlide);
 
         return slideIndexOfActiveDashboard;
     },
@@ -406,7 +406,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     goToActiveDashboardSlideinMiniSlider: function() {
         var me = this;
 
-        me.appPageCarousel.goToSlide(me.getActiveDashboardMiniSlideIndex);
+        me.appPageCarousel.goToSlide(me.getActiveDashboardMiniSlideIndex());
     },
 
     onSlideTransition: function($slideElement, oldIndex, newIndex) {
@@ -793,6 +793,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             if (stack) {
                 if (this.stacks[stackId]) {
                     this.toggleStack(this.stacks[stackId], $('#stack'+stackId, '.bx-slide:not(.bx-clone)')).then(function () {
+                        me.goToActiveDashboardSlideinMiniSlider();
                         me.focusActiveDashboard();
                     });
                 }
