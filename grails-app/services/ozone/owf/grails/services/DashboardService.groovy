@@ -699,15 +699,24 @@ class DashboardService extends BaseService {
     def deletePersonalAndGroupDashboards(Dashboard personalDashboard) {
         Dashboard groupDashboard = getGroupDashboard(personalDashboard)
 
-        // TODO: see if we need to delete all private copies of this dashboard
-        //delete all mappings for this dashboard
-        domainMappingService.purgeAllMappings(personalDashboard)
+        deletePersonalDashboard(personalDashboard)
 
         // If this is the page of the user's app, delete the group dashboard
         if (accountService.getLoggedInUsername().equals(groupDashboard?.stack?.owner?.username)) {
+
+            if (groupDashboard.stack) {
+                def stackDefaultGroup = groupDashboard.stack.findStackDefaultGroup()
+                domainMappingService.deleteMapping(stackDefaultGroup, RelationshipType.owns, groupDashboard)
+            }
             groupDashboard.delete()
         }
+    }
 
+    def deletePersonalDashboard(Dashboard personalDashboard) {
+        // Delete all mappings for this dashboard
+        domainMappingService.purgeAllMappings(personalDashboard)
+
+        // Delete the dashboard
         personalDashboard.delete(flush:true)
     }
 

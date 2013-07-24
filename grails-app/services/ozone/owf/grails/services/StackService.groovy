@@ -432,84 +432,74 @@ class StackService {
             }
         }
     }
-    
-    def deleteUserStack(stackIds) {
+
+    /**
+     * Remove the user form stack's default group and all the user's personal dashboards from that stack
+     * @param stack
+     * @return
+     */
+    private Stack deleteUserStack(Stack stack) {
         
         def user = accountService.getLoggedInUser();
-        def stacks = [];
-        
-        stackIds.each {
-            def stack = Stack.findById(it.id, [cache: true])
-            def stackDefaultGroup = stack.findStackDefaultGroup()
-            
-            stackDefaultGroup.removeFromPeople(user)
+        def stackDefaultGroup = stack.findStackDefaultGroup()
 
-            // Remove all user dashboards that are in the stack
-            def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
-            userStackDashboards?.each { userStackDashboard ->
+        stackDefaultGroup.removeFromPeople(user)
 
-                dashboardService.delete([
-                    dashboard: userStackDashboard
-                ])
-            }
-            
-            stacks << stack
+        // Remove all user dashboards that are in the stack
+        def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
+        userStackDashboards?.each { userStackDashboard ->
+            dashboardService.deletePersonalDashboard(userStackDashboard)
         }
-        return [success: true, data: stacks];
+        stack
     }
     
-    private def isStackOwner(stacks) {
-        def stackOwnerOfAll = true
-
-        def userId = accountService.getLoggedInUser()?.id
-        def stack
-
-        stacks.each{
-            stack = Stack.get(it.id)
-            if(!stack || !stack.owner || !userId || userId != stack.owner.id) {
-                stackOwnerOfAll = false
-            }
-        }
-
-        return stackOwnerOfAll
+    def isStackOwner(Stack stack) {
+        stack?.owner?.id == accountService.getLoggedInUser()?.id
     }
 
-    private boolean stackOwnerCanDelete(stacks) {
-
-        def found = stacks.find { stackParams ->
-            Stack stack = Stack.get(stackParams.id)
-            stack ? Dashboard.findWhere(user: null, stack: stack, publishedToStore: true) : null
-        }
-        !found
+    private static boolean stackOwnerCanDelete(Stack stack) {
+        boolean hasPublishedDashboards = Dashboard.findWhere(user: null, stack: stack, publishedToStore: true)
+        !hasPublishedDashboards
     }
 
+    private static boolean stackHasAtMostOneUser(Stack stack) {
+        Group defaultStackGroup = stack?.groups?.find { it.stackDefault }
+        defaultStackGroup.people == null || defaultStackGroup.people?.size() <= 1
+    }
+
+    /**
+     * Deletes one or more stacks from the parameters.
+     * @param params
+     * @return
+     */
     def delete(params) {
-        def stacks
+        def stackParams
         
         if (params.data) {
             def json = JSON.parse(params.data)
-            stacks = [json].flatten()
+            stackParams = [json].flatten()
         } else {
-            stacks = params.list('id').collect {
+            stackParams = params.list('id').collect {
                 [id:it]
             }
         }
-        
-        // Handle user deletion of their stack association and data.
-        boolean isAdmin = accountService.getLoggedInUserIsAdmin()
-        boolean adminEnabled = (params.adminEnabled == true  || params.adminEnabled == 'true')
-        boolean isOwner = isStackOwner(stacks)
-        boolean ownerCanDelete = stackOwnerCanDelete(stacks)
 
-        if ((isOwner && ownerCanDelete) || (isAdmin && adminEnabled)) {
-            // Handle administrative (or owner's) removal of stacks.
-            stacks.each {
-                Stack stack = Stack.findById(it.id)
+        def stacks = []
+        stackParams.each {
+            Stack stack = Stack.findById(it.id)
+            // Handle user deletion of their stack association and data.
+            boolean isAdmin = accountService.getLoggedInUserIsAdmin()
+            boolean adminEnabled = (params.adminEnabled == true  || params.adminEnabled == 'true')
+            boolean isOwner = isStackOwner(stack)
+            boolean ownerCanDelete = stackOwnerCanDelete(stack)
+            if ((isOwner && ownerCanDelete) || (isAdmin && adminEnabled) || stackHasAtMostOneUser(stack)) {
+                // Handle administrative (or owner's) removal of stacks.
                 if (stack) deleteStack(stack)
+                stacks << it
+            } else {
+                // The user cannot delete the stacks - remove that user and his dashboards from the stack
+               stacks << deleteUserStack(stack);
             }
-        } else {
-            // The user cannot delete the stacks - remove that user and his dashboards from the stack
-            return deleteUserStack(stacks);
         }
 
         return [success: true, data: stacks]
