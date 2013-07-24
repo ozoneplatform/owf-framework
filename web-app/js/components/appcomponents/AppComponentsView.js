@@ -69,7 +69,7 @@
 
             this.collection = new Ozone.data.collections.Widgets(standardAppComponents);
 
-            _.bindAll(this, 'refresh');
+            _.bindAll(this, '_refreshDebounce');
         },
 
         render: function () {
@@ -123,7 +123,7 @@
                 })
         },
 
-        refresh: _.debounce(function (evt) {
+        refresh: function () {
             var newWindowHeight = $window.height(),
                 newWindowWidth = $window.width();
 
@@ -132,18 +132,30 @@
                 windowWidth = newWindowWidth;
                 windowHeight = newWindowHeight;
 
-                this.carousel.reloadCarousel();
+                this.isVisible() && this.carousel.reloadCarousel();
             }
+        },
+
+        _refreshDebounce: _.debounce(function () {
+            this.refresh();
         }, 1000),
 
         show: function () {
-            $(window).on('resize', this.refresh);
+            $window.on('resize', this._refreshDebounce);
             return SuperClass.prototype.show.call(this);
         },
 
         hide: function () {
-            $(window).off('resize', this.refresh);
+            $window.off('resize', this._refreshDebounce);
             return SuperClass.prototype.hide.call(this);
+        },
+
+        isVisible: function () {
+            return this.$el.is(':visible');
+        },
+
+        isHidden: function () {
+            return !this.isVisible();
         },
 
         shown: function () {

@@ -114,7 +114,8 @@
                     startSlide: startSlide,
                     oneItemPerSlide: false,
                     infiniteLoop: true,
-                    touchEnabled: false
+                    touchEnabled: false,
+                    responsive: false
                 }); 
 
                 this.$el.trigger('initcarousel');

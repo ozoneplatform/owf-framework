@@ -211,6 +211,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         this.setupDashboardChangeListeners();
         OWF.Collections.AppComponents.on('remove', this.removeAppComponent, this);
+
+
+
+        $(window).on('resize', function () {
+            if(me.appComponentsView && me.appComponentsView.isHidden()) {
+                 me._refreshAppComponent = true;
+            }
+        });
     },
 
     onWidgetMouseDown: function(evt, target) {
@@ -888,6 +896,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
         else {
             me.appComponentsView.toggle();
+
+            if(me._refreshAppComponent) {
+                me._refreshAppComponent = false;
+                me.appComponentsView.refresh();
+            }
         }
     },
 
