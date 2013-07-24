@@ -51,5 +51,17 @@ Ext.define('Ozone.components.WidgetIframeComponent', {
             return true;
         }
         return el.dom.src === 'about:blank';
-    }
+    },
+
+    /**
+     * Hack fix for OP-2275.  This is to get around jQuery bug 12266,
+     * where a strange IE9 behavior on iframe creation causes calls like $('<div><div></div></div>);
+     * later on to fail with access denied errors.  Newer versions of jQuery are patched to avoid this,
+     * but this should also fix it without requiring us to upgrade
+     */
+    onRender: Ext.ieVersion >= 9 ? function() {
+        var oldDoc0 = document[0];
+        this.callParent(arguments);
+        document[0] = oldDoc0;
+    } : function() { this.callParent(arguments); }
 });
