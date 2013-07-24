@@ -496,24 +496,22 @@ class StackService {
         }
         
         // Handle user deletion of their stack association and data.
-        def isAdmin = accountService.getLoggedInUserIsAdmin()
-        def adminEnabled = (params.adminEnabled == true  || params.adminEnabled == 'true')
-        def isOwner = isStackOwner(stacks)
-        def ownerCanDelete = stackOwnerCanDelete(stacks)
+        boolean isAdmin = accountService.getLoggedInUserIsAdmin()
+        boolean adminEnabled = (params.adminEnabled == true  || params.adminEnabled == 'true')
+        boolean isOwner = isStackOwner(stacks)
+        boolean ownerCanDelete = stackOwnerCanDelete(stacks)
 
-        // If the user is the owner, he can delete the stack only if the stack has no published dashboards
-        if((isOwner && !ownerCanDelete) || (!isOwner && (!isAdmin || !adminEnabled))) {
+        if ((isOwner && ownerCanDelete) || (isAdmin && adminEnabled)) {
+            // Handle administrative (or owner's) removal of stacks.
+            stacks.each {
+                Stack stack = Stack.findById(it.id)
+                if (stack) deleteStack(stack)
+            }
+        } else {
             // The user cannot delete the stacks - remove that user and his dashboards from the stack
             return deleteUserStack(stacks);
-        } 
-        
-        // Handle administrative (or owner's) removal of stacks.
-        stacks.each {
-            def stack = Stack.findById(it.id)
-            deleteStack(stack)
-      
         }
-        
+
         return [success: true, data: stacks]
     }
 
