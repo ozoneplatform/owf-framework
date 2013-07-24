@@ -19,8 +19,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     viewId: 'dashboard-switcher-dashboard-view',
 
     width: 750,
-    height: 595,
-    expandedHeight: 755,
+    height: 600,
+    expandedHeight: 760,
 
     dashboardContainer: null,
 

@@ -311,8 +311,9 @@
                 *min-height: $dashboard-mini-slider-viewport-height-ie7 !important;
 
                 .dashboard {
-                    padding-top: 10px;
+                    padding-top: 5px;
                     margin-bottom: 0px;
+                    margin-top: $dashboard-mini-slider-dashboard-margin-top;
                     width: 80px;
                 }
             }
@@ -400,6 +401,8 @@
         margin-top: 4px;
         margin-left: auto;
         margin-right: auto;
+        padding: 0 2px 0 2px;
+        line-height: 1em;
     }
     
     &:hover, &.hover {
