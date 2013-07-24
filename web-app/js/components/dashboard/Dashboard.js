@@ -107,8 +107,13 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
         me.items = me.buildItemsArray(me.configRecord.get('layoutConfig')) || [];
 
-        //make sure the store is registered under the guid
-        if (this.stateStore != null && this.stateStore.storeId == null) {
+        if (!this.stateStore) {
+            this.stateStore = Ext.create('Ozone.data.StateStore', {
+                storeId: this.guid,
+                data: []
+            });
+        }
+        else if (!this.stateStore.storeId) {
             this.stateStore.storeId = this.guid;
             Ext.data.StoreManager.register(this.stateStore);
         }
@@ -129,10 +134,6 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
         this.on('activate', this.onActivate, this);
         this.on('deactivate', this.onDeActivate, this);
-
-        if (!this.stateStore) {
-            this.stateStore = Ext.create('Ozone.data.StateStore');
-        }
 
         this.stateStore.on({
             add: {
@@ -436,6 +437,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         if (this.stateStore != null) {
             this.stateStore.destroyStore();
             this.stateStore = null;
+            this.initialConfig.stateStore = null;
         }
         this.callParent(arguments);
     },
