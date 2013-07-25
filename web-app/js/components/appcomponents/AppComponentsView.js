@@ -211,7 +211,8 @@
             this.filter($(evt.target).val());
         }, 500),
 
-        _onDblClick: function (evt) {
+        // debounce to prevent double-click from launching widget twice
+        _onDblClick: _.debounce(function (evt) {
             var me = this,
                 model = $(evt.currentTarget).data('view').model;
 
@@ -221,7 +222,10 @@
                 me.launch(model, false, false);
             }, 200);
             
-        },
+        }, 201, {
+            leading: true,
+            trailing: false
+        }),
 
         _initSortable: function () {
             var me = this,
