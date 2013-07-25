@@ -134,7 +134,7 @@
                 .destroyCarousel()
                 .initCarousel(startSlide, force)
                 .initResizable()
-                ._removeDetailsTip();
+                .removeDetailsTip();
         },
 
         destroyCarousel: function () {

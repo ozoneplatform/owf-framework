@@ -92,10 +92,14 @@
                 selectable: false,
                 size: this.size,
                 addFilterFn: function (model, index) {
-                    if(model.get('name').toLowerCase().indexOf(this.searchQuery.toLowerCase()) < 0) {
-                        return false;
+                    var name = model.get('name').toLowerCase(),
+                        description = (model.get('description') || '').toLowerCase(),
+                        searchQuery = this.searchQuery.toLowerCase();
+
+                    if(_.contains(name, searchQuery) || _.contains(description, searchQuery)) {
+                        return true;
                     }
-                    return true;
+                    return false;
                 }
             });
 
@@ -147,6 +151,7 @@
 
         hide: function () {
             $window.off('resize', this._refreshDebounce);
+            this.carousel.removeDetailsTip();
             return SuperClass.prototype.hide.call(this);
         },
 

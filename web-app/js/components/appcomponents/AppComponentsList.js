@@ -85,7 +85,13 @@
 
         filter: function (query) {
             this.searchQuery = query;
+            this.removeDetailsTip();
             return this.addAll();
+        },
+
+        removeDetailsTip: function () {
+            tip && tip.remove();
+            tip = null;
         },
 
         removeAppComponent: function (view, tip) {
@@ -132,14 +138,14 @@
                 }
             }).show();
             
-            this._removeDetailsTip();
+            this.removeDetailsTip();
         },
 
         remove: function () {
             _.invoke(this.views, 'remove');
             this.views = null;
 
-            this._removeDetailsTip();
+            this.removeDetailsTip();
 
             this.$el.enableSelection()
 
@@ -165,7 +171,7 @@
             evt.preventDefault();
             evt.stopPropagation();
 
-            this._removeDetailsTip();
+            this.removeDetailsTip();
             
             tip = new DetailsTip({
                 model: view.model
@@ -183,11 +189,6 @@
                     me.removeAppComponent(view, tip);
                 });
             tip.shown();
-        },
-
-        _removeDetailsTip: function () {
-            tip && tip.remove();
-            tip = null;
         },
 
         _showDetailsTipOption: function (evt) {
