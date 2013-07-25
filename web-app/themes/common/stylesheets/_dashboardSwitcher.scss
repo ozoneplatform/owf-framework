@@ -44,11 +44,11 @@
 
     .actions {
         height: auto;
-        text-align: left;
+        text-align: right;
         padding-top: 10px;
 
         ul {
-            color: $dashboard-switcher-dashboard-text-color;
+            color: $dashboard-switcher-details-btn-color;
 
             li {
                 display: inline-block;
@@ -66,17 +66,17 @@
             .store-link-btn-text, .create-link-btn-text {
                 display: inline-block;
                 width: 140px;
-                padding-left: 7px;
+                padding: 3px 0 0 7px;
                 font: {
-                    size: 14px;
+                    size: 10px;
                     weight: normal;
                 }
             }
 
             .store-link-btn-img, .create-link-btn-img {
                 position: relative;
-                width: 30px;
-                height: 40px; 
+                width: 20px;
+                height: 20px; 
                 display: inline-block;
                 float: left;
                 background-repeat: no-repeat !important;
@@ -103,7 +103,7 @@
         .store-link-btn {
             &:hover, &.hover {
                 & .store-link-btn-img {
-                    background-position: 5px 11px !important;
+                    background-position: 0 1px !important;
                     background-image: theme-image($theme-name, 'myappswindow/MoreinStore-over.png');
                 }
             }
@@ -159,6 +159,7 @@
     .bx-pager, .bx-controls-auto {
         .bx-pager-item {
             .bx-pager-link {
+                margin: 0 3px;
                 background: theme-image($theme-name, 'myappswindow/carousel_dot_empty-out.png');
 
                 &:hover, &.hover {
