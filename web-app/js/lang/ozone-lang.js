@@ -421,7 +421,7 @@ Ozone.layout.DialogMessages = {
     marketplaceWindow_LaunchSuccessful: 'The App Component was added successfully from AppsMall. Now choose the App where you want the Component to launch.',
 	widgetAdded: 'Selected widget is already added for this user',
 	marketplaceWindow_RequiredListingsAlertMsg: 'The widget you have launched will not work without some dependencies.  These widgets are listed below and will be additionally added to the launch menu.',
-    fitPaneFullWarning: 'You are attempting to add an App Component to a pane with a single-App-Component layout. Continuing will replace the existing App Component.',
+    fitPaneFullWarning: 'This pane can only contain one App Component.',
     dashboardLockTitle: 'Lock Page',
     dashboardLockWarning: 'Locking this Page disables the App Components toolbar button. Users cannot start or add new App Components to this layout. Do you still want to lock this Page?',
     dashboardLockAlertTitle: 'Locked Page',
