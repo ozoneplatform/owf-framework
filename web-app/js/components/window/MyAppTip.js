@@ -435,8 +435,8 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         var me = this;
 
-        var msg = 'This action will permanently delete stack <span class="heading-bold">' + 
-                Ext.htmlEncode(me.clickedStack.name) + '</span> and its dashboards.';
+        var msg = 'This action will permanently delete app <span class="heading-bold">' + 
+                Ext.htmlEncode(me.clickedStack.name) + '</span> and its pages.';
 
         var stackGroups = me.clickedStack.groups
         var userGroups = Ozone.config.user.groups
