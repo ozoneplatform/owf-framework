@@ -630,6 +630,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     // Otherwise, set active dashboard to default dashboard
                     continueInitLoad(me.defaultDashboard);
                 } else {
+                    if (me.dashboards.length === 1 && me.hasMpWidget()) {
+                        me.createEmptyDashboard('desktop', true, Ext.bind(function (dash) {
+                            var dashModel = me.createDashboardConfig(Ext.create('Ozone.data.Dashboard', dash));
+
+                            me.dashboards = [dashModel];
+                            continueInitLoad(dashModel);
+                        }, me));
+                    }
                     if (me.dashboards.length > 0) {
                         // Otherwise, just pick the first dash
                         continueInitLoad(me.dashboards[0]);
@@ -2094,6 +2102,23 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         } else {
             this.getBanner().getUserMenu().disableMetricsMenuItem();
         }
+    },
+
+    hasMpWidget: function() {
+        var records = this.widgetStore.getRange();
+        for (var i = 0; i < records.length; i++) {
+            var newTitle = this.widgetNames[records[i].data.widgetGuid];
+            if (newTitle) {
+                records[i].data.name = newTitle;
+            }
+            if(records[i].data.widgetTypes.length > 0) {
+                if (records[i].data.widgetTypes[0].name == 'marketplace') {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     },
 
     /**
