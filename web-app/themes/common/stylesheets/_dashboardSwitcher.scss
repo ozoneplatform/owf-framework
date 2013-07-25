@@ -466,10 +466,14 @@
         -webkit-animation-delay: 1s;
 }
 
-.detail-actions {
-	padding-top:5px; 
-	color: $dashboard-switcher-dashboard-text-color;
+.details-btn-container {
+	padding-top: 10px; 
+	color: $dashboard-switcher-details-btn-color;
     font-size: 10px;
+
+    &:hover, &.hover {
+        text-decoration: underline;
+    }
 }
 
 .x-ie7 {

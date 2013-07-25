@@ -143,8 +143,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             },
             
             getActions: function (values) {
-                return	'<ul class="detail-actions hide">'+
-                			'<li class="detail-action">Details</li>'+
+                return	'<ul class="details-btn-container hide">'+
+                            '<li class="details-btn">details</li>'+
                         '</ul>'
             },
             
@@ -824,7 +824,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var $clickedDashboard = $(evt.currentTarget),
         dashboard = this.getDashboard( $clickedDashboard );
 
-        if ($(evt.target).hasClass('detail-action')) {
+        if ($(evt.target).hasClass('details-btn')) {
         	Ext.select('.itemTip').destroy();
         	
         	Ext.widget('mypagetip', {
@@ -876,7 +876,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 $clickedStack = $(evt.currentTarget),
                 stack = me.getStack( $clickedStack );
             
-            if ($(evt.target).hasClass('detail-action')) {
+            if ($(evt.target).hasClass('details-btn')) {
             	Ext.select('.itemTip').destroy();
             	
             	Ext.widget('myapptip', {
@@ -1104,10 +1104,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var el = $(evt.currentTarget);
 
         if (this._previouslyHoveredStackOrDashboard != null) {
-            $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');
+            $('.details-btn-container', this._previouslyHoveredStackOrDashboard).addClass('hide');
         }
             
-        $('.detail-actions', el).removeClass('hide');
+        $('.details-btn-container', el).removeClass('hide');
 
         this._previouslyHoveredStackOrDashboard = el;
     },
@@ -1116,7 +1116,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var el = $(evt.currentTarget);
 
         if (this._previouslyHoveredStackOrDashboard) {
-            $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');
+            $('.details-btn-container', this._previouslyHoveredStackOrDashboard).addClass('hide');
         }
     },
 
