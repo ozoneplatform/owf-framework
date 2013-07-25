@@ -1133,12 +1133,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     },
     
     switchToMarketplace: function() {
-    	var mpButton = $('.marketBtn')
-    	
-    	if(mpButton && mpButton.is(':visible')) {
-    		mpButton.click()
-    		this.close();
-    	}
+        var banner = this.dashboardContainer.getBanner()
+        banner.getMarketplaceLauncher().gotoMarketplace(banner.marketplaceWidget, null);
+        this.close();
     },
     
     verifyDiscoverMoreButton: function() {
