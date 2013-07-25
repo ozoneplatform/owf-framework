@@ -103,11 +103,11 @@ Ext.define('Ozone.components.dashboarddesigner.SidePanel', {
                                     mouseOffset: [0,10],
                                     renderTo: cmp.ownerCt.el,
                                     width: 115,
-                                    html: me.dashboardDesigner.locked ? "Dashboard locked" : "Dashboard unlocked",
+                                    html: me.dashboardDesigner.locked ? "Page locked" : "Page unlocked",
                                     listeners: {
                                         beforeshow: {
                                             fn: function updateTipBody(tip) {
-                                                var text = me.dashboardDesigner.locked ? "Dashboard locked" : "Dashboard unlocked";
+                                                var text = me.dashboardDesigner.locked ? "Page locked" : "Page unlocked";
                                                 tip.update(text);
                                             }
                                         }
