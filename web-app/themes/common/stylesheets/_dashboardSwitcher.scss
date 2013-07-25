@@ -247,14 +247,32 @@
         }
     }
 
-    > .bx-wrapper {
+    > .bx-wrapper > .bx-controls > .bx-controls-direction {
+        .bx-prev, .bx-next {
+            height: 54px !important;
+            background-position: 0 1px !important;
+
+            // keep arrows in same y-position when My Apps modal is expanded
+            top: 200px !important;
+        }
+
         .bx-prev {
-            left: 10px !important;
-            height: 42px !important;
+            left: -56px !important;
+
+            background: theme-image($theme-name, 'myappswindow/my_apps_carousel_left_arrow_out.png') no-repeat !important;
+            
+            &:hover, &.hover {
+                background: theme-image($theme-name, 'myappswindow/my_apps_carousel_left_arrow_out.png') no-repeat !important;
+            }
         }
         .bx-next {
-            right: 4px !important;
-            height: 42px !important;
+            right: -56px !important;
+
+            background: theme-image($theme-name, 'myappswindow/my_apps_carousel_right_arrow_out.png') no-repeat !important;
+            
+            &:hover, &.hover {
+                background: theme-image($theme-name, 'myappswindow/my_apps_carousel_right_arrow_out.png') no-repeat !important;
+            }
         }
     }
 }
