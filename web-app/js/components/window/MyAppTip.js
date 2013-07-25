@@ -76,7 +76,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                         '<span class=\'createPageImg  \'></span>'+
                         '<p class=\'actionText\'>Add Page</p>'+
                     '</li>'+
-                    '<li class=\'pushButton actionButton\' data-qtip="<span class=\'tooltipception\'></span>">'+
+                    '<li class=\'pushButton actionButton\' data-qtip="Add App to the Store, making it available to all Store users.">'+
                     	'<span class=\'pushImg\'></span>'+
                     	'<p class=\'actionText\'>Push to Store</p>'+
                     '</li>'+

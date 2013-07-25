@@ -516,7 +516,7 @@
 }
 
 .itemTip {
-	z-index: 79001 !important;
+	z-index: 69011 !important;
 	border-radius: 10px;
 	
 	 .x-tool .x-tool-close {
@@ -550,10 +550,6 @@
     max-height: 500px;
     padding: 0;
 	background-color: $my-apps-tooltip-color;
-	
-	.tooltipception {
-		z-index: 79011 !important;
-	}
 	
     .dashboard-tooltip-content {
     	.noIconGivenStack { 
