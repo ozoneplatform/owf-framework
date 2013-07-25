@@ -59,14 +59,19 @@
         filter: function (query) {
             this.destroyCarousel();
             SuperClass.prototype.filter.call(this, query);
+            this.ellipsis();
             this.initCarousel();
         },
 
         shown: function () {
-            this.$el.find('.ellipsis').ellipsis();
+            this.ellipsis();
             this.initResizable();
             this.initCarousel();
             return this;
+        },
+
+        ellipsis: function () {
+            this.$el.find('.ellipsis').dotdotdot();
         },
 
         state: function () {

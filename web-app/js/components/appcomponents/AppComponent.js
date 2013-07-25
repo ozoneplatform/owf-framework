@@ -27,7 +27,7 @@
         tpl: '<div class="thumb-wrap">' +
                 '<img onerror="this.src = \'themes/common/images/settings/WidgetsIcon.png\'" src="<%= image %>" class="thumb" />' +
             '</div>' +
-            '<div class="thumb-text multiline ellipsis"><%= name %></div>'+
+            '<div class="thumb-text ellipsis"><%= name %></div>'+
             '<% if (details) { %>' +
                 '<a href="#" class="widget-details" style="visibility: hidden;">Details</a>' +
             '<% } %>',
