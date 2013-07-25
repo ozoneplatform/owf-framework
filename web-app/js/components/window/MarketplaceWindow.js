@@ -2,11 +2,11 @@
     extend: 'Ozone.components.window.ModalWindow',
     alias: ['widget.marketplacewindow', 'widget.Ozone.components.window.MarketplaceWindow'],
 
-    title: 'Marketplaces',
+    title: 'Stores',
     id: 'marketplaceWindow',
     cls: 'system-window settings-window',
     ui: 'system-window',
-    iconCls: 'marketplace-header-icon',
+    iconCls: '',
     layout: 'auto',
     closable: true,
     resizable: false,
