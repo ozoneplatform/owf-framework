@@ -608,6 +608,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             }
         }
 
+        var initialCreate = false;
+
+        if ((me.dashboards.length === 1 && me.hasMpWidget()) || me.dashboards.length === 0) {
+            initialCreate = true;
+            me.createEmptyDashboard('desktop', true);
+            continueInitLoad(me.dashboards[0]);
+        }
+
         // Set active dashboard
         if (me.activeDashboard == null) {
 
@@ -631,12 +639,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     continueInitLoad(me.defaultDashboard);
                 } else {
                     if ((me.dashboards.length === 1 && me.hasMpWidget()) || me.dashboards.length === 0) {
-                        me.createEmptyDashboard('desktop', true, Ext.bind(function (dash) {
-                            var dashModel = me.createDashboardConfig(Ext.create('Ozone.data.Dashboard', dash));
+                        if (!initialCreate) {
+                            me.createEmptyDashboard('desktop', true, Ext.bind(function (dash) {
+                                var dashModel = me.createDashboardConfig(Ext.create('Ozone.data.Dashboard', dash));
 
-                            me.dashboards = [dashModel];
-                            continueInitLoad(me.dashboards[0]);
-                        }, me));
+                                me.dashboards = [dashModel];
+                                continueInitLoad(me.dashboards[0]);
+                            }, me));
+                        }
                     }
                     else {
                         // Otherwise, just pick the first dash
