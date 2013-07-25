@@ -201,7 +201,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 }
             },
             onFailure: function(json) {
-                Ext.Msg.alert("Error", "Error has occurred while adding widgets from Marketplace");
+                Ext.Msg.alert("Error", "Error has occurred while adding App Components from AppsMall");
 
                 self.dashboardContainer.loadMask.hide();
             }
@@ -317,7 +317,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                                 notifyText = self.launchWidget(widgetDef, doLaunchCallback);
 
                             } else {
-                                notifyText = "The widget was successfully added.";
+                                notifyText = "The App Component was successfully added.";
                                 addWidgetCallback && addWidgetCallback(widgetDefs.get(0).get('name'));
                             }
                         } else {
