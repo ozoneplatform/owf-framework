@@ -9,11 +9,11 @@
     padding-top: 1px;
     padding-left: 4px;
 
+    border: 1px solid transparent;
+
 
     &:hover {
-        border: 1px solid $appConfig-cell-border-hover;
-        padding-top: 0px;
-        padding-left: 3px;
+        border-color: $appConfig-cell-border-hover;
         //background-image: theme-image($theme-name, 'applicationConfiguration/edit_out.png');
         //background-image:
         //background-repeat: no-repeat;
