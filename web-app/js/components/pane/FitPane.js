@@ -97,8 +97,8 @@ Ext.define('Ozone.components.pane.FitPane', {
         Ext.widget('alertwindow', {
             title: 'Warning',
             html: '<p>' + Ozone.layout.DialogMessages.fitPaneFullWarning + '</p><br/>'
-                + '<p>Adding <i>' + Ext.htmlEncode(this.items.get(0).title) + '</i> to the pane will replace the  <i>' 
-                + Ext.htmlEncode(widgetTitle) + '</i> App Component.</p>',
+                + '<p>Adding <i>' + Ext.htmlEncode(widgetTitle) + '</i> to the pane will replace the  <i>' 
+                + Ext.htmlEncode(this.items.get(0).title) + '</i> App Component.</p>',
             width: 400,
             dashboardContainer: this.dashboard.dashboardContainer,
             okFn: okFn,
