@@ -102,7 +102,7 @@ Ext.define('Ozone.components.dashboarddesigner.SidePanel', {
                                     trackMouse: true,
                                     mouseOffset: [0,10],
                                     renderTo: cmp.ownerCt.el,
-                                    width: 115,
+                                    width: 85,
                                     html: me.dashboardDesigner.locked ? "Page locked" : "Page unlocked",
                                     listeners: {
                                         beforeshow: {
