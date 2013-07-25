@@ -6,21 +6,26 @@ $dashboard-height: 110px;
 $dashboard-rows: 3;
 $dashboard-columns: 6;
 
-$dashboard-padding-top: 10px;
-$dashboard-margin-left: 5px;
-$dashboard-margin-right: 5px;
+$dashboard-padding-top: 5px;
+$dashboard-margin-left: 15px;
+$dashboard-margin-right: 15px;
 $dashboard-margin-bottom: 5px;
 
 $dashboard-switcher-title-color: #7F7F7F;
 $dashboard-switcher-descriptor-color: #C1C1C1;
 $dashboard-switcher-details-btn-color: #8BFEFF;
 
-$dashboard-mini-slider-width: 450px;
-$dashboard-mini-slider-height: $dashboard-height + $dashboard-padding-top;
+$dashboard-mini-slider-dashboard-width: 80px;
 $dashboard-mini-slider-dashboard-margin-top: 5px;
+$dashboard-mini-slider-dashboard-margin-left: 25px;
+$dashboard-mini-slider-dashboard-margin-right: 0px;
+$dashboard-mini-slider-height: $dashboard-height + $dashboard-padding-top;
+$dashboard-mini-slider-width: 
+	($dashboard-mini-slider-dashboard-width + $dashboard-mini-slider-dashboard-margin-left) * 5;
 
 $dashboard-mini-slider-viewport-height: $dashboard-mini-slider-height + $dashboard-padding-top;
 $dashboard-mini-slider-viewport-height-ie7: $dashboard-mini-slider-viewport-height + 5px;
+$dashboard-mini-slider-body-radius: 3px !default;
 
 $dashboard-switcher-body-radius: 7px !default;
 $dashboard-switcher-background-color: $owf-base-color !default;
@@ -28,8 +33,8 @@ $dashboard-switcher-opacity: 0.90 !default;
 
 $dashboard-item-body-radius: 5px !default;
 
-$dashboard-switcher-slider-height-extra: 40px;
-$dashboard-switcher-slider-expanded-height-extra: 45px;
+$dashboard-switcher-slider-height-extra: 25px;
+$dashboard-switcher-slider-expanded-height-extra: 30px;
 
 $dashboard-switcher-slider-width: 
 	($dashboard-width + $dashboard-margin-right + $dashboard-margin-left) * 

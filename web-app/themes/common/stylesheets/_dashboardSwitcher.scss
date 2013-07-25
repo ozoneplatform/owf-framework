@@ -45,10 +45,9 @@
     .actions {
         height: auto;
         text-align: right;
-        padding-top: 10px;
 
         ul {
-            color: $dashboard-switcher-details-btn-color;
+            color: $dashboard-switcher-descriptor-color;
 
             li {
                 display: inline-block;
@@ -159,7 +158,10 @@
     .bx-pager, .bx-controls-auto {
         .bx-pager-item {
             .bx-pager-link {
+                @include border-radius(0px);
                 margin: 0 3px;
+                width: 11px;
+
                 background: theme-image($theme-name, 'myappswindow/carousel_dot_empty-out.png');
 
                 &:hover, &.hover {
@@ -212,10 +214,14 @@
 
         > .bx-viewport {
             @include box-shadow(none);
+            
+            margin-left: -2px !important;
 
             background: transparent !important;
             *background: inherit !important;
+            
             border: 0px;
+            
             width: $dashboard-switcher-slider-width !important;
             height: $dashboard-switcher-slider-height;
             min-height: $dashboard-switcher-slider-height !important;
@@ -286,11 +292,15 @@
 > .stack-dashboards-container {
 
     > .stack-dashboards {
+        width: 690px;
+        margin: 0 auto;
+
+        @include border-radius($dashboard-mini-slider-body-radius);
 
         > .bx-wrapper {
             min-height: $dashboard-mini-slider-height !important;
             max-height: $dashboard-mini-slider-height !important;
-            width: $dashboard-mini-slider-width !important;
+            width: 540px;
             margin-bottom: 30px;
 
             > .bx-viewport {
@@ -311,10 +321,12 @@
                 *min-height: $dashboard-mini-slider-viewport-height-ie7 !important;
 
                 .dashboard {
-                    padding-top: 5px;
+                    padding-top: $dashboard-padding-top;
                     margin-bottom: 0px;
                     margin-top: $dashboard-mini-slider-dashboard-margin-top;
-                    width: 80px;
+                    margin-left: $dashboard-mini-slider-dashboard-margin-left;
+                    margin-right: $dashboard-mini-slider-dashboard-margin-right;
+                    width: $dashboard-mini-slider-dashboard-width;
                 }
             }
         }
@@ -366,9 +378,9 @@
     cursor: pointer;
     width: $dashboard-width;
     height: $dashboard-height;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-bottom: 5px;
+    margin-left: $dashboard-margin-left;
+    margin-right: $dashboard-margin-right;
+    margin-bottom: $dashboard-margin-bottom;
     
     .thumb-wrap {
         text-align: center;
@@ -390,7 +402,6 @@
             background-repeat: no-repeat;
             background-position: center center;
             background-image: $dashboard-switcher-layout-default-icon;
-            background-size: 100%;
         }
     }
 
@@ -426,6 +437,10 @@
 }
 
 #dashboard-switcher .dashboard, .dashboard.drag-proxy {
+    .thumb {
+        background-size: 80%;
+    }
+
     &:hover, &.hover {
         @include border-radius($dashboard-item-body-radius);
         background-color: darken($dashboard-switcher-dashboard-over-background-color, 10) !important;
@@ -439,7 +454,9 @@
 #dashboard-switcher .stack, .stack.drag-proxy {
     .thumb {
         background-image: $dashboard-switcher-layout-stack-default-icon !important;
+        background-size: 100%;
     }
+
     &.dashboard-selected {
         .thumb {
             background-image: $dashboard-switcher-layout-stack-default-icon-over !important;
@@ -526,7 +543,7 @@
 .stack-dashboards-container {
     clear: both;
     position: relative;
-    top: -7px;
+    top: -9px;
 
     .stack-dashboards {
         background: darken($dashboard-switcher-dashboard-background-color, 10%);
@@ -536,11 +553,6 @@
             display: none;
         }
     }
-}
-.stack-dashboards-anchor-tip {
-    position: relative;
-    border-width: 10px;
-    border-bottom-color: darken($dashboard-switcher-dashboard-background-color, 10%);
 }
 
 .itemTip {

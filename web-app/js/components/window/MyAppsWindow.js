@@ -19,8 +19,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     viewId: 'dashboard-switcher-dashboard-view',
 
     width: 750,
-    height: 600,
-    expandedHeight: 760,
+    height: 515,
+    expandedHeight: 675,
 
     dashboardContainer: null,
 
@@ -165,7 +165,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         });
 
         me.stackDashboardsTpl = '<div class="stack-dashboards-container">'+
-                                    '<div class="stack-dashboards-anchor-tip x-tip-anchor x-tip-anchor-top"></div>'+
                                     '<div class="stack-dashboards"></div>'+
                                 '</div>';
         
@@ -987,26 +986,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         this.$stackDashboards.children('.stack-dashboards').html( this.tpl.applyTemplate( stack.dashboards ) );
         this.$stackDashboards.insertAfter( lastElInRow );
 
-        this.stackDashboardsAnchorTip = $( '.stack-dashboards-anchor-tip' , this.$stackDashboards );
-
-        // cache size of tip
-        if( !this.stackDashboardsAnchorTipHeight ) {
-            this.stackDashboardsAnchorTipHeight = this.stackDashboardsAnchorTip.outerHeight();
-        }
-        if( !this.stackDashboardsAnchorTipWidth ) {
-            this.stackDashboardsAnchorTipWidth = this.stackDashboardsAnchorTip.outerWidth();
-        }
-
         this.$stackDashboards.hide();
-
-        // calculate top and left value for anchor tip
-        var parentPosition = $clickedStack.position(),
-            top = parentPosition.top + clickedStackElHeight - (this.stackDashboardsAnchorTipHeight),
-            left = parentPosition.left + (clickedStackElWidth / 2) - (this.stackDashboardsAnchorTipWidth / 2);
-        
-        this.stackDashboardsAnchorTip.css({
-            left: left + 'px'
-        });
 
         if (totalItems > me.numDashboardsNeededToExpandModal) {
             me.expandModal(parent);
