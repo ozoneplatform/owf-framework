@@ -676,7 +676,7 @@ class StackService {
 
             //Get only the values required for a widget definition
             def widgetData = [
-                    "widgetGuid": widget.id,
+                    "widgetGuid": widget.widgetGuid,
                     "descriptorUrl": widgetDefinition.descriptorUrl,
                     "universalName": widgetDefinition.universalName,
                     "displayName": widgetDefinition.namespace,
