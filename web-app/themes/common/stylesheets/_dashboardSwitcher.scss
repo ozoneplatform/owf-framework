@@ -9,15 +9,23 @@
 
     &-body {
         @include border-radius($dashboard-switcher-body-radius);
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
     }
 
+    @include border-radius($dashboard-switcher-body-radius);
+
     .x-window-header {
+        @include border-radius($dashboard-switcher-body-radius);
+
         background-color: $dashboard-switcher-background-color;
         margin-bottom: 5px;
         width: 100% !important;
         *overflow: hidden;
         *width: 97% !important;
         *margin-bottom: 0px;
+        border: 0px;
         zoom: 1;
         height: $dashboard-switcher-header-height !important;
         
@@ -117,12 +125,6 @@
         padding-top: 10px;
         *padding-top: 0px;
         padding-left: 53px;
-    }
-
-    > #dashboard-switcher-body {
-        text-align: center;
-        margin-left: auto;
-        margin-right: auto;
     }
 
     .all-dashboards {
