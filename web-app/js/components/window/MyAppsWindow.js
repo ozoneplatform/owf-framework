@@ -103,7 +103,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         me._deletedStackOrDashboards = [];
 
         me.tpl = new Ext.XTemplate(
-            '<div class="dashboard-switcher-descriptor">All of your applications appear here. To start an App, click it. To edit or delete, hover over it and select \'Details\'.</div>',
+            '<div class="dashboard-switcher-descriptor">Click to start an App. To edit or delete, hover over an app and select details.</div>',
             '<div class="all-dashboards">',
                 '<tpl for=".">',
                     '<div id="{[this.getName(values)+this.getId(values)]}" class="{[this.getClass(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}">',

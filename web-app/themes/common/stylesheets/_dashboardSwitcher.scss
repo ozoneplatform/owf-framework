@@ -31,8 +31,9 @@
         
         .x-window-header-text {
 			font-size: 24px;
-			padding-left: 68px;
+			padding-left: 13px;
             *line-height: 24px;
+            color: $dashboard-switcher-title-color;
 		}
 
         .x-window-header-body {
@@ -118,13 +119,12 @@
     }
 
     .dashboard-switcher-descriptor {
-        color: $dashboard-switcher-dashboard-text-color;
+        color: $dashboard-switcher-descriptor-color;
         bottom: 20px !important;
         position: relative;
         text-align: left;
         padding-top: 10px;
         *padding-top: 0px;
-        padding-left: 53px;
     }
 
     .all-dashboards {
