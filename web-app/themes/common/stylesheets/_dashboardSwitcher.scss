@@ -503,6 +503,7 @@
     .stack-dashboards {
         background: darken($dashboard-switcher-dashboard-background-color, 10%);
         overflow: hidden;
+        border-radius: 25px;
 
         .dashboard-switcher-descriptor {
             display: none;
