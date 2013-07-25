@@ -201,6 +201,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     me.onSlideTransition.apply(me, arguments);
                 }, me)
             });
+
+            if (me.slider.getSlideCount() === 1) {
+                $('.bx-wrapper .bx-pager').hide();
+            }
+
             me.slider.disableSelection();
         });
 
@@ -1035,6 +1040,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             infiniteLoop: true,
             touchEnabled: false
         });
+
+        if (me.appPageCarousel.getSlideCount() === 1) {
+            $('.bx-pager', '.stack-dashboards').hide();
+        }
 
         me.appPageCarousel.disableSelection();
     },

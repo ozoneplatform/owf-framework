@@ -118,6 +118,10 @@
                     responsive: false
                 }); 
 
+                if (this.$el.getSlideCount() === 1) {
+                    this.hidePager();
+                }
+
                 this.$el.trigger('initcarousel');
             }
             return this;
@@ -127,6 +131,10 @@
             if(this._carousel) {
                 return this.$el.getSlides();    
             }
+        },
+
+        hidePager: function() {
+            this.$el.parent().parent().find('.bx-pager').hide();
         },
 
         reloadCarousel: function (startSlide, force) {
