@@ -183,4 +183,89 @@ databaseChangeLog = {
         }
 
     }
+
+    changeSet(author: "owf", id: "7.3-11", context: "upgrade, 7.3, sampleData, 7.3-sampleData") {
+
+        comment("Migrating the legacy sample dashboards to the new format")
+
+        insert(tableName: "owf_group") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "automatic", valueBoolean: "false")
+            column(name: "description", value: "")
+            column(name: "email", value: null)
+            column(name: "name", value: "df51cb9b-f3d8-412e-af33-d064f81fb6c0")
+            column(name: "status", value: "active")
+            column(name: "display_name", value: null)
+            column(name: "stack_default", valueBoolean: true)
+        }
+
+        insert(tableName: "owf_group") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "automatic", valueBoolean: "false")
+            column(name: "description", value: "")
+            column(name: "email", value: null)
+            column(name: "name", value: "3b870e3b-247f-47db-bcd8-8fab6877bbc8")
+            column(name: "status", value: "active")
+            column(name: "display_name", value: null)
+            column(name: "stack_default", valueBoolean: true)
+        }
+
+        insert(tableName: "stack") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "name", value: "Sample")
+            column(name: "description", value: null)
+            column(name: "stack_context", value: "908d934d-9d53-406c-8143-90b406fb508f")
+            column(name: "image_url", value: null)
+            column(name: "descriptor_url", value: null)
+            column(name: "unique_widget_count", value: 0)
+            column(name: "owner_id", value: null)
+        }
+
+        insert(tableName: "stack") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "name", value: "Administration")
+            column(name: "description", value: "This dashboard provides the widgets needed to administer dashboards, widgets, groups, and users in OWF.")
+            column(name: "stack_context", value: "0092af0b-57ae-4fd9-bd8a-ec0937ac5399")
+            column(name: "image_url", value: null)
+            column(name: "descriptor_url", value: null)
+            column(name: "unique_widget_count", value: 0)
+            column(name: "owner_id", value: null)
+        }
+
+        insert(tableName: "stack_groups") {
+            column(name: "group_id", valueNumeric: "(SELECT id FROM owf_group WHERE name='df51cb9b-f3d8-412e-af33-d064f81fb6c0')")
+            column(name: "stack_id", valueNumeric: "(SELECT id FROM stack WHERE stack_context='908d934d-9d53-406c-8143-90b406fb508f')")
+        }
+
+        insert(tableName: "stack_groups") {
+            column(name: "group_id", valueNumeric: "(SELECT id FROM owf_group WHERE name='3b870e3b-247f-47db-bcd8-8fab6877bbc8')")
+            column(name: "stack_id", valueNumeric: "(SELECT id FROM stack WHERE stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399')")
+        }
+
+        update(tableName: "dashboard") {
+            column(name: "version", valueNumeric: "1")
+            column(name: "published_to_store", valueBoolean: "true")
+            where("guid='3f59855b-d93e-dc03-c6ba-f4c33ea0177f' AND user_id IS NULL AND name='Watch List'")
+        }
+
+        update(tableName: "dashboard") {
+            column(name: "version", valueNumeric: "1")
+            column(name: "stack_id", valueNumeric: "(SELECT id FROM stack WHERE stack_context='908d934d-9d53-406c-8143-90b406fb508f')")
+            column(name: "published_to_store", valueBoolean: "true")
+            where("guid='c62ce95c-d16d-4ffe-afae-c46fa64a689b' AND user_id IS NULL AND name='Sample'")
+        }
+
+        update(tableName: "dashboard") {
+            column(name: "version", valueNumeric: "1")
+            column(name: "stack_id", valueNumeric: "(SELECT id FROM stack WHERE stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399')")
+            column(name: "published_to_store", valueBoolean: "true")
+            where("guid='54949b5d-f0ee-4347-811e-2522a1bf96fe' AND user_id IS NULL AND name='Administration'")
+        }
+
+        update(tableName: "dashboard") {
+            column(name: "version", valueNumeric: "1")
+            column(name: "published_to_store", valueBoolean: "true")
+            where("guid='7f2f6d45-263a-7aeb-d841-3637678ce559' AND user_id IS NULL AND name='Contacts'")
+        }
+    }
 }
