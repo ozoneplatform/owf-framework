@@ -443,6 +443,7 @@ class MarketplaceService extends BaseService {
         def ompObj
 
         def socketFactory = createSocketFactory();
+        def handler = new BasicResponseHandler()
 
         setMpUrls.find { mpUrl ->
             // Check each configured marketplace and stop when we get a match.
@@ -466,9 +467,13 @@ class MarketplaceService extends BaseService {
 
                 if (header?.value.contains("json")) {
                     log.info "Received JSON response from MP (${mpUrl}); success"
-                    def handler = new BasicResponseHandler()
-                    def strJson = handler.handleResponse(response)
-                    ompObj = JSON.parse(strJson)
+                    def responseObj = JSON.parse(handler.handleResponse(response))
+
+                    if (responseObj?.total > 0) {
+                        ompObj = responseObj
+                        log.debug "Received Object: ${ompObj}"
+                        return true
+                    }
                 } else {
                     log.warn "Received non-parseable response from MP, content type -> ${response.entity.contentType}"
                 }
@@ -487,14 +492,9 @@ class MarketplaceService extends BaseService {
             } finally {
                 client.getConnectionManager().shutdown()
             }
-
-            // Break out on first match
-            if (ompObj) {
-                return true
-            }
         }
         if (ompObj) {
-            return ompObj?.data[0]
+            return ompObj.data[0]
         } else {
             return null
         }
