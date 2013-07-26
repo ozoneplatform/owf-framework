@@ -331,3 +331,16 @@
         }
     }
 }
+
+// OP-2310
+// Styled the title of the marketplace window a little bigger and a little offset from the left edge
+// Right now, #marketplaceWindow is a rather monolithic Ext.js window
+// If possible, someone should wean #marketplaceWindow off of Ext.js and simplfy it so that it is easier to style however we want
+// However, for now, this solution should work fine, especially after all the corner radii are changed from 25px to 7px
+#marketplaceWindow {
+    .x-window-header-text {
+        font-size: 18px;
+        font-weight: bold;
+        padding-left: 9px;
+    }
+}
