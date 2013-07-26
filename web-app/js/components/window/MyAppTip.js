@@ -236,7 +236,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             text: text
         }));
         
-        me.width = 220;
+        me.width = 300;
 
         me.doLayout();
     },
