@@ -818,15 +818,17 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     blinkMarketBtnAfterDashboardSwitch: function(guid, activeDashboard, previousActiveDashboard) {
         var btn = this.getComponent('marketBtn');
 
-        if (btn && (activeDashboard.configRecord.isMarketplaceDashboard() || previousActiveDashboard.configRecord.isMarketplaceDashboard())) {
-            if (!Modernizr.cssanimations) {
-                // wait 6 seconds if dashboard hasn't rendered
-                // otherwise frame animation won't be visible to user
-                setTimeout(function() {
+        if (previousActiveDashboard) {
+            if (btn && (activeDashboard.configRecord.isMarketplaceDashboard() || previousActiveDashboard.configRecord.isMarketplaceDashboard())) {
+                if (!Modernizr.cssanimations) {
+                    // wait 6 seconds if dashboard hasn't rendered
+                    // otherwise frame animation won't be visible to user
+                    setTimeout(function() {
+                        btn.blink();
+                    }, activeDashboard.rendered ? 0 : 6000);
+                } else {
                     btn.blink();
-                }, activeDashboard.rendered ? 0 : 6000);
-            } else {
-                btn.blink();
+                }
             }
         }
     }

@@ -608,12 +608,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             }
         }
 
-        var initialCreate = false;
-
-        if ((me.dashboards.length === 1 && me.hasMpWidget()) || me.dashboards.length === 0) {
-            initialCreate = true;
-            me.createEmptyDashboard('desktop', true);
-            continueInitLoad(me.dashboards[0]);
+        if ((me.dashboards.length === 1 && me.dashboards[0].config.type === "marketplace") || me.dashboards.length === 0) {
+            me.createEmptyDashboard('desktop', true, Ext.bind(function (record, dashboard) {
+                continueInitLoad(dashboard);
+            }, me));
+            return;
         }
 
         // Set active dashboard
@@ -638,19 +637,18 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     // Otherwise, set active dashboard to default dashboard
                     continueInitLoad(me.defaultDashboard);
                 } else {
-                    if ((me.dashboards.length === 1 && me.hasMpWidget()) || me.dashboards.length === 0) {
-                        if (!initialCreate) {
-                            me.createEmptyDashboard('desktop', true, Ext.bind(function (dash) {
-                                var dashModel = me.createDashboardConfig(Ext.create('Ozone.data.Dashboard', dash));
-
-                                me.dashboards = [dashModel];
-                                continueInitLoad(me.dashboards[0]);
-                            }, me));
-                        }
-                    }
-                    else {
+                    if (me.dashboards.length > 0) {
                         // Otherwise, just pick the first dash
                         continueInitLoad(me.dashboards[0]);
+                    }
+                    else {
+                        // And if all else fails, create a new active dashboard
+                        me.createEmptyDashboard('desktop', true, Ext.bind(function (dash) {
+                            var dashModel = me.createDashboardConfig(Ext.create('Ozone.data.Dashboard', dash));
+
+                            me.dashboards = [dashModel];
+                            continueInitLoad(dashModel);
+                        }, me));
                     }
                 }
             }
@@ -665,7 +663,22 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
          * and saved
          */
         function continueInitLoad(dash) {
-            me.defaultDashboard = me.activeDashboard = dash;
+            var currentUrlGuid;
+            //OP-2174 - Fixes a problem where browser URL and activeDashboard guids don't match
+            // TODO: Rewrite dashboard switcher so this can't happen
+            if (Ext.util.History.getHash()) {
+                currentUrlGuid = Ext.urlDecode(Ext.util.History.getHash()).guid;
+
+                if (me.activeDashboard && currentUrlGuid === me.activeDashboard.guid) {
+                    me.defaultDashboard = dash;
+                }
+                else {
+                    me.defaultDashboard = me.activeDashboard = dash;
+                }
+            }
+            else {
+                me.defaultDashboard = me.activeDashboard = dash;
+            }
 
             Ext.state.Manager.setProvider(Ext.create('Ozone.state.WidgetStateStoreProvider', {
                 store: me.activeDashboard ? me.activeDashboard.stateStore : null
@@ -1792,6 +1805,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         // ---------------------------------------------------------------------------------
         var me = this;
 
+        if (storeRecords.length === 0 || (storeRecords.length === 1 && storeRecords[0].get("type") === "marketplace")) {
+            me.createEmptyDashboard('desktop', true, function () {
+                me.updateDashboardsFromStore(storeRecords, callbackOptions, loadSuccess, dashboardGuidToActivate);
+            });
+            return;
+        }
+
         // Set default tab guid.
         var defaultTabGuid = storeRecords[0].get('guid');
         var stack = storeRecords[0].get('stack');
@@ -1809,7 +1829,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         // Without the timeout, updateDashboardsFromStore causes problems when dashboards are restored 
         // because widget destruction is delayed by 100ms to prevent memory leaks.
         // Because of the delay, widgets on a dashboard get rerendered while previous ones haven't been destroyed.
-        setTimeout(function() {
+        setTimeout(function() { 
             var dashboards = [];
 
             // Update various dashboard-related components.
@@ -1868,21 +1888,16 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         // TODO improvment: only restored dashboards should be refresh and deleted dashboard be removed
         var me = this;
 
-        // If user deleted all stacks create an empty one for them
-        if ((me.stackStore.getCount() === 1 && me.hasMpWidget()) || me.stackStore.getCount() === 0) {
-            me.createEmptyDashboard('desktop', true);
-        }
-
-        setTimeout(function() {
-            me.dashboardStore.load({
-                callback: function(records, options, success) {
-                    if (success == true) {
-                        me.updateDashboardsFromStore(records, options, success, me.activeDashboard.getGuid());
-                    }
-                    Ext.isFunction(callback) && callback(success);
+        me.dashboardStore.load({
+            callback: function(records, options, success) {
+                records = me.dashboardStore.data.items;
+                if (success == true) {
+                    me.updateDashboardsFromStore(records, options, success, me.activeDashboard.getGuid());
                 }
-            });
-        }, 200)
+                Ext.isFunction(callback) && callback(success);
+            }
+        });
+        
     },
 
     saveActiveDashboardToServer: function() {
@@ -1914,8 +1929,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             saveAsNew: createOrUpdate == 'create' ? true : false,
             onSuccess: function(json) {
                 me.destroyDashboardSwitcher();
-                me.dashboardCreated(json);
-                success && success(json);
+                var dashboard = me.dashboardCreated(json);
+                success && success(json, dashboard);
 
                 me = null;
             },
@@ -1941,23 +1956,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         };
 
         this.saveDashboard(newJson, 'create', callback);
-
-        // add to dashboardStore
-
-        //var dash = {
-            //id: newGuid,
-            //itemId: newGuid,
-            //alteredByAdmin: 'false',
-            //guid: newGuid,
-            //isdefault: setAsDefault,
-            //name: 'Untitled',
-            //state: []
-            ////user:             userNameObj
-        //};
-        //this.dashboardStore.add(dash);
-
-        //return this.dashboardStore.getAt(this.dashboardStore.getCount() - 1);
-        //return Ext.create('Ozone.data.Dashboard', dash);
     },
 
     createDashboard: function(model) {
