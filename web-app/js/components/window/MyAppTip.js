@@ -205,7 +205,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 var json = Ext.decode(response.responseText);
                 
                 if (json != null && json.updatedDashboards != null && json.updatedDashboards.length > 0) {
-                    me.appsWindow.notify('Restore Stack', '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is restored successfully to its default state!');
+                    me.appsWindow.notify('Restore App', '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is restored successfully to its default state!');
                     
                     var dashboards = stack.dashboards;
                     for(var i = 0; i < dashboards.length; i++) {
