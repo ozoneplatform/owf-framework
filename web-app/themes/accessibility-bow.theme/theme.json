@@ -17,15 +17,15 @@
     "screenshots": [
         {
             "url": "themes/accessibility-bow.theme/images/preview/bow-launch.png",
-            "description": "Launch Menu"
+            "description": "App Components"
         },
         {
             "url": "themes/accessibility-bow.theme/images/preview/bow-designer.png",
-            "description": "Dashboard Designer"
+            "description": "App Builder"
         },
         {
             "url": "themes/accessibility-bow.theme/images/preview/bow-split-dash.png",
-            "description": "Split Dashboard"
+            "description": "Split Application"
         }
     ]
 }

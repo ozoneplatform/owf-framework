@@ -17,15 +17,15 @@
     "screenshots": [
         {
             "url": "themes/accessibility-wob.theme/images/preview/wob-launch.png",
-            "description": "Launch Menu"
+            "description": "App Components"
         },
         {
             "url": "themes/accessibility-wob.theme/images/preview/wob-designer.png",
-            "description": "Dashboard Designer"
+            "description": "App Builder"
         },
         {
             "url": "themes/accessibility-wob.theme/images/preview/wob-split-dash.png",
-            "description": "Split Dashboard"
+            "description": "Split Application"
         }
     ]
 }

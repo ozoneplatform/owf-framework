@@ -17,15 +17,15 @@
     "screenshots": [
         {
             "url": "themes/a_default.theme/images/preview/OWF-launch.png",
-            "description": "Launch Menu"
+            "description": "App Components"
         },
         {
             "url": "themes/a_default.theme/images/preview/OWF-designer.png",
-            "description": "Dashboard Designer"
+            "description": "App Builder"
         },
         {
             "url": "themes/a_default.theme/images/preview/OWF-split-dash.png",
-            "description": "Split Dashboard"
+            "description": "Split Application"
         }
     ]
 }
