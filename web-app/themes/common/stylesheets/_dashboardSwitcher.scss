@@ -526,13 +526,14 @@
     
         .name {
         	color: $dashboard-switcher-dashboard-text-color;
-        	padding-left: 35%;
-        	padding-top: 8%;
         	margin-bottom: 0;
-        	max-width:300px !important;
+		    margin-left: 35%;
+		    padding-top: 4%;
+		    max-width: 200px !important;
         	
-        	*padding-left: 0;
-        	*padding-right: 10%;
+        	
+        	*margin-left: 0;
+        	*margin-right: 10%;
         }
         
         ul {
@@ -724,7 +725,10 @@
 	.description { 
 		width: 285px;
 		max-height: 300px;
-    	overflow: auto;
+    	overflow-y: scroll;
+    	overflow-x: hidden;
+    	
+    	overflow/*\**/: auto\9;
 	}
 
     .tip-description {

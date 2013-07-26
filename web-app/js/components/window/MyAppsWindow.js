@@ -110,7 +110,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                         '<div class="thumb-wrap">',
                             '{[this.getIcon(values)]}',
                         '</div>',
-                        '<div class="{[this.getName(values)]}-name">',
+                        '<div class="{[this.getName(values)]}-name" style="overflow: hidden;">',
                             '{[this.encodeAndEllipsize(values.name)]}',
                         '</div>',
                         '{[this.getActions(values)]}',
@@ -155,7 +155,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                         //get an array containing the first word of rowData.name as one elem, and the rest of name as another
                         Ext.Array.erase (/^([\S]+)\s*(.*)?/.exec(Ext.String.trim(str)), 0, 1),
                         function(it) {
-                            //for each elem in the array, truncate it with an ellipsis if it is longer than 11 characters
+                            //for each elem in the array, truncate it with an ellipsis if it is longer than 14 characters
                             return Ext.util.Format.ellipsis(it, 14);
                         }
                     //join the array back together with spaces

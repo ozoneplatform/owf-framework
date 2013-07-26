@@ -22,6 +22,21 @@ Ext.define('Ozone.components.window.MyAppTip', {
     		}
     	}
     },
+    
+    encodeAndEllipsize: function(str) {
+        //html encode the result since ellipses are special characters
+        return Ext.util.Format.htmlEncode(
+            Ext.Array.map (
+                //get an array containing the first word of rowData.name as one elem, and the rest of name as another
+                Ext.Array.erase (/^([\S]+)\s*(.*)?/.exec(Ext.String.trim(str)), 0, 1),
+                function(it) {
+                    //for each elem in the array, truncate it with an ellipsis if it is longer than 28 characters
+                    return Ext.util.Format.ellipsis(it, 12);
+                }
+            //join the array back together with spaces
+            ).join(' ')
+        );
+    },
 
     dashboardContainer: null,
     appsWindow: null,
@@ -70,7 +85,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 '<img class=\'tipIcon\'src=\'' + encodeURI(decodeURI(me.clickedStack.imageUrl)) + 
                 '\' />' : '<div class=\'tipIcon noIconGivenStack\'></div>',
             str = '<div class=\'dashboard-tooltip-content\'>' + icn +
-                '<h3 class=\'name\'>' + Ext.htmlEncode(me.clickedStack.name) + '</h3>';
+                '<h3 class=\'name\'>' + this.encodeAndEllipsize(me.clickedStack.name) + '</h3>';
 
         me.clickedStack.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedStack.description) +'</p></div>'):
         										 (str += '<p class=\'tip-description\'>  </p>');
