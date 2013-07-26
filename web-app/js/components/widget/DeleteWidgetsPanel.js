@@ -104,67 +104,46 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
                 ]
             }),
             columns: [
-            {
-                dataIndex: 'headerIcon',
-                width: 36,
-                sortable: false,
-                hideable: false,
-                menuDisabled: true,
-                renderer: function(value, metaData, record, rowIndex, colIndex, store) {
-                    var url = null;
-                    var contextPath = Ozone.util.contextPath();
-                    if (!value.match(new RegExp('^/?' + contextPath + '/.*$','i')) && !value.match(new RegExp('^https?://.*','i'))) {
-                        //url is not relative to the contextPath
-                        if (value.indexOf('/') == 0) {
-                            url = contextPath + value;
-                        } else {
-                            url = contextPath + '/' + value;
-                        }
-                    }
-                    else {
-                      //value is a full url
-                      url = value;
-                    }
-                    return '<img src="' + url + '" title="' + record.data.name + '">';
-                }
-            },
-            {
-                header: 'Name', 
-                dataIndex: 'name',
-                flex: 1,
-                sortable: false,
-                hideable: false,
-                menuDisabled: true
-            },
-            {
-                header: 'Version', 
-                dataIndex: 'version',
-                width: 121,
-                sortable: false,
-                hideable: false,
-                menuDisabled: true
-            },
-            {
-                header: 'Tags', 
-                dataIndex: 'tags',
-                //width: 150,
-                flex: 1, //fill the rest of the space
-                sortable: false,
-                hideable: false,
-                menuDisabled: true,
-                renderer: function(value, metaData, record, rowIndex, colIndex, store) {
-                    var strTags = "";
-                    if (value != null) {
-                        for (var i = 0; i < value.length; i++) {
-                            strTags += value[i].name;
-                            if (i < value.length - 1) {
-                                strTags += ", ";
+                {
+                    dataIndex: 'headerIcon',
+                    width: 36,
+                    sortable: false,
+                    hideable: false,
+                    menuDisabled: true,
+                    renderer: function(value, metaData, record, rowIndex, colIndex, store) {
+                        var url = null;
+                        var contextPath = Ozone.util.contextPath();
+                        if (!value.match(new RegExp('^/?' + contextPath + '/.*$','i')) && !value.match(new RegExp('^https?://.*','i'))) {
+                            //url is not relative to the contextPath
+                            if (value.indexOf('/') == 0) {
+                                url = contextPath + value;
+                            } else {
+                                url = contextPath + '/' + value;
                             }
                         }
+                        else {
+                          //value is a full url
+                          url = value;
+                        }
+                        return '<img src="' + url + '" title="' + record.data.name + '">';
                     }
-                    return strTags;
+                },
+                {
+                    header: 'Name', 
+                    dataIndex: 'name',
+                    flex: 1,
+                    sortable: false,
+                    hideable: false,
+                    menuDisabled: true
+                },
+                {
+                    header: 'Version', 
+                    dataIndex: 'version',
+                    width: 121,
+                    sortable: false,
+                    hideable: false,
+                    menuDisabled: true
                 }
-            }
             ],
             viewConfig: {
                 emptyText: 'No additional App Components to delete'
