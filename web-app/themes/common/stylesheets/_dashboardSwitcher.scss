@@ -150,52 +150,6 @@
 	}
 }
 
-
-/* Change carousel/slider graphics */
-/* for both My Apps and App Components */
-.bx-wrapper {
-    .bx-pager, .bx-controls-auto {
-        .bx-pager-item {
-            .bx-pager-link {
-                background: theme-image($theme-name, 'myappswindow/carousel_dot_empty-out.png');
-
-                &:hover, &.hover {
-                    background: theme-image($theme-name, 'myappswindow/carousel_dot_empty-over.png');
-                }
-
-                &.active {
-                    background: theme-image($theme-name, 'myappswindow/carousel_dot_filled-out.png');
-                    &:hover, &.hover {
-                        background: theme-image($theme-name, 'myappswindow/carousel_dot_filled-over.png');
-                    }    
-                }
-            }
-        }
-    }
-}
-
-.bx-wrapper {
-    .bx-prev, .bx-next {
-        height: 42px !important;
-    }
-    
-    .bx-prev {
-        background: theme-image($theme-name, 'myappswindow/carousel_arrows_left-out.png') 0 0 no-repeat !important;
-        
-        &:hover, &.hover {
-            background: theme-image($theme-name, 'myappswindow/carousel_arrows_left-over.png') 0 0 no-repeat !important;
-        }
-    }
-
-    .bx-next {
-        background: theme-image($theme-name, 'myappswindow/carousel_arrows_right-out.png') 0 0 no-repeat !important;
-        
-        &:hover, &.hover {
-            background: theme-image($theme-name, 'myappswindow/carousel_arrows_right-over.png') 0 0 no-repeat !important;
-        }
-    }
-}
-
 /**** BEGIN slider styling ****/
 #dashboard-switcher
     > #dashboard-switcher-body {
@@ -503,6 +457,7 @@
     .stack-dashboards {
         background: darken($dashboard-switcher-dashboard-background-color, 10%);
         overflow: hidden;
+        border-radius: 25px;
 
         .dashboard-switcher-descriptor {
             display: none;

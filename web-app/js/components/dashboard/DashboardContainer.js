@@ -583,7 +583,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         var stackDashboards = [];
         var stackContext = data.stack;
 
-        if (me.dashboardStore.getCount() > 0) {
+       if (me.dashboardStore.getCount() > 0) {
             for (var i = 0, len = me.dashboardStore.getCount(); i < len; i++) {
                 var dashRecord = me.dashboardStore.getAt(i);
                 var dash = dashRecord.data;
@@ -608,6 +608,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             }
         }
 
+        var initialCreate = false;
+
+        if ((me.dashboards.length === 1 && me.hasMpWidget()) || me.dashboards.length === 0) {
+            initialCreate = true;
+            me.createEmptyDashboard('desktop', true);
+            continueInitLoad(me.dashboards[0]);
+        }
+
         // Set active dashboard
         if (me.activeDashboard == null) {
 
@@ -630,25 +638,19 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     // Otherwise, set active dashboard to default dashboard
                     continueInitLoad(me.defaultDashboard);
                 } else {
-                    if (me.dashboards.length === 1 && me.hasMpWidget()) {
-                        me.createEmptyDashboard('desktop', true, Ext.bind(function (dash) {
-                            var dashModel = me.createDashboardConfig(Ext.create('Ozone.data.Dashboard', dash));
+                    if ((me.dashboards.length === 1 && me.hasMpWidget()) || me.dashboards.length === 0) {
+                        if (!initialCreate) {
+                            me.createEmptyDashboard('desktop', true, Ext.bind(function (dash) {
+                                var dashModel = me.createDashboardConfig(Ext.create('Ozone.data.Dashboard', dash));
 
-                            me.dashboards = [dashModel];
-                            continueInitLoad(dashModel);
-                        }, me));
+                                me.dashboards = [dashModel];
+                                continueInitLoad(me.dashboards[0]);
+                            }, me));
+                        }
                     }
-                    if (me.dashboards.length > 0) {
+                    else {
                         // Otherwise, just pick the first dash
                         continueInitLoad(me.dashboards[0]);
-                    } else {
-                        // And if all else fails, create a new active dashboard
-                        me.createEmptyDashboard('desktop', true, Ext.bind(function (dash) {
-                            var dashModel = me.createDashboardConfig(Ext.create('Ozone.data.Dashboard', dash));
-
-                            me.dashboards = [dashModel];
-                            continueInitLoad(dashModel);
-                        }, me));
                     }
                 }
             }
@@ -1865,14 +1867,22 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     reloadDashboards: function(callback) {
         // TODO improvment: only restored dashboards should be refresh and deleted dashboard be removed
         var me = this;
-        me.dashboardStore.load({
-            callback: function(records, options, success) {
-                if (success == true) {
-                    me.updateDashboardsFromStore(records, options, success, me.activeDashboard.getGuid());
+
+        // If user deleted all stacks create an empty one for them
+        if ((me.stackStore.getCount() === 1 && me.hasMpWidget()) || me.stackStore.getCount() === 0) {
+            me.createEmptyDashboard('desktop', true);
+        }
+
+        setTimeout(function() {
+            me.dashboardStore.load({
+                callback: function(records, options, success) {
+                    if (success == true) {
+                        me.updateDashboardsFromStore(records, options, success, me.activeDashboard.getGuid());
+                    }
+                    Ext.isFunction(callback) && callback(success);
                 }
-                Ext.isFunction(callback) && callback(success);
-            }
-        });
+            });
+        }, 200)
     },
 
     saveActiveDashboardToServer: function() {

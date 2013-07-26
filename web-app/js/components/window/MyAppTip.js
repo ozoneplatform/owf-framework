@@ -40,12 +40,23 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var ownerName = this.clickedStack && this.clickedStack.owner && this.clickedStack.owner.username;
         return ownerName === currentUserName;
     },
+
+    clickedStackIsFullscreen: function() {
+        return this.clickedStack.dashboards.length == 1 && this.clickedStack.dashboards[0].type == 'fullscreen'
+    },
     
     hideButtons: function() {
         var me = this;
         var notOwner = !me.isUserTheOwner();
 
-        if(notOwner) {
+        if(me.clickedStackIsFullscreen()) {
+            // Fullscreen stacks (which are created by the store for web apps) can only be deleted
+            me.hideButton('.addButton');
+            me.hideButton('.editButton');
+            me.hideButton('.pushButton');
+            me.hideButton('.restoreButton')
+        }
+        else if(notOwner) {
             me.hideButton('.addButton');
             me.hideButton('.editButton');
             me.hideButton('.pushButton');
@@ -435,8 +446,8 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         var me = this;
 
-        var msg = 'This action will permanently delete app <span class="heading-bold">' + 
-                Ext.htmlEncode(me.clickedStack.name) + '</span> and its pages.';
+        var msg = 'This action will permanently delete <span class="heading-bold">' + 
+                Ext.htmlEncode(me.clickedStack.name) + '</span>.';
 
         var stackGroups = me.clickedStack.groups
         var userGroups = Ozone.config.user.groups

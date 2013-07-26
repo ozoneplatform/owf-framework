@@ -114,11 +114,13 @@ Ext.define('Ozone.components.widget.WidgetPanel', {
         }
     },
 
-    afterCollapse: function(animated, internal) {
-      this.callParent(arguments);
-      //if this is an internal collapse we still need save state is keep the collapsed property correct
-      if (internal) {
-          this.saveState();
-      }
+    afterExpand: function (animated) {
+        this.callParent(arguments);
+        this.saveState();
+    },
+
+    afterCollapse: function(anim, internal) {
+        this.callParent(arguments);
+        this.saveState();
     }
 });

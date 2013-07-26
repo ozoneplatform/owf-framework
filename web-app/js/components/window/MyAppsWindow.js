@@ -190,24 +190,26 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
             me.bindEvents(cmp);
 
-            me.slider = $('.all-dashboards').bxSlider({
-                oneItemPerSlide: false,
-                infiniteLoop: true,
-                touchEnabled: false,
-                onSlideNext: Ext.bind(function() {
-                    me.onSlideTransition.apply(me, arguments);
-                }, me),
-                onSlidePrev: Ext.bind(function() {
-                    me.onSlideTransition.apply(me, arguments);
-                }, me)
-            });
+            if (me.stackOrDashboards.length > 0) {
+                me.slider = $('.all-dashboards').bxSlider({
+                    oneItemPerSlide: false,
+                    infiniteLoop: true,
+                    touchEnabled: false,
+                    onSlideNext: Ext.bind(function() {
+                        me.onSlideTransition.apply(me, arguments);
+                    }, me),
+                    onSlidePrev: Ext.bind(function() {
+                        me.onSlideTransition.apply(me, arguments);
+                    }, me)
+                });
 
-            if (me.slider.getSlideCount() === 1) {
-                $('.bx-wrapper .bx-pager').hide();
+                if (me.slider.getSlideCount() === 1) {
+                    $('.bx-wrapper .bx-pager').hide();
+                }
+                me.slider.disableSelection();
             }
-
-            me.slider.disableSelection();
         });
+
 
         me.on('beforeclose', me.onClose, me);
         me.on('show', me.verifyDiscoverMoreButton, me);
@@ -386,9 +388,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         
         var me = this,
             activeDashboardId = this.activeDashboard.id,
-            $dashboardEl = $('#dashboard' + activeDashboardId, '.stack-dashboards'),
+            $dashboardEl = $('#dashboard' + activeDashboardId, '.stack-dashboards .bx-slide:not(.bx-clone)'),
             $dashboardElSlide = $dashboardEl.parent(),
-            slideIndexOfActiveDashboard = $('.bx-slide:not(.bx-clone)', '.stack-dashboard').index($dashboardElSlide);
+            slideIndexOfActiveDashboard = $('.bx-slide:not(.bx-clone)', '.stack-dashboards').index($dashboardElSlide);
 
         return slideIndexOfActiveDashboard;
     },
@@ -396,17 +398,19 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     goToActiveStackSlide: function() {
         var me = this;
 
-        if (!me.getActiveStackId() || me.activeDashboard.configRecord.isMarketplaceDashboard()) {
-            me.slider.goToSlide(0);
-        } else {
-            me.slider.goToSlide(me.getActiveStackSlideIndex());
+        if (me.stackOrDashboards.length > 0) {
+            if (!me.getActiveStackId() || me.activeDashboard.configRecord.isMarketplaceDashboard()) {
+                me.slider.goToSlide(0);
+            } else {
+                me.slider.goToSlide(me.getActiveStackSlideIndex());
+            }
         }
     },
 
     goToActiveDashboardSlideinMiniSlider: function() {
         var me = this;
 
-        me.appPageCarousel.goToSlide(me.getActiveDashboardMiniSlideIndex);
+        me.appPageCarousel.goToSlide(me.getActiveDashboardMiniSlideIndex());
     },
 
     onSlideTransition: function($slideElement, oldIndex, newIndex) {
@@ -793,6 +797,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             if (stack) {
                 if (this.stacks[stackId]) {
                     this.toggleStack(this.stacks[stackId], $('#stack'+stackId, '.bx-slide:not(.bx-clone)')).then(function () {
+                        me.goToActiveDashboardSlideinMiniSlider();
                         me.focusActiveDashboard();
                     });
                 }
