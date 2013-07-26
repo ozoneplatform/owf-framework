@@ -190,24 +190,26 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
             me.bindEvents(cmp);
 
-            me.slider = $('.all-dashboards').bxSlider({
-                oneItemPerSlide: false,
-                infiniteLoop: true,
-                touchEnabled: false,
-                onSlideNext: Ext.bind(function() {
-                    me.onSlideTransition.apply(me, arguments);
-                }, me),
-                onSlidePrev: Ext.bind(function() {
-                    me.onSlideTransition.apply(me, arguments);
-                }, me)
-            });
+            if (me.stackOrDashboards.length > 0) {
+                me.slider = $('.all-dashboards').bxSlider({
+                    oneItemPerSlide: false,
+                    infiniteLoop: true,
+                    touchEnabled: false,
+                    onSlideNext: Ext.bind(function() {
+                        me.onSlideTransition.apply(me, arguments);
+                    }, me),
+                    onSlidePrev: Ext.bind(function() {
+                        me.onSlideTransition.apply(me, arguments);
+                    }, me)
+                });
 
-            if (me.slider.getSlideCount() === 1) {
-                $('.bx-wrapper .bx-pager').hide();
+                if (me.slider.getSlideCount() === 1) {
+                    $('.bx-wrapper .bx-pager').hide();
+                }
+                me.slider.disableSelection();
             }
-
-            me.slider.disableSelection();
         });
+
 
         me.on('beforeclose', me.onClose, me);
         me.on('show', me.verifyDiscoverMoreButton, me);
@@ -396,10 +398,12 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     goToActiveStackSlide: function() {
         var me = this;
 
-        if (!me.getActiveStackId() || me.activeDashboard.configRecord.isMarketplaceDashboard()) {
-            me.slider.goToSlide(0);
-        } else {
-            me.slider.goToSlide(me.getActiveStackSlideIndex());
+        if (me.stackOrDashboards.length > 0) {
+            if (!me.getActiveStackId() || me.activeDashboard.configRecord.isMarketplaceDashboard()) {
+                me.slider.goToSlide(0);
+            } else {
+                me.slider.goToSlide(me.getActiveStackSlideIndex());
+            }
         }
     },
 
