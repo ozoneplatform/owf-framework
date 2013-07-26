@@ -706,7 +706,6 @@ class StackService {
         //Get only the parameters required for a stack descriptor
         return [
                 'name': stack.name,
-                'owner': stack.owner,
                 'stackContext': stack.stackContext,
                 'description': stack.description,
                 'dashboards': dashboards,
