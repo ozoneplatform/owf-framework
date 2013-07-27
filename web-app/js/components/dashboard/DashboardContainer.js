@@ -46,35 +46,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     // private
     initComponent: function() {
-        var me = this,
-            stackModels = {},
-            dashboard, stack, model;
+        var me = this;
 
         this.loadMask = Ext.create('Ozone.components.mask.LoadMask', Ext.getBody(), {
             zIndexManager: this.modalWindowManager
         });
 
-        this.stackStore = Ext.create('Ozone.data.StackStore', {});
-
-        for (var i = 0, len = this.dashboardStore.getCount(); i < len; i++) {
-
-            model = this.dashboardStore.getAt(i);
-
-            dashboard = model.data;
-            stack = dashboard.stack;
-
-            if (stack) {
-                if (stackModels[stack.id]) {
-                    stackModels[stack.id].get('dashboards').push(model);
-                } else {
-                    var stackModel = this.stackStore.add(stack)[0];
-                    stackModel.set('dashboards', [model]);
-
-                    stackModels[stack.id] = stackModel;
-                }
-            }
-
-        }
+        this.reloadStacks();
 
         this.originalDashboardStore = Ext.create('Ozone.data.DashboardStore', {});
         this.dashboardMenuItems = [];
@@ -219,6 +197,32 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                  me._refreshAppComponent = true;
             }
         });
+    },
+
+    reloadStacks: function() {
+        var model, dashboard, stack;
+        var stackModels = {};
+        this.stackStore = Ext.create('Ozone.data.StackStore', {});
+
+        for (var i = 0, len = this.dashboardStore.getCount(); i < len; i++) {
+
+            model = this.dashboardStore.getAt(i);
+
+            dashboard = model.data;
+            stack = dashboard.stack;
+
+            if (stack) {
+                if (stackModels[stack.id]) {
+                    stackModels[stack.id].get('dashboards').push(model);
+                } else {
+                    var stackModel = this.stackStore.add(stack)[0];
+                    stackModel.set('dashboards', [model]);
+
+                    stackModels[stack.id] = stackModel;
+                }
+            }
+
+        }
     },
 
     onWidgetMouseDown: function(evt, target) {
@@ -1885,11 +1889,12 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
      * whether or not the refresh was successful
      */
     reloadDashboards: function(callback) {
-        // TODO improvment: only restored dashboards should be refresh and deleted dashboard be removed
+        // TODO improvement: only restored dashboards should be refresh and deleted dashboard be removed
         var me = this;
 
         me.dashboardStore.load({
             callback: function(records, options, success) {
+                me.reloadStacks();
                 records = me.dashboardStore.data.items;
                 if (success == true) {
                     me.updateDashboardsFromStore(records, options, success, me.activeDashboard.getGuid());
