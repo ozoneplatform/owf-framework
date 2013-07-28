@@ -78,7 +78,6 @@
                                     '<img src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="x-tool-close">' +
                                 '</a>' +
                                 '<input type="text" class="search-input">' +
-                                '<span>App Components</span>'+
                             '</div>' + 
                             '<div class="body"></div>'
             );

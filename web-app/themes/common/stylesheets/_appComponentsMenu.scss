@@ -16,6 +16,7 @@
 
     .body {
         overflow: hidden;
+        clear: both;
     }
 
     .app-components {
@@ -30,6 +31,10 @@
         background-image: theme-image($theme-name, 'grabber.png');
         background-repeat: no-repeat;
         background-position: center;
+    }
+
+    .bx-wrapper {
+        margin: 0px;
     }
 
     .bx-slide {
@@ -110,10 +115,6 @@
 
     .remember {
         margin-left: 5px;
-    }
-
-    .bx-wrapper {
-        height: 100%;
     }
 }
 
