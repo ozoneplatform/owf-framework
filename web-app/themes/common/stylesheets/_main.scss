@@ -662,18 +662,18 @@ img.widget-drag-proxy {
     }
     
     .bx-prev {
-        background: theme-image($theme-name, 'myappswindow/carousel_arrows_left_out.png') 0 0 no-repeat !important;
+        background: theme-image($theme-name, 'myappswindow/carousel_arrows_left_out.png') 0 0 no-repeat;
         
-        &:hover, &.hover {
-            background: theme-image($theme-name, 'myappswindow/carousel_arrows_left_over.png') 0 0 no-repeat !important;
+        &:hover {
+            background: theme-image($theme-name, 'myappswindow/carousel_arrows_left_over.png') 0 0 no-repeat;
         }
     }
 
     .bx-next {
-        background: theme-image($theme-name, 'myappswindow/carousel_arrows_right_out.png') 0 0 no-repeat !important;
+        background: theme-image($theme-name, 'myappswindow/carousel_arrows_right_out.png') 0 0 no-repeat;
         
-        &:hover, &.hover {
-            background: theme-image($theme-name, 'myappswindow/carousel_arrows_right_over.png') 0 0 no-repeat !important;
+        &:hover {
+            background: theme-image($theme-name, 'myappswindow/carousel_arrows_right_over.png') 0 0 no-repeat;
         }
     }
 }
