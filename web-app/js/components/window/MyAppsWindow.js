@@ -239,7 +239,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             $draggedItemParent,
             $dragProxy,
             carousel
-            isDraggingStackDashboard = false;
+            isDraggingStackDashboard = false,
+            isDropValid = true;
 
         // disable selection while dragging
         $dom
@@ -311,11 +312,12 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
                 // only allow reordering if parents match and 
                 // prevent reordering stack dashboards outside of stack and vice versa.
-                // if($draggedItemParent[0] !== $el.parent()[0])
-                //     return;
                 if(isDraggingStackDashboard && $el.parents('.stack-dashboards').length === 0) {
+                    isDropValid = false;
                     return;
                 }
+
+                isDropValid = true;
 
                 var pageX = evt.pageX,      // The mouse position relative to the left edge of the document.
                     pageY = evt.pageY,      // The mouse position relative to the top edge of the document.
@@ -338,12 +340,12 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
             // drop performed on a dashboard
             $dom.on('mouseup.reorder', '.dashboard', function (evt) {
-                me._dropOnDashboard($draggedItem, $(this));
+                isDropValid && me._dropOnDashboard($draggedItem, $(this));
             });
             
             // drop performed on a stack
             $dom.on('mouseup.reorder', '.stack', function (evt) {
-                me._dropOnStack($draggedItem, $(this));
+                isDropValid && me._dropOnStack($draggedItem, $(this));
             });
 
             // cleanup on mouseup
