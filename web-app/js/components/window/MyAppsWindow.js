@@ -19,8 +19,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     viewId: 'dashboard-switcher-dashboard-view',
 
     width: 750,
-    height: 500,
-    expandedHeight: 650,
+    height: 520,
+    expandedHeight: 670,
 
     dashboardContainer: null,
 
@@ -914,6 +914,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             dfd = $.Deferred();
 
         me.removeDeletedDashboard(stack);
+
+        $('.' + me.selectedAppCls).removeClass(me.selectedAppCls);
+        $stack.addClass(me.selectedAppCls);
 
         // don't expand stacks with one page/dashboard
         if (stack && stack.dashboards && stack.dashboards.length === 1) {

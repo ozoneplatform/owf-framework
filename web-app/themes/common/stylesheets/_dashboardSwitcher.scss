@@ -44,7 +44,9 @@
 
     .actions {
         height: auto;
-        text-align: right;
+        position: absolute;
+        bottom: -25px;
+        right: 0;
 
         ul {
             color: $dashboard-switcher-descriptor-color;
