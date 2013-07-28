@@ -297,6 +297,10 @@
         width: 690px;
         margin: 0 auto;
 
+        &.one-slide {
+            height: $dashboard-mini-slider-height-one-slide;
+        }
+
         @include border-radius($dashboard-mini-slider-body-radius);
 
         > .bx-wrapper {

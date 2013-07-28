@@ -19,8 +19,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     viewId: 'dashboard-switcher-dashboard-view',
 
     width: 750,
-    height: 520,
-    expandedHeight: 670,
+    height: 525,
+    expandedHeight: 675,
 
     dashboardContainer: null,
 
@@ -1036,6 +1036,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         if (me.appPageCarousel.getSlideCount() === 1) {
             $('.bx-pager', '.stack-dashboards').hide();
+            $('.stack-dashboards').addClass('one-slide');
         }
 
         me.appPageCarousel.disableSelection();

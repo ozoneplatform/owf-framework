@@ -23,6 +23,8 @@ $dashboard-mini-slider-height: $dashboard-height + $dashboard-padding-top;
 $dashboard-mini-slider-width: 
 	($dashboard-mini-slider-dashboard-width + $dashboard-mini-slider-dashboard-margin-left) * 5;
 
+$dashboard-mini-slider-height-one-slide: 125px;
+
 $dashboard-mini-slider-viewport-height: $dashboard-mini-slider-height + $dashboard-padding-top;
 $dashboard-mini-slider-viewport-height-ie7: $dashboard-mini-slider-viewport-height + 5px;
 $dashboard-mini-slider-body-radius: 3px !default;
