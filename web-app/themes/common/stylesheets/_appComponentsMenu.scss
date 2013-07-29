@@ -8,123 +8,8 @@
     -webkit-box-sizing: content-box;
 }
 
-#appcomponents-view {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-
-    .header {
-        height: 3em;
-    }
-
-    .body {
-        overflow: hidden;
-        clear: both;
-    }
-
-    .app-components {
-        overflow: hidden;
-        height: 150px;
-    }
-
-    .ui-resizable-s {
-        position: relative;
-        height: 25px;
-        bottom: auto;
-        background-image: theme-image($theme-name, 'grabber.png');
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-
-    .bx-wrapper {
-        margin: 0px;
-    }
-
-    .bx-slide {
-        height: 100%;
-    }
-
-    .bx-prev {
-        background: theme-image($theme-name, 'appcomponents/left_dark.png') 0 0 no-repeat;
-        
-        &:hover {
-            background: theme-image($theme-name, 'appcomponents/left_light.png') 0 0 no-repeat;
-        }
-    }
-
-    .bx-next {
-        background: theme-image($theme-name, 'appcomponents/right_dark.png') 0 0 no-repeat;
-        
-        &:hover {
-            background: theme-image($theme-name, 'appcomponents/right_light.png') 0 0 no-repeat;
-        }
-    }
-}
-
-.widget {
-    background-color: $widget-launcher-background-color;
-    border-color: $widget-launcher-background-color;
-    float: left;
-    cursor: pointer;
-    
-
-    .thumb-text {
-        color: $widget-launcher-widget-text-color;
-        overflow: hidden;
-    }
-
-    &:hover {
-        background-color: $widget-launcher-widget-over-background-color;
-        border-color: $widget-launcher-widget-over-border-color;
-
-        .thumb-text {
-            color: $widget-launcher-widget-over-text-color;
-        }
-    }
-}
-
-.widget.selected {
-    background-color: $widget-launcher-widget-selected-background-color;
-    border-color: $widget-launcher-widget-selected-border-color;
-    .thumb-text {
-        color: $widget-launcher-widget-selected-text-color;
-    }
-}
-
-.widget-disabled {
-    /*-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";*/
-    /*filter: alpha(opacity=40);*/
-    /*opacity: 0.4;  */
-    @include opacity(.4);
-}
-
-
-.intent-modal-mask {
-    z-index: 100000;
-}
-
-#intents-window {
-    z-index: 100002;
-    width: 48em;
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    margin-left: -24em;
-    @include border-radius(0.5em);
-
-    .body {
-        margin: 0 1em 0 1em;
-    }
-
-    .remember {
-        margin-left: 5px;
-    }
-}
-
 #appcomponents-view, #intents-window {
     color: #fff;
-    background: $widget-launcher-background-color;
 
     .search-input {
         float: right;
@@ -169,6 +54,127 @@
         vertical-align: middle;
         background-image: theme-image($theme-name, 'tools/close-out.png') !important;
     }
+}
+
+#appcomponents-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    .header {
+        height: 3em;
+        margin: 0;
+        background: $widget-launcher-background-color;
+    }
+
+    .x-tool-close {
+        margin: 0 0.5em 0 0;
+    }
+
+    .body {
+        overflow: hidden;
+        clear: both;
+    }
+
+    .app-components {
+        overflow: hidden;
+        height: 150px;
+        background: $widget-launcher-background-color;
+    }
+
+    .bx-wrapper {
+        margin: 0px;
+        background: $widget-launcher-background-color;
+    }
+
+    .bx-slide {
+        height: 100%;
+    }
+
+    .bx-prev {
+        background: theme-image($theme-name, 'appcomponents/left_dark.png') 0 0 no-repeat;
+        
+        &:hover {
+            background: theme-image($theme-name, 'appcomponents/left_light.png') 0 0 no-repeat;
+        }
+    }
+
+    .bx-next {
+        background: theme-image($theme-name, 'appcomponents/right_dark.png') 0 0 no-repeat;
+        
+        &:hover {
+            background: theme-image($theme-name, 'appcomponents/right_light.png') 0 0 no-repeat;
+        }
+    }
+
+    .ui-resizable-s {
+        height: 25px;
+        bottom: 0;
+        background-image: theme-image($theme-name, 'appcomponents/gripper.png');
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+}
+
+.intent-modal-mask {
+    z-index: 100000;
+}
+
+#intents-window {
+    z-index: 100002;
+    width: 48em;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    margin-left: -24em;
+    @include border-radius(0.5em);
+    background: $widget-launcher-background-color;
+
+    .body {
+        margin: 0 1em 0 1em;
+    }
+
+    .remember {
+        margin-left: 5px;
+    }
+}
+
+.widget {
+    background-color: $widget-launcher-background-color;
+    border-color: $widget-launcher-background-color;
+    float: left;
+    cursor: pointer;
+    
+
+    .thumb-text {
+        color: $widget-launcher-widget-text-color;
+        overflow: hidden;
+    }
+
+    &:hover {
+        background-color: $widget-launcher-widget-over-background-color;
+        border-color: $widget-launcher-widget-over-border-color;
+
+        .thumb-text {
+            color: $widget-launcher-widget-over-text-color;
+        }
+    }
+}
+
+.widget.selected {
+    background-color: $widget-launcher-widget-selected-background-color;
+    border-color: $widget-launcher-widget-selected-border-color;
+    .thumb-text {
+        color: $widget-launcher-widget-selected-text-color;
+    }
+}
+
+.widget-disabled {
+    /*-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";*/
+    /*filter: alpha(opacity=40);*/
+    /*opacity: 0.4;  */
+    @include opacity(.4);
 }
 
 #widget-details-tip {

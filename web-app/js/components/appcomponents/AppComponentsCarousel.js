@@ -36,6 +36,9 @@
         // default size to user
         size: null,
 
+        // gripper height
+        GRIPPER_HEIGHT: 25,
+
         render: function () {
             var height,
                 $el = $(this.tpl);
@@ -50,7 +53,7 @@
                 this.$container.height(height);
 
                 // substract margin bottom and grabber height for carousel pager to show
-                this.$el.height(height - 25);
+                this.$el.height(height - this.GRIPPER_HEIGHT);
             }
 
             return SuperClass.prototype.render.call(this);
@@ -81,16 +84,44 @@
         },
 
         initResizable: function () {
-            var elHeight = this.$el.children(':first-child').outerHeight(true) + 1,
-                minHeight = elHeight + 25,
+            var me = this,
+                minHeight = 125 + this.GRIPPER_HEIGHT,
                 // leave bottom 64px visible
-                maxHeight = $(window).height() - this.$container.offset().top - 64;
+                maxHeight = $(window).height() - this.$container.offset().top - 64,
+                $bxWrapper;
 
             this.$container.resizable({
                 handles: 's',
                 minHeight: minHeight,
                 maxHeight: maxHeight,
-                stop: _.bind(this.doLayout, this)
+                start: function () {
+                    $bxWrapper = me.$el.parents('.bx-wrapper');
+                },
+                resize: function (evt, ui) {
+                    $bxWrapper.css({
+                        position: 'absolute',
+                        top: '0px',
+                        bottom: me.GRIPPER_HEIGHT + 'px'
+                    });
+
+                    // update heights
+                    var height = $bxWrapper.height();
+                    me.$el.css({
+                        height: height
+                    });
+                    me.$el.parent().css({
+                        height: height
+                    });
+                },
+                stop: function (evt, ui) {
+                    $bxWrapper.css({
+                        position: '',
+                        top: '',
+                        bottom: ''
+                    });
+                    $bxWrapper = null;
+                    me.doLayout(evt, ui);
+                }
             });
             return this;
         },
@@ -102,7 +133,7 @@
             this.destroyCarousel();
 
             // substract margin bottom and grabber height for carousel pager to show
-            this.$el.height(height - 25);
+            this.$el.height(height - this.GRIPPER_HEIGHT);
 
             this.initCarousel();
         },
