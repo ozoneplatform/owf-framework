@@ -198,7 +198,8 @@
 
     &:hover {
         background-color: $widget-launcher-widget-over-background-color;
-        border-color: $widget-launcher-widget-over-border-color;
+        // OP-2312: no border on hover
+        // border-color: $widget-launcher-widget-over-border-color;
 
         .thumb-text {
             color: $widget-launcher-widget-over-text-color;
