@@ -1923,12 +1923,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             };
         }
 
-        json.stack = json.stack || {
-            "name": json.name,
-            "description": json.description,
-            "imageUrl": json.iconImageUrl
-        };
-
         Ozone.pref.PrefServer.createOrUpdateDashboard({
             json: json,
             saveAsNew: createOrUpdate == 'create' ? true : false,

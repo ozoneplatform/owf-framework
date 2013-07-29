@@ -279,20 +279,46 @@ Ozone.pref = Ozone.pref || {};
             'markedForDeletion' : json.markedForDeletion,
             'publishedToStore' : json.publishedToStore
           };
+
+          //remove undefined fields, which are serialized incorrectly by Ozone.util.toString
+          for (var prop in postParams) {
+            if (postParams[prop] === undefined) {
+                delete postParams[prop];
+            }
+          }
           return postParams;
       };
 
       var generateStackPostParamsJSON = function (json) {
-          if (json.stack.id) {
-              return { 'id': json.stack.id }
-          } else {
-              return {
-                  'name': json.stack.name,
-                  'description': json.stack.description,
-                  'imageUrl': json.stack.imageUrl,
-                  'stackContext': json.stack.stackContext
+          var stack;
+
+          if (json.stack) {
+              if (json.stack.id) {
+                  stack = { 'id': json.stack.id };
+              } else {
+                  stack = {
+                      'name': json.stack.name,
+                      'description': json.stack.description,
+                      'imageUrl': json.stack.imageUrl,
+                      'stackContext': json.stack.stackContext
+                  };
+              }
+          }
+          else {
+              stack = {
+                  "name": json.name,
+                  "description": json.description,
+                  "imageUrl": json.iconImageUrl
               };
           }
+
+          for (var prop in stack) {
+            if (stack[prop] === undefined) {
+                delete stack[prop];
+            }
+          }
+
+          return stack;
       };
 
       /**
@@ -307,8 +333,8 @@ Ozone.pref = Ozone.pref || {};
        */
       var generateAppPostParamsJSON = function (json) {
           return {
-              'stackData': JSON.stringify(generateStackPostParamsJSON(json)),
-              'dashboardData': JSON.stringify(generateDashboardPostParamsJSON(json)),
+              'stackData': Ozone.util.toString(generateStackPostParamsJSON(json)),
+              'dashboardData': Ozone.util.toString(generateDashboardPostParamsJSON(json)),
               'tab': 'dashboards',
               'update_action': 'createAndAddDashboard',
               'adminEnabled': false,
