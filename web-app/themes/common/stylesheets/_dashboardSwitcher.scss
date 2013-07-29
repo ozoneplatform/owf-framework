@@ -646,6 +646,7 @@
     }
 
     .tip-warning {
+    	
         .x-box-inner {
             height: inherit !important;
             top: 0 !important;
@@ -687,7 +688,7 @@
         }
 
         .x-panel-body {
-            background: $widget-launcher-background-color;
+            background: $my-apps-tooltip-color;
             border: none;
             color: getHighContrastColor($widget-launcher-background-color);
             padding: 10px 8px;
@@ -703,7 +704,7 @@
             filter: none;
         }
 
-        background: $widget-launcher-background-color;
+        background: $my-apps-tooltip-color;
         border: none;
     }
 
