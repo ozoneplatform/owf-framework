@@ -357,6 +357,7 @@
             background-repeat: no-repeat;
             background-position: center center;
             background-image: $dashboard-switcher-layout-default-icon;
+            background-size: 100%;
         }
     }
 
@@ -399,10 +400,6 @@
 }
 
 #dashboard-switcher .dashboard, .dashboard.drag-proxy {
-    .thumb {
-        background-size: 100%;
-    }
-
     &:hover, &.hover {
         background-color: darken($dashboard-switcher-dashboard-over-background-color, 10);
     }
@@ -415,7 +412,6 @@
 #dashboard-switcher .stack, .stack.drag-proxy {
     .thumb {
         background-image: $dashboard-switcher-layout-stack-default-icon !important;
-        background-size: 100%;
     }
 }
 
