@@ -28,7 +28,7 @@
         // boolean flag indicating whether or not carousel is instantiated
         _carousel: false,
 
-        tpl: '<div class="app-components"></div>',
+        tpl: '<div class="app-components"><div class="app-components-body"></div>',
 
         // container element
         $container: null,
@@ -37,7 +37,7 @@
         size: null,
 
         // gripper height
-        GRIPPER_HEIGHT: 25,
+        GRIPPER_HEIGHT: 25 + 21,
 
         render: function () {
             var height,
@@ -45,7 +45,9 @@
 
             this.$el.html($el);
             this.$container = this.$el;
-            this.setElement($el);
+            this.$appcomponents = $el;
+            this.setElement($el.children('.app-components-body'));
+
 
             if(this.size && this.size.height) {
                 height = this.size.height * $(window).height();
@@ -55,6 +57,7 @@
                 // substract gripper height for carousel pager to show
                 this.$el.height(height - this.GRIPPER_HEIGHT);
             }
+
 
             return SuperClass.prototype.render.call(this);
         },
@@ -88,38 +91,23 @@
                 minHeight = 125 + this.GRIPPER_HEIGHT,
                 // leave bottom 64px visible
                 maxHeight = $(window).height() - this.$container.offset().top - 64,
-                $bxWrapper;
+                $bx;
 
             this.$container.resizable({
                 handles: 's',
                 minHeight: minHeight,
                 maxHeight: maxHeight,
                 start: function (evt, ui) {
-                    $bxWrapper = me.$el.parents('.bx-wrapper');
+                    $bx = me.$container.find('.bx-wrapper, .bx-viewport');
                 },
                 resize: function (evt, ui) {
-                    $bxWrapper.css({
-                        position: 'absolute',
-                        top: '0px',
-                        bottom: me.GRIPPER_HEIGHT + 'px'
-                    });
+                    var height = ui.size.height - me.GRIPPER_HEIGHT;
 
-                    // update heights
-                    var height = $bxWrapper.height();
-                    me.$el.css({
-                        height: height
-                    });
-                    me.$el.parent().css({
-                        height: height
-                    });
+                    me.$appcomponents.height(height);
+                    $bx.height(height);
                 },
                 stop: function (evt, ui) {
-                    $bxWrapper.css({
-                        position: '',
-                        top: '',
-                        bottom: ''
-                    });
-                    $bxWrapper = null;
+                    $bx = null;
                     me.doLayout(evt, ui);
                 }
             });

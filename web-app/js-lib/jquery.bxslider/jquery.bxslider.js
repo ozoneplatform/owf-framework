@@ -125,8 +125,9 @@
 			
 			// wrap el in a wrapper
 			el.wrap('<div class="bx-wrapper"><div class="bx-viewport"></div></div>');
-			// store a namspace reference to .bx-viewport
+			// store a namspace reference to .bx-viewport and .bx-wrapper
 			slider.viewport = el.parent();
+			slider.wrapper = slider.viewport.parent();
 
 			slider.slides = null;
 			if(!slider.settings.oneItemPerSlide) createSlides();
@@ -630,7 +631,14 @@
 				pagerHtml += '<div class="bx-pager-item"><a href="" data-slide-index="' + i + '" class="bx-pager-link">' + linkContent + '</a></div>';
 			};
 			// populate the pager element with pager links
-			slider.pagerEl.html(pagerHtml)[el.getSlideCount() === 1 ? 'hide' : 'show']();
+			slider.pagerEl.html(pagerHtml);
+
+			if(el.getSlideCount() === 1) {
+				slider.wrapper.addClass('hide-pager');
+			}
+			else {
+				slider.wrapper.removeClass('hide-pager');
+			}
 		}
 		
 		/**

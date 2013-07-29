@@ -78,13 +78,33 @@
     }
 
     .app-components {
-        overflow: hidden;
-        height: 150px;
         background: $widget-launcher-background-color;
     }
 
+    .app-components-body {
+        overflow: hidden;
+        height: 150px;
+    }
+
     .bx-wrapper {
-        margin: 0px;
+        margin: 0 auto 21px;
+        background: $widget-launcher-background-color;
+
+        &.hide-pager {
+            .bx-pager {
+                display: block;
+            }
+
+            .bx-pager-item {
+                visibility: hidden;
+            }
+        }
+    }
+
+    .bx-pager {
+        padding: 5px 0;
+        font-size: 0px;
+        position: static;
         background: $widget-launcher-background-color;
     }
 
@@ -120,6 +140,10 @@
         background-position: center;
         @extend .grab;
     }
+}
+
+.x-ie .ui-resizable-s {
+    cursor: s-resize !important;
 }
 
 .intent-modal-mask {

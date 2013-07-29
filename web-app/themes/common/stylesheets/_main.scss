@@ -644,6 +644,7 @@ img.widget-drag-proxy {
 /* Change carousel/slider graphics */
 /* for both My Apps and App Components */
 .bx-wrapper {
+    
     .bx-pager, .bx-controls-auto {
         .bx-pager-item {
             .bx-pager-link {
@@ -666,9 +667,7 @@ img.widget-drag-proxy {
         width: 12px;
         height: 11px;
     }
-}
 
-.bx-wrapper {
     .bx-prev, .bx-next {
         height: 42px !important;
     }
@@ -686,6 +685,12 @@ img.widget-drag-proxy {
         
         &:hover {
             background: theme-image($theme-name, 'myappswindow/carousel_arrows_right_over.png') 0 0 no-repeat;
+        }
+    }
+
+    &.hide-pager {
+        .bx-pager {
+            display: none;
         }
     }
 }
