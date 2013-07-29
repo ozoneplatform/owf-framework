@@ -268,4 +268,28 @@ databaseChangeLog = {
             where("guid='7f2f6d45-263a-7aeb-d841-3637678ce559' AND user_id IS NULL AND name='Contacts'")
         }
     }
+
+    changeSet(author: "owf", id: "7.3-12", context: "sampleData, 7.3-sampleData") {
+
+        comment("Adding in the domain mapping changes that need to be made for the group dashboards in the sample data")
+
+        insert(tableName: "domain_mapping") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "dest_id", valueNumeric: "(SELECT id FROM dashboard WHERE guid='c62ce95c-d16d-4ffe-afae-c46fa64a689b' AND user_id IS NULL AND name='Sample'")
+            column(name: "dest_type", value: "dashboard")
+            column(name: "relationship_type", value: "owns")
+            column(name: "src_id", valueNumeric: "(SELECT id FROM owf_group WHERE name='df51cb9b-f3d8-412e-af33-d064f81fb6c0')")
+            column(name: "src_type", value: "group")
+        }
+
+        insert(tableName: "domain_mapping") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "dest_id", valueNumeric: "(SELECT id FROM dashboard WHERE guid='54949b5d-f0ee-4347-811e-2522a1bf96fe' AND user_id IS NULL AND name='Administration'")
+            column(name: "dest_type", value: "dashboard")
+            column(name: "relationship_type", value: "owns")
+            column(name: "src_id", valueNumeric: "(SELECT id FROM owf_group WHERE name='3b870e3b-247f-47db-bcd8-8fab6877bbc8')")
+            column(name: "src_type", value: "group")
+        }
+
+    }
 }
