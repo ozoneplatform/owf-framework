@@ -56,7 +56,7 @@ Ext.define('Ozone.components.admin.widget.WidgetDetailPanel', {
 			'<div><span class="detail-label">Single Instance:</span> {singleton}</div>',
 			'<div><span class="detail-label">Visible:</span> {definitionVisible}</div>',
       '<div><span class="detail-label">Background:</span> {background}</div>',
-			'<div><span class="detail-label">Requires Widgets:</span> {directRequired:this.renderRequiresFlag}</div>',
+			'<div><span class="detail-label">Requires App Components:</span> {directRequired:this.renderRequiresFlag}</div>',
 			'<div><span class="detail-label">Width:</span> {width}</div>',
 			'<div><span class="detail-label">Height:</span> {height}</div>',
 			'</div>',
@@ -123,7 +123,7 @@ Ext.define('Ozone.components.admin.widget.WidgetDetailPanel', {
           type: 'adminwidgetstore',
           remoteSort: false
         },
-//        title: 'This Widget Requires:',
+//        title: 'This App Component Requires:',
         dockedItems: [
           {
             xtype: 'toolbar',
@@ -131,7 +131,7 @@ Ext.define('Ozone.components.admin.widget.WidgetDetailPanel', {
             items: [
               {
                 xtype: 'tbtext',
-                text: 'This Widget Requires:'
+                text: 'This App Component Requires:'
               }
             ]
           }

@@ -706,7 +706,6 @@ class StackService {
         //Get only the parameters required for a stack descriptor
         return [
                 'name': stack.name,
-                'owner': stack.owner,
                 'stackContext': stack.stackContext,
                 'description': stack.description,
                 'dashboards': dashboards,
@@ -811,7 +810,7 @@ class StackService {
     }
 
     /**
-     * Create a stack, assigned the group dashboard to that stack.
+     * Create a stack, assign the group dashboard to that stack.
      * @param groupDashboard
      */
     def createAppForGroupDashboard(Dashboard groupDashboard) {
@@ -822,6 +821,8 @@ class StackService {
                     imageUrl: groupDashboard.iconImageUrl,
                     owner: null])
 
+            Group stackDefaultGroup = newApp.groups.asList()[0]
+
             // Obtain the group dashboard's groups
             List<Group> groups = dashboardService.getGroupDashboardsGroups(groupDashboard)
 
@@ -831,8 +832,9 @@ class StackService {
                 // Disassociate the group dashboard from all of its groups
                 dashboardService.removeGroupDashboardFromGroup(groupDashboard, group)
             }
-
             newApp.save()
+
+            domainMappingService.createMapping(stackDefaultGroup, RelationshipType.owns, groupDashboard)
 
             groupDashboard.stack = newApp
             groupDashboard.publishedToStore = true

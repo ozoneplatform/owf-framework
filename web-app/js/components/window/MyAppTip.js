@@ -22,6 +22,21 @@ Ext.define('Ozone.components.window.MyAppTip', {
     		}
     	}
     },
+    
+    encodeAndEllipsize: function(str) {
+        //html encode the result since ellipses are special characters
+        return Ext.util.Format.htmlEncode(
+            Ext.Array.map (
+                //get an array containing the first word of rowData.name as one elem, and the rest of name as another
+                Ext.Array.erase (/^([\S]+)\s*(.*)?/.exec(Ext.String.trim(str)), 0, 1),
+                function(it) {
+                    //for each elem in the array, truncate it with an ellipsis if it is longer than 21 characters
+                    return Ext.util.Format.ellipsis(it, 21);
+                }
+            //join the array back together with spaces
+            ).join(' ')
+        );
+    },
 
     dashboardContainer: null,
     appsWindow: null,
@@ -40,12 +55,23 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var ownerName = this.clickedStack && this.clickedStack.owner && this.clickedStack.owner.username;
         return ownerName === currentUserName;
     },
+
+    clickedStackIsFullscreen: function() {
+        return this.clickedStack.dashboards.length == 1 && this.clickedStack.dashboards[0].type == 'fullscreen'
+    },
     
     hideButtons: function() {
         var me = this;
         var notOwner = !me.isUserTheOwner();
 
-        if(notOwner) {
+        if(me.clickedStackIsFullscreen()) {
+            // Fullscreen stacks (which are created by the store for web apps) can only be deleted
+            me.hideButton('.addButton');
+            me.hideButton('.editButton');
+            me.hideButton('.pushButton');
+            me.hideButton('.restoreButton')
+        }
+        else if(notOwner) {
             me.hideButton('.addButton');
             me.hideButton('.editButton');
             me.hideButton('.pushButton');
@@ -59,7 +85,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 '<img class=\'tipIcon\'src=\'' + encodeURI(decodeURI(me.clickedStack.imageUrl)) + 
                 '\' />' : '<div class=\'tipIcon noIconGivenStack\'></div>',
             str = '<div class=\'dashboard-tooltip-content\'>' + icn +
-                '<h3 class=\'name\'>' + Ext.htmlEncode(me.clickedStack.name) + '</h3>';
+                '<h3 class=\'name\' data-qtip="'+ Ext.htmlEncode(me.clickedStack.name) +'">' + this.encodeAndEllipsize(me.clickedStack.name) + '</h3>';
 
         me.clickedStack.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedStack.description) +'</p></div>'):
         										 (str += '<p class=\'tip-description\'>  </p>');
@@ -76,7 +102,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                         '<span class=\'createPageImg  \'></span>'+
                         '<p class=\'actionText\'>Add Page</p>'+
                     '</li>'+
-                    '<li class=\'pushButton actionButton\' data-qtip="Add App to the Store, making it available to all Store users.">'+
+                    '<li class=\'pushButton actionButton\' data-qtip="">'+
                     	'<span class=\'pushImg\'></span>'+
                     	'<p class=\'actionText\'>Push to Store</p>'+
                     '</li>'+
@@ -179,7 +205,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 var json = Ext.decode(response.responseText);
                 
                 if (json != null && json.updatedDashboards != null && json.updatedDashboards.length > 0) {
-                    me.appsWindow.notify('Restore Stack', '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is restored successfully to its default state!');
+                    me.appsWindow.notify('Restore App', '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is restored successfully to its default state!');
                     
                     var dashboards = stack.dashboards;
                     for(var i = 0; i < dashboards.length; i++) {
@@ -225,7 +251,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             text: text
         }));
         
-        me.width = 220;
+        me.width = 300;
 
         me.doLayout();
     },
@@ -315,26 +341,31 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         var titleField = Ext.create('Ext.form.field.Text', {
             name: 'title',
-            emptyText: 'Title',
             usePlaceholderIfAvailable: false,
-            value: (isNameSet ? me.clickedStack.name : '')
+            value: (isNameSet ? me.clickedStack.name : ''),
+            fieldLabel: 'Title',
+            labelSeparator: '',
+            labelWidth: 65
         });
 
         var imgurlField = Ext.create('Ext.form.field.Text', {
             name: 'imageurl',
-            emptyText: 'Icon URL',
             usePlaceholderIfAvailable: false,
-            value: (isIconUrlSet ? me.clickedStack.imageUrl : '')
+            value: (isIconUrlSet ? me.clickedStack.imageUrl : ''),
+            fieldLabel: 'Icon URL',
+            labelSeparator: '',
+            labelWidth: 65
         });
 
         var descriptionField = Ext.create('Ext.form.field.TextArea', {
             name: 'description',
             maxLength: 4000,
             enforceMaxLength: true,
-            margin: '0, 2, 0, 2',
             value: (isDescriptionSet ? me.clickedStack.description : ''),
             usePlaceholderIfAvailable: false,
-            emptyText: 'Description'
+            fieldLabel: 'Description',
+            labelSeparator: '',
+            labelWidth: 65
         })
 
         var win = Ext.create('Ozone.components.window.TipWarning', {
@@ -344,7 +375,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             buttonHandler: function() {
                 console.log('FFS');
             },
-            height: 200,
+            height: 180,
             layout: {
                 type: 'vbox',
                 align: 'stretch'
@@ -356,35 +387,35 @@ Ext.define('Ozone.components.window.MyAppTip', {
                     align: 'stretch'
 
                 },
-                height: 54,
-                margin: '2 2 2 2',
+                height: 135,
                 items:[{
                     xtype: 'image',
                     src: (isIconUrlSet ? encodeURI(decodeURI(me.clickedStack.imageUrl)) : 'images/dashboardswitcher/StacksIcon.png'),
                     height: 54,
-                    width: 54,
-                    margin: '0 2 0 2'
+                    maxHeight: 54,
+                    maxWidth: 54,
+                    width: 54
                 },{
                     xtype: 'container',
                     layout: {
                         type: 'vbox',
                         align: 'stretch'
                     },
+                    padding: '0 0 0 5',
                     margin: '',
                     flex: 1,
-                    items: [titleField, imgurlField]
+                    items: [titleField, imgurlField,descriptionField]
                 }]
-            },descriptionField,
-            {
+            },{
                 xtype: 'toolbar',
                 flex: 1,
                 padding: '0 0 0 0',
                 margin: '2 0 0 0',
                 border: false,
-                layout: {
+                /*layout: {
                     pack: 'center'
-                },
-                items: [{
+                },*/
+                items: ['->',{
                     xtype: 'button',
                     text: 'OK',
                     cls: 'okbutton',
@@ -403,7 +434,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         });
 
         
-        me.height = 240;
+        me.height = 220;
         
         me.add(win);
         win.doLayout();
@@ -435,8 +466,8 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         var me = this;
 
-        var msg = 'This action will permanently delete app <span class="heading-bold">' + 
-                Ext.htmlEncode(me.clickedStack.name) + '</span> and its pages.';
+        var msg = 'This action will permanently delete <span class="heading-bold">' + 
+                Ext.htmlEncode(me.clickedStack.name) + '</span>.';
 
         var stackGroups = me.clickedStack.groups
         var userGroups = Ozone.config.user.groups

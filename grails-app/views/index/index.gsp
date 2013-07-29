@@ -274,7 +274,9 @@
                                 handleAs: "text",
                                 content: {'key': 'showAccessAlert', 'value': 'false'},
                                 load: function(response) {
-                                    continueProcessingPage();
+                                    // added a timeout for better error handling
+                                    // without this, any errors from continueProcessingPage method call are treated as Session errors
+                                    setTimeout(continueProcessingPage, 0);
                                 },
                                 error: function(xhr, textStatus) {
                                     Ext.Msg.alert("Error", Ozone.util.ErrorMessageString.settingSessionDataMsg);

@@ -44,7 +44,7 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
             me.width = (dashPanelWidth > 559) ? windowWidth : dashPanelWidth - 10;
         }
         if (me.minHeight == null) {
-            me.minHeight = 250;
+            me.minHeight = 220;
         }
 
         me.items = [{

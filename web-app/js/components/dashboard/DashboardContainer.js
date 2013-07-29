@@ -46,35 +46,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     // private
     initComponent: function() {
-        var me = this,
-            stackModels = {},
-            dashboard, stack, model;
+        var me = this;
 
         this.loadMask = Ext.create('Ozone.components.mask.LoadMask', Ext.getBody(), {
             zIndexManager: this.modalWindowManager
         });
 
-        this.stackStore = Ext.create('Ozone.data.StackStore', {});
-
-        for (var i = 0, len = this.dashboardStore.getCount(); i < len; i++) {
-
-            model = this.dashboardStore.getAt(i);
-
-            dashboard = model.data;
-            stack = dashboard.stack;
-
-            if (stack) {
-                if (stackModels[stack.id]) {
-                    stackModels[stack.id].get('dashboards').push(model);
-                } else {
-                    var stackModel = this.stackStore.add(stack)[0];
-                    stackModel.set('dashboards', [model]);
-
-                    stackModels[stack.id] = stackModel;
-                }
-            }
-
-        }
+        this.reloadStacks();
 
         this.originalDashboardStore = Ext.create('Ozone.data.DashboardStore', {});
         this.dashboardMenuItems = [];
@@ -219,6 +197,32 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                  me._refreshAppComponent = true;
             }
         });
+    },
+
+    reloadStacks: function() {
+        var model, dashboard, stack;
+        var stackModels = {};
+        this.stackStore = Ext.create('Ozone.data.StackStore', {});
+
+        for (var i = 0, len = this.dashboardStore.getCount(); i < len; i++) {
+
+            model = this.dashboardStore.getAt(i);
+
+            dashboard = model.data;
+            stack = dashboard.stack;
+
+            if (stack) {
+                if (stackModels[stack.id]) {
+                    stackModels[stack.id].get('dashboards').push(model);
+                } else {
+                    var stackModel = this.stackStore.add(stack)[0];
+                    stackModel.set('dashboards', [model]);
+
+                    stackModels[stack.id] = stackModel;
+                }
+            }
+
+        }
     },
 
     onWidgetMouseDown: function(evt, target) {
@@ -583,7 +587,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         var stackDashboards = [];
         var stackContext = data.stack;
 
-        if (me.dashboardStore.getCount() > 0) {
+       if (me.dashboardStore.getCount() > 0) {
             for (var i = 0, len = me.dashboardStore.getCount(); i < len; i++) {
                 var dashRecord = me.dashboardStore.getAt(i);
                 var dash = dashRecord.data;
@@ -608,6 +612,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             }
         }
 
+        if ((me.dashboards.length === 1 && me.dashboards[0].config.type === "marketplace") || me.dashboards.length === 0) {
+            me.createEmptyDashboard('desktop', true, Ext.bind(function (record, dashboard) {
+                continueInitLoad(dashboard);
+            }, me));
+            return;
+        }
+
         // Set active dashboard
         if (me.activeDashboard == null) {
 
@@ -630,18 +641,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     // Otherwise, set active dashboard to default dashboard
                     continueInitLoad(me.defaultDashboard);
                 } else {
-                    if (me.dashboards.length === 1 && me.hasMpWidget()) {
-                        me.createEmptyDashboard('desktop', true, Ext.bind(function (dash) {
-                            var dashModel = me.createDashboardConfig(Ext.create('Ozone.data.Dashboard', dash));
-
-                            me.dashboards = [dashModel];
-                            continueInitLoad(dashModel);
-                        }, me));
-                    }
                     if (me.dashboards.length > 0) {
                         // Otherwise, just pick the first dash
                         continueInitLoad(me.dashboards[0]);
-                    } else {
+                    }
+                    else {
                         // And if all else fails, create a new active dashboard
                         me.createEmptyDashboard('desktop', true, Ext.bind(function (dash) {
                             var dashModel = me.createDashboardConfig(Ext.create('Ozone.data.Dashboard', dash));
@@ -663,7 +667,22 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
          * and saved
          */
         function continueInitLoad(dash) {
-            me.defaultDashboard = me.activeDashboard = dash;
+            var currentUrlGuid;
+            //OP-2174 - Fixes a problem where browser URL and activeDashboard guids don't match
+            // TODO: Rewrite dashboard switcher so this can't happen
+            if (Ext.util.History.getHash()) {
+                currentUrlGuid = Ext.urlDecode(Ext.util.History.getHash()).guid;
+
+                if (me.activeDashboard && currentUrlGuid === me.activeDashboard.guid) {
+                    me.defaultDashboard = dash;
+                }
+                else {
+                    me.defaultDashboard = me.activeDashboard = dash;
+                }
+            }
+            else {
+                me.defaultDashboard = me.activeDashboard = dash;
+            }
 
             Ext.state.Manager.setProvider(Ext.create('Ozone.state.WidgetStateStoreProvider', {
                 store: me.activeDashboard ? me.activeDashboard.stateStore : null
@@ -1068,23 +1087,23 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     activateDashboard: function(guid, silent, stackContext) {
-    	if(this.activeDashboard.guid != guid) {
-	        //set dashboard in history but disable events so we don't activate the dashboard twice
-	        var params = {};
-	        if (stackContext) {
-	            params.stack = stackContext;
-	        }
-	        params.guid = guid;
-	        if (silent) {
-	            Ext.util.History.shutDown();
-	        }
-	        Ext.util.History.add(Ext.urlEncode(params));
-	        if (silent) {
-	            Ext.util.History.startUp();
-	        }
-	
-	        this.fireEvent(OWF.Events.Dashboard.SELECTED, guid);
-    	}
+        if(this.activeDashboard.guid != guid) {
+            //set dashboard in history but disable events so we don't activate the dashboard twice
+            var params = {};
+            if (stackContext) {
+                params.stack = stackContext;
+            }
+            params.guid = guid;
+            if (silent) {
+                Ext.util.History.shutDown();
+            }
+            Ext.util.History.add(Ext.urlEncode(params));
+            if (silent) {
+                Ext.util.History.startUp();
+            }
+
+            this.fireEvent(OWF.Events.Dashboard.SELECTED, guid);
+        }
     },
 
     /**
@@ -1790,6 +1809,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         // ---------------------------------------------------------------------------------
         var me = this;
 
+        if (storeRecords.length === 0 || (storeRecords.length === 1 && storeRecords[0].get("type") === "marketplace")) {
+            me.createEmptyDashboard('desktop', true, function () {
+                me.updateDashboardsFromStore(storeRecords, callbackOptions, loadSuccess, dashboardGuidToActivate);
+            });
+            return;
+        }
+
         // Set default tab guid.
         var defaultTabGuid = storeRecords[0].get('guid');
         var stack = storeRecords[0].get('stack');
@@ -1807,7 +1833,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         // Without the timeout, updateDashboardsFromStore causes problems when dashboards are restored 
         // because widget destruction is delayed by 100ms to prevent memory leaks.
         // Because of the delay, widgets on a dashboard get rerendered while previous ones haven't been destroyed.
-        setTimeout(function() {
+        setTimeout(function() { 
             var dashboards = [];
 
             // Update various dashboard-related components.
@@ -1863,16 +1889,20 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
      * whether or not the refresh was successful
      */
     reloadDashboards: function(callback) {
-        // TODO improvment: only restored dashboards should be refresh and deleted dashboard be removed
+        // TODO improvement: only restored dashboards should be refresh and deleted dashboard be removed
         var me = this;
+
         me.dashboardStore.load({
             callback: function(records, options, success) {
+                me.reloadStacks();
+                records = me.dashboardStore.data.items;
                 if (success == true) {
                     me.updateDashboardsFromStore(records, options, success, me.activeDashboard.getGuid());
                 }
                 Ext.isFunction(callback) && callback(success);
             }
         });
+        
     },
 
     saveActiveDashboardToServer: function() {
@@ -1904,8 +1934,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             saveAsNew: createOrUpdate == 'create' ? true : false,
             onSuccess: function(json) {
                 me.destroyDashboardSwitcher();
-                me.dashboardCreated(json);
-                success && success(json);
+                var dashboard = me.dashboardCreated(json);
+                success && success(json, dashboard);
 
                 me = null;
             },
@@ -1931,23 +1961,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         };
 
         this.saveDashboard(newJson, 'create', callback);
-
-        // add to dashboardStore
-
-        //var dash = {
-            //id: newGuid,
-            //itemId: newGuid,
-            //alteredByAdmin: 'false',
-            //guid: newGuid,
-            //isdefault: setAsDefault,
-            //name: 'Untitled',
-            //state: []
-            ////user:             userNameObj
-        //};
-        //this.dashboardStore.add(dash);
-
-        //return this.dashboardStore.getAt(this.dashboardStore.getCount() - 1);
-        //return Ext.create('Ozone.data.Dashboard', dash);
     },
 
     createDashboard: function(model) {

@@ -627,9 +627,54 @@ img.widget-drag-proxy {
     height: 31px;
 }
 
-.bx-wrapper .bx-pager.bx-default-pager {
-    a:hover, a.active {
-        background: $owf-focus-color;
+
+
+/* Change carousel/slider graphics */
+/* for both My Apps and App Components */
+.bx-wrapper {
+    .bx-pager, .bx-controls-auto {
+        .bx-pager-item {
+            .bx-pager-link {
+                background: theme-image($theme-name, 'myappswindow/carousel_dot_empty_out.png');
+
+                &:hover, &.hover {
+                    background: theme-image($theme-name, 'myappswindow/carousel_dot_empty_over.png');
+                }
+
+                &.active {
+                    background: theme-image($theme-name, 'myappswindow/carousel_dot_filled_out.png');
+                    &:hover, &.hover {
+                        background: theme-image($theme-name, 'myappswindow/carousel_dot_filled_over.png');
+                    }    
+                }
+            }
+        }
+    }
+    .bx-pager.bx-default-pager a {
+        width: 12px;
+        height: 11px;
+    }
+}
+
+.bx-wrapper {
+    .bx-prev, .bx-next {
+        height: 42px !important;
+    }
+    
+    .bx-prev {
+        background: theme-image($theme-name, 'myappswindow/carousel_arrows_left_out.png') 0 0 no-repeat;
+        
+        &:hover {
+            background: theme-image($theme-name, 'myappswindow/carousel_arrows_left_over.png') 0 0 no-repeat;
+        }
+    }
+
+    .bx-next {
+        background: theme-image($theme-name, 'myappswindow/carousel_arrows_right_out.png') 0 0 no-repeat;
+        
+        &:hover {
+            background: theme-image($theme-name, 'myappswindow/carousel_arrows_right_over.png') 0 0 no-repeat;
+        }
     }
 }
 

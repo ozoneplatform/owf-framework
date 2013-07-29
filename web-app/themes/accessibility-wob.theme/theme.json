@@ -1,6 +1,6 @@
 {
     "name": "accessibility-wob",
-    "display_name": "White on Black",
+    "display_name": "Carbon",
     "type": "High Contrast white on black",
     "author": "OWF Community Support Team",
     "contact_email": "ozone-developers@googlegroups.com",
@@ -17,15 +17,15 @@
     "screenshots": [
         {
             "url": "themes/accessibility-wob.theme/images/preview/wob-launch.png",
-            "description": "Launch Menu"
+            "description": "App Components"
         },
         {
             "url": "themes/accessibility-wob.theme/images/preview/wob-designer.png",
-            "description": "Dashboard Designer"
+            "description": "App Builder"
         },
         {
             "url": "themes/accessibility-wob.theme/images/preview/wob-split-dash.png",
-            "description": "Split Dashboard"
+            "description": "Split Application"
         }
     ]
 }

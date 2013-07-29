@@ -26,13 +26,28 @@ Ext.define('Ozone.components.window.MyPageTip', {
     appsWindow: null,
     $dashboard: null,
     
+    encodeAndEllipsize: function(str) {
+        //html encode the result since ellipses are special characters
+        return Ext.util.Format.htmlEncode(
+            Ext.Array.map (
+                //get an array containing the first word of rowData.name as one elem, and the rest of name as another
+                Ext.Array.erase (/^([\S]+)\s*(.*)?/.exec(Ext.String.trim(str)), 0, 1),
+                function(it) {
+                    //for each elem in the array, truncate it with an ellipsis if it is longer than 21 characters
+                    return Ext.util.Format.ellipsis(it, 21);
+                }
+            //join the array back together with spaces
+            ).join(' ')
+        );
+    },
+    
     getToolTip: function () {
         var me = this,
             icn = me.clickedDashboard.iconImageUrl && me.clickedDashboard.iconImageUrl != ' ' ? 
                 '<img class=\'tipIcon\' src=\'' + encodeURI(decodeURI(me.clickedDashboard.iconImageUrl)) + 
                 '\' />' : '<div class=\'tipIcon noIconGivenPage\'></div>',
             str = '<div class=\'dashboard-tooltip-content\'>' + icn + 
-                '<h3 class=\'name\'>'+ Ext.htmlEncode(me.clickedDashboard.name) + '</h3>';
+                '<h3 class=\'name\' data-qtip="'+ Ext.htmlEncode(me.clickedDashboard.name) +'">'+ this.encodeAndEllipsize(me.clickedDashboard.name) + '</h3>';
 
         me.clickedDashboard.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedDashboard.description) +'  </p></div>') :
         								  (str += '<p class=\'tip-description\'>  </p>');
@@ -105,10 +120,20 @@ Ext.define('Ozone.components.window.MyPageTip', {
 
         var dashboard = this.clickedDashboard;
 
+
+//        var createDashWindow = Ext.widget('createdashboardwindow', {
+//            stackId: stack.id,
+//            title: Ozone.ux.DashboardMgmtString.createNewPageTitle,
+//            headerText: Ozone.ux.DashboardMgmtString.createNewPageHeader,
+//            itemId: 'createDashWindow',
+//            dashboardContainer: this.dashboardContainer,
+//            ownerCt: this.dashboardContainer
+//        });
+
         var editDashWindow = Ext.widget('createdashboardwindow', {
             itemId: 'editDashWindow',
             title: null,
-            height: 300,
+            height: 265,
             dashboardContainer: this.dashboardContainer,
             ownerCt: this.dashboardContainer,
             hideViewSelectRadio: true,
@@ -148,7 +173,6 @@ Ext.define('Ozone.components.window.MyPageTip', {
                 dashboardStore.save();
                 me.appsWindow.notify('Delete Page', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> deleted!');
                 me.appsWindow._deletedStackOrDashboards.push(dashboard);
-                me.appsWindow.reloadDashboards = true;
                 var $prev = me.$dashboard.prev();
                 me.$dashboard.remove();
                 $prev.focus();
@@ -224,7 +248,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
             text: text
         }));
         
-        me.width = 220;
+        me.width = 300;
 
         me.doLayout();
     }

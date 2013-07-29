@@ -393,6 +393,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             } else {
                 dashboard = Ext.create('Ozone.data.Dashboard', {
                     name: widgetDef.data.title,
+                    type: 'fullscreen',
                     layoutConfig : {
                         xtype: 'container',
                         flex: 1,
@@ -405,7 +406,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                         "name": widgetDef.data.title,
                         "owner": null //explicitly null owner so the backend doesn't auto-assign
                     },
-                    publishedToStore: true  //allow the user to get their own copy of the 
+                    publishedToStore: true  //allow the user to get their own copy of the
                                             //dashboard
                 });
 

@@ -100,11 +100,9 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             usePlaceholderIfAvailable: false,
             emptyText: Ozone.ux.DashboardMgmtString.titleBlankText,
             allowBlank: false,
-            maxLength: 200,
-            height: 22,
             value: '',
             enforceMaxLength: true,
-            margin: '0 0 5 0'
+            fieldLabel: 'Title'
         };
 
         this.iconURLField = {
@@ -116,11 +114,9 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             usePlaceholderIfAvailable: false,
             emptyText: Ozone.ux.DashboardMgmtString.iconBlankText,
             allowBlank: true,
-            maxLength: 200,
-            height: 22,
             value: '',
             enforceMaxLength: true,
-            margin: '0 0 5 0',
+            fieldLabel: 'Icon URL',
             listeners: {
                 blur: function(field){
                     // Remove leading and tailing spaces
@@ -131,19 +127,41 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             }
         };
 
+        this.description = {
+            xtype: 'textareafield',
+            name: 'description',
+            cls: 'description createAppField',
+            emptyCls: 'empty-text-field',
+            itemId: 'description',
+            usePlaceholderIfAvailable: false,
+            emptyText: Ozone.ux.DashboardMgmtString.descriptionBlankText,
+            value: '',
+            maxLength: 4000,
+            enforceMaxLength: true,
+            fieldLabel: 'Description'
+        };
+
         this.titleIconContainer = {
-            xtype: 'container',
+            xtype: 'fieldcontainer',
             name: 'titleIconContainer',
-            height: 60,
+            height: 175,
             flex: 1,
+            fieldDefaults: {
+                labelWidth: 65,
+                maxLength: 100,
+                height: 32,
+                labelSeparator: '',
+                margin: '0 0 5 0',
+                width: 362
+            },
             layout: {
-                type: 'vbox',
-                align: 'stretch'
+                type: 'vbox'
             },
             padding: '5, 5, 0, 15',
             items: [
                 this.titleTextField,
-                this.iconURLField
+                this.iconURLField,
+                this.description
             ]
         };
 
@@ -153,6 +171,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             layout: {
                 type: 'hbox'
             },
+            height: 180,
             padding: '0, 5, 0, 0',
             items: [
                 this.iconImage,
@@ -180,20 +199,6 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                     field.setValue(val);
                 }
             }
-        };
-
-        this.description = {
-            xtype: 'textareafield',
-            name: 'description',
-            cls: 'description createAppField',
-            emptyCls: 'empty-text-field',
-            itemId: 'description',
-            usePlaceholderIfAvailable: false,
-            emptyText: Ozone.ux.DashboardMgmtString.descriptionBlankText,
-            value: '',
-            maxLength: 4000,
-            enforceMaxLength: true,
-            margin: '10 5 10 5'
         };
 
         if (this.existingDashboardRecord != null) {
@@ -556,7 +561,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             region: 'center',
             allowBlank: false,
             hidden: this.hideViewSelectRadio,
-            padding: '0, 0, 0, 6',
+            padding: '0, 0, 5, 6',
             items: [
                 {
                     xtype: 'radiogroup',
@@ -588,19 +593,20 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         };
 
         this.margin = '0 0 0 0';
+
+        var childItems = []
+        if (this.headerText) childItems.push(this.headerLabel);
+        childItems.push(this.appInfoContainer);
+        if (!this.hideViewSelectRadio) childItems.push(this.viewSelectRadio);
+
         this.items = [{
-            xtype: 'container',
+            xtype: 'fieldcontainer',
             layout: {
                 type: 'vbox',
                 align: 'stretch'
             },
             padding: '0, 0, 0, 0',
-            items: [
-                this.headerLabel,
-                this.appInfoContainer,
-                this.description,
-                this.viewSelectRadio
-            ]
+            items: childItems
         }];
 
         this.dockedItems = [{
@@ -777,17 +783,20 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             cmp.dockedItems = null;
         });
 
-        this.on("afterrender", function(cmp) {
-            // Register handler for pre-made layout buttons and select the first one by default
-            this.handlePremadeLayoutButtons();
-        });
-        
-        // had to add this here instead of after render because the selected first item would 
-        // mess up the layout in ie7.
-        this.on("afterlayout", function(cmp) {
-            var layoutButtons = this.query('container#premadeViewContainer')[0].query('button');
-            layoutButtons[0].fireEvent('click');
-        }, this, {single: true});
+        if (!this.hideViewSelectRadio) {
+            this.on("afterrender", function(cmp) {
+                // Register handler for pre-made layout buttons and select the first one by default
+                this.handlePremadeLayoutButtons();
+            });
+
+            // had to add this here instead of after render because the selected first item would
+            // mess up the layout in ie7.
+            this.on("afterlayout", function(cmp) {
+                var layoutButtons = this.query('container#premadeViewContainer')[0].query('button');
+                layoutButtons[0].fireEvent('click');
+            }, this, {single: true});
+        }
+
 
         this.callParent();
     },

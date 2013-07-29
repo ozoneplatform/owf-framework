@@ -14,8 +14,13 @@
     left: 0;
     width: 100%;
 
+    .header {
+        height: 3em;
+    }
+
     .body {
         overflow: hidden;
+        clear: both;
     }
 
     .app-components {
@@ -32,8 +37,28 @@
         background-position: center;
     }
 
+    .bx-wrapper {
+        margin: 0px;
+    }
+
     .bx-slide {
         height: 100%;
+    }
+
+    .bx-prev {
+        background: theme-image($theme-name, 'appcomponents/left_dark.png') 0 0 no-repeat;
+        
+        &:hover {
+            background: theme-image($theme-name, 'appcomponents/left_light.png') 0 0 no-repeat;
+        }
+    }
+
+    .bx-next {
+        background: theme-image($theme-name, 'appcomponents/right_dark.png') 0 0 no-repeat;
+        
+        &:hover {
+            background: theme-image($theme-name, 'appcomponents/right_light.png') 0 0 no-repeat;
+        }
     }
 }
 
@@ -94,10 +119,6 @@
 
     .remember {
         margin-left: 5px;
-    }
-
-    .bx-wrapper {
-        height: 100%;
     }
 }
 

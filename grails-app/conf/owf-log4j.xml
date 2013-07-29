@@ -106,13 +106,12 @@
         <param name="File" value="logs/owf-cef-audit.log" />
         <param name="Encoding" value="UTF-8" />
 
-        <rollingPolicy class="org.apache.log4j.rolling.FixedWindowRollingPolicy">
-            <param name="MaxIndex" value="3"/> <!-- Maximum number of backups to keep -->
-            <param name="FileNamePattern" value="logs/owf-cef-audit.log.%i"/>
+        <!-- CEF logs should never be automatically deleted, so using a rolling policy
+             that doesn't automatically delete backups
+        -->
+        <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+            <param name="FileNamePattern" value="logs/owf-cef-audit.log.%d"/>
         </rollingPolicy>
-        <triggeringPolicy class="org.apache.log4j.rolling.SizeBasedTriggeringPolicy">
-            <param name="MaxFileSize" value="100000000" /> <!-- 100 MB -->
-        </triggeringPolicy>
 
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{dd MMM yyyy HH:mm:ss,SSS z} %m%n" />

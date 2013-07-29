@@ -156,7 +156,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                         //get an array containing the first word of rowData.name as one elem, and the rest of name as another
                         Ext.Array.erase (/^([\S]+)\s*(.*)?/.exec(Ext.String.trim(str)), 0, 1),
                         function(it) {
-                            //for each elem in the array, truncate it with an ellipsis if it is longer than 11 characters
+                            //for each elem in the array, truncate it with an ellipsis if it is longer than 14 characters
                             return Ext.util.Format.ellipsis(it, 14);
                         }
                     //join the array back together with spaces
@@ -193,24 +193,23 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
             me.bindEvents(cmp);
 
-            me.slider = $('.all-dashboards').bxSlider({
-                oneItemPerSlide: false,
-                infiniteLoop: true,
-                touchEnabled: false,
-                onSlideNext: Ext.bind(function() {
-                    me.onSlideTransition.apply(me, arguments);
-                }, me),
-                onSlidePrev: Ext.bind(function() {
-                    me.onSlideTransition.apply(me, arguments);
-                }, me)
-            });
-
-            if (me.slider.getSlideCount() === 1) {
-                $('.bx-wrapper .bx-pager').hide();
+            if (me.stackOrDashboards.length > 0) {
+                me.slider = $('.all-dashboards').bxSlider({
+                    oneItemPerSlide: false,
+                    infiniteLoop: true,
+                    touchEnabled: false,
+                    onSlideNext: Ext.bind(function() {
+                        me.onSlideTransition.apply(me, arguments);
+                    }, me),
+                    onSlidePrev: Ext.bind(function() {
+                        me.onSlideTransition.apply(me, arguments);
+                    }, me)
+                });
+                
+                me.slider.disableSelection();
             }
-
-            me.slider.disableSelection();
         });
+
 
         me.on('beforeclose', me.onClose, me);
         me.on('show', me.verifyDiscoverMoreButton, me);
@@ -243,7 +242,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             $draggedItemParent,
             $dragProxy,
             carousel
-            isDraggingStackDashboard = false;
+            isDraggingStackDashboard = false,
+            isDropValid = true;
 
         // disable selection while dragging
         $dom
@@ -315,11 +315,12 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
                 // only allow reordering if parents match and 
                 // prevent reordering stack dashboards outside of stack and vice versa.
-                // if($draggedItemParent[0] !== $el.parent()[0])
-                //     return;
                 if(isDraggingStackDashboard && $el.parents('.stack-dashboards').length === 0) {
+                    isDropValid = false;
                     return;
                 }
+
+                isDropValid = true;
 
                 var pageX = evt.pageX,      // The mouse position relative to the left edge of the document.
                     pageY = evt.pageY,      // The mouse position relative to the top edge of the document.
@@ -342,12 +343,12 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
             // drop performed on a dashboard
             $dom.on('mouseup.reorder', '.dashboard', function (evt) {
-                me._dropOnDashboard($draggedItem, $(this));
+                isDropValid && me._dropOnDashboard($draggedItem, $(this));
             });
             
             // drop performed on a stack
             $dom.on('mouseup.reorder', '.stack', function (evt) {
-                me._dropOnStack($draggedItem, $(this));
+                isDropValid && me._dropOnStack($draggedItem, $(this));
             });
 
             // cleanup on mouseup
@@ -399,10 +400,12 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     goToActiveStackSlide: function() {
         var me = this;
 
-        if (!me.getActiveStackId() || me.activeDashboard.configRecord.isMarketplaceDashboard()) {
-            me.slider.goToSlide(0);
-        } else {
-            me.slider.goToSlide(me.getActiveStackSlideIndex());
+        if (me.stackOrDashboards.length > 0) {
+            if (!me.getActiveStackId() || me.activeDashboard.configRecord.isMarketplaceDashboard()) {
+                me.slider.goToSlide(0);
+            } else {
+                me.slider.goToSlide(me.getActiveStackSlideIndex());
+            }
         }
     },
 

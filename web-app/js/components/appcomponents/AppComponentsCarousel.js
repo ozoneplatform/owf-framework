@@ -50,7 +50,7 @@
                 this.$container.height(height);
 
                 // substract margin bottom and grabber height for carousel pager to show
-                this.$el.height(height - 60 - 25);
+                this.$el.height(height - 25);
             }
 
             return SuperClass.prototype.render.call(this);
@@ -82,7 +82,7 @@
 
         initResizable: function () {
             var elHeight = this.$el.children(':first-child').outerHeight(true) + 1,
-                minHeight = elHeight + 60 + 25,
+                minHeight = elHeight + 25,
                 // leave bottom 64px visible
                 maxHeight = $(window).height() - this.$container.offset().top - 64;
 
@@ -102,7 +102,7 @@
             this.destroyCarousel();
 
             // substract margin bottom and grabber height for carousel pager to show
-            this.$el.height(height - 60 - 25);
+            this.$el.height(height - 25);
 
             this.initCarousel();
         },
@@ -121,11 +121,7 @@
                     infiniteLoop: true,
                     touchEnabled: false,
                     responsive: false
-                }); 
-
-                if (this.$el.getSlideCount() === 1) {
-                    this.hidePager();
-                }
+                });
 
                 this.$el.trigger('initcarousel');
             }
@@ -136,10 +132,6 @@
             if(this._carousel) {
                 return this.$el.getSlides();    
             }
-        },
-
-        hidePager: function() {
-            this.$el.parent().parent().find('.bx-pager').hide();
         },
 
         reloadCarousel: function (startSlide, force) {

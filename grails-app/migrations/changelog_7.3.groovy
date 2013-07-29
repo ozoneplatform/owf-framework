@@ -173,13 +173,122 @@ databaseChangeLog = {
 
     }
 
-    changeSet(author: "owf", id: "7.3-10", context: "upgrade, 7.3, sampleData, 7.3-sampleData") {
+    changeSet(author: "owf", id: "7.3-10", context: "sampleData, 7.3-sampleData") {
 
         comment("Updating the existing widgets on the admin dash to use the new terms for stacks and widgets")
 
         update(tableName: "dashboard") {
             column(name: "layout_config", value: "{\"xtype\":\"container\",\"cls\":\"hbox \",\"layout\":{\"type\":\"hbox\",\"align\":\"stretch\"},\"items\":[{\"xtype\":\"accordionpane\",\"cls\":\"left\",\"flex\":1,\"htmlText\":\"50%\",\"items\":[],\"widgets\":[{\"universalName\":null,\"widgetGuid\":\"412ec70d-a178-41ae-a8d9-6713a430c87c\",\"uniqueId\":\"ca5b5bb3-14de-3a77-e689-1a752adca824\",\"dashboardGuid\":\"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f\",\"paneGuid\":\"73cf2212-9c0a-5d75-987c-4820faf3cf30\",\"intentConfig\":null,\"name\":\"App Components\",\"active\":false,\"x\":0,\"y\":363,\"zIndex\":0,\"minimized\":false,\"maximized\":false,\"pinned\":false,\"collapsed\":false,\"columnPos\":0,\"buttonId\":null,\"buttonOpened\":false,\"region\":\"none\",\"statePosition\":5,\"singleton\":false,\"floatingWidget\":false,\"height\":328,\"width\":675,\"background\":false,\"columnOrder\":\"\"},{\"universalName\":null,\"widgetGuid\":\"fe97f656-862e-4c54-928d-3cdd776daf5b\",\"uniqueId\":\"58f2f00b-a785-c61c-497f-7a99a59e350d\",\"dashboardGuid\":\"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f\",\"paneGuid\":\"73cf2212-9c0a-5d75-987c-4820faf3cf30\",\"intentConfig\":null,\"name\":\"Apps\",\"active\":true,\"x\":0,\"y\":691,\"zIndex\":0,\"minimized\":false,\"maximized\":false,\"pinned\":false,\"collapsed\":false,\"columnPos\":0,\"buttonId\":null,\"buttonOpened\":false,\"region\":\"none\",\"statePosition\":3,\"singleton\":false,\"floatingWidget\":false,\"height\":328,\"width\":675,\"background\":false,\"columnOrder\":\"\"}],\"paneType\":\"accordionpane\",\"defaultSettings\":{\"widgetStates\":{\"9d804b74-b2a6-448a-bd04-fe286905ab8f\":{\"timestamp\":1354917003344},\"412ec70d-a178-41ae-a8d9-6713a430c87c\":{\"timestamp\":1354917003349},\"fe97f656-862e-4c54-928d-3cdd776daf5b\":{\"timestamp\":1354917003354},\"9b5ebb40-8540-466c-8ccd-66092ec55636\":{\"timestamp\":1354916964296},\"6cf4f84a-cc89-45ba-9577-15c34f66ee9c\":{\"timestamp\":1354916988848},\"a540f672-a34c-4989-962c-dcbd559c3792\":{\"timestamp\":1354916998451}}}},{\"xtype\":\"dashboardsplitter\"},{\"xtype\":\"container\",\"cls\":\"vbox right\",\"layout\":{\"type\":\"vbox\",\"align\":\"stretch\"},\"items\":[{\"xtype\":\"tabbedpane\",\"cls\":\"top\",\"flex\":1,\"htmlText\":\"50%\",\"items\":[],\"widgets\":[{\"universalName\":null,\"widgetGuid\":\"b87c4a3e-aa1e-499e-ba10-510f35388bb6\",\"uniqueId\":\"49404ec0-c77c-f6b8-b3f9-d5c77fe465a1\",\"dashboardGuid\":\"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f\",\"paneGuid\":\"da405d45-8f04-c2d6-f45c-5ba780aa97fc\",\"intentConfig\":null,\"name\":\"Groups\",\"active\":false,\"x\":679,\"y\":62,\"zIndex\":0,\"minimized\":false,\"maximized\":false,\"pinned\":false,\"collapsed\":false,\"columnPos\":0,\"buttonId\":null,\"buttonOpened\":false,\"region\":\"none\",\"statePosition\":3,\"singleton\":false,\"floatingWidget\":false,\"height\":462,\"width\":676,\"background\":false,\"columnOrder\":\"\"},{\"universalName\":null,\"widgetGuid\":\"b3b1d04f-97c2-4726-9575-82bb1cf1af6a\",\"uniqueId\":\"7437065e-fb6c-3253-866c-d05bf45d180a\",\"dashboardGuid\":\"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f\",\"paneGuid\":\"da405d45-8f04-c2d6-f45c-5ba780aa97fc\",\"intentConfig\":null,\"name\":\"Users\",\"active\":false,\"x\":679,\"y\":62,\"zIndex\":0,\"minimized\":false,\"maximized\":false,\"pinned\":false,\"collapsed\":false,\"columnPos\":0,\"buttonId\":null,\"buttonOpened\":false,\"region\":\"none\",\"statePosition\":2,\"singleton\":false,\"floatingWidget\":false,\"height\":462,\"width\":676,\"background\":false,\"columnOrder\":\"\"}],\"paneType\":\"tabbedpane\",\"defaultSettings\":{\"widgetStates\":{\"b87c4a3e-aa1e-499e-ba10-510f35388bb6\":{\"timestamp\":1354916950506},\"b3b1d04f-97c2-4726-9575-82bb1cf1af6a\":{\"timestamp\":1354916950489}}}},{\"xtype\":\"dashboardsplitter\"},{\"xtype\":\"tabbedpane\",\"cls\":\"bottom\",\"flex\":1,\"htmlText\":\"50%\",\"items\":[],\"paneType\":\"tabbedpane\",\"widgets\":[{\"universalName\":null,\"widgetGuid\":\"9b5ebb40-8540-466c-8ccd-66092ec55636\",\"uniqueId\":\"de8e1489-1cfc-7a26-e807-6167d91f1539\",\"dashboardGuid\":\"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f\",\"paneGuid\":\"1e5dc42c-89c2-6fd4-b887-efaafdceb260\",\"intentConfig\":null,\"name\":\"App Editor\",\"active\":true,\"x\":679,\"y\":556,\"zIndex\":0,\"minimized\":false,\"maximized\":false,\"pinned\":false,\"collapsed\":false,\"columnPos\":0,\"buttonId\":null,\"buttonOpened\":false,\"region\":\"none\",\"statePosition\":1,\"singleton\":false,\"floatingWidget\":false,\"height\":463,\"width\":676,\"background\":false,\"columnOrder\":\"\"}],\"defaultSettings\":{\"widgetStates\":{\"9b5ebb40-8540-466c-8ccd-66092ec55636\":{\"timestamp\":1354917012829},\"6cf4f84a-cc89-45ba-9577-15c34f66ee9c\":{\"timestamp\":1354917003399},\"a540f672-a34c-4989-962c-dcbd559c3792\":{\"timestamp\":1354917012827}}}}],\"flex\":1}],\"flex\":3}")
             where("guid='54949b5d-f0ee-4347-811e-2522a1bf96fe' AND user_id IS NULL AND name='Administration'")
+        }
+
+    }
+
+    changeSet(author: "owf", id: "7.3-11", context: "sampleData, 7.3-sampleData") {
+
+        comment("Migrating the legacy sample dashboards to the new format")
+
+        insert(tableName: "owf_group") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "automatic", valueBoolean: "false")
+            column(name: "description", value: "")
+            column(name: "email", value: null)
+            column(name: "name", value: "df51cb9b-f3d8-412e-af33-d064f81fb6c0")
+            column(name: "status", value: "active")
+            column(name: "display_name", value: null)
+            column(name: "stack_default", valueBoolean: true)
+        }
+
+        insert(tableName: "owf_group") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "automatic", valueBoolean: "false")
+            column(name: "description", value: "")
+            column(name: "email", value: null)
+            column(name: "name", value: "3b870e3b-247f-47db-bcd8-8fab6877bbc8")
+            column(name: "status", value: "active")
+            column(name: "display_name", value: null)
+            column(name: "stack_default", valueBoolean: true)
+        }
+
+        insert(tableName: "stack") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "name", value: "Sample")
+            column(name: "description", value: null)
+            column(name: "stack_context", value: "908d934d-9d53-406c-8143-90b406fb508f")
+            column(name: "image_url", value: null)
+            column(name: "descriptor_url", value: null)
+            column(name: "unique_widget_count", value: 0)
+            column(name: "owner_id", value: null)
+        }
+
+        insert(tableName: "stack") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "name", value: "Administration")
+            column(name: "description", value: "This dashboard provides the widgets needed to administer dashboards, widgets, groups, and users in OWF.")
+            column(name: "stack_context", value: "0092af0b-57ae-4fd9-bd8a-ec0937ac5399")
+            column(name: "image_url", value: null)
+            column(name: "descriptor_url", value: null)
+            column(name: "unique_widget_count", value: 0)
+            column(name: "owner_id", value: null)
+        }
+
+        insert(tableName: "stack_groups") {
+            column(name: "group_id", valueNumeric: "(SELECT id FROM owf_group WHERE name='df51cb9b-f3d8-412e-af33-d064f81fb6c0')")
+            column(name: "stack_id", valueNumeric: "(SELECT id FROM stack WHERE stack_context='908d934d-9d53-406c-8143-90b406fb508f')")
+        }
+
+        insert(tableName: "stack_groups") {
+            column(name: "group_id", valueNumeric: "(SELECT id FROM owf_group WHERE name='3b870e3b-247f-47db-bcd8-8fab6877bbc8')")
+            column(name: "stack_id", valueNumeric: "(SELECT id FROM stack WHERE stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399')")
+        }
+
+        update(tableName: "dashboard") {
+            column(name: "version", valueNumeric: "1")
+            column(name: "published_to_store", valueBoolean: "true")
+            where("guid='3f59855b-d93e-dc03-c6ba-f4c33ea0177f' AND user_id IS NULL AND name='Watch List'")
+        }
+
+        update(tableName: "dashboard") {
+            column(name: "version", valueNumeric: "1")
+            column(name: "stack_id", valueNumeric: "(SELECT id FROM stack WHERE stack_context='908d934d-9d53-406c-8143-90b406fb508f')")
+            column(name: "published_to_store", valueBoolean: "true")
+            where("guid='c62ce95c-d16d-4ffe-afae-c46fa64a689b' AND user_id IS NULL AND name='Sample'")
+        }
+
+        update(tableName: "dashboard") {
+            column(name: "version", valueNumeric: "1")
+            column(name: "stack_id", valueNumeric: "(SELECT id FROM stack WHERE stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399')")
+            column(name: "published_to_store", valueBoolean: "true")
+            where("guid='54949b5d-f0ee-4347-811e-2522a1bf96fe' AND user_id IS NULL AND name='Administration'")
+        }
+
+        update(tableName: "dashboard") {
+            column(name: "version", valueNumeric: "1")
+            column(name: "published_to_store", valueBoolean: "true")
+            where("guid='7f2f6d45-263a-7aeb-d841-3637678ce559' AND user_id IS NULL AND name='Contacts'")
+        }
+    }
+
+    changeSet(author: "owf", id: "7.3-12", context: "sampleData, 7.3-sampleData") {
+
+        comment("Adding in the domain mapping changes that need to be made for the group dashboards in the sample data")
+
+        insert(tableName: "domain_mapping") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "dest_id", valueNumeric: "(SELECT id FROM dashboard WHERE guid='c62ce95c-d16d-4ffe-afae-c46fa64a689b' AND user_id IS NULL AND name='Sample'")
+            column(name: "dest_type", value: "dashboard")
+            column(name: "relationship_type", value: "owns")
+            column(name: "src_id", valueNumeric: "(SELECT id FROM owf_group WHERE name='df51cb9b-f3d8-412e-af33-d064f81fb6c0')")
+            column(name: "src_type", value: "group")
+        }
+
+        insert(tableName: "domain_mapping") {
+            column(name: "version", valueNumeric: "0")
+            column(name: "dest_id", valueNumeric: "(SELECT id FROM dashboard WHERE guid='54949b5d-f0ee-4347-811e-2522a1bf96fe' AND user_id IS NULL AND name='Administration'")
+            column(name: "dest_type", value: "dashboard")
+            column(name: "relationship_type", value: "owns")
+            column(name: "src_id", valueNumeric: "(SELECT id FROM owf_group WHERE name='3b870e3b-247f-47db-bcd8-8fab6877bbc8')")
+            column(name: "src_type", value: "group")
         }
 
     }

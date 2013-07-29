@@ -1096,6 +1096,13 @@ owf {
     }
 }
 
+//Custom quartz configuration goes here.
+quartz {
+    props {
+        scheduler.skipUpdateCheck = true
+    }
+}
+
 // log4j configuration : see log4j.xml
 
 //ssl stuff

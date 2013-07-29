@@ -63,5 +63,9 @@ Ext.define('Ozone.data.Dashboard', {
     **/
     isMarketplaceDashboard: function () {
         return this.get('type') === 'marketplace';
+    },
+
+    isFullscreenDashboard: function () {
+        return this.get('type') === 'fullscreen';
     }
 });

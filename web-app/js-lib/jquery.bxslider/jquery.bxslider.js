@@ -630,7 +630,7 @@
 				pagerHtml += '<div class="bx-pager-item"><a href="" data-slide-index="' + i + '" class="bx-pager-link">' + linkContent + '</a></div>';
 			};
 			// populate the pager element with pager links
-			slider.pagerEl.html(pagerHtml);
+			slider.pagerEl.html(pagerHtml)[el.getSlideCount() === 1 ? 'hide' : 'show']();
 		}
 		
 		/**

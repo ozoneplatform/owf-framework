@@ -16,15 +16,15 @@
     "screenshots": [
         {
             "url": "themes/large-text.theme/images/preview/lg-text-launch.png",
-            "description": "Launch Menu"
+            "description": "App Components"
         },
         {
             "url": "themes/large-text.theme/images/preview/lg-text-designer.png",
-            "description": "Dashboard Designer"
+            "description": "App Builder"
         },
         {
             "url": "themes/large-text.theme/images/preview/lg-text-split-dash.png",
-            "description": "Split Dashboard"
+            "description": "Split Application"
         }
     ]
 }

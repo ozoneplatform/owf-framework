@@ -358,7 +358,7 @@ Ext.define('Ozone.components.pane.Pane', {
     },
 
     cloneWidgetDataForTransfer: function (widget) {
-        var data = Ext.clone(widget.model.data),
+        var data = Ext.clone(widget.getState()),
             widgetDefinitionModel = this.dashboard.widgetStore.findRecord('widgetGuid', widget.model.get('widgetGuid'));
 
         data.name = widget.title || widgetDefinitionModel.get('name');
