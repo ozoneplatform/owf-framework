@@ -345,7 +345,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             value: (isNameSet ? me.clickedStack.name : ''),
             fieldLabel: 'Title',
             labelSeparator: '',
-            labelWidth: 60
+            labelWidth: 65
         });
 
         var imgurlField = Ext.create('Ext.form.field.Text', {
@@ -354,7 +354,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             value: (isIconUrlSet ? me.clickedStack.imageUrl : ''),
             fieldLabel: 'Icon URL',
             labelSeparator: '',
-            labelWidth: 60
+            labelWidth: 65
         });
 
         var descriptionField = Ext.create('Ext.form.field.TextArea', {
@@ -365,7 +365,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             usePlaceholderIfAvailable: false,
             fieldLabel: 'Description',
             labelSeparator: '',
-            labelWidth: 60
+            labelWidth: 65
         })
 
         var win = Ext.create('Ozone.components.window.TipWarning', {
@@ -401,6 +401,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                         type: 'vbox',
                         align: 'stretch'
                     },
+                    padding: '0 0 0 5',
                     margin: '',
                     flex: 1,
                     items: [titleField, imgurlField,descriptionField]
