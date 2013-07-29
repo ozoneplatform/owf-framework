@@ -112,7 +112,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                             '{[this.getIcon(values)]}',
                         '</div>',
                         '<div class="{[this.getName(values)]}-name" data-qtip="{[Ext.htmlEncode(values.name)]}">',
-                            '{[this. encodeAndEllipsize(values.name)]}',
+                            '{[Ext.htmlEncode(values.name)]}',
                         '</div>',
                         '{[this.getActions(values)]}',
                     '</div>',
@@ -147,21 +147,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 return	'<div class="details-btn-container hide">'+
                             '<div class="details-btn"></div>'+
                         '</div>';
-            },
-            
-            encodeAndEllipsize: function(str) {
-                //html encode the result since ellipses are special characters
-                return Ext.util.Format.htmlEncode(
-                    Ext.Array.map (
-                        //get an array containing the first word of rowData.name as one elem, and the rest of name as another
-                        Ext.Array.erase (/^([\S]+)\s*(.*)?/.exec(Ext.String.trim(str)), 0, 1),
-                        function(it) {
-                            //for each elem in the array, truncate it with an ellipsis if it is longer than 14 characters
-                            return Ext.util.Format.ellipsis(it, 14);
-                        }
-                    //join the array back together with spaces
-                    ).join(' ')
-                );
             }
         });
 
@@ -173,7 +158,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         me.on('afterrender', function (cmp) {
             me.tpl.overwrite( cmp.body, stackOrDashboards );
 
-            $('.stack-name').dotdotdot();
+            $('.stack-name, .dashboard-name').dotdotdot({
+                ellipsis: '…'
+            });
 
             Ext.DomHelper.append( cmp.body,
             '<div class="actions">'+
