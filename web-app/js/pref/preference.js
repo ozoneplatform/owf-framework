@@ -1001,12 +1001,10 @@ Ozone.pref = Ozone.pref || {};
            * });
            */
           cloneDashboard : function (cfg){
-              cfg.url = _url + "/" + 'dashboard' + "/" + cfg.json.guid;
-              var postParams = generateDashboardPostParamsJSON(cfg.json);
-              postParams.cloned = true;
+              cfg.url = Ozone.util.contextPath()  + '/stack/addPage';
               cfg.method = 'POST';
-              cfg.jsonObject = postParams;
-              setValuesViaJSONObject(cfg);
+              cfg.content = generateAppPostParamsJSON(cfg.json);
+              setValueBase(cfg);
           },
 
           /**
