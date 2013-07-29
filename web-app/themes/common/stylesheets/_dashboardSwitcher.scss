@@ -362,6 +362,7 @@
 
     &-name {
         color: $dashboard-switcher-dashboard-text-color;
+        overflow: hidden;
         height: 24px;
         width: 100%;
         margin: 2px 0 auto;
