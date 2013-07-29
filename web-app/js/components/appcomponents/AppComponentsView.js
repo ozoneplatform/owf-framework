@@ -276,7 +276,7 @@
 
         _initSortable: function () {
             var me = this,
-                $doc = $(document),
+                $doc = $document,
                 $slides;
 
             $slides = me.carousel.getSlides();
