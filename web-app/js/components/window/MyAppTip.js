@@ -375,7 +375,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             buttonHandler: function() {
                 console.log('FFS');
             },
-            height: 170,
+            height: 180,
             layout: {
                 type: 'vbox',
                 align: 'stretch'
@@ -387,7 +387,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                     align: 'stretch'
 
                 },
-                height: 125,
+                height: 135,
                 items:[{
                     xtype: 'image',
                     src: (isIconUrlSet ? encodeURI(decodeURI(me.clickedStack.imageUrl)) : 'images/dashboardswitcher/StacksIcon.png'),
@@ -433,7 +433,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         });
 
         
-        me.height = 210;
+        me.height = 220;
         
         me.add(win);
         win.doLayout();
