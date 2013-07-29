@@ -173,7 +173,7 @@ databaseChangeLog = {
 
     }
 
-    changeSet(author: "owf", id: "7.3-10", context: "upgrade, 7.3, sampleData, 7.3-sampleData") {
+    changeSet(author: "owf", id: "7.3-10", context: "sampleData, 7.3-sampleData") {
 
         comment("Updating the existing widgets on the admin dash to use the new terms for stacks and widgets")
 
@@ -184,7 +184,7 @@ databaseChangeLog = {
 
     }
 
-    changeSet(author: "owf", id: "7.3-11", context: "upgrade, 7.3, sampleData, 7.3-sampleData") {
+    changeSet(author: "owf", id: "7.3-11", context: "sampleData, 7.3-sampleData") {
 
         comment("Migrating the legacy sample dashboards to the new format")
 
