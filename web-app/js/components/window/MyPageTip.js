@@ -248,7 +248,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
             text: text
         }));
         
-        me.width = 220;
+        me.width = 300;
 
         me.doLayout();
     }
