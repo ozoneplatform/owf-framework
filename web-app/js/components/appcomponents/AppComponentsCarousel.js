@@ -52,7 +52,7 @@
 
                 this.$container.height(height);
 
-                // substract margin bottom and grabber height for carousel pager to show
+                // substract gripper height for carousel pager to show
                 this.$el.height(height - this.GRIPPER_HEIGHT);
             }
 

@@ -5,10 +5,7 @@
     border: 1px solid $selectable-item-border-color;
     float: left;
     margin: 0px 10px 0px 0px;
-    padding-top: 4px;
-    padding-left: 4px;
-    padding-right: 4px;
-    padding-bottom: 5px;
+    padding: 5px;
     position: relative;
     text-align: center;
     @include border-radius(5px);
@@ -16,9 +13,7 @@
     .thumb-wrap {
         text-align: center;
         white-space:nowrap;
-        margin-left:auto;
-        margin-right:auto;
-        margin-top: 8px; //so the singleton icon doesn't stick ot of the top
+        margin: auto auto 5px auto;
         position: relative; //to make the singleton icons position be relative to this
         width: $default-thumb-size;
         height: $default-thumb-size;

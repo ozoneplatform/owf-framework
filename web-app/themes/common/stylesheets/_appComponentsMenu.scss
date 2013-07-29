@@ -114,6 +114,7 @@
     .ui-resizable-s {
         height: 25px;
         bottom: 0;
+        border-top: 1px solid $widget-launcher-border-color;
         background-image: theme-image($theme-name, 'appcomponents/gripper.png');
         background-repeat: no-repeat;
         background-position: center;
@@ -220,6 +221,7 @@
 .widget-details {
     font-size: $owf-font-size - 1;
     color: $widget-details-color;
+    padding: 10px 0 0 0;
 }
 
 .show-new-component {
