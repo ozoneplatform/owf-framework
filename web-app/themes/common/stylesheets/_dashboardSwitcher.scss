@@ -413,6 +413,10 @@
     .thumb {
         background-image: $dashboard-switcher-layout-stack-default-icon !important;
     }
+
+    &-selected {
+        @include box-shadow(black 0 0 15px inset);
+    }
 }
 
 .stack.drag-proxy, .dashboard.drag-proxy {
