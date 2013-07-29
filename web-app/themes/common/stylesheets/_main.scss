@@ -8,6 +8,18 @@ a {
     text-decoration: none;
 }
 
+.grab {
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    cursor: grab;
+}
+
+.grabbing {
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+    cursor: grabbing;
+}
+
 .hide {
     display: none !important;
 }

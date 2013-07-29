@@ -94,7 +94,7 @@
                 handles: 's',
                 minHeight: minHeight,
                 maxHeight: maxHeight,
-                start: function () {
+                start: function (evt, ui) {
                     $bxWrapper = me.$el.parents('.bx-wrapper');
                 },
                 resize: function (evt, ui) {

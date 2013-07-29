@@ -108,12 +108,16 @@
         }
     }
 
+    .ui-resizable-resizing .ui-resizable-s {
+        @extend .grabbing;
+    }
     .ui-resizable-s {
         height: 25px;
         bottom: 0;
         background-image: theme-image($theme-name, 'appcomponents/gripper.png');
         background-repeat: no-repeat;
         background-position: center;
+        @extend .grab;
     }
 }
 
