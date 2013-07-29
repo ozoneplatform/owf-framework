@@ -175,6 +175,15 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             single: true
         });
         me.on('beforedestroy', me.cleanup, me);
+
+        if (me.configRecord.isMarketplaceDashboard()) {
+            //catch bubbling destroy events from widgets
+            me.on('remove', function(cont, cmp) {
+                if (cmp.isXType('widgetpanel') || cmp.isXType('widgetwindow')) {
+                    me.handleMarketplaceWidgetClose();
+                }
+            });
+        }           
     },
 
     afterDashboardLayout: function() {
@@ -1359,5 +1368,16 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         }, this, {
             single: true
         });
+    },
+
+    /**
+     * Handle the case when the user closes all widgets on the marketplace dashboard.
+     * In this case their previous dashboard should be switched to
+     */
+    handleMarketplaceWidgetClose: function() {
+        if (!this.query('.widgetpanel, .widgetwindow').length) {
+            //no widgets left on marketplace dashboard, switch to another dashboard
+            this.dashboardContainer.activatePreviousDashboard();
+        }
     }
 });

@@ -1087,23 +1087,23 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     activateDashboard: function(guid, silent, stackContext) {
-    	if(this.activeDashboard.guid != guid) {
-	        //set dashboard in history but disable events so we don't activate the dashboard twice
-	        var params = {};
-	        if (stackContext) {
-	            params.stack = stackContext;
-	        }
-	        params.guid = guid;
-	        if (silent) {
-	            Ext.util.History.shutDown();
-	        }
-	        Ext.util.History.add(Ext.urlEncode(params));
-	        if (silent) {
-	            Ext.util.History.startUp();
-	        }
-	
-	        this.fireEvent(OWF.Events.Dashboard.SELECTED, guid);
-    	}
+        if(this.activeDashboard.guid != guid) {
+            //set dashboard in history but disable events so we don't activate the dashboard twice
+            var params = {};
+            if (stackContext) {
+                params.stack = stackContext;
+            }
+            params.guid = guid;
+            if (silent) {
+                Ext.util.History.shutDown();
+            }
+            Ext.util.History.add(Ext.urlEncode(params));
+            if (silent) {
+                Ext.util.History.startUp();
+            }
+
+            this.fireEvent(OWF.Events.Dashboard.SELECTED, guid);
+        }
     },
 
     /**
