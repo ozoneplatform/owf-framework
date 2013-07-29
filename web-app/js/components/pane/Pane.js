@@ -436,11 +436,11 @@ Ext.define('Ozone.components.pane.Pane', {
         if(!this.shimEl) {
             this.shimEl = Ext.DomHelper.append(this.el, '<div></div>', true);
         }
-        this.shimEl && this.shimEl.addCls('paneshim');
+        this.shimEl && this.shimEl.addCls('shim');
     },
 
     unshim: function() {
-        this.shimEl && this.shimEl.removeCls('paneshim');
+        this.shimEl && this.shimEl.removeCls('shim');
     },
 
     moveFloatingWidgetUp: function(widget) {

@@ -21,6 +21,7 @@
     var SuperClass = Ozone.components.BaseView;
 
     var $window = $(window),
+        $document = $(document),
         windowWidth = $window.width(),
         windowHeight = $window.height();
 
@@ -31,7 +32,8 @@
         events: _.extend({}, SuperClass.prototype.events, {
             'keyup .search-input': '_inputKeyUp',
             'click .widget': '_onDblClick',
-            'click .x-tool': 'hide',
+            'click .close': 'hide',
+            'click .pin': 'togglePin',
             'mouseover .bx-prev': '_goToPrevSlide',
             'mouseover .bx-next': '_goToNextSlide',
             'mousedown .ui-resizable-handle': '_shim',
@@ -59,9 +61,14 @@
         // collection of all app components person has access to
         allAppComponents: null,
 
+        // flag indicating whether view is pinned or not
+        pinned: false,
+
         initialize: function () {
             SuperClass.prototype.initialize.apply(this, arguments);
+
             this.allAppComponents = this.collection;
+            this.pinned = this.state ? this.state.pinned : false;
 
             var standardAppComponents = this.allAppComponents.filter(function(appComponent) {
                 return appComponent.get('widgetTypes')[0].name === 'standard';
@@ -74,8 +81,11 @@
 
         render: function () {
             this.$el.html(  '<div class="header">' +
-                                '<a class="x-tool">' +
+                                '<a class="x-tool close">' +
                                     '<img src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="x-tool-close">' +
+                                '</a>' +
+                                '<a class="x-tool pin ' + (this.pinned ? 'pinned' : '') + ' ">' +
+                                    '<img src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="x-tool-pin">' +
                                 '</a>' +
                                 '<input type="text" class="search-input">' +
                             '</div>' + 
@@ -89,7 +99,7 @@
                 collection: this.collection,
                 allAppComponents: this.allAppComponents,
                 selectable: false,
-                size: this.size,
+                size: this.state,
                 addFilterFn: function (model, index) {
                     var name = model.get('name').toLowerCase(),
                         description = (model.get('description') || '').toLowerCase(),
@@ -126,6 +136,31 @@
                 })
         },
 
+        pin: function () {
+            var $pin = this.$el.find('.pin');
+
+            $pin.addClass('pinned');
+            this.pinned = true;
+
+            this.$shim && this.$shim.remove();
+            this.$shim = null;
+        },
+
+        unpin: function () {
+            var $pin = this.$el.find('.pin');
+
+            $pin.removeClass('pinned');
+
+            this.$shim = $('<div class="shim"></div>').on('click', _.bind(this.hide, this));
+            this.$shim.appendTo($('#dashboardCardPanel-body'));
+
+            this.pinned = false;
+        },
+
+        togglePin: function (evt) {
+            this[this.pinned ? 'unpin' : 'pin']();
+        },
+
         refresh: function () {
             var newWindowHeight = $window.height(),
                 newWindowWidth = $window.width();
@@ -144,6 +179,7 @@
         }, 1000),
 
         show: function () {
+            this[this.pinned ? 'pin' : 'unpin']();
             $window.on('resize', this._refreshDebounce);
             return SuperClass.prototype.show.call(this);
         },
@@ -151,6 +187,10 @@
         hide: function () {
             $window.off('resize', this._refreshDebounce);
             this.carousel.removeDetailsTip();
+            
+            this.$shim && this.$shim.remove();
+            this.$shim = null;
+            
             return SuperClass.prototype.hide.call(this);
         },
 
@@ -167,18 +207,26 @@
             return this;
         },
 
-        save: function (sync) {
+        getState: function () {
+            var state = { 
+                pinned: this.pinned
+            };
+
             if(this._resized) {
-                console.log(Ozone.util.toString(this.carousel.state()))
-                Ozone.pref.PrefServer.setUserPreference({
-                    namespace: "owf",
-                    name: "appcomponent-view",
-                    async: !sync,
-                    value: Ozone.util.toString(this.carousel.state()),
-                    onSuccess: $.noop,
-                    onFailure: $.noop
-                });
+                state = _.extend(state, this.carousel.state());
             }
+            return state;
+        },
+
+        save: function (sync) {
+            Ozone.pref.PrefServer.setUserPreference({
+                namespace: "owf",
+                name: "appcomponent-view",
+                async: !sync,
+                value: Ozone.util.toString(this.getState()),
+                onSuccess: $.noop,
+                onFailure: $.noop
+            });
 
             if(this._reordered) {
                 Ozone.pref.PrefServer.updateAndDeleteWidgets({
@@ -252,7 +300,7 @@
 
                             // checking for mouseout or mouseleave on current $el doesn't work
                             // check for mouseout by checking for mousemove on paneshims
-                            $doc.one('mousemove.launch', '.paneshim', function (evt) {
+                            $doc.one('mousemove.launch', '.shim', function (evt) {
                                 me._sorting = false;
                                 me._launching = true;
                                 me.launch(model, false, true);

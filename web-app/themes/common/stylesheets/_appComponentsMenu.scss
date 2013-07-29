@@ -42,7 +42,7 @@
 
     .x-tool {
         float: right;
-        margin: 0 0 0 5px;
+        margin: 0 0 0 1em;
 
         &:hover .x-tool-close {
              background-image: theme-image($theme-name, 'tools/close-over.png') !important;
@@ -72,6 +72,21 @@
         margin: 0 0.5em 0 0;
     }
 
+    .x-tool-pin {
+        margin: 0 0.5em 0 0;
+        background-image: theme-image($theme-name, 'appcomponents/pin.png');
+        background-position: 0;
+        vertical-align: middle;
+
+        &:hover {
+            background-image: theme-image($theme-name, 'appcomponents/pin_over.png');
+        }
+    }
+    
+    .pinned .x-tool-pin {
+        background-image: theme-image($theme-name, 'appcomponents/pinned.png');
+    }
+
     .body {
         overflow: hidden;
         clear: both;
@@ -83,11 +98,11 @@
 
     .app-components-body {
         overflow: hidden;
-        height: 150px;
+        height: 125px;
     }
 
     .bx-wrapper {
-        margin: 0 auto 21px;
+        margin: 0 auto 25px;
         background: $widget-launcher-background-color;
 
         &.hide-pager {

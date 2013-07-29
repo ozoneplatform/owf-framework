@@ -48,7 +48,6 @@
             this.$appcomponents = $el;
             this.setElement($el.children('.app-components-body'));
 
-
             if(this.size && this.size.height) {
                 height = this.size.height * $(window).height();
 
@@ -57,7 +56,6 @@
                 // substract gripper height for carousel pager to show
                 this.$el.height(height - this.GRIPPER_HEIGHT);
             }
-
 
             return SuperClass.prototype.render.call(this);
         },

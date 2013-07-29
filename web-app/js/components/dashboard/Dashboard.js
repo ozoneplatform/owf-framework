@@ -246,7 +246,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             ddGroup: 'widgets',
 
             getTargetFromEvent: function(e) {
-                return e.getTarget('.paneshim');
+                return e.getTarget('.shim');
             },
 
             // On entry into a target node, highlight that node.
@@ -1029,7 +1029,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         this.shimPanes();
 
         if(!isLocked) {
-            var $shims = $('.paneshim', this.el.dom),
+            var $shims = $('.shim', this.el.dom),
                 $doc = $(document);
 
             // TODO: find out why does this not work in IE7
@@ -1038,7 +1038,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             //     $(this).removeClass('highlight-dashboard-designer-drop');
             // });
 
-            $doc.on('mousemove.launch', '.paneshim', function (evt) {
+            $doc.on('mousemove.launch', '.shim', function (evt) {
                 $shims.addClass('highlight-dashboard-designer-drop');
                 $(evt.target).removeClass('highlight-dashboard-designer-drop');
             });
@@ -1052,7 +1052,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             });
 
             if(sourcePane && sourcePane.el) {
-                var $sourcePaneShim = $(sourcePane.el.dom).children('.paneshim');
+                var $sourcePaneShim = $(sourcePane.el.dom).children('.shim');
                 $shims.not($sourcePaneShim).addClass('highlight-dashboard-designer-drop');
             }
         }

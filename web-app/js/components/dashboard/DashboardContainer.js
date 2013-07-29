@@ -876,12 +876,20 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         OWF.Collections.AppComponents.fetch({fetch: true, data: $.param(search_params)}).done(function (resp) {
             if(me.appComponentsView) {
                 var isVisible = me.appComponentsView.$el.is(':visible');
+
+                // cache current state
+                me.appComponentsViewState.preference = me.appComponentsView.getState();
+                
+                // remove
                 me.appComponentsView.hide().remove();
                 me.appComponentsView = null;
+                
+                // show if it was visible before removal
                 isVisible && me.showAppComponentsView();
             }
-            me.widgetStore.loadRecords(me.widgetStore.proxy.reader.read(resp.rows).records);
 
+            // update Ext Store
+            me.widgetStore.loadRecords(me.widgetStore.proxy.reader.read(resp.rows).records);
 
             dfd.resolve();
         });
@@ -892,7 +900,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     showAppComponentsView: function () {
         var me = this,
             appComponentsBtn,
-            size;
+            state;
 
         if (me.activeDashboard.configRecord.get('locked') === true ||
             me.activeDashboard.configRecord.isMarketplaceDashboard()) {
@@ -900,14 +908,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
 
         if(!me.appComponentsView) {
-            size = _.isString(this.appComponentsViewState.preference) ? 
+            state = _.isString(this.appComponentsViewState.preference) ? 
                         Ozone.util.parseJson(this.appComponentsViewState.preference) :
                         this.appComponentsViewState.preference;
 
             me.appComponentsView = new Ozone.components.appcomponents.AppComponentsView({
                 collection: OWF.Collections.AppComponents,
                 dashboardContainer: me,
-                size: size
+                state: state
             });
 
             appComponentsBtn = me.getBanner().getComponent('appComponentsBtn');
