@@ -65,6 +65,8 @@
             SuperClass.prototype.filter.call(this, query);
             this.ellipsis();
             this.initCarousel();
+
+            this._constrain();
         },
 
         shown: function () {
@@ -103,6 +105,8 @@
 
                     me.$appcomponents.height(height);
                     $bx.height(height);
+
+                    me._constrain();
                 },
                 stop: function (evt, ui) {
                     $bx = null;
@@ -173,6 +177,15 @@
             this.destroyResizable();
 
             return SuperClass.prototype.remove.call(this);
+        },
+
+        _constrain: function () {
+            if(this.views.length === 0) {
+                this.$appcomponents.css({
+                    'height': this.$container.height() - 25,
+                    'margin-bottom': '25px'
+                });
+            }
         }
 
     });
