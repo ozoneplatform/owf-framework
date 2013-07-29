@@ -154,7 +154,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             });
 
             if (this.activeDashboard != null) {
-                Ext.getCmp(this.activeDashboard.id).saveToServer(true);
+                Ext.getCmp(this.activeDashboard.id).saveToServer(true, true);
             }
 
             if(this.appComponentsView) {
