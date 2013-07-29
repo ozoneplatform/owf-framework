@@ -341,26 +341,31 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         var titleField = Ext.create('Ext.form.field.Text', {
             name: 'title',
-            emptyText: 'Title',
             usePlaceholderIfAvailable: false,
-            value: (isNameSet ? me.clickedStack.name : '')
+            value: (isNameSet ? me.clickedStack.name : ''),
+            fieldLabel: 'Title',
+            labelSeparator: '',
+            labelWidth: 60
         });
 
         var imgurlField = Ext.create('Ext.form.field.Text', {
             name: 'imageurl',
-            emptyText: 'Icon URL',
             usePlaceholderIfAvailable: false,
-            value: (isIconUrlSet ? me.clickedStack.imageUrl : '')
+            value: (isIconUrlSet ? me.clickedStack.imageUrl : ''),
+            fieldLabel: 'Icon URL',
+            labelSeparator: '',
+            labelWidth: 60
         });
 
         var descriptionField = Ext.create('Ext.form.field.TextArea', {
             name: 'description',
             maxLength: 4000,
             enforceMaxLength: true,
-            margin: '0, 2, 0, 2',
             value: (isDescriptionSet ? me.clickedStack.description : ''),
             usePlaceholderIfAvailable: false,
-            emptyText: 'Description'
+            fieldLabel: 'Description',
+            labelSeparator: '',
+            labelWidth: 60
         })
 
         var win = Ext.create('Ozone.components.window.TipWarning', {
@@ -370,7 +375,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             buttonHandler: function() {
                 console.log('FFS');
             },
-            height: 200,
+            height: 170,
             layout: {
                 type: 'vbox',
                 align: 'stretch'
@@ -382,14 +387,14 @@ Ext.define('Ozone.components.window.MyAppTip', {
                     align: 'stretch'
 
                 },
-                height: 54,
-                margin: '2 2 2 2',
+                height: 125,
                 items:[{
                     xtype: 'image',
                     src: (isIconUrlSet ? encodeURI(decodeURI(me.clickedStack.imageUrl)) : 'images/dashboardswitcher/StacksIcon.png'),
                     height: 54,
-                    width: 54,
-                    margin: '0 2 0 2'
+                    maxHeight: 54,
+                    maxWidth: 54,
+                    width: 54
                 },{
                     xtype: 'container',
                     layout: {
@@ -398,19 +403,18 @@ Ext.define('Ozone.components.window.MyAppTip', {
                     },
                     margin: '',
                     flex: 1,
-                    items: [titleField, imgurlField]
+                    items: [titleField, imgurlField,descriptionField]
                 }]
-            },descriptionField,
-            {
+            },{
                 xtype: 'toolbar',
                 flex: 1,
                 padding: '0 0 0 0',
                 margin: '2 0 0 0',
                 border: false,
-                layout: {
+                /*layout: {
                     pack: 'center'
-                },
-                items: [{
+                },*/
+                items: ['->',{
                     xtype: 'button',
                     text: 'OK',
                     cls: 'okbutton',
@@ -429,7 +433,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         });
 
         
-        me.height = 240;
+        me.height = 210;
         
         me.add(win);
         win.doLayout();

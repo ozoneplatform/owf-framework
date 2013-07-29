@@ -21,10 +21,7 @@ Ext.define('Ozone.components.window.TipWarning', {
     		}]
     	} else if(me.buttonConfig == "ok_cancel") {
     		me.bbar = Ext.create('Ext.toolbar.Toolbar', {
-                layout: {
-                    pack: 'center'
-                },
-                items: [{
+                items: ['->',{
         			text: 'OK',
                     cls: 'okbutton',
         			handler: function() {
