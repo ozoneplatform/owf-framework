@@ -9,22 +9,31 @@
 
     &-body {
         @include border-radius($dashboard-switcher-body-radius);
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
     }
 
+    @include border-radius($dashboard-switcher-body-radius);
+
     .x-window-header {
+        @include border-radius($dashboard-switcher-body-radius);
+
         background-color: $dashboard-switcher-background-color;
         margin-bottom: 5px;
         width: 100% !important;
         *overflow: hidden;
         *width: 97% !important;
         *margin-bottom: 0px;
+        border: 0px;
         zoom: 1;
         height: $dashboard-switcher-header-height !important;
         
         .x-window-header-text {
 			font-size: 24px;
-			padding-left: 68px;
+			padding-left: 13px;
             *line-height: 24px;
+            color: $dashboard-switcher-title-color;
 		}
 
         .x-window-header-body {
@@ -35,17 +44,17 @@
 
     .actions {
         height: auto;
-        text-align: left;
-        padding-top: 10px;
+        position: absolute;
+        bottom: -15px;
+        right: 0;
 
         ul {
-            color: $dashboard-switcher-dashboard-text-color;
+            color: $dashboard-switcher-descriptor-color;
 
             li {
                 display: inline-block;
                 zoom: 1;
                 *display: inline;
-                padding: 5px 10px;
             }
         }
         
@@ -56,18 +65,18 @@
 
             .store-link-btn-text, .create-link-btn-text {
                 display: inline-block;
-                width: 140px;
-                padding-left: 7px;
+                width: 90px;
+                padding: 3px 0 0 7px;
                 font: {
-                    size: 14px;
+                    size: 10px;
                     weight: normal;
                 }
             }
 
             .store-link-btn-img, .create-link-btn-img {
                 position: relative;
-                width: 30px;
-                height: 40px; 
+                width: 20px;
+                height: 20px; 
                 display: inline-block;
                 float: left;
                 background-repeat: no-repeat !important;
@@ -79,7 +88,7 @@
             }
 
             .create-link-btn-text {
-                width: 110px;
+                width: 75px;
             }
 
             .store-link-btn-img {
@@ -94,7 +103,7 @@
         .store-link-btn {
             &:hover, &.hover {
                 & .store-link-btn-img {
-                    background-position: 5px 11px !important;
+                    background-position: 0 1px !important;
                     background-image: theme-image($theme-name, 'myappswindow/MoreinStore-over.png');
                 }
             }
@@ -110,19 +119,12 @@
     }
 
     .dashboard-switcher-descriptor {
-        color: $dashboard-switcher-dashboard-text-color;
+        color: $dashboard-switcher-descriptor-color;
         bottom: 20px !important;
         position: relative;
         text-align: left;
         padding-top: 10px;
         *padding-top: 0px;
-        padding-left: 53px;
-    }
-
-    > #dashboard-switcher-body {
-        text-align: center;
-        margin-left: auto;
-        margin-right: auto;
     }
 
     .all-dashboards {
@@ -163,12 +165,16 @@
 
         > .bx-viewport {
             @include box-shadow(none);
+            
+            margin-left: -4px !important;
 
             background: transparent !important;
             *background: inherit !important;
+            
             border: 0px;
+            
             width: $dashboard-switcher-slider-width !important;
-            height: $dashboard-switcher-slider-height;
+            height: $dashboard-switcher-slider-height !important;
             min-height: $dashboard-switcher-slider-height !important;
 
             .bx-slide.expanded {
@@ -198,14 +204,32 @@
         }
     }
 
-    > .bx-wrapper {
+    > .bx-wrapper > .bx-controls > .bx-controls-direction {
+        .bx-prev, .bx-next {
+            height: 54px !important;
+            background-position: 0 1px !important;
+
+            // keep arrows in same y-position when My Apps modal is expanded
+            top: 200px !important;
+        }
+
         .bx-prev {
-            left: 10px !important;
-            height: 42px !important;
+            left: -56px !important;
+
+            background: theme-image($theme-name, 'myappswindow/my_apps_carousel_left_arrow_out.png') no-repeat !important;
+            
+            &:hover, &.hover {
+                background: theme-image($theme-name, 'myappswindow/my_apps_carousel_left_arrow_out.png') no-repeat !important;
+            }
         }
         .bx-next {
-            right: 4px !important;
-            height: 42px !important;
+            right: -56px !important;
+
+            background: theme-image($theme-name, 'myappswindow/my_apps_carousel_right_arrow_out.png') no-repeat !important;
+            
+            &:hover, &.hover {
+                background: theme-image($theme-name, 'myappswindow/my_apps_carousel_right_arrow_out.png') no-repeat !important;
+            }
         }
     }
 }
@@ -219,11 +243,19 @@
 > .stack-dashboards-container {
 
     > .stack-dashboards {
+        width: 740px;
+        margin: 0 auto;
+
+        &.one-slide {
+            height: $dashboard-mini-slider-height-one-slide;
+        }
+
+        @include border-radius($dashboard-mini-slider-body-radius);
 
         > .bx-wrapper {
             min-height: $dashboard-mini-slider-height !important;
             max-height: $dashboard-mini-slider-height !important;
-            width: $dashboard-mini-slider-width !important;
+            width: 610px;
             margin-bottom: 30px;
 
             > .bx-viewport {
@@ -244,9 +276,12 @@
                 *min-height: $dashboard-mini-slider-viewport-height-ie7 !important;
 
                 .dashboard {
-                    padding-top: 10px;
+                    padding-top: $dashboard-padding-top;
                     margin-bottom: 0px;
-                    width: 80px;
+                    margin-top: $dashboard-mini-slider-dashboard-margin-top;
+                    margin-left: $dashboard-mini-slider-dashboard-margin-left;
+                    margin-right: $dashboard-mini-slider-dashboard-margin-right;
+                    width: $dashboard-mini-slider-dashboard-width;
                 }
             }
         }
@@ -266,17 +301,17 @@
         > .bx-wrapper {
             
             .bx-prev, .bx-prev:hover, .bx-next, .bx-next:hover {
-                top: 65%;
+                top: 60%;
                 background-size: 75% !important;
                 height: 42px !important;
             }
 
             .bx-prev {
-                left: -63px !important;
+                left: -52px !important;
             }
 
             .bx-next {
-                right: -70px !important;
+                right: -59px !important;
             }
         }
     }
@@ -298,9 +333,10 @@
     cursor: pointer;
     width: $dashboard-width;
     height: $dashboard-height;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-bottom: 5px;
+    margin: $dashboard-margin-top 
+            $dashboard-margin-right 
+            $dashboard-margin-bottom 
+            $dashboard-margin-left;
     
     .thumb-wrap {
         text-align: center;
@@ -314,66 +350,71 @@
             height: 64px;
             width: 64px;
 
-            margin-left: auto;
-            margin-right: auto;
+            margin: 0 auto;
             
             text-align: center;
 
             background-repeat: no-repeat;
             background-position: center center;
             background-image: $dashboard-switcher-layout-default-icon;
-            background-size: 100%;
         }
     }
 
     &-name {
         color: $dashboard-switcher-dashboard-text-color;
-        height: 15px;
+        height: 24px;
         width: 100%;
-        margin-top: 4px;
-        margin-left: auto;
-        margin-right: auto;
+        margin: 2px 0 auto;
+        padding: 0 4px 0 4px;
+        line-height: 1em;
+    }
+
+    .details-btn-container {
+        padding: 18px 7px 0 0;
+        
+        .details-btn {
+            float: right;
+            background-image: theme-image($theme-name, 'myappswindow/info_icon.png');
+            width: 14px;
+            height: 14px;
+        }
     }
     
-    &:hover, &.hover {
+    &:hover, &.hover, &-selected {
         @include border-radius($dashboard-item-body-radius);
-        background-color: $dashboard-switcher-dashboard-over-background-color !important;
+    }
 
-        .dashboard-name {
-            color: $dashboard-switcher-dashboard-over-text-color  !important;
-        }
+    &:hover, &.hover {
+        background-color: $dashboard-switcher-dashboard-over-background-color;
     }
 
     &-selected {
+        background-color: $dashboard-switcher-dashboard-selected-background-color !important;
+
         .dashboard-name {
-            color: $dashboard-switcher-dashboard-selected-text-color !important;
             font-weight: bold;
-        }
-        .thumb {
-            background-image: $dashboard-switcher-layout-default-icon-over !important;
         }
     }
 }
 
 #dashboard-switcher .dashboard, .dashboard.drag-proxy {
-    &:hover, &.hover {
-        @include border-radius($dashboard-item-body-radius);
-        background-color: darken($dashboard-switcher-dashboard-over-background-color, 10) !important;
+    .thumb {
+        background-size: 100%;
+    }
 
-        .dashboard-name {
-            color: $dashboard-switcher-dashboard-over-text-color !important;
-        }
+    &:hover, &.hover {
+        background-color: darken($dashboard-switcher-dashboard-over-background-color, 10);
+    }
+
+    &-selected {
+        background-color: darken($dashboard-switcher-dashboard-selected-background-color, 10) !important;
     }
 }
 
 #dashboard-switcher .stack, .stack.drag-proxy {
     .thumb {
         background-image: $dashboard-switcher-layout-stack-default-icon !important;
-    }
-    &.dashboard-selected {
-        .thumb {
-            background-image: $dashboard-switcher-layout-stack-default-icon-over !important;
-        }
+        background-size: 100%;
     }
 }
 
@@ -415,13 +456,14 @@
             font-size: 1.5em;
         }
         -webkit-animation-duration: 0.2s;
-        -webkit-animation-delay: 1s;
-}
+        -moz-animation-duration: 0.2s;
+        -o-animation-duration: 0.2s;
+        animation-duration: 0.2s;
 
-.detail-actions {
-	padding-top:5px; 
-	color: $dashboard-switcher-dashboard-text-color;
-    font-size: 10px;
+        -webkit-animation-delay: 1s;
+        -moz-animation-delay: 1s;
+        -o-animation-delay: 1s;
+        animation-delay: 1s;
 }
 
 .x-ie7 {
@@ -452,10 +494,17 @@
 .stack-dashboards-container {
     clear: both;
     position: relative;
-    top: -7px;
+    top: -8px;
+
+    .stack-dashboards-anchor-tip {
+        position: relative;
+        border-width: 5px;
+        height: 5px;
+        border-bottom-color: $dashboard-switcher-dashboard-selected-background-color;
+    }
 
     .stack-dashboards {
-        background: darken($dashboard-switcher-dashboard-background-color, 10%);
+        background: $dashboard-switcher-dashboard-selected-background-color;
         overflow: hidden;
         border-radius: 25px;
 
@@ -463,11 +512,6 @@
             display: none;
         }
     }
-}
-.stack-dashboards-anchor-tip {
-    position: relative;
-    border-width: 10px;
-    border-bottom-color: darken($dashboard-switcher-dashboard-background-color, 10%);
 }
 
 .itemTip {

@@ -18,9 +18,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     viewId: 'dashboard-switcher-dashboard-view',
 
-    width: 750,
-    height: 595,
-    expandedHeight: 755,
+    width: 780,
+    height: 600,
+    expandedHeight: 770,
 
     dashboardContainer: null,
 
@@ -40,7 +40,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     storeLengthChanged: true,
 
-    selectedItemCls : 'dashboard-selected',
+    selectedPageCls: 'dashboard-selected',
+    selectedAppCls: 'stack-selected',
 
     _deletedStackOrDashboards: null,
 
@@ -103,15 +104,15 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         me._deletedStackOrDashboards = [];
 
         me.tpl = new Ext.XTemplate(
-            '<div class="dashboard-switcher-descriptor">All of your applications appear here. To start an App, click it. To edit or delete, hover over it and select \'Details\'.</div>',
+            '<div class="dashboard-switcher-descriptor">Click to start an App. To edit or delete, hover over an app and select details.</div>',
             '<div class="all-dashboards">',
                 '<tpl for=".">',
                     '<div id="{[this.getName(values)+this.getId(values)]}" class="{[this.getClass(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}">',
                         '<div class="thumb-wrap">',
                             '{[this.getIcon(values)]}',
                         '</div>',
-                        '<div class="{[this.getName(values)]}-name" style="overflow: hidden;">',
-                            '{[this.encodeAndEllipsize(values.name)]}',
+                        '<div class="{[this.getName(values)]}-name">',
+                            '{[values.name]}',
                         '</div>',
                         '{[this.getActions(values)]}',
                     '</div>',
@@ -125,7 +126,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             
             getClass: function (values) {
                 var name = this.getName(values);
-                return values.guid === me.activeDashboard.id ? name + ' ' + me.selectedItemCls: name;
+                return values.guid === me.activeDashboard.id ? name + ' ' + me.selectedPageCls: name;
             },
             
             getName: function (values) {
@@ -143,9 +144,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             },
             
             getActions: function (values) {
-                return	'<ul class="detail-actions hide">'+
-                			'<li class="detail-action">Details</li>'+
-                        '</ul>'
+                return	'<div class="details-btn-container hide">'+
+                            '<div class="details-btn"></div>'+
+                        '</div>';
             },
             
             encodeAndEllipsize: function(str) {
@@ -172,16 +173,18 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         me.on('afterrender', function (cmp) {
             me.tpl.overwrite( cmp.body, stackOrDashboards );
 
+            $('.stack-name').dotdotdot();
+
             Ext.DomHelper.append( cmp.body,
             '<div class="actions">'+
                 '<ul>'+
                 	'<li class="store-link-btn">'+
                         '<div class="store-link-btn-img"></div>'+
-                        '<span class="store-link-btn-text">Discover More </br> in the Store</span>'+
+                        '<span class="store-link-btn-text">Discover More</span>'+
                     '</li>'+
             		'<li class="create-link-btn">'+
                         '<div class="create-link-btn-img"></div>'+
-                        '<span class="create-link-btn-text">Create <br>New App</span>'+
+                        '<span class="create-link-btn-text">Create New</span>'+
                     '</li>'+
                 '</ul>'+
             '</div>');
@@ -230,7 +233,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('mouseover', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
             .on('mouseout', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
             .on('focus', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
-            .on('blur', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
+            .on('blur', '.stack, .dashboard', $.proxy(me.onMouseLeave, me));
 
         me.initKeyboardNav();
 
@@ -514,12 +517,19 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     moveRight.call(this);
                 }
             })
-            .on('focus', '.dashboard, .stack', function (evt) {
-                $(evt.currentTarget).addClass(me.selectedItemCls);
+            .on('focus', '.dashboard', function (evt) {
+                $(evt.currentTarget).addClass(me.selectedPageCls);
             })
-            .on('blur', '.dashboard, .stack', function (evt) {
-                me._previouslyFocusedStackOrDashboard = $(evt.currentTarget).removeClass(me.selectedItemCls);
+            .on('focus', '.stack', function (evt) {
+                $(evt.currentTarget).addClass(me.selectedAppCls);
             })
+            .on('blur', '.dashboard', function (evt) {
+                me._previouslyFocusedStackOrDashboard = $(evt.currentTarget).removeClass(me.selectedPageCls);
+            })
+            // .on('blur', '.stack', function (evt) {
+            //     me._previouslyFocusedStackOrDashboard = $(evt.currentTarget).removeClass(me.selectedAppCls);
+            //     me.hideStackDashboards();
+            // })
             .on('focus', '.dashboard-actions li, .stack-actions li', function (evt) {
                 $(evt.currentTarget).addClass('hover');
             })
@@ -783,7 +793,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     focusActiveDashboard: function () {
         var me = this,
             activeDashboardId = this.activeDashboard.id,
-            selectedEl = $('#dashboard'+activeDashboardId);
+            selectedEl = $('#dashboard'+activeDashboardId, '.bx-slide:not(.bx-clone)');
 
         // dashboard item view not found in switcher, active dashboard must be in a stack.
         // expand the stack, then focus the active dashboard
@@ -803,7 +813,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             }
             return;
         } else {
-            selectedEl.addClass('selected');
+            selectedEl.addClass(me.selectedPageCls);
         }
     },
 
@@ -827,7 +837,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var $clickedDashboard = $(evt.currentTarget),
         dashboard = this.getDashboard( $clickedDashboard );
 
-        if ($(evt.target).hasClass('detail-action')) {
+        if ($(evt.target).hasClass('details-btn')) {
         	Ext.select('.itemTip').destroy();
         	
         	Ext.widget('mypagetip', {
@@ -879,7 +889,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 $clickedStack = $(evt.currentTarget),
                 stack = me.getStack( $clickedStack );
             
-            if ($(evt.target).hasClass('detail-action')) {
+            if ($(evt.target).hasClass('details-btn')) {
             	Ext.select('.itemTip').destroy();
             	
             	Ext.widget('myapptip', {
@@ -909,6 +919,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             dfd = $.Deferred();
 
         me.removeDeletedDashboard(stack);
+
+        $('.' + me.selectedAppCls).removeClass(me.selectedAppCls);
+        $stack.addClass(me.selectedAppCls);
 
         // don't expand stacks with one page/dashboard
         if (stack && stack.dashboards && stack.dashboards.length === 1) {
@@ -964,7 +977,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             parentWidth = parent.outerWidth( true ),
             lastElInRow;
 
-        $clickedStack.addClass('hover');
+        $clickedStack.addClass(me.selectedAppCls);
 
         // get last element in the clikced stack's row
         var numItemsInRow = Math.round( parentWidth / clickedStackElWidth ),
@@ -1006,7 +1019,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var parentPosition = $clickedStack.position(),
             top = parentPosition.top + clickedStackElHeight - (this.stackDashboardsAnchorTipHeight),
             left = parentPosition.left + (clickedStackElWidth / 2) - (this.stackDashboardsAnchorTipWidth / 2);
-        
+
         this.stackDashboardsAnchorTip.css({
             left: left + 'px'
         });
@@ -1045,6 +1058,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             touchEnabled: false
         });
 
+        if (me.appPageCarousel.getSlideCount() === 1) {
+            $('.bx-pager', '.stack-dashboards').hide();
+            $('.stack-dashboards').addClass('one-slide');
+        }
+
         me.appPageCarousel.disableSelection();
     },
 
@@ -1074,7 +1092,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         me.isAnAppExpanded = false;
 
-        $('.stack.hover', '.bx-slide:not(.bx-clone)').removeClass('hover');
+        $('.stack-selected', '.bx-slide:not(.bx-clone)').removeClass(me.selectedAppCls);
 
         if(Ext.isIE7 || Ext.isIE8) {
             var dfd = $.Deferred();
@@ -1103,10 +1121,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var el = $(evt.currentTarget);
 
         if (this._previouslyHoveredStackOrDashboard != null) {
-            $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');
+            $('.details-btn-container', this._previouslyHoveredStackOrDashboard).addClass('hide');
         }
             
-        $('.detail-actions', el).removeClass('hide');
+        $('.details-btn-container', el).removeClass('hide');
 
         this._previouslyHoveredStackOrDashboard = el;
     },
@@ -1115,7 +1133,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var el = $(evt.currentTarget);
 
         if (this._previouslyHoveredStackOrDashboard) {
-            $('.detail-actions', this._previouslyHoveredStackOrDashboard).addClass('hide');
+            $('.details-btn-container', this._previouslyHoveredStackOrDashboard).addClass('hide');
         }
     },
 
