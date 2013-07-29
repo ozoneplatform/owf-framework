@@ -45,7 +45,7 @@
     .actions {
         height: auto;
         position: absolute;
-        bottom: -25px;
+        bottom: -15px;
         right: 0;
 
         ul {
@@ -55,7 +55,6 @@
                 display: inline-block;
                 zoom: 1;
                 *display: inline;
-                // padding: 5px 10px;
             }
         }
         
@@ -217,7 +216,7 @@
         > .bx-viewport {
             @include box-shadow(none);
             
-            margin-left: -2px !important;
+            margin-left: -4px !important;
 
             background: transparent !important;
             *background: inherit !important;
@@ -294,7 +293,7 @@
 > .stack-dashboards-container {
 
     > .stack-dashboards {
-        width: 690px;
+        width: 740px;
         margin: 0 auto;
 
         &.one-slide {
@@ -306,7 +305,7 @@
         > .bx-wrapper {
             min-height: $dashboard-mini-slider-height !important;
             max-height: $dashboard-mini-slider-height !important;
-            width: 540px;
+            width: 610px;
             margin-bottom: 30px;
 
             > .bx-viewport {
@@ -352,17 +351,17 @@
         > .bx-wrapper {
             
             .bx-prev, .bx-prev:hover, .bx-next, .bx-next:hover {
-                top: 65%;
+                top: 60%;
                 background-size: 75% !important;
                 height: 42px !important;
             }
 
             .bx-prev {
-                left: -63px !important;
+                left: -52px !important;
             }
 
             .bx-next {
-                right: -70px !important;
+                right: -59px !important;
             }
         }
     }
@@ -384,9 +383,10 @@
     cursor: pointer;
     width: $dashboard-width;
     height: $dashboard-height;
-    margin-left: $dashboard-margin-left;
-    margin-right: $dashboard-margin-right;
-    margin-bottom: $dashboard-margin-bottom;
+    margin: $dashboard-margin-top 
+            $dashboard-margin-right 
+            $dashboard-margin-bottom 
+            $dashboard-margin-left;
     
     .thumb-wrap {
         text-align: center;
@@ -400,8 +400,7 @@
             height: 64px;
             width: 64px;
 
-            margin-left: auto;
-            margin-right: auto;
+            margin: 0 auto;
             
             text-align: center;
 
@@ -421,7 +420,7 @@
     }
 
     .details-btn-container {
-        padding: 2px 5px 0 0;
+        padding: 18px 7px 0 0;
         
         .details-btn {
             float: right;
@@ -431,42 +430,34 @@
         }
     }
     
-    &:hover, &.hover {
+    &:hover, &.hover, &-selected {
         @include border-radius($dashboard-item-body-radius);
-        background-color: $dashboard-switcher-dashboard-over-background-color;
+    }
 
-        .dashboard-name {
-            color: $dashboard-switcher-dashboard-over-text-color !important;
-        }
+    &:hover, &.hover {
+        background-color: $dashboard-switcher-dashboard-over-background-color;
     }
 
     &-selected {
-        @include border-radius($dashboard-item-body-radius);
-        @include box-shadow(5px inset);
         background-color: $dashboard-switcher-dashboard-selected-background-color !important;
 
         .dashboard-name {
-            color: $dashboard-switcher-dashboard-selected-text-color !important;
             font-weight: bold;
-        }
-        .thumb {
-            background-image: $dashboard-switcher-layout-default-icon-over !important;
         }
     }
 }
 
 #dashboard-switcher .dashboard, .dashboard.drag-proxy {
     .thumb {
-        background-size: 80%;
+        background-size: 100%;
     }
 
     &:hover, &.hover {
-        @include border-radius($dashboard-item-body-radius);
-        background-color: darken($dashboard-switcher-dashboard-over-background-color, 10) !important;
+        background-color: darken($dashboard-switcher-dashboard-over-background-color, 10);
+    }
 
-        .dashboard-name {
-            color: $dashboard-switcher-dashboard-over-text-color !important;
-        }
+    &-selected {
+        background-color: darken($dashboard-switcher-dashboard-selected-background-color, 10) !important;
     }
 }
 
@@ -474,12 +465,6 @@
     .thumb {
         background-image: $dashboard-switcher-layout-stack-default-icon !important;
         background-size: 100%;
-    }
-
-    &.dashboard-selected {
-        .thumb {
-            background-image: $dashboard-switcher-layout-stack-default-icon-over !important;
-        }
     }
 }
 
@@ -521,7 +506,14 @@
             font-size: 1.5em;
         }
         -webkit-animation-duration: 0.2s;
+        -moz-animation-duration: 0.2s;
+        -o-animation-duration: 0.2s;
+        animation-duration: 0.2s;
+
         -webkit-animation-delay: 1s;
+        -moz-animation-delay: 1s;
+        -o-animation-delay: 1s;
+        animation-delay: 1s;
 }
 
 .x-ie7 {
@@ -552,7 +544,14 @@
 .stack-dashboards-container {
     clear: both;
     position: relative;
-    top: -9px;
+    top: -8px;
+
+    .stack-dashboards-anchor-tip {
+        position: relative;
+        border-width: 5px;
+        height: 5px;
+        border-bottom-color: $dashboard-switcher-dashboard-selected-background-color;
+    }
 
     .stack-dashboards {
         background: $dashboard-switcher-dashboard-selected-background-color;

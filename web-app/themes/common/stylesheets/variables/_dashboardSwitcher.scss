@@ -1,29 +1,32 @@
 $dashboard-switcher-header-font-size: 12px !default;
 
-$dashboard-width: 90px;
-$dashboard-height: 110px;
+$dashboard-width: 115px;
+$dashboard-height: 130px;
 
 $dashboard-rows: 3;
 $dashboard-columns: 6;
 
-$dashboard-padding-top: 5px;
-$dashboard-margin-left: 15px;
-$dashboard-margin-right: 15px;
+$dashboard-padding-top: 10px;
+$dashboard-margin-top: 0px;
+$dashboard-margin-left: 5px;
+$dashboard-margin-right: 5px;
 $dashboard-margin-bottom: 5px;
 
 $dashboard-switcher-title-color: #969696;
 $dashboard-switcher-descriptor-color: #C1C1C1;
 $dashboard-switcher-details-btn-color: #8BFEFF;
 
-$dashboard-mini-slider-dashboard-width: 80px;
+$dashboard-mini-slider-dashboard-width: 115px;
 $dashboard-mini-slider-dashboard-margin-top: 5px;
-$dashboard-mini-slider-dashboard-margin-left: 25px;
-$dashboard-mini-slider-dashboard-margin-right: 0px;
+$dashboard-mini-slider-dashboard-margin-left: 2px;
+$dashboard-mini-slider-dashboard-margin-right: 9px;
 $dashboard-mini-slider-height: $dashboard-height + $dashboard-padding-top;
 $dashboard-mini-slider-width: 
-	($dashboard-mini-slider-dashboard-width + $dashboard-mini-slider-dashboard-margin-left) * 5;
+	($dashboard-mini-slider-dashboard-width + 
+	 $dashboard-mini-slider-dashboard-margin-left + 
+	 $dashboard-mini-slider-dashboard-margin-right) * 5;
 
-$dashboard-mini-slider-height-one-slide: 125px;
+$dashboard-mini-slider-height-one-slide: 150px;
 
 $dashboard-mini-slider-viewport-height: $dashboard-mini-slider-height + $dashboard-padding-top;
 $dashboard-mini-slider-viewport-height-ie7: $dashboard-mini-slider-viewport-height + 5px;
@@ -33,9 +36,9 @@ $dashboard-switcher-body-radius: 7px !default;
 $dashboard-switcher-background-color: $owf-base-color !default;
 $dashboard-switcher-opacity: 0.90 !default;
 
-$dashboard-item-body-radius: 5px !default;
+$dashboard-item-body-radius: 7px !default;
 
-$dashboard-switcher-slider-expanded-height-extra: 20px;
+$dashboard-switcher-slider-expanded-height-extra: 30px;
 
 $dashboard-switcher-slider-width: 
 	($dashboard-width + $dashboard-margin-right + $dashboard-margin-left) * 
@@ -70,10 +73,8 @@ $dashboard-switcher-dashboard-over-text-color: getHighContrastColor($dashboard-s
 $dashboard-switcher-dashboard-selected-text-color: getHighContrastColor($dashboard-switcher-dashboard-selected-background-color) !default;
 
 $dashboard-switcher-layout-default-icon: theme-image($theme-name, 'dashboardswitcher/DashboardIcon64.png') !default;
-$dashboard-switcher-layout-default-icon-over: theme-image($theme-name, 'dashboardswitcher/DashboardIcon64.png') !default;
 
 $dashboard-switcher-layout-stack-default-icon: theme-image($theme-name, 'dashboardswitcher/StacksIcon64.png') !default;
-$dashboard-switcher-layout-stack-default-icon-over: theme-image($theme-name, 'dashboardswitcher/StacksIcon64.png') !default;
 
 $dashboard-switcher-tooltip-heading-color: #acd2ed !default;
 $dashboard-switcher-tooltip-label-color: #ababab !default;

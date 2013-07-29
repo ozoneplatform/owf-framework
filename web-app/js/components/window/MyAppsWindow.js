@@ -18,9 +18,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     viewId: 'dashboard-switcher-dashboard-view',
 
-    width: 750,
-    height: 525,
-    expandedHeight: 675,
+    width: 780,
+    height: 600,
+    expandedHeight: 770,
 
     dashboardContainer: null,
 
@@ -166,6 +166,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         });
 
         me.stackDashboardsTpl = '<div class="stack-dashboards-container">'+
+                                    '<div class="stack-dashboards-anchor-tip x-tip-anchor x-tip-anchor-top"></div>'+
                                     '<div class="stack-dashboards"></div>'+
                                 '</div>';
         
@@ -233,7 +234,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('mouseover', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
             .on('mouseout', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
             .on('focus', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
-            .on('blur', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
+            .on('blur', '.stack, .dashboard', $.proxy(me.onMouseLeave, me));
 
         me.initKeyboardNav();
 
@@ -522,9 +523,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('blur', '.dashboard', function (evt) {
                 me._previouslyFocusedStackOrDashboard = $(evt.currentTarget).removeClass(me.selectedPageCls);
             })
-            .on('blur', '.stack', function (evt) {
-                me._previouslyFocusedStackOrDashboard = $(evt.currentTarget).removeClass(me.selectedAppCls);
-            })
+            // .on('blur', '.stack', function (evt) {
+            //     me._previouslyFocusedStackOrDashboard = $(evt.currentTarget).removeClass(me.selectedAppCls);
+            //     me.hideStackDashboards();
+            // })
             .on('focus', '.dashboard-actions li, .stack-actions li', function (evt) {
                 $(evt.currentTarget).addClass('hover');
             })
@@ -788,7 +790,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     focusActiveDashboard: function () {
         var me = this,
             activeDashboardId = this.activeDashboard.id,
-            selectedEl = $('#dashboard'+activeDashboardId);
+            selectedEl = $('#dashboard'+activeDashboardId, '.bx-slide:not(.bx-clone)');
 
         // dashboard item view not found in switcher, active dashboard must be in a stack.
         // expand the stack, then focus the active dashboard
@@ -808,7 +810,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             }
             return;
         } else {
-            selectedEl.addClass('selected');
+            selectedEl.addClass(me.selectedPageCls);
         }
     },
 
@@ -998,7 +1000,26 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         this.$stackDashboards.children('.stack-dashboards').html( this.tpl.applyTemplate( stack.dashboards ) );
         this.$stackDashboards.insertAfter( lastElInRow );
 
+        this.stackDashboardsAnchorTip = $( '.stack-dashboards-anchor-tip' , this.$stackDashboards );
+
+        // cache size of tip
+        if( !this.stackDashboardsAnchorTipHeight ) {
+            this.stackDashboardsAnchorTipHeight = this.stackDashboardsAnchorTip.outerHeight();
+        }
+        if( !this.stackDashboardsAnchorTipWidth ) {
+            this.stackDashboardsAnchorTipWidth = this.stackDashboardsAnchorTip.outerWidth();
+        }
+
         this.$stackDashboards.hide();
+
+        // calculate top and left value for anchor tip
+        var parentPosition = $clickedStack.position(),
+            top = parentPosition.top + clickedStackElHeight - (this.stackDashboardsAnchorTipHeight),
+            left = parentPosition.left + (clickedStackElWidth / 2) - (this.stackDashboardsAnchorTipWidth / 2);
+
+        this.stackDashboardsAnchorTip.css({
+            left: left + 'px'
+        });
 
         if (totalItems > me.numDashboardsNeededToExpandModal) {
             me.expandModal(parent);
