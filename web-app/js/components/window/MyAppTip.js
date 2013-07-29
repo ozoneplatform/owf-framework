@@ -30,8 +30,8 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 //get an array containing the first word of rowData.name as one elem, and the rest of name as another
                 Ext.Array.erase (/^([\S]+)\s*(.*)?/.exec(Ext.String.trim(str)), 0, 1),
                 function(it) {
-                    //for each elem in the array, truncate it with an ellipsis if it is longer than 28 characters
-                    return Ext.util.Format.ellipsis(it, 12);
+                    //for each elem in the array, truncate it with an ellipsis if it is longer than 21 characters
+                    return Ext.util.Format.ellipsis(it, 21);
                 }
             //join the array back together with spaces
             ).join(' ')
@@ -85,7 +85,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 '<img class=\'tipIcon\'src=\'' + encodeURI(decodeURI(me.clickedStack.imageUrl)) + 
                 '\' />' : '<div class=\'tipIcon noIconGivenStack\'></div>',
             str = '<div class=\'dashboard-tooltip-content\'>' + icn +
-                '<h3 class=\'name\'>' + this.encodeAndEllipsize(me.clickedStack.name) + '</h3>';
+                '<h3 class=\'name\' data-qtip="'+ Ext.htmlEncode(me.clickedStack.name) +'">' + this.encodeAndEllipsize(me.clickedStack.name) + '</h3>';
 
         me.clickedStack.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedStack.description) +'</p></div>'):
         										 (str += '<p class=\'tip-description\'>  </p>');
@@ -102,7 +102,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                         '<span class=\'createPageImg  \'></span>'+
                         '<p class=\'actionText\'>Add Page</p>'+
                     '</li>'+
-                    '<li class=\'pushButton actionButton\' data-qtip="Add App to the Store, making it available to all Store users.">'+
+                    '<li class=\'pushButton actionButton\' data-qtip="">'+
                     	'<span class=\'pushImg\'></span>'+
                     	'<p class=\'actionText\'>Push to Store</p>'+
                     '</li>'+

@@ -33,8 +33,8 @@ Ext.define('Ozone.components.window.MyPageTip', {
                 //get an array containing the first word of rowData.name as one elem, and the rest of name as another
                 Ext.Array.erase (/^([\S]+)\s*(.*)?/.exec(Ext.String.trim(str)), 0, 1),
                 function(it) {
-                    //for each elem in the array, truncate it with an ellipsis if it is longer than 28 characters
-                    return Ext.util.Format.ellipsis(it, 12);
+                    //for each elem in the array, truncate it with an ellipsis if it is longer than 21 characters
+                    return Ext.util.Format.ellipsis(it, 21);
                 }
             //join the array back together with spaces
             ).join(' ')
@@ -47,7 +47,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
                 '<img class=\'tipIcon\' src=\'' + encodeURI(decodeURI(me.clickedDashboard.iconImageUrl)) + 
                 '\' />' : '<div class=\'tipIcon noIconGivenPage\'></div>',
             str = '<div class=\'dashboard-tooltip-content\'>' + icn + 
-                '<h3 class=\'name\'>'+ this.encodeAndEllipsize(me.clickedDashboard.name) + '</h3>';
+                '<h3 class=\'name\' data-qtip="'+ Ext.htmlEncode(me.clickedDashboard.name) +'">'+ this.encodeAndEllipsize(me.clickedDashboard.name) + '</h3>';
 
         me.clickedDashboard.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedDashboard.description) +'  </p></div>') :
         								  (str += '<p class=\'tip-description\'>  </p>');

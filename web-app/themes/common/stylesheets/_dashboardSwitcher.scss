@@ -528,9 +528,10 @@
         	color: $dashboard-switcher-dashboard-text-color;
         	margin-bottom: 0;
 		    margin-left: 35%;
+		    margin-right:8%;
 		    padding-top: 4%;
 		    max-width: 200px !important;
-        	
+        	overflow:hidden;
         	
         	*margin-left: 0;
         	*margin-right: 10%;
