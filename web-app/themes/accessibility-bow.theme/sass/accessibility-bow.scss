@@ -137,9 +137,9 @@ $owf-tool-width: 17px;
 
 $dashboard-switcher-background-color: #fff; 
 $dashboard-mini-slider-background-color: $owfgrey12;
-$dashboard-switcher-stack-over-background-color: $owfgrey0;
+$dashboard-switcher-stack-over-background-color: #c4f5f3;
 $dashboard-switcher-stack-selected-background-color: #ddd;
-$dashboard-switcher-dashboard-over-background-color: $owfgrey11;
+$dashboard-switcher-dashboard-over-background-color: $dashboard-switcher-stack-over-background-color;
 $dashboard-switcher-dashboard-selected-background-color: white;
 $dashboard-switcher-dashboard-over-border-color: 1px solid $owfgrey6;
 
