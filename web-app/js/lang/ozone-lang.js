@@ -220,8 +220,6 @@ Ozone.ux.DashboardMgmtString = {
     iconBlankText: 'Icon URL',
     descriptionBlankText : 'Description',
 
-    dashboardIconPath: '/themes/common/images/dashboardswitcher/DefaultDashboard.png',
-
     premadeLayout: 'Choose a premade layout',
     existingLayout: 'Use the layout of an existing App',
     newLayout: 'Create a new layout',
@@ -268,6 +266,16 @@ Ozone.ux.DashboardMgmtString = {
 	en_US : 'English',
 	ko : 'Korean'
 };
+
+if (Ozone.config &&
+    Ozone.config.currentTheme &&
+    Ozone.config.currentTheme.themeName) {
+    Ozone.ux.DashboardMgmtString.dashboardIconPath = '/themes/' + Ozone.config.currentTheme.themeName + '.theme/images/dashboardswitcher/DashboardIcon64.png';
+    Ozone.ux.DashboardMgmtString.stackIconPath = '/themes/' + Ozone.config.currentTheme.themeName + '.theme/images/dashboardswitcher/StacksIcon64.png';
+} else {
+    Ozone.ux.DashboardMgmtString.dashboardIconPath = '/themes/common/images/dashboardswitcher/DashboardIcon64.png';
+    Ozone.ux.DashboardMgmtString.stackIconPath = '/themes/common/images/dashboardswitcher/StacksIcon64.png';
+}
 
 Ozone.layout.AccordionWindowManagerString = {
     configureAccordion : 'Configure Accordion' 

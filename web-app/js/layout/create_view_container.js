@@ -65,7 +65,9 @@ Ext.define('Ozone.layout.CreateViewContainer', {
     },
 
     initComponent: function() {
-        var me = this;
+        var me = this,
+            defaultIconUrl = '';
+
         this.config = this.dashboardContainer.activeDashboard.config;
         this.views = this.dashboardContainer.dashboards;
 
@@ -81,11 +83,17 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             margins: '0 0 0 10'
         };
 
+        if (me.existingStackRecord) {
+            defaultIconUrl = OWF.getContainerUrl() + Ozone.ux.DashboardMgmtString.stackIconPath;
+        } else {
+            defaultIconUrl = OWF.getContainerUrl() + Ozone.ux.DashboardMgmtString.dashboardIconPath;
+        }
+
         this.iconImage = Ext.create('Ext.Img', {
             name: 'appIconImage',
             cls: 'appIconImage',
             itemId: 'appIconImage',
-            src: OWF.getContainerUrl() + Ozone.ux.DashboardMgmtString.dashboardIconPath,
+            src: defaultIconUrl,
             height: 54,
             width: 54,
             margin: '4 0 0 5'
