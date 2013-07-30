@@ -1,4 +1,5 @@
 $dashboard-switcher-header-font-size: 12px !default;
+$dashboard-switcher-header-height: 36px;
 
 $dashboard-width: 115px;
 $dashboard-height: 130px;
@@ -12,9 +13,9 @@ $dashboard-margin-left: 5px;
 $dashboard-margin-right: 5px;
 $dashboard-margin-bottom: 5px;
 
-$dashboard-switcher-title-color: #969696;
-$dashboard-switcher-descriptor-color: #C1C1C1;
-$dashboard-switcher-details-btn-color: #8BFEFF;
+$dashboard-switcher-title-color: #969696 !default;
+$dashboard-switcher-descriptor-color: #C1C1C1 !default;
+$dashboard-switcher-details-btn-color: #8BFEFF !default;
 
 $dashboard-mini-slider-dashboard-width: 115px;
 $dashboard-mini-slider-dashboard-margin-top: 5px;
@@ -31,6 +32,8 @@ $dashboard-mini-slider-height-one-slide: 150px;
 $dashboard-mini-slider-viewport-height: $dashboard-mini-slider-height + $dashboard-padding-top;
 $dashboard-mini-slider-viewport-height-ie7: $dashboard-mini-slider-viewport-height + 5px;
 $dashboard-mini-slider-body-radius: 7px !default;
+
+$dashboard-mini-slider-background-color: #272727 !default;
 
 $dashboard-switcher-body-radius: 7px !default;
 $dashboard-switcher-background-color: $owf-base-color !default;
@@ -56,11 +59,12 @@ $dashboard-switcher-slider-expanded-height:
 $dashboard-switcher-slider-min-height: $dashboard-switcher-slider-height;
 $dashboard-switcher-slider-max-height: $dashboard-switcher-slider-expanded-height;
 
-$dashboard-switcher-header-height: 26px;
-
 $dashboard-switcher-dashboard-background-color: $dashboard-switcher-background-color !default;
-$dashboard-switcher-dashboard-over-background-color: #323232 !default;
-$dashboard-switcher-dashboard-selected-background-color: #272727 !default;
+$dashboard-switcher-dashboard-over-background-color: #141414 !default;
+$dashboard-switcher-dashboard-selected-background-color: black !default;
+
+$dashboard-switcher-stack-over-background-color: #323232 !default;
+$dashboard-switcher-stack-selected-background-color: #272727 !default;
 
 $dashboard-switcher-dashboard-selected-box-shadow-color: black !default;
 
@@ -68,7 +72,7 @@ $dashboard-switcher-dashboard-border-color: $dashboard-switcher-background-color
 $dashboard-switcher-dashboard-over-border-color: $dashboard-switcher-dashboard-over-background-color !default;
 $dashboard-switcher-dashboard-selected-border-color: $dashboard-switcher-dashboard-selected-background-color !default;
 
-$dashboard-switcher-dashboard-text-color: getHighContrastColor($dashboard-switcher-dashboard-background-color) !default;
+$dashboard-switcher-dashboard-text-color: getHighContrastColor($dashboard-switcher-background-color) !default;
 $dashboard-switcher-dashboard-over-text-color: getHighContrastColor($dashboard-switcher-dashboard-over-background-color) !default;
 $dashboard-switcher-dashboard-selected-text-color: getHighContrastColor($dashboard-switcher-dashboard-selected-background-color) !default;
 

@@ -32,6 +32,7 @@
         .x-window-header-text {
 			font-size: 24px;
 			padding-left: 13px;
+            padding-top: 10px;
             *line-height: 24px;
             color: $dashboard-switcher-title-color;
 		}
@@ -103,7 +104,6 @@
         .store-link-btn {
             &:hover, &.hover {
                 & .store-link-btn-img {
-                    background-position: 0 1px !important;
                     background-image: theme-image($theme-name, 'myappswindow/MoreinStore-over.png');
                 }
             }
@@ -386,26 +386,18 @@
         @include border-radius($dashboard-item-body-radius);
     }
 
-    &:hover, &.hover {
-        background-color: $dashboard-switcher-dashboard-over-background-color;
-    }
-
-    &-selected {
-        background-color: $dashboard-switcher-dashboard-selected-background-color !important;
-
-        .dashboard-name {
-            font-weight: bold;
-        }
+    &-selected .dashboard-name {
+        font-weight: bold;    
     }
 }
 
 #dashboard-switcher .dashboard, .dashboard.drag-proxy {
     &:hover, &.hover {
-        background-color: darken($dashboard-switcher-dashboard-over-background-color, 10);
+        background-color: $dashboard-switcher-dashboard-over-background-color;
     }
 
     &-selected {
-        background-color: darken($dashboard-switcher-dashboard-selected-background-color, 10) !important;
+        background-color: $dashboard-switcher-dashboard-selected-background-color;
     }
 }
 
@@ -414,8 +406,13 @@
         background-image: $dashboard-switcher-layout-stack-default-icon !important;
     }
 
+    &:hover, &.hover {
+        background-color: $dashboard-switcher-stack-over-background-color;
+    }
+
     &-selected {
         @include box-shadow(black 0 0 15px inset);
+        background-color: $dashboard-switcher-stack-selected-background-color;
     }
 }
 
@@ -495,17 +492,17 @@
 .stack-dashboards-container {
     clear: both;
     position: relative;
-    top: -8px;
+    top: -11px;
 
     .stack-dashboards-anchor-tip {
         position: relative;
-        border-width: 5px;
-        height: 5px;
-        border-bottom-color: $dashboard-switcher-dashboard-selected-background-color;
+        border-width: 7px;
+        height: 7px;
+        border-bottom-color: $dashboard-mini-slider-background-color;
     }
 
     .stack-dashboards {
-        background: $dashboard-switcher-dashboard-selected-background-color;
+        background-color: $dashboard-mini-slider-background-color;
         overflow: hidden;
 
         .dashboard-switcher-descriptor {
@@ -572,11 +569,10 @@
         	color: $dashboard-switcher-dashboard-text-color;
         	margin-bottom: 0;
 		    margin-left: 35%;
-		    margin-right:8%;
-		    padding-top: 4%;
+		    margin-right: 8%;
 		    max-width: 200px !important;
 		    max-height: 75px !important;
-        	overflow:hidden;
+        	overflow: hidden;
         	
         	*margin-left: 0;
         	*margin-right: 10%;
@@ -584,7 +580,8 @@
         
         ul {
             color: $dashboard-switcher-dashboard-text-color;
-			background: $dashboard-switcher-dashboard-over-background-color;
+			background-color: $my-apps-tooltip-color;
+            border-top: 1px solid $dashboard-switcher-background-color;
 			border-radius: 0 0 10px 10px;
 			margin-top: 5.5%;
 			

@@ -15,6 +15,8 @@ $owfblue3: #70B0BA;
 $owfblue2: #adf7ff;
 $owfblue1: #e7f8fa;
 
+$owfbluemodal: #07525a;
+
 //In order from darkest to lightest
 $owfgreen6: #3A4547;
 $owfgreen5: #607745;
@@ -67,11 +69,6 @@ $banner-button-background: #fff;
 $banner-button-over-background: #fff;
 $owf-logout-color: #ff7979;
 $user-menu-button-border-color: $owfgrey13; 
-
-
-
-
-
 
 /*****************************************************************
  * Put yor theme customizations here.  If you have many customizations,
@@ -139,7 +136,11 @@ $owf-tool-width: 17px;
 // =================== Dashboard Switcher
 
 $dashboard-switcher-background-color: #fff; 
-$dashboard-switcher-dashboard-over-background-color: $owfgrey0;
+$dashboard-mini-slider-background-color: $owfgrey12;
+$dashboard-switcher-stack-over-background-color: $owfgrey0;
+$dashboard-switcher-stack-selected-background-color: #ddd;
+$dashboard-switcher-dashboard-over-background-color: $owfgrey11;
+$dashboard-switcher-dashboard-selected-background-color: white;
 $dashboard-switcher-dashboard-over-border-color: 1px solid $owfgrey6;
 
 $dashboard-switcher-tooltip-heading-color: #134d77;
@@ -149,6 +150,10 @@ $dashboard-switcher-share-color: #134d77;
 $dashboard-switcher-restore-color: #dd8f08;
 $dashboard-switcher-edit-color: #55921a;
 $dashboard-switcher-delete-color: #b3292d;
+
+$dashboard-switcher-title-color: $owfgrey5;
+$dashboard-switcher-descriptor-color: black;
+$dashboard-switcher-details-btn-color: black;
 
 $system-window-background-color: #fff;
 
@@ -422,7 +427,7 @@ $close-button-width: 19px;
 //override dashboard modal bg color
 // Nish to come back to fix
 .x-mask {
-  background: $owfblue2;
+  background: $owfbluemodal;
 }
 
 //override that editor tab area
@@ -446,8 +451,8 @@ textarea.x-form-focus {
 // overriding tooltip for this theme
 
 .x-tip {
-  background-color: $owfblue1;
-  border-color: $owfblue3;
+  background-color: $owfgrey10;
+  border-color: $owfgrey13;
 }
 
 .x-tip-header-text {
@@ -475,4 +480,12 @@ textarea.x-form-focus {
     border-color: $owfblue3;
 }
 
+#userMenuBtn {
+    background: transparent;
+    *background: none;
+}
 
+.ozonequicktip .dashboard-tooltip-content ul {
+    background-color: $owfgrey10;
+    border-top: 1px solid $owfgrey13;
+}
