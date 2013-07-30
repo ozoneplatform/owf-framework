@@ -13,18 +13,18 @@
     "contrast": "white-on-black",
     "owf_font_size": 12,
 
-    "thumb": "themes/accessibility-wob.theme/images/preview/wob-dashboard.png",
+    "thumb": "themes/accessibility-wob.theme/images/preview/CARBON_Application.png",
     "screenshots": [
         {
-            "url": "themes/accessibility-wob.theme/images/preview/wob-launch.png",
+            "url": "themes/accessibility-wob.theme/images/preview/CARBON_Components.png",
             "description": "App Components"
         },
         {
-            "url": "themes/accessibility-wob.theme/images/preview/wob-designer.png",
+            "url": "themes/accessibility-wob.theme/images/preview/CARBON_Builder.png",
             "description": "App Builder"
         },
         {
-            "url": "themes/accessibility-wob.theme/images/preview/wob-split-dash.png",
+            "url": "themes/accessibility-wob.theme/images/preview/CARBON_Application.png",
             "description": "Split Application"
         }
     ]

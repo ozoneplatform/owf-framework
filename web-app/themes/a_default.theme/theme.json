@@ -13,18 +13,18 @@
     "contrast": "standard",
     "owf_font_size": 12,
 
-    "thumb": "themes/a_default.theme/images/preview/OWF-dashboard.png",
+    "thumb": "themes/a_default.theme/images/preview/COBALT_Application.png",
     "screenshots": [
         {
-            "url": "themes/a_default.theme/images/preview/OWF-launch.png",
+            "url": "themes/a_default.theme/images/preview/COBALT_Components.png",
             "description": "App Components"
         },
         {
-            "url": "themes/a_default.theme/images/preview/OWF-designer.png",
+            "url": "themes/a_default.theme/images/preview/COBALT_Builder.png",
             "description": "App Builder"
         },
         {
-            "url": "themes/a_default.theme/images/preview/OWF-split-dash.png",
+            "url": "themes/a_default.theme/images/preview/COBALT_Application.png",
             "description": "Split Application"
         }
     ]
