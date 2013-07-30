@@ -575,6 +575,7 @@
 		    margin-right:8%;
 		    padding-top: 4%;
 		    max-width: 200px !important;
+		    max-height: 75px !important;
         	overflow:hidden;
         	
         	*margin-left: 0;
@@ -766,13 +767,14 @@
         font-size: $owf-font-size;
         line-height: 1.5em;
         min-height: 50px;
+        max-width: 265px;
     }
 
 	.description { 
 		width: 285px;
 		max-height: 300px;
     	overflow-y: auto;
-    	overflow-x: hidden;
+    	overflow-x: auto;
     	
     	overflow/*\**/: auto\9;
 	}

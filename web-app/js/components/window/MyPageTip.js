@@ -18,6 +18,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
             fn: function() {
                 this.hideButtons();
                 this.setupClickHandlers();
+                jQuery('.name').dotdotdot();
             }
         }
     },
@@ -26,28 +27,13 @@ Ext.define('Ozone.components.window.MyPageTip', {
     appsWindow: null,
     $dashboard: null,
     
-    encodeAndEllipsize: function(str) {
-        //html encode the result since ellipses are special characters
-        return Ext.util.Format.htmlEncode(
-            Ext.Array.map (
-                //get an array containing the first word of rowData.name as one elem, and the rest of name as another
-                Ext.Array.erase (/^([\S]+)\s*(.*)?/.exec(Ext.String.trim(str)), 0, 1),
-                function(it) {
-                    //for each elem in the array, truncate it with an ellipsis if it is longer than 21 characters
-                    return Ext.util.Format.ellipsis(it, 21);
-                }
-            //join the array back together with spaces
-            ).join(' ')
-        );
-    },
-    
     getToolTip: function () {
         var me = this,
             icn = me.clickedDashboard.iconImageUrl && me.clickedDashboard.iconImageUrl != ' ' ? 
                 '<img class=\'tipIcon\' src=\'' + encodeURI(decodeURI(me.clickedDashboard.iconImageUrl)) + 
                 '\' />' : '<div class=\'tipIcon noIconGivenPage\'></div>',
             str = '<div class=\'dashboard-tooltip-content\'>' + icn + 
-                '<h3 class=\'name\' data-qtip="'+ Ext.htmlEncode(me.clickedDashboard.name) +'">'+ this.encodeAndEllipsize(me.clickedDashboard.name) + '</h3>';
+                '<h3 class=\'name\' data-qtip="'+ Ext.htmlEncode(me.clickedDashboard.name) +'">'+ Ext.htmlEncode(me.clickedDashboard.name) + '</h3>';
 
         me.clickedDashboard.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedDashboard.description) +'  </p></div>') :
         								  (str += '<p class=\'tip-description\'>  </p>');
