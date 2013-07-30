@@ -15,6 +15,8 @@ coverage {
             "**/org/apache/log4j/**",
             "changelog*/**"
     ]
+    xml = true
+    enabledByDefault = true
 }
 
 codenarc.reports = {
