@@ -390,6 +390,7 @@ class GroupService {
                     }
                     else if (params.update_action == 'remove') {
                         group.removeFromPeople(person)
+                        deletePersonalDashboardsForGroup(person, group)
                     }
 
                     updatedUsers << person
@@ -456,6 +457,14 @@ class GroupService {
         }
 
         return returnValue
+    }
+
+    def deletePersonalDashboardsForGroup(Person person, Group removedGroup) {
+        person.dashboards?.each { Dashboard dashboard ->
+            if (dashboard.stack?.groups?.find { it.id == removedGroup.id}){
+                dashboardService.deletePersonalDashboard(dashboard)
+            }
+        }
     }
 
     def delete(params) {
