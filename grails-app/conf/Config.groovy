@@ -836,42 +836,22 @@ environments {
     development {
         uiperformance.enabled = false
 
-        /*perfTest.enabled = false              // Determines whether or not bootstrap is run
+        perfTest.enabled = false                 // Determines whether or not bootstrap is run
         perfTest.assignToOWFUsersGroup = false  // Assign widgets, dashboards and stacks to OWF Users group only
-        perfTest.clearCacheEvery = 10
-        perfTest.numDashboards = 5              // The number of dashboards each user will get assigned to them
-        perfTest.numGroupDashboards = 1         // The number of dashboards each group will get assigned to them
-        perfTest.numDashboardsWidgets = 5       // The number of widgets on each dashboard
-        perfTest.numAdmins = 100                // The number of administrators
-        perfTest.numUsers = 99900               // The number of non-admin users
-        perfTest.numGroups = 2                  // The number of groups
-        perfTest.numGroupsPerUser = 2           // The number of groups each user is assigned to
-        perfTest.numWidgetsInGroups = 0         // The number of widgets assigned to each group
-        perfTest.numWidgetsPerUser = 5          // The number of widgets assigned to each user
-        perfTest.numPreferences = 50            // The number of preferences per user
-        perfTest.numWidgets = 500               // The number of unique widget definitions
-        perfTest.numStacks = 5                  // The number of stacks
-        perfTest.numStacksPerUser = 2           // The number of stacks per user
-        perfTest.numStackDashboards = 2         // The number of dashboards each stack will get assigned to them
-        */
-        
-        perfTest.enabled = false                // Determines whether or not bootstrap is run
-        perfTest.assignToOWFUsersGroup = true   // Assign widgets, dashboards and stacks to OWF Users group only
-        perfTest.clearCacheEvery = 20
-        perfTest.numDashboards = 0              // The number of dashboards each user will get assigned to them
-        perfTest.numGroupDashboards = 3         // The number of dashboards each group will get assigned to them
+        perfTest.clearCacheEvery = 1000
         perfTest.numDashboardsWidgets = 3       // The number of widgets on each dashboard
-        perfTest.numAdmins = 100                // The number of administrators
-        perfTest.numUsers = 99900               // The number of non-admin users
-        perfTest.numGroups = 0                  // The number of groups
-        perfTest.numGroupsPerUser = 0           // The number of groups each user is assigned to
-        perfTest.numWidgetsInGroups = 50        // The number of widgets assigned to each group
-        perfTest.numWidgetsPerUser = 0          // The number of widgets assigned to each user
-        perfTest.numPreferences = 0             // The number of preferences per user
-        perfTest.numWidgets = 50                // The number of unique widget definitions
-        perfTest.numStacks = 2                  // The number of stacks
-        perfTest.numStacksPerUser = 0           // The number of stacks per user
+        perfTest.numAdmins = 5                  // The number of administrators
+        perfTest.numUsers = 99995                   // The number of non-admin users
+        perfTest.numGroups = 50                 // The number of groups
+        perfTest.numGroupsPerUser = 2           // The number of groups each user is assigned to
+        perfTest.numWidgetsInGroups = 5         // The number of widgets assigned to each group
+        perfTest.numWidgetsPerUser = 5          // The number of widgets assigned to each user
+        perfTest.numPreferences = 10            // The number of preferences per user
+        perfTest.numWidgets = 500               // The number of unique widget definitions
+        perfTest.numStacks = 25                 // The number of stacks
+        perfTest.numStacksPerUser = 3           // The number of stacks per user
         perfTest.numStackDashboards = 2         // The number of dashboards each stack will get assigned to them
+        // TODO: perfTest.numPersonalStacks variable to assign stacks that haven't been published to each user only 
 
         perfTest.createSampleWidgets = false
         perfTest.sampleWidgetBaseUrl = 'https://127.0.0.1:8443/owf/sampleWidgets/'
