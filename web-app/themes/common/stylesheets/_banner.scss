@@ -362,8 +362,9 @@
         border-bottom: none !important;
         padding: 0px !important;
 
-	    #logout.x-over {
-	    	background: none $owf-logout-color !important;
+        #logout.x-over {
+            @include border-bottom-radius(8px);
+            background: none $owf-logout-color !important;
 
             .x-btn-inner {
                 background: none $owf-logout-color !important;
