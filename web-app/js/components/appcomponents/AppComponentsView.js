@@ -132,8 +132,11 @@
             me.dashboardContainer
                 .launchWidgets(app, isEnterPressed, isDragAndDrop)
                 .always(function () {
-                    me.show();
-                })
+                    // only show if pinned
+                    if(me.pinned) {
+                        me.show();
+                    }
+                });
         },
 
         pin: function () {
