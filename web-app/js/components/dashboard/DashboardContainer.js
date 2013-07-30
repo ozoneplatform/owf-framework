@@ -216,6 +216,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     stackModels[stack.id].get('dashboards').push(model);
                 } else {
                     var stackModel = this.stackStore.add(stack)[0];
+                    // Set phantom to 'false' to overcome a quirk of ExtJS, which considers models with id of 0
+                    // to be new (phantom = true).
+                    stackModel.phantom = false;
                     stackModel.set('dashboards', [model]);
 
                     stackModels[stack.id] = stackModel;
