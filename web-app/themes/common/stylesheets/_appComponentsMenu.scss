@@ -263,9 +263,10 @@
 }
 
 .widget-details {
-    font-size: $owf-font-size - 1;
-    color: $widget-details-color;
-    padding: 10px 0 0 0;
+    float: right;
+    background-image: theme-image($theme-name, 'myappswindow/info_icon.png');
+    width: 14px;
+    height: 14px;
 }
 
 .show-new-component {
