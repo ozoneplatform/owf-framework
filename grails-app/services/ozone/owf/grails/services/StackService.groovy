@@ -492,8 +492,8 @@ class StackService {
             boolean adminEnabled = (params.adminEnabled == true  || params.adminEnabled == 'true')
             boolean isOwner = isStackOwner(stack)
             boolean ownerCanDelete = stackOwnerCanDelete(stack)
-            if ((isOwner && ownerCanDelete) || (isAdmin && adminEnabled) || stackHasAtMostOneUser(stack)) {
-                // Handle administrative (or owner's) removal of stacks.
+            if ((isAdmin && adminEnabled)) {
+                // Handle administrative removal of stacks.
                 if (stack) deleteStack(stack)
                 stacks << it
             } else {
