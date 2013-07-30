@@ -158,9 +158,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         me.on('afterrender', function (cmp) {
             me.tpl.overwrite( cmp.body, stackOrDashboards );
 
-            $('.stack-name, .dashboard-name').dotdotdot({
-                ellipsis: '…'
-            });
+            $('.stack-name').dotdotdot();
 
             Ext.DomHelper.append( cmp.body,
             '<div class="actions">'+
@@ -1044,6 +1042,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             infiniteLoop: true,
             touchEnabled: false
         });
+
+        $('.dashboard-name').dotdotdot();
 
         if (me.appPageCarousel.getSlideCount() === 1) {
             $('.bx-pager', '.stack-dashboards').hide();
