@@ -502,19 +502,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     moveRight.call(this);
                 }
             })
-            .on('focus', '.dashboard', function (evt) {
-                $(evt.currentTarget).addClass(me.selectedPageCls);
-            })
-            .on('focus', '.stack', function (evt) {
-                $(evt.currentTarget).addClass(me.selectedAppCls);
-            })
             .on('blur', '.dashboard', function (evt) {
                 me._previouslyFocusedStackOrDashboard = $(evt.currentTarget).removeClass(me.selectedPageCls);
             })
-            // .on('blur', '.stack', function (evt) {
-            //     me._previouslyFocusedStackOrDashboard = $(evt.currentTarget).removeClass(me.selectedAppCls);
-            //     me.hideStackDashboards();
-            // })
             .on('focus', '.dashboard-actions li, .stack-actions li', function (evt) {
                 $(evt.currentTarget).addClass('hover');
             })
