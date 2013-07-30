@@ -22,6 +22,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
     createViewContainer_FormValid: true,
     hideViewSelectRadio: false,
     stackId: null, // parent stack id
+    existingDashboardRecord: null,
+    existingStackRecord: null,
     premadeLayouts: {
         premadeDesktop: {"paneType":"desktoppane","widgets":[],"xtype":"container","flex":1,"height":"100%","items":[]},
         premadeFit: {"paneType":"fitpane","widgets":[],"xtype":"container","flex":1,"height":"100%","items":[]},
@@ -201,16 +203,24 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             }
         };
 
-        if (this.existingDashboardRecord != null) {
+        var iconImageUrl, description;
+        if (this.existingStackRecord != null) {
+            // Edit stack
+            this.titleTextField.value = this.existingStackRecord.name;
+            iconImageUrl = this.existingStackRecord.imageUrl || "";
+            description = this.existingStackRecord.description || "";
+        }
+        else if (this.existingDashboardRecord != null) {
+            // Edit dashboard
             this.titleTextField.value = this.existingDashboardRecord.get('name');
-            var iconImageUrl = this.existingDashboardRecord.get('iconImageUrl') || "";
-            var description = this.existingDashboardRecord.get('description') || "";
-            this.iconURLField.value = jQuery.trim(iconImageUrl);
-            this.description.value = jQuery.trim(description);
+            iconImageUrl = this.existingDashboardRecord.get('iconImageUrl') || "";
+            description = this.existingDashboardRecord.get('description') || "";
+        }
+        this.iconURLField.value = jQuery.trim(iconImageUrl);
+        this.description.value = jQuery.trim(description);
 
-            if (this.iconURLField.value) {
-                this.iconImage.setSrc(encodeURI(decodeURI(this.iconURLField.value)));
-            }
+        if (this.iconURLField.value) {
+            this.iconImage.setSrc(encodeURI(decodeURI(this.iconURLField.value)));
         }
 
         this.newViewRadio = {
@@ -648,11 +658,16 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                             iconImageUrl = ' ';
 
                         //edit an existing dashboard if a record was passed in
-                        if (this.existingDashboardRecord != null) {
-                            this.existingDashboardRecord.set('name',title);
-                            this.existingDashboardRecord.set('description',desc);
-                            this.existingDashboardRecord.set('iconImageUrl', iconImageUrl);
-                            this.dashboardContainer.editDashboard(this.existingDashboardRecord);
+                        if (this.existingDashboardRecord != null || this.existingStackRecord != null) {
+                            if (this.existingStackRecord != null) {
+                                this.editStack(title, iconImageUrl, desc, this.existingDashboardRecord === null);
+                            }
+                            if (this.existingDashboardRecord != null) {
+                                this.existingDashboardRecord.set('name',title);
+                                this.existingDashboardRecord.set('description',desc);
+                                this.existingDashboardRecord.set('iconImageUrl', iconImageUrl);
+                                this.dashboardContainer.editDashboard(this.existingDashboardRecord);
+                            }
                             this.close();
                         }
                         //else create a new one
@@ -878,5 +893,21 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         }
 
         return Ext.create('Ozone.data.Dashboard', config);
+    },
+
+    editStack: function(name, url, description, sync) {
+        var me = this;
+        var stack = this.dashboardContainer.stackStore.getById(this.existingStackRecord.id);
+        stack.set('name', name);
+        stack.set('imageUrl', url);
+        stack.set('description', description);
+        if (sync) {
+            me.dashboardContainer.stackStore.on("write", function(store, operation, eOpts) {
+                if (operation.records && operation.records[0].get("id") === stack.get("id")) {
+                    me.dashboardContainer.reloadDashboards()
+                };
+            }, {single: true});
+            this.dashboardContainer.stackStore.sync();
+        }
     }
 });

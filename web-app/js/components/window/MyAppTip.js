@@ -327,139 +327,30 @@ Ext.define('Ozone.components.window.MyAppTip', {
                  Ext.isEmpty(Ext.String.trim(attr)));
     },
 
-    handleStackEdit: function(evnt) {
-        evnt.stopPropagation();
+    handleStackEdit: function(event) {
+        event.stopPropagation();
 
-        var me = this;
+        var stack = this.clickedStack;
+        var dashboardCount = stack.dashboards.length;
+        var dashboardModel = (dashboardCount === 1) ? stack.dashboards[0].model : null;
 
-        me.update('');
-        me.removeAll();
+        var editDashWindow = Ext.widget('createdashboardwindow', {
+            itemId: 'editDashWindow',
+            title: null,
+            height: 265,
+            dashboardContainer: this.dashboardContainer,
+            ownerCt: this.dashboardContainer,
+            hideViewSelectRadio: true,
+            closable: false,
+            constrainHeader: false,
+            existingDashboardRecord: dashboardModel,
+            existingStackRecord: stack
+        }).show();
 
-        var isNameSet = me.isAttributeSet(me.clickedStack.name);
-        var isIconUrlSet = me.isAttributeSet(me.clickedStack.imageUrl);
-        var isDescriptionSet = me.isAttributeSet(me.clickedStack.description);
-
-        var titleField = Ext.create('Ext.form.field.Text', {
-            name: 'title',
-            usePlaceholderIfAvailable: false,
-            value: (isNameSet ? me.clickedStack.name : ''),
-            fieldLabel: 'Title',
-            labelSeparator: '',
-            labelWidth: 65
-        });
-
-        var imgurlField = Ext.create('Ext.form.field.Text', {
-            name: 'imageurl',
-            usePlaceholderIfAvailable: false,
-            value: (isIconUrlSet ? me.clickedStack.imageUrl : ''),
-            fieldLabel: 'Icon URL',
-            labelSeparator: '',
-            labelWidth: 65
-        });
-
-        var descriptionField = Ext.create('Ext.form.field.TextArea', {
-            name: 'description',
-            maxLength: 4000,
-            enforceMaxLength: true,
-            value: (isDescriptionSet ? me.clickedStack.description : ''),
-            usePlaceholderIfAvailable: false,
-            fieldLabel: 'Description',
-            labelSeparator: '',
-            labelWidth: 65
-        })
-
-        var win = Ext.create('Ozone.components.window.TipWarning', {
-            tip: me,
-            text: '',
-            buttonConfig: 'none',
-            buttonHandler: function() {
-                console.log('FFS');
-            },
-            height: 180,
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            },
-            items: [{
-                xtype: 'container',
-                layout: {
-                    type: 'hbox',
-                    align: 'stretch'
-
-                },
-                height: 135,
-                items:[{
-                    xtype: 'image',
-                    src: (isIconUrlSet ? encodeURI(decodeURI(me.clickedStack.imageUrl)) : 'images/dashboardswitcher/StacksIcon.png'),
-                    height: 54,
-                    maxHeight: 54,
-                    maxWidth: 54,
-                    width: 54
-                },{
-                    xtype: 'container',
-                    layout: {
-                        type: 'vbox',
-                        align: 'stretch'
-                    },
-                    padding: '0 0 0 5',
-                    margin: '',
-                    flex: 1,
-                    items: [titleField, imgurlField,descriptionField]
-                }]
-            },{
-                xtype: 'toolbar',
-                flex: 1,
-                padding: '0 0 0 0',
-                margin: '2 0 0 0',
-                border: false,
-                /*layout: {
-                    pack: 'center'
-                },*/
-                items: ['->',{
-                    xtype: 'button',
-                    text: 'OK',
-                    cls: 'okbutton',
-                    handler: function() {
-                        me.editStack(titleField.value, imgurlField.value, descriptionField.value);
-                    }
-                },{
-                    xtype: 'button',
-                    text: 'Cancel',
-                    cls: 'cancelbutton',
-                    handler: function() {
-                        me.close();
-                    }
-                }]
-            }]
-        });
-
-        
-        me.height = 220;
-        
-        me.add(win);
-        win.doLayout();
-        me.doLayout();
-
+        this.close();
+        this.appsWindow.close();
     },
 
-    editStack: function(name, url, description) {
-        var me = this;
-        var stack = me.dashboardContainer.stackStore.getById(me.clickedStack.id);
-        stack.set('name', name);
-        stack.set('imageUrl', url);
-        stack.set('description', description);
-        stack.set('context', name);
-
-        me.dashboardContainer.stackStore.save();
-        me.appsWindow.reloadDashboards = true;
-        
-        var $target = jQuery(me.event.target.parentElement.parentElement);
-        var $name = jQuery('.stack-name', $target);
-        $name.text(name);
-
-        me.close();
-        //me.appsWindow.close();
-    },
 
     handleStackDelete: function (evt) {
         evt.stopPropagation();

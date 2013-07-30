@@ -503,19 +503,27 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
             me.dashboard.configRecord.set('layoutConfig', dashboardLayoutConfig);
             me.dashboard.configRecord.set('locked', me.locked);
 
-            me.dashboard.saveToServer(null, null, null, function() {
-                //TODO revisit, reload can be worked around by manually updating Ext layout
-
-                me.dashboardContainer.dashboardStore.load({
-                    callback: function(records, options, success) {
-                        if (success == true) {
-                            me.dashboardContainer.updateDashboardsFromStore(records, options, success, me.dashboard.getGuid());
-                        }
-                    },
-                    scope: me
+            // save stack store
+            if (me.dashboardContainer.stackStore.getUpdatedRecords()) {
+                me.dashboardContainer.stackStore.on("write", function() {
+                    me.dashboard.saveToServer(null, null, null, function() {
+                        me.dashboardContainer.reloadDashboards();
+                    });
+                }, {single: true});
+                me.dashboardContainer.stackStore.sync();
+            } else {
+                me.dashboard.saveToServer(null, null, null, function() {
+                    //TODO revisit, reload can be worked around by manually updating Ext layout
+                    me.dashboardContainer.dashboardStore.load({
+                        callback: function(records, options, success) {
+                            if (success == true) {
+                                me.dashboardContainer.updateDashboardsFromStore(records, options, success, me.dashboard.getGuid());
+                            }
+                        },
+                        scope: me
+                    });
                 });
-                
-            });
+            }
         }
         else {
             me.dashboard.set('layoutConfig', dashboardLayoutConfig);
@@ -528,14 +536,36 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
             });
         }
 
-        me.cancel();
+        me.close();
     },
-    
+
+    saveDashboard: function() {
+        var me = this;
+        me.dashboard.saveToServer(null, null, null, function() {
+            //TODO revisit, reload can be worked around by manually updating Ext layout
+            me.dashboardContainer.dashboardStore.load({
+                callback: function(records, options, success) {
+                    if (success == true) {
+                        me.dashboardContainer.updateDashboardsFromStore(records, options, success, me.dashboard.getGuid());
+                    }
+                },
+                scope: me
+            });
+
+        });
+    },
+
     cancel: function() {
+        this.dashboardContainer.cancelStackChange(this.dashboard.id);
+        this.dashboardContainer.cancelDashboardChange(this.dashboard.id);
+        this.close();
+    },
+
+    close: function() {
         Ext.EventManager.removeResizeListener(this.resize, this);
         this.destroy();
     },
-    
+
     toggleDashboardLock: function() {
         var me = this,
             sidePanel = this.getComponent('dashboard-designer-side-panel'),

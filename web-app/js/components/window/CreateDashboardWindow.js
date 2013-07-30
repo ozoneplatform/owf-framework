@@ -21,7 +21,8 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
     },
 
     dashboardContainer: null,
-    existingDashboardModel: null,
+    existingDashboardRecord: null,
+    existingStackRecord: null,
     ownerCt: null,
     stackId: null, // id of the parent Stack
     
@@ -53,6 +54,7 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
             hideViewSelectRadio: me.hideViewSelectRadio,
             winId: me.id,
             existingDashboardRecord: me.existingDashboardRecord,
+            existingStackRecord: me.existingStackRecord,
             headerText: me.headerText,
             stackId: me.stackId
         }];

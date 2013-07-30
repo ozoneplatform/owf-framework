@@ -120,16 +120,6 @@ Ext.define('Ozone.components.window.MyPageTip', {
 
         var dashboard = this.clickedDashboard;
 
-
-//        var createDashWindow = Ext.widget('createdashboardwindow', {
-//            stackId: stack.id,
-//            title: Ozone.ux.DashboardMgmtString.createNewPageTitle,
-//            headerText: Ozone.ux.DashboardMgmtString.createNewPageHeader,
-//            itemId: 'createDashWindow',
-//            dashboardContainer: this.dashboardContainer,
-//            ownerCt: this.dashboardContainer
-//        });
-
         var editDashWindow = Ext.widget('createdashboardwindow', {
             itemId: 'editDashWindow',
             title: null,

@@ -2273,5 +2273,32 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 });
             });
         }
+    },
+
+    /**
+     * Reverts stack model change for given dashboard's parent stack
+     * @param dashboardId
+     */
+    cancelStackChange: function(dashboardId) {
+        var dashboardModel = this.dashboardStore.getById(dashboardId);
+        if (dashboardModel) {
+            var stackModel =  dashboardModel.get('stack');
+            if (stackModel) {
+                var stack = this.stackStore.getById(stackModel.id);
+                stack.reject();
+            }
+        }
+    },
+
+    /**
+     * Reverts dashboard model change
+     * @param dashboardId
+     */
+    cancelDashboardChange: function(dashboardId) {
+        var dashboardModel = this.dashboardStore.getById(dashboardId);
+        if (dashboardModel) {
+            dashboardModel.reject();
+        }
     }
+
 });
