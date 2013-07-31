@@ -1,4 +1,4 @@
-$system-window-body-radius: 25px !default;
+$system-window-body-radius: 7px !default;
 $system-window-background-color: #2a2a2a !default;
 $system-window-over-background-color: darken($system-window-background-color, 15) !default;
 
@@ -22,6 +22,8 @@ $system-window-over-background-color: darken($system-window-background-color, 15
 );
 
 .x-window-system-window {
+    padding: 24px 24px 24px 24px;
+    
     //@include border-radius($dashboard-switcher-body-radius);
     .x-window-header {
         @include border-top-radius($system-window-body-radius);
@@ -35,6 +37,6 @@ $system-window-over-background-color: darken($system-window-background-color, 15
     .x-window-body {
         @include border-bottom-radius($system-window-body-radius);
         //padding: 10px;
-        border:none;
+        border: none;
     }
 }

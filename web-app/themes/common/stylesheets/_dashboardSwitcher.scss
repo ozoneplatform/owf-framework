@@ -208,28 +208,16 @@
         .bx-prev, .bx-next {
             height: 54px !important;
             background-position: 0 1px !important;
-
-            // keep arrows in same y-position when My Apps modal is expanded
-            top: 200px !important;
+            top: 200px !important; // keep arrows in same y-position when My Apps modal is expanded
         }
 
         .bx-prev {
             left: -56px !important;
-
             background: theme-image($theme-name, 'myappswindow/my_apps_carousel_left_arrow_out.png') no-repeat !important;
-            
-            &:hover, &.hover {
-                background: theme-image($theme-name, 'myappswindow/my_apps_carousel_left_arrow_out.png') no-repeat !important;
-            }
         }
         .bx-next {
             right: -56px !important;
-
             background: theme-image($theme-name, 'myappswindow/my_apps_carousel_right_arrow_out.png') no-repeat !important;
-            
-            &:hover, &.hover {
-                background: theme-image($theme-name, 'myappswindow/my_apps_carousel_right_arrow_out.png') no-repeat !important;
-            }
         }
     }
 }
@@ -517,7 +505,7 @@
 
 .itemTip {
 	z-index: 69011 !important;
-	border-radius: 10px;
+	@include border-radius($dashboard-item-body-radius);
 	
 	 .x-tool .x-tool-close {
 	    background-image: theme-image($theme-name, 'tools/close-out.png') !important;
@@ -586,7 +574,7 @@
             color: $dashboard-switcher-dashboard-text-color;
 			background-color: $my-apps-tooltip-color;
             border-top: 1px solid $dashboard-switcher-background-color;
-			border-radius: 0 0 10px 10px;
+			@include border-bottom-radius(7px);
 			margin-top: 5.5%;
 			
             li {
@@ -733,14 +721,13 @@
             filter: none;
         }
 
-        .x-panel-body {
-            background: $my-apps-tooltip-color;
+        .x-panel-body-default {
+            background-color: $my-apps-tooltip-color;
             border: none;
             color: getHighContrastColor($widget-launcher-background-color);
             padding: 10px 8px;
 
             .x-form-field.x-form-text {
-                background: $widget-launcher-background-color;
                 border-color: #a0a9ad;
                 color: getHighContrastColor($widget-launcher-background-color);
             }
@@ -750,7 +737,6 @@
             filter: none;
         }
 
-        background: $my-apps-tooltip-color;
         border: none;
     }
 
