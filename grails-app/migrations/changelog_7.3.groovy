@@ -233,13 +233,13 @@ databaseChangeLog = {
         }
 
         insert(tableName: "stack_groups") {
-            column(name: "group_id", valueNumeric: "(SELECT id FROM owf_group WHERE name='df51cb9b-f3d8-412e-af33-d064f81fb6c0')")
-            column(name: "stack_id", valueNumeric: "(SELECT id FROM stack WHERE stack_context='908d934d-9d53-406c-8143-90b406fb508f')")
+            column(name: "group_id", valueComputed: "(SELECT id FROM owf_group WHERE name='df51cb9b-f3d8-412e-af33-d064f81fb6c0')")
+            column(name: "stack_id", valueComputed: "(SELECT id FROM stack WHERE stack_context='908d934d-9d53-406c-8143-90b406fb508f')")
         }
 
         insert(tableName: "stack_groups") {
-            column(name: "group_id", valueNumeric: "(SELECT id FROM owf_group WHERE name='3b870e3b-247f-47db-bcd8-8fab6877bbc8')")
-            column(name: "stack_id", valueNumeric: "(SELECT id FROM stack WHERE stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399')")
+            column(name: "group_id", valueComputed: "(SELECT id FROM owf_group WHERE name='3b870e3b-247f-47db-bcd8-8fab6877bbc8')")
+            column(name: "stack_id", valueComputed: "(SELECT id FROM stack WHERE stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399')")
         }
 
         update(tableName: "dashboard") {
@@ -250,14 +250,14 @@ databaseChangeLog = {
 
         update(tableName: "dashboard") {
             column(name: "version", valueNumeric: "1")
-            column(name: "stack_id", valueNumeric: "(SELECT id FROM stack WHERE stack_context='908d934d-9d53-406c-8143-90b406fb508f')")
+            column(name: "stack_id", valueComputed: "(SELECT id FROM stack WHERE stack_context='908d934d-9d53-406c-8143-90b406fb508f')")
             column(name: "published_to_store", valueBoolean: "true")
             where("guid='c62ce95c-d16d-4ffe-afae-c46fa64a689b' AND user_id IS NULL AND name='Sample'")
         }
 
         update(tableName: "dashboard") {
             column(name: "version", valueNumeric: "1")
-            column(name: "stack_id", valueNumeric: "(SELECT id FROM stack WHERE stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399')")
+            column(name: "stack_id", valueComputed: "(SELECT id FROM stack WHERE stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399')")
             column(name: "published_to_store", valueBoolean: "true")
             where("guid='54949b5d-f0ee-4347-811e-2522a1bf96fe' AND user_id IS NULL AND name='Administration'")
         }
@@ -275,19 +275,19 @@ databaseChangeLog = {
 
         insert(tableName: "domain_mapping") {
             column(name: "version", valueNumeric: "0")
-            column(name: "dest_id", valueNumeric: "(SELECT id FROM dashboard WHERE guid='c62ce95c-d16d-4ffe-afae-c46fa64a689b' AND user_id IS NULL AND name='Sample'")
+            column(name: "dest_id", valueComputed: "(SELECT id FROM dashboard WHERE guid='c62ce95c-d16d-4ffe-afae-c46fa64a689b' AND user_id IS NULL AND name='Sample')")
             column(name: "dest_type", value: "dashboard")
             column(name: "relationship_type", value: "owns")
-            column(name: "src_id", valueNumeric: "(SELECT id FROM owf_group WHERE name='df51cb9b-f3d8-412e-af33-d064f81fb6c0')")
+            column(name: "src_id", valueComputed: "(SELECT id FROM owf_group WHERE name='df51cb9b-f3d8-412e-af33-d064f81fb6c0')")
             column(name: "src_type", value: "group")
         }
 
         insert(tableName: "domain_mapping") {
             column(name: "version", valueNumeric: "0")
-            column(name: "dest_id", valueNumeric: "(SELECT id FROM dashboard WHERE guid='54949b5d-f0ee-4347-811e-2522a1bf96fe' AND user_id IS NULL AND name='Administration'")
+            column(name: "dest_id", valueComputed: "(SELECT id FROM dashboard WHERE guid='54949b5d-f0ee-4347-811e-2522a1bf96fe' AND user_id IS NULL AND name='Administration')")
             column(name: "dest_type", value: "dashboard")
             column(name: "relationship_type", value: "owns")
-            column(name: "src_id", valueNumeric: "(SELECT id FROM owf_group WHERE name='3b870e3b-247f-47db-bcd8-8fab6877bbc8')")
+            column(name: "src_id", valueComputed: "(SELECT id FROM owf_group WHERE name='3b870e3b-247f-47db-bcd8-8fab6877bbc8')")
             column(name: "src_type", value: "group")
         }
 
