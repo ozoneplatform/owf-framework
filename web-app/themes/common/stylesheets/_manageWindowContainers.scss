@@ -121,6 +121,9 @@ directly overriding the base ExtJS 4.0.1 rules.
                 clear:both;
                 .x-form-cb-label {
                 }
+                .x-form-cb-wrap {
+                  padding-top: 0px !important;
+                }
             }
             .x-field {
                 float:left;

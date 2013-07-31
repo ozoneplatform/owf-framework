@@ -951,6 +951,8 @@ div#premadeViewContainer {
 
   &.collapseView {
     height: 0px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
   }
 
   &.expandView {
