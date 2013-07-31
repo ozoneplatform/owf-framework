@@ -504,7 +504,8 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
             me.dashboard.configRecord.set('locked', me.locked);
 
             // save stack store
-            if (me.dashboardContainer.stackStore.getUpdatedRecords()) {
+            var updatedStackRecords = me.dashboardContainer.stackStore.getUpdatedRecords();
+            if (updatedStackRecords && updatedStackRecords.length > 0) {
                 me.dashboardContainer.stackStore.on("write", function() {
                     me.dashboard.saveToServer(null, null, null, function() {
                         me.dashboardContainer.reloadDashboards();
