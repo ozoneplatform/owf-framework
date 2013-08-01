@@ -369,7 +369,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     },
 
     getActiveDashboardMiniSlideIndex: function() {
-        if (!this.getActiveStackId() || this.activeDashboard.configRecord.isMarketplaceDashboard()) {
+        if (this.getActiveStackId() == null || this.activeDashboard.configRecord.isMarketplaceDashboard()) {
             return;
         }
         
