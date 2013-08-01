@@ -404,6 +404,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     },
                     stack: {
                         "name": widgetDef.data.title,
+                        "description": widgetDef.get("description"),
                         "owner": null //explicitly null owner so the backend doesn't auto-assign
                     },
                     publishedToStore: true  //allow the user to get their own copy of the
