@@ -409,19 +409,21 @@ Ozone.chrome.WidgetChromeContainer = function(config) {
       return gadgets.json.stringify(returnValue);
   };
 
-  var setTitle = function(sender,data) {
-      var returnValue = {success:false};
-      //parse out widgetid from sender
-      var widgetCfg = Ozone.util.parseJson(sender);
-      if (widgetCfg != null ) {
-        var cmp = Ext.getCmp(widgetCfg.id);
-        if (cmp != null && cmp.setTitle != null) {
-          returnValue.success = true;
-          cmp.setTitle(data.title);
-          returnValue.title = cmp.title;
-        }
+  var setTitle = function(sender, data) {
+    var returnValue = {
+      success: false
+    };
+    //parse out widgetid from sender
+    var widgetCfg = Ozone.util.parseJson(sender);
+    if (widgetCfg != null) {
+      var cmp = Ext.getCmp(widgetCfg.id);
+      if (cmp != null && cmp.setTitle != null) {
+        returnValue.success = true;
+        (cmp.tab || cmp).setTitle(data.title);
+        returnValue.title = cmp.title;
       }
-      return gadgets.json.stringify(returnValue);
+    }
+    return gadgets.json.stringify(returnValue);
   };
 
   if (config != null && config.eventingContainer != null) {
