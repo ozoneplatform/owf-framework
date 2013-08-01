@@ -292,4 +292,109 @@ databaseChangeLog = {
         }
 
     }
+
+    // OP-2157: Sample data still references "dashboards" and "stacks"
+    changeSet(author: "owf", id: "7.3-13", context: "sampleData, 7.3-sampleData") {
+
+        comment("Updating verbiage in the sample data; changing the word widget to app component; changing the word stack to app; changing the word dashboard to page")
+
+        //------------------------------
+        // Update sample app components
+        //------------------------------
+
+        // Change "Widget Log" to "Load Time Log"
+        update(tableName: "widget_definition") {
+            column(name: "display_name", value: "Load Time Log")
+            where("display_name = 'Widget Log'")
+        }
+
+        // Change "NYSE Widget" to "NYSE App Component"
+        // Change "This widget displays the end of day report for the New York Stock Exchange."
+        //     to "This app component displays the end of day report for the New York Stock Exchange."
+        update(tableName: "widget_definition") {
+            column(name: "display_name", value: "NYSE App Component")
+            column(name: "description", value: "This app component displays the end of day report for the New York Stock Exchange.")
+            where("universal_name = 'org.owfgoss.owf.examples.NYSE'")
+        }
+
+        // In "HTML Viewer", change "This widget displays HTML."
+        //                       to "This app component displays HTML."
+        update(tableName: "widget_definition") {
+            column(name: "description", value: "This app component displays HTML.")
+            where("universal_name = 'org.owfgoss.owf.examples.HTMLViewer'")
+        }
+
+        // In "Stock Chart", change "This widget charts stock prices."
+        //                       to "This app component charts stock prices."
+        update(tableName: "widget_definition") {
+            column(name: "description", value: "This app component charts stock prices.")
+            where("universal_name = 'org.owfgoss.owf.examples.StockChart'")
+        }
+
+        // In "Directions", change "This widget allows user to get directions fron one place to another."
+        //                      to "This app component maps directions."
+        update(tableName: "widget_definition") {
+            column(name: "description", value: "This app component maps directions.")
+            where("universal_name = 'org.owfgoss.owf.examples.GetDirections'")
+        }
+
+        // In "Google Maps", change "This widget displays markers or directions."
+        //                       to "This app component displays markers or directions."
+        update(tableName: "widget_definition") {
+            column(name: "description", value: "This app component displays markers or directions.")
+            where("universal_name = 'org.owfgoss.owf.examples.GoogleMaps'")
+        }
+
+        // In "Contacts Manager", change "This widget allows users to manage their contacts."
+        //                            to "This app component allows users to manage their contacts."
+        update(tableName: "widget_definition") {
+            column(name: "description", value: "This app component allows users to manage their contacts.")
+            where("universal_name = 'org.owfgoss.owf.examples.ContactsManager'")
+        }
+
+        //--------------------
+        // Update sample apps
+        //--------------------
+
+        // In "Investments", change "Sample stack containing dashboards with example investment widgets."
+        //                       to "Sample app containing example investment pages."
+        update(tableName: "stack") {
+            column(name: "description", value: "Sample app containing example investment pages.")
+            where("name = 'Investments'")
+        }
+
+        // In "Administration", change "This dashboard provides the widgets needed to administer dashboards, widgets, groups, and users in OWF."
+        //                          to "This app lists administrative pages."
+        update(tableName: "stack") {
+            column(name: "description", value: "This app lists administrative pages.")
+            where("name = 'Administration'")
+        }
+
+        //---------------------
+        // Update sample pages
+        //---------------------
+
+        // In "Watch List", change "This dashboard uses the sample Intents Widgets to demonstrate the widget intents workflow."
+        //                      to "This page demonstrates how intents work using company stock information."
+        update(tableName: "dashboard") {
+            column(name: "description", value: "This page demonstrates how intents work using company stock information.")
+            where("name = 'Watch List'")
+        }
+
+        // In "Contacts", change "This dashboard uses the Contacts Manager, Direction and Google Maps widgets."
+        //                    to "This page demonstrates how intents work by sending addresses to a map."
+        update(tableName: "dashboard") {
+            column(name: "description", value: "This page demonstrates how intents work by sending addresses to a map.")
+            where("name = 'Contacts'")
+        }
+
+        // In "Administration", change "This dashboard provides the widgets needed to administer dashboards, widgets, groups, and users in OWF."
+        //                          to "This page provides the tools needed to administer apps, app component, groups and users."
+        update(tableName: "dashboard") {
+            column(name: "description", value: "This page provides the tools needed to administer apps, app component, groups and users.")
+            where("name = 'Administration'")
+        }
+
+    }
+
 }
