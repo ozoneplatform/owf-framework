@@ -416,7 +416,7 @@ databaseChangeLog = {
 
     changeSet(author: "owf", id: "7.3-15", context: "sampleData, 7.3-sampleData") {
 
-        comment("Associate sample app with owf users group and administration app with owf admin group.")
+        comment("Associate sample app with owf users group and administration app with owf admin group. Disassociate the corresponding group dashboards from their groups.")
 
         // sample
         insert(tableName: "stack_groups") {
@@ -429,6 +429,13 @@ databaseChangeLog = {
             column(name: "group_id", valueComputed: "(SELECT id FROM owf_group WHERE name='OWF Administrators')")
             column(name: "stack_id", valueComputed: "(SELECT id FROM stack WHERE stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399')")
         }
-    }
 
+        delete(tableName: "domain_mapping") {
+            where("src_type = 'group' AND relationship_type = 'owns' AND dest_type = 'dashboard' AND src_id = (select id from owf_group where name  = 'OWF Users') AND dest_id = (select id from dashboard where name = 'Sample')")
+        }
+
+        delete(tableName: "domain_mapping") {
+            where("src_type = 'group' AND relationship_type = 'owns' AND dest_type = 'dashboard' AND src_id = (select id from owf_group where name  = 'OWF Administrators') AND dest_id = (select id from dashboard where name = 'Administration')")
+        }
+    }
 }
