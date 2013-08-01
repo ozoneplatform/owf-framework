@@ -443,7 +443,7 @@ Ozone.chrome.WidgetChromeContainer = function(config) {
       var cmp = Ext.getCmp(widgetCfg.id);
       if (cmp != null && cmp.setTitle != null) {
         returnValue.success = true;
-        cmp.setTitle(data.title);
+        (cmp.tab || cmp).setTitle(data.title);
         returnValue.title = cmp.title;
       }
     }
