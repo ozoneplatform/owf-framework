@@ -12,23 +12,26 @@ import org.ozoneplatform.auditing.hibernate.AbstractAuditLogListener
 import org.springframework.web.context.request.RequestContextHolder
 
 import ozone.owf.grails.services.AccountService
+import ozone.owf.grails.services.OwfApplicationConfigurationService
+
 class AuditLogListener extends AbstractAuditLogListener {
 
     GrailsApplication grailsApplication
 	
     AccountService accountService
+	OwfApplicationConfigurationService owfApplicationConfigurationService
 	
 	String hostCls
 	
 
 	@Override
     public boolean doCefLogging() {
-		getSettingFromRequest(CEF_LOGGING_ENABLED)
+		owfApplicationConfigurationService.is(CEF_LOGGING_ENABLED)
     }	
 	
 	@Override
 	public boolean doCefObjectAccessLogging(){
-		getSettingFromRequest(CEF_OBJECT_ACCESS_LOGGING_ENABLED)
+		owfApplicationConfigurationService.is(CEF_OBJECT_ACCESS_LOGGING_ENABLED)
 	}
 	
 	private getSettingFromRequest(ApplicationSetting setting) {

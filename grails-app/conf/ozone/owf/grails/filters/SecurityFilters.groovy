@@ -248,13 +248,6 @@ class SecurityFilters {
             }			
         }
 		
-		setApplicationConfigurationFlags(controller: '*', action:'*'){			
-			before = {				
-				request.setAttribute(CEF_LOGGING_ENABLED.getCode(), owfApplicationConfigurationService.is(CEF_LOGGING_ENABLED))
-				request.setAttribute(CEF_OBJECT_ACCESS_LOGGING_ENABLED.getCode(), owfApplicationConfigurationService.is(CEF_OBJECT_ACCESS_LOGGING_ENABLED))							
-			}			
-		}
-		
 //        securityDashboardAdmin(controller:'dashboardAdmin', action:'*'){
 //            before = {
 //                if (! accountService.getLoggedInUserIsAdmin() ) {
