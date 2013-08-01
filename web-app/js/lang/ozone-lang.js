@@ -119,7 +119,7 @@ Ozone.layout.ConfigurationWindowString = {
 
 Ozone.layout.CreateViewWindowString = {
     chosePremadeLayout: 'Choose a template',
-    createFromExisting: 'Copy the layout of an existing App',
+    createFromExisting: 'Copy the layout of an existing Page',
     createNew: 'Create a new layout'
 };
 
