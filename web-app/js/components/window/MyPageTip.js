@@ -147,7 +147,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
             var deletePageHandler = function () {
                 //remove from stack dashboard list so if only one page remains the stack will launch on single click
                 var stack_dashboards = me.appsWindow.stacks[dashboard.stack.id].dashboards;
-                stack_dashboards.splice(stack_dashboards.indexOf(dashboard), 1);
+                stack_dashboards.splice(jQuery.inArray(stack_dashboards, dashboard), 1);
                 if(stack_dashboards.length === 1) {
                     me.appsWindow.hideStackDashboards();
                 }
