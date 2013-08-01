@@ -63,7 +63,7 @@ class ConfigController {
         }
 
         conf.customHeaderFooter = customHeaderFooterService.configAsMap
-        conf.backgroundURL =  owfApplicationConfigurationService.getApplicationConfiguration(CUSTOM_BACKGROUND_URL).value
+        conf.backgroundURL =  owfApplicationConfigurationService.getApplicationConfiguration(CUSTOM_BACKGROUND_URL)?.value
 
         render(view: 'config_js',
                 model: [

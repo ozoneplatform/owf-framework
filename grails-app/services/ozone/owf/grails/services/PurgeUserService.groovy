@@ -9,6 +9,10 @@ class PurgeUserService {
 
     void purgeInactiveAccounts() {
         def thresholdInDays = owfApplicationConfigurationService.valueOf(OwfApplicationSetting.INACTIVITY_THRESHOLD)
+        if (!thresholdInDays) {
+            return
+        }
+
         List<Person> inactiveAccounts = getInactiveAccounts(thresholdInDays)
         inactiveAccounts.each { account ->
             Person person = Person.findByUsername(account.username)

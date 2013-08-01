@@ -15,7 +15,6 @@ import ozone.owf.grails.domain.PersonWidgetDefinition
 import ozone.owf.grails.domain.WidgetType
 import ozone.owf.grails.domain.RelationshipType
 import ozone.owf.grails.domain.DomainMapping
-import ozone.owf.grails.services.OwfApplicationConfigurationService;
 import ozone.security.authentication.OWFUserDetailsImpl
 import java.util.HashMap
 import static ozone.owf.enums.OwfApplicationSetting.*
@@ -33,8 +32,6 @@ class SecurityFilters {
     def serviceModelService
     def grailsApplication
 
-	OwfApplicationConfigurationService owfApplicationConfigurationService
-	
     def filters = {
         securityAll(controller:'index', action:'index') {
             before = {
