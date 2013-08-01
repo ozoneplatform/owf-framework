@@ -876,7 +876,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             startParam: undefined
         };
 
-        OWF.Collections.AppComponents.fetch({fetch: true, data: $.param(search_params)}).done(function (resp) {
+        OWF.Collections.AppComponents.fetch({fetch: true, data: $.param(search_params), cache: false}).done(function (resp) {
             if(me.appComponentsView) {
                 var isVisible = me.appComponentsView.$el.is(':visible');
 
