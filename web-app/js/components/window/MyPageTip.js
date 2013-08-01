@@ -145,6 +145,13 @@ Ext.define('Ozone.components.window.MyPageTip', {
             msg = 'Are you sure you want to delete this Page?';
 
             var deletePageHandler = function () {
+                //remove from stack dashboard list so if only one page remains the stack will launch on single click
+                var stack_dashboards = me.appsWindow.stacks[dashboard.stack.id].dashboards;
+                stack_dashboards.splice(stack_dashboards.indexOf(dashboard), 1);
+                if(stack_dashboards.length === 1) {
+                    me.appsWindow.hideStackDashboards();
+                }
+
                 dashboardStore.remove(dashboard.model);
                 dashboardStore.save();
                 me.appsWindow.notify('Delete Page', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> deleted!');
