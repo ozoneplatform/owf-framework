@@ -346,26 +346,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var msg = 'This action will permanently delete <span class="heading-bold">' + 
                 Ext.htmlEncode(me.clickedStack.name) + '</span>.';
 
-        var stackGroups = me.clickedStack.groups
-        var userGroups = Ozone.config.user.groups
-        var groupAssignment = false;
-        
-        if(stackGroups && userGroups && stackGroups.length > 0 && userGroups.length > 0) {
-            for (var i = 0, len1 = stackGroups.length; i < len1; i++) {
-                var stackGroup = stackGroups[i];
-                
-                for (var j = 0, len2 = userGroups.length; j < len2; j++) {
-                    var userGroup = userGroups[j];
-                    if(stackGroup.id === userGroup.id) {
-                        groupAssignment = true;
-                        break;
-                    }
-                }
-
-                if(groupAssignment === true)
-                    break;
-            }
-        }
+        var groupAssignment = me.isStackAGroupAssignment(me.clickedStack);
 
         if(groupAssignment) {
             msg = 'Users in a group cannot remove stacks assigned to the group. Please contact your administrator.'
@@ -463,6 +444,25 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         }, this, {single: true});
         mpLauncher.gotoMarketplace(widget);
+    },
+
+    /**
+     * Returns true if the stack and the current user belong to the same group.
+     * @param stack
+     * @returns {*}
+     */
+    isStackAGroupAssignment: function(stack) {
+        var stackGroups = stack.groups
+        var userGroups = Ozone.config.user.groups
+
+        if (_.intersection(stackGroups, userGroups).length > 0) {
+            return true;
+        } else {
+            // A hack to verify whether the stack is in one of the user's implicit groups
+            return Boolean(_.find(stackGroups, { 'displayName': 'OWF Users' }) ||
+                (Ozone.config.user.isAdmin && _.find(stackGroups, { 'displayName': 'OWF Administrators' })));
+        }
+
     }
 
 });
