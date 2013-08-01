@@ -640,6 +640,10 @@ img.widget-drag-proxy {
 }
 
 
+.alert-window.warning {
+    z-index: 10000003 !important; // set higher than App Components z-index
+}
+
 
 /* Change carousel/slider graphics */
 /* for both My Apps and App Components */

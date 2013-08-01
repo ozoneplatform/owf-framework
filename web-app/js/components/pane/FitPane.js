@@ -100,6 +100,7 @@ Ext.define('Ozone.components.pane.FitPane', {
                 + '<p>Adding <i>' + Ext.htmlEncode(widgetTitle) + '</i> to the pane will replace the  <i>' 
                 + Ext.htmlEncode(this.items.get(0).title) + '</i> App Component.</p>',
             width: 400,
+            cls: 'alert-window warning',
             dashboardContainer: this.dashboard.dashboardContainer,
             okFn: okFn,
             cancelFn: function() {
