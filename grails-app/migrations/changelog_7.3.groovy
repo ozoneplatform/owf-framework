@@ -397,4 +397,38 @@ databaseChangeLog = {
 
     }
 
+    changeSet(author: "owf", id: "7.3-14", context: "sampleData, 7.3-sampleData") {
+
+        comment("Updating the unique widget count for sample and admin apps that we ship with.")
+
+        // Sample app
+        update(tableName: "stack") {
+            column(name: "unique_widget_count", value: 2)
+            where("stack_context='908d934d-9d53-406c-8143-90b406fb508f'")
+        }
+
+        // Administration app
+        update(tableName: "stack") {
+            column(name: "unique_widget_count", value: 5)
+            where("stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399'")
+        }
+    }
+
+    changeSet(author: "owf", id: "7.3-15", context: "sampleData, 7.3-sampleData") {
+
+        comment("Associate sample app with owf users group and administration app with owf admin group.")
+
+        // sample
+        insert(tableName: "stack_groups") {
+            column(name: "group_id", valueComputed: "(SELECT id FROM owf_group WHERE name='OWF Users')")
+            column(name: "stack_id", valueComputed: "(SELECT id FROM stack WHERE stack_context='908d934d-9d53-406c-8143-90b406fb508f')")
+        }
+
+        // admin
+        insert(tableName: "stack_groups") {
+            column(name: "group_id", valueComputed: "(SELECT id FROM owf_group WHERE name='OWF Administrators')")
+            column(name: "stack_id", valueComputed: "(SELECT id FROM stack WHERE stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399')")
+        }
+    }
+
 }
