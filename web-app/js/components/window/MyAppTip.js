@@ -211,7 +211,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                     }
                     
                     me.appsWindow.updateStackDashboardsEl(stack);
-                    me.reloadDashboards = true;
+                    me.appsWindow.reloadDashboards = true;
                     //$stack.focus();
                 }
             },
