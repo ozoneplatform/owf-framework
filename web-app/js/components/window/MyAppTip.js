@@ -200,7 +200,9 @@ Ext.define('Ozone.components.window.MyAppTip', {
                             if(dash.guid == dashboards[i].guid) {
                                 dashboards[i].model.set({
                                     'name': dash.name,
-                                    'description': dash.description
+                                    'description': dash.description,
+                                    'layoutConfig': dash.layoutConfig,
+                                    'iconImageUrl': dash.iconImageUrl
                                 });
                                 dashboards[i].name = dash.name;
                                 dashboards[i].description = dash.description;
