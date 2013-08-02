@@ -55,11 +55,11 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             imageInfo = config.data.image;
 
         if (listingType === "widget") {
-            animTargetX = "67px";
+            animTargetX = "128px";
             animTargetBtn = "appComponentsBtn";
         }
         else if (listingType === "stack") {
-            animTargetX = "0px";
+            animTargetX = "32px";
             animTargetBtn = "myAppsBtn";
         }
 
@@ -88,7 +88,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     .css({
                         top: '0px',
                         left: animTargetX,
-                        width: btn.btnEl.getWidth() + 'px',
+                        width: btn.btnEl.getHeight() + 'px',
                         height: btn.btnEl.getHeight() + 'px'
                     });
             }
