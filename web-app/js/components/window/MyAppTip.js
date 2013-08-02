@@ -281,7 +281,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                         url : Ozone.util.contextPath()  + '/stack/share?id=' + stack.id,
                         method : "POST",
                         onSuccess: function (json){
-                            me.sendRequest(json, mpLauncher, banner.marketplaceWidget);
+                            me.sendRequest(json, mpLauncher, banner.marketplaceWidget, stack);
                         },
 
                         onFailure: function (errorMsg){
@@ -383,7 +383,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
      * @param widget the Marketplace wiget to launch. If undefined, the marketplace
      * switcher will be shown, allowing the user to choose
      */
-    sendRequest: function(json, mpLauncher, widget) {
+    sendRequest: function(json, mpLauncher, widget, stack) {
         var me = this;
 
 
@@ -413,6 +413,11 @@ Ext.define('Ozone.components.window.MyAppTip', {
                             function() {
                         me.dashboardContainer.loadMask.hide();
                         Ozone.eventing.Container.unsubscribe('ozone.marketplace.pageLoaded');
+
+                        Ext.Ajax.request({
+                            url: Ozone.util.contextPath() + '/stack/' + stack.id,
+                            method: 'POST'
+                        });
 
                         // Display completion message
                         Ext.Msg.show({

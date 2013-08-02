@@ -131,7 +131,7 @@ class StackService {
 
             def stackDefaultGroup = stack.findStackDefaultGroup()
             def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
-            
+
             serviceModelService.createServiceModel(stack,[
                 totalDashboards: totalDashboards,
                 totalUsers: totalUsers[0],
@@ -181,7 +181,7 @@ class StackService {
             } else {
                 if(params.id || params.stack_id) {
                     if(params.id >= 0 || params.stack_id >= 0) {
-                        ensureAdminOrOwner(params.id >= 0 ? param.id: params.stack_id);
+                        ensureAdminOrOwner(params.id >= 0 ? params.id: params.stack_id);
                     }
                 }
 
@@ -238,6 +238,7 @@ class StackService {
                             stack.owner) : stack.owner
             ]
 
+            stack.uniqueWidgetCount = widgetDefinitionService.list([stack_id: stack.id]).results
             stack = stack.save(flush: true, failOnError: true)
 
             def stackDefaultGroup = stack.findStackDefaultGroup()
@@ -253,7 +254,7 @@ class StackService {
                 totalDashboards: totalDashboards,
                 totalUsers: stack.findStackDefaultGroup()?.people ? stack.findStackDefaultGroup().people.size() : 0,
                 totalGroups: stack.groups ? stack.groups.size() - 1 : 0, // Don't include the default stack group
-                totalWidgets: 0
+                totalWidgets: stack.uniqueWidgetCount
             ])
         } else {            
             if ('groups' == params.tab) {
