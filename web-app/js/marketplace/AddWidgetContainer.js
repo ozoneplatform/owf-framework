@@ -222,7 +222,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             widgetUrl: serviceItem.launchUrl,
             widgetVersion: serviceItem.versionName,
             isSelected: widgetId == serviceItem.id, // true if this is the widget the user selected and not a dependent widget
-            isExtAjaxFormat: true,
+            isExtAjaxFormat: true
         };
         if (serviceItem.ozoneAware) {
             // Get the widget properties from the store info
