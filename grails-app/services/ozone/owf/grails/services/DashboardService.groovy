@@ -1261,6 +1261,8 @@ class DashboardService extends BaseService {
                     dashboardPosition = ownerDashboard.dashboardPosition
                     layoutConfig = ownerDashboard.layoutConfig
                 }
+                ownerDashboard.publishedToStore = true
+                ownerDashboard.save()
             }
 
             //set publishedToStore to true

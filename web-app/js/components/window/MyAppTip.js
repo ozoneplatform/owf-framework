@@ -171,10 +171,21 @@ Ext.define('Ozone.components.window.MyAppTip', {
         evnt.stopPropagation();
         var me = this;
 
+        // Check whether the App has been pushed to store
         var stack = me.clickedStack;
 
-        var msg = 'Click OK to delete changes you made to <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> and restore its default settings.'
-        me.warn('ok_cancel', jQuery.proxy(me.restoreStack, me), msg);
+        var msg;
+        if (me.appWasPublishedToStore(stack)) {
+            msg = 'Click OK to delete changes you made to <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> and restore its default settings.'
+            me.warn('ok_cancel', jQuery.proxy(me.restoreStack, me), msg);
+        } else {
+            msg = 'Application pages cannot be restored until the Application is pushed to store'
+            me.warn('ok', null, msg);
+        }
+    },
+
+    appWasPublishedToStore: function(stack) {
+        return Boolean(_.find(stack.dashboards, { 'publishedToStore': true }));
     },
 
     restoreStack: function() {
@@ -305,7 +316,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             }
         });
 
-      me.close();
+        me.close();
         me.appsWindow.close();
     },
 
@@ -419,6 +430,13 @@ Ext.define('Ozone.components.window.MyAppTip', {
                         Ext.Ajax.request({
                             url: Ozone.util.contextPath() + '/stack/' + stack.id,
                             method: 'POST'
+                        });
+
+                        // mark dashboards as published to store
+                        _.forEach(stack.dashboards, function(dashboard) {
+                            var store = me.dashboardContainer.dashboardStore;
+                            var dashboardFromStore = store.getAt(store.find('guid', dashboard.guid));
+                            dashboardFromStore.set('publishedToStore', true);
                         });
 
                         // Display completion message

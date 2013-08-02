@@ -180,47 +180,53 @@ Ext.define('Ozone.components.window.MyPageTip', {
             dashboard = this.clickedDashboard,
             dashboardGuid = dashboard.guid;
 
-        var msg = 'Click OK to delete changes you made to this Page and restore its default settings.';
+        if (dashboard.publishedToStore) {
+            var msg = 'Click OK to delete changes you made to this Page and restore its default settings.';
 
-        var restorePageHandler = function () {
-            Ext.Ajax.request({
-                url: Ozone.util.contextPath() + '/dashboard/restore',
-                params: {
-                    guid: dashboardGuid,
-                    isdefault: dashboardGuid == me.appsWindow.activeDashboard.guid
-                },
-                success: function(response, opts) {
-                    var json = Ext.decode(response.responseText);
-                    if (json != null && json.data != null && json.data.length > 0) {
-                        me.appsWindow.notify('Restore Page', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> is restored successfully to its default state!');
+            var restorePageHandler = function () {
+                Ext.Ajax.request({
+                    url: Ozone.util.contextPath() + '/dashboard/restore',
+                    params: {
+                        guid: dashboardGuid,
+                        isdefault: dashboardGuid == me.appsWindow.activeDashboard.guid
+                    },
+                    success: function(response, opts) {
+                        var json = Ext.decode(response.responseText);
+                        if (json != null && json.data != null && json.data.length > 0) {
+                            me.appsWindow.notify('Restore Page', '<span class="heading-bold">' + Ext.htmlEncode(dashboard.name) + '</span> is restored successfully to its default state!');
 
-                        var name = json.data[0].name,
-                            description = json.data[0].description;
+                            var name = json.data[0].name,
+                                description = json.data[0].description;
 
-                        dashboard.model.set({
-                            'name': name,
-                            'description': description
-                        });
-                        dashboard.name = name;
-                        dashboard.description = name;
+                            dashboard.model.set({
+                                'name': name,
+                                'description': description
+                            });
+                            dashboard.name = name;
+                            dashboard.description = name;
 
-                        me.appsWindow.updateDashboardEl($dashboard, dashboard);
+                            me.appsWindow.updateDashboardEl($dashboard, dashboard);
 
-                        me.appsWindow.reloadDashboards = true;
+                            me.appsWindow.reloadDashboards = true;
+                        }
+                    },
+                    failure: function(response, opts) {
+                        Ozone.Msg.alert('Page Manager', "Error restoring page.", function() {
+                            Ext.defer(function() {
+                                $dashboard[0].focus();
+                            }, 200, me);
+                        }, me, null, me.dashboardContainer.modalWindowManager);
+                        return;
                     }
-                },
-                failure: function(response, opts) {
-                    Ozone.Msg.alert('Page Manager', "Error restoring page.", function() {
-                        Ext.defer(function() {
-                            $dashboard[0].focus();
-                        }, 200, me);
-                    }, me, null, me.dashboardContainer.modalWindowManager);
-                    return;
-                }
-            });
+                });
+            }
+
+            me.warn('ok_cancel', restorePageHandler, msg);
+        } else {
+            msg = 'Application pages cannot be restored until the Application is pushed to store'
+            me.warn('ok', null, msg);
         }
 
-        me.warn('ok_cancel', restorePageHandler, msg);
     },
 
     warn: function(buttons, button_handler, text) {
