@@ -221,25 +221,33 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             widgetGuid: serviceItem.uuid,
             widgetUrl: serviceItem.launchUrl,
             widgetVersion: serviceItem.versionName,
-            //FIXME this ternary is a hack for AML-3148
-            singleton: (!serviceItem.ozoneAware ? false : serviceItem.owfProperties.singleton),
-            //FIXME this ternary is a hack for AML-3148
-            visible: (!serviceItem.ozoneAware ? false : serviceItem.owfProperties.visibleInLaunch),
-            //FIXME this ternary is a hack for AML-3148
-            background: (!serviceItem.ozoneAware ? false : serviceItem.owfProperties.background),
             isSelected: widgetId == serviceItem.id, // true if this is the widget the user selected and not a dependent widget
-            //FIXME this ternary is a hack for AML-3148
-            height: (!serviceItem.ozoneAware  ? 200 : serviceItem.owfProperties.height),
-            //FIXME this ternary is a hack for AML-3148
-            width: (!serviceItem.ozoneAware  ? 200 : serviceItem.owfProperties.width),
-            //FIXME this ternary is a hack for AML-3148
-            universalName: (!serviceItem.ozoneAware ? "" : (serviceItem.owfProperties.universalName || "" )),
-            descriptorUrl: (!serviceItem.ozoneAware ? "" : (serviceItem.owfProperties.descriptorUrl || "" )),
             isExtAjaxFormat: true,
-            //FIXME this ternary is a hack for AML-3148
-            widgetTypes: [(!serviceItem.ozoneAware ? "fullscreen" : serviceItem.owfProperties.owfWidgetType)],
-            listingIntents: (!serviceItem.ozoneAware ? [] : serviceItem.intents)
         };
+        if (serviceItem.ozoneAware) {
+            // Get the widget properties from the store info
+            widgetJson.singleton = serviceItem.owfProperties.singleton;
+            widgetJson.visible = serviceItem.owfProperties.visibleInLaunch;
+            widgetJson.background = serviceItem.owfProperties.background;
+            widgetJson.height = serviceItem.owfProperties.height;
+            widgetJson.width = serviceItem.owfProperties.width;
+            widgetJson.universalName = serviceItem.owfProperties.universalName || "";
+            widgetJson.descriptorUrl = serviceItem.owfProperties.descriptorUrl || "";
+            widgetJson.widgetTypes = [serviceItem.owfProperties.owfWidgetType];
+            widgetJson.listingIntents = serviceItem.intents;
+        } else {
+            // For web app listings, create some default info
+            widgetJson.singleton = false;
+            widgetJson.visible = false;
+            widgetJson.background = false;
+            widgetJson.height = 200;
+            widgetJson.width = 200;
+            widgetJson.universalName = "";
+            widgetJson.descriptorUrl = "";
+            widgetJson.widgetTypes = ["fullscreen"];
+            widgetJson.listingIntents = [];
+        }
+
         if (directRequired.length > 0) {
             widgetJson.directRequired = Ext.JSON.encode(directRequired);
         }
