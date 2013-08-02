@@ -55,6 +55,7 @@
             li {
                 display: inline-block;
                 zoom: 1;
+                cursor: pointer;
                 *display: inline;
             }
         }
@@ -587,6 +588,7 @@
                	padding-top: 3.5%;
                	font-size:.75em;
                 color: $dashboard-switcher-dashboard-over-text-color;
+                cursor: pointer;
                 
                 .actionText {
                 	text-align:center;

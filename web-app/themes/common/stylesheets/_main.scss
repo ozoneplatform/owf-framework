@@ -190,8 +190,8 @@ a {
         }
     }
 }
-.x-window-header-text, .x-panel-header-text {
-    cursor: pointer !important;
+.widgetheader .x-window-header-text, .widgetheader .x-panel-header-text {
+    cursor: pointer; // widget headers get a pointer because you can double-click to edit the title
 }
 
 
