@@ -30,6 +30,8 @@ class AccountService {
     //    def domainMappingService
 
     def serviceModelService
+    def stackService
+
     static final ThreadLocal<Boolean> hasTemporaryAdminPrivileges = new ThreadLocal<Boolean>()
 
     private static def addFilter(name, value, c) {
@@ -435,8 +437,10 @@ class AccountService {
                         if(stack) {
                             if(params.update_action == 'add')
                                 stack.findStackDefaultGroup().addToPeople(user)
-                            else if(params.update_action == 'remove')
-                                stack.findStackDefaultGroup().removeFromPeople(user)
+                            else if(params.update_action == 'remove') {
+                                stackService.deleteUserStack(stack, user)
+                            }
+
 
                             stack.save(flush: true,failOnError: true)
                             updatedStacks << stack

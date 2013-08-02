@@ -27,6 +27,7 @@ beans = {
 					autoAccountDisplayName = "Test User 1"
                     autoRoles = [ERoleAuthority.ROLE_USER.strVal]
                     serviceModelService = ref('serviceModelService')
+                    stackService = ref('stackService')
                 }
                 break
             case "testAdmin1":
@@ -36,6 +37,7 @@ beans = {
 					autoAccountDisplayName = "Test Admin 1"
                     autoRoles = [ERoleAuthority.ROLE_USER.strVal, ERoleAuthority.ROLE_ADMIN.strVal]
                     serviceModelService = ref('serviceModelService')
+                    stackService = ref('stackService')
                 }
                 break
             case "testAdmin2":
@@ -45,19 +47,23 @@ beans = {
                     autoAccountDisplayName = "Test Admin 2"
                     autoRoles = [ERoleAuthority.ROLE_USER.strVal, ERoleAuthority.ROLE_ADMIN.strVal]
                     serviceModelService = ref('serviceModelService')
+                    stackService = ref('stackService')
+
                 }
                 break
             default :
                 println("You are not using the AutoLoginAccountService. If you want to, add -Duser=[testUser1|testAdmin1|testAdmin2] to your environment.")
-               accountService(AccountService) {
-                   serviceModelService = ref('serviceModelService')
-               }
+                accountService(AccountService) {
+                    serviceModelService = ref('serviceModelService')
+                    stackService = ref('stackService')
+                }
                break
         }
     } else {
-       accountService(AccountService) {
-           serviceModelService = ref('serviceModelService')
-       }
+        accountService(AccountService) {
+            serviceModelService = ref('serviceModelService')
+            stackService = ref('stackService')
+        }
     }
 
 	exceptionHandler(OwfExceptionResolver)

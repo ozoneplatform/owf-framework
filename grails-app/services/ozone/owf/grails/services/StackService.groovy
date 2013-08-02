@@ -439,9 +439,10 @@ class StackService {
      * @param stack
      * @return
      */
-    private Stack deleteUserStack(Stack stack) {
-        
-        def user = accountService.getLoggedInUser();
+    def Stack deleteUserStack(Stack stack, Person user) {
+        if(user == null) {
+            user = accountService.getLoggedInUser();
+        }
         def stackDefaultGroup = stack.findStackDefaultGroup()
 
         stackDefaultGroup.removeFromPeople(user)
