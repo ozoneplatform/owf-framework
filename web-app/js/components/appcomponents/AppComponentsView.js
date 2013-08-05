@@ -296,8 +296,12 @@
 
                         start: function(evt, ui) {
                             var model = ui.item.data('view').model;
-
                             me._sorting = true;
+
+                            //OP-2183 Remove the drag proxy's details icon and remove the height style so it resizes
+                            ui.helper.children('.widget-details').remove();
+                            ui.helper.css('height', '');
+                            ui.helper.children('.thumb-text').css('height', 'auto');
 
                             ui.helper.addClass('selected');
 
