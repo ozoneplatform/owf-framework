@@ -330,7 +330,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     allowBlank: false,
                     editable: false,
                     store: this.widgetTypeStore,
-                    displayField: 'name',
+                    displayField: 'displayName',
                     valueField: 'id',
                     autoSelect: true,
                     queryMode: 'local'
@@ -391,7 +391,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                 if (!widgetType.value) {
                     this.widgetTypeStore.load({
                         callback: function () {
-                            widgetType.setRawValue(widgetType.store.findRecord('name', 'standard').get('name'));
+                            widgetType.setRawValue(widgetType.store.findRecord('name', 'standard').get('displayName'));
                             me.setWidgetType();
                         }
                     });
@@ -577,7 +577,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             // Set widget type
             var typeId = data.widgetTypes[0];
             if (!Ext.isNumeric(typeId)) {
-                widgetType.setRawValue(widgetType.store.findRecord('name', 'standard').get('name'));
+                widgetType.setRawValue(widgetType.store.findRecord('name', 'standard').get('displayName'));
                 typeId = this.widgetTypeStore.getAt(this.widgetTypeStore.find('name', typeId)).get('id');
             }
             this.getComponent('_types').setValue(typeId);

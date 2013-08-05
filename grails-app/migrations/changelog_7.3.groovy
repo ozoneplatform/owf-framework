@@ -438,4 +438,34 @@ databaseChangeLog = {
             where("src_type = 'group' AND relationship_type = 'owns' AND dest_type = 'dashboard' AND src_id = (select id from owf_group where name  = 'OWF Administrators') AND dest_id = (select id from dashboard where name = 'Administration')")
         }
     }
+
+    //OP-2330: Type of App Component still listed as Marketplace
+    changeSet(author: "owf", id: "7.3-16", context: "create, upgrade, 7.3") {
+
+        comment("Adding a column named display_name to the table widget_type so that the UI name is decoupled from the actual back-end name; The display_name will be the same as the name, except for marketplace, which will be displayed as store")
+
+        // Add a column named display_name to the table widget_type
+        // TYPE: VARCHAR(256)
+        addColumn(tableName: "widget_type") {
+            column(name: "display_name", type: "VARCHAR(256)")
+        }
+
+        // Fill the display_name column with the data from the name column, expect for "marketplace"
+        update(tableName: "widget_type") {
+            column(name: "display_name", valueComputed: "name")
+            where("name != 'marketplace'")
+        }
+
+        // Display "marketplace" as "store"
+        update(tableName: "widget_type") {
+            column(name: "display_name", value: "store")
+            where("name = 'marketplace'")
+        }
+
+        // Make sure the display_name column is never NULL
+        // TYPE: VARCHAR(256)
+        addNotNullConstraint(tableName: "widget_type", columnName: "display_name", columnDataType: "VARCHAR(256)")
+
+    }
+
 }

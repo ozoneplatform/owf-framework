@@ -180,7 +180,8 @@ class ServiceModelService {
                 WidgetType widgetType = (WidgetType) obj
                 model = new WidgetTypeServiceModel(
                         id: widgetType.id,
-                        name: widgetType.name
+                        name: widgetType.name,
+                        displayName: widgetType.displayName
                         )
                 break
             case Stack:

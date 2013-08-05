@@ -6,6 +6,7 @@ class WidgetType implements Serializable {
     static final long serialVersionUID = 700L
 
 	String name
+    String displayName
  	
  	static belongsTo = WidgetDefinition
 	
@@ -13,6 +14,7 @@ class WidgetType implements Serializable {
 
 	static constraints = {
 		name(nullable: false, blank: false)
+        displayName(nullable: false, blank: false)
 	}
 	static mapping = {
 		widgetDefinitions (lazy:true, cache: true)
