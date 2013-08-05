@@ -48,13 +48,16 @@
             this.$appcomponents = $el;
             this.setElement($el.children('.app-components-body'));
 
-            if(this.size && this.size.height) {
+            if(this.size && this.size.height && this.size.height < 1) {
                 height = this.size.height * $(window).height();
 
-                this.$container.height(height);
+                // don't set height if less than min required
+                if(height > (125 + this.GRIPPER_HEIGHT)) {
+                    this.$container.height(height);
 
-                // substract gripper height for carousel pager to show
-                this.$el.height(height - this.GRIPPER_HEIGHT);
+                    // substract gripper height for carousel pager to show
+                    this.$el.height(height - this.GRIPPER_HEIGHT);
+                }
             }
 
             return SuperClass.prototype.render.call(this);
