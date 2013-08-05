@@ -438,7 +438,7 @@ class AccountService {
                             if(params.update_action == 'add')
                                 stack.findStackDefaultGroup().addToPeople(user)
                             else if(params.update_action == 'remove') {
-                                stackService.deleteUserStack(stack, user)
+                                stackService.deleteUserFromStack(stack, user)
                             }
 
 

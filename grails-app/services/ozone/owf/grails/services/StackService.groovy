@@ -439,7 +439,7 @@ class StackService {
      * @param stack
      * @return
      */
-    def Stack deleteUserStack(Stack stack, Person user) {
+    def Stack deleteUserFromStack(Stack stack, Person user = null) {
         if(user == null) {
             user = accountService.getLoggedInUser();
         }
@@ -500,7 +500,7 @@ class StackService {
                 stacks << it
             } else {
                 // The user cannot delete the stacks - remove that user and his dashboards from the stack
-               stacks << deleteUserStack(stack);
+               stacks << deleteUserFromStack(stack);
             }
         }
 
