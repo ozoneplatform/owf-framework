@@ -40,7 +40,7 @@ test-widgets/standalone-container/src/main/webapp/js-min/
 owf-widget-debug.js
 owf-widget-min.js
 owf-widget-min.gz.js
-*.jks
+/*.jks
 
 # OS generated files #
 .DS_Store
