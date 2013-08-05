@@ -429,17 +429,13 @@
 	        border-style: none;
 	        max-height: 1px;
             height: 1px;
-	        background-color: $user-menu-text-color;
-	        background: -webkit-linear-gradient(right, 
-	            rgba($user-menu-text-color, 0), 
-	            rgba($user-menu-text-color, .4), 
-	            rgba($user-menu-text-color, 0));
-	
-	        background: -moz-linear-gradient(right, 
-	            rgba($user-menu-text-color, 0), 
-	            rgba($user-menu-text-color, .4), 
-	            rgba($user-menu-text-color, 0));
-	
+            width: 85%;
+            margin-left: 1em;
+            background-color: $user-menu-separator-color;
+
+            .x-btn-inner {
+                background: transparent;
+            }
 	    }
 	}
 }
@@ -456,18 +452,24 @@
 		#userMenu-body {
 			div {
 				//ie gradient esque fix 
-    	    	filter:none;
+    	    	filter: none;
 			
 				#owfMenuTitle-btnEl {
-			    	width:150px !important;
+                    width: 150px !important;
 			    }
 			    
 			    #marketplaceMenuTitle-btnEl {
-			    	width:150px !important;
+                    width: 150px !important;
 		    	}
-		    	
+
+		    	#prevLogin-btnEl {
+                    *width: 160px !important;
+                }
+
 		    	#prevLogin-btnInnerEl {
-			    	*font-size: .76em;
+                    *font-size: .7em;
+                    *width: 160px !important;
+                    *margin-left: -5px !important;
 			    }
 			}
 		}
