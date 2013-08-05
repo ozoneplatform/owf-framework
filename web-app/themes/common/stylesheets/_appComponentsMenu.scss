@@ -132,18 +132,20 @@
     }
 
     .bx-prev {
-        background: theme-image($theme-name, 'appcomponents/left_dark.png') 0 0 no-repeat;
+        background: theme-image($theme-name, 'appcomponents/left_light.png') 0 0 no-repeat;
         
         &:hover {
-            background: theme-image($theme-name, 'appcomponents/left_light.png') 0 0 no-repeat;
+            background: theme-image($theme-name, 'appcomponents/left_dark.png') 0 0 no-repeat;
+            
         }
     }
 
     .bx-next {
-        background: theme-image($theme-name, 'appcomponents/right_dark.png') 0 0 no-repeat;
+        background: theme-image($theme-name, 'appcomponents/right_light.png') 0 0 no-repeat;
         
         &:hover {
-            background: theme-image($theme-name, 'appcomponents/right_light.png') 0 0 no-repeat;
+            background: theme-image($theme-name, 'appcomponents/right_dark.png') 0 0 no-repeat;
+            
         }
     }
 
