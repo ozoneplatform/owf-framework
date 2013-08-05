@@ -300,7 +300,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                 });
             }
         } else if(records && records.length > 1) {
-            this.showAlert('Error', 'You may only assign of one App at a time.');
+            this.showAlert('Error', 'You may assign <b>only</b> one App at a time.');
         } else {
             this.showAlert('Error', 'You must select an App to assign.');
         }
