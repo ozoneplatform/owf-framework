@@ -230,10 +230,10 @@ class BootStrap {
   
     private loadWidgetTypes() {
         println "---- loadWidgetTypes() ----"
-        if(!WidgetType.findByName('standard')) saveInstance(new WidgetType(name: 'standard'))
-        if(!WidgetType.findByName('administration')) saveInstance(new WidgetType(name: 'administration'))
-        if(!WidgetType.findByName('metrics')) saveInstance(new WidgetType(name: 'metrics'))
-        if(!WidgetType.findByName('marketplace')) saveInstance(new WidgetType(name: 'marketplace'))
+        if(!WidgetType.findByName('standard')) saveInstance(new WidgetType(name: 'standard', displayName: 'standard'))
+        if(!WidgetType.findByName('administration')) saveInstance(new WidgetType(name: 'administration', displayName: 'administration'))
+        if(!WidgetType.findByName('metrics')) saveInstance(new WidgetType(name: 'metrics', displayName: 'metrics'))
+        if(!WidgetType.findByName('marketplace')) saveInstance(new WidgetType(name: 'marketplace', displayName: 'store'))
         
         flushAndClearCache()
     }
