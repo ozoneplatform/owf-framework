@@ -238,7 +238,10 @@ class StackService {
                             stack.owner) : stack.owner
             ]
 
-            stack.uniqueWidgetCount = widgetDefinitionService.list([stack_id: stack.id]).results
+            // OP-2494 Commented out this fix for OP-2287, because Drew said that the fix wasn't
+            // complete and it was causing a NullPointerException when a stack was added to OWF
+            // from the store
+            //stack.uniqueWidgetCount = widgetDefinitionService.list([stack_id: stack.id]).results
             stack = stack.save(flush: true, failOnError: true)
 
             def stackDefaultGroup = stack.findStackDefaultGroup()
