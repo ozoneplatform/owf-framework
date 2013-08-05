@@ -352,6 +352,11 @@
 	}
 	
 	#userMenu-body {
+
+        .x-menu-icon-separator {
+            background: none;
+            border-left: 0px none;
+        }
 		
         .x-box-inner .x-panel-default { 
             border: none !important;
