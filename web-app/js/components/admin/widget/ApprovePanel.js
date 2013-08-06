@@ -44,8 +44,8 @@ Ext.define('Ozone.components.admin.widget.ApprovePanel', {
           layout: 'fit',
           border: false,
           height: 50,
-          renderTpl: ['These widgets are required by other widgets in OWF. ' +
-                  'Approving these widgets will additionally approve the widgets listed below.']
+          renderTpl: ['These app components are required by other components in OZONE. ' +
+                  'Approving them will approve the app components listed below:']
         },
         {
           xtype: 'grid',
