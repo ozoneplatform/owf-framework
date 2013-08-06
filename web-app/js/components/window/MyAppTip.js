@@ -480,7 +480,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var stackGroups = stack.groups
         var userGroups = Ozone.config.user.groups
 
-        if (_.intersection(stackGroups, userGroups).length > 0) {
+        if (_.find(stackGroups, function(stackGroup) { return _.find(userGroups, {'id' : stackGroup.id})})) {
             return true;
         } else {
             // A hack to verify whether the stack is in one of the user's implicit groups
