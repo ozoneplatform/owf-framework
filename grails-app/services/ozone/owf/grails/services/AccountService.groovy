@@ -251,6 +251,7 @@ class AccountService {
                 person {
                     eq('id', p.id)
                 }
+                eq('userWidget', true)
                 projections { rowCount() }
             }
             def dashboardCount = Dashboard.withCriteria {

@@ -107,13 +107,13 @@ class StackService {
             cacheMode(CacheMode.GET)
         }
         
-        def processedResults = results.collect { stack ->
+        def processedResults = results.findAll { tempStack ->
             
             def totalGroups = Group.withCriteria {
                 cacheMode(CacheMode.GET)
                 eq('stackDefault', false)
                 stacks {
-                    eq('id', stack.id)
+                    eq('id', tempStack.id)
                 }
                 projections { rowCount() }
             }
@@ -123,21 +123,34 @@ class StackService {
                 groups {
                     eq('stackDefault', true)
                     stacks {
-                        eq('id', stack.id)
+                        eq('id', tempStack.id)
                     }
                     projections { rowCount() }
                 }
             }
 
-            def stackDefaultGroup = stack.findStackDefaultGroup()
+            def stackDefaultGroup = tempStack.findStackDefaultGroup()
             def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
 
-            serviceModelService.createServiceModel(stack,[
-                totalDashboards: totalDashboards,
-                totalUsers: totalUsers[0],
-                totalGroups: totalGroups[0]
-            ])
-            
+            // OP-2297: this is used to find out if dashboards associated with this stack are of type marketplace,
+            // and if so, we don't want to return these since these are transparent to the end user
+            def marketplaceDashboard = Dashboard.withCriteria {
+                cacheMode(CacheMode.GET)
+                eq('type','marketplace')
+                stack {
+                    eq('id', tempStack.id)
+                }
+            }
+
+            // iwe only want to return this stack if it does NOT have marketplace dashboards in it
+            if (marketplaceDashboard.size() == 0) {
+                serviceModelService.createServiceModel(tempStack,[
+                    totalDashboards: totalDashboards,
+                    totalUsers: totalUsers[0],
+                    totalGroups: totalGroups[0]
+                ])
+            }
+
         }
         return [data: processedResults, results: results.totalCount]
         
@@ -241,7 +254,9 @@ class StackService {
             // OP-2494 Commented out this fix for OP-2287, because Drew said that the fix wasn't
             // complete and it was causing a NullPointerException when a stack was added to OWF
             // from the store
-            //stack.uniqueWidgetCount = widgetDefinitionService.list([stack_id: stack.id]).results
+            if (stack.id != null) {
+                stack.uniqueWidgetCount = widgetDefinitionService.list([stack_id: stack.id]).results
+            }
             stack = stack.save(flush: true, failOnError: true)
 
             def stackDefaultGroup = stack.findStackDefaultGroup()
