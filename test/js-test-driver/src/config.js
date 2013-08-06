@@ -24,8 +24,6 @@ Ozone.config.carousel = {
 
 Ozone.config.user = {"displayName":"testAdmin1","userRealName":"Test Admin 1","prevLogin":"2012-04-05T16:55:08Z","prettyPrevLogin":"4 hours ago","id":1,"groups":[{"totalUsers":0,"id":309,"totalWidgets":0,"name":"OWF Admins","status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"automatic":false},{"totalUsers":0,"id":4,"totalWidgets":0,"name":"TestGroup1","status":"active","tagLinks":[],"description":"TestGroup1","email":"testgroup1@group1.com","automatic":false},{"totalUsers":0,"id":5,"totalWidgets":0,"name":"TestGroup2","status":"active","tagLinks":[],"description":"TestGroup2","email":"testgroup2@group2.com","automatic":false},{"totalUsers":0,"id":300,"totalWidgets":0,"name":"All Users","status":"active","tagLinks":[],"description":"All Users","email":null,"automatic":false}],"email":"testAdmin1@ozone3.test","isAdmin":true};
 
-Ozone.config.widgetNames = {};
-
 Ozone.config.currentTheme = {"themeName":"a_default","themeContrast":"standard","themeFontSize":12};
 
 //for consistency add the properties onto the new OWF namespace

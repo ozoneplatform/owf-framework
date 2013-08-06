@@ -23,8 +23,8 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
     },
 
     loadGridData: function(){
-    this.setLoading(true);
-    var existingWidgetStore = this.dashboardContainer.widgetStore;
+        this.setLoading(true);
+        var existingWidgetStore = this.dashboardContainer.widgetStore;
 
         // Add removed flag for delete column
         var storeData = [];
@@ -54,30 +54,6 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
         this.setLoading(false);
     },
 
-    refreshOriginalWidgetNames: function(params) {
-        this.setLoading(true);
-        var scope = this;
-        Ozone.pref.PrefServer.findWidgets({
-          onSuccess: function(records) {
-                // Update originalWidgetNames
-                for (var i = 0; i < records.length; i++) {
-                    scope.dashboardContainer.originalWidgetNames[records[i].path] = records[i].value.namespace;
-                }
-
-                if (params.reloadGrid == true) {
-                    scope.loadGridData();
-                } else {
-                    scope.setLoading(false);
-                }
-                params.callback();
-            },
-            
-            onFailure: function() {
-                scope.setLoading(false);
-                params.callback();
-            }
-        });
-    },
     initComponent: function() {
         var scope = this;
           
@@ -168,70 +144,6 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                 }
             }
         });
-          
-        var resetTitleAction = Ext.create('Ext.Action', {
-            text: 'Reset Title',
-            handler: function(widget, event) {
-                var rec = scope.widgetGrid.getSelectionModel().getSelection()[0];
-                if (rec) {
-                    scope.refreshOriginalWidgetNames({
-                        reloadGrid: false,
-                        callback: function() {
-                            var originalName = rec.get('originalName');
-                            rec.set('name', originalName);
-                        }
-                    });
-                }
-            }
-        });
-        var resetAllTitlesAction = Ext.create('Ext.Action', {
-            text: 'Reset All Titles',
-            handler: function(widget, event) {
-                var records = scope.widgetGrid.getStore().getRange();
-                scope.refreshOriginalWidgetNames({
-                    reloadGrid: false,
-                    callback: function() {
-                        for (var i = 0; i < records.length; i++) {
-                            if (records[i].data.editable) {
-                                // Reset titles
-                                var originalName = records[i].get('originalName');
-                                records[i].data.name = originalName;
-
-                                // Update tags
-                                var tags = [];
-                                if (records[i].data._tags.length > 0 && records[i].data._tags != '') {
-                                    var splits = records[i].data._tags.split(',');
-                                    for (var j = 0 ; j < splits.length ; j++) {
-                                        var name = Ext.String.trim(splits[j]);
-                                        if (name != '') {
-                                            tags.push({
-                                                name: name,
-                                                visible: true,
-
-                                                //todo use position to order groups for now just set to -1
-                                                position: -1,
-                                                editable: records[i].data._editable
-                                            });
-                                        }
-                                    }
-                                }
-                                records[i].data.tags = tags;
-                            }
-                        }
-                        scope.store.loadRecords(records, {
-                            addRecords: false
-                        });
-                    }
-                });
-            }
-        });
-
-        var contextMenu = Ext.create('Ext.menu.Menu', {
-            items: [
-                resetTitleAction,
-                resetAllTitlesAction
-            ]
-        });
 
         this.widgetGrid = Ext.create('Ext.grid.GridPanel', {
             ddGroup: 'ddWidgets',
@@ -241,16 +153,6 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
             scroll: true,
             viewConfig: {
                 listeners: {
-                    itemcontextmenu: {
-                        fn: function (view, rec, node, index, e) {
-                            e.stopEvent();
-                            this.dashboardContainer.modalWindowManager.register(contextMenu);
-                            contextMenu.showAt(e.getXY());
-                            this.dashboardContainer.modalWindowManager.bringToFront(contextMenu);
-                            return false;
-                        },
-                        scope: this
-                    },
                     itemkeydown: {
                         fn: function (view, record, item, index, evt) {
                             switch (evt.getKey()) {
@@ -273,31 +175,6 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                                     break;
 
                                 case Ext.EventObject.R:
-                                    if(!Ext.EventObject.hasModifier()) {
-                                        //Get the 3rd cell (in the Tags column) of the selected row to get starting point
-                                        //for XY coordinates to place the context menu inside the selected row appropriately.
-                                        var thirdCellInSelectedRow = Ext.select('tr[class*=x-grid-row-focused]:first td').item(2);
-                                        var coordinates = thirdCellInSelectedRow.getXY();
-                                        coordinates[0] -= 5;
-                                        coordinates[1] += 10; // Approximates a good location for the context menu to appear
-
-                                        this.dashboardContainer.modalWindowManager.register(contextMenu);
-                                        contextMenu.showAt(coordinates);
-                                        this.dashboardContainer.modalWindowManager.bringToFront(contextMenu);
-
-                                        //Add a listener to the context menu so that when it is closed with ESC it will 
-                                        //move focus back to the widget grid
-                                        contextMenu.addListener('hide', function(view, record, item) {
-                                            //Set on a defer to wait until focus is moved to the banner, then pulls focus back
-                                            Ext.defer(function() {
-                                                //Set focus on the widget grid, which is 3 levels down from the manageWidgetsWindow
-                                                Ext.getCmp("manageWidgetsWindowId").getComponent(0).getComponent(0).getComponent(0).focus();
-                                            }, 100, this);
-
-                                            //Remove this listener after the context menu is hidden
-                                            contextMenu.removeListener('hide', arguments.callee);
-                                        });
-                                    }
                                     break;
 
                                 case Ext.EventObject.ENTER:
@@ -560,7 +437,6 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
         var widgetsToUpdate = [];
         var widgetsToDelete = [];
         var widgetGuidsToDelete = [];
-        //this.dashboardContainer.widgetNames = {};
         for (var i = 0; i < gridData.length; i++) {
 
             if (gridData[i].data.editable) {

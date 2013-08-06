@@ -26,8 +26,6 @@ Ozone.config.carousel = {
 
 Ozone.config.user = ${user};
 
-Ozone.config.widgetNames = ${widgetNames};
-
 Ozone.config.currentTheme = ${currentTheme};
 
 Ozone.config.loginCookieName = ${Environment.current == Environment.DEVELOPMENT ? "null" : "'" + ozone.security.SecurityUtils.LOGIN_COOKIE_NAME + "'"};

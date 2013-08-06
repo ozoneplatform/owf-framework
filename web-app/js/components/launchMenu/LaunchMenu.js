@@ -116,21 +116,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
             widgetTypes: ['standard']
         };
 
-        //update names to custom names
-        this.widgetStore.on({
-            datachanged: {
-                fn: function (store, records, successful, operation, eOpts) {
-                    for (var i = 0; i < records.length; i++) {
-                        var newTitle = this.dashboardContainer.widgetNames[records[i].data.widgetGuid];
-                        if (newTitle) {
-                            records[i].data.name = newTitle;
-                        }
-                    }
-                },
-                scope: this
-            }
-        });
-
         //a load on the main widgetStore this will trigger the launch Menu widgetStore to load
         this.dashboardContainer.widgetStore.on({
             load: {

@@ -20,10 +20,6 @@ class ConfigController {
     def config = {
         def curUser = accountService.getLoggedInUser()
 
-        def widgetNamesResults = preferenceService.show([namespace: 'owf.custom.widgetprefs',
-                path: 'widgetNames'])
-        def widgetNames = widgetNamesResults.preference?.value ? widgetNamesResults.preference.value : [:] as JSON
-
         def pDate = new Date()
         def pDateString = null
         if (curUser.prevLogin != null) {
@@ -64,7 +60,6 @@ class ConfigController {
         render(view: 'config_js',
                 model: [
                   user: curUserResult,
-                  widgetNames: widgetNames,
                   currentTheme: theme as JSON,
                   conf: conf as JSON
                  ],

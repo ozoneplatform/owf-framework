@@ -19,10 +19,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     // current user
     user: null,
 
-    // User-defined widget names
-    widgetNames: {},
-    originalWidgetNames: {},
-
     // the number of milliseconds to wait between checks to determine if a save is needed
     // 900000 = 15 minutes
     pollingInterval: Ozone.config.autoSaveInterval ? Ozone.config.autoSaveInterval : 900000,
@@ -86,7 +82,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         OWF.Container.State = new Ozone.state.WidgetStateContainer(OWF.Container.Eventing);
 
         this.user = Ozone.config.user;
-        this.widgetNames = Ozone.config.widgetNames || {};
         this.widgetStore.on('datachanged', this.updateTitlesandBanner, this);
 
         //setup component properties
@@ -137,12 +132,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         });
 
         this.onBeforeUnload = function(evt) {
-            Ozone.pref.PrefServer.deleteUserPreference({
-                namespace: 'owf.custom.widgetprefs',
-                sync: true,
-                name: 'widgetNames'
-            });
-
             if (this.activeDashboard != null) {
                 Ext.getCmp(this.activeDashboard.id).saveToServer(true, true);
             }
@@ -568,10 +557,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         var me = this;
 
         var records = me.widgetStore.getRange();
-        for (var i = 0; i < records.length; i++) {
-            //save widget names
-            me.originalWidgetNames[records[i].data.widgetGuid] = records[i].data.name;
-        }
 
         //see if the dashboard guid was specified on the hash
         var hashData = Ext.util.History.getToken();
@@ -2072,10 +2057,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             mpWidget = null;
         var records = this.widgetStore.getRange();
         for (var i = 0; i < records.length; i++) {
-            var newTitle = this.widgetNames[records[i].data.widgetGuid];
-            if (newTitle) {
-                records[i].data.name = newTitle;
-            }
             if(records[i].data.widgetTypes.length > 0) {
                 if (records[i].data.widgetTypes[0].name == 'marketplace') {
                     hasMpWidget = true;
@@ -2107,10 +2088,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     hasMpWidget: function() {
         var records = this.widgetStore.getRange();
         for (var i = 0; i < records.length; i++) {
-            var newTitle = this.widgetNames[records[i].data.widgetGuid];
-            if (newTitle) {
-                records[i].data.name = newTitle;
-            }
             if(records[i].data.widgetTypes.length > 0) {
                 if (records[i].data.widgetTypes[0].name == 'marketplace') {
                     return true;
