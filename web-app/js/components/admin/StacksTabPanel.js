@@ -80,6 +80,9 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                     }
                                 });
                                 store.save();
+                                
+                                var widgetStateHandler = Ozone.state.WidgetStateHandler.getInstance();
+                                widgetStateHandler.handleWidgetRequest({fn: 'refreshDashboardStore'});
                             }
                             else {
                                 self.editPanel.showAlert("Error", "You must select at least one App to remove.")

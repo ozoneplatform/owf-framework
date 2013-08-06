@@ -371,6 +371,9 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
                         }
                     });
                     store.save();
+                    
+                    var widgetStateHandler = Ozone.state.WidgetStateHandler.getInstance();
+                    widgetStateHandler.handleWidgetRequest({fn: 'refreshDashboardStore'});
                 }
             });
         } else {

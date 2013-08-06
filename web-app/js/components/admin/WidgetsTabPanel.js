@@ -229,7 +229,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
             });
         }
     },
-    
+   
     doEdit: function(id, title) {
         var me = this;
         var dataString = Ozone.util.toString({

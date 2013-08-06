@@ -609,6 +609,8 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 return Ext.JSON.encode(data);
             case 'refreshWidgetLaunchMenu':
                 return this.refreshWidgetLaunchMenu();
+            case 'refreshDashboardStore': 
+            	return this.dashboardContainer.reloadDashboards();
             default:
                 break;
         }

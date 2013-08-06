@@ -209,6 +209,7 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
             });
         }
     },
+
     onAddClicked: function(button, e) {
         var itemName = this.ownerCt.record.get('title');
         if(!itemName){

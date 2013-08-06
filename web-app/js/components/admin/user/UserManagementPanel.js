@@ -170,6 +170,7 @@ Ext.define('Ozone.components.admin.user.UserManagementPanel', {
                                         userstore.save();
                                     }
                                 });
+                                
 							}
 							else {
                                 me.showAlert('Error', 'You must select at least one user to delete.');

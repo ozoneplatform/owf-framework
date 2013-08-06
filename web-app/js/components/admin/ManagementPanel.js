@@ -83,8 +83,7 @@ Ext.define('Ozone.components.admin.ManagementPanel', {
         fn: 'refreshWidgetLaunchMenu'
       });
     }
-    },
-
+   },
   //cache components that are searched for
   down: function(selector) {
     if (this.cmpCache == null) {

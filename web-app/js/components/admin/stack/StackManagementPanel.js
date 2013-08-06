@@ -259,12 +259,15 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                            this.pnlStackDetail.removeData();
                            if (!this.pnlDashboardDetail.collapsed) {this.pnlDashboardDetail.collapse();}
                            this.refreshWidgetLaunchMenu();
+                           
                          },
                          scope: this,
                          single: true
                        }
                     });
                     store.save();
+                    
+                    this.widgetStateHandler.handleWidgetRequest({fn: 'refreshDashboardStore'});
                 }
             });
         } else {

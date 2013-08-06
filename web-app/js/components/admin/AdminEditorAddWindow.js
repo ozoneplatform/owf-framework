@@ -98,6 +98,7 @@ Ext.define('Ozone.components.admin.AdminEditorAddWindow', {
                 me.on(
                     'datachanged',
                     function(store, opts) {
+                    	alert(this)
                           //collapse and clear detail panel if the store is refreshed
                           if (this.pnlDashboardDetail != null ) {
                             this.pnlDashboardDetail.collapse();
@@ -178,6 +179,11 @@ Ext.define('Ozone.components.admin.AdminEditorAddWindow', {
                         me.existingItemsStore.save();
                     }
                 }
+                var widgetStateHandler = Ozone.state.WidgetStateHandler.getInstance();
+                widgetStateHandler.handleWidgetRequest({
+                    fn: 'refreshDashboardStore'
+                });
+                
                 me.close();
             });
 
