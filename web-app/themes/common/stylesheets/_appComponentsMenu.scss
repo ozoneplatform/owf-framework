@@ -267,8 +267,14 @@
 .widget-details {
     float: right;
     background-image: theme-image($theme-name, 'myappswindow/info_icon.png');
-    width: 14px;
-    height: 14px;
+    background-repeat: no-repeat;
+    background-position: 4px 4px;
+    width: 18px;
+    height: 18px;
+
+    &:hover, &.hover {
+        background-image: theme-image($theme-name, 'myappswindow/info_icon_hover.png');
+    }
 }
 
 .show-new-component {

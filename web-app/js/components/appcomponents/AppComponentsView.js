@@ -88,7 +88,7 @@
                                     '<img src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="x-tool-pin">' +
                                 '</a>' +
                                 '<input type="text" class="search-input">' +
-                            '</div>' + 
+                            '</div>' +
                             '<div class="body"></div>'
             );
 

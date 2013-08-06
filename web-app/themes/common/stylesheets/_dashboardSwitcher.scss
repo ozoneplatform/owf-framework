@@ -360,17 +360,21 @@
         line-height: 1em;
     }
 
-    .details-btn-container {
-        padding: 7px 7px 0 0;
-        
-        .details-btn {
+    .details-btn {
             float: right;
             background-image: theme-image($theme-name, 'myappswindow/info_icon.png');
-            width: 14px;
-            height: 14px;
+            background-repeat: no-repeat;
+            background-position: 4px 4px;
+            width: 18px;
+            height: 18px;
+            margin-right: 7px;
+            margin-top: 3px;
+
+            &:hover, &.hover {
+                background-image: theme-image($theme-name, 'myappswindow/info_icon_hover.png');
+            }
         }
-    }
-    
+
     &:hover, &.hover, &-selected {
         @include border-radius($dashboard-item-body-radius);
     }

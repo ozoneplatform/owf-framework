@@ -144,9 +144,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             },
             
             getActions: function (values) {
-                return	'<div class="details-btn-container hide">'+
-                            '<div class="details-btn"></div>'+
-                        '</div>';
+                return	'<div class="details-btn hide"></div>';
+                        
             }
         });
 
@@ -1098,10 +1097,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var el = $(evt.currentTarget);
 
         if (this._previouslyHoveredStackOrDashboard != null) {
-            $('.details-btn-container', this._previouslyHoveredStackOrDashboard).addClass('hide');
+            $('.details-btn', this._previouslyHoveredStackOrDashboard).addClass('hide');
         }
             
-        $('.details-btn-container', el).removeClass('hide');
+        $('.details-btn', el).removeClass('hide');
 
         this._previouslyHoveredStackOrDashboard = el;
     },
@@ -1110,7 +1109,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var el = $(evt.currentTarget);
 
         if (this._previouslyHoveredStackOrDashboard) {
-            $('.details-btn-container', this._previouslyHoveredStackOrDashboard).addClass('hide');
+            $('.details-btn', this._previouslyHoveredStackOrDashboard).addClass('hide');
         }
     },
 
