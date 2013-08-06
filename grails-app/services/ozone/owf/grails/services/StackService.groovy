@@ -39,18 +39,18 @@ class StackService {
     }
 
     def list(params) {
-        
+
         def criteria = Stack.createCriteria()
         def opts = [:]
-        
+
         if (params?.offset != null) opts.offset = (params.offset instanceof String ? Integer.parseInt(params.offset) : params.offset)
         if (params?.max != null) opts.max =(params.max instanceof String ? Integer.parseInt(params.max) : params.max)
-        
+
         def results = criteria.list(opts) {
-            
+
             if (params?.id)
                 eq("id", Long.parseLong(params.id))
-                
+
             // Apply any filters
             if (params.filters) {
                 if (params.filterOperator?.toUpperCase() == 'OR') {
@@ -67,7 +67,7 @@ class StackService {
             } else if (params.filterName && params.filterValue) {
                 def filterNames = params.list('filterName')
                 def filterValues = params.list('filterValue')
-                
+
                 if (params.filterOperator?.toUpperCase() == 'OR') {
                     or {
                         filterNames.eachWithIndex { filterName, i ->
@@ -80,11 +80,11 @@ class StackService {
                     }
                 }
             }
-            
+
             if (params.group_id) {
                 addFilter('group_id', params.group_id, criteria)
             }
-            
+
             if (params.user_id) {
                 groups {
                     eq('stackDefault', true)
@@ -93,7 +93,7 @@ class StackService {
                     }
                 }
             }
-            
+
             // Sort
             if (params?.sort) {
                 order(params.sort, params?.order?.toLowerCase() ?: 'asc')
@@ -102,13 +102,14 @@ class StackService {
                 //default sort
                 order('name', params?.order?.toLowerCase() ?: 'asc')
             }
-            
+
             cache(true)
             cacheMode(CacheMode.GET)
         }
-        
-        def processedResults = results.findAll { tempStack ->
-            
+
+        def stackList = []
+        results.collect { tempStack ->
+
             def totalGroups = Group.withCriteria {
                 cacheMode(CacheMode.GET)
                 eq('stackDefault', false)
@@ -117,7 +118,7 @@ class StackService {
                 }
                 projections { rowCount() }
             }
-            
+
             def totalUsers = Person.withCriteria {
                 cacheMode(CacheMode.GET)
                 groups {
@@ -144,18 +145,19 @@ class StackService {
 
             // iwe only want to return this stack if it does NOT have marketplace dashboards in it
             if (marketplaceDashboard.size() == 0) {
-                serviceModelService.createServiceModel(tempStack,[
+                stackList.add(serviceModelService.createServiceModel(tempStack,[
                     totalDashboards: totalDashboards,
                     totalUsers: totalUsers[0],
                     totalGroups: totalGroups[0]
-                ])
+                ]))
             }
 
         }
-        return [data: processedResults, results: results.totalCount]
-        
+
+        return [data: stackList, results: stackList.size()]
+
     }
-    
+
     def createOrUpdate(params) {
         def stacks = []
 
@@ -175,7 +177,7 @@ class StackService {
         } else {
             if (params.data) {
                 def json = JSON.parse(params.data)
-                
+
                 if (json instanceof List) {
                     json.each {
                         if(it.id >= 0 || it.stack_id >= 0) {
@@ -206,14 +208,14 @@ class StackService {
 
         [success:true, data:results.flatten()]
     }
-    
+
     private def updateStack(params) {
         def stack, returnValue = null
 
         if (params?.stack_id){
             params.stack_id = (params.stack_id instanceof String ? Integer.parseInt(params.stack_id) : params.stack_id)
         }
-        
+
         if (params?.id >= 0 || params.stack_id  >= 0) {  // Existing Stack
             params.id = (params?.id >= 0 ? params.id : params.stack_id)
             stack = Stack.findById(params.id, [cache: true])
@@ -229,7 +231,7 @@ class StackService {
             //If context was modified and it already exists, throw a unique constrain error
             if(params.stackContext && params.stackContext != stack.stackContext) {
                 if(Stack.findByStackContext(params.stackContext)) {
-                    throw new OwfException(message: 'Another stack uses ' + params.stackContext + ' as its URL Name. ' 
+                    throw new OwfException(message: 'Another stack uses ' + params.stackContext + ' as its URL Name. '
                         + 'Please select a unique URL Name for this stack.', exceptionType: OwfExceptionTypes.GeneralServerError)
                 }
             }
@@ -243,9 +245,9 @@ class StackService {
                 imageUrl: params.imageUrl != null ? params.imageUrl : stack.imageUrl,
                 stackContext: params.stackContext ?: stack.stackContext ?: UUID.randomUUID().toString(),
                 descriptorUrl: params.descriptorUrl ?: stack.descriptorUrl,
-                //If param owner isn't null and user is admin, check if previous owner is different 
+                //If param owner isn't null and user is admin, check if previous owner is different
                 //and new user is the logged in user, if so set user to the owner
-                owner: !params.owner?.equals(null) && accountService.getLoggedInUserIsAdmin() ? 
+                owner: !params.owner?.equals(null) && accountService.getLoggedInUserIsAdmin() ?
                             (stack.owner?.username != params.owner?.username &&
                             params.owner?.username == loggedInUser?.username ? loggedInUser :
                             stack.owner) : stack.owner
@@ -274,12 +276,12 @@ class StackService {
                 totalGroups: stack.groups ? stack.groups.size() - 1 : 0, // Don't include the default stack group
                 totalWidgets: stack.uniqueWidgetCount
             ])
-        } else {            
+        } else {
             if ('groups' == params.tab) {
-                
+
                 def updatedGroups = []
                 def groups = JSON.parse(params.data)
-                
+
                 groups?.each { it ->
                     def group = Group.findById(it.id.toLong(), [cache: true])
                     if (group) {
@@ -292,7 +294,7 @@ class StackService {
                             }
                             stack.removeFromGroups(group)
                         }
-                        
+
                         updatedGroups << group
                     }
                 }
@@ -305,7 +307,7 @@ class StackService {
 
                 def updatedUsers = []
                 def users = JSON.parse(params.data)
-                
+
                 users?.each { it ->
                     def user = Person.findById(it.id.toLong(), [cache: true])
                     if (user) {
@@ -316,7 +318,7 @@ class StackService {
                             removeUserStackDashboards(user, stack, stackDefaultGroup)
                             stackDefaultGroup.removeFromPeople(user)
                         }
-                        
+
                         updatedUsers << user
                     }
                 }
@@ -332,25 +334,25 @@ class StackService {
                 def dashboards = JSON.parse(params.data)
 
                 def stackDefaultGroup = stack.findStackDefaultGroup()
-                      
+
                 dashboards?.each { it ->
                     def dashboard = Dashboard.findByGuid(it.guid)
 
                     if (dashboard) {
-                        if (params.update_action == 'remove') {       
+                        if (params.update_action == 'remove') {
                             // Find all clones.
                             def clones = domainMappingService.getMappedObjects([id:dashboard.id,TYPE:Dashboard.TYPE],
                                 RelationshipType.cloneOf,Dashboard.TYPE,[:],{},'dest')
-                            
+
                             // Set their stack to null and remove it's clone record.
                             clones?.each{ clone ->
                                 domainMappingService.deleteMapping(clone, RelationshipType.cloneOf,dashboard)
                                 clone.delete()
                             }
-                            
+
                             // Remove the mapping to the group.
                             domainMappingService.deleteMapping(stackDefaultGroup,RelationshipType.owns,dashboard)
-                            
+
                             // Delete the dashboard.
                             dashboard.delete(flush: true)
                             updatedDashboards << dashboard
@@ -360,7 +362,7 @@ class StackService {
                         }
                     }
                 }
-                
+
                 // Copy any new instances to the default group.  Save the results for the return value.
                 if (!dashboardsToCopy.isEmpty()) {
                     def copyParams = [:]
@@ -385,7 +387,7 @@ class StackService {
 
                 // Add any widgets to the stack's default group if not already there.
                 widgetDefinitionService.reconcileGroupWidgetsFromDashboards(stackDefaultGroup, false)
-                
+
                 // Update the unique widgets now contained in the stack's dashboards.
                 stack.uniqueWidgetCount = widgetDefinitionService.list([stack_id: stack.id]).results
                 stack.save(flush: true, failOnError: true)
@@ -409,7 +411,7 @@ class StackService {
 
     def restore(params) {
         def stack = Stack.findById(params.id)
-        
+
         if (stack == null) {
             throw new OwfException(message:'Stack ' + params.guid + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
         }
@@ -417,20 +419,20 @@ class StackService {
         def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
         def updatedDashboards = []
         userStackDashboards?.each { userStackDashboard ->
-            
+
             updatedDashboards.push(dashboardService.restore([
                     guid: userStackDashboard.guid
                 ]).data[0])
         }
-                
+
                 reorderUserDashboards(params)
-        
+
         def stackDefaultGroup = stack.findStackDefaultGroup()
         def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
-        
+
         return [success:true, updatedDashboards: updatedDashboards]
     }
-        
+
     def reorderUserDashboards(params) {
         def stack = Stack.findById(params.id)
         def user = accountService.getLoggedInUser()
@@ -472,7 +474,7 @@ class StackService {
         }
         stack
     }
-    
+
     def isStackOwner(Stack stack) {
         stack?.owner?.id == accountService.getLoggedInUser()?.id
     }
@@ -494,7 +496,7 @@ class StackService {
      */
     def delete(params) {
         def stackParams
-        
+
         if (params.data) {
             def json = JSON.parse(params.data)
             stackParams = [json].flatten()
@@ -621,7 +623,7 @@ class StackService {
 
         // create dashboards from stack descriptor json
         def dashboards = params.data.dashboards
-    
+
         dashboards.each {
             def json = it.toString()
             oldToNewGuids.each {old, changed ->
@@ -639,19 +641,19 @@ class StackService {
 
         // Add any widgets to the stack's default group if not already there.
         widgetDefinitionService.reconcileGroupWidgetsFromDashboards(stackDefaultGroup, false)
-        
+
         //Update the uniqueWidgetCount of the stack
         stack.uniqueWidgetCount = widgets.length()
         stack.save(flush: true, failOnError: true)
     }
-    
+
     private def changeWidgetInstanceIds(layoutConfig) {
-		
+
 		def widgets = layoutConfig.widgets
 		for(def i = 0; i < widgets?.size(); i++) {
 			widgets[i].put("uniqueId", UUID.randomUUID().toString())
 		}
-		
+
 		def items = layoutConfig.items
 		for(def i = 0; i < items?.size(); i++) {
 			changeWidgetInstanceIds(items[i])
@@ -732,7 +734,7 @@ class StackService {
                 'widgets': widgets
         ]
     }
-    
+
     /**
      * Generates a stack JSON structure for sharing.  Also performs any internal
      * cleanup needed in order to sync the owner's view of the stack with others.
@@ -749,10 +751,10 @@ class StackService {
     }
 
     def export(params) {
-        
+
         // Only admins may export Stacks
         ensureAdmin()
-        
+
         def stackData = createStackData(params)
 
         //Pretty print the JSON to be put as part of descriptor
@@ -798,7 +800,7 @@ class StackService {
 
             //If owner param is present (including explicitly null), set it to that,
             //otherwise, on update do not change, and on create set to current user
-            def owner = params.owner ?: (params.id  >= 0 ? stack.owner : 
+            def owner = params.owner ?: (params.id  >= 0 ? stack.owner :
                 accountService.getLoggedInUser())
             if (owner == JSONObject.NULL) {
                 owner = null
@@ -927,7 +929,7 @@ class StackService {
             }
         }
     }
-    
+
     private def ensureAdmin() {
         if (!accountService.getLoggedInUserIsAdmin()) {
             throw new OwfException(message: "You must be an admin", exceptionType: OwfExceptionTypes.Authorization)
