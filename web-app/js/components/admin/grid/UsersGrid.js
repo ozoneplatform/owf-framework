@@ -2,6 +2,9 @@ Ext.define('Ozone.components.UsersGrid', {
     extend: 'Ext.grid.Panel',
     alias: ['widget.usersgrid', 'widget.Ozone.components.UsersGrid'],
     plugins: new Ozone.components.focusable.FocusableGridPanel(),
+    mixins: {
+        filter: 'Ozone.components.admin.grid.FilterMixin'
+    },
     store: null,
     baseParams: {},
     quickSearchFields: ['userRealName', 'username', 'email'],
@@ -108,48 +111,6 @@ Ext.define('Ozone.components.UsersGrid', {
         else {
             this.store.proxy.extraParams = params;
         }
-    },
-    applyFilter: function(filterText, fields){
-    
-        this.store.proxy.extraParams = {};
-        Ext.apply(this.store.proxy.extraParams, this.baseParams);
-        
-        if (!Ext.isEmpty(filterText)) {
-            var filters = [];
-            for (var i = 0; i < fields.length; i++) {
-                filters.push({
-                    filterField: fields[i],
-                    filterValue: filterText
-                });
-            }
-            Ext.apply(this.store.proxy.extraParams, {
-                filters: Ext.JSON.encode(filters),
-                filterOperator: 'OR'
-            });
-        }
-        
-        if (this.baseParams) { this.setBaseParams(this.baseParams); }
-        
-        this.store.loadPage(1,{
-            params: {
-                offset: 0,
-                max: this.store.pageSize
-            }
-        });
-        
-    	//this.store.filter(fields[0],filterText);
-    },
-    clearFilters: function(){
-        this.store.proxy.extraParams = undefined;
-        if (this.baseParams) { this.setBaseParams(this.baseParams); }
-        this.store.load({
-            params: {
-                start: 0,
-                max: this.store.pageSize
-            }
-        });
-        
-    	//this.store.clearFilter();
     },
     load: function(){
         this.store.loadPage(1);

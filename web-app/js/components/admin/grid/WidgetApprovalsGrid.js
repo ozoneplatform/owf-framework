@@ -2,6 +2,9 @@ Ext.define('Ozone.components.admin.grid.WidgetApprovalsGrid', {
   extend: 'Ext.grid.Panel',
   alias: ['widget.widgetapprovalsgrid'],
   plugins: new Ozone.components.focusable.FocusableGridPanel(),
+    mixins: {
+        filter: 'Ozone.components.admin.grid.FilterMixin'
+    },
 
   cls: 'grid-widget',
   
@@ -232,44 +235,6 @@ Ext.define('Ozone.components.admin.grid.WidgetApprovalsGrid', {
     return this.getDockedItems('toolbar[dock="bottom"]')[0];
   },
 
-  applyFilter: function(filterText, fields) {
-    this.store.proxy.extraParams = undefined;
-
-    if (filterText) {
-      var filters = [];
-      for (var i = 0; i < fields.length; i++) {
-        filters.push({
-          filterField: fields[i],
-          filterValue: filterText
-        });
-      }
-      this.store.proxy.extraParams = {
-        filters: Ext.JSON.encode(filters),
-        filterOperator: 'OR'
-      };
-    }
-    
-    if (this.baseParams) { this.setBaseParams(this.baseParams); }
-
-    this.store.loadPage(1,{
-      params: {
-        offset: 0,
-        max: this.store.pageSize
-      }
-    });
-  },
-
-  clearFilters: function() {
-    this.store.proxy.extraParams = undefined;
-    if (this.baseParams) { this.setBaseParams(this.baseParams); }
-    this.store.load({
-      params: {
-        start: 0,
-        max: this.store.pageSize
-      }
-    });
-  },
-  
   setBaseParams: function(params) {
       this.baseParams = params;
       if (this.store.proxy.extraParams) {

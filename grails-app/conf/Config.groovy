@@ -230,6 +230,7 @@ uiperformance.bundles = [
             '../js/data/models/WidgetDefinition',
             '../js/data/stores/AdminWidgetStore',
             '../js/data/stores/WidgetApprovalStore',
+            '../js/components/admin/grid/FilterMixin',
             '../js/components/admin/grid/WidgetApprovalsGrid',
             '../js/components/admin/widget/WidgetDetailPanel',
             '../js/components/admin/widget/ApprovePanel',
@@ -246,6 +247,7 @@ uiperformance.bundles = [
             '../js/data/stores/AdminDashboardStore',
             '../js/data/models/Group',
             '../js/data/stores/GroupStore',
+            '../js/components/admin/grid/FilterMixin',
             '../js/components/admin/grid/GroupsGrid',
             '../js/components/admin/EditWidgetPanel',
             '../js/components/admin/GroupsTabPanel',
@@ -262,6 +264,7 @@ uiperformance.bundles = [
         files: [
             'data/models/Dashboard',
             'data/stores/AdminDashboardStore',
+            'components/admin/grid/FilterMixin',
             'components/admin/grid/DashboardGroupsGrid',
             'components/admin/dashboard/DashboardDetailPanel',
             'components/admin/dashboard/GroupDashboardManagementPanel'
@@ -274,6 +277,7 @@ uiperformance.bundles = [
         files: [
             'data/models/Group',
             'data/stores/GroupStore',
+            'components/admin/grid/FilterMixin',
             'components/admin/grid/GroupsGrid',
             'components/admin/group/GroupDetailPanel',
             'components/admin/group/GroupManagementPanel'
@@ -294,6 +298,7 @@ uiperformance.bundles = [
             '../js/data/stores/StackStore',
             '../js/data/models/WidgetDefinition',
             '../js/data/stores/AdminWidgetStore',
+            '../js/components/admin/grid/FilterMixin',
             '../js/components/admin/grid/DashboardsGrid',
             '../js/components/admin/grid/StacksGrid',
             '../js/components/admin/grid/UsersGrid',
@@ -322,6 +327,7 @@ uiperformance.bundles = [
             'data/models/Stack',
             'data/stores/StackStore',
             'components/admin/ExportWindow',
+            'components/admin/grid/FilterMixin',
             'components/admin/grid/StacksGrid',
             'components/admin/stack/StackDetailPanel',
             'components/admin/stack/StackManagementPanel'
@@ -344,6 +350,7 @@ uiperformance.bundles = [
             '../js/data/stores/AdminWidgetStore',
             '../js/components/admin/UrlField',
             '../js/components/admin/EditDashboardWindow',
+            '../js/components/admin/grid/FilterMixin',
             '../js/components/admin/grid/DashboardsGrid',
             '../js/components/admin/grid/GroupsGrid',
             '../js/components/admin/grid/UsersGrid',
@@ -372,6 +379,7 @@ uiperformance.bundles = [
         files: [
             'data/models/User',
             'data/stores/UserStore',
+            'components/admin/grid/FilterMixin',
             'components/admin/grid/UsersGrid',
             'components/admin/user/UserDetailPanel',
             'components/admin/user/UserManagementPanel'
@@ -397,6 +405,7 @@ uiperformance.bundles = [
             '../js/data/stores/AdminWidgetStore',
             '../js/components/admin/EditPreferenceWindow',
             '../js/components/admin/EditDashboardWindow',
+            '../js/components/admin/grid/FilterMixin',
             '../js/components/admin/grid/DashboardsGrid',
             '../js/components/admin/grid/GroupsGrid',
             '../js/components/admin/grid/PreferencesGrid',
@@ -426,6 +435,7 @@ uiperformance.bundles = [
             '../js/data/models/WidgetDefinition',
             '../js/data/stores/AdminWidgetStore',
             '../js/components/admin/ExportWindow',
+            '../js/components/admin/grid/FilterMixin',
             '../js/components/admin/grid/WidgetsGrid',
             '../js/components/admin/widget/DeleteWidgetsPanel',
             '../js/components/admin/widget/WidgetDetailPanel',
@@ -451,6 +461,7 @@ uiperformance.bundles = [
             '../js/data/models/WidgetType',
             '../js/data/stores/WidgetTypeStore',
             '../js/components/admin/EditIntentWindow',
+            '../js/components/admin/grid/FilterMixin',
             '../js/components/admin/grid/IntentsGrid',
             '../js/components/admin/grid/GroupsGrid',
             '../js/components/admin/grid/UsersGrid',
