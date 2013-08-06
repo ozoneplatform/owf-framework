@@ -848,13 +848,8 @@ class DashboardService extends BaseService {
         dashboard.name = params.name ? params.name : dashboard.name
         dashboard.isdefault = params.isdefault != null ? convertStringToBool(params.isdefault) : dashboard.isdefault
         dashboard.dashboardPosition = params.dashboardPosition != null ? params.dashboardPosition as Integer : dashboard.dashboardPosition
-        if (params.description) {
-            dashboard.description = JSONObject.NULL.equals(params.description) ? null : params.description
-        }
-
-        if (params.iconImageUrl) {
-            dashboard.iconImageUrl = JSONObject.NULL.equals(params.iconImageUrl) ? null : params.iconImageUrl
-        }
+        dashboard.description = JSONObject.NULL.equals(params.description) ? null : params.description
+        dashboard.iconImageUrl = JSONObject.NULL.equals(params.iconImageUrl) ? null : params.iconImageUrl
 
         if (params.type) {
             dashboard.type = JSONObject.NULL.equals(params.type) ? null : params.type
