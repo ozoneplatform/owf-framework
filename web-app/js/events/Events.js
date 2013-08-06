@@ -15,9 +15,5 @@ OWF.Events = {
     Marketplace: {
         OPENED: 'marketplaceOpened',
         CLOSED: 'marketplaceClosed'
-    },
-	Banner: {
-		DOCKED: 'docked',
-		UNDOCKED: 'undocked'
-	}
+    }
 };

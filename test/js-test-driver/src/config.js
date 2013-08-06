@@ -26,8 +26,6 @@ Ozone.config.user = {"displayName":"testAdmin1","userRealName":"Test Admin 1","p
 
 Ozone.config.widgetNames = {};
 
-Ozone.config.banner = {"state":"docked","position":[0,0]};
-
 Ozone.config.currentTheme = {"themeName":"a_default","themeContrast":"standard","themeFontSize":12};
 
 //for consistency add the properties onto the new OWF namespace

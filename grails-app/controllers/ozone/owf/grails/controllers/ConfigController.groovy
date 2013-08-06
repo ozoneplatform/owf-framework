@@ -24,10 +24,6 @@ class ConfigController {
                 path: 'widgetNames'])
         def widgetNames = widgetNamesResults.preference?.value ? widgetNamesResults.preference.value : [:] as JSON
 
-        def bannerStateResults = preferenceService.show([namespace: 'owf.banner',
-                path: 'state'])
-        def bannerState = bannerStateResults.preference?.value ? bannerStateResults.preference.value : [:] as JSON
-
         def pDate = new Date()
         def pDateString = null
         if (curUser.prevLogin != null) {
@@ -69,7 +65,6 @@ class ConfigController {
                 model: [
                   user: curUserResult,
                   widgetNames: widgetNames,
-                  bannerState: bannerState,
                   currentTheme: theme as JSON,
                   conf: conf as JSON
                  ],

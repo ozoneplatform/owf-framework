@@ -124,15 +124,6 @@ class PreferenceServiceTests extends OWFGroovyTestCase {
         assertNull result.preference
 	}
 	
-	void testShowForUserNoBannerCollapsedSet() {
-		loginAsUsernameAndRole('testUser1', 'ROLE_USER')
-		
-		def result = service.showForUser([namespace:'owf.banner', path:'collapsed'])
-
-		assertTrue result.success
-        assertNull result.preference
-	}
-	
 	void testShowForUserWithNonExistingPreference() {
 		loginAsUsernameAndRole('testUser1', 'ROLE_USER')
 		

@@ -28,11 +28,6 @@ Ozone.config.user = ${user};
 
 Ozone.config.widgetNames = ${widgetNames};
 
-Ozone.config.banner = ${bannerState};
-
-//developers can toggle this to enable banner popout in case it can be reused in future redesign somehow 
-Ozone.config.bannerPopoutEnabled = ${false}; 
-
 Ozone.config.currentTheme = ${currentTheme};
 
 Ozone.config.loginCookieName = ${Environment.current == Environment.DEVELOPMENT ? "null" : "'" + ozone.security.SecurityUtils.LOGIN_COOKIE_NAME + "'"};

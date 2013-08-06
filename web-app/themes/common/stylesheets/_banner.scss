@@ -88,10 +88,6 @@
     }
 }
 
-/*#popOutBanner {*/
-    /*z-index: 100000000000 !important;*/
-/*}*/
-
 @include extjs-button-ui(
     'default-toolbar-banner-large',
     
@@ -120,13 +116,6 @@
     background-image: $gripper-logo;
     width: $gripper-logo-width;
     height: $gripper-logo-height !important;
-    cursor: move;
-}
-
-#popout_logo {
-    background-image: $banner-popout-logo;
-    width: $banner-popout-logo-width;
-    height: $banner-popout-logo-height !important;
     cursor: move;
 }
 
@@ -201,48 +190,6 @@
     &.x-btn-pressed {
         .profileBtnIcon {
             background-image: $profile-pressed-icon;
-        }
-    }
-}
-
-#popOutBannerBtn, #popInBannerBtn {
-    background: none !important;
-    filter: none !important;
-    button {
-        width: 15px !important;
-    }
-}
-
-#popOutBannerBtn {
-    .popOutBannerBtnIcon {
-        background-image: $popout-icon;
-        width: 100%;
-    }
-    &.x-btn-over {
-        .popOutBannerBtnIcon {
-            background-image: $popout-over-icon;
-        }
-    }
-    &.x-btn-pressed {
-        .popOutBannerBtnIcon {
-            background-image: $popout-pressed-icon;
-        }
-    }
-}
-
-#popInBannerBtn {
-    .popInBannerBtnIcon {
-        background-image: $popin-icon;
-        width: 100%;
-    }
-    &.x-btn-over {
-        .popInBannerBtnIcon {
-            background-image: $popin-over-icon;
-        }
-    }
-    &.x-btn-pressed {
-        .popInBannerBtnIcon {
-            background-image: $popin-pressed-icon;
         }
     }
 }

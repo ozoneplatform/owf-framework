@@ -136,16 +136,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             single: true
         });
 
-        this.on('resize', function(comp, width, height, oldWidth, oldHeight, eOpts) {
-            var banner = this.getBanner();
-            if (banner && banner.popOutToolbar && banner.popOutToolbar.isVisible()) {
-                var pos = banner.getBanner().getPosition(true);
-                if (pos[0] > width || pos[1] > height) {
-                    banner.dockPopOutBanner();
-                }
-            }
-        });
-
         this.onBeforeUnload = function(evt) {
             Ozone.pref.PrefServer.deleteUserPreference({
                 namespace: 'owf.custom.widgetprefs',
@@ -1276,7 +1266,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         if (evt.fromWidget) {
             this.unfocusWidget(key, evt, guid);
         } else {
-            this.getBanner().getBanner().focus();
+            this.getBanner().focus();
         }
     },
 
@@ -1288,7 +1278,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             if (header) {
                 header.titleCmp.focus();
             } else {
-                this.getBanner().getBanner().focus();
+                this.getBanner().focus();
             }
         }
     },
@@ -2002,14 +1992,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     designDashboard: function(dashboard, dashboardExists) {
         Ozone.KeyMap.disable();
 
-        var banner = this.getBanner().getBanner(),
+        var banner = this.getBanner(),
             me = this;
 
-        if (banner.state !== 'docked') {
-            banner.hide();
-        } else {
-            banner.el.mask();
-        }
+        banner.el.mask();
 
         var dashboardCardPanel = Ext.getCmp('dashboardCardPanel');
         var dashboardDesigner = Ext.widget('dashboarddesigner', {
@@ -2022,11 +2008,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         });
 
         dashboardDesigner.on('destroy', function() {
-            if (banner.state !== 'docked') {
-                banner.show();
-            } else {
-                banner.el.unmask();
-            }
+            banner.el.unmask();
             Ozone.KeyMap.enable();
         });
     },
@@ -2116,9 +2098,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
 
         if (hasMetricWidget) {
-            this.getBanner().getUserMenu().enableMetricsMenuItem();
+            this.getBanner().getUserMenuBtn().enableMetricsMenuItem();
         } else {
-            this.getBanner().getUserMenu().disableMetricsMenuItem();
+            this.getBanner().getUserMenuBtn().disableMetricsMenuItem();
         }
     },
 
