@@ -79,17 +79,7 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
         assertEquals(stack, foundStack)
     }
 
-    void testAddingWidgetFromMarketplaceWithApproval() {
-        grailsApplication.config.owf.enablePendingApprovalWidgetTagGroup = true
-        testAddExternalWidgetsToUser()
-    }
-
-    void testAddingWidgetFromMarketplaceWithAutoApproval() {
-        grailsApplication.config.owf.enablePendingApprovalWidgetTagGroup = false
-        testAddExternalWidgetsToUser()
-    }
-
-    private void testAddExternalWidgetsToUser() {
+    void testAddingWidgetFromMarketplace() {
       //add a dummy widgets that would be from marketplace
 
       //todo someday fix this crazy json string embedded structure
@@ -107,14 +97,7 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
               height: 200,
               width: 200,
               isExtAjaxFormat: true,
-              tags: (
-                grailsApplication.config.owf.enablePendingApprovalWidgetTagGroup ?
-                [[
-                        name: 'pending approval',
-                        visible: true,
-                        position: -1
-                ]] as JSON : [] as JSON
-              ).toString(),
+              tags: ([] as JSON).toString(),
               directRequired: (['79ae9905-ce38-4de6-ad89-fe598d497703'] as JSON).toString()
       ] as JSON).toString()
       def widget2 = ([
@@ -131,14 +114,7 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
               height: 200,
               width: 200,
               isExtAjaxFormat: true,
-              tags: (
-                grailsApplication.config.owf.enablePendingApprovalWidgetTagGroup ?
-                [[
-                        name: 'pending approval',
-                        visible: true,
-                        position: -1
-                ]] as JSON : [] as JSON
-              ).toString(),
+              tags: ([] as JSON).toString(),
               directRequired: (['6aca40aa-1b9e-4044-8bbe-d628e6d4518f'] as JSON).toString()
       ] as JSON).toString()
       def widget3 = ([
@@ -155,14 +131,7 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
               height: 200,
               width: 200,
               isExtAjaxFormat: true,
-              tags: (
-                grailsApplication.config.owf.enablePendingApprovalWidgetTagGroup ?
-                [[
-                        name: 'pending approval',
-                        visible: true,
-                        position: -1
-                ]] as JSON : [] as JSON
-              ).toString(),
+              tags: ([] as JSON).toString(),
       ] as JSON).toString()
 
       def params = [
@@ -195,83 +164,29 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
       assertEquals data[2].displayName, "Widget3"
       assertEquals data.size(), 3
 
-      //check to see if that widget1 is in the approval list depending on the config param
-      if (grailsApplication.config.owf.enablePendingApprovalWidgetTagGroup) {
-        result = personWidgetDefinitionService.listForAdminByTags(
-                new GrailsParameterMap([tags: 'pending approval', sort: 'name', order: 'ASC'], null))
-        data = result.data
+      result = personWidgetDefinitionService.listForAdminByTags(
+              new GrailsParameterMap([tags: 'pending approval', sort: 'name', order: 'ASC'], null))
+      data = result.data
 
-        //check for success
-        assertTrue result.success
+      //check for success
+      assertTrue result.success
 
-        //check that only widget1
-        assertEquals data[0].widgetDefinition.displayName, "Widget1"
-        assertEquals data.size(), 1
+      //check that only widget1
+      //println("data:${data}")
+      assertEquals data.size(), 0
 
-        //approve
-        result = personWidgetDefinitionService.approveForAdminByTags([
-                toApprove: ([
-                        [
-                                userId: 'testUserWidgetDefinitionServiceTesting',
-                                widgetGuid: '9bd3e9ad-366d-4fda-8ae3-2b269f72e059'
-                        ],
-                        [
-                                userId: 'testUserWidgetDefinitionServiceTesting',
-                                widgetGuid: '79ae9905-ce38-4de6-ad89-fe598d497703'
-                        ],
-                        [
-                                userId: 'testUserWidgetDefinitionServiceTesting',
-                                widgetGuid: '6aca40aa-1b9e-4044-8bbe-d628e6d4518f'
-                        ]
-                ] as JSON).toString(),
-                toDelete: ([
-                ] as JSON).toString()
-        ])
-        data = result
+      //check that the widgets are in the launch menu for the current user
+      result = personWidgetDefinitionService.list(new GrailsParameterMap([:],null))
+      data = result.personWidgetDefinitionList
 
-        //check for success
-        assertTrue result.success
+      //check for success
+      assertTrue result.success
 
-        //check that the widgets are in the launch menu for the current user
-        result = personWidgetDefinitionService.list(new GrailsParameterMap([:],null))
-        data = result.personWidgetDefinitionList
-
-        //check for success
-        assertTrue result.success
-
-        //check that widget1, widget2 and widget3 are in the return data
-        assertEquals data[0].widgetDefinition.displayName, "Widget1"
-        assertEquals data[1].widgetDefinition.displayName, "Widget2"
-        assertEquals data[2].widgetDefinition.displayName, "Widget3"
-        assertEquals data.size(), 3
-
-      }
-      else {
-        //widgets are auto approved thus nothing should show in the approval widget
-        result = personWidgetDefinitionService.listForAdminByTags(
-                new GrailsParameterMap([tags: 'pending approval', sort: 'name', order: 'ASC'], null))
-        data = result.data
-
-        //check for success
-        assertTrue result.success
-
-        //check that only widget1
-        //println("data:${data}")
-        assertEquals data.size(), 0
-
-        //check that the widgets are in the launch menu for the current user
-        result = personWidgetDefinitionService.list(new GrailsParameterMap([:],null))
-        data = result.personWidgetDefinitionList
-
-        //check for success
-        assertTrue result.success
-
-        //check that widget1, widget2 and widget3 are in the return data
-        assertEquals data[0].widgetDefinition.displayName, "Widget1"
-        assertEquals data[1].widgetDefinition.displayName, "Widget2"
-        assertEquals data[2].widgetDefinition.displayName, "Widget3"
-        assertEquals data.size(), 3
-      }
+      //check that widget1, widget2 and widget3 are in the return data
+      assertEquals data[0].widgetDefinition.displayName, "Widget1"
+      assertEquals data[1].widgetDefinition.displayName, "Widget2"
+      assertEquals data[2].widgetDefinition.displayName, "Widget3"
+      assertEquals data.size(), 3
 
     }
 

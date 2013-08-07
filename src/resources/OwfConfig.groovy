@@ -35,8 +35,6 @@ owf {
     // log4j file watch interval in milliseconds
     log4jWatchTime = 180000; // 3 minutes
 
-    enablePendingApprovalWidgetTagGroup = false
-
     sendWidgetLoadTimesToServer = true
     publishWidgetLoadTimes = true
 

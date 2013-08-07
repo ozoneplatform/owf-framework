@@ -255,25 +255,15 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
     },
 
     createApprovalTag: function() {
-        var approvalTag = {};
-        if (Ozone.config.enablePendingApprovalWidgetTagGroup) {
-            approvalTag = {
-                name:Ozone.config.carousel.pendingApprovalTagGroupName,
-                visible:true,
-                position:-1,
-                editable:false
-            };
-        }
-        else {
-            var dt = new Date();
-            var dateString = Ext.Date.format(dt, 'Y-m-d');
-            approvalTag = {
-                name:Ozone.config.carousel.approvedTagGroupName + ' on ' + dateString,
-                visible:true,
-                position:-1,
-                editable:true
-            };
-        }
+        var dt = new Date();
+        var dateString = Ext.Date.format(dt, 'Y-m-d');
+        var approvalTag = {
+            name:Ozone.config.carousel.approvedTagGroupName + ' on ' + dateString,
+            visible:true,
+            position:-1,
+            editable:true
+        };
+
         return approvalTag;
     },
 

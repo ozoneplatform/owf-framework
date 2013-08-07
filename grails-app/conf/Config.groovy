@@ -946,7 +946,6 @@ owf {
       mpPollingInterval = 300000
       mpVersion = "2.5"
 
-      enablePendingApprovalWidgetTagGroup = false
       pendingApprovalTagGroupName='pending approval'
       approvedTagGroupName='approved'
 
