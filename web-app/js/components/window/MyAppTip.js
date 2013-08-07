@@ -362,7 +362,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var groupAssignment = me.isStackAGroupAssignment(me.clickedStack);
 
         if(groupAssignment) {
-            msg = 'Users in a group cannot remove stacks assigned to the group. Please contact your administrator.'
+            msg = 'Group members cannot delete applications assigned to the group. Please contact your administrator.';
             me.warn('ok', null, msg);
             return;
         }
