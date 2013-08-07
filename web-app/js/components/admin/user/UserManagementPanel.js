@@ -168,6 +168,8 @@ Ext.define('Ozone.components.admin.user.UserManagementPanel', {
                                             }
                                         });
                                         userstore.save();
+                                        
+                                        this.widgetStateHandler.handleWidgetRequest({fn: 'refreshDashboardStore'});
                                     }
                                 });
                                 
