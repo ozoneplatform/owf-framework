@@ -555,6 +555,12 @@ class AccountService {
                 it.editedBy = null
             }
 
+            //Set stack owner to null
+            def stacks = Stack.withCriteria { eq('owner', person) }
+            stacks.each {
+                it.owner = null
+            }
+
             //delete person
             person.delete(flush:true)
             return [success: true, person: person]
