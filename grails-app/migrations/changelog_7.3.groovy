@@ -290,7 +290,6 @@ databaseChangeLog = {
             column(name: "src_id", valueComputed: "(SELECT id FROM owf_group WHERE name='3b870e3b-247f-47db-bcd8-8fab6877bbc8')")
             column(name: "src_type", value: "group")
         }
-
     }
 
     // OP-2157: Sample data still references "dashboards" and "stacks"
@@ -467,5 +466,11 @@ databaseChangeLog = {
         addNotNullConstraint(tableName: "widget_type", columnName: "display_name", columnDataType: "VARCHAR(256)")
 
     }
+
+    changeSet(author: "owf", id: "7.3-17", context: "create, 7.3, upgrade") {
+        addDefaultValue(tableName: "application_configuration", columnName: "version", defaultValueNumeric: 0)
+    }
+
+    include file: "app_config_7.3.groovy"
 
 }
