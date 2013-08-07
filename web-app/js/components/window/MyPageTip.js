@@ -70,6 +70,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
 
         if(notOwner) {
             me.appsWindow.hideButton('.deleteButton');
+            me.appsWindow.hideButton('.editButton');
         }
     },
     
