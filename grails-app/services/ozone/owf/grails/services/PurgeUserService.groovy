@@ -2,6 +2,7 @@ package ozone.owf.grails.services
 
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.Dashboard
+import ozone.owf.grails.domain.Stack
 import ozone.owf.enums.OwfApplicationSetting
 
 class PurgeUserService {
@@ -54,6 +55,13 @@ class PurgeUserService {
             //explicitly clear those audit log fields
             it.editedBy = null
         }
+
+        //Set stack owner to null
+        def stacks = Stack.withCriteria { eq('owner', person) }
+        stacks.each {
+            it.owner = null
+        }
+
 
         //delete person
         person.delete()
