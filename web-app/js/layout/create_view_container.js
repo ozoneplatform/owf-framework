@@ -50,9 +50,9 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             dashboardStore = this.dashboardContainer.dashboardStore,
             storeDashboards = dashboardStore.data.items;
 
-        for(var i = 0, len = storeDashboards.length; i < len; i++) {
+        for (var i = 0, len = storeDashboards.length; i < len; i++) {
             dashboard = storeDashboards[i];
-            if(dashboard.get('type') !== 'marketplace') {
+            if (dashboard.get('type') !== 'marketplace') {
                 dashboards.push(dashboard.data);
             }
         }
@@ -193,7 +193,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             xtype: 'textfield',
             name: 'titleBox',
             cls: 'titleBox',
-            itemId: 'titleBox', //OWF-2558
+            itemId: 'titleBox', // OWF-2558
             fieldLabel: Ozone.util.createRequiredLabel(Ozone.ux.DashboardMgmtString.title),
             labelSeparator: '',
             labelWidth: 150,
@@ -238,8 +238,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             listeners: {
                 'change': {
                     fn: function(radio, newValue) {
-                        if(newValue)
-                        {
+                        if (newValue) {
                             this.down('#existViewCb').removeCls('expandView');
                             this.down('#existViewCb').addCls('collapseView');
                             this.down('#premadeViewContainer').removeCls('expandView');
@@ -260,12 +259,11 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             name: 'viewSelectRadio',
             inputValue: "copiedDashboard",
             cls:'existingViewRadio',
-            //tabIndex: 2,
+            // tabIndex: 2,
             listeners: {
                 'change': {
                     fn: function(radio, newValue) {
-                        if(newValue)
-                        {
+                        if (newValue) {
                             this.down('#existViewCb').removeCls('collapseView');
                             this.down('#existViewCb').addCls('expandView');
                             this.down('#premadeViewContainer').removeCls('expandView');
@@ -290,10 +288,10 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             checked: 'true',
             cls:'importedViewRadio',
             listeners: {
-                //this listener works for both since we can use the 'isSelected' param
+                // This listener works for both since we can use the 'isSelected' param
                 'change': {
                     fn: function(radio, newValue) {
-                        if(newValue) {
+                        if (newValue) {
                             this.down('#existViewCb').removeCls('expandView');
                             this.down('#existViewCb').addCls('collapseView');
                             this.down('#premadeViewContainer').removeCls('collapseView');
@@ -482,7 +480,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                         var fileInputEl = this.fileInputEl;
                         var allowFocus = true;
 
-                        //set the <button> element and the text field to not be focusable
+                        // Set the <button> element and the text field to not be focusable
                         innerBtnEl.dom.tabIndex = -1;
                         cmp.inputEl.dom.tabIndex = -1;
 
@@ -510,7 +508,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
 
                     cmp.setupFocus();
 
-                    //override the reset function
+                    // Override the reset function
                     cmp._reset = cmp.reset;
                     cmp.reset = function() {
 
@@ -518,7 +516,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                             this._reset.apply(this, arguments);
                             dashboardJson = null;
                         }
-                        // this small block does exactly what the extjs reset does, except
+                        // This small block does exactly what the extjs reset does, except
                         // it does not clear out the inputEl value because we want to see
                         // the file in the input text field after selecting it.  if the
                         // fileInputEl is not removed then created again, the browse button
@@ -568,9 +566,9 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         };
 
 
-        //RadioGroup and CheckboxGroup does not properly validate other form fields that are not radio/checkboxes
-        //when mixed with radio/checkbox fields because it assumes if any radio/checkbox is checked it can assume the
-        //entire group is valid
+        // RadioGroup and CheckboxGroup does not properly validate other form fields that are not radio/checkboxes
+        // when mixed with radio/checkbox fields because it assumes if any radio/checkbox is checked it can assume the
+        // entire group is valid
         this.viewSelectRadio = {
             xtype: 'fieldcontainer',
             labelWidth: 110,
@@ -612,197 +610,208 @@ Ext.define('Ozone.layout.CreateViewContainer', {
 
         this.margin = '0 0 0 0';
 
-        var childItems = []
-        if (this.headerText) childItems.push(this.headerLabel);
+        var childItems = [];
+        if (this.headerText) {
+            childItems.push(this.headerLabel);
+        }
         childItems.push(this.appInfoContainer);
-        if (!this.hideViewSelectRadio) childItems.push(this.viewSelectRadio);
+        if (!this.hideViewSelectRadio) {
+            childItems.push(this.viewSelectRadio);
+        }
 
-        this.items = [{
-            xtype: 'fieldcontainer',
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            },
-            padding: '0, 0, 0, 0',
-            items: childItems
-        }];
+        this.items = [
+            {
+                xtype: 'fieldcontainer',
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
+                },
+                padding: '0, 0, 0, 0',
+                items: childItems
+            }
+        ];
 
-        this.dockedItems = [{
-            xtype: 'toolbar',
-            dock: 'bottom',
-            defaults: {
-                minWidth: this.minButtonWidth
-            },
-            items: [{
-                xtype: 'tbfill'
-            },{
-                xtype:'button',
-                scale: 'small',
-                cls: 'okbutton',
-                text: Ozone.layout.DialogMessages.ok,
-                itemId: 'saveButton',
-                //iconCls: 'okSaveBtnIcon',
-                //tabIndex: 4,
-                handler: function (button, event) {
-                    if (this.getForm().isValid() && this.createViewContainer_FormValid) {
-                        var dashboardContainer = Ext.getCmp('mainPanel');
-                        var titleTextField = this.down('#titleTextField'),
-                            descriptionBox = this.down('#description'),
-                            iconImageUrlField = this.down('#iconURLField');
+        this.dockedItems = [
+            {
+                xtype: 'toolbar',
+                dock: 'bottom',
+                defaults: {
+                    minWidth: this.minButtonWidth
+                },
+                items: [
+                    {
+                        xtype: 'tbfill'
+                    },
+                    {
+                        xtype:'button',
+                        scale: 'small',
+                        cls: 'okbutton',
+                        text: Ozone.layout.DialogMessages.ok,
+                        itemId: 'saveButton',
+                        // iconCls: 'okSaveBtnIcon',
+                        // tabIndex: 4,
+                        handler: function (button, event) {
+                            if (this.getForm().isValid() && this.createViewContainer_FormValid) {
+                                var dashboardContainer = Ext.getCmp('mainPanel'),
+                                    titleTextField = this.down('#titleTextField'),
+                                    descriptionBox = this.down('#description'),
+                                    iconImageUrlField = this.down('#iconURLField');
 
-                        Ozone.util.formField.removeLeadingTrailingSpaces(titleTextField);
-                        //make sure name is unique
-                        dashboardContainer.saveActiveDashboardToServer();
+                                Ozone.util.formField.removeLeadingTrailingSpaces(titleTextField);
+                                // Make sure name is unique
+                                dashboardContainer.saveActiveDashboardToServer();
 
-                        var title = titleTextField.getValue();
-                        var desc = descriptionBox.getValue();
-                        var iconImageUrl = iconImageUrlField.getValue();
+                                var title = titleTextField.getValue();
+                                var desc = descriptionBox.getValue();
+                                var iconImageUrl = iconImageUrlField.getValue();
 
-                        // add a space to the field if it is empty or null so that it will
-                        // store an empty string to the db instead of it thinking its a null value
-                        if (desc == null || desc == '')
-                            desc = ' ';
-                        if (iconImageUrl == null || iconImageUrl == '')
-                            iconImageUrl = ' ';
+                                // Add a space to the field if it is empty or null so that it will
+                                // store an empty string to the db instead of it thinking its a null value
+                                if (desc == null || desc == '')
+                                    desc = ' ';
+                                if (iconImageUrl == null || iconImageUrl == '')
+                                    iconImageUrl = ' ';
 
-                        //edit an existing dashboard if a record was passed in
-                        if (this.existingDashboardRecord != null || this.existingStackRecord != null) {
-                            if (this.existingStackRecord != null) {
-                                this.editStack(title, iconImageUrl, desc, this.existingDashboardRecord === null);
-                            }
-                            if (this.existingDashboardRecord != null) {
-                                this.existingDashboardRecord.set('name',title);
-                                this.existingDashboardRecord.set('description',desc);
-                                this.existingDashboardRecord.set('iconImageUrl', iconImageUrl);
-                                this.dashboardContainer.editDashboard(this.existingDashboardRecord);
-                            }
-                            this.close();
-                        }
-                        //else create a new one
-                        else {
-
-                            var radioSelection = this.down('#viewSelect').getValue().viewSelectRadio;
-                            var isCreateFromExisting = radioSelection == "copiedDashboard";
-                            var isImport = radioSelection == "importedDashboard";
-                            var usePremadeLayout = radioSelection == "premadeLayout";
-
-                            //create new from existing
-                            if (isCreateFromExisting) {
-                                var existingViewSelected = this.down('#existViewCb').getValue();
-
-                                if (Ext.isEmpty(existingViewSelected)) {
-                                    this.down('#existViewCb').markInvalid("This field cannot be blank.");
-                                    Ozone.Msg.alert(Ozone.util.ErrorMessageString.invalidForm, Ozone.util.ErrorMessageString.invalidFormMsg, function () {
-                                        this.focusTitleBox();
-                                    }, this, null, this.dashboardContainer.modalWindowManager);
-                                    return;
-                                }
-
-                                var existingViewToDuplicate = this.dashboardContainer.dashboardStore.getById(existingViewSelected).data;
-                                existingViewToDuplicate = Ozone.util.cloneDashboard(existingViewToDuplicate, true);
-
-                                existingViewToDuplicate.name = title;
-                                existingViewToDuplicate.description = desc;
-                                existingViewToDuplicate.iconImageUrl = iconImageUrl;
-                                existingViewToDuplicate.isdefault = false;
-                                existingViewToDuplicate.stack = null;
-
-                                dashboardContainer.createDashboard(this.createDashboardModel(existingViewToDuplicate));
-
-                                this.close();
-                            }
-                            //create new from import
-                            else if (isImport) {
-                                //check if the dashboardJson has been set from file upload
-                                if (dashboardJson != null) {
-
-                                    // Reset title
-                                    dashboardJson.name = title;
-                                    dashboardJson.description = desc;
-                                    dashboardJson.iconImageUrl = iconImageUrl;
-
-                                    // make sure the right type of json is being imported
-                                    if (!Ozone.util.validateDashboardJSON(dashboardJson)) {
-                                        Ozone.Msg.alert(Ozone.util.ErrorMessageString.dashboardConfig, "Invalid " + dashboardJson.layout + " configuration file.", function () {
-                                            this.focusTitleBox();
-                                        }, this, null, this.dashboardContainer.modalWindowManager);
+                                // Edit an existing dashboard if a record was passed in
+                                if (this.existingDashboardRecord != null || this.existingStackRecord != null) {
+                                    if (this.existingStackRecord != null) {
+                                        this.editStack(title, iconImageUrl, desc, this.existingDashboardRecord === null);
                                     }
-                                    else {
-                                        delete dashboardJson.state;
+                                    if (this.existingDashboardRecord != null) {
+                                        this.existingDashboardRecord.set('name', title);
+                                        this.existingDashboardRecord.set('description', desc);
+                                        this.existingDashboardRecord.set('iconImageUrl', iconImageUrl);
+                                        this.dashboardContainer.editDashboard(this.existingDashboardRecord);
+                                    }
+                                    this.close();
+                                }
+                                // Else create a new one
+                                else {
 
-                                        dashboardContainer.createDashboard(this.createDashboardModel(Ozone.util.cloneDashboard(dashboardJson, true)));
+                                    var radioSelection = this.down('#viewSelect').getValue().viewSelectRadio;
+                                    var isCreateFromExisting = radioSelection == "copiedDashboard";
+                                    var isImport = radioSelection == "importedDashboard";
+                                    var usePremadeLayout = radioSelection == "premadeLayout";
+
+                                    // Create new from existing
+                                    if (isCreateFromExisting) {
+                                        var existingViewSelected = this.down('#existViewCb').getValue();
+
+                                        if (Ext.isEmpty(existingViewSelected)) {
+                                            this.down('#existViewCb').markInvalid("This field cannot be blank.");
+                                            Ozone.Msg.alert(Ozone.util.ErrorMessageString.invalidForm, Ozone.util.ErrorMessageString.invalidFormMsg, function () {
+                                                this.focusTitleBox();
+                                            }, this, null, this.dashboardContainer.modalWindowManager);
+                                            return;
+                                        }
+
+                                        var existingViewToDuplicate = this.dashboardContainer.dashboardStore.getById(existingViewSelected).data;
+                                        existingViewToDuplicate = Ozone.util.cloneDashboard(existingViewToDuplicate, true);
+
+                                        existingViewToDuplicate.name = title;
+                                        existingViewToDuplicate.description = desc;
+                                        existingViewToDuplicate.iconImageUrl = iconImageUrl;
+                                        existingViewToDuplicate.isdefault = false;
+                                        existingViewToDuplicate.stack = null;
+
+                                        dashboardContainer.createDashboard(this.createDashboardModel(existingViewToDuplicate));
 
                                         this.close();
                                     }
-                                }
-                                else {
-                                    Ozone.Msg.alert(Ozone.util.ErrorMessageString.invalidForm, Ozone.util.ErrorMessageString.invalidFormMsg, function () {
-                                        this.focusTitleBox();
-                                    }, this, null, this.dashboardContainer.modalWindowManager);
+                                    // Create new from import
+                                    else if (isImport) {
+                                        // Check if the dashboardJson has been set from file upload
+                                        if (dashboardJson != null) {
+
+                                            // Reset title
+                                            dashboardJson.name = title;
+                                            dashboardJson.description = desc;
+                                            dashboardJson.iconImageUrl = iconImageUrl;
+
+                                            // Make sure the right type of json is being imported
+                                            if (!Ozone.util.validateDashboardJSON(dashboardJson)) {
+                                                Ozone.Msg.alert(Ozone.util.ErrorMessageString.dashboardConfig, "Invalid " + dashboardJson.layout + " configuration file.", function () {
+                                                    this.focusTitleBox();
+                                                }, this, null, this.dashboardContainer.modalWindowManager);
+                                            }
+                                            else {
+                                                delete dashboardJson.state;
+
+                                                dashboardContainer.createDashboard(this.createDashboardModel(Ozone.util.cloneDashboard(dashboardJson, true)));
+
+                                                this.close();
+                                            }
+                                        }
+                                        else {
+                                            Ozone.Msg.alert(Ozone.util.ErrorMessageString.invalidForm, Ozone.util.ErrorMessageString.invalidFormMsg, function () {
+                                                this.focusTitleBox();
+                                            }, this, null, this.dashboardContainer.modalWindowManager);
+                                        }
+                                    }
+                                    else if (usePremadeLayout) {
+                                        var dashboardModel = this.createDashboardModel({
+                                            name: title,
+                                            description: desc,
+                                            iconImageUrl: iconImageUrl,
+                                            layoutConfig: me.getPremadeLayout()
+                                        });
+
+                                        // DO not open dashboard designer, just save the dashboard with the pre-made layout
+                                        dashboardContainer.saveDashboard(dashboardModel.data, 'create', function(json) {
+
+                                            // Activate new dashboard
+                                            dashboardContainer.activateDashboard(json.guid);
+                                        });
+
+                                        this.close();
+                                    }
+                                    // Create new using name, and description
+                                    else {
+                                        dashboardContainer.createDashboard(
+                                            this.createDashboardModel({
+                                                name: title,
+                                                description: desc,
+                                                iconImageUrl: iconImageUrl
+                                            })
+                                        );
+                                        this.close();
+                                    }
                                 }
                             }
-                            else if (usePremadeLayout) {
-                                var dashboardModel = this.createDashboardModel({
-                                    name: title,
-                                    description: desc,
-                                    iconImageUrl: iconImageUrl,
-                                    layoutConfig: me.getPremadeLayout()
-                                });
-
-                                // DO not open dashboard designer, just save the dashboard with the pre-made layout
-                                dashboardContainer.saveDashboard(dashboardModel.data, 'create', function(json) {
-
-                                    // activate new dashboard
-                                    dashboardContainer.activateDashboard(json.guid);
-                                });
-
-                                this.close();
-                            }
-                            //create new using name, and description
                             else {
-                                dashboardContainer.createDashboard(
-                                    this.createDashboardModel({
-                                        name: title,
-                                        description: desc,
-                                        iconImageUrl: iconImageUrl
-                                    })
-                                );
-                                this.close();
+                                Ozone.Msg.alert(Ozone.util.ErrorMessageString.invalidForm, Ozone.util.ErrorMessageString.invalidFormMsg, function () {
+                                    this.focusTitleBox();
+                                }, this, null, this.dashboardContainer.modalWindowManager);
+                            }
+                        },
+                        scope: this,
+                        listeners: {
+                            afterrender: function(button) {
+                                button.getEl().on('keydown', function(e) {
+                                    e.stopPropagation(); // prevent keydown from bubbling up to the toolbar
+                                });
                             }
                         }
+                    },
+                    {
+                        xtype:'button',
+                        scale: 'small',
+                        text: 'Cancel',
+                        cls: 'cancelbutton',
+                        itemId: 'cancelBtn',
+                        // iconCls: 'cancelBtnIcon',
+                        scope: this,
+                        handler: this.cancel
+                    },
+                    {
+                        xtype: 'tbfill'
                     }
-                    else {
-                        Ozone.Msg.alert(Ozone.util.ErrorMessageString.invalidForm, Ozone.util.ErrorMessageString.invalidFormMsg, function () {
-                            this.focusTitleBox();
-                        }, this, null, this.dashboardContainer.modalWindowManager);
-                    }
-                },
-                scope: this,
-                listeners: {
-                    afterrender: function(button) {
-                        button.getEl().on('keydown', function(e) {
-                            e.stopPropagation(); //prevent keydown from bubbling up to the toolbar
-                        });
-                    }
-                }
-            },
-                {
-                    xtype:'button',
-                    scale: 'small',
-                    text: 'Cancel',
-                    cls: 'cancelbutton',
-                    itemId: 'cancelBtn',
-//                iconCls: 'cancelBtnIcon',
-                    scope: this,
-                    handler: this.cancel
-                },
-                {
-                    xtype: 'tbfill'
-                }]
-        }];
+                ]
+            }
+        ];
 
-        //Need this to get rid of destory errors with ExtJS
-        this.on('beforedestroy', function(cmp){
+        // Need this to get rid of destroy errors with ExtJS
+        this.on('beforedestroy', function(cmp) {
             cmp.dockedItems = null;
         });
 
@@ -812,7 +821,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                 this.handlePremadeLayoutButtons();
             });
 
-            // had to add this here instead of after render because the selected first item would
+            // Had to add this here instead of after render because the selected first item would
             // mess up the layout in ie7.
             this.on("afterlayout", function(cmp) {
                 var layoutButtons = this.query('container#premadeViewContainer')[0].query('button');
@@ -882,7 +891,9 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         Ext.Array.each(layoutButtons, function(button) {
             // Select the clicked button
             button.on("click", function(evt) {
-                if (me.selectedButton) me.selectedButton.removeCls('selected');
+                if (me.selectedButton) {
+                    me.selectedButton.removeCls('selected');
+                }
                 this.addCls('selected');
                 me.selectedLayoutName = this.itemId;
                 me.selectedButton = this;
@@ -897,7 +908,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
 
     createDashboardModel: function(config) {
         if (this.stackId) {
-            config.stack = {"id": this.stackId };
+            config.stack = {"id": this.stackId};
         }
 
         return Ext.create('Ozone.data.Dashboard', config);
@@ -912,8 +923,8 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         if (sync) {
             me.dashboardContainer.stackStore.on("write", function(store, operation, eOpts) {
                 if (operation.records && operation.records[0].get("id") === stack.get("id")) {
-                    me.dashboardContainer.reloadDashboards()
-                };
+                    me.dashboardContainer.reloadDashboards();
+                }
             }, {single: true});
             this.dashboardContainer.stackStore.sync();
         }
