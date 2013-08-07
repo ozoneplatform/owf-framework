@@ -355,20 +355,17 @@ Ext.define('Ozone.components.window.MyAppTip', {
         evt.stopPropagation();
 
         var me = this;
-
-        var msg = 'This action will permanently delete <span class="heading-bold">' + 
-                Ext.htmlEncode(me.clickedStack.name) + '</span>.';
-
+        var msg;
         var groupAssignment = me.isStackAGroupAssignment(me.clickedStack);
 
         if(groupAssignment) {
             msg = 'Group members cannot delete applications assigned to the group. Please contact your administrator.';
             me.warn('ok', null, msg);
-            return;
+        } else {
+            msg = 'This action will permanently delete <span class="heading-bold">' +
+                Ext.htmlEncode(me.clickedStack.name) + '</span>.';
+            me.warn('ok_cancel', jQuery.proxy(me.removeStack, me), msg);
         }
-
-
-        me.warn('ok_cancel', jQuery.proxy(me.removeStack, me), msg);
     },
 
     removeStack:function() {

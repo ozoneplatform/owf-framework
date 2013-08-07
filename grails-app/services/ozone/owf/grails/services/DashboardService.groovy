@@ -190,18 +190,8 @@ class DashboardService extends BaseService {
      * @return
      */
     private boolean shouldCloneGroupDashboard(Dashboard groupDashboard, Person user) {
-        if (groupDashboard) {
-            boolean userIsTheOwner = groupDashboard?.stack?.owner == user
-            if (groupDashboard?.markedForDeletion && userIsTheOwner) {
-                return false
-            }
-            //TODO: enable the code below after sample data are converted to work with Applications/Pages.
-            else if (!groupDashboard.publishedToStore && !userIsTheOwner) {
-                return false
-            }
-            return true
-        }
-        return false
+        boolean userIsTheOwner = groupDashboard?.stack?.owner == user
+        groupDashboard.publishedToStore || userIsTheOwner
     }
 
     private def addGroupToDashboardToGroupsMap(def groupId, def groupDashboardToGroupsMap, def mapKey){
@@ -418,6 +408,7 @@ class DashboardService extends BaseService {
                 //default sort
                 order('dashboardPosition', params?.order?.toLowerCase() ?: 'asc')
             }
+            eq('markedForDeletion', false)
             cache(true)
         }
 
@@ -677,14 +668,8 @@ class DashboardService extends BaseService {
     private boolean markForDeletion(Dashboard personalDashboard) {
         Dashboard groupDashboard = getGroupDashboard(personalDashboard)
         if (groupDashboard && groupDashboard.publishedToStore) {
-            groupDashboard.markedForDeletion = true
-            groupDashboard.save()
-
-            // Delete all mappings for personal dashboard
-            domainMappingService.purgeAllMappings(personalDashboard)
-
-            personalDashboard.delete(flush:true)
-
+            personalDashboard.markedForDeletion = true
+            personalDashboard.save()
             true
         } else {
             false
@@ -692,14 +677,21 @@ class DashboardService extends BaseService {
     }
 
     /**
-     * Deletes a personal dashboard along with its stack dashboard. Corresponds to the case of App owner
+     * Finds a group dashboard for the given personal dashboard and deletes the group dashboard along with all its cloned personal dashboard. Corresponds to the case of App owner
      * deleting a page from the app.
      * @param personalDashboard
      */
     def deletePersonalAndGroupDashboards(Dashboard personalDashboard) {
         Dashboard groupDashboard = getGroupDashboard(personalDashboard)
 
-        deletePersonalDashboard(personalDashboard)
+        if (groupDashboard) {
+            List<Dashboard> personalDashboards = findPersonalDashboardsForGroupDashboard(groupDashboard)
+
+            personalDashboards.each { deletePersonalDashboard(it) }
+        } else {
+            deletePersonalDashboard(personalDashboard)
+        }
+
 
         // If this is the page of the user's app, delete the group dashboard
         if (accountService.getLoggedInUsername().equals(groupDashboard?.stack?.owner?.username)) {
@@ -860,8 +852,8 @@ class DashboardService extends BaseService {
         // dashboard.stack =  params.stack != null ? Stack.get(params.stack.id.toLong()) : null
         dashboard.locked = params.locked instanceof Boolean ? params.locked : params.locked == "true"
 
-        dashboard.publishedToStore = params.publishedToStore ? convertStringToBool(params.publishedToStore) : dashboard.publishedToStore
-        dashboard.markedForDeletion = params.markedForDeletion ? convertStringToBool(params.markedForDeletion) : dashboard.markedForDeletion
+        dashboard.publishedToStore = new Boolean(params.get('publishedToStore', dashboard.publishedToStore))
+        dashboard.markedForDeletion = new Boolean(params.get('markedForDeletion', dashboard.markedForDeletion))
 
         // TODO: Consider renaming the regenerateStateIds param.  This controls regenerating widget instance id's which are encapsulated in layout_config now instead of a state table.
         if (params.regenerateStateIds) {
@@ -943,6 +935,8 @@ class DashboardService extends BaseService {
 
                     //need to regenerate when updating an existing dash
                     args.regenerateStateIds = true
+
+                    args.markedForDeletion = groupDash.markedForDeletion
 
                     args.layoutConfig = groupDash.layoutConfig
                     //args.stack = (groupDash.stack != null) ? ['id': groupDash.stack.id] : null
@@ -1222,7 +1216,7 @@ class DashboardService extends BaseService {
      * @param dashboard The stack's copy of the dashboard (not a personal copy)
      * @param owner The owner of the stack that this dashboard belongs to
      */
-    void syncDashboardForPublish(dashboard, owner) {
+    void syncDashboardForPublish(Dashboard dashboard, Person owner) {
         def clonedDashboards = domainMappingService.getMappings(
             dashboard, 
             RelationshipType.cloneOf, 
@@ -1230,7 +1224,14 @@ class DashboardService extends BaseService {
             'dest'
         )
 
-        if (dashboard.markedForDeletion) {
+        //the stack owner's personal copy of this dashboard
+        Dashboard ownerDashboard = clonedDashboards.collect {
+            Dashboard.findById(it.srcId)
+        }.find {
+            it.user == owner
+        }
+
+        if (ownerDashboard?.markedForDeletion) {
             clonedDashboards.collect { Dashboard.get(it.srcId) }.each { 
                 it.delete() 
             }
@@ -1238,12 +1239,6 @@ class DashboardService extends BaseService {
             dashboard.delete(flush:true)
         }
         else {
-            //the stack owner's personal copy of this dashboard
-            Dashboard ownerDashboard = clonedDashboards.collect { 
-                Dashboard.findById(it.srcId) 
-            }.find { 
-                it.user == owner 
-            }
 
             if (ownerDashboard) {
                 //sync dashboard from owner's copy
