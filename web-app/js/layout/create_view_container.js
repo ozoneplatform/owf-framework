@@ -802,9 +802,6 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                         // iconCls: 'cancelBtnIcon',
                         scope: this,
                         handler: this.cancel
-                    },
-                    {
-                        xtype: 'tbfill'
                     }
                 ]
             }
