@@ -356,7 +356,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         var btn = this.getComponent('marketBtn');
 
         if (previousActiveDashboard) {
-            if (btn && (activeDashboard.configRecord.isMarketplaceDashboard() || previousActiveDashboard.configRecord.isMarketplaceDashboard())) {
+            if (btn && (activeDashboard.configRecord.isMarketplaceDashboard() )) {
                 if (!Modernizr.cssanimations) {
                     // wait 6 seconds if dashboard hasn't rendered
                     // otherwise frame animation won't be visible to user
