@@ -73,6 +73,9 @@
             this.ellipsis();
             this.initResizable();
             this.initCarousel();
+            // OP-2531: Before showing, always make sure that
+            // if the carousel is empty, the gripper will be in the right spot.
+            this._constrain();
             return this;
         },
 
@@ -113,6 +116,7 @@
                     me.doLayout(evt, ui);
                 }
             });
+
             return this;
         },
 

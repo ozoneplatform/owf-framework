@@ -90,6 +90,9 @@
     .body {
         overflow: hidden;
         clear: both;
+        // OP-2531: In CSS land, the carousel should be 171 pixels so that
+        // it matches the minimum resizable size in JavaScript land.
+        height: 171px;
     }
 
     .app-components {
