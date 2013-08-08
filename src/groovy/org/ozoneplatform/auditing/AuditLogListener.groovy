@@ -74,9 +74,10 @@ class AuditLogListener extends AbstractAuditLogListener {
     private def getApplicationConfiguration(ApplicationSetting setting) {
         //first look for values that were discovered farther up the stack, then check the
         //database if it wasn't found
-        def knownValue = knownValues.get()?.get(setting.code)?.value 
+        def conf = knownValues.get()?.get(setting.code)
 
-        knownValue != null ? knownValue : 
+        //if the config was found use its value otherwise look it up
+        conf != null ? conf.value : 
             owfApplicationConfigurationService.getApplicationConfiguration(setting)?.value
     }
 
