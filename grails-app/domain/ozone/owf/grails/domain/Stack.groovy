@@ -2,7 +2,7 @@ package ozone.owf.grails.domain
 
 import org.hibernate.CacheMode
 
-class Stack {
+class Stack implements Serializable{
     
     static String TYPE = 'stack'
     static final long serialVersionUID = 700L
