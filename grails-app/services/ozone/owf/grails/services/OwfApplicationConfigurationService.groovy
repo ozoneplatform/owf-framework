@@ -4,6 +4,8 @@ import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
 import org.ozoneplatform.appconfig.server.service.impl.ApplicationConfigurationServiceImpl
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.transaction.annotation.Transactional
+import ozone.owf.enums.OwfApplicationSetting
+
 import static ozone.owf.enums.OwfApplicationSetting.*
 import static ozone.owf.enums.OwfApplicationSettingType.*
 import ozone.owf.grails.jobs.DisableInactiveAccountsJob
@@ -146,77 +148,6 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 	@Override
 	@Transactional(readOnly=false)
 	void createRequired(){
-		createRequiredCefAuditingConfigurations()
-        createRequiredUserAccountConfigurations()
-	}
-
-
-	@Transactional(readOnly=false)
-	private void createRequiredCefAuditingConfigurations(){
-
-		def GROUP_NAME = AUDITING
-		def SUB_GROUP_NAME = ""
-		int subGroupCtr = 1
-
-		def cefEnabled = grailsApplication.config.owf.dynamic.enable.cef.logging
-
-		createOrUpdateApplicationConfig(CEF_LOGGING_ENABLED, GROUP_NAME,  "Boolean", cefEnabled, subGroupCtr++, SUB_GROUP_NAME)
-		createOrUpdateApplicationConfig(CEF_OBJECT_ACCESS_LOGGING_ENABLED, GROUP_NAME,  "Boolean", "false", subGroupCtr++, SUB_GROUP_NAME)
-
-		createOrUpdateApplicationConfig(CEF_LOG_SWEEP_ENABLED, GROUP_NAME,  "Boolean", "true", subGroupCtr++, SUB_GROUP_NAME)
-		createOrUpdateApplicationConfig(CEF_LOG_LOCATION, GROUP_NAME,  "String", "/usr/share/tomcat6", subGroupCtr++, SUB_GROUP_NAME)
-		createOrUpdateApplicationConfig(CEF_LOG_SWEEP_LOCATION, GROUP_NAME,  "String", "/var/log/cef", subGroupCtr++, SUB_GROUP_NAME)
-        createOrUpdateApplicationConfig(SECURITY_LEVEL, GROUP_NAME, "String", "", subGroupCtr, SUB_GROUP_NAME)
-	}
-
-    @Transactional(readOnly=false)
-    private void createRequiredUserAccountConfigurations(){
-        createRequiredSessionConfigurations() 
-        createRequiredInactiveAccountConfigurations()
-        createRequiredCustomBackgroundConfigurations()
-        createRequiredCustomHeaderFooterConfigurations()
-    }
-
-    //OP-2015
-    private void createRequiredCustomBackgroundConfigurations(){
-        def GROUP_NAME=BRANDING
-        def SUB_GROUP_NAME= "Custom Background"
-        int subGroupCtr = 1
-
-        // OP-2015
-        createOrUpdateApplicationConfig(CUSTOM_BACKGROUND_URL, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
-
-    }
-
-    private void createRequiredCustomHeaderFooterConfigurations() {
-        def GROUP_NAME=BRANDING
-        def SUB_GROUP_NAME = "Custom Header and Footer"
-        int subGroupCtr = 1
-
-
-        createOrUpdateApplicationConfig(CUSTOM_HEADER_URL, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
-        createOrUpdateApplicationConfig(CUSTOM_HEADER_HEIGHT, GROUP_NAME, "Integer", 0, subGroupCtr++, SUB_GROUP_NAME)
-        createOrUpdateApplicationConfig(CUSTOM_FOOTER_URL, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
-        createOrUpdateApplicationConfig(CUSTOM_FOOTER_HEIGHT, GROUP_NAME, "Integer", 0, subGroupCtr++, SUB_GROUP_NAME)
-        createOrUpdateApplicationConfig(CUSTOM_CSS_IMPORTS, GROUP_NAME, "String", "", subGroupCtr++, SUB_GROUP_NAME)
-        createOrUpdateApplicationConfig(CUSTOM_JS_IMPORTS, GROUP_NAME, "String", "", subGroupCtr, SUB_GROUP_NAME)
-    }
-
-    private void createRequiredSessionConfigurations() {
-        // OP-1103
-        def GROUP_NAME = USER_ACCOUNT_SETTINGS
-        def SUB_GROUP_NAME = "Session Control"
-        int subGroupCtr = 1
-
-        // Configuration for the Enable session control switch
-        createOrUpdateApplicationConfig(SESSION_CONTROL_ENABLED, GROUP_NAME,  "Boolean", 
-            grailsApplication.config.owf.dynamic.session.control.enabled,
-            subGroupCtr++, SUB_GROUP_NAME)
-
-        // Configuration for the Maximum sessions per user value
-        createOrUpdateApplicationConfig(SESSION_CONTROL_MAX_CONCURRENT, GROUP_NAME,  "Integer",
-            grailsApplication.config.owf.dynamic.session.control.max.concurrent,
-            subGroupCtr++, SUB_GROUP_NAME)
 
         try {
             //update spring security
@@ -228,39 +159,21 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
             }
             //this is expected in dev mode, since spring security is not set up
         }
-    }
 
-    private void createRequiredInactiveAccountConfigurations() {
-        // OP-727
-        def GROUP_NAME = USER_ACCOUNT_SETTINGS
-        def SUB_GROUP_NAME = "Inactive Accounts"
-        def subGroupCtr = 1
-
-        // Configuration for the Disable Inactive Accounts switch
-        createOrUpdateApplicationConfig(DISABLE_INACTIVE_ACCOUNTS, GROUP_NAME,  "Boolean",
-            grailsApplication.config.owf.dynamic.disable.inactive.accounts,
-            subGroupCtr++, SUB_GROUP_NAME)
-
-        // Configuration for the Inactivity Threshold value in minutes
-        createOrUpdateApplicationConfig(INACTIVITY_THRESHOLD, GROUP_NAME,  "Integer",
-            grailsApplication.config.owf.dynamic.inactivity.threshold, 
-            subGroupCtr++, SUB_GROUP_NAME)
-
-        // Configuration for the job to disable accounts interval in minutes (integer) 1 day = 1440 minutes
-        // This is currently implemented as a HIDDEN configuration (not visible in UI)
-        createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_INTERVAL, HIDDEN,  "Integer",
-            grailsApplication.config.owf.dynamic.job.disable.accounts.interval, 
-            subGroupCtr++, SUB_GROUP_NAME)
-
-        // Configuration for the Disable Job start time in hh:mm:ss  format, i.e. "23:59:59"
-        // This is currently implemented as a HIDDEN configuration (not visible in UI)
-        createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_START, HIDDEN,  "String",
-            grailsApplication.config.owf.dynamic.job.disable.accounts.start.time, 
-            subGroupCtr++, SUB_GROUP_NAME)
-
-
-        // Turn on the job if the config is set to on
         handleDisableInactiveAccountsJobChange(this.getApplicationConfiguration(DISABLE_INACTIVE_ACCOUNTS))
+	}
+
+    @Transactional(readOnly = true)
+    def checkThatConfigsExist() {
+        log.info "Doing configuration validation"
+        OwfApplicationSetting.values().each { setting ->
+            def requiredConfig = getApplicationConfiguration(setting)
+            if(!requiredConfig) {
+                log.error "The required configuration, ${setting.code}, is missing from the " +
+                    "database. Please repair the application configuration table."
+                System.exit(1)
+            }
+        }
     }
 
 	private def handleDisableInactiveAccountsJobChange(ApplicationConfiguration configItem) {

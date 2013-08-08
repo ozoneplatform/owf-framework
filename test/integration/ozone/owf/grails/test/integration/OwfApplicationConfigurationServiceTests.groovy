@@ -1,11 +1,13 @@
 package ozone.owf.grails.test.integration
 
+import org.codehaus.groovy.grails.commons.ApplicationHolder
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy
 import org.springframework.security.core.session.SessionRegistryImpl
 
 import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration;
 import ozone.owf.grails.services.OwfApplicationConfigurationService;
 import static ozone.owf.enums.OwfApplicationSetting.*
+import static ozone.owf.enums.OwfApplicationSettingType.*
 import static org.junit.Assert.assertThat
 import static org.hamcrest.CoreMatchers.*
 
@@ -13,18 +15,11 @@ public class OwfApplicationConfigurationServiceTests extends GroovyTestCase{
 	
 	OwfApplicationConfigurationService owfApplicationConfigurationService
 
-    def grailsApplication
     def quartzScheduler
 
-	//As more logic is added we can build these tests more.  For now we can just assume that there should be more than
-	//zero application configuration items
-	public void testCreateRequired(){
-		
-		 
-		 owfApplicationConfigurationService.createRequired()
-		 
-		 assertTrue(owfApplicationConfigurationService.getAllApplicationConfigurations().size() > 0)
-	}
+    protected void setUp() {
+        createRequiredConfigs()
+    }
 
     def testSessionControlConfigurations() {
 
@@ -42,10 +37,8 @@ public class OwfApplicationConfigurationServiceTests extends GroovyTestCase{
         service.concurrentSessionControlStrategy = sessionStrategy
 
         //check defaults
-        assertThat(enabledConf.value.toBoolean(), 
-            is(grailsApplication.config.owf.dynamic.session.control.enabled))
-        assertThat(maxConf.value.toInteger(), 
-            is(grailsApplication.config.owf.dynamic.session.control.max.concurrent))
+        assertThat(enabledConf.value.toBoolean(), is(true))
+        assertThat(maxConf.value.toInteger(), is(1))
 
         //test enabling
         enabledConf.value = 'true'
@@ -123,7 +116,6 @@ public class OwfApplicationConfigurationServiceTests extends GroovyTestCase{
         )
     }
 
-
     def testInactiveAccountConfigurations() {
 
         def service = owfApplicationConfigurationService
@@ -143,11 +135,11 @@ public class OwfApplicationConfigurationServiceTests extends GroovyTestCase{
 
 
         // Test initial values
-        assertThat(disabledConf.value.toBoolean(), is(grailsApplication.config.owf.dynamic.disable.inactive.accounts))
-        assertThat(thresholdConf.value.toInteger(), is(grailsApplication.config.owf.dynamic.inactivity.threshold))
-        assertThat(startConf.value, is(grailsApplication.config.owf.dynamic.job.disable.accounts.start.time))
-        assertThat(intervalConf.value.toInteger(), is(grailsApplication.config.owf.dynamic.job.disable.accounts.interval))
-
+        assertThat(disabledConf.value.toBoolean(), is(true))
+        assertThat(thresholdConf.value.toInteger(), is(90))
+        assertThat(startConf.value, is("23:59:59"))
+        assertThat(intervalConf.value.toInteger(), is(1440))
+                  JOB_DISABLE_ACCOUNTS_INTERVAL
         // Test changing a value, that the value is returned
         disabledConf.value = 'false'
         service.saveApplicationConfiguration(disabledConf)
@@ -179,5 +171,24 @@ public class OwfApplicationConfigurationServiceTests extends GroovyTestCase{
         disabledConf.value = 'false'
         service.saveApplicationConfiguration(disabledConf)
         assertNull(quartzScheduler.getJobDetail(name,group))
+    }
+
+    private void createRequiredConfigs() {
+        def group = USER_ACCOUNT_SETTINGS
+        int subGroupCtr = 0
+
+        owfApplicationConfigurationService.createOrUpdateApplicationConfig(SESSION_CONTROL_ENABLED, group,  "Boolean", "true", ++subGroupCtr, null)
+        owfApplicationConfigurationService.createOrUpdateApplicationConfig(SESSION_CONTROL_MAX_CONCURRENT, group,  "Integer", "1", ++subGroupCtr, null)
+
+        group = USER_ACCOUNT_SETTINGS
+        subGroupCtr = 0
+
+        owfApplicationConfigurationService.createOrUpdateApplicationConfig(DISABLE_INACTIVE_ACCOUNTS, group, "Boolean", "true", ++subGroupCtr, null)
+        owfApplicationConfigurationService.createOrUpdateApplicationConfig(INACTIVITY_THRESHOLD, group, "Integer", "90", ++subGroupCtr, null)
+        owfApplicationConfigurationService.createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_START, group, "String", "23:59:59", ++subGroupCtr, null)
+        owfApplicationConfigurationService.createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_INTERVAL, group, "Integer", "1440", ++subGroupCtr, null)
+
+        owfApplicationConfigurationService.createRequired()
+
     }
 }

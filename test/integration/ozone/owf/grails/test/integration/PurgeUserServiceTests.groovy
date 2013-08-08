@@ -1,15 +1,16 @@
 package ozone.owf.grails.test.integration
 
 import ozone.owf.grails.domain.Person
+import static ozone.owf.enums.OwfApplicationSetting.*
+import static ozone.owf.enums.OwfApplicationSettingType.*
 
 class PurgeUserServiceTests extends GroovyTestCase {
     def purgeUserService
 
     def testUser1
     def testUser2
-    def dummyServiceItem
-    def systemUser
     def originalUserCount
+    def owfApplicationConfigurationService
 
     protected void setUp() {
         super.setUp()
@@ -53,6 +54,7 @@ class PurgeUserServiceTests extends GroovyTestCase {
     }
 
     void testPurgeInactiveUsers() {
+        createRequiredConfigs()
         def today = new Date()
         def thresholdInDays = 90
         def inactiveUser = createPersonWithLastLogin(today.minus(thresholdInDays+1))
@@ -72,5 +74,16 @@ class PurgeUserServiceTests extends GroovyTestCase {
     private Person createPersonWithLastLogin(Date lastLoginDate) {
         Person person = Person.build(lastLogin: lastLoginDate)
         return person
+    }
+
+    private createRequiredConfigs() {
+        def group = USER_ACCOUNT_SETTINGS
+        def groupIndex = 0
+
+        owfApplicationConfigurationService.createOrUpdateApplicationConfig(DISABLE_INACTIVE_ACCOUNTS, USER_ACCOUNT_SETTINGS, "Boolean", "true", ++groupIndex, null)
+        owfApplicationConfigurationService.createOrUpdateApplicationConfig(INACTIVITY_THRESHOLD, USER_ACCOUNT_SETTINGS, "Integer", "90", ++groupIndex, null)
+        owfApplicationConfigurationService.createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_START, USER_ACCOUNT_SETTINGS, "String", "23:59:59", ++groupIndex, null)
+        owfApplicationConfigurationService.createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_INTERVAL, USER_ACCOUNT_SETTINGS, "Integer", "1440", ++groupIndex, null)
+        owfApplicationConfigurationService.handleDisableInactiveAccountsJobChange(owfApplicationConfigurationService.getApplicationConfiguration(DISABLE_INACTIVE_ACCOUNTS))
     }
 }

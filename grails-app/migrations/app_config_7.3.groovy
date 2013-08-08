@@ -39,7 +39,8 @@ databaseChangeLog = {
 
             [items: [[code: DISABLE_INACTIVE_ACCOUNTS.code, type: "Boolean", mutable: true, value: "true"],
                      [code: INACTIVITY_THRESHOLD.code, type: "Integer", mutable: true, value: "90"],
-                     [code: JOB_DISABLE_ACCOUNTS_START.code, type: "String", mutable: true, value: "23:59:59"]],
+                     [code: JOB_DISABLE_ACCOUNTS_START.code, type: "String", mutable: true, value: "23:59:59"],
+                     [code: JOB_DISABLE_ACCOUNTS_INTERVAL.code, type: "Integer", mutable: true, value: "1440"]],
              subGroupName: "Inactive Accounts"
             ]
         ].each { subGroup ->
