@@ -95,6 +95,7 @@
         initResizable: function () {
             var me = this,
                 minHeight = 125 + this.GRIPPER_HEIGHT,
+                rowHeight = 121,
                 // leave bottom 64px visible
                 maxHeight = $(window).height() - this.$container.offset().top - 64,
                 $bx;
@@ -115,7 +116,16 @@
                     me._constrain();
                 },
                 stop: function (evt, ui) {
-                    $bx = null;
+                    // Snap to the nearest row height on release. The rows are so tall that using
+                    // jQuery's grid snapping (which snaps as you drag) feels unnatural, so we snap
+                    // on release.
+                    // We snap to row height to prevent users from seeing the extra row that is
+                    // created when dragging from one page to another (OP-2054).
+                    var roundedHeight = Math.round((ui.size.height - minHeight) / rowHeight) * rowHeight + minHeight,
+                        componentsHeight = roundedHeight - me.GRIPPER_HEIGHT;
+                    ui.size.height = roundedHeight;
+                    ui.element.height(roundedHeight);
+                    me.$appcomponents.height(componentsHeight);
                     me.doLayout(evt, ui);
                 }
             });
