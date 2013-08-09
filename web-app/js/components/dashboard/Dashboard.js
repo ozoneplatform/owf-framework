@@ -610,7 +610,8 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             case 'refreshWidgetLaunchMenu':
                 return this.refreshWidgetLaunchMenu();
             case 'refreshDashboardStore': 
-            	return this.dashboardContainer.reloadDashboards();
+            	//refer to OP-442 refresh disrupts workflow and is removed for now. 
+            	//return this.dashboardContainer.reloadDashboards();
             default:
                 break;
         }
