@@ -21,6 +21,7 @@ class DashboardService extends BaseService {
     def domainMappingService
     def serviceModelService
     def widgetDefinitionService
+//    def groupService
     
     def addOrRemove(params) {
         def returnValue = [:]
@@ -66,6 +67,7 @@ class DashboardService extends BaseService {
 
     def removeGroupDashboardFromGroup(Dashboard groupDashboard, Group group) {
         domainMappingService.deleteMapping(group, RelationshipType.owns, groupDashboard)
+        purgePersonalDashboards()
     }
 
     private def getUserPrivateDashboards(user, dmParentId) {
@@ -278,7 +280,9 @@ class DashboardService extends BaseService {
         }
 
         // Get the OWF Users Group and add it to the list
+
         def allUsersGroup = Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
+//        def allUsersGroup = groupService.getAllUsersGroup()
         if (allUsersGroup) {
             groups = groups << allUsersGroup
 
@@ -291,7 +295,9 @@ class DashboardService extends BaseService {
 
         // Process admin group dashboards if this user is an admin.
         if (accountService.getLoggedInUserIsAdmin()) {
+
             def allAdminsGroup = Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
+//            def allAdminsGroup = groupService.getAllAdminsGroup()
 
             if (allAdminsGroup) {
                 // Add the admin group.
@@ -708,8 +714,11 @@ class DashboardService extends BaseService {
         // Delete all mappings for this dashboard
         domainMappingService.purgeAllMappings(personalDashboard)
 
+        println "Deleted personal dashboard $personalDashboard.name"
+
         // Delete the dashboard
         personalDashboard.delete(flush:true)
+
     }
 
     def bulkDeleteAndUpdate(params){
@@ -1269,7 +1278,89 @@ class DashboardService extends BaseService {
     }
 
     List<Group> getGroupDashboardsGroups(Dashboard groupDashboard) {
-        []
+        Group.findAll("\
+            from Group as g \
+            where g.id in \
+                 (select dm.srcId from DomainMapping as dm \
+                    where dm.srcId = g.id and dm.destId = ? and dm.srcType = 'group' and dm.relationshipType = 'owns' and dm.destType = 'dashboard') ", [groupDashboard.id])
     }
 
+    /**
+     * Delete personal dashboards for the given user to which he is no longer entitled. If group is specified restrict search to this group only,
+     * otherwise search for 'orphan' personal dashboards in all user's groups. This method is called when user is removed from some associations (e.g., a group).
+     * @param user
+     * @param group
+     * @return
+     */
+    def purgePersonalDashboards(Person user, Group group = null) {
+
+        // Get the user's list of groups
+        Set<Group> userGroups = group ? [group] : new HashSet(user.groups)
+
+        if (!group) {
+            Group allUsersGroup = Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
+//            Group allUsersGroup = groupService.getAllUsersGroup()
+            if (allUsersGroup) userGroups << allUsersGroup
+
+            if (accountService.isUserAdmin(user)) {
+                Group allAdminsGroup = Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
+//                Group allAdminsGroup = groupService.getAllAdminsGroup()
+                if (allAdminsGroup) userGroups << allAdminsGroup
+            }
+        }
+
+        // Get the list of default groups of stacks belonging to user's groups
+        List<Group> stackDefaultGroups = userGroups.collect { Group userGroup ->
+            userGroup.stacks?.collect { Stack stack ->
+                stack.findStackDefaultGroup()
+            }?.flatten()
+        }
+        // Add the stack default groups to the user group list since user has access to these stacks
+        if (stackDefaultGroups) userGroups.addAll(stackDefaultGroups.flatten())
+
+        // Get the list of group dashboards for the above groups
+        if (userGroups) {
+            List<Dashboard> groupDashboards = Dashboard.findAll(" \
+            from Dashboard as d \
+            where d.id in \
+                 (select dm.destId from DomainMapping as dm \
+                    where dm.srcType = 'group' and dm.relationshipType = 'owns' and dm.destType = 'dashboard' and dm.srcId in (:groupIds)) ", [groupIds: userGroups.collect { it.id }])
+
+            if (groupDashboards) {
+                // Find all the personal dashboards belonging to group dashboards outside of the list above
+                List<Dashboard> personalDashboards = Dashboard.findAll(" \
+                    from Dashboard as d \
+                    where d.id in \
+                         (select dm.srcId from DomainMapping as dm \
+                            where dm.srcType = 'dashboard' and dm.relationshipType = 'cloneOf' and dm.destType = 'dashboard' and dm.destId not in (:dashboardIds)) ", [dashboardIds: groupDashboards.collect { it.id }])
+
+                // Remove these personal dashboards
+                personalDashboards.each {deletePersonalDashboard(it)}
+            }
+        }
+    }
+
+    /**
+     * Remove personal dashboards to which users are no longer entitled based on removal of a stack from a group.
+     * @param stack
+     * @param group
+     */
+    def purgePersonalDashboards(Stack stack, Group group) {
+
+        Group stackDefaultGroup = stack.findStackDefaultGroup()
+
+        // List of user who will be affected by the change (all group users who do not have direct access to the stack)
+        Set<Person> users = (group.name == "OWF Users" ? new HashSet(Person.findAll()) : new HashSet(group.people)) - stackDefaultGroup.people
+
+        if (users) {
+            // Find all the personal dashboards belonging to the stack and the affected users
+            List<Dashboard> personalDashboards = Dashboard.findAll(" \
+                    from Dashboard as d \
+                    where d.stack = :stack and d.user.id in (:userIds)",
+                    [stack: stack, userIds: users.collect {it.id}])
+
+            // Remove these personal dashboards
+            personalDashboards.each {deletePersonalDashboard(it)}
+        }
+    }
 }

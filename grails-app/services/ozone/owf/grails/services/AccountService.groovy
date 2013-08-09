@@ -31,6 +31,8 @@ class AccountService {
 
     def serviceModelService
     def stackService
+    def dashboardService
+    def groupService
 
     static final ThreadLocal<Boolean> hasTemporaryAdminPrivileges = new ThreadLocal<Boolean>()
 
@@ -87,6 +89,10 @@ class AccountService {
 
     boolean isTemporaryAdmin() {
         return (hasTemporaryAdminPrivileges.get())
+    }
+
+    boolean isUserAdmin(Person user) {
+        user.authorities.find { it.authority.equals(ERoleAuthority.ROLE_ADMIN.strVal) } as boolean
     }
 
     def getLoggedInUserIsAdmin() {
@@ -315,7 +321,7 @@ class AccountService {
 
                 // Add to OWF Users group
                 if (isNewUser) {
-                    def grp = Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
+                    def grp = groupService.getAllUsersGroup()
                     if (grp) {
                         user.addToGroups(grp)
                     }
@@ -329,7 +335,7 @@ class AccountService {
         else if (params.update_action && (params.id || params.user_id))
         {
             def id = params.id ?: params.user_id
-            def user = Person.findById(id,[cache:true])
+            Person user = Person.findById(id,[cache:true])
             if (user)
             {
                 def updatedWidgets = []
@@ -412,13 +418,15 @@ class AccountService {
                     //group_ids?.each{
                     def groups = JSON.parse(params.data)
                     groups.each {
-                        def group = Group.findById(it.id.toLong(),[cache:true])
+                        Group group = Group.findById(it.id.toLong(),[cache:true])
                         if (group)
                         {
                             if (params.update_action == 'add')
                                 group.addToPeople(user)
-                            else if (params.update_action == 'remove')
+                            else if (params.update_action == 'remove') {
                                 group.removeFromPeople(user)
+                                dashboardService.purgePersonalDashboards(user, group)
+                            }
 
                             group.save(flush: true,failOnError: true)
                             updatedGroups << group
@@ -440,6 +448,7 @@ class AccountService {
                                 stack.findStackDefaultGroup().addToPeople(user)
                             else if(params.update_action == 'remove') {
                                 stackService.deleteUserFromStack(stack, user)
+                                stack.findStackDefaultGroup().removeFromPeople(user)
                             }
 
 

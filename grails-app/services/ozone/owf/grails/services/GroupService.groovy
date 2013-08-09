@@ -283,7 +283,7 @@ class GroupService {
 
     private def updateGroup(params) {
 
-        def group
+        Group group
         def returnValue = null
 
         //check for id param if exists this is an update
@@ -335,13 +335,14 @@ class GroupService {
             def user_ids = params.user_ids ? [params.user_ids].flatten() : []
 
             user_ids?.each { it ->
-                def person = Person.findById(it.toLong(),[cache:true])
+                Person person = Person.findById(it.toLong(),[cache:true])
                 if (person) {
                     if (params.update_action == 'add') {
                         group.addToPeople(person)
                     }
                     else if (params.update_action == 'remove') {
                         group.removeFromPeople(person)
+                        dashboardService.purgePersonalDashboards(person, group)
                     }
 
                     updatedPeople << person
@@ -390,7 +391,7 @@ class GroupService {
                     }
                     else if (params.update_action == 'remove') {
                         group.removeFromPeople(person)
-                        deletePersonalDashboardsForGroup(person, group)
+                        dashboardService.purgePersonalDashboards(person, group)
                     }
 
                     updatedUsers << person
@@ -432,13 +433,14 @@ class GroupService {
             def stacks = JSON.parse(params.data)
 
             stacks?.each { it ->
-                def stack = ozone.owf.grails.domain.Stack.findById(it.id.toLong(), [cache: true])
+                Stack stack = ozone.owf.grails.domain.Stack.findById(it.id.toLong(), [cache: true])
                 if (stack) {
                     if (params.update_action == 'add') {
                         group.addToStacks(stack)
                     }
                     else if (params.update_action == 'remove') {
                         group.removeFromStacks(stack)
+                        dashboardService.purgePersonalDashboards(stack, group)
                     }
 
                     updatedStacks << stack
@@ -509,6 +511,14 @@ class GroupService {
         }
 
         return [success: true, data: groups]
+    }
+
+    Group getAllUsersGroup() {
+        Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
+    }
+
+    Group getAllAdminsGroup() {
+        Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
     }
 
     private def ensureAdmin() {

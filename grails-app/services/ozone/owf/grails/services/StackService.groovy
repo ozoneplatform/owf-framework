@@ -293,6 +293,7 @@ class StackService {
                                 removeUserStackDashboards(user, stack, group)
                             }
                             stack.removeFromGroups(group)
+                            dashboardService.purgePersonalDashboards(stack, group)
                         }
 
                         updatedGroups << group
@@ -314,8 +315,7 @@ class StackService {
                         if (params.update_action == 'add') {
                             stackDefaultGroup.addToPeople(user)
                         } else if (params.update_action == 'remove') {
-                            //Remove all references to stack for all user's dashboards in the stack
-                            removeUserStackDashboards(user, stack, stackDefaultGroup)
+                            deleteUserFromStack(stack, user)
                             stackDefaultGroup.removeFromPeople(user)
                         }
 
@@ -463,30 +463,46 @@ class StackService {
         if(user == null) {
             user = accountService.getLoggedInUser();
         }
-        def stackDefaultGroup = stack.findStackDefaultGroup()
 
-        stackDefaultGroup.removeFromPeople(user)
+        boolean userAssignedToStackThroughGroup = userAssignedToStackThroughGroup(stack, user)
 
-        // Remove all user dashboards that are in the stack
-        def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
-        userStackDashboards?.each { userStackDashboard ->
-            dashboardService.deletePersonalDashboard(userStackDashboard)
+        if (!userAssignedToStackThroughGroup) {
+            def stackDefaultGroup = stack.findStackDefaultGroup()
+            stackDefaultGroup.removeFromPeople(user)
+
+            // Remove all user dashboards that are in the stack
+            def userStackDashboards = Dashboard.findAllByUserAndStack(user, stack)
+            userStackDashboards?.each { userStackDashboard ->
+                dashboardService.deletePersonalDashboard(userStackDashboard)
+            }
         }
         stack
+    }
+
+    boolean userAssignedToStackThroughGroup(Stack stack, Person user) {
+        def stackDefaultGroup = stack.findStackDefaultGroup()
+        Set<Group> groups = []
+        groups.addAll(stack.groups)
+        groups.remove(stackDefaultGroup)
+        groups.add(groupService.allUsersGroup)
+        if (accountService.isUserAdmin(user)) groups.add(groupService.allAdminsGroup)
+
+        groups.find { Group group ->
+            group != stackDefaultGroup && group.people.contains(user)
+        } as boolean
     }
 
     def isStackOwner(Stack stack) {
         stack?.owner?.id == accountService.getLoggedInUser()?.id
     }
 
-    private static boolean stackOwnerCanDelete(Stack stack) {
-        boolean hasPublishedDashboards = Dashboard.findWhere(user: null, stack: stack, publishedToStore: true)
-        !hasPublishedDashboards
-    }
+    /**
+     * Disassociates the given stack and group. Deletes all personal dashboards of the group's user that belong to that stack.
+     * @param stack
+     * @param group
+     */
+    def void removeStackFromGroup(Stack stack, Group group) {
 
-    private static boolean stackHasAtMostOneUser(Stack stack) {
-        Group defaultStackGroup = stack?.groups?.find { it.stackDefault }
-        defaultStackGroup.people == null || defaultStackGroup.people?.size() <= 1
     }
 
     /**
@@ -512,8 +528,6 @@ class StackService {
             // Handle user deletion of their stack association and data.
             boolean isAdmin = accountService.getLoggedInUserIsAdmin()
             boolean adminEnabled = (params.adminEnabled == true  || params.adminEnabled == 'true')
-            boolean isOwner = isStackOwner(stack)
-            boolean ownerCanDelete = stackOwnerCanDelete(stack)
             if ((isAdmin && adminEnabled)) {
                 // Handle administrative removal of stacks.
                 if (stack) deleteStack(stack)
