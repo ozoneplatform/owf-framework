@@ -215,9 +215,34 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 scope: this.dashboardContainer,
                 handler: this.dashboardContainer.showAppComponentsView,
                 listeners: {
-                    afterrender: {
+                    disable: {
                         fn: function(btn) {
+                            if (Ext.getCmp('appComponentsBtnToolTip')) {
+                                Ext.getCmp('appComponentsBtnToolTip').destroy();
+                            }
+                            
                             Ext.create('Ext.tip.ToolTip', {
+                                id: 'appComponentsBtnToolTip',
+                                target: btn.getEl().id,
+                                html: Ozone.layout.tooltipString.addWidgetsContentDisabled,
+                                anchor: 'bottom',
+                                anchorToTarget: true,
+                                anchorOffset: -5,
+                                mouseOffset: [5, 0],
+                                width: 500,
+                                maxWidth: 500
+                            });
+                        }
+                    },
+
+                    enable: {
+                        fn: function(btn) {
+                            if (Ext.getCmp('appComponentsBtnToolTip')) {
+                                Ext.getCmp('appComponentsBtnToolTip').destroy();
+                            }
+
+                            Ext.create('Ext.tip.ToolTip', {
+                                id: 'appComponentsBtnToolTip',
                                 target: btn.getEl().id,
                                 title: Ozone.layout.tooltipString.addWidgetsTitle,
                                 html: Ozone.layout.tooltipString.addWidgetsContent,
