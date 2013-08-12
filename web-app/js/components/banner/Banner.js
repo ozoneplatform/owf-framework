@@ -168,7 +168,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             }),
             Ext.apply(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER, {
                 scope: this.dashboardContainer,
-                fn: this.dashboardContainer.showDashboardSwitcherButtonHandler
+                fn: this.dashboardContainer.showMyAppsWindowButtonHandler
             }),
             Ext.apply(Ozone.components.keys.HotKeys.MARKETPLACE, {
                 scope: this,
@@ -195,7 +195,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 cls: 'bannerBtn myAppsBtn',
                 scale: 'banner-large',
                 scope: this.dashboardContainer,
-                handler: this.dashboardContainer.showDashboardSwitcherButtonHandler,
+                handler: this.dashboardContainer.showMyAppsWindowButtonHandler,
                 listeners: {
                     afterrender: {
                         fn: me.myAppsAfterRender,
@@ -366,8 +366,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     myAppsAfterRender: function(btn) {
         Ext.create('Ext.tip.ToolTip', {
             target: btn.getEl().id,
-            title: Ozone.layout.tooltipString.dashboardSwitcherTitle,
-            html: Ozone.layout.tooltipString.dashboardSwitcherContent,
+            title: Ozone.layout.tooltipString.myAppsWindowTitle,
+            html: Ozone.layout.tooltipString.myAppsWindowContent,
             anchor: 'bottom',
             anchorToTarget: true,
             anchorOffset: -5,

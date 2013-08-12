@@ -10,7 +10,7 @@ $system-window-over-background-color: darken($system-window-background-color, 15
     $ui-border-color: $system-window-background-color,
     $ui-inner-border-color: null,
     
-    $ui-header-color: $dashboard-switcher-dashboard-text-color,
+    $ui-header-color: $my-apps-window-dashboard-text-color,
     $ui-header-font-size: $owf-font-size,
     $ui-header-font-weight: $window-header-font-weight,
     
@@ -24,7 +24,6 @@ $system-window-over-background-color: darken($system-window-background-color, 15
 .x-window-system-window {
     padding: 24px 24px 24px 24px;
     
-    //@include border-radius($dashboard-switcher-body-radius);
     .x-window-header {
         @include border-top-radius($system-window-body-radius);
         background-image: none;

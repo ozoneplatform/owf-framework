@@ -146,8 +146,8 @@ Ozone.layout.tooltipString = {
 	addWidgetsTitle: 				'App Components (Alt+Shift+F)',
 	addWidgetsContent: 				'This button opens or closes the App Components, allowing users to add App Components to their current page.',
     addWidgetsContentDisabled:      'You must open an OZONE App before starting an App Component. To do this, click My Apps, start an app and then open App Components.',
-    dashboardSwitcherTitle:			'My Apps (Alt+Shift+C)',
-	dashboardSwitcherContent:		'This opens My Apps, allowing users to Start and Manage their Applications.',
+    myAppsWindowTitle:			'My Apps (Alt+Shift+C)',
+	myAppsWindowContent:		'This opens My Apps, allowing users to Start and Manage their Applications.',
 	marketplaceWindowTitle:			'Store (Alt+Shift+M)',
 	marketplaceWindowContent:		'This button opens the Store window, allowing users to discover App Components in Apps Mall and add them to their App Components.',
     metricWindowTitle:		    	'Metric (Alt+Shift+R)',
@@ -271,11 +271,11 @@ Ozone.ux.DashboardMgmtString = {
 if (Ozone.config &&
     Ozone.config.currentTheme &&
     Ozone.config.currentTheme.themeName) {
-    Ozone.ux.DashboardMgmtString.dashboardIconPath = '/themes/' + Ozone.config.currentTheme.themeName + '.theme/images/dashboardswitcher/DashboardIcon64.png';
-    Ozone.ux.DashboardMgmtString.stackIconPath = '/themes/' + Ozone.config.currentTheme.themeName + '.theme/images/dashboardswitcher/StacksIcon64.png';
+    Ozone.ux.DashboardMgmtString.dashboardIconPath = '/themes/' + Ozone.config.currentTheme.themeName + '.theme/images/myappswindow/DashboardIcon64.png';
+    Ozone.ux.DashboardMgmtString.stackIconPath = '/themes/' + Ozone.config.currentTheme.themeName + '.theme/images/myappswindow/StacksIcon64.png';
 } else {
-    Ozone.ux.DashboardMgmtString.dashboardIconPath = '/themes/common/images/dashboardswitcher/DashboardIcon64.png';
-    Ozone.ux.DashboardMgmtString.stackIconPath = '/themes/common/images/dashboardswitcher/StacksIcon64.png';
+    Ozone.ux.DashboardMgmtString.dashboardIconPath = '/themes/common/images/myappswindow/DashboardIcon64.png';
+    Ozone.ux.DashboardMgmtString.stackIconPath = '/themes/common/images/myappswindow/StacksIcon64.png';
 }
 
 Ozone.layout.AccordionWindowManagerString = {

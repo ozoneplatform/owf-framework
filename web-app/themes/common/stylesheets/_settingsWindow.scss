@@ -44,9 +44,9 @@
         //its contents
         @include box-sizing(content-box);
 
-        @include border-radius($dashboard-switcher-body-radius);
+        @include border-radius($my-apps-window-body-radius);
         background-color: $system-window-background-color;
-        border-color: $dashboard-switcher-dashboard-border-color;
+        border-color: $my-apps-window-dashboard-border-color;
         align: center;
         float: left;
         margin: 0px 7px 0px 0px;
@@ -75,7 +75,7 @@
         }
         .thumb-text {
             margin-top: 5px;
-            color: $dashboard-switcher-dashboard-text-color;
+            color: $my-apps-window-dashboard-text-color;
             height: 2.5em;
             width: 6em;
 
@@ -90,7 +90,7 @@
         background-color: $system-window-over-background-color;
         border-color: $system-window-over-background-color;
         .thumb-text {
-            color: $dashboard-switcher-dashboard-over-text-color;
+            color: $my-apps-window-dashboard-over-text-color;
         }
     }
 

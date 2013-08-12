@@ -40,6 +40,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     // state of app component menu
     appComponentsViewState: null,
 
+    MY_APPS_WINDOW_ID: 'my-apps-window',
+
     // private
     initComponent: function() {
         var me = this;
@@ -927,19 +929,19 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
     },
 
-    showDashboardSwitcherButtonHandler: function() {
-        return this.showDashboardSwitcher(false);
+    showMyAppsWindowButtonHandler: function() {
+        return this.showMyAppsWind(false);
     },
 
-    showDashboardSwitcherToSelectForWidgetLaunch: function() {
-        return this.showDashboardSwitcher(true);
+    showMyAppsWindToSelectForWidgetLaunch: function() {
+        return this.showMyAppsWind(true);
     },
 
-    showDashboardSwitcher: function(hideLockedDashboards) {
+    showMyAppsWind: function(hideLockedDashboards) {
         var me = this,
-            dashboardSwitcherId = 'dashboard-switcher',
-            dashboardSwitcher = Ext.getCmp(dashboardSwitcherId),
-            dashboardSwitcherDeferred = $.Deferred(),
+            myAppsWindowId = this.MY_APPS_WINDOW_ID,
+            myAppsWindow = Ext.getCmp(myAppsWindowId),
+            myAppsWindowDeferred = $.Deferred(),
 
             //perform the logic of actually creating and displaying the window
             show = function() {
@@ -947,12 +949,12 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 // OP-1355
                 // Re-render dashboard switcher and its elements
                 // in case locked dashboards have to be hidden
-                if (dashboardSwitcher) {
-                    dashboardSwitcher.destroy();
+                if (myAppsWindow) {
+                    myAppsWindow.destroy();
                 }
 
-                dashboardSwitcher = Ext.widget('myappswindow', {
-                    id: dashboardSwitcherId,
+                myAppsWindow = Ext.widget('myappswindow', {
+                    id: myAppsWindowId,
                     dashboardContainer: me,
                     activeDashboard: me.activeDashboard,
                     dashboardStore: me.dashboardStore,
@@ -960,9 +962,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     plugins: new Ozone.components.keys.HotKeyComponent(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER)
                 });
 
-                dashboardSwitcher.activeDashboard = me.activeDashboard;
-                dashboardSwitcher.show().center();
-                dashboardSwitcherDeferred.resolve(dashboardSwitcher);
+                myAppsWindow.activeDashboard = me.activeDashboard;
+                myAppsWindow.show().center();
+                myAppsWindowDeferred.resolve(myAppsWindow);
 
                 me.loadMask.hide();
             };
@@ -972,8 +974,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
 
         // If it already is open, close it
-        if (dashboardSwitcher && dashboardSwitcher.isVisible()) {
-            dashboardSwitcher.close();
+        if (myAppsWindow && myAppsWindow.isVisible()) {
+            myAppsWindow.close();
         } else {
             me.loadMask.show();
 
@@ -985,9 +987,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                 //if necessary, refresh the dashboards before calling show
                 if (me.dashboardsNeedRefresh) {
-                    if (dashboardSwitcher) {
-                        dashboardSwitcher.destroy();
-                        dashboardSwitcher = null;
+                    if (myAppsWindow) {
+                        myAppsWindow.destroy();
+                        myAppsWindow = null;
                     }
 
                     me.dashboardsNeedRefresh = false;
@@ -998,14 +1000,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 }
             }, 0);
         }
-        return dashboardSwitcherDeferred.promise();
+        return myAppsWindowDeferred.promise();
     },
 
-    destroyDashboardSwitcher: function() {
-        var dashboardSwitcherId = 'dashboard-switcher',
-            dashboardSwitcher = Ext.getCmp(dashboardSwitcherId);
+    destroyMyAppsWindow: function() {
+        var myAppsWindowId = this.MY_APPS_WINDOW_ID,
+            myAppsWindow = Ext.getCmp(myAppsWindowId);
 
-        dashboardSwitcher && dashboardSwitcher.destroy();
+        myAppsWindow && myAppsWindow.destroy();
     },
 
     // Displays dashboard switcher and returns a promise which is resolved only after the user selects a dashboard
@@ -1015,11 +1017,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             dashboardActivatedDeferred = $.Deferred();
 
         // Show the switcher
-        var dashboardSwitcherPromise = this.showDashboardSwitcherToSelectForWidgetLaunch();
+        var myAppsWindowPromise = this.showMyAppsWindToSelectForWidgetLaunch();
 
-        dashboardSwitcherPromise.done(function(dashboardSwitcher) {
+        myAppsWindowPromise.done(function(myAppsWindow) {
             // Dashboard selection promise will resolve if a dashboard is selected in a switcher
-            var dashboardSelectionPromise = dashboardSwitcher.getDashboardSelectionPromise();
+            var dashboardSelectionPromise = myAppsWindow.getDashboardSelectionPromise();
             dashboardSelectionPromise.done(function(dashboardGuid) {
                 if (me.activeDashboard.guid === dashboardGuid) {
                     // The user selected the same dashboard
@@ -1789,7 +1791,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             }
         }
 
-        this.destroyDashboardSwitcher();
+        this.destroyMyAppsWindow();
     },
 
     updateDashboardsFromStore: function(storeRecords, callbackOptions, loadSuccess, dashboardGuidToActivate) {
@@ -1818,7 +1820,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         var dashPanel = this.getDashboardCardPanel();
         dashPanel.removeAll(true);
 
-        this.destroyDashboardSwitcher();
+        this.destroyMyAppsWindow();
 
         // Without the timeout, updateDashboardsFromStore causes problems when dashboards are restored 
         // because widget destruction is delayed by 100ms to prevent memory leaks.
@@ -1917,7 +1919,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             json: json,
             saveAsNew: createOrUpdate == 'create' ? true : false,
             onSuccess: function(json) {
-                me.destroyDashboardSwitcher();
+                me.destroyMyAppsWindow();
                 var dashboard = me.dashboardCreated(json);
                 success && success(json, dashboard);
 

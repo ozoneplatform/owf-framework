@@ -1,0 +1,89 @@
+$my-apps-window-header-font-size: 12px !default;
+$my-apps-window-header-height: 36px;
+
+$dashboard-width: 115px;
+$dashboard-height: 130px;
+
+$dashboard-rows: 3;
+$dashboard-columns: 6;
+
+$dashboard-padding-top: 10px;
+$dashboard-margin-top: 0px;
+$dashboard-margin-left: 5px;
+$dashboard-margin-right: 5px;
+$dashboard-margin-bottom: 5px;
+
+$my-apps-window-title-color: #969696 !default;
+$my-apps-window-descriptor-color: #C1C1C1 !default;
+$my-apps-window-details-btn-color: #8BFEFF !default;
+
+$dashboard-mini-slider-dashboard-width: 115px;
+$dashboard-mini-slider-dashboard-margin-top: 5px;
+$dashboard-mini-slider-dashboard-margin-left: 2px;
+$dashboard-mini-slider-dashboard-margin-right: 9px;
+$dashboard-mini-slider-height: $dashboard-height + $dashboard-padding-top;
+$dashboard-mini-slider-width: 
+	($dashboard-mini-slider-dashboard-width + 
+	 $dashboard-mini-slider-dashboard-margin-left + 
+	 $dashboard-mini-slider-dashboard-margin-right) * 5;
+
+$dashboard-mini-slider-height-one-slide: 150px;
+
+$dashboard-mini-slider-viewport-height: $dashboard-mini-slider-height + $dashboard-padding-top;
+$dashboard-mini-slider-viewport-height-ie7: $dashboard-mini-slider-viewport-height + 5px;
+$dashboard-mini-slider-body-radius: 7px !default;
+
+$dashboard-mini-slider-background-color: #272727 !default;
+
+$my-apps-window-body-radius: 7px !default;
+$my-apps-window-background-color: $owf-base-color !default;
+$my-apps-window-opacity: 0.90 !default;
+
+$dashboard-item-body-radius: 7px !default;
+
+$my-apps-window-slider-expanded-height-extra: 30px;
+
+$my-apps-window-slider-width: 
+	($dashboard-width + $dashboard-margin-right + $dashboard-margin-left) * 
+	$dashboard-columns;
+
+$my-apps-window-slider-height: 
+	(($dashboard-height + $dashboard-margin-bottom + $dashboard-padding-top) * $dashboard-rows) +
+	$my-apps-window-slider-expanded-height-extra;
+
+$my-apps-window-slider-expanded-height: 
+	$my-apps-window-slider-height + 
+	$dashboard-mini-slider-height + 
+	$my-apps-window-slider-expanded-height-extra;
+
+$my-apps-window-slider-min-height: $my-apps-window-slider-height;
+$my-apps-window-slider-max-height: $my-apps-window-slider-expanded-height;
+
+$my-apps-window-dashboard-background-color: $my-apps-window-background-color !default;
+$my-apps-window-dashboard-over-background-color: #141414 !default;
+$my-apps-window-dashboard-selected-background-color: black !default;
+
+$my-apps-window-stack-over-background-color: #323232 !default;
+$my-apps-window-stack-selected-background-color: #272727 !default;
+
+$my-apps-window-dashboard-selected-box-shadow-color: black !default;
+
+$my-apps-window-dashboard-border-color: $my-apps-window-background-color !default;
+$my-apps-window-dashboard-over-border-color: $my-apps-window-dashboard-over-background-color !default;
+$my-apps-window-dashboard-selected-border-color: $my-apps-window-dashboard-selected-background-color !default;
+
+$my-apps-window-dashboard-text-color: getHighContrastColor($my-apps-window-background-color) !default;
+$my-apps-window-dashboard-over-text-color: getHighContrastColor($my-apps-window-dashboard-over-background-color) !default;
+$my-apps-window-dashboard-selected-text-color: getHighContrastColor($my-apps-window-dashboard-selected-background-color) !default;
+
+$my-apps-window-layout-default-icon: theme-image($theme-name, 'myappswindow/DashboardIcon64.png') !default;
+
+$my-apps-window-layout-stack-default-icon: theme-image($theme-name, 'myappswindow/StacksIcon64.png') !default;
+
+$my-apps-window-tooltip-heading-color: #acd2ed !default;
+$my-apps-window-tooltip-label-color: #ababab !default;
+
+$my-apps-window-share-color: #6ba6dd !default;
+$my-apps-window-restore-color: #dd8f08 !default;
+$my-apps-window-edit-color: #99d460 !default;
+$my-apps-window-delete-color: #b3292d !default;

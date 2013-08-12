@@ -13,10 +13,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     closable: true,
     title: 'My Apps',
     cls: 'system-window',
+
     resizable: false,
     draggable: false,
-
-    viewId: 'dashboard-switcher-dashboard-view',
 
     width: 780,
     height: 600,
@@ -104,7 +103,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         me._deletedStackOrDashboards = [];
 
         me.tpl = new Ext.XTemplate(
-            '<div class="dashboard-switcher-descriptor">Click to start an App. To edit or delete, hover over an app and select the information icon.</div>',
+            '<div class="my-apps-window-descriptor">Click to start an App. To edit or delete, hover over an app and select the information icon.</div>',
             '<div class="all-dashboards">',
                 '<tpl for=".">',
                     '<div id="{[this.getName(values)+this.getId(values)]}" class="{[this.getClass(values)]}" tabindex="0" data-{[this.getName(values)]}-id="{[this.getId(values)]}">',
@@ -137,7 +136,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 var url = values.isStack ? values.imageUrl : values.iconImageUrl;
 
                 if (url && !Ext.isEmpty(Ext.String.trim(url))) {
-                    return '<div class="thumb" style="background-image: url(' + encodeURI(decodeURI(url)) + ') !important"></div>';
+                    return '<img class="thumb" src="' + encodeURI(decodeURI(url)) + '"/>';
                 } else {
                     return '<div class="thumb default"></div>';
                 }
