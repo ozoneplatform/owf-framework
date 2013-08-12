@@ -609,9 +609,24 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 return Ext.JSON.encode(data);
             case 'refreshWidgetLaunchMenu':
                 return this.refreshWidgetLaunchMenu();
-            case 'refreshDashboardStore': 
-            	//refer to OP-442 refresh disrupts workflow and is removed for now. 
-            	//return this.dashboardContainer.reloadDashboards();
+            case 'refreshDashboardStore':
+                var title = config.title || Ozone.layout.DialogMessages.refreshRequiredTitle;
+                
+                $.pnotify({
+                    title: title,
+                    text: Ozone.layout.DialogMessages.refreshRequiredBody,
+                    type: 'success',
+                    addclass: "stack-bottomright",
+                    stack: {
+                        "dir1": "up",
+                        "dir2": "left",
+                        "firstpos1": 25,
+                        "firstpos2": 25
+                    },
+                    history: false,
+                    sticker: false,
+                    icon: false
+                });
             default:
                 break;
         }

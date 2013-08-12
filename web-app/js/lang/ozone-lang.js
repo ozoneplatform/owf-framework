@@ -437,7 +437,9 @@ Ozone.layout.DialogMessages = {
     dashboardLockAlert: 'This Page is locked. App Components cannot be added or removed from a locked Page.',
     closeBackgroundWidgetWarning: ' is a background widget. You won’t see it on your screen because it runs behind the scenes.<br/><br/>To close the widget, click OK.',
     launchWidgetTitle: 'Launch Widget',
-    launchWidgetAlert: 'Choose the dashboard where the widget will open.'
+    launchWidgetAlert: 'Choose the dashboard where the widget will open.',
+    refreshRequiredTitle: 'Refresh Required',
+    refreshRequiredBody: "Refresh your browser to see changes you've made in the My Apps window."
 };
 
 Ozone.layout.ThemeSwitcherWindowConstants = {
