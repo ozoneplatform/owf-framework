@@ -194,12 +194,8 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
         }
     }
 
-    //Allows retrieval of a String configuration value using the name of the setting (vice the setting)
-    @Transactional (readOnly=true)
-    public String valueOf(String settingKey) {
-        def setting = ozone.owf.enums.OwfApplicationSetting."$settingKey"
-        ApplicationConfiguration config = getApplicationConfiguration(setting)
-
-        config.value
+    @Transactional (readOnly = true)
+    public String getApplicationSecurityLevel() {
+        return valueOf(SECURITY_LEVEL) ?: ""
     }
 }
