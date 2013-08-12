@@ -703,8 +703,12 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 me.activateDashboard(me.activeDashboard.id, true, me.activeDashboard.stackContext);
                 if (me.activeDashboard.configRecord.get('locked') || me.activeDashboard.configRecord.isMarketplaceDashboard()) {
                     me.getBanner().disableAppComponentsBtn();
+                    me.getBanner().getUserMenuBtn().disableAdminMenuItem();
+                    me.getBanner().getUserMenuBtn().disableMetricsMenuItem();
                 } else {
                     me.getBanner().enableAppComponentsBtn();
+                    me.getBanner().getUserMenuBtn().enableAdminMenuItem();
+                    me.getBanner().getUserMenuBtn().enableMetricsMenuItem();
                 }
 
                 if (me.activeDashboard.configRecord.isMarketplaceDashboard()) {

@@ -917,8 +917,12 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
         if (this.configRecord.get('locked') || this.configRecord.isMarketplaceDashboard()) {
             banner.disableAppComponentsBtn();
+            banner.getUserMenuBtn().disableAdminMenuItem();
+            banner.getUserMenuBtn().disableMetricsMenuItem();
         } else {
             banner.enableAppComponentsBtn();
+            banner.getUserMenuBtn().enableAdminMenuItem();
+            banner.getUserMenuBtn().enableMetricsMenuItem();
         }
 
         // hide all widgets to fire hide events on Widget State

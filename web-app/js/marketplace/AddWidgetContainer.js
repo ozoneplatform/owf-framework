@@ -415,6 +415,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                         self.dashboardContainer.activeDashboard.config.locked = true;
                         self.dashboardContainer.saveDashboard(self.dashboardContainer.activeDashboard, 'update', function() {});
                         self.dashboardContainer.getBanner().disableAppComponentsBtn();
+                        self.dashboardContainer.getBanner().getUserMenuBtn().disableAdminMenuItem();
+                        self.dashboardContainer.getBanner().getUserMenuBtn().disableMetricsMenuItem();
                     }, self.dashboardContainer, {/*delay:2000,*/ single:true});
                     self.dashboardContainer.activateDashboard(json.guid);
                 });
