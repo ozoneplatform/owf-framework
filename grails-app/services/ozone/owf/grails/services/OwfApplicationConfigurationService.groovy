@@ -196,6 +196,6 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 
     @Transactional (readOnly = true)
     public String getApplicationSecurityLevel() {
-        return valueOf(SECURITY_LEVEL) ?: ""
+        return this.valueOf(SECURITY_LEVEL) ?: ""
     }
 }
