@@ -1299,12 +1299,10 @@ class DashboardService extends BaseService {
 
         if (!group) {
             Group allUsersGroup = Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
-//            Group allUsersGroup = groupService.getAllUsersGroup()
             if (allUsersGroup) userGroups << allUsersGroup
 
             if (accountService.isUserAdmin(user)) {
                 Group allAdminsGroup = Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
-//                Group allAdminsGroup = groupService.getAllAdminsGroup()
                 if (allAdminsGroup) userGroups << allAdminsGroup
             }
         }
@@ -1330,9 +1328,10 @@ class DashboardService extends BaseService {
                 // Find all the personal dashboards belonging to group dashboards outside of the list above
                 List<Dashboard> personalDashboards = Dashboard.findAll(" \
                     from Dashboard as d \
-                    where d.id in \
+                    where d.user.id = (:userId) and \
+                        d.id in \
                          (select dm.srcId from DomainMapping as dm \
-                            where dm.srcType = 'dashboard' and dm.relationshipType = 'cloneOf' and dm.destType = 'dashboard' and dm.destId not in (:dashboardIds)) ", [dashboardIds: groupDashboards.collect { it.id }])
+                            where dm.srcType = 'dashboard' and dm.relationshipType = 'cloneOf' and dm.destType = 'dashboard' and dm.destId in (:dashboardIds)) ", [userId: user.id, dashboardIds: groupDashboards.collect { it.id }])
 
                 // Remove these personal dashboards
                 personalDashboards.each {deletePersonalDashboard(it)}

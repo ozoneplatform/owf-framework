@@ -28,6 +28,8 @@ beans = {
                     autoRoles = [ERoleAuthority.ROLE_USER.strVal]
                     serviceModelService = ref('serviceModelService')
                     stackService = ref('stackService')
+                    dashboardService = ref('dashboardService')
+                    groupService = ref('groupService')
                 }
                 break
             case "testAdmin1":
@@ -38,6 +40,8 @@ beans = {
                     autoRoles = [ERoleAuthority.ROLE_USER.strVal, ERoleAuthority.ROLE_ADMIN.strVal]
                     serviceModelService = ref('serviceModelService')
                     stackService = ref('stackService')
+                    dashboardService = ref('dashboardService')
+                    groupService = ref('groupService')
                 }
                 break
             case "testAdmin2":
@@ -48,6 +52,8 @@ beans = {
                     autoRoles = [ERoleAuthority.ROLE_USER.strVal, ERoleAuthority.ROLE_ADMIN.strVal]
                     serviceModelService = ref('serviceModelService')
                     stackService = ref('stackService')
+                    dashboardService = ref('dashboardService')
+                    groupService = ref('groupService')
 
                 }
                 break
@@ -56,6 +62,8 @@ beans = {
                 accountService(AccountService) {
                     serviceModelService = ref('serviceModelService')
                     stackService = ref('stackService')
+                    dashboardService = ref('dashboardService')
+                    groupService = ref('groupService')
                 }
                break
         }
@@ -63,6 +71,8 @@ beans = {
         accountService(AccountService) {
             serviceModelService = ref('serviceModelService')
             stackService = ref('stackService')
+            dashboardService = ref('dashboardService')
+            groupService = ref('groupService')
         }
     }
 
