@@ -1349,7 +1349,7 @@ class DashboardService extends BaseService {
         Group stackDefaultGroup = stack.findStackDefaultGroup()
 
         // List of user who will be affected by the change (all group users who do not have direct access to the stack)
-        Set<Person> users = (group.name == "OWF Users" ? new HashSet(Person.findAll()) : new HashSet(group.people)) - stackDefaultGroup.people
+        Set<Person> users = (group.name == "OWF Users" ? new HashSet(Person.findAll()) : (group.people ? new HashSet(group.people) : new HashSet())) - stackDefaultGroup.people
 
         if (users) {
             // Find all the personal dashboards belonging to the stack and the affected users

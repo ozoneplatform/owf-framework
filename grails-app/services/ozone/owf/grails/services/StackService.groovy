@@ -488,7 +488,7 @@ class StackService {
         if (accountService.isUserAdmin(user)) groups.add(groupService.allAdminsGroup)
 
         groups.find { Group group ->
-            group != stackDefaultGroup && group.people.contains(user)
+            group != stackDefaultGroup && group && group.people && group.people.contains(user)
         } as boolean
     }
 
