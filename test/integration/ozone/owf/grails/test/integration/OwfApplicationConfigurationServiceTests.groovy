@@ -42,7 +42,7 @@ public class OwfApplicationConfigurationServiceTests extends GroovyTestCase{
 
         //test enabling
         enabledConf.value = 'true'
-        service.saveApplicationConfiguration(enabledConf)
+        enabledConf = service.saveApplicationConfiguration(enabledConf)
         assertThat(sessionStrategy.getMaximumSessionsForThisUser(null), is(1))
         assertThat (
             service.getApplicationConfiguration(
@@ -57,7 +57,7 @@ public class OwfApplicationConfigurationServiceTests extends GroovyTestCase{
 
         //test changing number of concurrent session while enabled
         maxConf.value = '2'
-        service.saveApplicationConfiguration(enabledConf)
+        maxConf = service.saveApplicationConfiguration(maxConf)
         assertThat(sessionStrategy.getMaximumSessionsForThisUser(null), is(2))
         assertThat (
             service.getApplicationConfiguration(
@@ -72,7 +72,7 @@ public class OwfApplicationConfigurationServiceTests extends GroovyTestCase{
 
         //test disabling 
         enabledConf.value = 'false'
-        service.saveApplicationConfiguration(enabledConf)
+        enabledConf = service.saveApplicationConfiguration(enabledConf)
         assertThat(sessionStrategy.getMaximumSessionsForThisUser(null), is(-1))
         assertThat (
             service.getApplicationConfiguration(
@@ -87,7 +87,7 @@ public class OwfApplicationConfigurationServiceTests extends GroovyTestCase{
 
         //test changing number of concurrent sessions while disabled
         maxConf.value = '3'
-        service.saveApplicationConfiguration(enabledConf)
+        maxConf = service.saveApplicationConfiguration(maxConf)
         assertThat(sessionStrategy.getMaximumSessionsForThisUser(null), is(-1))
         assertThat (
             service.getApplicationConfiguration(
@@ -102,7 +102,7 @@ public class OwfApplicationConfigurationServiceTests extends GroovyTestCase{
 
         //test re-enabling after having changed the max
         enabledConf.value = 'true'
-        service.saveApplicationConfiguration(enabledConf)
+        enabledConf = service.saveApplicationConfiguration(enabledConf)
         assertThat(sessionStrategy.getMaximumSessionsForThisUser(null), is(3))
         assertThat (
             service.getApplicationConfiguration(
@@ -142,34 +142,34 @@ public class OwfApplicationConfigurationServiceTests extends GroovyTestCase{
                   JOB_DISABLE_ACCOUNTS_INTERVAL
         // Test changing a value, that the value is returned
         disabledConf.value = 'false'
-        service.saveApplicationConfiguration(disabledConf)
+        disabledConf = service.saveApplicationConfiguration(disabledConf)
         assertThat(service.getApplicationConfiguration(DISABLE_INACTIVE_ACCOUNTS).value.toBoolean(), is(false))
 
         disabledConf.value = 'true'
-        service.saveApplicationConfiguration(disabledConf)
+        disabledConf = service.saveApplicationConfiguration(disabledConf)
         assertThat(service.getApplicationConfiguration(DISABLE_INACTIVE_ACCOUNTS).value.toBoolean(), is(true))
 
         thresholdConf.value = '50'
-        service.saveApplicationConfiguration(disabledConf)
+        thresholdConf = service.saveApplicationConfiguration(thresholdConf)
         assertThat(service.getApplicationConfiguration(INACTIVITY_THRESHOLD).value.toInteger(), is(50))
 
         thresholdConf.value = '90'
-        service.saveApplicationConfiguration(disabledConf)
+        thresholdConf = service.saveApplicationConfiguration(thresholdConf)
         assertThat(service.getApplicationConfiguration(INACTIVITY_THRESHOLD).value.toInteger(), is(90))
 
         // Test that setting the disabled flag starts and stops the job
 
         disabledConf.value = 'false'
-        service.saveApplicationConfiguration(disabledConf)
+        disabledConf = service.saveApplicationConfiguration(disabledConf)
         assertNull(quartzScheduler.getJobDetail(name,group))
 
         disabledConf.value = 'true'
-        service.saveApplicationConfiguration(disabledConf)
+        disabledConf = service.saveApplicationConfiguration(disabledConf)
         assertNotNull(quartzScheduler.getJobDetail(name,group))
 
         // Set it back to false
         disabledConf.value = 'false'
-        service.saveApplicationConfiguration(disabledConf)
+        disabledConf = service.saveApplicationConfiguration(disabledConf)
         assertNull(quartzScheduler.getJobDetail(name,group))
     }
 

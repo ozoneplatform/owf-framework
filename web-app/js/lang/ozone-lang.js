@@ -145,8 +145,9 @@ Ozone.layout.tooltipString = {
 	createDashboardContent: 		'This screen allows users to create blank pages, copy an existing pages, or import a page from a shared configuration.',
 	addWidgetsTitle: 				'App Components (Alt+Shift+F)',
 	addWidgetsContent: 				'This button opens or closes the App Components, allowing users to add App Components to their current page.',
-	dashboardSwitcherTitle:			'My Apps (Alt+Shift+C)',
-	dashboardSwitcherContent:		'This opens My Apps, allowing users to Start and Manage their Applications.',
+    addWidgetsContentDisabled:      'You must open an OZONE App before starting an App Component. To do this, click My Apps, start an app and then open App Components.',
+    myAppsWindowTitle:			'My Apps (Alt+Shift+C)',
+	myAppsWindowContent:		'This opens My Apps, allowing users to Start and Manage their Applications.',
 	marketplaceWindowTitle:			'Store (Alt+Shift+M)',
 	marketplaceWindowContent:		'This button opens the Store window, allowing users to discover App Components in Apps Mall and add them to their App Components.',
     metricWindowTitle:		    	'Metric (Alt+Shift+R)',
@@ -270,11 +271,11 @@ Ozone.ux.DashboardMgmtString = {
 if (Ozone.config &&
     Ozone.config.currentTheme &&
     Ozone.config.currentTheme.themeName) {
-    Ozone.ux.DashboardMgmtString.dashboardIconPath = '/themes/' + Ozone.config.currentTheme.themeName + '.theme/images/dashboardswitcher/DashboardIcon64.png';
-    Ozone.ux.DashboardMgmtString.stackIconPath = '/themes/' + Ozone.config.currentTheme.themeName + '.theme/images/dashboardswitcher/StacksIcon64.png';
+    Ozone.ux.DashboardMgmtString.dashboardIconPath = '/themes/' + Ozone.config.currentTheme.themeName + '.theme/images/myappswindow/DashboardIcon64.png';
+    Ozone.ux.DashboardMgmtString.stackIconPath = '/themes/' + Ozone.config.currentTheme.themeName + '.theme/images/myappswindow/StacksIcon64.png';
 } else {
-    Ozone.ux.DashboardMgmtString.dashboardIconPath = '/themes/common/images/dashboardswitcher/DashboardIcon64.png';
-    Ozone.ux.DashboardMgmtString.stackIconPath = '/themes/common/images/dashboardswitcher/StacksIcon64.png';
+    Ozone.ux.DashboardMgmtString.dashboardIconPath = '/themes/common/images/myappswindow/DashboardIcon64.png';
+    Ozone.ux.DashboardMgmtString.stackIconPath = '/themes/common/images/myappswindow/StacksIcon64.png';
 }
 
 Ozone.layout.AccordionWindowManagerString = {
@@ -436,7 +437,9 @@ Ozone.layout.DialogMessages = {
     dashboardLockAlert: 'This Page is locked. App Components cannot be added or removed from a locked Page.',
     closeBackgroundWidgetWarning: ' is a background widget. You won’t see it on your screen because it runs behind the scenes.<br/><br/>To close the widget, click OK.',
     launchWidgetTitle: 'Launch Widget',
-    launchWidgetAlert: 'Choose the dashboard where the widget will open.'
+    launchWidgetAlert: 'Choose the dashboard where the widget will open.',
+    refreshRequiredTitle: 'Refresh Required',
+    refreshRequiredBody: "Refresh your browser to see changes you've made in the My Apps window."
 };
 
 Ozone.layout.ThemeSwitcherWindowConstants = {

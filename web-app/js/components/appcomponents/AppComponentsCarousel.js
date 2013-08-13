@@ -48,13 +48,16 @@
             this.$appcomponents = $el;
             this.setElement($el.children('.app-components-body'));
 
-            if(this.size && this.size.height) {
+            if(this.size && this.size.height && this.size.height < 1) {
                 height = this.size.height * $(window).height();
 
-                this.$container.height(height);
+                // don't set height if less than min required
+                if(height > (125 + this.GRIPPER_HEIGHT)) {
+                    this.$container.height(height);
 
-                // substract gripper height for carousel pager to show
-                this.$el.height(height - this.GRIPPER_HEIGHT);
+                    // substract gripper height for carousel pager to show
+                    this.$el.height(height - this.GRIPPER_HEIGHT);
+                }
             }
 
             return SuperClass.prototype.render.call(this);
@@ -92,6 +95,7 @@
         initResizable: function () {
             var me = this,
                 minHeight = 125 + this.GRIPPER_HEIGHT,
+                rowHeight = 121,
                 // leave bottom 64px visible
                 maxHeight = $(window).height() - this.$container.offset().top - 64,
                 $bx;
@@ -112,7 +116,16 @@
                     me._constrain();
                 },
                 stop: function (evt, ui) {
-                    $bx = null;
+                    // Snap to the nearest row height on release. The rows are so tall that using
+                    // jQuery's grid snapping (which snaps as you drag) feels unnatural, so we snap
+                    // on release.
+                    // We snap to row height to prevent users from seeing the extra row that is
+                    // created when dragging from one page to another (OP-2054).
+                    var roundedHeight = Math.round((ui.size.height - minHeight) / rowHeight) * rowHeight + minHeight,
+                        componentsHeight = roundedHeight - me.GRIPPER_HEIGHT;
+                    ui.size.height = roundedHeight;
+                    ui.element.height(roundedHeight);
+                    me.$appcomponents.height(componentsHeight);
                     me.doLayout(evt, ui);
                 }
             });

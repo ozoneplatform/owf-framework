@@ -20,7 +20,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "app_config-7.3-1", context: "create") {
+    changeSet(author: "owf", id: "app_config-7.3-1", context: "create, upgrade, 7.3") {
 
         [
             [code: CEF_LOGGING_ENABLED.code, type: "Boolean", mutable: true, value: "true"],
@@ -38,13 +38,16 @@ databaseChangeLog = {
             ],
 
             [items: [[code: DISABLE_INACTIVE_ACCOUNTS.code, type: "Boolean", mutable: true, value: "true"],
-                     [code: INACTIVITY_THRESHOLD.code, type: "Integer", mutable: true, value: "90"],
-                     [code: JOB_DISABLE_ACCOUNTS_START.code, type: "String", mutable: true, value: "23:59:59"],
-                     [code: JOB_DISABLE_ACCOUNTS_INTERVAL.code, type: "Integer", mutable: true, value: "1440"]],
+                     [code: INACTIVITY_THRESHOLD.code, type: "Integer", mutable: true, value: "90"]],
              subGroupName: "Inactive Accounts"
             ]
         ].each { subGroup ->
             subGroup.items.eachWithIndex{ appConfig, index -> doConfigInsert(appConfig, USER_ACCOUNT_SETTINGS.description, subGroup.subGroupName, index+1) }
+        }
+
+        [[code: JOB_DISABLE_ACCOUNTS_START.code, type: "String", mutable: true, value: "23:59:59"],
+         [code: JOB_DISABLE_ACCOUNTS_INTERVAL.code, type: "Integer", mutable: true, value: "1440"]].eachWithIndex { appConfig, index ->
+            doConfigInsert(appConfig, HIDDEN.description, null, index+1)
         }
 
         [

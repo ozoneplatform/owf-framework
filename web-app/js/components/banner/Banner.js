@@ -168,7 +168,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             }),
             Ext.apply(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER, {
                 scope: this.dashboardContainer,
-                fn: this.dashboardContainer.showDashboardSwitcherButtonHandler
+                fn: this.dashboardContainer.showMyAppsWindowButtonHandler
             }),
             Ext.apply(Ozone.components.keys.HotKeys.MARKETPLACE, {
                 scope: this,
@@ -195,7 +195,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 cls: 'bannerBtn myAppsBtn',
                 scale: 'banner-large',
                 scope: this.dashboardContainer,
-                handler: this.dashboardContainer.showDashboardSwitcherButtonHandler,
+                handler: this.dashboardContainer.showMyAppsWindowButtonHandler,
                 listeners: {
                     afterrender: {
                         fn: me.myAppsAfterRender,
@@ -215,9 +215,34 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 scope: this.dashboardContainer,
                 handler: this.dashboardContainer.showAppComponentsView,
                 listeners: {
-                    afterrender: {
+                    disable: {
                         fn: function(btn) {
+                            if (Ext.getCmp('appComponentsBtnToolTip')) {
+                                Ext.getCmp('appComponentsBtnToolTip').destroy();
+                            }
+                            
                             Ext.create('Ext.tip.ToolTip', {
+                                id: 'appComponentsBtnToolTip',
+                                target: btn.getEl().id,
+                                html: Ozone.layout.tooltipString.addWidgetsContentDisabled,
+                                anchor: 'bottom',
+                                anchorToTarget: true,
+                                anchorOffset: -5,
+                                mouseOffset: [5, 0],
+                                width: 500,
+                                maxWidth: 500
+                            });
+                        }
+                    },
+
+                    enable: {
+                        fn: function(btn) {
+                            if (Ext.getCmp('appComponentsBtnToolTip')) {
+                                Ext.getCmp('appComponentsBtnToolTip').destroy();
+                            }
+
+                            Ext.create('Ext.tip.ToolTip', {
+                                id: 'appComponentsBtnToolTip',
                                 target: btn.getEl().id,
                                 title: Ozone.layout.tooltipString.addWidgetsTitle,
                                 html: Ozone.layout.tooltipString.addWidgetsContent,
@@ -341,8 +366,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     myAppsAfterRender: function(btn) {
         Ext.create('Ext.tip.ToolTip', {
             target: btn.getEl().id,
-            title: Ozone.layout.tooltipString.dashboardSwitcherTitle,
-            html: Ozone.layout.tooltipString.dashboardSwitcherContent,
+            title: Ozone.layout.tooltipString.myAppsWindowTitle,
+            html: Ozone.layout.tooltipString.myAppsWindowContent,
             anchor: 'bottom',
             anchorToTarget: true,
             anchorOffset: -5,

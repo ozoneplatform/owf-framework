@@ -215,6 +215,10 @@
                 pinned: this.pinned
             };
 
+            if(this.state) {
+                state = $.extend(this.state, state);
+            }
+
             if(this._resized) {
                 state = _.extend(state, this.carousel.state());
             }

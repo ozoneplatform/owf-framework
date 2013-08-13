@@ -4,10 +4,10 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
 
     //The editor widget the tab is open in
     editPanel: null,
-    
+
     initComponent: function() {
         var me = this;
-        
+
         Ext.apply(this, {
 
             layout: {
@@ -16,7 +16,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
             preventHeader: true,
             border: true,
             padding: 5,
-    
+
             //gridWidgets: null,
             widgetLauncher: null,
             widgetEventingController: null,
@@ -36,26 +36,26 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                 cls: 'tbWidgetsGridHdr',
                 dock: 'top',
                 items: [{
-                    xtype: 'tbtext',
-                    itemId: 'lblWidgetsGrid',
-                    cls: 'tbWidgetsGridHdr',
-                    text: 'App Components'
-                },
-                '->',
-                {
-                    xtype: 'searchbox',
-                    listeners: {
-                        searchChanged: {
-                            fn: function(cmp, value) {
-                                var grid = this.getComponent('widgetsGrid');
-                                if (grid != null) {
-                                    grid.applyFilter(value, ['displayName', 'universalName']);
-                                }
-                            },
-                            scope: this
+                        xtype: 'tbtext',
+                        itemId: 'lblWidgetsGrid',
+                        cls: 'tbWidgetsGridHdr',
+                        text: 'App Components'
+                    },
+                    '->', {
+                        xtype: 'searchbox',
+                        listeners: {
+                            searchChanged: {
+                                fn: function(cmp, value) {
+                                    var grid = this.getComponent('widgetsGrid');
+                                    if (grid != null) {
+                                        grid.applyFilter(value, ['displayName', 'universalName']);
+                                    }
+                                },
+                                scope: this
+                            }
                         }
                     }
-                }]
+                ]
             }, {
                 xtype: 'toolbar',
                 itemId: 'tbWidgetsGridFtr',
@@ -69,7 +69,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                     itemId: 'btnAdd',
                     text: 'Add',
                     handler: function() {
-                      this.onAddClicked();
+                        this.onAddClicked();
                     },
                     scope: this
                 }, {
@@ -77,21 +77,27 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                     itemId: 'btnRemove',
                     text: 'Remove',
                     handler: function() {
-                      var grid = this.getComponent('widgetsGrid');
-                      var store = grid.store;
-                      var records = grid.getSelectionModel().getSelection();
-                      if (records && records.length > 0) {
-                          store.remove(records);
-                          store.save();
-                      } else {
-                          me.editPanel.showAlert("Error", "You must select at least one widget to remove.");
-                      }
+                        var grid = this.getComponent('widgetsGrid');
+                        var store = grid.store;
+                        var records = grid.getSelectionModel().getSelection();
+                        if (records && records.length > 0) {
+                            store.remove(records);
+                            store.save();
+
+                            var widgetStateHandler = Ozone.state.WidgetStateHandler.getInstance();
+                            widgetStateHandler.handleWidgetRequest({
+                                fn: 'refreshDashboardStore',
+                                title: this.generateNotificationTitle(records.length)
+                            });
+                        } else {
+                            me.editPanel.showAlert("Error", "You must select at least one widget to remove.");
+                        }
                     },
                     scope: this
                 }]
             }]
         });
-        
+
         this.on({
             activate: {
                 scope: this,
@@ -102,7 +108,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                     var lbl = tb.getComponent('lblWidgetsGrid');
                     var comp = cmp.ownerCt;
                     var compId = -1;
-                    
+
                     OWF.Preferences.getUserPreference({
                         namespace: 'owf.admin.WidgetEditCopy',
                         name: 'guid_to_launch',
@@ -113,7 +119,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                             me.editPanel.showAlert('Preferences Error', 'Error looking up Widget Editor: ' + err);
                         }
                     });
-    
+
                     // Create modified widget store and bind to grid
                     grid.setStore(Ext.create('Ozone.data.stores.AdminWidgetStore', cmp.storeCfg));
                     var refreshPagingToolbar = function(operation) {
@@ -149,16 +155,16 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                         p[cmp.componentId] = compId;
                         grid.setBaseParams(p);
                     }
-                    
+
                     // Set the title
                     if (comp.record) {
                         var titleText = Ext.htmlEncode(Ext.util.Format.ellipsis(comp.record.get('title'), 25));
-                        if(!titleText) {
+                        if (!titleText) {
                             titleText = Ext.htmlEncode(Ext.util.Format.ellipsis(comp.record.get('name'), 25)) || 'Widgets';
                         }
                         lbl.setText(titleText);
                     }
-                    
+
                     if (grid != null) {
                         grid.on({
                             itemdblclick: {
@@ -168,8 +174,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                                         for (var i = 0; i < records.length; i++) {
                                             cmp.doEdit(records[i].data.id, records[i].data.name);
                                         }
-                                    }
-                                    else {
+                                    } else {
                                         me.editPanel.showAlert("Error", "You must select at least one widget to edit.");
                                     }
                                 },
@@ -181,17 +186,17 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                 single: true
             }
         });
-        
+
         this.widgetStateHandler = Ozone.state.WidgetStateHandler.getInstance();
 
         this.on({
-           activate: {
-             fn: function() {
-               var grid = this.getComponent('widgetsGrid');
-               var store = grid.getStore();
+            activate: {
+                fn: function() {
+                    var grid = this.getComponent('widgetsGrid');
+                    var store = grid.getStore();
 
-               if (store) {
-                    /*
+                    if (store) {
+                        /*
                     store.on(
                         'datachanged',
                         function(store, opts) {
@@ -207,21 +212,25 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
                     );
                     */
 
-                   store.load({
-                       params: {
-                           offset: 0,
-                           max: store.pageSize
-                       }
-                   });
-               }
-             },
-             scope: this
-           }
+                        store.load({
+                            params: {
+                                offset: 0,
+                                max: store.pageSize
+                            }
+                        });
+                    }
+                },
+                scope: this
+            }
         });
 
         this.callParent(arguments);
     },
-    
+
+    generateNotificationTitle: function(numRecordsChanged) {
+        return title = (numRecordsChanged === 1 ? 'App Component' : 'App Components') + ' removed from ' + this.ownerCt.record.get('title');
+    },
+
     refreshWidgetLaunchMenu: function() {
         if (this.widgetStateHandler) {
             this.widgetStateHandler.handleWidgetRequest({
@@ -229,7 +238,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
             });
         }
     },
-   
+
     doEdit: function(id, title) {
         var me = this;
         var dataString = Ozone.util.toString({
@@ -249,7 +258,7 @@ Ext.define('Ozone.components.admin.grid.WidgetsTabPanel', {
             }
         });
     },
-    
+
     onAddClicked: function(button, e) {
         var win = Ext.widget('admineditoraddwindow', {
             addType: 'App Component',

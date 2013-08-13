@@ -82,7 +82,10 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                 store.save();
                                 
                                 var widgetStateHandler = Ozone.state.WidgetStateHandler.getInstance();
-                                widgetStateHandler.handleWidgetRequest({fn: 'refreshDashboardStore'});
+                                widgetStateHandler.handleWidgetRequest({
+                                    fn: 'refreshDashboardStore',
+                                    title: this.generateNotificationTitle(records.length)
+                                });
                             }
                             else {
                                 self.editPanel.showAlert("Error", "You must select at least one App to remove.")
@@ -195,6 +198,11 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
 
         this.callParent();
     },
+
+    generateNotificationTitle: function(numRecordsChanged) {
+        return numRecordsChanged === 1 ? 'App Removed' : 'Apps Removed';
+    },
+
     onAddClicked: function (button, e) {
         var record = this.ownerCt.record,
             itemName = record.get('name') ? record.get('name') : record.get('userRealName');
@@ -216,6 +224,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
         });
         win.show();
     },
+
     doEdit: function(id, title) {
         var self = this;
         var dataString = Ozone.util.toString({
@@ -235,6 +244,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
             }
         });
     },
+
     refreshWidgetLaunchMenu: function() {
         if (this.widgetStateHandler) {
             this.widgetStateHandler.handleWidgetRequest({

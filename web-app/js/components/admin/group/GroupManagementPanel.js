@@ -373,12 +373,19 @@ Ext.define('Ozone.components.admin.group.GroupManagementPanel', {
                     store.save();
                     
                     var widgetStateHandler = Ozone.state.WidgetStateHandler.getInstance();
-                    widgetStateHandler.handleWidgetRequest({fn: 'refreshDashboardStore'});
+                    widgetStateHandler.handleWidgetRequest({
+                        fn: 'refreshDashboardStore',
+                        title: this.generateNotificationTitle(records.length)
+                    });
                 }
             });
         } else {
             this.showAlert('Error', 'You must select at least one group to delete.');
         }
+    },
+
+    generateNotificationTitle: function(numRecordsChanged) {
+        return numRecordsChanged === 1 ? 'Group Deleted' : 'Groups Deleted';
     },
     
     updateDeleteButton: function(records) {

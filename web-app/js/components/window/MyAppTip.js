@@ -68,8 +68,8 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var me = this,
             banner = me.dashboardContainer.getBanner(),
             icn = me.clickedStack.imageUrl && me.clickedStack.imageUrl != ' ' ? 
-                '<img class=\'tipIcon\'src=\'' + encodeURI(decodeURI(me.clickedStack.imageUrl)) + 
-                '\' />' : '<div class=\'tipIcon noIconGivenStack\'></div>',
+                '<img class=\'tipIcon\'src=\'' + encodeURI(decodeURI(me.clickedStack.imageUrl)) + '\' />' : 
+                '<div class=\'tipIcon noIconGivenStack\'></div>',
             str = '<div class=\'dashboard-tooltip-content\'>' + icn +
                 '<h3 class=\'name\' data-qtip="'+ Ext.htmlEncode(me.clickedStack.name) +'">' + Ext.htmlEncode(me.clickedStack.name) + '</h3>';
 
@@ -132,7 +132,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             
         }
         
-        $('#dashboard-switcher').click(function() {
+        $('#my-apps-window').click(function() {
         	  //Hide the tip if outside click 
         	me.destroy()
         });

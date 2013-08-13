@@ -7,9 +7,11 @@ import javax.servlet.http.HttpServletRequest
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.ozoneplatform.appconfig.server.domain.model.ApplicationSetting
+import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
 import org.ozoneplatform.auditing.format.cef.Extension
 import org.ozoneplatform.auditing.hibernate.AbstractAuditLogListener
 import org.springframework.web.context.request.RequestContextHolder
+import org.hibernate.event.PostLoadEvent;
 
 import ozone.owf.grails.services.AccountService
 import ozone.owf.grails.services.OwfApplicationConfigurationService
@@ -22,49 +24,80 @@ class AuditLogListener extends AbstractAuditLogListener {
 	OwfApplicationConfigurationService owfApplicationConfigurationService
 	
 	String hostCls
-	
 
-	@Override
-    public boolean doCefLogging() {
-		owfApplicationConfigurationService.is(CEF_LOGGING_ENABLED)
-    }	
-	
-	@Override
-	public boolean doCefObjectAccessLogging(){
-		owfApplicationConfigurationService.is(CEF_OBJECT_ACCESS_LOGGING_ENABLED)
-	}
-	
-	private getSettingFromRequest(ApplicationSetting setting) {
-		if(getRequest() == null)
-			return false
-		return this.getRequest().getAttribute(setting.getCode()) ?: false
-	}
+    //thread-local cache of looked up ApplicationConfigurations, to prevent recursive
+    //lookups of CEF object access flags
+    private ThreadLocal<HashMap<String, ApplicationConfiguration>> knownValues =
+        new ThreadLocal<HashMap<String, ApplicationConfiguration>>()
 
     @Override
-    public String getApplicationVersion() {
+    protected void withKnownValue(PostLoadEvent event, Closure fn) {
+        if (!knownValues.get()) {
+            knownValues.set([:])
+        }
+
+        def valMap = knownValues.get(),
+            entity = event.entity
+        if (entity instanceof ApplicationConfiguration) {
+            try {
+                //put the loaded configuration in the map so that it can be used
+                //in getApplicationConfiguration calls within fn
+                valMap.put(entity.code, entity)
+                fn()
+            }
+            finally {
+                //clean up the configurations that were added to the map.  Finally block
+                //ensures that this happens no matter what
+                valMap.remove(entity.code)
+            }
+        }
+        else {
+            fn()
+        }
+    }
+
+	@Override
+    protected boolean doCefLogging() {
+        getBooleanConfiguration(CEF_LOGGING_ENABLED)
+    }
+	
+	protected boolean doCefObjectAccessLogging(){
+        getBooleanConfiguration(CEF_OBJECT_ACCESS_LOGGING_ENABLED)
+	}
+
+    private boolean getBooleanConfiguration(ApplicationSetting setting) {
+        def conf = getApplicationConfiguration(setting)
+
+        conf == null ? false : conf.toBoolean()
+    }
+
+    private def getApplicationConfiguration(ApplicationSetting setting) {
+        //first look for values that were discovered farther up the stack, then check the
+        //database if it wasn't found
+        def conf = knownValues.get()?.get(setting.code)
+
+        //if the config was found use its value otherwise look it up
+        conf != null ? conf.value : 
+            owfApplicationConfigurationService.getApplicationConfiguration(setting)?.value
+    }
+
+    @Override
+    protected String getApplicationVersion() {
         return grailsApplication.metadata['app.version']
     }
 
     @Override
-    public String getUserName() {
+    protected String getUserName() {
         return accountService.getLoggedInUsername()
     }
 
     @Override
-    public String getHostClassification() {
-		if(!hostCls){
-			def host = 'http://localhost:8080/jblocks-banner/config/getConfigs'
-			try{
-				hostCls = JSON.parse(new URL(host)?.text)?.hostCls ?: Extension.UNKOWN_VALUE
-			} catch (IOException ioe){
-				hostCls = Extension.UNKOWN_VALUE
-			}			
-		}		
-		hostCls
+    protected String getHostClassification() {
+        getApplicationConfiguration(SECURITY_LEVEL)
     }
 
     @Override
-    public HttpServletRequest getRequest(){
+    protected HttpServletRequest getRequest(){
         return RequestContextHolder?.getRequestAttributes()?.getRequest()
     }
 }

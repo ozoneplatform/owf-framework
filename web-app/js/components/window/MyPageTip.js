@@ -92,7 +92,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
             .on('click', '.deleteButton', $.proxy(me.deletePage, me))
             .on('click', '.restoreButton', $.proxy(me.restorePage, me));
         
-        $('#dashboard-switcher').click(function() {
+        $('#my-apps-window').click(function() {
 	      	  //Hide the tip if outside click 
 	      	me.destroy()
 	      });

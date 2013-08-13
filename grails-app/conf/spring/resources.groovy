@@ -14,6 +14,7 @@ beans = {
     auditLogListener(org.ozoneplatform.auditing.AuditLogListener) {
         sessionFactory = ref('sessionFactory')
         accountService = ref('accountService')
+        owfApplicationConfigurationService = ref('owfApplicationConfigurationService')
         grailsApplication = ref('grailsApplication')
     }
 	

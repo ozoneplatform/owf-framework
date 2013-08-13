@@ -1,25 +1,25 @@
 [class^="icon-"],
 [class*=" icon-"] {
-    color: $dashboard-switcher-dashboard-text-color;
+    color: $my-apps-window-dashboard-text-color;
 }
 
-#dashboard-switcher {
+#my-apps-window {
     border: 0px;
-    background-color: $dashboard-switcher-background-color;
+    background-color: $my-apps-window-background-color;
 
     &-body {
-        @include border-radius($dashboard-switcher-body-radius);
+        @include border-radius($my-apps-window-body-radius);
         text-align: center;
         margin-left: auto;
         margin-right: auto;
     }
 
-    @include border-radius($dashboard-switcher-body-radius);
+    @include border-radius($my-apps-window-body-radius);
 
     .x-window-header {
-        @include border-radius($dashboard-switcher-body-radius);
+        @include border-radius($my-apps-window-body-radius);
 
-        background-color: $dashboard-switcher-background-color;
+        background-color: $my-apps-window-background-color;
         margin-bottom: 5px;
         width: 100% !important;
         *overflow: hidden;
@@ -27,18 +27,18 @@
         *margin-bottom: 0px;
         border: 0px;
         zoom: 1;
-        height: $dashboard-switcher-header-height !important;
+        height: $my-apps-window-header-height !important;
         
         .x-window-header-text {
 			font-size: 24px;
 			padding-left: 13px;
             padding-top: 10px;
             *line-height: 24px;
-            color: $dashboard-switcher-title-color;
+            color: $my-apps-window-title-color;
 		}
 
         .x-window-header-body {
-            height: $dashboard-switcher-header-height !important;
+            height: $my-apps-window-header-height !important;
             zoom: 1;
         }
     }
@@ -50,7 +50,7 @@
         right: 0;
 
         ul {
-            color: $dashboard-switcher-descriptor-color;
+            color: $my-apps-window-descriptor-color;
 
             li {
                 display: inline-block;
@@ -119,8 +119,8 @@
         }
     }
 
-    .dashboard-switcher-descriptor {
-        color: $dashboard-switcher-descriptor-color;
+    .my-apps-window-descriptor {
+        color: $my-apps-window-descriptor-color;
         bottom: 20px !important;
         position: relative;
         text-align: left;
@@ -154,15 +154,15 @@
 }
 
 /**** BEGIN slider styling ****/
-#dashboard-switcher
-    > #dashboard-switcher-body {
+#my-apps-window
+    > #my-apps-window-body {
 
-    background-color: $dashboard-switcher-background-color;
+    background-color: $my-apps-window-background-color;
 
     > .bx-wrapper {
         margin-bottom: 30px !important;
-        min-height: $dashboard-switcher-slider-height;
-        max-height: $dashboard-switcher-slider-max-height;
+        min-height: $my-apps-window-slider-height;
+        max-height: $my-apps-window-slider-max-height;
 
         > .bx-viewport {
             @include box-shadow(none);
@@ -174,21 +174,21 @@
             
             border: 0px;
             
-            width: $dashboard-switcher-slider-width !important;
-            height: $dashboard-switcher-slider-height !important;
-            min-height: $dashboard-switcher-slider-height !important;
+            width: $my-apps-window-slider-width !important;
+            height: $my-apps-window-slider-height !important;
+            min-height: $my-apps-window-slider-height !important;
 
             .bx-slide.expanded {
-                height: $dashboard-switcher-slider-expanded-height;
+                height: $my-apps-window-slider-expanded-height;
             }
 
             &.expanded {
-                height: $dashboard-switcher-slider-expanded-height !important;
+                height: $my-apps-window-slider-expanded-height !important;
             }
         }
 
         &.expanded {
-            height: $dashboard-switcher-slider-expanded-height !important;
+            height: $my-apps-window-slider-expanded-height !important;
         }
     }
 
@@ -223,8 +223,8 @@
     }
 }
 
-#dashboard-switcher
-> #dashboard-switcher-body
+#my-apps-window
+> #my-apps-window-body
 > .bx-wrapper
 > .bx-viewport
 > .all-dashboards
@@ -307,7 +307,7 @@
 }
 /***** END slider styling  ****/
 
-#dashboard-switcher .dashboard, #dashboard-switcher .stack, .stack.drag-proxy, .dashboard.drag-proxy {
+#my-apps-window .dashboard, #my-apps-window .stack, .stack.drag-proxy, .dashboard.drag-proxy {
     //For these elements, it is more useful
     //to compute content width not overall box 
     //width, since we are setting width based on
@@ -338,20 +338,19 @@
         .thumb {
             height: 64px;
             width: 64px;
-
             margin: 0 auto;
-            
             text-align: center;
+        }
 
+        .thumb.default {
             background-repeat: no-repeat;
             background-position: center center;
-            background-image: $dashboard-switcher-layout-default-icon;
             background-size: 100%;
         }
     }
 
     &-name {
-        color: $dashboard-switcher-dashboard-text-color;
+        color: $my-apps-window-dashboard-text-color;
         overflow: hidden;
         height: 36px;
         width: 100%;
@@ -384,28 +383,32 @@
     }
 }
 
-#dashboard-switcher .dashboard, .dashboard.drag-proxy {
+#my-apps-window .dashboard, .dashboard.drag-proxy {
+    .thumb.default {
+        background-image: $my-apps-window-layout-default-icon;
+    }
+
     &:hover, &.hover {
-        background-color: $dashboard-switcher-dashboard-over-background-color;
+        background-color: $my-apps-window-dashboard-over-background-color;
     }
 
     &-selected {
-        background-color: $dashboard-switcher-dashboard-selected-background-color;
+        background-color: $my-apps-window-dashboard-selected-background-color;
     }
 }
 
-#dashboard-switcher .stack, .stack.drag-proxy {
-    .thumb {
-        background-image: $dashboard-switcher-layout-stack-default-icon !important;
+#my-apps-window .stack, .stack.drag-proxy {
+    .thumb.default {
+        background-image: $my-apps-window-layout-stack-default-icon;
     }
 
     &:hover, &.hover {
-        background-color: $dashboard-switcher-stack-over-background-color;
+        background-color: $my-apps-window-stack-over-background-color;
     }
 
     &-selected {
         @include box-shadow(black 0 0 15px inset);
-        background-color: $dashboard-switcher-stack-selected-background-color;
+        background-color: $my-apps-window-stack-selected-background-color;
     }
 }
 
@@ -416,25 +419,25 @@
 
 .icon-share {
     &:hover, &.hover {
-        color: $dashboard-switcher-share-color;
+        color: $my-apps-window-share-color;
     }
 }
 
 .icon-refresh {
     &:hover, &.hover {
-        color: $dashboard-switcher-restore-color;
+        color: $my-apps-window-restore-color;
     }
 }
 
 .icon-edit {
     &:hover, &.hover {
-        color: $dashboard-switcher-edit-color;
+        color: $my-apps-window-edit-color;
     }
 }
 
 .icon-remove {
     &:hover, &.hover {
-        color: $dashboard-switcher-delete-color;
+        color: $my-apps-window-delete-color;
     }
 }
 
@@ -458,7 +461,7 @@
 }
 
 .x-ie7 {
-    #dashboard-switcher {
+    #my-apps-window {
         ul.actions li{
             display: inline;
             zoom: 1; 
@@ -502,7 +505,7 @@
         background-color: $dashboard-mini-slider-background-color;
         overflow: hidden;
 
-        .dashboard-switcher-descriptor {
+        .my-apps-window-descriptor {
             display: none;
         }
     }
@@ -546,11 +549,11 @@
 	
     .dashboard-tooltip-content {
     	.noIconGivenStack { 
-    		background-image: $dashboard-switcher-layout-stack-default-icon; 
+    		background-image: $my-apps-window-layout-stack-default-icon; 
     	}
     	
     	.noIconGivenPage { 
-    		background-image: $dashboard-switcher-layout-default-icon; 
+    		background-image: $my-apps-window-layout-default-icon; 
     	}
     	
     	.tipIcon {
@@ -563,7 +566,7 @@
     	}
     
         .name {
-        	color: $dashboard-switcher-dashboard-text-color;
+        	color: $my-apps-window-dashboard-text-color;
         	margin-bottom: 0;
 		    margin-left: 35%;
 		    margin-right: 8%;
@@ -576,9 +579,9 @@
         }
         
         ul {
-            color: $dashboard-switcher-dashboard-text-color;
+            color: $my-apps-window-dashboard-text-color;
 			background-color: $my-apps-tooltip-color;
-            border-top: 1px solid $dashboard-switcher-background-color;
+            border-top: 1px solid $my-apps-window-background-color;
 			@include border-bottom-radius(7px);
 			margin-top: 5.5%;
 			
@@ -591,7 +594,7 @@
                	height:55px;
                	padding-top: 3.5%;
                	font-size:.75em;
-                color: $dashboard-switcher-dashboard-over-text-color;
+                color: $my-apps-window-dashboard-over-text-color;
                 cursor: pointer;
                 
                 .actionText {
@@ -747,11 +750,11 @@
     }
 
     label {
-        color: $dashboard-switcher-tooltip-label-color;
+        color: $my-apps-window-tooltip-label-color;
     }
 
     h3 {
-        color: $dashboard-switcher-tooltip-heading-color;
+        color: $my-apps-window-tooltip-heading-color;
         font-size: 1.5em;
         margin: 0 0 1.25em 0;
     }
@@ -811,52 +814,52 @@
 }
 
 .premadeDesktop {
-  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_1-Desktop.png');
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_1-Desktop.png');
   opacity: 25 !important;
 }
 
 .premadeFit {
-  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_1-Fit.png');
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_1-Fit.png');
 }
 
 .premadeTabbed {
-  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_1-Tabbed.png');
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_1-Tabbed.png');
 }
 
 .premade2ColumnFit {
-  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-FitBSB.png');
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_2-FitBSB.png');
 }
 
 .premade2RowFit {
-  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-FitStack.png');
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_2-FitStack.png');
 }
 
 .premade4Fit {
-  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_4-Fit.png');
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_4-Fit.png');
 }
 
 .premade2ColumnPortal {
-  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-Portal.png');
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_2-Portal.png');
 }
 
 .premadeAccordionFit {
-  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-Accord-Fit.png');
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_2-Accord-Fit.png');
 }
 
 .premadeTabbedAccordion {
-  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-Tabbed-Accord.png');
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_2-Tabbed-Accord.png');
 }
 
 .premade2RowFitTabbed {
-  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_2-Fit-Tab.png');
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_2-Fit-Tab.png');
 }
 
 .premadeAccordion2RowFit {
-  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_3-Accord-Fit-Fit.png');
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_3-Accord-Fit-Fit.png');
 }
 
 .premadeTabbed2Fit {
-  background-image: theme-image($theme-name, 'dashboardswitcher/StockAppLayouts_3-Tab-Fit-Fit.png');
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_3-Tab-Fit-Fit.png');
 }
 
 .premadeButtonInactive {
@@ -866,8 +869,8 @@
 }
 
 [id*="owfCreateDashboardsContainer"], [id*="owfCreateDashboardsContainer"] .x-toolbar, .createAppField input, .createAppField textArea, {
-  color: $dashboard-switcher-dashboard-text-color;
-  background: $dashboard-switcher-background-color;
+  color: $my-apps-window-dashboard-text-color;
+  background: $my-apps-window-background-color;
 }
 
 .createAppField input:focus, .createAppField textArea:focus {
@@ -877,18 +880,18 @@
 [id*="createdashboardwindow"].manageContainer {
 
   border-width: 0px !important;
-  background-color: $dashboard-switcher-background-color;
+  background-color: $my-apps-window-background-color;
 
   .x-window-header {
     border-width: 0px !important;
-    background-color: $dashboard-switcher-background-color;
+    background-color: $my-apps-window-background-color;
     margin-bottom: 5px;
     width: 95% !important;
     *overflow: hidden;
     *width: 97% !important;
     *margin-bottom: 0px;
     zoom: 1;
-    height: $dashboard-switcher-header-height !important;
+    height: $my-apps-window-header-height !important;
 
     .x-window-header-text {
       font-size: 24px;
@@ -897,7 +900,7 @@
     }
 
     .x-window-header-body {
-      height: $dashboard-switcher-header-height !important;
+      height: $my-apps-window-header-height !important;
       zoom: 1;
     }
   }
@@ -980,8 +983,8 @@ div#existViewCb {
 
     label {
       padding-left: 0px !important;
-      color: $dashboard-switcher-dashboard-text-color !important;
-      background: $dashboard-switcher-background-color !important;
+      color: $my-apps-window-dashboard-text-color !important;
+      background: $my-apps-window-background-color !important;
       height: 28px !important;
     }
   }

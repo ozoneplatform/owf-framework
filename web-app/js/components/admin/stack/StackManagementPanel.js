@@ -267,12 +267,19 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                     });
                     store.save();
                     
-                    this.widgetStateHandler.handleWidgetRequest({fn: 'refreshDashboardStore'});
+                    this.widgetStateHandler.handleWidgetRequest({
+                        fn: 'refreshDashboardStore',
+                        title: this.generateNotificationTitle(records.length)
+                    });
                 }
             });
         } else {
             this.showAlert('Error', 'You must select at least one App to delete.');
         }
+    },
+
+    generateNotificationTitle: function(numRecordsChanged) {
+        return numRecordsChanged === 1 ? 'App Deleted' : 'Apps Deleted';
     },
     
     doAssignToMe: function() {

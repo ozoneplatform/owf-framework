@@ -30,7 +30,7 @@
                     '</a>' +
                     '<h3 class="widget-name"><%= name %></h3>'+
                 '</div>' + 
-                '<% if (description) { %>' +
+                '<% if (typeof description === "string") { %>' +
                     '<p class="widget-description" ><%= description %></p>' +
                 '<% } %>' +
                 '<div class="footer">' +

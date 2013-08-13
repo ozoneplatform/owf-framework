@@ -134,27 +134,27 @@ $required-widgets-color: #454F55;
 
 $owf-tool-width: 17px;
 
-// =================== Dashboard Switcher
+// =================== My Apps Window
 
-$dashboard-switcher-background-color: #fff; 
+$my-apps-window-background-color: #fff; 
 $dashboard-mini-slider-background-color: $owfgrey12;
-$dashboard-switcher-stack-over-background-color: #c4f5f3;
-$dashboard-switcher-stack-selected-background-color: #ddd;
-$dashboard-switcher-dashboard-over-background-color: $dashboard-switcher-stack-over-background-color;
-$dashboard-switcher-dashboard-selected-background-color: white;
-$dashboard-switcher-dashboard-over-border-color: 1px solid $owfgrey6;
+$my-apps-window-stack-over-background-color: #c4f5f3;
+$my-apps-window-stack-selected-background-color: #ddd;
+$my-apps-window-dashboard-over-background-color: $my-apps-window-stack-over-background-color;
+$my-apps-window-dashboard-selected-background-color: white;
+$my-apps-window-dashboard-over-border-color: 1px solid $owfgrey6;
 
-$dashboard-switcher-tooltip-heading-color: #134d77;
-$dashboard-switcher-tooltip-label-color: #666;
+$my-apps-window-tooltip-heading-color: #134d77;
+$my-apps-window-tooltip-label-color: #666;
 
-$dashboard-switcher-share-color: #134d77;
-$dashboard-switcher-restore-color: #dd8f08;
-$dashboard-switcher-edit-color: #55921a;
-$dashboard-switcher-delete-color: #b3292d;
+$my-apps-window-share-color: #134d77;
+$my-apps-window-restore-color: #dd8f08;
+$my-apps-window-edit-color: #55921a;
+$my-apps-window-delete-color: #b3292d;
 
-$dashboard-switcher-title-color: $owfgrey5;
-$dashboard-switcher-descriptor-color: black;
-$dashboard-switcher-details-btn-color: black;
+$my-apps-window-title-color: $owfgrey5;
+$my-apps-window-descriptor-color: black;
+$my-apps-window-details-btn-color: black;
 
 $system-window-background-color: #fff;
 

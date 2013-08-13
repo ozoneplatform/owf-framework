@@ -22,14 +22,16 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
 
     @Override
     @Transactional(readOnly=false)
-    public void saveApplicationConfiguration(ApplicationConfiguration item){
-        super.saveApplicationConfiguration(item)
+    public ApplicationConfiguration saveApplicationConfiguration(ApplicationConfiguration item){
+        item = super.saveApplicationConfiguration(item)
         // OP-727 Disabling inactive user accounts
         if (item.code == DISABLE_INACTIVE_ACCOUNTS.code) {
             handleDisableInactiveAccountsJobChange(item)
         }
 
         handleSessionControlChange(item)
+
+        item
 	}
 
     // Implements validations specific to OWF
@@ -192,12 +194,8 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
         }
     }
 
-    //Allows retrieval of a String configuration value using the name of the setting (vice the setting)
-    @Transactional (readOnly=true)
-    public String valueOf(String settingKey) {
-        def setting = ozone.owf.enums.OwfApplicationSetting."$settingKey"
-        ApplicationConfiguration config = getApplicationConfiguration(setting)
-
-        config.value
+    @Transactional (readOnly = true)
+    public String getApplicationSecurityLevel() {
+        return valueOf(SECURITY_LEVEL) ?: ""
     }
 }

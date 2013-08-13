@@ -82,7 +82,9 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                                 store.save();
                                 
                                 var widgetStateHandler = Ozone.state.WidgetStateHandler.getInstance();
-                                widgetStateHandler.handleWidgetRequest({fn: 'refreshDashboardStore'});
+                                widgetStateHandler.handleWidgetRequest({
+                                    fn: 'refreshDashboardStore'
+                                });
                             }
                             else {
                                 self.editPanel.showAlert("Error", "You must select at least one group to remove.")
@@ -206,6 +208,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
 
         this.callParent();
     },
+
     onAddClicked: function (button, e) {
         var record = this.ownerCt.record,
             itemName = record.get('name') ? record.get('name') : record.get('userRealName');

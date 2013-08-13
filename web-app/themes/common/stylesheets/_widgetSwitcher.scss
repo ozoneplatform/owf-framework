@@ -31,24 +31,24 @@
         padding-left: 10px;
     }
     .widget {
-        background-color: $dashboard-switcher-dashboard-background-color;
-        border-color: $dashboard-switcher-dashboard-border-color;
+        background-color: $my-apps-window-dashboard-background-color;
+        border-color: $my-apps-window-dashboard-border-color;
         .thumb-text {
-            color: $dashboard-switcher-dashboard-text-color;
+            color: $my-apps-window-dashboard-text-color;
         }
     }
 //    .widget-selected {
-//        background-color: $dashboard-switcher-dashboard-selected-background-color;
-//        border-color: $dashboard-switcher-dashboard-selected-border-color;
+//        background-color: $my-apps-window-dashboard-selected-background-color;
+//        border-color: $my-apps-window-dashboard-selected-border-color;
 //        .thumb-text {
-//            color: $dashboard-switcher-dashboard-selected-text-color;
+//            color: $my-apps-window-dashboard-selected-text-color;
 //        }
 //    }
     .widget-over, .widget-selected {
-        background-color: $dashboard-switcher-dashboard-over-background-color;
-        border-color: $dashboard-switcher-dashboard-over-border-color;
+        background-color: $my-apps-window-dashboard-over-background-color;
+        border-color: $my-apps-window-dashboard-over-border-color;
         .thumb-text {
-            color: $dashboard-switcher-dashboard-over-text-color;
+            color: $my-apps-window-dashboard-over-text-color;
         }
     }
 }

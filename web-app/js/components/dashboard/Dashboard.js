@@ -609,8 +609,24 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 return Ext.JSON.encode(data);
             case 'refreshWidgetLaunchMenu':
                 return this.refreshWidgetLaunchMenu();
-            case 'refreshDashboardStore': 
-            	return this.dashboardContainer.reloadDashboards();
+            case 'refreshDashboardStore':
+                var title = config.title || Ozone.layout.DialogMessages.refreshRequiredTitle;
+                
+                $.pnotify({
+                    title: title,
+                    text: Ozone.layout.DialogMessages.refreshRequiredBody,
+                    type: 'success',
+                    addclass: "stack-bottomright",
+                    stack: {
+                        "dir1": "up",
+                        "dir2": "left",
+                        "firstpos1": 25,
+                        "firstpos2": 25
+                    },
+                    history: false,
+                    sticker: false,
+                    icon: false
+                });
             default:
                 break;
         }
@@ -916,8 +932,12 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
         if (this.configRecord.get('locked') || this.configRecord.isMarketplaceDashboard()) {
             banner.disableAppComponentsBtn();
+            banner.getUserMenuBtn().disableAdminMenuItem();
+            banner.getUserMenuBtn().disableMetricsMenuItem();
         } else {
             banner.enableAppComponentsBtn();
+            banner.getUserMenuBtn().enableAdminMenuItem();
+            banner.getUserMenuBtn().enableMetricsMenuItem();
         }
 
         // hide all widgets to fire hide events on Widget State
