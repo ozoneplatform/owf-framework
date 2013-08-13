@@ -427,7 +427,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
         me.clickables = owfClickables.concat(marketplaceClickables);
     },
 
-    getAdminBtn: function() {
+    getMetricsBtn: function() {
         if (!this.metricsBtn) {
             this.metricsBtn = this.menu.down("#metrics");
         }
@@ -435,7 +435,7 @@ Ext.define('Ozone.components.button.UserMenuButton', {
         return this.metricsBtn;
     },
 
-    getMetricsBtn: function() {
+    getAdminBtn: function() {
         if (!this.adminBtn) {
             this.adminBtn = this.menu.down("#admin");
         }
