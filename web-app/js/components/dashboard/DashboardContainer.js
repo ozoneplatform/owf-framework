@@ -42,6 +42,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     MY_APPS_WINDOW_ID: 'my-apps-window',
 
+    hasMetricsWidget: false,
+
     // private
     initComponent: function() {
         var me = this;
@@ -2055,36 +2057,16 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     updateTitlesandBanner: function() {
-        // Update widget titles with user-defined titles
-        // and find out if there are marketplace widgets
-        var hasMpWidget = false;
-        var hasMetricWidget = false;
-        var mpWidgets = [],
-            mpWidget = null;
-        var records = this.widgetStore.getRange();
-        for (var i = 0; i < records.length; i++) {
-            if(records[i].data.widgetTypes.length > 0) {
-                if (records[i].data.widgetTypes[0].name == 'marketplace') {
-                    hasMpWidget = true;
-                    mpWidgets.push(records[i]);
-                }
-                if (records[i].data.widgetTypes[0].name == 'metric') {
-                    hasMetricWidget = true;
-                }
-            }
-
-        }
         //if we have a marketplace widget or marketplace config, tell the banner to add a button
-        if (hasMpWidget) {
-            if (mpWidgets.length == 1) {
-                mpWidget = mpWidgets[0]
-            }
+        var mpWidget = this.hasMpWidget();
+
+        if (mpWidget) {
             this.getBanner().addMarketplaceButton(mpWidget);
         } else {
             this.getBanner().removeMarketplaceButton();
         }
 
-        if (hasMetricWidget) {
+        if (this.hasMetricsWidget()) {
             this.getBanner().getUserMenuBtn().enableMetricsMenuItem();
         } else {
             this.getBanner().getUserMenuBtn().disableMetricsMenuItem();
@@ -2092,10 +2074,29 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     hasMpWidget: function() {
+        var records = this.widgetStore.getRange(),
+            mpWidgets = [];
+
+        for (var i = 0; i < records.length; i++) {
+            if(records[i].data.widgetTypes.length > 0) {
+                if (records[i].data.widgetTypes[0].name === 'marketplace') {
+                    mpWidgets.push(records[i]);
+                }
+            }
+        }
+
+        if (mpWidgets.length >= 1) {
+            return mpWidgets[0];
+        } else {
+            return false;
+        }
+    },
+
+    hasMetricsWidget: function() {
         var records = this.widgetStore.getRange();
         for (var i = 0; i < records.length; i++) {
             if(records[i].data.widgetTypes.length > 0) {
-                if (records[i].data.widgetTypes[0].name == 'marketplace') {
+                if (records[i].data.widgetTypes[0].name === 'metric') {
                     return true;
                 }
             }

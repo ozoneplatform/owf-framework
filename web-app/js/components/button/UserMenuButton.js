@@ -125,25 +125,12 @@ Ext.define('Ozone.components.button.UserMenuButton', {
             owfMenuItems = me.addOwfAdminMenuItem(owfMenuItems);
         }
 
+        if (me.dashboardContainer.hasMetricsWidget()) {
+            me.hasMetricBtn = true;
+            owfMenuItems = me.addOwfMetricsMenuItem(owfMenuItems);
+        }
+
         owfMenuItems.push([{
-            text: 'Metrics',
-            id: 'metrics',
-            height: 25,
-            clickable: true,
-            handler: Ext.bind(function() {
-                if (!me.metricWindow || me.metricWindow.isDestroyed) {
-                    me.metricWindow = Ext.widget('metricwindow', {
-                        dashboardContainer: me.dashboardContainer
-                    });
-                }
-                if (me.metricWindow.isVisible()) {
-                    me.metricWindow.close();
-                } else {
-                    me.dashboardContainer.hideAppComponentsView();
-                    me.metricWindow.show();
-                }
-            }, me)
-        }, {
             text: 'About',
             id: 'about',
             height: 25,
@@ -198,6 +185,32 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                 } else {
                     me.dashboardContainer.hideAppComponentsView();
                     me.administrationWindow.show();
+                }
+            }, me)
+        }]);
+
+        return existingMenuItems;
+    },
+
+    addOwfMetricsMenuItem: function(existingMenuItems) {
+        var me = this;
+
+        existingMenuItems.push([{
+            text: 'Metrics',
+            id: 'metrics',
+            height: 25,
+            clickable: true,
+            handler: Ext.bind(function() {
+                if (!me.metricWindow || me.metricWindow.isDestroyed) {
+                    me.metricWindow = Ext.widget('metricwindow', {
+                        dashboardContainer: me.dashboardContainer
+                    });
+                }
+                if (me.metricWindow.isVisible()) {
+                    me.metricWindow.close();
+                } else {
+                    me.dashboardContainer.hideAppComponentsView();
+                    me.metricWindow.show();
                 }
             }, me)
         }]);
@@ -460,23 +473,19 @@ Ext.define('Ozone.components.button.UserMenuButton', {
     },
 
     enableMetricsMenuItem: function() {
-        this.getMetricsBtn().enable();
+        this.hasMetricBtn && this.getMetricsBtn().show();
     },
 
     disableMetricsMenuItem: function() {
-        this.getMetricsBtn().disable();
+        this.hasMetricBtn && this.getMetricsBtn().hide();
     },
 
     enableAdminMenuItem: function() {
-        if (this.hasAdminBtn) {
-            this.getAdminBtn().enable();
-        }
+        this.hasAdminBtn && this.getAdminBtn().show();
     },
 
     disableAdminMenuItem: function() {
-        if (this.hasAdminBtn) {
-            this.getAdminBtn().disable();
-        }
+        this.hasAdminBtn && this.getAdminBtn().hide();
     },
 
     enableMarketplaceMenu: function() {
