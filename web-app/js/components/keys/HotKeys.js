@@ -46,7 +46,7 @@ Ozone.components.keys.MoveHotKeys = Ozone.components.keys.MoveHotKeys || {};
 
     k.HELP = {
         key: 'H'.charCodeAt(0),
-        exclusive: true
+        exclusive: false
     };
 
     k.LOGOUT = { key: 'O'.charCodeAt(0) }; //O for 'out'
