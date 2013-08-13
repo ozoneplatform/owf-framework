@@ -39,6 +39,10 @@ Ext.define('Ozone.components.admin.stack.StackDetailPanel', {
                                 '<div><span class="detail-label">Description:</span></div>',
                                 '<div>{description:htmlEncode}</div>',
                             '</div>',
+                            '<div class="detail-block">',
+                                '<div><span class="detail-label">Owner:</span></div>',
+                                '<div>{owner:this.ownerName}</div>',
+                            '</div>',
                         '</div>',
                     '</div>',
                 '</tpl>',
@@ -61,6 +65,10 @@ Ext.define('Ozone.components.admin.stack.StackDetailPanel', {
                         context = Ext.htmlEncode(context);
                         var url = OWF.getContainerUrl() + '/#stack=' + context;
                         return '<a href="' + url + '" target="_top">' + url + '</a>';
+                    },
+
+                    ownerName: function (owner) {
+                        return ((owner && owner.userRealName) || '');
                     }
                 }
             ),
