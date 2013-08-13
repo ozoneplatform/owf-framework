@@ -473,19 +473,19 @@ Ext.define('Ozone.components.button.UserMenuButton', {
     },
 
     enableMetricsMenuItem: function() {
-        this.hasMetricBtn && this.getMetricsBtn().show();
+        this.hasMetricBtn && this.getMetricsBtn().enable();
     },
 
     disableMetricsMenuItem: function() {
-        this.hasMetricBtn && this.getMetricsBtn().hide();
+        this.hasMetricBtn && this.getMetricsBtn().disable();
     },
 
     enableAdminMenuItem: function() {
-        this.hasAdminBtn && this.getAdminBtn().show();
+        this.hasAdminBtn && this.getAdminBtn().enable();
     },
 
     disableAdminMenuItem: function() {
-        this.hasAdminBtn && this.getAdminBtn().hide();
+        this.hasAdminBtn && this.getAdminBtn().disable();
     },
 
     enableMarketplaceMenu: function() {
