@@ -1835,7 +1835,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                 var dsRecord = storeRecords[i1];
 
-                dashboardGuidFound = dashboardGuidToActivate === dsRecord.get('guid');
+                if (!dashboardGuidFound) {
+                    dashboardGuidFound = dashboardGuidToActivate === dsRecord.get('guid');
+                }
 
                 // Add dashboard object to local array.
                 me.dashboards.push(me.createDashboardConfig(dsRecord));
