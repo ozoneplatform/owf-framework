@@ -989,3 +989,19 @@ div#existViewCb {
     }
   }
 }
+
+.ui-tooltip {
+    @include border-radius(3px);
+    border: 1px solid $my-apps-window-title-color;
+    z-index: 69012 !important;
+    background-color: $my-apps-tooltip-color;
+    color: $my-apps-window-dashboard-text-color;
+    width: auto !important;
+    max-width: 300px !important;
+    padding: 5px;
+
+    &-content {
+        width: auto !important;
+        max-width: 300px !important;
+    }
+}

@@ -19,7 +19,10 @@ Ext.define('Ozone.components.window.MyAppTip', {
     		fn: function() {
                 this.hideButtons();
                 this.bindHandlers();
-                jQuery('.name').dotdotdot();
+                $('.name').dotdotdot({
+                    ellipsis: '…'
+                });
+                $('.name:contains(…)').tooltip();
     		}
     	}
     },
@@ -30,7 +33,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
     initComponent: function() {
         var me = this;
         
-        me.target = jQuery(me.event.target.parentElement);
+        me.target = $(me.event.target.parentElement);
         me.html = me.getToolTip();
 
         me.callParent(arguments);
@@ -71,7 +74,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 '<img class=\'tipIcon\'src=\'' + encodeURI(decodeURI(me.clickedStack.imageUrl)) + '\' />' : 
                 '<div class=\'tipIcon noIconGivenStack\'></div>',
             str = '<div class=\'dashboard-tooltip-content\'>' + icn +
-                '<h3 class=\'name\' data-qtip="'+ Ext.htmlEncode(me.clickedStack.name) +'">' + Ext.htmlEncode(me.clickedStack.name) + '</h3>';
+                '<h3 class=\'name\' title="'+ Ext.htmlEncode(me.clickedStack.name) +'">' + Ext.htmlEncode(me.clickedStack.name) + '</h3>';
 
         me.clickedStack.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedStack.description) +'</p></div>'):
         										 (str += '<p class=\'tip-description\'>  </p>');
@@ -112,7 +115,6 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
     bindHandlers: function() {
         var me = this;
-        var $ = jQuery;
     	var banner = me.dashboardContainer.getBanner();
 
         if (!banner.hasMarketplaceButton)
@@ -139,14 +141,10 @@ Ext.define('Ozone.components.window.MyAppTip', {
     },
     
     hideButton: function(className) {
-    	var $ = jQuery;
-    	
     	$(className).hide();
     },
     
     showButton: function(className) {
-    	var $ = jQuery; 
-    	
     	$(className).show();
     },
 
@@ -177,7 +175,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var msg;
         if (me.appWasPublishedToStore(stack)) {
             msg = 'Click OK to delete changes you made to <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> and restore its default settings.'
-            me.warn('ok_cancel', jQuery.proxy(me.restoreStack, me), msg);
+            me.warn('ok_cancel', $.proxy(me.restoreStack, me), msg);
         } else {
             msg = 'Application pages cannot be restored until the Application is pushed to store'
             me.warn('ok', null, msg);
@@ -364,7 +362,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         } else {
             msg = 'This action will permanently delete <span class="heading-bold">' +
                 Ext.htmlEncode(me.clickedStack.name) + '</span>.';
-            me.warn('ok_cancel', jQuery.proxy(me.removeStack, me), msg);
+            me.warn('ok_cancel', $.proxy(me.removeStack, me), msg);
         }
     },
 
@@ -378,7 +376,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             me.appsWindow.hideStackDashboards();
         }
 
-        var $target = jQuery(me.event.target.parentElement.parentElement);
+        var $target = $(me.event.target.parentElement.parentElement);
         var $prev = $target.prev();
         $target.remove();
         //$prev.focus(); //for keyboard nav which is no longet supported.

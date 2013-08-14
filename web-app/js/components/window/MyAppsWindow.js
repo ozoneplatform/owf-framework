@@ -110,7 +110,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                         '<div class="thumb-wrap">',
                             '{[this.getIcon(values)]}',
                         '</div>',
-                        '<div class="{[this.getName(values)]}-name" data-qtip="{[Ext.htmlEncode(values.name)]}">',
+                        '<div class="{[this.getName(values)]}-name" title="{[Ext.htmlEncode(values.name)]}">',
                             '{[Ext.htmlEncode(values.name)]}',
                         '</div>',
                         '{[this.getActions(values)]}',
@@ -156,7 +156,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         me.on('afterrender', function (cmp) {
             me.tpl.overwrite( cmp.body, stackOrDashboards );
 
-            $('.stack-name').dotdotdot();
+            $('.stack-name').dotdotdot({
+                ellipsis: '…'
+            });
+            $('.stack-name:contains(…)').tooltip();
 
             Ext.DomHelper.append( cmp.body,
             '<div class="actions">'+
@@ -1031,7 +1034,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             touchEnabled: false
         });
 
-        $('.dashboard-name').dotdotdot();
+        $('.dashboard-name').dotdotdot({
+            ellipsis: '…'
+        });
+        $('.dashboard-name:contains(…)').tooltip();
 
         if (me.appPageCarousel.getSlideCount() === 1) {
             $('.bx-pager', '.stack-dashboards').hide();

@@ -111,6 +111,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             emptyText: Ozone.ux.DashboardMgmtString.titleBlankText,
             allowBlank: false,
             value: '',
+            maxLength: (this.existingStackRecord ? 256 : 200),
             enforceMaxLength: true,
             fieldLabel: 'Title'
         };
@@ -125,6 +126,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             emptyText: Ozone.ux.DashboardMgmtString.iconBlankText,
             allowBlank: true,
             value: '',
+            maxLength: 2083,
             enforceMaxLength: true,
             fieldLabel: 'Icon URL',
             listeners: {

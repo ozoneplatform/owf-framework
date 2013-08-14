@@ -18,7 +18,10 @@ Ext.define('Ozone.components.window.MyPageTip', {
             fn: function() {
                 this.hideButtons();
                 this.setupClickHandlers();
-                jQuery('.name').dotdotdot();
+                $('.name').dotdotdot({
+                    ellipsis: '…'
+                });
+                $('.name:contains(…)').tooltip();
             }
         }
     },
@@ -33,7 +36,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
                 '<img class=\'tipIcon\' src=\'' + encodeURI(decodeURI(me.clickedDashboard.iconImageUrl)) + 
                 '\' />' : '<div class=\'tipIcon noIconGivenPage\'></div>',
             str = '<div class=\'dashboard-tooltip-content\'>' + icn + 
-                '<h3 class=\'name\' data-qtip="'+ Ext.htmlEncode(me.clickedDashboard.name) +'">'+ Ext.htmlEncode(me.clickedDashboard.name) + '</h3>';
+                '<h3 class=\'name\' title="'+ Ext.htmlEncode(me.clickedDashboard.name) +'">'+ Ext.htmlEncode(me.clickedDashboard.name) + '</h3>';
 
         me.clickedDashboard.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedDashboard.description) +'  </p></div>') :
         								  (str += '<p class=\'tip-description\'>  </p>');
@@ -84,8 +87,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
     },
 
     setupClickHandlers : function() {
-        var me = this,
-            $ = jQuery;
+        var me = this;
 
         $(me.getEl().dom)
             .on('click', '.editButton', $.proxy(me.editPage, me))
@@ -148,7 +150,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
             var deletePageHandler = function () {
                 //remove from stack dashboard list so if only one page remains the stack will launch on single click
                 var stack_dashboards = me.appsWindow.stacks[dashboard.stack.id].dashboards;
-                stack_dashboards.splice(jQuery.inArray(stack_dashboards, dashboard), 1);
+                stack_dashboards.splice($.inArray(stack_dashboards, dashboard), 1);
                 if(stack_dashboards.length === 1) {
                     me.appsWindow.hideStackDashboards();
                 }

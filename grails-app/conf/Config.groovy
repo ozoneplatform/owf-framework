@@ -502,6 +502,7 @@ uiperformance.bundles = [
                         '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.position',
                         '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.sortable',
                         '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.resizable',
+                        '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.tooltip',
                         '../js-lib/backbone/backbone-1.0.0',
                         '../js-lib/jquery.bxslider/jquery.bxslider',
                         '../js-lib/modernizr/modernizr-2.6.2',
