@@ -22,11 +22,6 @@ eventCreateWarStart = { name, stagingDir ->
             include(name: "*/css/*__*")
         }
     }
-    ant.delete {
-        fileset(dir: "${basedir}/js-plugins/") {
-            include(name: "**/*.gz.js")
-        }
-    }
 
     //copy external themes into the war folder
     //so that uiperformance will run on them
@@ -36,17 +31,9 @@ eventCreateWarStart = { name, stagingDir ->
         }
     }
 
-    ant.mkdir(dir:"${stagingDir}/js-plugins")
-    ant.copy(todir:"${stagingDir}/js-plugins") {
-        fileset(dir: "${basedir}/js-plugins") {
-            include(name: "**/*.js")
-            exclude(name: "**/*.gz.js")
-        }
-    }
-
 	versionResources name, stagingDir
 
-    //now that versioning is complete, move external 
+    //now that versioning is complete, move external
     //themes back out
     ant.move(todir: "${basedir}/themes", failonerror: false) {
         fileset(dir: "${stagingDir}/themes-tmp") {
@@ -54,14 +41,6 @@ eventCreateWarStart = { name, stagingDir ->
         }
     }
     ant.delete(dir: "${stagingDir}/themes-tmp")
-
-    //only keep compressed files
-    ant.copy(todir:"${basedir}/js-plugins") {
-        fileset(dir: "${stagingDir}/js-plugins") {
-            include(name: "*.gz.js")
-        }
-    }
-    ant.delete(dir: "${stagingDir}/js-plugins")
 
     //keep old owf bundle name for compatibility
     ant.copy(todir: "${stagingDir}/js-min") {
@@ -73,15 +52,6 @@ eventCreateWarStart = { name, stagingDir ->
     }
     ant.copy(file : "${stagingDir}/js/owf-widget.js", tofile: "${stagingDir}/js-min/owf-widget-debug.js")
 
-//    ant.copy(todir: "${stagingDir}/js-min") {
-//      fileset(dir: "${stagingDir}/js") {
-//        include(name: "owf-server__v*.js")
-//        exclude(name: "owf-server__v*gz.js")
-//      }
-//      regexpmapper(from: '^(.*)$', to: "owf-server-min.js")
-//    }
-//    ant.copy(file : "${stagingDir}/js/owf-server.js", tofile: "${stagingDir}/js-min/owf-server-debug.js")
-
     //copy back into our webapp for grails run mode
     ant.copy(todir: "${baseWebDir}/js-min") {
       fileset(dir: "${stagingDir}/js") {
@@ -91,15 +61,6 @@ eventCreateWarStart = { name, stagingDir ->
       regexpmapper(from: '^(.*)$', to: "owf-widget-min.js")
     }
     ant.copy(file : "${stagingDir}/js/owf-widget.js", tofile: "${baseWebDir}/js-min/owf-widget-debug.js")
-
-//    ant.copy(todir: "${baseWebDir}/js-min") {
-//      fileset(dir: "${stagingDir}/js") {
-//        include(name: "owf-server__v*.js")
-//        exclude(name: "owf-server__v*gz.js")
-//      }
-//      regexpmapper(from: '^(.*)$', to: "owf-server-min.js")
-//    }
-//    ant.copy(file : "${stagingDir}/js/owf-server.js", tofile: "${baseWebDir}/js-min/owf-server-debug.js")
 
     //build classpath for our jar
     ant.path(id:"classpath") {

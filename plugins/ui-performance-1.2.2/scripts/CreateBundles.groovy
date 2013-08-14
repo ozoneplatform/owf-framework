@@ -5,28 +5,11 @@ includeTargets << grailsScript("_GrailsPackage")
 target ('default': "creates bundles")   {
   depends(packageApp)
 
-//  stagingDir = grailsSettings.projectWarExplodedDir
-//  ant.mkdir(dir:stagingDir)
 	baseWebAppDir = basedir + '/web-app'
 	destDir = baseWebAppDir + '/js-min'
 	ant.mkdir(dir:destDir)
-	
-	jsPluginsDir = baseWebAppDir + '/js-plugins'
-
-	// temporarily cpp js-plugin files in web-app so
-	// ui-performance can be run on theme 
-	ant.mkdir(dir:jsPluginsDir)
-	ant.copy(todir:jsPluginsDir) {
-		fileset(dir: "${basedir}/js-plugins") {
-			include(name: "**/*.js")
-			exclude(name: "**/*.gz.js")
-		}
-	}
 
 	createJsBundles new File(baseWebAppDir), new File(destDir)
-	
-	// delete js-plugins now that we are done
-	ant.delete(dir:jsPluginsDir)
 }
 
 
