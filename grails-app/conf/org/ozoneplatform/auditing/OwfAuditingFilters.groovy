@@ -61,8 +61,12 @@ class OwfAuditingFilters extends AbstractAuditingFilters {
     }
 
 	@Override
-	public HttpServletRequest getRequest()
-	{
+	public HttpServletRequest getRequest(){
 		return RequestContextHolder?.getRequestAttributes()?.getRequest()
+	}
+
+	@Override
+	public String getUserRoles() {
+		return accountService.getLoggedInUserRoles();
 	}
 }

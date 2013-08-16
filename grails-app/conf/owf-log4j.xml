@@ -68,23 +68,6 @@
         <!-- <appender-ref ref="ozone-stdout" /> -->
 	</appender>
 	
-  	<appender name="ozone-audit-log" class="org.apache.log4j.rolling.RollingFileAppender">
-        <param name="File" value="logs/audit.log" />
-        <param name="Encoding" value="UTF-8" />
-
-        <rollingPolicy class="org.apache.log4j.rolling.FixedWindowRollingPolicy">
-            <param name="MaxIndex" value="3"/> <!-- Maximum number of backups to keep -->
-            <param name="FileNamePattern" value="logs/audit.log.%i"/>
-        </rollingPolicy>
-        <triggeringPolicy class="org.apache.log4j.rolling.SizeBasedTriggeringPolicy">
-            <param name="MaxFileSize" value="100000000" /> <!-- 100 MB -->
-        </triggeringPolicy>
-
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{dd MMM yyyy HH:mm:ss,SSS z} %m%n" />
-        </layout>
-    </appender>
-
     <appender name="ozone-audit-dataGuard-log" class="org.apache.log4j.rolling.RollingFileAppender">
         <param name="File" value="logs/auditDataGuard.log" />
         <param name="Encoding" value="UTF-8" />
@@ -118,9 +101,6 @@
         </layout>
     </appender>
 
-    <appender name="ozone-async-audit" class="org.apache.log4j.AsyncAppender">
-      <appender-ref ref="ozone-audit-log" />
-    </appender>
 
     <appender name="ozone-async-dataGuard-audit" class="org.apache.log4j.AsyncAppender">
       <appender-ref ref="ozone-audit-dataGuard-log" />
@@ -140,11 +120,6 @@
     	<appender-ref ref="ozone-async-dataGuard-audit" />
     </logger>
 
-    <!-- For security logging, set this log level to "info". -->
-    <logger name="ozone.securitysample.authentication.audit.SecurityAuditLogger" additivity="false">
-      <level value="info" />
-      <appender-ref ref="ozone-async-audit" />
-    </logger>
     <!-- All other logs from Ozone secuity can be sent to the regular log
 		unless you are worried that the regular logs have too lax of read permissions. -->
     <logger name="ozone.securitysample" additivity="false">
