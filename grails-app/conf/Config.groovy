@@ -999,7 +999,7 @@ owf {
     external {
         themePath = "file:${System.properties['base.dir']}/themes"
         helpPath = "file:${System.properties['base.dir']}/help"
-        jsPluginPath = "file:${System.properties['base.dir']}/js-plugins"
+        //jsPluginPath = "file:${System.properties['base.dir']}/js-plugins"
     }
 
     metric {

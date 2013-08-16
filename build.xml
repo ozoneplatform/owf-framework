@@ -349,18 +349,12 @@
             </fileset>
             <fileset dir="${basedir}" includes="themes/**" />
             <fileset dir="${basedir}" includes="help/**" />
-            <fileset dir="${basedir}" includes="js-plugins/**" />
         </copy>
         <copy todir="${tomcat.dir}">
             <fileset dir="${basedir}">
                 <include name="prodDb.script" />
             </fileset>
         </copy>
-        <!--<copy todir="${staging.dir}/etc/override">-->
-            <!--<fileset dir="src/resources">-->
-                <!--<include name="ehcache.xml" />-->
-            <!--</fileset>-->
-        <!--</copy>-->
     </target>
 
     <!-- =================================
