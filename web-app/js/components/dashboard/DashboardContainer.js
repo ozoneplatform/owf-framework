@@ -42,8 +42,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     MY_APPS_WINDOW_ID: 'my-apps-window',
 
-    hasMetricsWidget: false,
-
     // private
     initComponent: function() {
         var me = this;
@@ -2060,10 +2058,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     updateTitlesandBanner: function() {
         //if we have a marketplace widget or marketplace config, tell the banner to add a button
-        var mpWidget = this.hasMpWidget();
+        var mpWidgets = this.getMpWidgets();
 
-        if (mpWidget) {
-            this.getBanner().addMarketplaceButton(mpWidget);
+        if (mpWidgets && mpWidgets.length > 0) {
+            var singleWidget = (mpWidgets.length == 1) ? mpWidgets[0] : null;
+            this.getBanner().addMarketplaceButton(singleWidget);
         } else {
             this.getBanner().removeMarketplaceButton();
         }
@@ -2075,36 +2074,16 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
     },
 
-    hasMpWidget: function() {
-        var records = this.widgetStore.getRange(),
-            mpWidgets = [];
-
-        for (var i = 0; i < records.length; i++) {
-            if(records[i].data.widgetTypes.length > 0) {
-                if (records[i].data.widgetTypes[0].name === 'marketplace') {
-                    mpWidgets.push(records[i]);
-                }
-            }
-        }
-
-        if (mpWidgets.length >= 1) {
-            return mpWidgets[0];
-        } else {
-            return false;
-        }
+    getMpWidgets: function() {
+        return _.filter(this.widgetStore.getRange(), function(widget) {
+            return (widget.data.widgetTypes.length > 0 && widget.data.widgetTypes[0].name === 'marketplace')
+        });
     },
 
     hasMetricsWidget: function() {
-        var records = this.widgetStore.getRange();
-        for (var i = 0; i < records.length; i++) {
-            if(records[i].data.widgetTypes.length > 0) {
-                if (records[i].data.widgetTypes[0].name === 'metric') {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return Boolean(_.find(this.widgetStore.getRange(), function(widget) {
+            return (widget.data.widgetTypes.length > 0 && widget.data.widgetTypes[0].name === 'metric')
+        }));
     },
 
     /**
