@@ -354,16 +354,42 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         var me = this;
         var msg;
-        var groupAssignment = me.isStackAGroupAssignment(me.clickedStack);
 
-        if(groupAssignment) {
-            msg = 'Group members cannot delete applications assigned to the group. Please contact your administrator.';
-            me.warn('ok', null, msg);
-        } else {
-            msg = 'This action will permanently delete <span class="heading-bold">' +
-                Ext.htmlEncode(me.clickedStack.name) + '</span>.';
-            me.warn('ok_cancel', $.proxy(me.removeStack, me), msg);
-        }
+        var stack = me.clickedStack;
+        var stackGroups;
+        var userGroups = Ozone.config.user.groups;
+
+        // Request the list of stack's groups from the server, since the client list may be out-of-date
+        Ext.Ajax.request({
+            url: Ozone.util.contextPath() + '/stack/listGroups',
+            method: 'GET',
+            params: {
+                id: stack.id
+            },
+            callback: function(options, success, response) {
+                // If request is not successful, fall back in the client-side list of groups
+                stackGroups = success ? Ext.decode(response.responseText) : stack.groups;
+
+                var groupAssignment
+                // Find out whether stack belongs to one of the user's groups (including OWF Users and OFW Administrators)
+                if (_.find(stackGroups, function(stackGroup) { return _.find(userGroups, {'id' : stackGroup.id})})) {
+                    groupAssignment = true;
+                } else {
+                    // A hack to verify whether the stack is in one of the user's implicit groups
+                    groupAssignment = Boolean(_.find(stackGroups, { 'displayName': 'OWF Users' }) ||
+                        (Ozone.config.user.isAdmin && _.find(stackGroups, { 'displayName': 'OWF Administrators' })));
+                }
+
+                if(groupAssignment) {
+                    msg = 'Group members cannot delete applications assigned to the group. Please contact your administrator.';
+                    me.warn('ok', null, msg);
+                } else {
+                    msg = 'This action will permanently delete <span class="heading-bold">' +
+                        Ext.htmlEncode(me.clickedStack.name) + '</span>.';
+                    me.warn('ok_cancel', $.proxy(me.removeStack, me), msg);
+                }
+            }
+        });
     },
 
     removeStack:function() {
@@ -472,17 +498,34 @@ Ext.define('Ozone.components.window.MyAppTip', {
      * @returns {*}
      */
     isStackAGroupAssignment: function(stack) {
-        var stackGroups = stack.groups
+        var stackGroups
         var userGroups = Ozone.config.user.groups
 
-        if (_.find(stackGroups, function(stackGroup) { return _.find(userGroups, {'id' : stackGroup.id})})) {
-            return true;
-        } else {
-            // A hack to verify whether the stack is in one of the user's implicit groups
-            return Boolean(_.find(stackGroups, { 'displayName': 'OWF Users' }) ||
-                (Ozone.config.user.isAdmin && _.find(stackGroups, { 'displayName': 'OWF Administrators' })));
-        }
+        Ext.Ajax.request({
+            url: Ozone.util.contextPath() + '/stack/listGroups',
+            method: 'GET',
+            params: {
+                id: stack.id
+            },
+            success: function(response, opts) {
+                stackGroups = Ext.decode(response.msg);
+            },
+            failure: function(response, opts) {
+                // Fallback
+                stackGroups = stack.groups;
+            }
+        });
 
+
+        var stackAndUserGroupsIntersect = function(stackGroups, userGroups) {
+            if (_.find(stackGroups, function(stackGroup) { return _.find(userGroups, {'id' : stackGroup.id})})) {
+                return true;
+            } else {
+                // A hack to verify whether the stack is in one of the user's implicit groups
+                return Boolean(_.find(stackGroups, { 'displayName': 'OWF Users' }) ||
+                    (Ozone.config.user.isAdmin && _.find(stackGroups, { 'displayName': 'OWF Administrators' })));
+            }
+        }
     }
 
 });

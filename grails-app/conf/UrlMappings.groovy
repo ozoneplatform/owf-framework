@@ -322,6 +322,12 @@ class UrlMappings {
 			controller = "stack"
 			action = "restore"
 		}
+
+        "/stack/listGroups/$id?" {
+            controller = "stack"
+            action = "listGroups"
+        }
+
         "/stack/$id?" {
             controller = "stack"
             action = UrlMappings.getAction

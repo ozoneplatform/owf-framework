@@ -235,4 +235,17 @@ class StackController extends BaseOwfRestController {
 			log.info("Executed stackService: restore in " + stopWatch);
 		}
 	}
+
+    def listGroups = {
+        def jsonResult
+
+        if (params.containsKey('id')) {
+            ozone.owf.grails.domain.Stack stack = ozone.owf.grails.domain.Stack.get(params.id)
+            jsonResult = [msg: stack.groups as JSON, status: 200]
+        }
+        else {
+            jsonResult = [msg: "Missing stack id", status: 500]
+        }
+        renderResult(jsonResult)
+    }
 }
