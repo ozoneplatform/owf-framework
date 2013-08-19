@@ -471,6 +471,15 @@ databaseChangeLog = {
         addDefaultValue(tableName: "application_configuration", columnName: "version", defaultValueNumeric: 0)
     }
 
+    changeSet(author: "owf", id: "7.3-18", context: "create, upgrade, 7.3") {
+        comment("Add isApproved to stack")
+        addColumn(tableName: "stack") {
+            column(name: "approved", type: "java.sql.Types.BOOLEAN") {
+                constraints(nullable: "true")
+            }
+        }
+    }
+
     include file: "app_config_7.3.groovy"
 
 }

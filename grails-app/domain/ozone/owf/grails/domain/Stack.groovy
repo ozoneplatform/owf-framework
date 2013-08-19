@@ -13,6 +13,8 @@ class Stack implements Serializable{
     String imageUrl
     String descriptorUrl
     Integer uniqueWidgetCount = 0
+    Boolean approved = false;
+
     static belongsTo = [owner:Person]
     
     static hasMany = [groups: Group]
@@ -29,6 +31,7 @@ class Stack implements Serializable{
         imageUrl(nullable: true, blank: true, maxSize: 2083)
         descriptorUrl(nullable: true, blank: true, maxSize: 2083)
         uniqueWidgetCount(nullable: false, blank: false)
+        approved(nullable: true)
         owner(nullable:true)
     }
 
