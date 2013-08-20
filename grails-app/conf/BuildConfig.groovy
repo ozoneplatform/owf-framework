@@ -200,6 +200,13 @@ grails.project.dependency.resolution = {
 			'jsr250-api', 'log4j'
         }
 
+    compile('org.ozoneplatform.appconfig.server:commons-appconfig:1.1.0') {
+        excludes 'spring-aop', 'spring-beans', 'spring-web', 'spring-context', 'spring-core', 'ant'
+    }
+    compile('org.ozoneplatform.auditing:commons-auditing:1.4.0') {
+        excludes 'hibernate-core', 'log4j', 'servlet-api'
+    }
+
 	runtime (
          //needed for code-coverage plugin
          //'asm:asm:3.3.1',
