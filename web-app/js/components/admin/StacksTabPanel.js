@@ -219,7 +219,29 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                 border: false,
                 preventHeader:true,
                 enableColumnHide: false,
-                sortableColumns: false
+                sortableColumns: false,
+                listeners: {
+                    select: {
+                        fn: function( cmp, record, row, column, eOpts) {
+                            if (record.data) {
+
+                                Ext.QuickTips.init();
+                                var stack = record.data;
+                                var button = win.down('#ok');
+
+                                // disable the ok button if the app is not approved
+                                if (!stack.approved) {
+                                    button.setDisabled(true);
+                                    button.setTooltip(Ozone.layout.tooltipString.addingUnapprovedStackToGroupOrUserMessage);
+                                }
+                                else {
+                                    button.setDisabled(false);
+                                    button.setTooltip('');
+                                }
+                            }
+                        }
+                    }
+                }
             })
         });
         win.show();

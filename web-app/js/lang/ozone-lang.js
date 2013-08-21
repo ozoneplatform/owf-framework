@@ -203,7 +203,8 @@ Ozone.layout.tooltipString = {
         bannerDockContent:                      'Dock toolbar to banner at top of page.',
         bannerUndockTitle:                      'Undock',
         bannerUndockContent:                    'Undock toolbar to floating position and hide banner.',
-    editingUnapprovedStackEditMessage:          'You cannot edit this app because it has not been approved.'
+    editingUnapprovedStackEditMessage:          'You cannot edit this app because it has not been approved.',
+    addingUnapprovedStackToGroupOrUserMessage:  'You cannot add this stack because it has not been approved.'
 };
 
 Ozone.layout.admin = {
