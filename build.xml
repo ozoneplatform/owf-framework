@@ -207,14 +207,6 @@
         </exec>
     </target>
 
-    <target name="copy-appconfig-files">
-        <unzip src="${basedir}/lib/commons-appconfig-1.1.0-webclient.zip" dest="${basedir}/lib/temp" overwrite="true"/>
-        <copy todir="${basedir}/web-app/js/components/admin/applicationConfiguration">
-            <fileset dir="${basedir}/lib/temp/js"></fileset>
-        </copy>
-        <delete dir="${basedir}/lib/temp" />
-    </target>
-
     <target name="stage-samples" depends="zip-widgets" >
         <mkdir dir="${staging.dir}/samples" />
         <copy  file="${widget.samples.dir}/dotnet-widget/dotnet-widget.zip" todir="${staging.dir}/samples" />
@@ -227,7 +219,7 @@
         <copy  file="${widget.samples.dir}/silverlight-widget/silverlight-widget.zip" todir="${staging.dir}/samples" />
     </target>
 
-    <target name="stage-extras" depends="copy-appconfig-files,compile-themes">
+    <target name="stage-extras" depends="compile-themes">
         <mkdir dir="${tomcat.dir}" />
         <mkdir dir="${staging.dir}/etc/override" />
         <mkdir dir="${staging.dir}/owf-security" />
@@ -376,7 +368,7 @@
           target: war
          ================================= -->
 
-    <target name="war" depends="test,jsdoc,about,copy-appconfig-files,compress_js,compile-themes" description="--> Creates a WAR of a Grails application">
+    <target name="war" depends="test,jsdoc,about,compress_js,compile-themes" description="--> Creates a WAR of a Grails application">
         <grails script="war" preargs="${offline.arg}"/>
         <move file="${basedir}/target/${app.name}-${app.version}.war" tofile="${basedir}/target/owf.war" />
     </target>

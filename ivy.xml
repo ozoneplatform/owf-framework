@@ -17,9 +17,6 @@
                   ext="zip" />
     </publications>
     <dependencies>
-        <!--<dependency org="${jetty.custom.org}" name="${jetty.custom.module}" rev="${jetty.custom.rev}" conf="jetty->zip" transitive="false" >-->
-            <!--<artifact name="${jetty.custom.module}" type="zip" />-->
-        <!--</dependency>-->
         <dependency org="${tomcat.custom.org}" name="${tomcat.custom.module}" rev="${tomcat.custom.rev}" transitive="false" >
             <artifact name="${tomcat.custom.module}" type="zip" />
         </dependency>
@@ -30,9 +27,6 @@
         <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}" rev="${owf.security.rev}" changing="true" transitive="false" />
         <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}-project" rev="${owf.security.rev}" changing="true" transitive="false" />
         <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}-extras" rev="${owf.security.rev}" changing="true" transitive="false" />
-        <!-- <dependency orf="org.ozoneplatform.appconfig.server" conf="bundle->*" name="commons-appconfig" changing="true" transitive="false" >
-            <artifact type="zip" name="commons-appconfig-webclient"/>
-        </dependency> -->
         <dependency org="ozone-widgeting-framework-legacy" name="OWFAntTasks" rev="1.0.0"  />
         <dependency org="net.alchim31.3rd.com.yahoo.platform.yui" name="yuicompressor" rev="2.4.2"  />
 
