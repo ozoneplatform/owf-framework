@@ -54,6 +54,7 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                 xtype: 'button',
                 text: 'Add',
                 itemId: 'add',
+                id: 'adminUsersTabAddButton',
                 handler: function() {
                   this.onAddClicked();
                 },
@@ -62,6 +63,7 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                 xtype: 'button',
                 text: 'Remove',
                 itemId: 'remove',
+                id: 'adminUsersTabRemoveButton',
                 handler: function() {
                   var grid = this.getComponent("usersgrid");
                   var store = grid.getStore();

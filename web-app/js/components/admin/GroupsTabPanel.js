@@ -56,6 +56,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     xtype:'button',
                     text:'Add',
                     itemId: 'addButton',
+                    id: 'adminGroupsTabAddButton',
                     handler: function() {
                       this.onAddClicked();
                     },
@@ -64,6 +65,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     xtype:'button',
                     text:'Remove',
                     itemId: 'removeButton',
+                    id: 'adminGroupsTabRemoveButton',
                     handler: function() {
                         var grid = this.down('#groupsgrid');
                         //TODO make sure this is filtered by the passed in id

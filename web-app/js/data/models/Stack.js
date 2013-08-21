@@ -7,6 +7,7 @@ Ext.define('Ozone.data.Stack', {
         { name: 'description', type: 'string' },
         { name: 'stackContext', type: 'string' },
         { name: 'owner' },
+        { name: 'approved', type: 'boolean'},
         { name: 'imageUrl', type: 'string'},
         { name: 'descriptorUrl', type: 'string'},
         { name: 'totalDashboards', type: 'int' },

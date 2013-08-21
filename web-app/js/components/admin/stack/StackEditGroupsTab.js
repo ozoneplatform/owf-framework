@@ -43,6 +43,37 @@ Ext.define('Ozone.components.admin.stack.StackEditGroupsTab', {
             }
         });
 
+        // this is to disable the add/remove buttons if the app has not been approved
+        this.on({
+            activate: {
+                scope: this,
+                fn: function (cmp, opts) {
+                    Ext.QuickTips.init();
+
+                    if (cmp && cmp.ownerCt && cmp.ownerCt.record && cmp.ownerCt.record.data) {
+                        var stack = cmp.ownerCt.record.data;
+                        if (!stack.approved) {
+
+                            // disable the add button
+                            var button = Ext.getCmp('adminGroupsTabAddButton');
+                            if (button) {
+                                button.setDisabled(true);
+                                button.setTooltip(Ozone.layout.tooltipString.editingUnapprovedStackEditMessage);
+                            }
+
+                            // disable the remove button
+                            button = Ext.getCmp('adminGroupsTabRemoveButton');
+                            if (button) {
+                                button.setDisabled(true);
+                                button.setTooltip(Ozone.layout.tooltipString.editingUnapprovedStackEditMessage);
+                            }
+                        }
+                    }
+
+                }
+            }
+        });
+
         this.callParent();
     },
     initBaseParams: function(record) {

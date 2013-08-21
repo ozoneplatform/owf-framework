@@ -47,6 +47,29 @@ Ext.define('Ozone.components.admin.stack.StackEditUsersTab', {
                 fn: function(cmp, opts) {
                     var grid = cmp.getComponent('usersgrid');
                     grid.setBaseParams({adminEnabled: true});
+
+                    // disable the add/remove buttons if the app has not been approved
+                    Ext.QuickTips.init();
+
+                    if (cmp && cmp.ownerCt && cmp.ownerCt.record && cmp.ownerCt.record.data) {
+                        var stack = cmp.ownerCt.record.data;
+                        if (!stack.approved) {
+
+                            // disable the add button
+                            var button = Ext.getCmp('adminUsersTabAddButton');
+                            if (button) {
+                                button.setDisabled(true);
+                                button.setTooltip(Ozone.layout.tooltipString.editingUnapprovedStackEditMessage);
+                            }
+
+                            // disable the remove button
+                            button = Ext.getCmp('adminUsersTabRemoveButton');
+                            if (button) {
+                                button.setDisabled(true);
+                                button.setTooltip(Ozone.layout.tooltipString.editingUnapprovedStackEditMessage);
+                            }
+                        }
+                    }
                 }
             }
         });
