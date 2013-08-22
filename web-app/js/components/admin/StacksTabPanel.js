@@ -232,7 +232,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                 // disable the ok button if the app is not approved
                                 if (!stack.approved) {
                                     button.setDisabled(true);
-                                    button.setTooltip(Ozone.layout.tooltipString.addingUnapprovedStackToGroupOrUserMessage);
+                                    button.setTooltip(Ozone.layout.tooltipString.unapprovedStackEditMessage);
                                 }
                                 else {
                                     button.setDisabled(false);

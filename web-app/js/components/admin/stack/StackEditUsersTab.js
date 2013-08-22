@@ -59,14 +59,14 @@ Ext.define('Ozone.components.admin.stack.StackEditUsersTab', {
                             var button = Ext.getCmp('adminUsersTabAddButton');
                             if (button) {
                                 button.setDisabled(true);
-                                button.setTooltip(Ozone.layout.tooltipString.editingUnapprovedStackEditMessage);
+                                button.setTooltip(Ozone.layout.tooltipString.unapprovedStackEditMessage);
                             }
 
                             // disable the remove button
                             button = Ext.getCmp('adminUsersTabRemoveButton');
                             if (button) {
                                 button.setDisabled(true);
-                                button.setTooltip(Ozone.layout.tooltipString.editingUnapprovedStackEditMessage);
+                                button.setTooltip(Ozone.layout.tooltipString.unapprovedStackEditMessage);
                             }
                         }
                     }

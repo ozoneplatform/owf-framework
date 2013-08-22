@@ -58,14 +58,14 @@ Ext.define('Ozone.components.admin.stack.StackEditGroupsTab', {
                             var button = Ext.getCmp('adminGroupsTabAddButton');
                             if (button) {
                                 button.setDisabled(true);
-                                button.setTooltip(Ozone.layout.tooltipString.editingUnapprovedStackEditMessage);
+                                button.setTooltip(Ozone.layout.tooltipString.unapprovedStackEditMessage);
                             }
 
                             // disable the remove button
                             button = Ext.getCmp('adminGroupsTabRemoveButton');
                             if (button) {
                                 button.setDisabled(true);
-                                button.setTooltip(Ozone.layout.tooltipString.editingUnapprovedStackEditMessage);
+                                button.setTooltip(Ozone.layout.tooltipString.unapprovedStackEditMessage);
                             }
                         }
                     }
