@@ -1,5 +1,7 @@
 package org.ozoneplatform.auditing
 
+import java.util.Map;
+
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 
 import static ozone.owf.enums.OwfApplicationSetting.*
@@ -11,7 +13,7 @@ import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
 import org.ozoneplatform.auditing.filter.AbstractAuditingFilters
 import org.ozoneplatform.auditing.format.cef.Extension
 import org.springframework.web.context.request.RequestContextHolder
-
+import org.springframework.security.core.context.SecurityContextHolder as SCH
 import ozone.owf.grails.services.AccountService
 import ozone.owf.grails.services.OwfApplicationConfigurationService
 
@@ -66,7 +68,27 @@ class OwfAuditingFilters extends AbstractAuditingFilters {
 	}
 
 	@Override
-	public String getUserRoles() {
-		return accountService.getLoggedInUserRoles();
+	public Map<String, String> getUserInfo(){
+
+		def map = [:]
+		def p = SCH?.context?.authentication?.principal
+
+		if(p){
+			map['USERNAME'] = p?.username  ?: Extension.UNKOWN_VALUE
+			if (p?.metaClass.hasProperty(p, "displayName")) {
+				map['NAME'] = p?.displayName ?: map['USERNAME']
+			}
+			else {
+				map['NAME'] = map['USERNAME']
+			}
+			if (p?.metaClass.hasProperty(p, "organization")) {
+				map['ORG'] 	= p?.organization     ?: Extension.UNKOWN_VALUE
+			}
+			if (p?.metaClass.hasProperty(p, "email")) {
+				map['EMAIL']= p?.email     ?: Extension.UNKOWN_VALUE
+			}			
+		}
+		map['ROLES']	= accountService.getLoggedInUserRoles().collect{it.authority}
+		map
 	}
 }

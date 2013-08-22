@@ -203,7 +203,7 @@ grails.project.dependency.resolution = {
         compile('org.ozoneplatform.appconfig.server:commons-appconfig:1.1.0') {
             excludes 'gmaven-runtime-2.0', 'ant'
         }
-        compile('org.ozoneplatform.auditing:commons-auditing:1.4.0') {
+        compile('org.ozoneplatform.auditing:commons-auditing:1.5.0') {
             excludes 'gmaven-runtime-2.0'
         }
 
