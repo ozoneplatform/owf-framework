@@ -88,7 +88,7 @@ class OwfAuditingFilters extends AbstractAuditingFilters {
 				map['EMAIL']= p?.email     ?: Extension.UNKOWN_VALUE
 			}			
 		}
-		map['ROLES']	= accountService.getLoggedInUserRoles().collect{it.authority}
+		map['ROLES']	= accountService.getLoggedInUserRoles().collect{it instanceof String ? it : it.authority}
 		map
 	}
 }
