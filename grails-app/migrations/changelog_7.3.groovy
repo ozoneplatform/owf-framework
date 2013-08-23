@@ -480,6 +480,14 @@ databaseChangeLog = {
         }
     }
 
+    changeSet(author: "owf", id: "7.3-19", context: "sampleData, 7.3-sampleData") {
+        comment("Add isApproved to stack")
+        update(tableName: "stack") {
+            column(name: "approved", valueBoolean: true)
+            where("name = 'Investments' OR name = 'Administration' OR name = 'Sample'")
+        }
+    }
+
     include file: "app_config_7.3.groovy"
 
 }
