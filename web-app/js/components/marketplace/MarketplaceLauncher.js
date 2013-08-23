@@ -111,6 +111,7 @@ Ext.define('Ozone.components.marketplace.MarketplaceLauncher', {
         me.dashboard = Ext.create('Ozone.data.Dashboard', {
             name: this.mpDashboardName,
             type: 'marketplace',
+            stackContext: 'store.ozone.org',
             layoutConfig : {
                 xtype: 'container',
                 flex: 1,

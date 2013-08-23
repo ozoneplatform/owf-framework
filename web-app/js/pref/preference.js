@@ -308,7 +308,8 @@ Ozone.pref = Ozone.pref || {};
               stack = {
                   "name": json.name,
                   "description": json.description,
-                  "imageUrl": json.iconImageUrl
+                  "imageUrl": json.iconImageUrl,
+                  "stackContext": json.stackContext
               };
           }
 
