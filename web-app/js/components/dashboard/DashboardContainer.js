@@ -1078,8 +1078,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         };
     },
 
-    activateDashboard: function(guid, silent, stackContext) {
-        if(this.activeDashboard.guid != guid) {
+    activateDashboard: function(guid, silent, stackContext, forceActivation) {
+        if(this.activeDashboard.guid != guid || forceActivation) {
             //set dashboard in history but disable events so we don't activate the dashboard twice
             var params = {};
             if (stackContext) {
@@ -1835,6 +1835,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                 if (!dashboardGuidFound) {
                     dashboardGuidFound = dashboardGuidToActivate === dsRecord.get('guid');
+
+                    // OP-2799: Have to get the stack context from this record so the URL can change
+                    // correctly to the new dashboard when activated
+                    if (dashboardGuidFound) {
+                        stack = dsRecord.get('stack');
+                        stackContext = stack ? stack.stackContext : null;
+                    }
                 }
 
                 // Add dashboard object to local array.
@@ -1848,8 +1855,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 // Save default dashboard Guid and set active dashboard instance.
                 if (dsRecord.get('isdefault')) {
                     defaultTabGuid = dsRecord.get('guid');
-                    stack = dsRecord.get('stack');
-                    stackContext = stack ? stack.stackContext : null;
+                    if (!dashboardGuidFound) {
+                        stack = dsRecord.get('stack');
+                        stackContext = stack ? stack.stackContext : null;
+                    }
                     me.activeDashboard = addedDash;
                     me.defaultDashboard = addedDash;
                 }
@@ -1864,7 +1873,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
             // activate dashboard
             me._activateDashboard(dashboardGuidToActivate); // Focus the default dashboard.
-            me.activateDashboard(dashboardGuidToActivate, true, stackContext);
+            me.activateDashboard(dashboardGuidToActivate, true, stackContext, true);
 
             //If browser uses animations, enable them now that dashboards are added to card layout
             if (Modernizr.cssanimations) {
