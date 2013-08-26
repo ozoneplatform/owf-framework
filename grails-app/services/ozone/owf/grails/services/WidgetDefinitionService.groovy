@@ -134,7 +134,7 @@ class WidgetDefinitionService {
                 }
             }
         }
-    
+
         //actually query the widgetdef table
         widgetDefinition = WidgetDefinition.createCriteria().list(opts) {
             if (params?.id)
@@ -145,6 +145,17 @@ class WidgetDefinitionService {
             if(params?.universalName) like("universalName", params.universalName)
             if(params?.widgetName) like("displayName", params.widgetName)
             if(params?.widgetVersion) like("widgetVersion", params.widgetVersion)
+
+            if (params?.widgetTypes) {
+                def widgetTypeList = [params.widgetTypes].flatten()
+
+                widgetTypes {
+                    widgetTypeList.each { widgetType ->
+                        eq("displayName", widgetType)
+                    }
+                }
+            }
+
             if(params?.filters) {
                 if(params.filterOperator?.toUpperCase() == 'OR') {
                     or {

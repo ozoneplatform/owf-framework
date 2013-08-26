@@ -7,7 +7,6 @@
         <!-- ** CSS ** -->
         <!-- base library -->
         <link rel='stylesheet' type='text/css' href='../themes/a_default.theme/css/a_default.css' />
-        
     </head>
   
     <body class="configuration_widget">
@@ -22,6 +21,9 @@
             </div>
             <div class="item branding">
                 <a href="#/config/branding">Branding</a>
+            </div>
+            <div class="item store">
+                <a href="#/config/store">Store</a>
             </div>
         </div>
 

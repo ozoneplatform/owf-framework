@@ -1,18 +1,19 @@
-define([    
+define([
     'jquery',
     'underscore',
     'backbone',
     'views/OWFConfigPage',
-    'views/StaticPage'  
-], function($, _, Backbone, ApplicationConfigurationPageView, ApplicationConfigurationStaticPageView){
-    
+    'views/StaticPage',
+    'views/StoresView'
+], function ($, _, Backbone, ApplicationConfigurationPageView, ApplicationConfigurationStaticPageView, ApplicationConfigurationStoresView) {
+
     return Backbone.Router.extend({
 
         // current view instance
         view: null,
 
         container: $('body'),
-        
+
         routes: {
             'config/:id': 'getGroup',
             '*actions': 'show'          //default view
@@ -33,12 +34,19 @@ define([
 
         getGroup: function (name) {
             this.cleanup();
-            this.view = new ApplicationConfigurationPageView({
-                groupName: name
-            });
+            switch (name) {
+                case "store":
+                    this.view = new ApplicationConfigurationStoresView();
+                    break;
+                default:
+                    this.view = new ApplicationConfigurationPageView({
+                        groupName: name
+                    });
+                    break;
+            }
             this.container.append(this.view.el);
         }
-    
+
     });
 
 });
