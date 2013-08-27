@@ -102,26 +102,28 @@ databaseChangeLog = {
         SET IDENTITY_INSERT [dbo].[owf_group] ON
       """)
     }
-    changeSet(author: "owf", id: "5.0.0-9", context: "sampleData, 5.0.0-sampleData") {
-        comment(text="Add admin group")
+    // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
+    // As of 7.4, this group is created in the database create scripts.
+    // changeSet(author: "owf", id: "5.0.0-9", context: "sampleData, 5.0.0-sampleData") {
+    //     comment(text="Add admin group")
 
-        //insert admin group
-        insert(tableName: "owf_group") {
-            column(name: "id", valueNumeric: "191")
+    //     //insert admin group
+    //     insert(tableName: "owf_group") {
+    //         column(name: "id", valueNumeric: "191")
 
-            column(name: "version", valueNumeric: "0")
+    //         column(name: "version", valueNumeric: "0")
 
-            column(name: "status", value: "active")
+    //         column(name: "status", value: "active")
 
-            column(name: "description", value: "OWF Administrators")
+    //         column(name: "description", value: "OWF Administrators")
 
-            column(name: "name", value: "OWF Administrators")
+    //         column(name: "name", value: "OWF Administrators")
 
-            column(name: "display_name", value: "OWF Administrators")
+    //         column(name: "display_name", value: "OWF Administrators")
 
-            column(name: "automatic", valueBoolean: "true")
-        }
-    }
+    //         column(name: "automatic", valueBoolean: "true")
+    //     }
+    // }
     changeSet(author: "owf", id: "5.0.0-10", dbms:"mssql", context: "sampleData, 5.0.0-sampleData") {
         comment(text="allow identity inserts")
       sql ( text = """
@@ -313,27 +315,29 @@ databaseChangeLog = {
         """)
     }
     
-    changeSet(author: "owf", id: "5.0.0-21", context: "sampleData, 5.0.0-sampleData") {
-        comment(text="insert new sample data")
-        insert(tableName: "domain_mapping") {
-            column(name: "id", valueNumeric: "200")
-            column(name: "version", valueNumeric: "0")
-            column(name: "src_id", valueNumeric: "191")
-            column(name: "src_type", value: "group")
-            column(name: "relationship_type", value: "owns")
-            column(name: "dest_id", valueNumeric: "170")
-            column(name: "dest_type", value: "widget_definition")
-        }
-        insert(tableName: "domain_mapping") {
-            column(name: "id", valueNumeric: "201")
-            column(name: "version", valueNumeric: "0")
-            column(name: "src_id", valueNumeric: "191")
-            column(name: "src_type", value: "group")
-            column(name: "relationship_type", value: "owns")
-            column(name: "dest_id", valueNumeric: "171")
-            column(name: "dest_type", value: "widget_definition")
-        }
-    }
+    // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
+    // As of 7.4, this group is created in the database create scripts.
+    // changeSet(author: "owf", id: "5.0.0-21", context: "sampleData, 5.0.0-sampleData") {
+    //     comment(text="insert new sample data")
+    //     insert(tableName: "domain_mapping") {
+    //         column(name: "id", valueNumeric: "200")
+    //         column(name: "version", valueNumeric: "0")
+    //         column(name: "src_id", valueNumeric: "191")
+    //         column(name: "src_type", value: "group")
+    //         column(name: "relationship_type", value: "owns")
+    //         column(name: "dest_id", valueNumeric: "170")
+    //         column(name: "dest_type", value: "widget_definition")
+    //     }
+    //     insert(tableName: "domain_mapping") {
+    //         column(name: "id", valueNumeric: "201")
+    //         column(name: "version", valueNumeric: "0")
+    //         column(name: "src_id", valueNumeric: "191")
+    //         column(name: "src_type", value: "group")
+    //         column(name: "relationship_type", value: "owns")
+    //         column(name: "dest_id", valueNumeric: "171")
+    //         column(name: "dest_type", value: "widget_definition")
+    //     }
+    // }
     
     changeSet(author: "owf", id: "5.0.0-22", dbms:"mssql", context: "sampleData, 5.0.0-sampleData") {
         comment(text="allow identity inserts")

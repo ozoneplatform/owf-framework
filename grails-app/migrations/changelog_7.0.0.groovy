@@ -881,65 +881,67 @@ databaseChangeLog = {
       """)
     }
     
-    changeSet(author: "owf", id: "7.0.0-66", context: "sampleData, 7.0.0-sampleData") {
-        comment(text="Add Stacks Admin widgets to sample data.")
-        insert(tableName: "widget_definition") {
-            column(name: "id", valueNumeric: "184")
+    // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
+    // As of 7.4 this is done in creation scripts.
+    // changeSet(author: "owf", id: "7.0.0-66", context: "sampleData, 7.0.0-sampleData") {
+    //     comment(text="Add Stacks Admin widgets to sample data.")
+    //     insert(tableName: "widget_definition") {
+    //         column(name: "id", valueNumeric: "184")
     
-            column(name: "version", valueNumeric: "0")
+    //         column(name: "version", valueNumeric: "0")
     
-            column(name: "visible", valueBoolean: "false")
+    //         column(name: "visible", valueBoolean: "false")
     
-            column(name: "image_url_large", value: "themes/common/images/adm-tools/Stacks64.png")
+    //         column(name: "image_url_large", value: "themes/common/images/adm-tools/Stacks64.png")
     
-            column(name: "image_url_small", value: "themes/common/images/adm-tools/Stacks24.png")
+    //         column(name: "image_url_small", value: "themes/common/images/adm-tools/Stacks24.png")
     
-            column(name: "singleton", valueBoolean: "false")
+    //         column(name: "singleton", valueBoolean: "false")
     
-            column(name: "width", valueNumeric: "581")
+    //         column(name: "width", valueNumeric: "581")
     
-            column(name: "widget_version", value: "1.0")
+    //         column(name: "widget_version", value: "1.0")
     
-            column(name: "height", valueNumeric: "440")
+    //         column(name: "height", valueNumeric: "440")
     
-            column(name: "widget_url", value: "admin/StackEdit.gsp")
+    //         column(name: "widget_url", value: "admin/StackEdit.gsp")
     
-            column(name: "widget_guid", value: "9b5ebb40-8540-466c-8ccd-66092ec55636")
+    //         column(name: "widget_guid", value: "9b5ebb40-8540-466c-8ccd-66092ec55636")
     
-            column(name: "display_name", value: "Stack Editor")
+    //         column(name: "display_name", value: "Stack Editor")
     
-            column(name: "background", valueBoolean: "false")
-        }
+    //         column(name: "background", valueBoolean: "false")
+    //     }
     
-        insert(tableName: "widget_definition") {
-            column(name: "id", valueNumeric: "185")
+    //     insert(tableName: "widget_definition") {
+    //         column(name: "id", valueNumeric: "185")
     
-            column(name: "version", valueNumeric: "0")
+    //         column(name: "version", valueNumeric: "0")
     
-            column(name: "visible", valueBoolean: "true")
+    //         column(name: "visible", valueBoolean: "true")
     
-            column(name: "image_url_large", value: "themes/common/images/adm-tools/Stacks64.png")
+    //         column(name: "image_url_large", value: "themes/common/images/adm-tools/Stacks64.png")
     
-            column(name: "image_url_small", value: "themes/common/images/adm-tools/Stacks24.png")
+    //         column(name: "image_url_small", value: "themes/common/images/adm-tools/Stacks24.png")
     
-            column(name: "singleton", valueBoolean: "false")
+    //         column(name: "singleton", valueBoolean: "false")
     
-            column(name: "width", valueNumeric: "818")
+    //         column(name: "width", valueNumeric: "818")
     
-            column(name: "widget_version", value: "1.0")
+    //         column(name: "widget_version", value: "1.0")
     
-            column(name: "height", valueNumeric: "440")
+    //         column(name: "height", valueNumeric: "440")
     
-            column(name: "widget_url", value: "admin/StackManagement.gsp")
+    //         column(name: "widget_url", value: "admin/StackManagement.gsp")
     
-            column(name: "widget_guid", value: "fe97f656-862e-4c54-928d-3cdd776daf5b")
+    //         column(name: "widget_guid", value: "fe97f656-862e-4c54-928d-3cdd776daf5b")
     
-            column(name: "display_name", value: "Stacks")
+    //         column(name: "display_name", value: "Stacks")
     
-            column(name: "background", valueBoolean: "false")
-        }
+    //         column(name: "background", valueBoolean: "false")
+    //     }
         
-    }
+    // }
     
     changeSet(author: "owf", id: "7.0.0-67", dbms:"mssql", context: "sampleData, 7.0.0-sampleData") {
         comment(text="allow identity inserts")
@@ -983,27 +985,29 @@ databaseChangeLog = {
         """)
     }
     
-    changeSet(author: "owf", id: "7.0.0-69", context: "sampleData, 7.0.0-sampleData", dbms:"hsqldb, mysql, mssql") {
-        comment(text="Add the group ownership mappings for the stacks admin widgets.")
-        insert(tableName: "domain_mapping") {
-            column(name: "id", valueNumeric: "349")
-            column(name: "version", valueNumeric: "0")
-            column(name: "src_id", valueNumeric: "191")
-            column(name: "src_type", value: "group")
-            column(name: "relationship_type", value: "owns")
-            column(name: "dest_id", valueNumeric: "184")
-            column(name: "dest_type", value: "widget_definition")
-        }
-        insert(tableName: "domain_mapping") {
-            column(name: "id", valueNumeric: "350")
-            column(name: "version", valueNumeric: "0")
-            column(name: "src_id", valueNumeric: "191")
-            column(name: "src_type", value: "group")
-            column(name: "relationship_type", value: "owns")
-            column(name: "dest_id", valueNumeric: "185")
-            column(name: "dest_type", value: "widget_definition")
-        }
-    }
+    // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
+    // As of 7.4, the owf admin group and admin widgets are created/assigned in the database create scripts.
+    // changeSet(author: "owf", id: "7.0.0-69", context: "sampleData, 7.0.0-sampleData", dbms:"hsqldb, mysql, mssql") {
+    //     comment(text="Add the group ownership mappings for the stacks admin widgets.")
+    //     insert(tableName: "domain_mapping") {
+    //         column(name: "id", valueNumeric: "349")
+    //         column(name: "version", valueNumeric: "0")
+    //         column(name: "src_id", valueNumeric: "191")
+    //         column(name: "src_type", value: "group")
+    //         column(name: "relationship_type", value: "owns")
+    //         column(name: "dest_id", valueNumeric: "184")
+    //         column(name: "dest_type", value: "widget_definition")
+    //     }
+    //     insert(tableName: "domain_mapping") {
+    //         column(name: "id", valueNumeric: "350")
+    //         column(name: "version", valueNumeric: "0")
+    //         column(name: "src_id", valueNumeric: "191")
+    //         column(name: "src_type", value: "group")
+    //         column(name: "relationship_type", value: "owns")
+    //         column(name: "dest_id", valueNumeric: "185")
+    //         column(name: "dest_type", value: "widget_definition")
+    //     }
+    // }
     
     changeSet(author: "owf", id: "7.0.0-70", dbms:"mssql", context: "sampleData, 7.0.0-sampleData") {
         comment(text="allow identity inserts")
@@ -1012,33 +1016,35 @@ databaseChangeLog = {
         """)
     }
     
-    changeSet(author: "owf", id: "7.0.0-71", context: "sampleData, 7.0.0-sampleData") {
-        comment(text="Insert widget type mapping links for stack admin widgets")
-        sql ( text = """
-          insert into widget_definition_widget_types (widget_definition_id, widget_type_id)
-          select id, 2 from widget_definition
-          where widget_url in (
-            'admin/StackManagement.gsp',
-            'admin/StackEdit.gsp'
-            )
-        """ )
-    }
+    // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
+    // As of 7.4 this is done in creation scripts.
+    // changeSet(author: "owf", id: "7.0.0-71", context: "sampleData, 7.0.0-sampleData") {
+    //     comment(text="Insert widget type mapping links for stack admin widgets")
+    //     sql ( text = """
+    //       insert into widget_definition_widget_types (widget_definition_id, widget_type_id)
+    //       select id, 2 from widget_definition
+    //       where widget_url in (
+    //         'admin/StackManagement.gsp',
+    //         'admin/StackEdit.gsp'
+    //         )
+    //     """ )
+    // }
     
-    changeSet(author: "owf", id: "7.0.0-72", dbms: "mysql,mssql,postgresql,hsqldb", context: "sampleData, 7.0.0-sampleData") {
-        comment(text="Update Administration Dashboards")
+    // changeSet(author: "owf", id: "7.0.0-72", dbms: "mysql,mssql,postgresql,hsqldb", context: "sampleData, 7.0.0-sampleData") {
+    //     comment(text="Update Administration Dashboards")
         
-        update(tableName: "dashboard") {
-            column(name: "layout_config", value: """{"xtype":"container","cls":"hbox ","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"accordionpane","cls":"left","flex":1,"htmlText":"50%","items":[],"widgets":[{"universalName":null,"widgetGuid":"9d804b74-b2a6-448a-bd04-fe286905ab8f","uniqueId":"327a1df4-a879-f361-db47-03635a0f5730","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Group Dashboards","active":false,"x":0,"y":34,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":4,"singleton":false,"floatingWidget":false,"height":329,"width":675,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"412ec70d-a178-41ae-a8d9-6713a430c87c","uniqueId":"ca5b5bb3-14de-3a77-e689-1a752adca824","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Widgets","active":false,"x":0,"y":363,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":5,"singleton":false,"floatingWidget":false,"height":328,"width":675,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"fe97f656-862e-4c54-928d-3cdd776daf5b","uniqueId":"58f2f00b-a785-c61c-497f-7a99a59e350d","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Stacks","active":true,"x":0,"y":691,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":3,"singleton":false,"floatingWidget":false,"height":328,"width":675,"background":false,"columnOrder":""}],"paneType":"accordionpane","defaultSettings":{"widgetStates":{"9d804b74-b2a6-448a-bd04-fe286905ab8f":{"timestamp":1354917003344},"412ec70d-a178-41ae-a8d9-6713a430c87c":{"timestamp":1354917003349},"fe97f656-862e-4c54-928d-3cdd776daf5b":{"timestamp":1354917003354},"9b5ebb40-8540-466c-8ccd-66092ec55636":{"timestamp":1354916964296},"6cf4f84a-cc89-45ba-9577-15c34f66ee9c":{"timestamp":1354916988848},"a540f672-a34c-4989-962c-dcbd559c3792":{"timestamp":1354916998451}}}},{"xtype":"dashboardsplitter"},{"xtype":"container","cls":"vbox right","layout":{"type":"vbox","align":"stretch"},"items":[{"xtype":"tabbedpane","cls":"top","flex":1,"htmlText":"50%","items":[],"widgets":[{"universalName":null,"widgetGuid":"b87c4a3e-aa1e-499e-ba10-510f35388bb6","uniqueId":"49404ec0-c77c-f6b8-b3f9-d5c77fe465a1","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"da405d45-8f04-c2d6-f45c-5ba780aa97fc","intentConfig":null,"name":"Groups","active":false,"x":679,"y":62,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":3,"singleton":false,"floatingWidget":false,"height":462,"width":676,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"b3b1d04f-97c2-4726-9575-82bb1cf1af6a","uniqueId":"7437065e-fb6c-3253-866c-d05bf45d180a","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"da405d45-8f04-c2d6-f45c-5ba780aa97fc","intentConfig":null,"name":"Users","active":false,"x":679,"y":62,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":2,"singleton":false,"floatingWidget":false,"height":462,"width":676,"background":false,"columnOrder":""}],"paneType":"tabbedpane","defaultSettings":{"widgetStates":{"b87c4a3e-aa1e-499e-ba10-510f35388bb6":{"timestamp":1354916950506},"b3b1d04f-97c2-4726-9575-82bb1cf1af6a":{"timestamp":1354916950489}}}},{"xtype":"dashboardsplitter"},{"xtype":"tabbedpane","cls":"bottom","flex":1,"htmlText":"50%","items":[],"paneType":"tabbedpane","widgets":[{"universalName":null,"widgetGuid":"9b5ebb40-8540-466c-8ccd-66092ec55636","uniqueId":"de8e1489-1cfc-7a26-e807-6167d91f1539","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"1e5dc42c-89c2-6fd4-b887-efaafdceb260","intentConfig":null,"name":"Stack Editor","active":true,"x":679,"y":556,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":1,"singleton":false,"floatingWidget":false,"height":463,"width":676,"background":false,"columnOrder":""}],"defaultSettings":{"widgetStates":{"9b5ebb40-8540-466c-8ccd-66092ec55636":{"timestamp":1354917012829},"6cf4f84a-cc89-45ba-9577-15c34f66ee9c":{"timestamp":1354917003399},"a540f672-a34c-4989-962c-dcbd559c3792":{"timestamp":1354917012827}}}}],"flex":1}],"flex":3}""")
-            where("id=322")
-        }
-    }
+    //     update(tableName: "dashboard") {
+    //         column(name: "layout_config", value: """{"xtype":"container","cls":"hbox ","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"accordionpane","cls":"left","flex":1,"htmlText":"50%","items":[],"widgets":[{"universalName":null,"widgetGuid":"9d804b74-b2a6-448a-bd04-fe286905ab8f","uniqueId":"327a1df4-a879-f361-db47-03635a0f5730","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Group Dashboards","active":false,"x":0,"y":34,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":4,"singleton":false,"floatingWidget":false,"height":329,"width":675,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"412ec70d-a178-41ae-a8d9-6713a430c87c","uniqueId":"ca5b5bb3-14de-3a77-e689-1a752adca824","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Widgets","active":false,"x":0,"y":363,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":5,"singleton":false,"floatingWidget":false,"height":328,"width":675,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"fe97f656-862e-4c54-928d-3cdd776daf5b","uniqueId":"58f2f00b-a785-c61c-497f-7a99a59e350d","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Stacks","active":true,"x":0,"y":691,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":3,"singleton":false,"floatingWidget":false,"height":328,"width":675,"background":false,"columnOrder":""}],"paneType":"accordionpane","defaultSettings":{"widgetStates":{"9d804b74-b2a6-448a-bd04-fe286905ab8f":{"timestamp":1354917003344},"412ec70d-a178-41ae-a8d9-6713a430c87c":{"timestamp":1354917003349},"fe97f656-862e-4c54-928d-3cdd776daf5b":{"timestamp":1354917003354},"9b5ebb40-8540-466c-8ccd-66092ec55636":{"timestamp":1354916964296},"6cf4f84a-cc89-45ba-9577-15c34f66ee9c":{"timestamp":1354916988848},"a540f672-a34c-4989-962c-dcbd559c3792":{"timestamp":1354916998451}}}},{"xtype":"dashboardsplitter"},{"xtype":"container","cls":"vbox right","layout":{"type":"vbox","align":"stretch"},"items":[{"xtype":"tabbedpane","cls":"top","flex":1,"htmlText":"50%","items":[],"widgets":[{"universalName":null,"widgetGuid":"b87c4a3e-aa1e-499e-ba10-510f35388bb6","uniqueId":"49404ec0-c77c-f6b8-b3f9-d5c77fe465a1","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"da405d45-8f04-c2d6-f45c-5ba780aa97fc","intentConfig":null,"name":"Groups","active":false,"x":679,"y":62,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":3,"singleton":false,"floatingWidget":false,"height":462,"width":676,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"b3b1d04f-97c2-4726-9575-82bb1cf1af6a","uniqueId":"7437065e-fb6c-3253-866c-d05bf45d180a","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"da405d45-8f04-c2d6-f45c-5ba780aa97fc","intentConfig":null,"name":"Users","active":false,"x":679,"y":62,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":2,"singleton":false,"floatingWidget":false,"height":462,"width":676,"background":false,"columnOrder":""}],"paneType":"tabbedpane","defaultSettings":{"widgetStates":{"b87c4a3e-aa1e-499e-ba10-510f35388bb6":{"timestamp":1354916950506},"b3b1d04f-97c2-4726-9575-82bb1cf1af6a":{"timestamp":1354916950489}}}},{"xtype":"dashboardsplitter"},{"xtype":"tabbedpane","cls":"bottom","flex":1,"htmlText":"50%","items":[],"paneType":"tabbedpane","widgets":[{"universalName":null,"widgetGuid":"9b5ebb40-8540-466c-8ccd-66092ec55636","uniqueId":"de8e1489-1cfc-7a26-e807-6167d91f1539","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"1e5dc42c-89c2-6fd4-b887-efaafdceb260","intentConfig":null,"name":"Stack Editor","active":true,"x":679,"y":556,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":1,"singleton":false,"floatingWidget":false,"height":463,"width":676,"background":false,"columnOrder":""}],"defaultSettings":{"widgetStates":{"9b5ebb40-8540-466c-8ccd-66092ec55636":{"timestamp":1354917012829},"6cf4f84a-cc89-45ba-9577-15c34f66ee9c":{"timestamp":1354917003399},"a540f672-a34c-4989-962c-dcbd559c3792":{"timestamp":1354917012827}}}}],"flex":1}],"flex":3}""")
+    //         where("id=322")
+    //     }
+    // }
     
-    changeSet(author: "owf", id: "7.0.0-72", dbms: "oracle", context: "sampleData, 7.0.0-sampleData") {
-        comment(text="Update Administration Dashboards")
-        sql( text = """
-            UPDATE dashboard SET layout_config = to_clob('{"xtype":"container","cls":"hbox ","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"accordionpane","cls":"left","flex":1,"htmlText":"50%","items":[],"widgets":[{"universalName":null,"widgetGuid":"9d804b74-b2a6-448a-bd04-fe286905ab8f","uniqueId":"327a1df4-a879-f361-db47-03635a0f5730","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Group Dashboards","active":false,"x":0,"y":34,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":4,"singleton":false,"floatingWidget":false,"height":329,"width":675,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"412ec70d-a178-41ae-a8d9-6713a430c87c","uniqueId":"ca5b5bb3-14de-3a77-e689-1a752adca824","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Widgets","active":false,"x":0,"y":363,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":5,"singleton":false,"floatingWidget":false,"height":328,"width":675,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"fe97f656-862e-4c54-928d-3cdd776daf5b","uniqueId":"58f2f00b-a785-c61c-497f-7a99a59e350d","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Stacks","active":true,"x":0,"y":691,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":3,"singleton":false,"floatingWidget":false,"height":328,"width":675,"background":false,"columnOrder":""}],"paneType":"accordionpane","defaultSettings":{"widgetStates":{"9d804b74-b2a6-448a-bd04-fe286905ab8f":{"timestamp":1354917003344},"412ec70d-a178-41ae-a8d9-6713a430c87c":{"timestamp":1354917003349},"fe97f656-862e-4c54-928d-3cdd776daf5b":{"timestamp":1354917003354},"9b5ebb40-8540-466c-8ccd-66092ec55636":{"timestamp":1354916964296},"6cf4f84a-cc89-45ba-9577-15c34f66ee9c":{"timestamp":1354916988848},"a540f672-a34c-4989-962c-dcbd559c3792":{"timestamp":1354916998451}}}},{"xtype":"dashboardsplitter"},{"xtype":"container","cls":"vbox right","layout":{"type":"vbox","align":"stretch"},"items":[{"xtype":"tabbedpane","cls":"top","flex":1,"htmlText":"50%","items":[],"widgets":[{"universalName":null,"widgetGuid":"b87c4a3e-aa1e-499e-ba10-510f35388bb6","uniqueId":"49404ec0-c77c-f6b8-b3f9-d5c77fe465a1","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"da405d45-8f04-c2d6-f45c-5ba780aa97fc","intentConfig":null,"name":"Groups","active":false,"x":679,"y":62,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":3,') || to_clob('"singleton":false,"floatingWidget":false,"height":462,"width":676,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"b3b1d04f-97c2-4726-9575-82bb1cf1af6a","uniqueId":"7437065e-fb6c-3253-866c-d05bf45d180a","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"da405d45-8f04-c2d6-f45c-5ba780aa97fc","intentConfig":null,"name":"Users","active":false,"x":679,"y":62,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":2,"singleton":false,"floatingWidget":false,"height":462,"width":676,"background":false,"columnOrder":""}],"paneType":"tabbedpane","defaultSettings":{"widgetStates":{"b87c4a3e-aa1e-499e-ba10-510f35388bb6":{"timestamp":1354916950506},"b3b1d04f-97c2-4726-9575-82bb1cf1af6a":{"timestamp":1354916950489}}}},{"xtype":"dashboardsplitter"},{"xtype":"tabbedpane","cls":"bottom","flex":1,"htmlText":"50%","items":[],"paneType":"tabbedpane","widgets":[{"universalName":null,"widgetGuid":"9b5ebb40-8540-466c-8ccd-66092ec55636","uniqueId":"de8e1489-1cfc-7a26-e807-6167d91f1539","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"1e5dc42c-89c2-6fd4-b887-efaafdceb260","intentConfig":null,"name":"Stack Editor","active":true,"x":679,"y":556,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":1,"singleton":false,"floatingWidget":false,"height":463,"width":676,"background":false,"columnOrder":""}],"defaultSettings":{"widgetStates":{"9b5ebb40-8540-466c-8ccd-66092ec55636":{"timestamp":1354917012829},"6cf4f84a-cc89-45ba-9577-15c34f66ee9c":{"timestamp":1354917003399},"a540f672-a34c-4989-962c-dcbd559c3792":{"timestamp":1354917012827}}}}],"flex":1}],"flex":3}') WHERE id=322;
-        """)
-    }
+    // changeSet(author: "owf", id: "7.0.0-72", dbms: "oracle", context: "sampleData, 7.0.0-sampleData") {
+    //     comment(text="Update Administration Dashboards")
+    //     sql( text = """
+    //         UPDATE dashboard SET layout_config = to_clob('{"xtype":"container","cls":"hbox ","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"accordionpane","cls":"left","flex":1,"htmlText":"50%","items":[],"widgets":[{"universalName":null,"widgetGuid":"9d804b74-b2a6-448a-bd04-fe286905ab8f","uniqueId":"327a1df4-a879-f361-db47-03635a0f5730","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Group Dashboards","active":false,"x":0,"y":34,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":4,"singleton":false,"floatingWidget":false,"height":329,"width":675,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"412ec70d-a178-41ae-a8d9-6713a430c87c","uniqueId":"ca5b5bb3-14de-3a77-e689-1a752adca824","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Widgets","active":false,"x":0,"y":363,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":5,"singleton":false,"floatingWidget":false,"height":328,"width":675,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"fe97f656-862e-4c54-928d-3cdd776daf5b","uniqueId":"58f2f00b-a785-c61c-497f-7a99a59e350d","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Stacks","active":true,"x":0,"y":691,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":3,"singleton":false,"floatingWidget":false,"height":328,"width":675,"background":false,"columnOrder":""}],"paneType":"accordionpane","defaultSettings":{"widgetStates":{"9d804b74-b2a6-448a-bd04-fe286905ab8f":{"timestamp":1354917003344},"412ec70d-a178-41ae-a8d9-6713a430c87c":{"timestamp":1354917003349},"fe97f656-862e-4c54-928d-3cdd776daf5b":{"timestamp":1354917003354},"9b5ebb40-8540-466c-8ccd-66092ec55636":{"timestamp":1354916964296},"6cf4f84a-cc89-45ba-9577-15c34f66ee9c":{"timestamp":1354916988848},"a540f672-a34c-4989-962c-dcbd559c3792":{"timestamp":1354916998451}}}},{"xtype":"dashboardsplitter"},{"xtype":"container","cls":"vbox right","layout":{"type":"vbox","align":"stretch"},"items":[{"xtype":"tabbedpane","cls":"top","flex":1,"htmlText":"50%","items":[],"widgets":[{"universalName":null,"widgetGuid":"b87c4a3e-aa1e-499e-ba10-510f35388bb6","uniqueId":"49404ec0-c77c-f6b8-b3f9-d5c77fe465a1","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"da405d45-8f04-c2d6-f45c-5ba780aa97fc","intentConfig":null,"name":"Groups","active":false,"x":679,"y":62,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":3,') || to_clob('"singleton":false,"floatingWidget":false,"height":462,"width":676,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"b3b1d04f-97c2-4726-9575-82bb1cf1af6a","uniqueId":"7437065e-fb6c-3253-866c-d05bf45d180a","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"da405d45-8f04-c2d6-f45c-5ba780aa97fc","intentConfig":null,"name":"Users","active":false,"x":679,"y":62,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":2,"singleton":false,"floatingWidget":false,"height":462,"width":676,"background":false,"columnOrder":""}],"paneType":"tabbedpane","defaultSettings":{"widgetStates":{"b87c4a3e-aa1e-499e-ba10-510f35388bb6":{"timestamp":1354916950506},"b3b1d04f-97c2-4726-9575-82bb1cf1af6a":{"timestamp":1354916950489}}}},{"xtype":"dashboardsplitter"},{"xtype":"tabbedpane","cls":"bottom","flex":1,"htmlText":"50%","items":[],"paneType":"tabbedpane","widgets":[{"universalName":null,"widgetGuid":"9b5ebb40-8540-466c-8ccd-66092ec55636","uniqueId":"de8e1489-1cfc-7a26-e807-6167d91f1539","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"1e5dc42c-89c2-6fd4-b887-efaafdceb260","intentConfig":null,"name":"Stack Editor","active":true,"x":679,"y":556,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":1,"singleton":false,"floatingWidget":false,"height":463,"width":676,"background":false,"columnOrder":""}],"defaultSettings":{"widgetStates":{"9b5ebb40-8540-466c-8ccd-66092ec55636":{"timestamp":1354917012829},"6cf4f84a-cc89-45ba-9577-15c34f66ee9c":{"timestamp":1354917003399},"a540f672-a34c-4989-962c-dcbd559c3792":{"timestamp":1354917012827}}}}],"flex":1}],"flex":3}') WHERE id=322;
+    //     """)
+    // }
     
     changeSet(author: "owf", id: "7.0.0-73", context: "sampleData, 7.0.0-sampleData") {
         comment(text="Clean out some old domain mapping entries for widgets that have been removed from our sample database.")

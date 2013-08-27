@@ -594,79 +594,81 @@ databaseChangeLog = {
 			column(name: "dest_type", value: "widget_definition")
 		}
 
+        // DEPRECATED widgets
+        // As of 7.4, admin widget assignmentss are created in the create script, not in sample data.
 		// Assign widgets for Administration dashboard to OWF Administrators group
-		insert(tableName: "domain_mapping") {
-			column(name: "id", valueNumeric: "323")
-			column(name: "version", valueNumeric: "0")
-			column(name: "src_id", valueNumeric: "191")
-			column(name: "src_type", value: "group")
-			column(name: "relationship_type", value: "owns")
-			column(name: "dest_id", valueNumeric: "151")
-			column(name: "dest_type", value: "widget_definition")
-		}
-		insert(tableName: "domain_mapping") {
-			column(name: "id", valueNumeric: "324")
-			column(name: "version", valueNumeric: "0")
-			column(name: "src_id", valueNumeric: "191")
-			column(name: "src_type", value: "group")
-			column(name: "relationship_type", value: "owns")
-			column(name: "dest_id", valueNumeric: "154")
-			column(name: "dest_type", value: "widget_definition")
-		}
-		insert(tableName: "domain_mapping") {
-			column(name: "id", valueNumeric: "325")
-			column(name: "version", valueNumeric: "0")
-			column(name: "src_id", valueNumeric: "191")
-			column(name: "src_type", value: "group")
-			column(name: "relationship_type", value: "owns")
-			column(name: "dest_id", valueNumeric: "156")
-			column(name: "dest_type", value: "widget_definition")
-		}
-		insert(tableName: "domain_mapping") {
-			column(name: "id", valueNumeric: "326")
-			column(name: "version", valueNumeric: "0")
-			column(name: "src_id", valueNumeric: "191")
-			column(name: "src_type", value: "group")
-			column(name: "relationship_type", value: "owns")
-			column(name: "dest_id", valueNumeric: "158")
-			column(name: "dest_type", value: "widget_definition")
-		}
-		insert(tableName: "domain_mapping") {
-			column(name: "id", valueNumeric: "327")
-			column(name: "version", valueNumeric: "0")
-			column(name: "src_id", valueNumeric: "191")
-			column(name: "src_type", value: "group")
-			column(name: "relationship_type", value: "owns")
-			column(name: "dest_id", valueNumeric: "160")
-			column(name: "dest_type", value: "widget_definition")
-		}
-		insert(tableName: "domain_mapping") {
-			column(name: "id", valueNumeric: "328")
-			column(name: "version", valueNumeric: "0")
-			column(name: "src_id", valueNumeric: "191")
-			column(name: "src_type", value: "group")
-			column(name: "relationship_type", value: "owns")
-			column(name: "dest_id", valueNumeric: "163")
-			column(name: "dest_type", value: "widget_definition")
-		}
-		insert(tableName: "domain_mapping") {
-			column(name: "id", valueNumeric: "329")
-			column(name: "version", valueNumeric: "0")
-			column(name: "src_id", valueNumeric: "191")
-			column(name: "src_type", value: "group")
-			column(name: "relationship_type", value: "owns")
-			column(name: "dest_id", valueNumeric: "166")
-			column(name: "dest_type", value: "widget_definition")
-		}
-		insert(tableName: "domain_mapping") {
-			column(name: "id", valueNumeric: "330")
-			column(name: "version", valueNumeric: "0")
-			column(name: "src_id", valueNumeric: "191")
-			column(name: "src_type", value: "group")
-			column(name: "relationship_type", value: "owns")
-			column(name: "dest_id", valueNumeric: "170")
-			column(name: "dest_type", value: "widget_definition")
-		}
+		// insert(tableName: "domain_mapping") {
+		// 	column(name: "id", valueNumeric: "323")
+		// 	column(name: "version", valueNumeric: "0")
+		// 	column(name: "src_id", valueNumeric: "191")
+		// 	column(name: "src_type", value: "group")
+		// 	column(name: "relationship_type", value: "owns")
+		// 	column(name: "dest_id", valueNumeric: "151")
+		// 	column(name: "dest_type", value: "widget_definition")
+		// }
+		// insert(tableName: "domain_mapping") {
+		// 	column(name: "id", valueNumeric: "324")
+		// 	column(name: "version", valueNumeric: "0")
+		// 	column(name: "src_id", valueNumeric: "191")
+		// 	column(name: "src_type", value: "group")
+		// 	column(name: "relationship_type", value: "owns")
+		// 	column(name: "dest_id", valueNumeric: "154")
+		// 	column(name: "dest_type", value: "widget_definition")
+		// }
+		// insert(tableName: "domain_mapping") {
+		// 	column(name: "id", valueNumeric: "325")
+		// 	column(name: "version", valueNumeric: "0")
+		// 	column(name: "src_id", valueNumeric: "191")
+		// 	column(name: "src_type", value: "group")
+		// 	column(name: "relationship_type", value: "owns")
+		// 	column(name: "dest_id", valueNumeric: "156")
+		// 	column(name: "dest_type", value: "widget_definition")
+		// }
+		// insert(tableName: "domain_mapping") {
+		// 	column(name: "id", valueNumeric: "326")
+		// 	column(name: "version", valueNumeric: "0")
+		// 	column(name: "src_id", valueNumeric: "191")
+		// 	column(name: "src_type", value: "group")
+		// 	column(name: "relationship_type", value: "owns")
+		// 	column(name: "dest_id", valueNumeric: "158")
+		// 	column(name: "dest_type", value: "widget_definition")
+		// }
+		// insert(tableName: "domain_mapping") {
+		// 	column(name: "id", valueNumeric: "327")
+		// 	column(name: "version", valueNumeric: "0")
+		// 	column(name: "src_id", valueNumeric: "191")
+		// 	column(name: "src_type", value: "group")
+		// 	column(name: "relationship_type", value: "owns")
+		// 	column(name: "dest_id", valueNumeric: "160")
+		// 	column(name: "dest_type", value: "widget_definition")
+		// }
+		// insert(tableName: "domain_mapping") {
+		// 	column(name: "id", valueNumeric: "328")
+		// 	column(name: "version", valueNumeric: "0")
+		// 	column(name: "src_id", valueNumeric: "191")
+		// 	column(name: "src_type", value: "group")
+		// 	column(name: "relationship_type", value: "owns")
+		// 	column(name: "dest_id", valueNumeric: "163")
+		// 	column(name: "dest_type", value: "widget_definition")
+		// }
+		// insert(tableName: "domain_mapping") {
+		// 	column(name: "id", valueNumeric: "329")
+		// 	column(name: "version", valueNumeric: "0")
+		// 	column(name: "src_id", valueNumeric: "191")
+		// 	column(name: "src_type", value: "group")
+		// 	column(name: "relationship_type", value: "owns")
+		// 	column(name: "dest_id", valueNumeric: "166")
+		// 	column(name: "dest_type", value: "widget_definition")
+		// }
+		// insert(tableName: "domain_mapping") {
+		// 	column(name: "id", valueNumeric: "330")
+		// 	column(name: "version", valueNumeric: "0")
+		// 	column(name: "src_id", valueNumeric: "191")
+		// 	column(name: "src_type", value: "group")
+		// 	column(name: "relationship_type", value: "owns")
+		// 	column(name: "dest_id", valueNumeric: "170")
+		// 	column(name: "dest_type", value: "widget_definition")
+		// }
 	}
     changeSet(author: "owf", id: "6.0.0-43", context: "sampleData, 6.0.0-sampleData", dbms:"mssql") {
         comment(text="allow identity inserts")
@@ -794,16 +796,18 @@ databaseChangeLog = {
 			column(name: "dest_type", value: "dashboard")
 		}
 
+        // DEPRECATED dashboard
+        // As of 7.4, this dashboard associations is created in the database create scripts and not in sample data scripts.
 		// Assign Administration Dashboard to OWF Administrators group
-		insert(tableName: "domain_mapping") {
-			column(name: "id", valueNumeric: "333")
-			column(name: "version", valueNumeric: "0")
-			column(name: "src_id", valueNumeric: "191")
-			column(name: "src_type", value: "group")
-			column(name: "relationship_type", value: "owns")
-			column(name: "dest_id", valueNumeric: "322")
-			column(name: "dest_type", value: "dashboard")
-		}
+		// insert(tableName: "domain_mapping") {
+		// 	column(name: "id", valueNumeric: "333")
+		// 	column(name: "version", valueNumeric: "0")
+		// 	column(name: "src_id", valueNumeric: "191")
+		// 	column(name: "src_type", value: "group")
+		// 	column(name: "relationship_type", value: "owns")
+		// 	column(name: "dest_id", valueNumeric: "322")
+		// 	column(name: "dest_type", value: "dashboard")
+		// }
 	}
 	
 	changeSet(author: "owf", id: "6.0.0-52", context: "sampleData, 6.0.0-sampleData", dbms:"mssql") {

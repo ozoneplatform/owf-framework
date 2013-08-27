@@ -204,15 +204,16 @@ databaseChangeLog = {
       delete(tableName: "requestmap")
       delete(tableName: "preference")
       delete(tableName: "owf_group_people")
-	  // DEPRECATED delete as of 7.0.0 where dashboard_widget_state table is removed.
+	    // DEPRECATED delete as of 7.0.0 where dashboard_widget_state table is removed.
       // delete(tableName: "dashboard_widget_state")
       delete(tableName: "person_widget_definition")
-      delete(tableName: "domain_mapping")
-      delete(tableName: "dashboard")
-      delete(tableName: "owf_group") {
-          where(text="not stack_default")
-      }
-      delete(tableName: "widget_definition")
+      // DEPRECATED delete as of 7.4 where the create scripts inject some initial widgets, groups, dashboards.
+      //delete(tableName: "domain_mapping")
+      //delete(tableName: "dashboard")
+      // delete(tableName: "owf_group") {
+      //     where(text="not stack_default")
+      // }
+      //delete(tableName: "widget_definition")
       delete(tableName: "person")
   }
   
@@ -224,15 +225,16 @@ databaseChangeLog = {
       delete(tableName: "requestmap")
       delete(tableName: "preference")
       delete(tableName: "owf_group_people")
-	  // DEPRECATED delete as of 7.0.0 where dashboard_widget_state table is removed.
+	    // DEPRECATED delete as of 7.0.0 where dashboard_widget_state table is removed.
       // delete(tableName: "dashboard_widget_state")
       delete(tableName: "person_widget_definition")
-      delete(tableName: "domain_mapping")
-      delete(tableName: "dashboard")
-      delete(tableName: "owf_group") {
-          where(text="stack_default=0")
-      }
-      delete(tableName: "widget_definition")
+      // DEPRECATED delete as of 7.4 where the create scripts inject some initial widgets, groups, dashboards.
+      //delete(tableName: "domain_mapping")
+      //delete(tableName: "dashboard")
+      // delete(tableName: "owf_group") {
+      //     where(text="stack_default=0")
+      // }
+      //delete(tableName: "widget_definition")
       delete(tableName: "person")
   }
 
@@ -248,12 +250,13 @@ databaseChangeLog = {
       // DEPRECATED delete as of 7.0.0 where dashboard_widget_state table is removed.
       // delete(tableName: "dashboard_widget_state")
       delete(tableName: "person_widget_definition")
-      delete(tableName: "domain_mapping")
-      delete(tableName: "dashboard")
-      delete(tableName: "owf_group") {
-          where(text="stack_default=0")
-      }
-      delete(tableName: "widget_definition")
+      // DEPRECATED delete as of 7.4 where the create scripts inject some initial widgets, groups, dashboards.
+      //delete(tableName: "domain_mapping")
+      //delete(tableName: "dashboard")
+      // delete(tableName: "owf_group") {
+      //     where(text="stack_default=0")
+      // }
+      //delete(tableName: "widget_definition")
       delete(tableName: "person")
   }
 
@@ -768,230 +771,232 @@ databaseChangeLog = {
 			column(name: "background", valueBoolean: "false")
 		}
 
+    // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
+    // As of 7.4 this is done in creation scripts.
     //admin widgets
-    insert(tableName: "widget_definition") {
-        column(name: "id", valueNumeric: "151")
+    // insert(tableName: "widget_definition") {
+    //     column(name: "id", valueNumeric: "151")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "visible", valueBoolean: "true")
+    //     column(name: "visible", valueBoolean: "true")
 
-        column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_user.png")
+    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_user.png")
 
-        column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_user.png")
+    //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_user.png")
 
-        column(name: "singleton", valueBoolean: "false")
+    //     column(name: "singleton", valueBoolean: "false")
 
-        column(name: "width", valueNumeric: "818")
+    //     column(name: "width", valueNumeric: "818")
 
-        column(name: "widget_version", value: "1.0")
+    //     column(name: "widget_version", value: "1.0")
 
-        column(name: "height", valueNumeric: "440")
+    //     column(name: "height", valueNumeric: "440")
 
-        column(name: "widget_url", value: "admin/UserManagement.gsp")
+    //     column(name: "widget_url", value: "admin/UserManagement.gsp")
 
-        column(name: "widget_guid", value: "b3b1d04f-97c2-4726-9575-82bb1cf1af6a")
+    //     column(name: "widget_guid", value: "b3b1d04f-97c2-4726-9575-82bb1cf1af6a")
 
-        column(name: "display_name", value: "Users")
+    //     column(name: "display_name", value: "Users")
 
-        column(name: "background", valueBoolean: "false")
-    }
+    //     column(name: "background", valueBoolean: "false")
+    // }
 
-    insert(tableName: "widget_definition") {
-        column(name: "id", valueNumeric: "154")
+    // insert(tableName: "widget_definition") {
+    //     column(name: "id", valueNumeric: "154")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "visible", valueBoolean: "false")
+    //     column(name: "visible", valueBoolean: "false")
 
-        column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_user.png")
+    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_user.png")
 
-        column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_user.png")
+    //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_user.png")
 
-        column(name: "singleton", valueBoolean: "false")
+    //     column(name: "singleton", valueBoolean: "false")
 
-        column(name: "width", valueNumeric: "581")
+    //     column(name: "width", valueNumeric: "581")
 
-        column(name: "widget_version", value: "1.0")
+    //     column(name: "widget_version", value: "1.0")
 
-        column(name: "height", valueNumeric: "440")
+    //     column(name: "height", valueNumeric: "440")
 
-        column(name: "widget_url", value: "admin/UserEdit.gsp")
+    //     column(name: "widget_url", value: "admin/UserEdit.gsp")
 
-        column(name: "widget_guid", value: "101f119e-b56a-4e16-8219-11048c020038")
+    //     column(name: "widget_guid", value: "101f119e-b56a-4e16-8219-11048c020038")
 
-        column(name: "display_name", value: "User Editor")
+    //     column(name: "display_name", value: "User Editor")
 
-        column(name: "background", valueBoolean: "false")
-    }
+    //     column(name: "background", valueBoolean: "false")
+    // }
 
-    insert(tableName: "widget_definition") {
-        column(name: "id", valueNumeric: "156")
+    // insert(tableName: "widget_definition") {
+    //     column(name: "id", valueNumeric: "156")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "visible", valueBoolean: "true")
+    //     column(name: "visible", valueBoolean: "true")
 
-        column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_widget.png")
+    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_widget.png")
 
-        column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_widget.png")
+    //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_widget.png")
 
-        column(name: "singleton", valueBoolean: "false")
+    //     column(name: "singleton", valueBoolean: "false")
 
-        column(name: "width", valueNumeric: "818")
+    //     column(name: "width", valueNumeric: "818")
 
-        column(name: "widget_version", value: "1.0")
+    //     column(name: "widget_version", value: "1.0")
 
-        column(name: "height", valueNumeric: "440")
+    //     column(name: "height", valueNumeric: "440")
 
-        column(name: "widget_url", value: "admin/WidgetManagement.gsp")
+    //     column(name: "widget_url", value: "admin/WidgetManagement.gsp")
 
-        column(name: "widget_guid", value: "412ec70d-a178-41ae-a8d9-6713a430c87c")
+    //     column(name: "widget_guid", value: "412ec70d-a178-41ae-a8d9-6713a430c87c")
 
-        column(name: "display_name", value: "Widgets")
+    //     column(name: "display_name", value: "Widgets")
 
-        column(name: "background", valueBoolean: "false")
-    }
+    //     column(name: "background", valueBoolean: "false")
+    // }
 
-    insert(tableName: "widget_definition") {
-        column(name: "id", valueNumeric: "158")
+    // insert(tableName: "widget_definition") {
+    //     column(name: "id", valueNumeric: "158")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "visible", valueBoolean: "false")
+    //     column(name: "visible", valueBoolean: "false")
 
-        column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_widget.png")
+    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_widget.png")
 
-        column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_widget.png")
+    //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_widget.png")
 
-        column(name: "singleton", valueBoolean: "false")
+    //     column(name: "singleton", valueBoolean: "false")
 
-        column(name: "width", valueNumeric: "581")
+    //     column(name: "width", valueNumeric: "581")
 
-        column(name: "widget_version", value: "1.0")
+    //     column(name: "widget_version", value: "1.0")
 
-        column(name: "height", valueNumeric: "493")
+    //     column(name: "height", valueNumeric: "493")
 
-        column(name: "widget_url", value: "admin/WidgetEdit.gsp")
+    //     column(name: "widget_url", value: "admin/WidgetEdit.gsp")
 
-        column(name: "widget_guid", value: "6cf4f84a-cc89-45ba-9577-15c34f66ee9c")
+    //     column(name: "widget_guid", value: "6cf4f84a-cc89-45ba-9577-15c34f66ee9c")
 
-        column(name: "display_name", value: "Widget Editor")
+    //     column(name: "display_name", value: "Widget Editor")
 
-        column(name: "background", valueBoolean: "false")
-    }
+    //     column(name: "background", valueBoolean: "false")
+    // }
 
-    insert(tableName: "widget_definition") {
-        column(name: "id", valueNumeric: "160")
+    // insert(tableName: "widget_definition") {
+    //     column(name: "id", valueNumeric: "160")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "visible", valueBoolean: "true")
+    //     column(name: "visible", valueBoolean: "true")
 
-        column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_group.png")
+    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_group.png")
 
-        column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_group.png")
+    //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_group.png")
 
-        column(name: "singleton", valueBoolean: "false")
+    //     column(name: "singleton", valueBoolean: "false")
 
-        column(name: "width", valueNumeric: "818")
+    //     column(name: "width", valueNumeric: "818")
 
-        column(name: "widget_version", value: "1.0")
+    //     column(name: "widget_version", value: "1.0")
 
-        column(name: "height", valueNumeric: "440")
+    //     column(name: "height", valueNumeric: "440")
 
-        column(name: "widget_url", value: "admin/GroupManagement.gsp")
+    //     column(name: "widget_url", value: "admin/GroupManagement.gsp")
 
-        column(name: "widget_guid", value: "b87c4a3e-aa1e-499e-ba10-510f35388bb6")
+    //     column(name: "widget_guid", value: "b87c4a3e-aa1e-499e-ba10-510f35388bb6")
 
-        column(name: "display_name", value: "Groups")
+    //     column(name: "display_name", value: "Groups")
 
-        column(name: "background", valueBoolean: "false")
-    }
+    //     column(name: "background", valueBoolean: "false")
+    // }
 
-    insert(tableName: "widget_definition") {
-        column(name: "id", valueNumeric: "163")
+    // insert(tableName: "widget_definition") {
+    //     column(name: "id", valueNumeric: "163")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "visible", valueBoolean: "false")
+    //     column(name: "visible", valueBoolean: "false")
 
-        column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_group.png")
+    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_group.png")
 
-        column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_group.png")
+    //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_group.png")
 
-        column(name: "singleton", valueBoolean: "false")
+    //     column(name: "singleton", valueBoolean: "false")
 
-        column(name: "width", valueNumeric: "581")
+    //     column(name: "width", valueNumeric: "581")
 
-        column(name: "widget_version", value: "1.0")
+    //     column(name: "widget_version", value: "1.0")
 
-        column(name: "height", valueNumeric: "440")
+    //     column(name: "height", valueNumeric: "440")
 
-        column(name: "widget_url", value: "admin/GroupEdit.gsp")
+    //     column(name: "widget_url", value: "admin/GroupEdit.gsp")
 
-        column(name: "widget_guid", value: "d6ce3375-6e89-45ab-a7be-b6cf3abb0e8c")
+    //     column(name: "widget_guid", value: "d6ce3375-6e89-45ab-a7be-b6cf3abb0e8c")
 
-        column(name: "display_name", value: "Group Editor")
+    //     column(name: "display_name", value: "Group Editor")
 
-        column(name: "background", valueBoolean: "false")
-    }
+    //     column(name: "background", valueBoolean: "false")
+    // }
 
-    insert(tableName: "widget_definition") {
-        column(name: "id", valueNumeric: "166")
+    // insert(tableName: "widget_definition") {
+    //     column(name: "id", valueNumeric: "166")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "visible", valueBoolean: "true")
+    //     column(name: "visible", valueBoolean: "true")
 
-        column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_dashboard.png")
+    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_dashboard.png")
 
-        column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_dashboard.png")
+    //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_dashboard.png")
 
-        column(name: "singleton", valueBoolean: "false")
+    //     column(name: "singleton", valueBoolean: "false")
 
-        column(name: "width", valueNumeric: "818")
+    //     column(name: "width", valueNumeric: "818")
 
-        column(name: "widget_version", value: "1.0")
+    //     column(name: "widget_version", value: "1.0")
 
-        column(name: "height", valueNumeric: "440")
+    //     column(name: "height", valueNumeric: "440")
 
-        column(name: "widget_url", value: "admin/GroupDashboardManagement.gsp")
+    //     column(name: "widget_url", value: "admin/GroupDashboardManagement.gsp")
 
-        column(name: "widget_guid", value: "9d804b74-b2a6-448a-bd04-fe286905ab8f")
+    //     column(name: "widget_guid", value: "9d804b74-b2a6-448a-bd04-fe286905ab8f")
 
-        column(name: "display_name", value: "Group Dashboards")
+    //     column(name: "display_name", value: "Group Dashboards")
 
-        column(name: "background", valueBoolean: "false")
-    }
+    //     column(name: "background", valueBoolean: "false")
+    // }
 
-    insert(tableName: "widget_definition") {
-        column(name: "id", valueNumeric: "170")
+    // insert(tableName: "widget_definition") {
+    //     column(name: "id", valueNumeric: "170")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "visible", valueBoolean: "false")
+    //     column(name: "visible", valueBoolean: "false")
 
-        column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_dashboard.png")
+    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_dashboard.png")
 
-        column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_dashboard.png")
+    //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_dashboard.png")
 
-        column(name: "singleton", valueBoolean: "false")
+    //     column(name: "singleton", valueBoolean: "false")
 
-        column(name: "width", valueNumeric: "581")
+    //     column(name: "width", valueNumeric: "581")
 
-        column(name: "widget_version", value: "1.0")
+    //     column(name: "widget_version", value: "1.0")
 
-        column(name: "height", valueNumeric: "440")
+    //     column(name: "height", valueNumeric: "440")
 
-        column(name: "widget_url", value: "admin/DashboardEdit.gsp")
+    //     column(name: "widget_url", value: "admin/DashboardEdit.gsp")
 
-        column(name: "widget_guid", value: "a540f672-a34c-4989-962c-dcbd559c3792")
+    //     column(name: "widget_guid", value: "a540f672-a34c-4989-962c-dcbd559c3792")
 
-        column(name: "display_name", value: "Dashboard Editor")
+    //     column(name: "display_name", value: "Dashboard Editor")
 
-        column(name: "background", valueBoolean: "false")
-    }
+    //     column(name: "background", valueBoolean: "false")
+    // }
 
   }
   changeSet(author: "owf", id: "4.0.0-11", dbms:"mssql", context: "sampleData, 4.0.0-sampleData") {
@@ -1905,118 +1910,120 @@ databaseChangeLog = {
         column(name: "widget_definition_id", valueNumeric: "21")
     }
 
+    // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
+    // As of 7.4 this is done in creation scripts.
     //admin widget mappings
-    insert(tableName: "person_widget_definition") {
-        column(name: "id", valueNumeric: "174")
+    // insert(tableName: "person_widget_definition") {
+    //     column(name: "id", valueNumeric: "174")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "person_id", valueNumeric: "1")
+    //     column(name: "person_id", valueNumeric: "1")
 
-        column(name: "visible", valueBoolean: "true")
+    //     column(name: "visible", valueBoolean: "true")
 
-        column(name: "pwd_position", valueNumeric: "1")
+    //     column(name: "pwd_position", valueNumeric: "1")
 
-        column(name: "widget_definition_id", valueNumeric: "151")
-    }
+    //     column(name: "widget_definition_id", valueNumeric: "151")
+    // }
 
-    insert(tableName: "person_widget_definition") {
-        column(name: "id", valueNumeric: "177")
+    // insert(tableName: "person_widget_definition") {
+    //     column(name: "id", valueNumeric: "177")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "person_id", valueNumeric: "1")
+    //     column(name: "person_id", valueNumeric: "1")
 
-        column(name: "visible", valueBoolean: "true")
+    //     column(name: "visible", valueBoolean: "true")
 
-        column(name: "pwd_position", valueNumeric: "1")
+    //     column(name: "pwd_position", valueNumeric: "1")
 
-        column(name: "widget_definition_id", valueNumeric: "154")
-    }
+    //     column(name: "widget_definition_id", valueNumeric: "154")
+    // }
 
-    insert(tableName: "person_widget_definition") {
-        column(name: "id", valueNumeric: "179")
+    // insert(tableName: "person_widget_definition") {
+    //     column(name: "id", valueNumeric: "179")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "person_id", valueNumeric: "1")
+    //     column(name: "person_id", valueNumeric: "1")
 
-        column(name: "visible", valueBoolean: "true")
+    //     column(name: "visible", valueBoolean: "true")
 
-        column(name: "pwd_position", valueNumeric: "1")
+    //     column(name: "pwd_position", valueNumeric: "1")
 
-        column(name: "widget_definition_id", valueNumeric: "156")
-    }
+    //     column(name: "widget_definition_id", valueNumeric: "156")
+    // }
 
-    insert(tableName: "person_widget_definition") {
-        column(name: "id", valueNumeric: "181")
+    // insert(tableName: "person_widget_definition") {
+    //     column(name: "id", valueNumeric: "181")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "person_id", valueNumeric: "1")
+    //     column(name: "person_id", valueNumeric: "1")
 
-        column(name: "visible", valueBoolean: "true")
+    //     column(name: "visible", valueBoolean: "true")
 
-        column(name: "pwd_position", valueNumeric: "1")
+    //     column(name: "pwd_position", valueNumeric: "1")
 
-        column(name: "widget_definition_id", valueNumeric: "158")
-    }
+    //     column(name: "widget_definition_id", valueNumeric: "158")
+    // }
 
-    insert(tableName: "person_widget_definition") {
-        column(name: "id", valueNumeric: "183")
+    // insert(tableName: "person_widget_definition") {
+    //     column(name: "id", valueNumeric: "183")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "person_id", valueNumeric: "1")
+    //     column(name: "person_id", valueNumeric: "1")
 
-        column(name: "visible", valueBoolean: "true")
+    //     column(name: "visible", valueBoolean: "true")
 
-        column(name: "pwd_position", valueNumeric: "1")
+    //     column(name: "pwd_position", valueNumeric: "1")
 
-        column(name: "widget_definition_id", valueNumeric: "160")
-    }
+    //     column(name: "widget_definition_id", valueNumeric: "160")
+    // }
 
-    insert(tableName: "person_widget_definition") {
-        column(name: "id", valueNumeric: "185")
+    // insert(tableName: "person_widget_definition") {
+    //     column(name: "id", valueNumeric: "185")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "person_id", valueNumeric: "1")
+    //     column(name: "person_id", valueNumeric: "1")
 
-        column(name: "visible", valueBoolean: "true")
+    //     column(name: "visible", valueBoolean: "true")
 
-        column(name: "pwd_position", valueNumeric: "1")
+    //     column(name: "pwd_position", valueNumeric: "1")
 
-        column(name: "widget_definition_id", valueNumeric: "163")
-    }
+    //     column(name: "widget_definition_id", valueNumeric: "163")
+    // }
 
-    insert(tableName: "person_widget_definition") {
-        column(name: "id", valueNumeric: "187")
+    // insert(tableName: "person_widget_definition") {
+    //     column(name: "id", valueNumeric: "187")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "person_id", valueNumeric: "1")
+    //     column(name: "person_id", valueNumeric: "1")
 
-        column(name: "visible", valueBoolean: "true")
+    //     column(name: "visible", valueBoolean: "true")
 
-        column(name: "pwd_position", valueNumeric: "1")
+    //     column(name: "pwd_position", valueNumeric: "1")
 
-        column(name: "widget_definition_id", valueNumeric: "166")
-    }
+    //     column(name: "widget_definition_id", valueNumeric: "166")
+    // }
 
-    insert(tableName: "person_widget_definition") {
-        column(name: "id", valueNumeric: "189")
+    // insert(tableName: "person_widget_definition") {
+    //     column(name: "id", valueNumeric: "189")
 
-        column(name: "version", valueNumeric: "0")
+    //     column(name: "version", valueNumeric: "0")
 
-        column(name: "person_id", valueNumeric: "1")
+    //     column(name: "person_id", valueNumeric: "1")
 
-        column(name: "visible", valueBoolean: "true")
+    //     column(name: "visible", valueBoolean: "true")
 
-        column(name: "pwd_position", valueNumeric: "1")
+    //     column(name: "pwd_position", valueNumeric: "1")
 
-        column(name: "widget_definition_id", valueNumeric: "170")
-    }
+    //     column(name: "widget_definition_id", valueNumeric: "170")
+    // }
 
   }
   changeSet(author: "owf", id: "4.0.0-14", dbms:"mssql", context: "sampleData, 4.0.0-sampleData") {
@@ -3813,8 +3820,11 @@ databaseChangeLog = {
       SET IDENTITY_INSERT [dbo].[widget_type] OFF
     """)
   }
+
+  
   changeSet(author: "owf", id: "4.0.0-53", context: "upgrade, 4.0.0, sampleData, 4.0.0-sampleData") {
     comment(text="Insert widget type mapping links")
+    // Altered for 7.4 to include stack managers and configuration page.
     sql ( text = """
       insert into widget_definition_widget_types (widget_definition_id, widget_type_id)
       select id, 1 from widget_definition
@@ -3827,24 +3837,29 @@ databaseChangeLog = {
         'admin/UserManagement.gsp',
         'admin/UserEdit.gsp',
         'admin/WidgetEdit.gsp',
-        'admin/WidgetManagement.gsp'
+        'admin/WidgetManagement.gsp',
+        'admin/StackEdit.gsp',
+        'admin/StackManagement.gsp',
+        'admin/Configuration.gsp'
         )
     """ )
-    sql ( text = """
-      insert into widget_definition_widget_types (widget_definition_id, widget_type_id)
-      select id, 2 from widget_definition
-      where widget_url in (
-        'admin/DashboardEdit.gsp',
-        'admin/GroupDashboardManagement.gsp',
-        'admin/GroupEdit.gsp',
-        'admin/GroupManagement.gsp',
-        'admin/MarketplaceApprovals.gsp',
-        'admin/UserManagement.gsp',
-        'admin/UserEdit.gsp',
-        'admin/WidgetEdit.gsp',
-        'admin/WidgetManagement.gsp'
-        )
-    """ )
+    // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
+    // As of 7.4 this is done in creation scripts.
+    // sql ( text = """
+    //   insert into widget_definition_widget_types (widget_definition_id, widget_type_id)
+    //   select id, 2 from widget_definition
+    //   where widget_url in (
+    //     'admin/DashboardEdit.gsp',
+    //     'admin/GroupDashboardManagement.gsp',
+    //     'admin/GroupEdit.gsp',
+    //     'admin/GroupManagement.gsp',
+    //     'admin/MarketplaceApprovals.gsp',
+    //     'admin/UserManagement.gsp',
+    //     'admin/UserEdit.gsp',
+    //     'admin/WidgetEdit.gsp',
+    //     'admin/WidgetManagement.gsp'
+    //     )
+    // """ )
   }
 
 // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
@@ -3872,61 +3887,63 @@ databaseChangeLog = {
 //    }
 //  }
 
-  changeSet(author: "owf", id: "4.0.0-55", context: "upgrade, 4.0.0, sampleData, 4.0.0-sampleData") {
-    comment(text="Updating Admin Widget Icons and Names")
+  // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
+  // As of 7.4 this is done in creation scripts.
+  // changeSet(author: "owf", id: "4.0.0-55", context: "upgrade, 4.0.0, sampleData, 4.0.0-sampleData") {
+  //   comment(text="Updating Admin Widget Icons and Names")
 
-    update(tableName:"widget_definition") {
-      column(name:"image_url_large", value:"themes/common/images/adm-tools/Users64.png")
-      column(name:"image_url_small", value:"themes/common/images/adm-tools/Users24.png")
-      column(name: "display_name", value: "Users")
-      where(text="widget_url='admin/UserManagement.gsp'")
-    }
-    update(tableName:"widget_definition") {
-      column(name:"image_url_large", value:"themes/common/images/adm-tools/Users64.png")
-      column(name:"image_url_small", value:"themes/common/images/adm-tools/Users24.png")
-      where(text="widget_url='admin/UserEdit.gsp'")
-    }
-    update(tableName:"widget_definition") {
-      column(name:"image_url_large", value:"themes/common/images/adm-tools/Widgets64.png")
-      column(name:"image_url_small", value:"themes/common/images/adm-tools/Widgets24.png")
-      column(name: "display_name", value: "Widgets")
-      where(text="widget_url='admin/WidgetManagement.gsp'")
-    }
-    update(tableName:"widget_definition") {
-      column(name:"image_url_large", value:"themes/common/images/adm-tools/Widgets64.png")
-      column(name:"image_url_small", value:"themes/common/images/adm-tools/Widgets24.png")
-      where(text="widget_url='admin/WidgetEdit.gsp'")
-    }
-    update(tableName:"widget_definition") {
-      column(name:"image_url_large", value:"themes/common/images/adm-tools/Groups64.png")
-      column(name:"image_url_small", value:"themes/common/images/adm-tools/Groups24.png")
-      column(name: "display_name", value: "Groups")
-      where(text="widget_url='admin/GroupManagement.gsp'")
-    }
-    update(tableName:"widget_definition") {
-      column(name:"image_url_large", value:"themes/common/images/adm-tools/Groups64.png")
-      column(name:"image_url_small", value:"themes/common/images/adm-tools/Groups24.png")
-      where(text="widget_url='admin/GroupEdit.gsp'")
-    }
-    update(tableName:"widget_definition") {
-      column(name:"image_url_large", value:"themes/common/images/adm-tools/Dashboards64.png")
-      column(name:"image_url_small", value:"themes/common/images/adm-tools/Dashboards24.png")
-      column(name: "display_name", value: "Group Dashboards")
-      where(text="widget_url='admin/GroupDashboardManagement.gsp'")
-    }
-    update(tableName:"widget_definition") {
-      column(name:"image_url_large", value:"themes/common/images/adm-tools/Dashboards64.png")
-      column(name:"image_url_small", value:"themes/common/images/adm-tools/Dashboards24.png")
-      where(text="widget_url='admin/DashboardEdit.gsp'")
-    }
-    update(tableName:"widget_definition") {
-      column(name:"image_url_large", value:"themes/common/images/adm-tools/Approvals64.png")
-      column(name:"image_url_small", value:"themes/common/images/adm-tools/Approvals24.png")
-      column(name:"visible", valueBoolean: "true")
-      column(name: "display_name", value: "Approvals")
-      where(text="widget_url='admin/MarketplaceApprovals.gsp'")
-    }
-  }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Users64.png")
+  //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Users24.png")
+  //     column(name: "display_name", value: "Users")
+  //     where(text="widget_url='admin/UserManagement.gsp'")
+  //   }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Users64.png")
+  //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Users24.png")
+  //     where(text="widget_url='admin/UserEdit.gsp'")
+  //   }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Widgets64.png")
+  //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Widgets24.png")
+  //     column(name: "display_name", value: "Widgets")
+  //     where(text="widget_url='admin/WidgetManagement.gsp'")
+  //   }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Widgets64.png")
+  //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Widgets24.png")
+  //     where(text="widget_url='admin/WidgetEdit.gsp'")
+  //   }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Groups64.png")
+  //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Groups24.png")
+  //     column(name: "display_name", value: "Groups")
+  //     where(text="widget_url='admin/GroupManagement.gsp'")
+  //   }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Groups64.png")
+  //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Groups24.png")
+  //     where(text="widget_url='admin/GroupEdit.gsp'")
+  //   }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Dashboards64.png")
+  //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Dashboards24.png")
+  //     column(name: "display_name", value: "Group Dashboards")
+  //     where(text="widget_url='admin/GroupDashboardManagement.gsp'")
+  //   }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Dashboards64.png")
+  //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Dashboards24.png")
+  //     where(text="widget_url='admin/DashboardEdit.gsp'")
+  //   }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Approvals64.png")
+  //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Approvals24.png")
+  //     column(name:"visible", valueBoolean: "true")
+  //     column(name: "display_name", value: "Approvals")
+  //     where(text="widget_url='admin/MarketplaceApprovals.gsp'")
+  //   }
+  // }
 
   changeSet(author: "owf", id: "4.0.0-56", context: "create, upgrade, 4.0.0") {
     comment(text="Updating display_name column to 256 chars")

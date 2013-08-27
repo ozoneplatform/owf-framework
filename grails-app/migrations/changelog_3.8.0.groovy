@@ -102,69 +102,71 @@ databaseChangeLog = {
 //      }
 //  }
 
-  changeSet(author: "owf", id: "3.8.0-7", context: "upgrade, 3.8.0,  sampleData, 3.8.0-sampleData") {
-    comment(text="Updating Admin Widget Icons and Names")
+  // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
+  // As of 7.4 this is done in creation scripts.
+  // changeSet(author: "owf", id: "3.8.0-7", context: "upgrade, 3.8.0,  sampleData, 3.8.0-sampleData") {
+  //   comment(text="Updating Admin Widget Icons and Names")
 
-    update(tableName:"widget_definition") {
-      column(name:"display_name", value:"User Manager")
-      column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_user.png")
-      column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_user.png")
-      where(text="widget_url='admin/UserManagement.gsp'")
-    }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"display_name", value:"User Manager")
+  //     column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_user.png")
+  //     column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_user.png")
+  //     where(text="widget_url='admin/UserManagement.gsp'")
+  //   }
 
-    update(tableName:"widget_definition") {
-      column(name:"display_name", value:"User Editor")
-      column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_user.png")
-      column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_user.png")
-      column(name:"visible", valueBoolean:"false")
-      where(text="widget_url='admin/UserEdit.gsp'")
-    }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"display_name", value:"User Editor")
+  //     column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_user.png")
+  //     column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_user.png")
+  //     column(name:"visible", valueBoolean:"false")
+  //     where(text="widget_url='admin/UserEdit.gsp'")
+  //   }
 
-    update(tableName:"widget_definition") {
-      column(name:"display_name", value:"Widget Manager")
-      column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_widget.png")
-      column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_widget.png")
-      where(text="widget_url='admin/WidgetManagement.gsp'")
-    }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"display_name", value:"Widget Manager")
+  //     column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_widget.png")
+  //     column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_widget.png")
+  //     where(text="widget_url='admin/WidgetManagement.gsp'")
+  //   }
 
-    update(tableName:"widget_definition") {
-      column(name:"display_name", value:"Widget Editor")
-      column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_widget.png")
-      column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_widget.png")
-      column(name:"visible", valueBoolean:"false")
-      where(text="widget_url='admin/WidgetEdit.gsp'")
-    }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"display_name", value:"Widget Editor")
+  //     column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_widget.png")
+  //     column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_widget.png")
+  //     column(name:"visible", valueBoolean:"false")
+  //     where(text="widget_url='admin/WidgetEdit.gsp'")
+  //   }
 
-    update(tableName:"widget_definition") {
-      column(name:"display_name", value:"Group Manager")
-      column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_group.png")
-      column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_group.png")
-      where(text="widget_url='admin/GroupManagement.gsp'")
-    }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"display_name", value:"Group Manager")
+  //     column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_group.png")
+  //     column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_group.png")
+  //     where(text="widget_url='admin/GroupManagement.gsp'")
+  //   }
 
-    update(tableName:"widget_definition") {
-      column(name:"display_name", value:"Group Editor")
-      column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_group.png")
-      column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_group.png")
-      column(name:"visible", valueBoolean:"false")
-      where(text="widget_url='admin/GroupEdit.gsp'")
-    }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"display_name", value:"Group Editor")
+  //     column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_group.png")
+  //     column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_group.png")
+  //     column(name:"visible", valueBoolean:"false")
+  //     where(text="widget_url='admin/GroupEdit.gsp'")
+  //   }
 
-    update(tableName:"widget_definition") {
-      column(name:"display_name", value:"Group Dashboard Manager")
-      column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_dashboard.png")
-      column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_dashboard.png")
-      where(text="widget_url='admin/GroupDashboardManagement.gsp'")
-    }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"display_name", value:"Group Dashboard Manager")
+  //     column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_dashboard.png")
+  //     column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_dashboard.png")
+  //     where(text="widget_url='admin/GroupDashboardManagement.gsp'")
+  //   }
 
-    update(tableName:"widget_definition") {
-      column(name:"display_name", value:"Dashboard Editor")
-      column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_dashboard.png")
-      column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_dashboard.png")
-      column(name:"visible", valueBoolean:"false")
-      where(text="widget_url='admin/DashboardEdit.gsp'")
-    }
-  }
+  //   update(tableName:"widget_definition") {
+  //     column(name:"display_name", value:"Dashboard Editor")
+  //     column(name:"image_url_large", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_dashboard.png")
+  //     column(name:"image_url_small", value:"themes/owf-ext-theme/resources/themes/images/owf-ext/admin/64x64_blue_dashboard.png")
+  //     column(name:"visible", valueBoolean:"false")
+  //     where(text="widget_url='admin/DashboardEdit.gsp'")
+  //   }
+  // }
   // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
   // changeSet(author: "owf", id: "3.8.0-8", context: "sampleData, 3.8.0-sampleData") {
   //   comment(text="Renaming sample dashboard names")
