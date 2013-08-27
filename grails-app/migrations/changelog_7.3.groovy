@@ -199,16 +199,17 @@ databaseChangeLog = {
             column(name: "stack_default", valueBoolean: true)
         }
 
-        insert(tableName: "owf_group") {
-            column(name: "version", valueNumeric: "0")
-            column(name: "automatic", valueBoolean: "false")
-            column(name: "description", value: "")
-            column(name: "email", value: null)
-            column(name: "name", value: "3b870e3b-247f-47db-bcd8-8fab6877bbc8")
-            column(name: "status", value: "active")
-            column(name: "display_name", value: null)
-            column(name: "stack_default", valueBoolean: true)
-        }
+        // As of 7.4 this is done in creation scripts.
+        // insert(tableName: "owf_group") {
+        //     column(name: "version", valueNumeric: "0")
+        //     column(name: "automatic", valueBoolean: "false")
+        //     column(name: "description", value: "")
+        //     column(name: "email", value: null)
+        //     column(name: "name", value: "3b870e3b-247f-47db-bcd8-8fab6877bbc8")
+        //     column(name: "status", value: "active")
+        //     column(name: "display_name", value: null)
+        //     column(name: "stack_default", valueBoolean: true)
+        // }
 
         insert(tableName: "stack") {
             column(name: "version", valueNumeric: "0")
@@ -221,26 +222,28 @@ databaseChangeLog = {
             column(name: "owner_id", value: null)
         }
 
-        insert(tableName: "stack") {
-            column(name: "version", valueNumeric: "0")
-            column(name: "name", value: "Administration")
-            column(name: "description", value: "This dashboard provides the widgets needed to administer dashboards, widgets, groups, and users in OWF.")
-            column(name: "stack_context", value: "0092af0b-57ae-4fd9-bd8a-ec0937ac5399")
-            column(name: "image_url", value: null)
-            column(name: "descriptor_url", value: null)
-            column(name: "unique_widget_count", value: 0)
-            column(name: "owner_id", value: null)
-        }
+        // As of 7.4 this is done in creation scripts.
+        // insert(tableName: "stack") {
+        //     column(name: "version", valueNumeric: "0")
+        //     column(name: "name", value: "Administration")
+        //     column(name: "description", value: "This dashboard provides the widgets needed to administer dashboards, widgets, groups, and users in OWF.")
+        //     column(name: "stack_context", value: "0092af0b-57ae-4fd9-bd8a-ec0937ac5399")
+        //     column(name: "image_url", value: null)
+        //     column(name: "descriptor_url", value: null)
+        //     column(name: "unique_widget_count", value: 0)
+        //     column(name: "owner_id", value: null)
+        // }
 
         insert(tableName: "stack_groups") {
             column(name: "group_id", valueComputed: "(SELECT id FROM owf_group WHERE name='df51cb9b-f3d8-412e-af33-d064f81fb6c0')")
             column(name: "stack_id", valueComputed: "(SELECT id FROM stack WHERE stack_context='908d934d-9d53-406c-8143-90b406fb508f')")
         }
 
-        insert(tableName: "stack_groups") {
-            column(name: "group_id", valueComputed: "(SELECT id FROM owf_group WHERE name='3b870e3b-247f-47db-bcd8-8fab6877bbc8')")
-            column(name: "stack_id", valueComputed: "(SELECT id FROM stack WHERE stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399')")
-        }
+        // As of 7.4 this is done in creation scripts.
+        // insert(tableName: "stack_groups") {
+        //     column(name: "group_id", valueComputed: "(SELECT id FROM owf_group WHERE name='3b870e3b-247f-47db-bcd8-8fab6877bbc8')")
+        //     column(name: "stack_id", valueComputed: "(SELECT id FROM stack WHERE stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399')")
+        // }
 
         update(tableName: "dashboard") {
             column(name: "version", valueNumeric: "1")
@@ -282,14 +285,15 @@ databaseChangeLog = {
             column(name: "src_type", value: "group")
         }
 
-        insert(tableName: "domain_mapping") {
-            column(name: "version", valueNumeric: "0")
-            column(name: "dest_id", valueComputed: "(SELECT id FROM dashboard WHERE guid='54949b5d-f0ee-4347-811e-2522a1bf96fe' AND user_id IS NULL AND name='Administration')")
-            column(name: "dest_type", value: "dashboard")
-            column(name: "relationship_type", value: "owns")
-            column(name: "src_id", valueComputed: "(SELECT id FROM owf_group WHERE name='3b870e3b-247f-47db-bcd8-8fab6877bbc8')")
-            column(name: "src_type", value: "group")
-        }
+        // As of 7.4 this is done in creation scripts.
+        // insert(tableName: "domain_mapping") {
+        //     column(name: "version", valueNumeric: "0")
+        //     column(name: "dest_id", valueComputed: "(SELECT id FROM dashboard WHERE guid='54949b5d-f0ee-4347-811e-2522a1bf96fe' AND user_id IS NULL AND name='Administration')")
+        //     column(name: "dest_type", value: "dashboard")
+        //     column(name: "relationship_type", value: "owns")
+        //     column(name: "src_id", valueComputed: "(SELECT id FROM owf_group WHERE name='3b870e3b-247f-47db-bcd8-8fab6877bbc8')")
+        //     column(name: "src_type", value: "group")
+        // }
     }
 
     // OP-2157: Sample data still references "dashboards" and "stacks"
@@ -362,12 +366,13 @@ databaseChangeLog = {
             where("name = 'Investments'")
         }
 
+        // As of 7.4 this is done in creation scripts.
         // In "Administration", change "This dashboard provides the widgets needed to administer dashboards, widgets, groups, and users in OWF."
         //                          to "This app lists administrative pages."
-        update(tableName: "stack") {
-            column(name: "description", value: "This app lists administrative pages.")
-            where("name = 'Administration'")
-        }
+        // update(tableName: "stack") {
+        //     column(name: "description", value: "This app lists administrative pages.")
+        //     where("name = 'Administration'")
+        // }
 
         //---------------------
         // Update sample pages
@@ -406,11 +411,12 @@ databaseChangeLog = {
             where("stack_context='908d934d-9d53-406c-8143-90b406fb508f'")
         }
 
+        // As of 7.4 this is done in creation scripts.
         // Administration app
-        update(tableName: "stack") {
-            column(name: "unique_widget_count", value: 5)
-            where("stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399'")
-        }
+        // update(tableName: "stack") {
+        //     column(name: "unique_widget_count", value: 5)
+        //     where("stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399'")
+        // }
     }
 
     changeSet(author: "owf", id: "7.3-15", context: "sampleData, 7.3-sampleData") {
@@ -423,19 +429,21 @@ databaseChangeLog = {
             column(name: "stack_id", valueComputed: "(SELECT id FROM stack WHERE stack_context='908d934d-9d53-406c-8143-90b406fb508f')")
         }
 
+        // As of 7.4 this is done in creation scripts.
         // admin
-        insert(tableName: "stack_groups") {
-            column(name: "group_id", valueComputed: "(SELECT id FROM owf_group WHERE name='OWF Administrators')")
-            column(name: "stack_id", valueComputed: "(SELECT id FROM stack WHERE stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399')")
-        }
+        // insert(tableName: "stack_groups") {
+        //     column(name: "group_id", valueComputed: "(SELECT id FROM owf_group WHERE name='OWF Administrators')")
+        //     column(name: "stack_id", valueComputed: "(SELECT id FROM stack WHERE stack_context='0092af0b-57ae-4fd9-bd8a-ec0937ac5399')")
+        // }
 
         delete(tableName: "domain_mapping") {
             where("src_type = 'group' AND relationship_type = 'owns' AND dest_type = 'dashboard' AND src_id = (select id from owf_group where name  = 'OWF Users') AND dest_id = (select id from dashboard where name = 'Sample')")
         }
 
-        delete(tableName: "domain_mapping") {
-            where("src_type = 'group' AND relationship_type = 'owns' AND dest_type = 'dashboard' AND src_id = (select id from owf_group where name  = 'OWF Administrators') AND dest_id = (select id from dashboard where name = 'Administration')")
-        }
+        // As of 7.4 this is done in creation scripts.
+        // delete(tableName: "domain_mapping") {
+        //     where("src_type = 'group' AND relationship_type = 'owns' AND dest_type = 'dashboard' AND src_id = (select id from owf_group where name  = 'OWF Administrators') AND dest_id = (select id from dashboard where name = 'Administration')")
+        // }
     }
 
     //OP-2330: Type of App Component still listed as Marketplace
@@ -1131,5 +1139,13 @@ databaseChangeLog = {
         }
     }
 
+    changeSet(author: "owf", id: "7.3-27", context: "sampleData, 7.3-sampleData") {
 
+        comment("Remove the old admin dashboard.")
+
+        delete(tableName: "dashboard") {
+            where("guid='54949b5d-f0ee-4347-811e-2522a1bf96fe' AND user_id IS NULL AND name='Administration'")
+        }
+
+    }
 }
