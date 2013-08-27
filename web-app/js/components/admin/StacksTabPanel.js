@@ -205,7 +205,8 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
 
     onAddClicked: function (button, e) {
         var record = this.ownerCt.record,
-            itemName = record.get('name') ? record.get('name') : record.get('userRealName');
+            itemName = record.get('name') ? record.get('name') : record.get('userRealName'),
+            tip;
 
         var win = Ext.widget('admineditoraddwindow', {
             addType: 'App',
@@ -226,17 +227,41 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                             if (record.data) {
 
                                 Ext.QuickTips.init();
-                                var stack = record.data;
-                                var button = win.down('#ok');
+                                var stack = record.data,
+                                    button = win.down('#ok');
 
                                 // disable the ok button if the app is not approved
                                 if (!stack.approved) {
                                     button.setDisabled(true);
-                                    button.setTooltip(Ozone.layout.tooltipString.unapprovedStackEditMessage);
+
+                                    // firefox handles tooltips on disabled buttons differently than the other browsers
+                                    if (Ext.isGecko) {
+                                        if (!tip) {
+                                            tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: button.id,
+                                                html: Ozone.layout.tooltipString.unapprovedStackEditMessage
+                                            });
+                                        }
+                                        else {
+                                            tip.setTarget(button.id);
+                                        }
+                                    }
+                                    else {
+                                        button.setTooltip(Ozone.layout.tooltipString.unapprovedStackEditMessage);
+                                    }
                                 }
                                 else {
                                     button.setDisabled(false);
-                                    button.setTooltip('');
+
+                                    // firefox handles tooltips on disabled buttons differently than the other browsers
+                                    if (Ext.isGecko) {
+                                        if (tip) {
+                                            tip.setTarget(null);
+                                        }
+                                    }
+                                    else {
+                                        button.setTooltip('');
+                                    }
                                 }
                             }
                         }

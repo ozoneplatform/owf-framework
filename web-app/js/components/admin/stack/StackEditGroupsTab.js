@@ -55,17 +55,39 @@ Ext.define('Ozone.components.admin.stack.StackEditGroupsTab', {
                         if (!stack.approved) {
 
                             // disable the add button
-                            var button = Ext.getCmp('adminGroupsTabAddButton');
+                            var button = Ext.getCmp('adminGroupsTabAddButton'),
+                                tip;
+
                             if (button) {
                                 button.setDisabled(true);
-                                button.setTooltip(Ozone.layout.tooltipString.unapprovedStackEditMessage);
+
+                                // firefox handles tooltips on disabled buttons differently than the other browsers
+                                if (Ext.isGecko) {
+                                    tip = Ext.create('Ext.tip.ToolTip', {
+                                        target: button.id,
+                                        html: Ozone.layout.tooltipString.unapprovedStackEditMessage
+                                    });
+                                }
+                                else {
+                                    button.setTooltip(Ozone.layout.tooltipString.unapprovedStackEditMessage);
+                                }
                             }
 
                             // disable the remove button
                             button = Ext.getCmp('adminGroupsTabRemoveButton');
                             if (button) {
                                 button.setDisabled(true);
-                                button.setTooltip(Ozone.layout.tooltipString.unapprovedStackEditMessage);
+
+                                // firefox handles tooltips on disabled buttons differently than the other browsers
+                                if (Ext.isGecko) {
+                                    tip = Ext.create('Ext.tip.ToolTip', {
+                                        target: button.id,
+                                        html: Ozone.layout.tooltipString.unapprovedStackEditMessage
+                                    });
+                                }
+                                else {
+                                    button.setTooltip(Ozone.layout.tooltipString.unapprovedStackEditMessage);
+                                }
                             }
                         }
                     }
