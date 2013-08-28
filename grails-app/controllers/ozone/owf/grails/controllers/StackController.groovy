@@ -3,6 +3,7 @@ package ozone.owf.grails.controllers
 import ozone.owf.grails.OwfException
 import grails.converters.JSON
 import org.apache.commons.lang.time.StopWatch
+import javax.servlet.http.HttpServletResponse
 
 class StackController extends BaseOwfRestController {
     
@@ -21,7 +22,7 @@ class StackController extends BaseOwfRestController {
         }
         try {
             def result = stackService.list(params)
-            statusCode = 200
+            statusCode = HttpServletResponse.SC_OK
             jsonResult = result as JSON
         }
         catch (OwfException owe) {
@@ -54,9 +55,9 @@ class StackController extends BaseOwfRestController {
             } else {
                 result = stackService.createOrUpdate(params)
             }
-            jsonResult = [msg: result as JSON, status: 200 ]
+            jsonResult = [msg: result as JSON, status: HttpServletResponse.SC_OK ]
         }
-        catch (Exception e) {
+        catch (def e) {
             jsonResult = handleError(e)
         }
         
@@ -75,7 +76,7 @@ class StackController extends BaseOwfRestController {
         try {
             result = stackService.addPage(params)
             result = getJsonResult(result, 'dashboard', params)
-            statusCode = 200
+            statusCode = HttpServletResponse.SC_OK
         }
         catch (OwfException owe) {
             handleError(owe)
@@ -96,9 +97,9 @@ class StackController extends BaseOwfRestController {
         }
         try {
             def result = stackService.delete(params)
-            jsonResult = [msg: result as JSON, status: 200]
+            jsonResult = [msg: result as JSON, status: HttpServletResponse.SC_OK]
         }
-        catch (Exception e) {
+        catch (def e) {
             jsonResult = handleError(e)
         }
         
@@ -126,13 +127,13 @@ class StackController extends BaseOwfRestController {
 
             jsonResult =  stackService.share(params)
 
-        } catch (Exception e) {
+        } catch (def e) {
 
             jsonResult = handleError(e)
 
         }
 
-        renderResult(jsonResult, 200)
+        renderResult(jsonResult, HttpServletResponse.SC_OK)
 
         if (log.isInfoEnabled()) {
             stopWatch.stop();
@@ -172,7 +173,7 @@ class StackController extends BaseOwfRestController {
             response.outputStream.flush()
 
         }
-        catch (Exception e) {
+        catch (def e) {
             //Set content-disposition back to text to relay the error
             response.setHeader("Content-disposition", "")
 
@@ -197,9 +198,9 @@ class StackController extends BaseOwfRestController {
         }
         try {
             def result = stackService.importStack(params)
-            jsonResult = [msg: result as JSON, status: 200]
+            jsonResult = [msg: result as JSON, status: HttpServletResponse.SC_OK]
         }
-        catch (Exception e) {
+        catch (def e) {
             jsonResult = handleError(e)
         }
 
@@ -222,9 +223,9 @@ class StackController extends BaseOwfRestController {
 		}
 		try {
 			def result = stackService.restore(params)
-			jsonResult = [msg: result as JSON, status: 200]
+			jsonResult = [msg: result as JSON, status: HttpServletResponse.SC_OK]
 		}
-		catch (Exception e) {
+		catch (def e) {
 			jsonResult = handleError(e)
 		}
 		
@@ -241,10 +242,10 @@ class StackController extends BaseOwfRestController {
 
         if (params.containsKey('id')) {
             ozone.owf.grails.domain.Stack stack = ozone.owf.grails.domain.Stack.get(params.id)
-            jsonResult = [msg: stack.groups as JSON, status: 200]
+            jsonResult = [msg: stack.groups as JSON, status: HttpServletResponse.SC_OK]
         }
         else {
-            jsonResult = [msg: "Missing stack id", status: 500]
+            jsonResult = [msg: "Missing stack id", status: HttpServletResponse.SC_INTERNAL_SERVER_ERROR]
         }
         renderResult(jsonResult)
     }

@@ -1,17 +1,13 @@
 package org.ozoneplatform.auditing
 
 import static ozone.owf.enums.OwfApplicationSetting.*
-import grails.converters.JSON
 
 import javax.servlet.http.HttpServletRequest
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
-import org.ozoneplatform.appconfig.server.domain.model.ApplicationSetting
 import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
-import org.ozoneplatform.auditing.format.cef.Extension
 import org.ozoneplatform.auditing.hibernate.AbstractAuditLogListener
 import org.springframework.web.context.request.RequestContextHolder
-import org.hibernate.event.PostLoadEvent;
 
 import ozone.owf.grails.services.AccountService
 import ozone.owf.grails.services.OwfApplicationConfigurationService
