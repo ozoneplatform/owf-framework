@@ -171,9 +171,8 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
         OwfApplicationSetting.values().each { setting ->
             def requiredConfig = getApplicationConfiguration(setting)
             if(!requiredConfig) {
-                log.error "The required configuration, ${setting.code}, is missing from the " +
-                    "database. Please repair the application configuration table."
-                System.exit(1)
+                throw new IllegalStateException("The required configuration, ${setting.code}, is missing from the " +
+                        "database. Please repair the application configuration table.")
             }
         }
     }
