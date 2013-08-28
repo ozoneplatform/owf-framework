@@ -200,10 +200,10 @@ grails.project.dependency.resolution = {
 			'jsr250-api', 'log4j'
         }
 
-        compile('org.ozoneplatform.appconfig.server:commons-appconfig:1.1.0') {
+        compile("${config.appconfig.server.org}:${config.appconfig.server.module}:${config.appconfig.server.rev}") {
             excludes 'gmaven-runtime-2.0', 'ant'
         }
-        compile('org.ozoneplatform.auditing:commons-auditing:1.5.0') {
+        compile("${config.auditing.org}:${config.auditing.module}:${config.auditing.rev}") {
             excludes 'gmaven-runtime-2.0'
         }
 
