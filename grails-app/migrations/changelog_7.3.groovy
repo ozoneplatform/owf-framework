@@ -498,7 +498,8 @@ databaseChangeLog = {
 
     include file: "app_config_7.3.groovy"
 
-    changeSet(author: "owf", id: "7.3-20", context: "create, 7.3") {
+    // Create an admin group at creation time.  Upgrades are expected to have this group already.
+    changeSet(author: "owf", id: "7.3-20", context: "create") {
         comment(text="Create an OWF Admin group.")
         //insert admin group
         insert(tableName: "owf_group") {
@@ -553,7 +554,7 @@ databaseChangeLog = {
 
     }
 
-    changeSet(author: "owf", id: "7.3.23", context: "create, 7.3") {
+    changeSet(author: "owf", id: "7.3.23", context: "create") {
         comment(text="Add new admin components that include universal names.  These will be the primary admin components moving forward.")
 
         // Insert the app component admin components.
@@ -751,7 +752,7 @@ databaseChangeLog = {
     }
 
     // On upgrades, allow the 
-    changeSet(author: "owf", id: "7.3.23", context: "upgrade, 7.3") {
+    changeSet(author: "owf", id: "7.3.24", context: "upgrade, 7.3") {
         comment(text="Add new admin components that include universal names.  These will be the primary admin components moving forward.")
 
         // Insert the app component admin components.
@@ -938,7 +939,7 @@ databaseChangeLog = {
             """ )
     }
 
-    changeSet(author: "owf", id: "7.3.24", context: "create, upgrade, 7.3") {
+    changeSet(author: "owf", id: "7.3.25", context: "create, upgrade, 7.3") {
         comment(text="Add the pages for the administrator's app.")
         insert(tableName: "dashboard") {
             // column(name: "id", valueNumeric: "322")
@@ -1026,7 +1027,7 @@ databaseChangeLog = {
 
     }
 
-    changeSet(author: "owf", id: "7.3.25", context: "create, upgrade, 7.3") {
+    changeSet(author: "owf", id: "7.3.26", context: "create, upgrade, 7.3") {
         comment(text="Add the associations for the stack's default group to the app pages..")
 
         insert(tableName: "domain_mapping") {
@@ -1063,7 +1064,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.26", context: "create, upgrade, 7.3") {
+    changeSet(author: "owf", id: "7.3.27", context: "create, upgrade, 7.3") {
         comment(text="Add the associations for the stack's default group to the admin components.")
         insert(tableName: "domain_mapping") {
             column(name: "version", valueNumeric: "0")
@@ -1139,7 +1140,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3-27", context: "sampleData, 7.3-sampleData") {
+    changeSet(author: "owf", id: "7.3-28", context: "sampleData, 7.3-sampleData") {
 
         comment("Remove the old admin dashboard.")
 
