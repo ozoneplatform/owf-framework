@@ -1,5 +1,5 @@
 databaseChangeLog = {
-    include file: "app_config_7.3.groovy"
+    include file: "app_config.groovy"
 
     changeSet(author: "owf", id: "7.4-1", context: "create, 7.4, upgrade") {
         addDefaultValue(tableName: "application_configuration", columnName: "version", defaultValueNumeric: 0)
