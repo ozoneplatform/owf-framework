@@ -1,6 +1,3 @@
-import static ozone.owf.enums.OwfApplicationSetting.*
-import static ozone.owf.enums.OwfApplicationSettingType.*
-
 databaseChangeLog = {
 
     property([name:"appconfig.valColumn", value:"VALUE", dbms:"hsqldb"])
@@ -23,48 +20,48 @@ databaseChangeLog = {
     changeSet(author: "owf", id: "app_config-7.3-1", context: "create, upgrade, 7.3") {
 
         [
-            [code: CEF_LOGGING_ENABLED.code, type: "Boolean", mutable: true, value: "true"],
-            [code: CEF_OBJECT_ACCESS_LOGGING_ENABLED.code, type: "Boolean", mutable: true, value: "false"],
-            [code: CEF_LOG_SWEEP_ENABLED.code, type: "Boolean", mutable: true, value: "true"],
-            [code: CEF_LOG_LOCATION.code, type: "String", mutable: true, value: "/usr/share/tomcat6"],
-            [code: CEF_LOG_SWEEP_LOCATION.code, type: "String", mutable: true, value: "/var/log/cef"],
-            [code: SECURITY_LEVEL.code, type: "String", mutable: true]
-        ].eachWithIndex{ appConfig, index -> doConfigInsert(appConfig, AUDITING.description, null, index+1) }
+            [code: "owf.enable.cef.logging", type: "Boolean", mutable: true, value: "true"],
+            [code: "owf.enable.cef.object.access.logging", type: "Boolean", mutable: true, value: "false"],
+            [code: "owf.cef.sweep.log.location", type: "Boolean", mutable: true, value: "true"],
+            [code: "owf.cef.log.location", type: "String", mutable: true, value: "/usr/share/tomcat6"],
+            [code: "owf.enable.cef.log.sweep", type: "String", mutable: true, value: "/var/log/cef"],
+            [code: "owf.security.level", type: "String", mutable: true]
+        ].eachWithIndex{ appConfig, index -> doConfigInsert(appConfig, "AUDITING", null, index+1) }
 
         [
-            [items: [[code: SESSION_CONTROL_ENABLED.code, type: "Boolean", mutable: true, value: "false"],
-                     [code: SESSION_CONTROL_MAX_CONCURRENT.code, type: "Integer", mutable: true, value: "1"]],
+            [items: [[code: "owf.session.control.enabled", type: "Boolean", mutable: true, value: "false"],
+                     [code: "owf.session.control.max.concurrent", type: "Integer", mutable: true, value: "1"]],
              subGroupName: "Session Control"
             ],
 
-            [items: [[code: DISABLE_INACTIVE_ACCOUNTS.code, type: "Boolean", mutable: true, value: "true"],
-                     [code: INACTIVITY_THRESHOLD.code, type: "Integer", mutable: true, value: "90"]],
+            [items: [[code: "owf.disable.inactive.accounts", type: "Boolean", mutable: true, value: "true"],
+                     [code: "owf.inactivity.threshold", type: "Integer", mutable: true, value: "90"]],
              subGroupName: "Inactive Accounts"
             ]
         ].each { subGroup ->
-            subGroup.items.eachWithIndex{ appConfig, index -> doConfigInsert(appConfig, USER_ACCOUNT_SETTINGS.description, subGroup.subGroupName, index+1) }
+            subGroup.items.eachWithIndex{ appConfig, index -> doConfigInsert(appConfig, "USER_ACCOUNT_SETTINGS", subGroup.subGroupName, index+1) }
         }
 
-        [[code: JOB_DISABLE_ACCOUNTS_START.code, type: "String", mutable: true, value: "23:59:59"],
-         [code: JOB_DISABLE_ACCOUNTS_INTERVAL.code, type: "Integer", mutable: true, value: "1440"]].eachWithIndex { appConfig, index ->
-            doConfigInsert(appConfig, HIDDEN.description, null, index+1)
+        [[code: "owf.job.disable.accounts.start.time", type: "String", mutable: true, value: "23:59:59"],
+         [code: "owf.job.disable.accounts.interval", type: "Integer", mutable: true, value: "1440"]].eachWithIndex { appConfig, index ->
+            doConfigInsert(appConfig, "HIDDEN", null, index+1)
         }
 
         [
-            [items: [[code: CUSTOM_BACKGROUND_URL.code, type: "String", mutable: true, value: ""]],
+            [items: [[code: "owf.custom.background.url", type: "String", mutable: true, value: ""]],
              subGroupName: "Custom Background"
             ],
 
-            [items: [[code: CUSTOM_HEADER_URL.code, type: "String", mutable: true],
-                     [code: CUSTOM_HEADER_HEIGHT.code, type: "Integer", mutable: true, value: "0"],
-                     [code: CUSTOM_FOOTER_URL.code, type: "String", mutable: true],
-                     [code: CUSTOM_FOOTER_HEIGHT.code, type: "Integer", mutable: true, value: "0"],
-                     [code: CUSTOM_CSS_IMPORTS.code, type: "String", mutable: true],
-                     [code: CUSTOM_JS_IMPORTS.code, type: "String", mutable: true]],
+            [items: [[code: "owf.custom.header.url", type: "String", mutable: true],
+                     [code: "owf.custom.header.height", type: "Integer", mutable: true, value: "0"],
+                     [code: "owf.custom.footer.url", type: "String", mutable: true],
+                     [code: "owf.custom.footer.height", type: "Integer", mutable: true, value: "0"],
+                     [code: "owf.custom.css", type: "String", mutable: true],
+                     [code: "owf.custom.jss", type: "String", mutable: true]],
              subGroupName: "Custom Header and Footer"
             ]
         ].each { subGroup ->
-            subGroup.items.eachWithIndex { appConfig, index -> doConfigInsert(appConfig, BRANDING.description, subGroup.subGroupName, index+1) }
+            subGroup.items.eachWithIndex { appConfig, index -> doConfigInsert(appConfig, "BRANDING", subGroup.subGroupName, index+1) }
         }
     }
 }
