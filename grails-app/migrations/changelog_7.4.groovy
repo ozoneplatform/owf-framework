@@ -191,7 +191,7 @@ databaseChangeLog = {
             column(name: "id", valueNumeric: "192")
             column(name: "universal_name", value: "org.ozoneplatform.owf.admin.configuration")
             column(name: "version", valueNumeric: "0")
-            column(name: "visible", valueBoolean: "false")
+            column(name: "visible", valueBoolean: "true")
             column(name: "image_url_large", value: "themes/common/images/adm-tools/Configuration64.png")
             column(name: "image_url_small", value: "themes/common/images/adm-tools/Configuration24.png")
             column(name: "singleton", valueBoolean: "false")
@@ -382,7 +382,7 @@ databaseChangeLog = {
         insert(tableName: "widget_definition") {
             column(name: "universal_name", value: "org.ozoneplatform.owf.admin.configuration")
             column(name: "version", valueNumeric: "0")
-            column(name: "visible", valueBoolean: "false")
+            column(name: "visible", valueBoolean: "true")
             column(name: "image_url_large", value: "themes/common/images/adm-tools/Configuration64.png")
             column(name: "image_url_small", value: "themes/common/images/adm-tools/Configuration24.png")
             column(name: "singleton", valueBoolean: "false")
