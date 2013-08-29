@@ -55,7 +55,29 @@
     position: relative;
     box-shadow: 0 0 0 15px transparent;
     height: auto !important;
-    min-height: 424px;          
+    min-height: 424px;
+
+    #app-config-add-store-container {
+        float: right;
+        width: 54%;
+        padding-top: 10px;
+
+        #app-config-add-store {
+
+            @include border-radius(3px);
+            border: 1px solid $appConfig-store-btn-border-color;
+
+            color: $appConfig-store-btn-color;
+            background-color: $appConfig-store-btn-bg-color;
+            
+            padding: 5px 20px;
+            
+            &:hover, &-hover {
+                color: $appConfig-store-btn-color-hover;
+                background-color: $appConfig-store-btn-bg-color-hover;
+            }
+        }
+    }
 }
                 
 div.app_config_column_container{
@@ -181,6 +203,74 @@ div.app_config_map_row{
     padding-top: 14px;
 }
 
+.app-config-store-view {
+    color: $appConfig-cell-color;
+    min-height: 35px;
+    padding-bottom: 10px;
+    float: right;
+    width: 54%;
+
+    .icon {
+        float: left;
+    }
+
+    .name {
+        margin-top: 0.5em;
+        display: inline-block;
+        width: 12em;
+        padding-left: 10px;
+        padding-right: 10px;
+        
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        
+        font: {
+            size: 1.2em;
+            weight: bold;
+        }
+    }
+
+    .edit, .delete {
+        display: inline-block;
+        visibility: hidden;
+        width: 16px;
+        height: 16px;
+
+        position: relative;
+        top: 0.3em;
+        
+        background-repeat: no-repeat;
+        background-position: center center;
+        cursor: pointer;
+    }
+
+    // display edit and delete buttons only when hovering on parent element
+    &:hover, &-hover {
+        & .edit, & .delete {
+            visibility: visible;
+        }
+    }
+
+    .edit {
+        margin-left: 4em;
+        background-image: theme-image($theme-name, 'applicationConfiguration/stores/Edit-out.png');
+        
+        &:hover, &.hover {
+            background-image: theme-image($theme-name, 'applicationConfiguration/stores/Edit-over.png'); 
+        }   
+    }
+
+    .delete {
+        margin-left: 1em;
+        background-image: theme-image($theme-name, 'applicationConfiguration/stores/Delete-out.png');
+
+        &:hover, &.hover {
+            background-image: theme-image($theme-name, 'applicationConfiguration/stores/Delete-over.png'); 
+        }
+    }
+}
+
 
 // MENU STUFF -->
 .app_config_menu{
@@ -257,6 +347,17 @@ body.configuration_widget {
 
         &.active {
             background-image: theme-image($theme-name, 'applicationConfiguration/Branding_Active.png');    
+        }
+    }
+
+    .store {
+        background-image: theme-image($theme-name, 'applicationConfiguration/Store_Inactive.png');
+        &:hover {
+            background-image: theme-image($theme-name, 'applicationConfiguration/Store_Hover.png');
+        }
+
+        &.active {
+            background-image: theme-image($theme-name, 'applicationConfiguration/Store_Active.png');
         }
     }
 }

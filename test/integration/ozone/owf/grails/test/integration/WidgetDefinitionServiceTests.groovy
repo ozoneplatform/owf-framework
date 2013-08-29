@@ -1,35 +1,24 @@
 package ozone.owf.grails.test.integration
 
-import ozone.owf.grails.domain.Dashboard
-import ozone.owf.grails.domain.ERoleAuthority
-import ozone.owf.grails.domain.Group
-import ozone.owf.grails.domain.Intent
-import ozone.owf.grails.domain.IntentDataType
-import ozone.owf.grails.domain.Person
-import ozone.owf.grails.domain.RelationshipType
-import ozone.owf.grails.domain.Stack
-import ozone.owf.grails.domain.WidgetDefinition
-import ozone.owf.grails.domain.WidgetDefinitionIntent
-import ozone.owf.grails.domain.WidgetType
-import ozone.owf.grails.OwfException
 import grails.converters.JSON
+import ozone.owf.grails.OwfException
+import ozone.owf.grails.domain.*
 import ozone.owf.grails.services.AutoLoginAccountService
 
 class WidgetDefinitionServiceTests extends GroovyTestCase {
 
     def domainMappingService
-    def grailsApplication
     def widgetDefinitionService
     def origAccountService
 
-    private final samplesArray = ["A","D","C","AA","B","BB"]
-    
+    private final samplesArray = ["A", "D", "C", "AA", "B", "BB"]
+
     protected void setUp() {
         super.setUp()
         origAccountService = widgetDefinitionService.accountService
 
         def acctService = new AutoLoginAccountService()
-        Person p = new Person(username:'testWidgetDefinitionServiceTesting', userRealName: 'foo', enabled:true)
+        Person p = new Person(username: 'testWidgetDefinitionServiceTesting', userRealName: 'foo', enabled: true)
         p.save()
         acctService.autoAccountName = 'testWidgetDefinitionServiceTesting'
         acctService.autoRoles = [ERoleAuthority.ROLE_ADMIN.strVal]
@@ -41,27 +30,25 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
         widgetDefinitionService.accountService = origAccountService
     }
 
-    void testCreate()
-    {
+    void testCreate() {
         def resultOfCreate = widgetDefinitionService.create(WidgetDefinitionPostParams.generatePostParamsA())
         assertTrue resultOfCreate.success
         assertEquals "12345678-1234-1234-1234-1234567890a0", resultOfCreate.data[0].widgetGuid
         def widgetDefinition = WidgetDefinition.findByWidgetGuid("12345678-1234-1234-1234-1234567890a0")
         assertEquals widgetDefinition.widgetGuid, resultOfCreate.data[0].widgetGuid
     }
-    
-    void testUpdate()
-    {
+
+    void testUpdate() {
         def postParamsA = WidgetDefinitionPostParams.generatePostParamsA()
         def resultOfCreate = widgetDefinitionService.create(postParamsA)
 
         def postParamsB = WidgetDefinitionPostParams.generatePostParamsB()
         postParamsB.id = postParamsB.widgetGuid
         def resultOfUpdate = widgetDefinitionService.update(postParamsB)
-        
+
         assertTrue resultOfUpdate.success
         assertEquals 1, WidgetDefinition.findAll().size()
-        
+
         def widgetDefinition = WidgetDefinition.findByWidgetGuid("12345678-1234-1234-1234-1234567890a0")
         assertEquals "My Widget Updated", widgetDefinition.displayName
     }
@@ -76,7 +63,7 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
 
     void testListWithSortAndDir() {
         createDataForListTests()
-        def expectedOrder = ["D","C","BB","B","AA","A"]
+        def expectedOrder = ["D", "C", "BB", "B", "AA", "A"]
 
         def widgets = widgetDefinitionService.list([sort: 'value.namespace', order: 'desc'])
 
@@ -111,19 +98,38 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
         assertEquals expectedOrder, widgets.data*.displayName
     }
 
+    void testListWithWidgetTypesParameter() {
+        WidgetType storeWidgetType = WidgetType.build(displayName: 'store')
+
+        createDataForListTests()
+
+        WidgetDefinition storeWidgetA = WidgetDefinition.findByDisplayName('A')
+        WidgetDefinition storeWidgetB = WidgetDefinition.findByDisplayName('B')
+
+        storeWidgetA.addToWidgetTypes(storeWidgetType)
+        storeWidgetB.addToWidgetTypes(storeWidgetType)
+
+        storeWidgetA.save()
+        storeWidgetB.save()
+
+        def widgets = widgetDefinitionService.list([widgetTypes: 'store'])
+
+        assertEquals 2, widgets.results
+    }
+
     void testListWithStackId() {
         createDataForListTests()
 
         def widget1 = WidgetDefinition.findByDisplayName(samplesArray[0])
         def widget2 = WidgetDefinition.findByDisplayName(samplesArray[1])
         def widget3 = WidgetDefinition.findByDisplayName(samplesArray[2])
-        
-        def stack1 = Stack.build(name: 'Stack One', description: 'Stack One description', stackContext: 'one', 
-            imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
+
+        def stack1 = Stack.build(name: 'Stack One', description: 'Stack One description', stackContext: 'one',
+                imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
         stack1.addToGroups(Group.build(name: 'Group1', automatic: false, status: 'active', stackDefault: true))
 
         def stackDashboard1 = Dashboard.build(alteredByAdmin: false, guid: '12345678-1234-1234-1234-123456789000',
-            locked: false, isdefault: false, name: 'Stack Dashboard1', layoutConfig: """{
+                locked: false, isdefault: false, name: 'Stack Dashboard1', layoutConfig: """{
                     "cls": "hbox",
                     "items":[{
                         "xtype": "tabbedpane",
@@ -161,7 +167,7 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
                 }""", description: 'This is a stack dashboard.')
 
         def stackDashboard2 = Dashboard.build(alteredByAdmin: false, guid: '12345678-1234-1234-1234-123456789001',
-            locked: false, isdefault: false, name: 'Stack Dashboard2', layoutConfig: """{
+                locked: false, isdefault: false, name: 'Stack Dashboard2', layoutConfig: """{
                     "xtype": "tabbedpane",
                     "flex": 1,
                     "height": "100%",
@@ -194,28 +200,28 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
     }
 
     void testListWithBadJSONNameParameter() {
-        shouldFail (OwfException,
+        shouldFail(OwfException,
                 { widgetDefinitionService.list([sort: 'youneverfindmeindomain']) }
         )
-        
+
     }
 
     void testExport() {
         def standardWidgetType = WidgetType.build(name: 'standard')
 
         def widget = WidgetDefinition.build(
-            descriptorUrl : '../examples/fake-widgets/widget-c.json',
-            displayName : 'Widget C',
-            description: 'Widget C description',
-            height : 740,
-            imageUrlLarge : '../images/blue/icons/widgetIcons/widgetC.gif',
-            imageUrlSmall : '../images/blue/icons/widgetContainer/widgetCsm.gif',
-            widgetGuid : '0c5435cf-4021-4f2a-ba69-dde451d12551',
-            universalName : 'com.company.widget.universalname',
-            widgetVersion : '1.0',
-            widgetUrl : '../examples/fake-widgets/widget-c.html',
-            width : 980,
-            widgetTypes: [standardWidgetType]
+                descriptorUrl: '../examples/fake-widgets/widget-c.json',
+                displayName: 'Widget C',
+                description: 'Widget C description',
+                height: 740,
+                imageUrlLarge: '../images/blue/icons/widgetIcons/widgetC.gif',
+                imageUrlSmall: '../images/blue/icons/widgetContainer/widgetCsm.gif',
+                widgetGuid: '0c5435cf-4021-4f2a-ba69-dde451d12551',
+                universalName: 'com.company.widget.universalname',
+                widgetVersion: '1.0',
+                widgetUrl: '../examples/fake-widgets/widget-c.html',
+                width: 980,
+                widgetTypes: [standardWidgetType]
         )
 
         def tag = "tag"
@@ -225,12 +231,12 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
         def intentDataType2 = IntentDataType.build(dataType: "City")
         def intentDataType3 = IntentDataType.build(dataType: "LongLat")
 
-        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(widget, 
-            Intent.build(action: "Pan", dataTypes: [intentDataType1, intentDataType2]),
-            [intentDataType1, intentDataType2], true, false)
-        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(widget, 
-            Intent.build(action: "Plot", dataTypes: [intentDataType2, intentDataType1, intentDataType3]),
-            [intentDataType1, intentDataType3], false, true)
+        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(widget,
+                Intent.build(action: "Pan", dataTypes: [intentDataType1, intentDataType2]),
+                [intentDataType1, intentDataType2], true, false)
+        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(widget,
+                Intent.build(action: "Plot", dataTypes: [intentDataType2, intentDataType1, intentDataType3]),
+                [intentDataType1, intentDataType3], false, true)
 
         def widgetDescriptor = widgetDefinitionService.export([id: widget.widgetGuid, filename: "test"])
 
@@ -257,18 +263,18 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
         def standardWidgetType = WidgetType.build(name: 'standard')
 
         def widget = WidgetDefinition.build(
-            descriptorUrl : '../examples/fake-widgets/widget-c.json',
-            description: 'Widget C description',
-            displayName : 'Widget C',
-            height : 740,
-            imageUrlLarge : '../images/blue/icons/widgetIcons/widgetC.gif',
-            imageUrlSmall : '../images/blue/icons/widgetContainer/widgetCsm.gif',
-            widgetGuid : '0c5435cf-4021-4f2a-ba69-dde451d12551',
-            universalName : 'com.company.widget.universalname',
-            widgetVersion : '1.0',
-            widgetUrl : '../examples/fake-widgets/widget-c.html',
-            width : 980,
-            widgetTypes: [standardWidgetType]
+                descriptorUrl: '../examples/fake-widgets/widget-c.json',
+                description: 'Widget C description',
+                displayName: 'Widget C',
+                height: 740,
+                imageUrlLarge: '../images/blue/icons/widgetIcons/widgetC.gif',
+                imageUrlSmall: '../images/blue/icons/widgetContainer/widgetCsm.gif',
+                widgetGuid: '0c5435cf-4021-4f2a-ba69-dde451d12551',
+                universalName: 'com.company.widget.universalname',
+                widgetVersion: '1.0',
+                widgetUrl: '../examples/fake-widgets/widget-c.html',
+                width: 980,
+                widgetTypes: [standardWidgetType]
         )
 
         def tags = ["tag1", "tag2"]
@@ -278,12 +284,12 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
         def intentDataType2 = IntentDataType.build(dataType: "City")
         def intentDataType3 = IntentDataType.build(dataType: "LongLat")
 
-        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(widget, 
-            Intent.build(action: "Pan", dataTypes: [intentDataType1, intentDataType2]),
-            [intentDataType1, intentDataType2], true, false)
-        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(widget, 
-            Intent.build(action: "Plot", dataTypes: [intentDataType2, intentDataType1, intentDataType3]),
-            [intentDataType1, intentDataType3], false, true)
+        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(widget,
+                Intent.build(action: "Pan", dataTypes: [intentDataType1, intentDataType2]),
+                [intentDataType1, intentDataType2], true, false)
+        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(widget,
+                Intent.build(action: "Plot", dataTypes: [intentDataType2, intentDataType1, intentDataType3]),
+                [intentDataType1, intentDataType3], false, true)
 
         def widgetDescriptor = JSON.parse(widgetDefinitionService.getWidgetDescriptorJson(widget))
 
@@ -319,22 +325,22 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
         assertArrayEquals widgetDefinitionIntent2DataTypes.toArray(), resultReceiveDataTypes.toArray()
     }
 
-  private void createDataForListTests() {
+    private void createDataForListTests() {
         // just some sample data, must be called in each test, spring transactions clean up the db
         samplesArray.eachWithIndex { obj, i ->
-            WidgetDefinition.build(universalName: java.util.UUID.randomUUID(), widgetGuid: java.util.UUID.randomUUID(), widgetVersion: '1.0', displayName: obj )
+            WidgetDefinition.build(universalName: java.util.UUID.randomUUID(), widgetGuid: java.util.UUID.randomUUID(), widgetVersion: '1.0', displayName: obj)
         }
     }
 
     private def createWidgetDefinitionIntentForTest(widgetDefinition, intent, dataTypes, send, receive) {
         def widgetDefinitionIntent = WidgetDefinitionIntent.build(
-            widgetDefinition : widgetDefinition,
-            intent : intent,
-            dataTypes : dataTypes,
-            send : send,
-            receive : receive)
+                widgetDefinition: widgetDefinition,
+                intent: intent,
+                dataTypes: dataTypes,
+                send: send,
+                receive: receive)
 
-        widgetDefinitionIntent.save(flush:true)
+        widgetDefinitionIntent.save(flush: true)
         return widgetDefinitionIntent
     }
 }

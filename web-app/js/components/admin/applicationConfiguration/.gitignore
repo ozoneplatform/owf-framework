@@ -1,5 +1,6 @@
-collections
-models
+collections/Collection.js
+collections/Errors.js
+models/Model.js
 views/base
 views/partials
 views/Boolean.js
