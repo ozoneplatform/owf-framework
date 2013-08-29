@@ -413,7 +413,10 @@ class DashboardService extends BaseService {
                 //default sort
                 order('dashboardPosition', params?.order?.toLowerCase() ?: 'asc')
             }
-            ne('markedForDeletion', true)
+            or {
+                eq('markedForDeletion', false)
+                isNull('markedForDeletion')
+            }
             cache(true)
         }
 
