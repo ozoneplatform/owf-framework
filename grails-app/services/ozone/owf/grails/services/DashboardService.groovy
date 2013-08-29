@@ -67,7 +67,6 @@ class DashboardService extends BaseService {
 
     def removeGroupDashboardFromGroup(Dashboard groupDashboard, Group group) {
         domainMappingService.deleteMapping(group, RelationshipType.owns, groupDashboard)
-        purgePersonalDashboards()
     }
 
     private def getUserPrivateDashboards(user, dmParentId) {
