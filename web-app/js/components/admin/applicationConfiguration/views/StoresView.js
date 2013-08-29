@@ -52,7 +52,7 @@ define([
         buildModel: function() {
             this.model = new Backbone.Model({
                 title: 'Stores',
-                description: 'The icon, name, and URL for connected Stores is connected here.'
+                description: 'The icon and name for connected Stores is displayed here.'
             });
         },
 

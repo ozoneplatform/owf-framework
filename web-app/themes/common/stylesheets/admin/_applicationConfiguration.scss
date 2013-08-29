@@ -215,6 +215,7 @@ div.app_config_map_row{
     }
 
     .name {
+        margin-top: 0.5em;
         display: inline-block;
         width: 12em;
         padding-left: 10px;
@@ -232,28 +233,40 @@ div.app_config_map_row{
 
     .edit, .delete {
         display: inline-block;
-        width: 20px;
-        height: 20px;
-        margin-left: 10px;
+        visibility: hidden;
+        width: 16px;
+        height: 16px;
+
+        position: relative;
+        top: 0.3em;
         
         background-repeat: no-repeat;
         background-position: center center;
         cursor: pointer;
     }
 
+    // display edit and delete buttons only when hovering on parent element
+    &:hover, &-hover {
+        & .edit, & .delete {
+            visibility: visible;
+        }
+    }
+
     .edit {
-        background-image: theme-image($theme-name, 'myappswindow/Edit-out.png');
+        margin-left: 4em;
+        background-image: theme-image($theme-name, 'applicationConfiguration/stores/Edit-out.png');
         
         &:hover, &.hover {
-            background-image: theme-image($theme-name, 'myappswindow/Edit-over.png'); 
+            background-image: theme-image($theme-name, 'applicationConfiguration/stores/Edit-over.png'); 
         }   
     }
 
     .delete {
-        background-image: theme-image($theme-name, 'myappswindow/Delete-out.png');
+        margin-left: 1em;
+        background-image: theme-image($theme-name, 'applicationConfiguration/stores/Delete-out.png');
 
         &:hover, &.hover {
-            background-image: theme-image($theme-name, 'myappswindow/Delete-over.png'); 
+            background-image: theme-image($theme-name, 'applicationConfiguration/stores/Delete-over.png'); 
         }
     }
 }
