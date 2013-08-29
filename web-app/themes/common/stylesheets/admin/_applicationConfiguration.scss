@@ -351,13 +351,13 @@ body.configuration_widget {
     }
 
     .store {
-        background-image: url('http://lorempixel.com/24/24/nightlife');
+        background-image: theme-image($theme-name, 'applicationConfiguration/Store_Inactive.png');
         &:hover {
-            background-image: url('http://lorempixel.com/24/24/cars');
+            background-image: theme-image($theme-name, 'applicationConfiguration/Store_Hover.png');
         }
 
         &.active {
-            background-image: url('http://lorempixel.com/24/24/sports');
+            background-image: theme-image($theme-name, 'applicationConfiguration/Store_Active.png');
         }
     }
 }

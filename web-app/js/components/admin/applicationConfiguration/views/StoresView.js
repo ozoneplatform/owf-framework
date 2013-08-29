@@ -103,13 +103,6 @@ define([
             this._deleteStoreWidget(storeId);
         },
 
-        // /owf/prefs/widget
-        // POST
-        // application/x-www-form-urlencoded; charset=UTF-8
-        // _method: PUT
-        // widgetsToUpdate: undefined
-        // widgetGuidsToDelete: [storeId]
-        // updateOrder: false
         _deleteStoreWidget: function(storeId) {
             var me = this,
                 storeIds = [];
@@ -134,11 +127,6 @@ define([
                 }, me));
         },
 
-        // /owf/prefs/widgetDefinition
-        // POST
-        // application/x-www-form-urlencoded; charset=UTF-8
-        // _method: DELETE
-        // id: storeId
         _deleteStoreWidgetDefinition: function(storeId) {
             var me = this;
 
