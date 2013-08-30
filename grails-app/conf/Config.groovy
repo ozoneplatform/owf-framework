@@ -736,6 +736,8 @@ uiperformance.bundles = [
 						'../js/data/stores/AdminWidgetStore',
 						'../js/data/models/WidgetType',
 						'../js/data/stores/WidgetTypeStore',
+						'../js/data/models/Group',
+						'../js/data/stores/GroupStore',
             //this patch file should be at the end
                         '../js-lib/patches/RemoveListenerCaptureBugOverrides'
 

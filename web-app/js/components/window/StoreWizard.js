@@ -14,6 +14,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
     cls: 'system-window',
     store: null,
     typeStore:  null,
+    groupStore: null,
 
     resizable: false,
     draggable: false,
@@ -44,8 +45,10 @@ Ext.define('Ozone.components.window.StoreWizard', {
         });
 
         this.typeStore = Ext.create('Ozone.data.WidgetTypeStore');
+        this.groupStore =  Ext.create('Ozone.data.GroupStore', {});
         
         this.typeStore.load();
+        this.groupStore.load();
      
 		this.html = this.getContent();
 
@@ -189,6 +192,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
 	            me.record = new Ozone.data.WidgetDefinition(me.data);
 	            me.record.phantom = true;
 	            
+	            var userGroup = this.groupStore.findRecord('name','OWF Users');
 	            var typeId = this.typeStore.findRecord('name', 'marketplace').internalId;
 	            
 	           	var types = [{
@@ -201,8 +205,33 @@ Ext.define('Ozone.components.window.StoreWizard', {
 	            me.record.set('widgetTypes', types);
 	            me.record.endEdit();
 	            
+	            var guid = me.data.widgetGuid
+	            
 	            me.store.add(me.record);
-                me.store.save();
+	            me.store.onBatchOperationComplete = function(){
+	            	  //ajax call to the server to save group
+	                Ozone.util.Transport.send({
+	                    url : Ozone.util.contextPath() + '/widget',
+	                    method : "PUT",
+	                    onSuccess: Ext.bind(function (json){
+	                    	console.log('successfully added marketplace to user group');
+	                    },this),
+	                    onFailure: function (errorMsg){
+	                    	console.log('error adding user group to marketplace');
+	                    },
+	                    autoSendVersion : false,
+	                    content : {
+	                    	data:gadgets.json.stringify([userGroup.data]),
+	                    	tab:'groups',
+	                    	update_action:'add',
+	                    	widget_id:guid
+	                    }
+	                });
+	            };
+	            me.store.sync();
+	                        
+	  
+	          
 	                        
 	    	 	me.close();
 	   		}
