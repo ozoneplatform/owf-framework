@@ -101,6 +101,15 @@ define([
 
         editBtnClicked: function(e) {
             e.preventDefault();
+
+            Ext.widget('storewizard', {
+                id: 'storeWizard',
+                editing: true,
+                existingStoreId: ($(e.currentTarget).parent().data('store-id')),
+                saveCallback: _.bind(function() {
+                    setTimeout(_.bind(this.refresh, this), 500);
+                }, this)
+            }).show().center();
         },
 
         deleteBtnClicked: function(e) {
