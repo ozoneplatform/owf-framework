@@ -2,14 +2,12 @@ define([
     './Description',
     './StoreView',
     '../collections/Stores',
-    '../util/util',
     'jquery',
     'underscore',
     'backbone'
 ], function(ApplicationConfigurationDescriptionView,
     StoreView,
     Stores,
-    Util,
     $,
     _,
     Backbone) {
@@ -97,45 +95,16 @@ define([
 
         editBtnClicked: function(e) {
             e.preventDefault();
-            var storeId = $(e.currentTarget).parent().data('store-id');
         },
 
         deleteBtnClicked: function(e) {
             e.preventDefault();
-            var storeId = $(e.currentTarget).parent().data('store-id');
 
-            this._deleteStoreWidget(storeId);
-        },
-
-        _deleteStoreWidget: function(storeId) {
             var me = this,
-                storeIds = [];
-            storeIds.push(storeId);
+                storeId = $(e.currentTarget).parent().data('store-id');
 
             $.ajax({
-                url: Util.contextPath + '/prefs/widget',
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    _method: 'PUT',
-                    widgetsToUpdate: "[]",
-                    widgetGuidsToDelete: "[\"" + storeId + "\"]",
-                    updateOrder: false
-                }
-            })
-                .done(_.bind(function(data, textStatus) {
-                    me._deleteStoreWidgetDefinition(storeId);
-                }, me))
-                .fail(_.bind(function(data, textStatus, error) {
-                    console.log('first delete failed');
-                }, me));
-        },
-
-        _deleteStoreWidgetDefinition: function(storeId) {
-            var me = this;
-
-            $.ajax({
-                url: Util.contextPath + '/prefs/widgetDefinition',
+                url: Ozone.util.contextPath() + '/prefs/widgetDefinition',
                 type: 'POST',
                 dataType: 'json',
                 data: {
