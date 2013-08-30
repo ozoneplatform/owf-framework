@@ -41,6 +41,8 @@ Ext.define('Ozone.components.window.StoreWizard', {
         
         this.store = Ext.create('Ozone.data.stores.AdminWidgetStore', {});
         this.typeStore = Ext.create('Ozone.data.WidgetTypeStore');
+        
+        this.typeStore.load();
      
 		this.html = this.getContent();
 
@@ -135,7 +137,6 @@ Ext.define('Ozone.components.window.StoreWizard', {
 			            				me.loadMask.hide();
 			            				me.data = data;
 			            				
-			            				
 							            // Set needed vals not in descriptor
 							            me.data.title = Ext.String.trim(data.displayName);
 							            me.data.url = storeURL;
@@ -185,10 +186,10 @@ Ext.define('Ozone.components.window.StoreWizard', {
 	            me.record = new Ozone.data.WidgetDefinition(me.data);
 	            me.record.phantom = true;
 	            
-	            var typeId = this.typeStore.find('name', 'marketplace');
+	            var typeId = this.typeStore.findRecord('name', 'marketplace').internalId;
 	            
 	           	var types = [{
-				                id: 3,
+				                id: typeId,
 				                name: "marketplace"
 				            }];
 	            
