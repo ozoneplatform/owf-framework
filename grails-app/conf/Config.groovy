@@ -477,6 +477,29 @@ uiperformance.bundles = [
         ]
     ],
     [
+        type: 'js',
+        name: 'owf-widget-configuration-widget',
+
+        files: [
+            "../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed",
+            "../js/util/util",
+            "../js/util/guid",
+            "../js/util/version",
+            "../js/util/transport",
+            "../js-lib/ext-4.0.7/ext-all",
+            "../js/data/models/WidgetDefinition",
+            "../js/data/models/WidgetType",
+            "../js/components/mask/LoadMask",
+            "../js/components/focusable/CircularFocus",
+            "../js/components/window/ModalWindow",
+            "../js/data/OWFTransportProxy",
+            "../js/data/OWFStore",
+            "../js/data/stores/AdminWidgetStore",
+            "../js/data/stores/WidgetTypeStore",
+            "../js/components/window/StoreWizard"
+        ]
+    ],
+    [
         type: "js",
         name: "require-js",
         files: [
