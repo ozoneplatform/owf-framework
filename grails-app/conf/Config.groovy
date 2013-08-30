@@ -669,6 +669,7 @@ uiperformance.bundles = [
                         'components/dashboard/Dashboard',
 						'components/window/MyAppsWindow',
 						'components/window/MyAppTip',
+						'components/window/StoreWizard',
                         'components/window/TipWarning',
 						'components/window/MyPageTip',
                         'components/window/HelpWindow',
@@ -709,6 +710,9 @@ uiperformance.bundles = [
                         'chrome/WidgetChromeContainer',
                         'components/widget/DeleteWidgetsPanel',
                         'metrics/BaseMetrics',
+						'../js/data/stores/AdminWidgetStore',
+						'../js/data/models/WidgetType',
+						'../js/data/stores/WidgetTypeStore',
             //this patch file should be at the end
                         '../js-lib/patches/RemoveListenerCaptureBugOverrides'
 
