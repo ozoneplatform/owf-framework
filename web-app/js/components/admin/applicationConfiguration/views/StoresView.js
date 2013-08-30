@@ -37,14 +37,7 @@ define([
 
             this.buildModel();
             this.buildCollection();
-
-            this.collection.fetch({
-                data: $.param({
-                    widgetTypes: 'store'
-                })
-            }).complete(_.bind(function() {
-                this.render();
-            }, this));
+            this.loadAndRenderStores();
         },
 
         buildModel: function() {
@@ -58,6 +51,16 @@ define([
             this.collection = new Stores([], {
                 parse: true
             });
+        },
+
+        loadAndRenderStores: function() {
+            this.collection.fetch({
+                data: $.param({
+                    widgetTypes: 'store'
+                })
+            }).complete(_.bind(function() {
+                this.render();
+            }, this));
         },
 
         render: function() {
@@ -89,7 +92,10 @@ define([
             e.preventDefault();
 
             Ext.widget('storewizard', {
-                id: 'storeWizard'
+                id: 'storeWizard',
+                saveCallback: _.bind(function() {
+                    setTimeout(_.bind(this.refresh, this), 500);
+                }, this)
             }).show().center();
         },
 
@@ -129,7 +135,7 @@ define([
 
         refresh: function() {
             this.$el.empty();
-            this.render();
+            this.loadAndRenderStores();
         },
 
         remove: function() {

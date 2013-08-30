@@ -39,7 +39,10 @@ Ext.define('Ozone.components.window.StoreWizard', {
             zIndexManager: Ext.WindowManager
         });
         
-        this.store = Ext.create('Ozone.data.stores.AdminWidgetStore', {});
+        this.store = Ext.create('Ozone.data.stores.AdminWidgetStore', {
+            callback: this.saveCallback
+        });
+
         this.typeStore = Ext.create('Ozone.data.WidgetTypeStore');
         
         this.typeStore.load();
@@ -199,7 +202,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
 	            me.record.endEdit();
 	            
 	            me.store.add(me.record);
-	            me.store.save();
+                me.store.save();
 	                        
 	    	 	me.close();
 	   		}
