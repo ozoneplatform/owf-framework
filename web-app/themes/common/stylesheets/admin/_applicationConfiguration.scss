@@ -205,17 +205,19 @@ div.app_config_map_row{
 
 .app-config-store-view {
     color: $appConfig-cell-color;
-    min-height: 35px;
+    min-height: 32px;
     padding-bottom: 10px;
     float: right;
     width: 54%;
 
     .icon {
         float: left;
+        width: 64px;
+        height: 64px;
     }
 
     .name {
-        margin-top: 0.5em;
+        margin-top: 1.5em;
         display: inline-block;
         width: 12em;
         padding-left: 10px;

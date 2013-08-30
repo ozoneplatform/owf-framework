@@ -11,8 +11,8 @@ define([
 
         tpl:    '<img class="icon" src="<%= iconUrl %>"/>' + 
                 '<div class="name" title="<%= name %>"><%= name %></div>' +
-                '<div class="edit" title="Edit Store"></div>' +
-                '<div class="delete" title="Delete Store"></div>',
+                '<div class="edit" title="Edit Store">&nbsp;</div>' +
+                '<div class="delete" title="Delete Store">&nbsp;</div>',
 
         refresh: function() {
             this.$el.empty();

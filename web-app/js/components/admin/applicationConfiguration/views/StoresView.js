@@ -89,15 +89,19 @@ define([
 
         addBtnClicked: function(e) {
             e.preventDefault();
-            $(e.currentTarget).fadeOut('fast').fadeIn('fast');
+
+            Ext.widget('storewizard', {
+                id: 'storeWizard'
+            }).show().center();
         },
 
         editBtnClicked: function(e) {
-            this.addBtnClicked(e);
+            e.preventDefault();
             var storeId = $(e.currentTarget).parent().data('store-id');
         },
 
         deleteBtnClicked: function(e) {
+            e.preventDefault();
             var storeId = $(e.currentTarget).parent().data('store-id');
 
             this._deleteStoreWidget(storeId);
