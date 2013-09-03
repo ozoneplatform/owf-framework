@@ -30,12 +30,12 @@
         height: $my-apps-window-header-height !important;
         
         .x-window-header-text {
-			font-size: 24px;
-			padding-left: 13px;
+            font-size: 24px;
+            padding-left: 13px;
             padding-top: 10px;
             *line-height: 24px;
             color: $my-apps-window-title-color;
-		}
+        }
 
         .x-window-header-body {
             height: $my-apps-window-header-height !important;
@@ -63,7 +63,7 @@
         // 'Discover More in the Store' button
         // 'Create New App' button
         .store-link-btn, .create-link-btn {
-        	text-align: left;
+            text-align: left;
 
             .store-link-btn-text, .create-link-btn-text {
                 display: inline-block;
@@ -139,18 +139,18 @@
     }
     
     .x-tool .x-tool-close {
-	    background-image: theme-image($theme-name, 'tools/close-out.png') !important;
-	}
-	
-	.x-tool-over .x-tool-close {
-	     background-image: theme-image($theme-name, 'tools/close-over.png') !important;
-	     background-position: 0 !important;
-	}
-	
-	.x-tool-pressed .x-tool-close {
-	     background-image: theme-image($theme-name, 'tools/close-down.png') !important;
-	     background-position: 0 !important;
-	}
+        background-image: theme-image($theme-name, 'tools/close-out.png') !important;
+    }
+    
+    .x-tool-over .x-tool-close {
+         background-image: theme-image($theme-name, 'tools/close-over.png') !important;
+         background-position: 0 !important;
+    }
+    
+    .x-tool-pressed .x-tool-close {
+         background-image: theme-image($theme-name, 'tools/close-down.png') !important;
+         background-position: 0 !important;
+    }
 }
 
 /**** BEGIN slider styling ****/
@@ -512,32 +512,32 @@
 }
 
 .itemTip {
-	z-index: 69011 !important;
-	@include border-radius($dashboard-item-body-radius);
-	
-	 .x-tool .x-tool-close {
-	    background-image: theme-image($theme-name, 'tools/close-out.png') !important;
-	    right: 5px;
-	    position:relative;
-	}
-	
-	.x-tool-over .x-tool-close {
-	     background-image: theme-image($theme-name, 'tools/close-over.png') !important;
-	     background-position: 0 !important;
-	}
-	
-	.x-tool-pressed .x-tool-close {
-	     background-image: theme-image($theme-name, 'tools/close-down.png') !important;
-	     background-position: 0 !important;
-	}
-	
-	.x-box-inner {
-		top:5px !important;
-		height: 25px !important;
-		
-		*overflow:visible;
-	}
-	
+    z-index: 69011 !important;
+    @include border-radius($dashboard-item-body-radius);
+    
+     .x-tool .x-tool-close {
+        background-image: theme-image($theme-name, 'tools/close-out.png') !important;
+        right: 5px;
+        position:relative;
+    }
+    
+    .x-tool-over .x-tool-close {
+         background-image: theme-image($theme-name, 'tools/close-over.png') !important;
+         background-position: 0 !important;
+    }
+    
+    .x-tool-pressed .x-tool-close {
+         background-image: theme-image($theme-name, 'tools/close-down.png') !important;
+         background-position: 0 !important;
+    }
+    
+    .x-box-inner {
+        top:5px !important;
+        height: 25px !important;
+        
+        *overflow:visible;
+    }
+    
 }
 
 .ozonequicktip {
@@ -545,151 +545,151 @@
     max-width: 300px;
     max-height: 500px;
     padding: 0;
-	background-color: $my-apps-tooltip-color;
-	
+    background-color: $my-apps-tooltip-color;
+    
     .dashboard-tooltip-content {
-    	.noIconGivenStack { 
-    		background-image: $my-apps-window-layout-stack-default-icon; 
-    	}
-    	
-    	.noIconGivenPage { 
-    		background-image: $my-apps-window-layout-default-icon; 
-    	}
-    	
-    	.tipIcon {
-    		width:64px;
-    		height:64px; 
-    		margin-right:15px;
-    		margin-left: 5%;
-    		margin-bottom: 5%;
-    		float: left;
-    	}
+        .noIconGivenStack { 
+            background-image: $my-apps-window-layout-stack-default-icon; 
+        }
+        
+        .noIconGivenPage { 
+            background-image: $my-apps-window-layout-default-icon; 
+        }
+        
+        .tipIcon {
+            width:64px;
+            height:64px; 
+            margin-right:15px;
+            margin-left: 5%;
+            margin-bottom: 5%;
+            float: left;
+        }
     
         .name {
-        	color: $my-apps-window-dashboard-text-color;
-        	margin-bottom: 0;
-		    margin-left: 35%;
-		    margin-right: 8%;
-		    max-width: 200px !important;
-		    max-height: 75px !important;
-        	overflow: hidden;
-        	
-        	*margin-left: 0;
-        	*margin-right: 10%;
+            color: $my-apps-window-dashboard-text-color;
+            margin-bottom: 0;
+            margin-left: 35%;
+            margin-right: 8%;
+            max-width: 200px !important;
+            max-height: 75px !important;
+            overflow: hidden;
+            
+            *margin-left: 0;
+            *margin-right: 10%;
         }
         
         ul {
             color: $my-apps-window-dashboard-text-color;
-			background-color: $my-apps-tooltip-color;
+            background-color: $my-apps-tooltip-color;
             border-top: 1px solid $my-apps-window-background-color;
-			@include border-bottom-radius(7px);
-			margin-top: 5.5%;
-			
+            @include border-bottom-radius(7px);
+            margin-top: 5.5%;
+            
             li {
                 display: inline-block;
                 *zoom:1;
                 *display: inline;
                 margin: 0 1px;
-               	width:55px;
-               	height:55px;
-               	padding-top: 3.5%;
-               	font-size:.75em;
+                width:55px;
+                height:55px;
+                padding-top: 3.5%;
+                font-size:.75em;
                 color: $my-apps-window-dashboard-over-text-color;
                 cursor: pointer;
                 
                 .actionText {
-                	text-align:center;
-                	 margin-left:auto;
-                	 margin-right:auto; 
-                	 margin-top: 2px;
-                	 font-size:.94em;
-    			}
+                    text-align:center;
+                     margin-left:auto;
+                     margin-right:auto; 
+                     margin-top: 2px;
+                     font-size:.94em;
+                }
 
                 .createImg {
-		        	background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-out.png'); 
-		        	display: inline-block;
-		        	width:20px;
-		        	height:20px;
-                	margin-left: 35%;
-                	
-		        	&:hover, &.hover {
-				        background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-over.png'); 
-				    }
-		        }
-		        
-		        .createPageImg {
-		        	background-image: theme-image($theme-name, 'myappswindow/CreateNewPage-out.png'); 
-		        	display: inline-block;
-		        	width:20px;
-		        	height:20px;
-                	margin-left: 35%;
-                	 
-		        	&:hover, &.hover {
-				        background-image: theme-image($theme-name, 'myappswindow/CreateNewPage-over.png'); 
-				    }
-		        }
-		        
-		        .pushImg {
-		        	background-image: theme-image($theme-name, 'myappswindow/PushtoStore-out.png'); 
-		        	display: inline-block;
-		        	width:20px;
-		        	height:20px;
-                   	margin-left: 35%;
-                   	 
-		        	&:hover, &.hover {
-				        background-image: theme-image($theme-name, 'myappswindow/PushtoStore-over.png'); 
-				    }
-		        }
-		       
-		       	.restoreImg {
-		        	background-image: theme-image($theme-name, 'myappswindow/Restore-out.png'); 
-		        	display: inline-block;
-		        	width:20px;
-		        	height:20px;
-                	margin-left: 32%;
-                	 
-		        	&:hover, &.hover {
-				        background-image: theme-image($theme-name, 'myappswindow/Restore-over.png'); 
-				    }
-		        }
-		        
-		        .editImg {
-		        	background-image: theme-image($theme-name, 'myappswindow/Edit-out.png'); 
-		        	display: inline-block;
-		        	width:20px;
-		        	height:20px;
-                	margin-left: 35%;
-                	 
-		        	&:hover, &.hover {
-				        background-image: theme-image($theme-name, 'myappswindow/Edit-over.png'); 
-				    }
-		        }
-		        
-		        .deleteImg {
-		        	background-image: theme-image($theme-name, 'myappswindow/Delete-out.png'); 
-		        	display: inline-block;
-		        	width:20px;
-		        	height:20px;
-                	margin-left: 32%;
-                	 
-		        	&:hover, &.hover {
-				        background-image: theme-image($theme-name, 'myappswindow/Delete-over.png'); 
-				    }
-		        }
+                    background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-out.png'); 
+                    display: inline-block;
+                    width:20px;
+                    height:20px;
+                    margin-left: 35%;
+                    
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-over.png'); 
+                    }
+                }
+                
+                .createPageImg {
+                    background-image: theme-image($theme-name, 'myappswindow/CreateNewPage-out.png'); 
+                    display: inline-block;
+                    width:20px;
+                    height:20px;
+                    margin-left: 35%;
+                     
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/CreateNewPage-over.png'); 
+                    }
+                }
+                
+                .pushImg {
+                    background-image: theme-image($theme-name, 'myappswindow/PushtoStore-out.png'); 
+                    display: inline-block;
+                    width:20px;
+                    height:20px;
+                    margin-left: 35%;
+                     
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/PushtoStore-over.png'); 
+                    }
+                }
+               
+                .restoreImg {
+                    background-image: theme-image($theme-name, 'myappswindow/Restore-out.png'); 
+                    display: inline-block;
+                    width:20px;
+                    height:20px;
+                    margin-left: 32%;
+                     
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/Restore-over.png'); 
+                    }
+                }
+                
+                .editImg {
+                    background-image: theme-image($theme-name, 'myappswindow/Edit-out.png'); 
+                    display: inline-block;
+                    width:20px;
+                    height:20px;
+                    margin-left: 35%;
+                     
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/Edit-over.png'); 
+                    }
+                }
+                
+                .deleteImg {
+                    background-image: theme-image($theme-name, 'myappswindow/Delete-out.png'); 
+                    display: inline-block;
+                    width:20px;
+                    height:20px;
+                    margin-left: 32%;
+                     
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/Delete-over.png'); 
+                    }
+                }
             }
             
             .liStoreAdjust{
-            	font-size: 1em !important;
+                font-size: 1em !important;
             }
             
             .liPageAdjust{
-            	font-size: 1em !important;
+                font-size: 1em !important;
             }
         }
     }
 
     .tip-warning {
-    	
+        
         .x-box-inner {
             height: inherit !important;
             top: 0 !important;
@@ -766,14 +766,14 @@
         max-width: 265px;
     }
 
-	.description { 
-		width: 285px;
-		max-height: 300px;
-    	overflow-y: auto;
-    	overflow-x: auto;
-    	
-    	overflow/*\**/: auto\9;
-	}
+    .description { 
+        width: 285px;
+        max-height: 300px;
+        overflow-y: auto;
+        overflow-x: auto;
+        
+        overflow/*\**/: auto\9;
+    }
 
     .tip-description {
         line-height: (14/12);
