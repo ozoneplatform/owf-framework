@@ -496,7 +496,9 @@ uiperformance.bundles = [
             "../js/data/OWFStore",
             "../js/data/stores/AdminWidgetStore",
             "../js/data/stores/WidgetTypeStore",
-            "../js/components/window/StoreWizard"
+            "../js/components/window/StoreWizard",
+            '../js/data/models/Group',
+            '../js/data/stores/GroupStore'
         ]
     ],
     [
