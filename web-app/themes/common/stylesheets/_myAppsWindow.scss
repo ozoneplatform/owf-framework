@@ -590,19 +590,19 @@
                 *zoom:1;
                 *display: inline;
                 margin: 0 1px;
-                width:55px;
-                height:55px;
-                padding-top: 3.5%;
-                font-size:.75em;
+                width: 55px;
+                height: 55px;
+                padding-top: 10px;
+                font-size: .75em;
                 color: $my-apps-window-dashboard-over-text-color;
                 cursor: pointer;
                 
                 .actionText {
                     text-align:center;
-                     margin-left:auto;
-                     margin-right:auto; 
-                     margin-top: 2px;
-                     font-size:.94em;
+                    margin-left:auto;
+                    margin-right:auto; 
+                    margin-top: 2px;
+                    font-size:.94em;
                 }
 
                 .createImg {
