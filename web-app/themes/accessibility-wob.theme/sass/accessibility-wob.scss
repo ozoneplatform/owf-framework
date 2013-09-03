@@ -220,6 +220,33 @@ $owf-form-field-background-color: $owfgrey6;
 $owf-form-field-invalid-background-color: $owfgrey6 !default;
 $owf-form-field-invalid-border-color: $warning-color !default;
 
+// -- store wizard-------------------------------------------------
+$store-wizard-modal-color: #212121;
+$store-wizard-background-color: #363636;
+
+$store-wizard-title-color: #FABA1A;
+$store-wizard-step-color: #7D5D0D;
+
+$store-wizard-input-color: #212121;
+$store-wizard-input-border-color: #4D4D4D;
+
+$store-wizard-button-color: #212121;
+$store-wizard-button-hover-color: #FCD676;
+$store-wizard-button-press-color: #BC8C14;
+
+$store-wizard-button-text-press-color: #212121;
+$store-wizard-button-next-color: #FABA1A;
+$store-wizard-unreached-step-color: #4D4D4D;
+
+$store-wizard-input-text-color: #E5E5E5;
+
+$store-wizard-progress-bar-back-color: #363636;
+$store-wizard-progress-bar-front-color: #FABA1A;
+
+$store-wizard-title-divide-color: #111111;
+$store-wizard-current-progress-color:#363636;
+$store-wizard-current-progress-text-color: #FABA1A;
+
 // -- theme switcher ------------------------------------------------
 $owf-boundlist-item-selected-color: $owf-contrast-base; //contrast to make the text readable
 $theme-switcher-window-image-border-color: $owf-contrast-base;  //catchall 

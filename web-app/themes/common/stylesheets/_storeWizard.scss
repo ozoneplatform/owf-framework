@@ -26,6 +26,9 @@
 	 		
 	 		li {
 	 			padding: 15px;
+	 			background-image: theme-image($theme-name, 'storewizard/WizardArrow_disabled.png');
+	 			background-position: 95% 50%;
+    			background-repeat: no-repeat;
 	 			
 	 			.stepNumber {
 					padding-right:15px;	 	
@@ -34,11 +37,13 @@
 	 		}
 	 		
 	 		.active {
+	 			background-image: theme-image($theme-name, 'storewizard/WizardArrow_active.png');
 	 			color: $store-wizard-current-progress-text-color;
 	 			background-color: $store-wizard-current-progress-color;
 	 		}
 	 		
 	 		.complete {
+	 			background-image: theme-image($theme-name, 'storewizard/WizardArrow_inactive.png');
 	 			color: $store-wizard-step-color;
 	 		}
 	 	}
@@ -127,12 +132,12 @@
 	 	
 	 	.button:hover {
 	 		background-color: $store-wizard-button-hover-color;
-	 		color:$store-wizard-button-text-press-color;
+	 		color:$store-wizard-button-text-press-color !important;
 	 	}
 	 	
 	 	.button:active {
 	 		background-color: $store-wizard-button-press-color;
-	 		color:$store-wizard-button-text-press-color;
+	 		color:$store-wizard-button-text-press-color !important;
 	 	}
 	 	
 	 	.back {
@@ -149,7 +154,7 @@
 	 	
 	 	.next {
 	 		background-color:$store-wizard-button-next-color;
-	 		color:$store-wizard-button-text-press-color;
+	 		color:$store-wizard-button-text-press-color !important;
 	 		position:absolute;
 	 		left: 60%;
  			top: 91%;
@@ -157,7 +162,7 @@
 	 	
 	 	.save {
 	 		background-color:$store-wizard-button-next-color;
-	 		color:$store-wizard-button-text-press-color;
+	 		color:$store-wizard-button-text-press-color !important;
 	 		position:absolute;
 	 		left: 60%;
  			top: 91%;

@@ -256,19 +256,6 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                         }
                     }
                 }
-            }, '-', {
-                xtype: 'button',
-                itemId: 'addBtn',
-                cls: 'bannerBtn addBtn',
-                scale: 'banner-large',
-                iconAlign: 'top',
-                text: 'Add Store',
-                handler: function(){
-                	Ext.widget('storewizard', {
-                        id: 'storeWizard'
-                    }).show().center();
-                },
-                scope: this
             },
             '-', {
                 xtype: 'button',
