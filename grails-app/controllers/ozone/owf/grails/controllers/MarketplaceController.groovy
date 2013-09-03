@@ -25,25 +25,37 @@ class MarketplaceController extends BaseOwfRestController {
         def statusCode = 500
         def statusKey = 'updateFailed'
         def statusMessage = "GUID ${params.guid} not found"
+        boolean foundStack = false;
 
         if (params.guid) {
             if (config.owf.mpSync.enabled) {
                 // Prevent a new widget from being automatically added from MP
+
+                // One item of interest. Since we don't have a really good
+                // way to determine the URL of the marketplace that
+                // triggering the update, we actually give the service a
+                // null URL. No matter as the service will, in turn, look
+                // into the current marketplaces configured in OWF and grab
+                // the URLs for each returning the first match it finds for
+                // the GUID among all the MPs.
+                stMarketplaceJson.addAll(marketplaceService.buildWidgetListFromMarketplace(params.guid))
+
+                // since there is no way to tell from the parameters passed in whether it's a widget or stack,
+                // we're going to look through for a stakccontext object to know whether a stack was found or not
+                stMarketplaceJson.each {
+                    if (it.stackContext) {
+                        foundStack = true;
+                    }
+                }
+
                 if (!config.owf.mpSync.autoCreateWidget &&
-                    null == WidgetDefinition.findByWidgetGuid(params.guid, [cache:true])) {
+                    null == WidgetDefinition.findByWidgetGuid(params.guid, [cache:true]) &&
+                    !foundStack) {
                         statusKey = 'updateDisabled'
-                        statusMessage += ". Automatic creation is disabled."
+                        statusMessage += ". Automatic creation is disabled or no app was found."
                         statusCode = 200
                         log.info("MP Sync: ${statusMessage}")
                 } else {
-                    // One item of interest. Since we don't have a really good
-                    // way to determine the URL of the marketplace that
-                    // triggering the update, we actually give the service a
-                    // null URL. No matter as the service will, in turn, look
-                    // into the current marketplaces configured in OWF and grab
-                    // the URLs for each returning the first match it finds for
-                    // the GUID among all the MPs.
-                    stMarketplaceJson.addAll(marketplaceService.buildWidgetListFromMarketplace(params.guid))
 
                     if (!stMarketplaceJson.isEmpty()) {
                         marketplaceService.addListingsToDatabase(stMarketplaceJson)
