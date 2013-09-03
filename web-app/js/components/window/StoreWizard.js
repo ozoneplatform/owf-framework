@@ -75,36 +75,36 @@ Ext.define('Ozone.components.window.StoreWizard', {
     getContent: function() {
         var htmlData = "<h1 id='wizardTitle'>" + (this.editing ? "Edit Store" : "Connecting to a Store") + "</h1>" +
             "<div id='wizardButtons'>" +
-                "<ul id='wizardProcessList'>" +
-                    "<li class='step1 active'><div><span class='stepNumber'>1</span> Entering Store URL</div></li>" +
-                    "<li class='step2'><div><span class='stepNumber'>2</span> Review or Edit</div></li>" +
-                "</ul>" +
-                "<div id='progressBar' >" +
-                    "<div id='progressBarProgress' style='display:none;'>" +
-                    "</div>" +
-                "</div>" +
+            "<ul id='wizardProcessList'>" +
+            "<li class='step1 active'><div><span class='stepNumber'>1</span> Enter Store URL</div></li>" +
+            "<li class='step2'><div><span class='stepNumber'>2</span> Review or Edit</div></li>" +
+            "</ul>" +
+            "<div id='progressBar' >" +
+            "<div id='progressBarProgress' style='display:none;'>" +
+            "</div>" +
+            "</div>" +
             "</div>" +
             "<div id='wizardContentBox'>" +
-                "<div id='enterURLStep'>" +
-                    "<div class='contentTitle'>Entering Store URL</div>" +
-                    "<div class='contentText'>Enter the location of the store. For example, https://store.gov</div>" +
-                    "<div class='contentText userInput'>Store URL <input id='storeUrl'></input></div>" +
-                    "<div class='controlButtons'>" +
-                        "<div class='next button'>Next</div>" +
-                        "<div class='cancel button'>Cancel</div>" +
-                    "</div>" +
-                "</div>" +
-                "<div id='editStep' style='display:none;'>" +
-                    "<div class='contentTitle'>Review or Edit</div>" +
-                    "<div class='contentText'>User will see this Store icon and name. If it is correct, click Save.</div>" +
-                    "<div class='contentText userInput iconText'>Icon <input id='iconUrl'></input></div>" +
-                    "<div class='contentText userInput'>Store Name <input id='storeName'></input></div>" +
-                    "<div class='controlButtons'>" +
-                        "<div class='back button'>Back</div>" +
-                        "<div class='save button'>Save</div>" +
-                        "<div class='cancel button'>Cancel</div>" +
-                    "</div>" +
-                "</div>" +
+            "<div id='enterURLStep'>" +
+            "<div class='contentTitle'>Enter Store URL</div>" +
+            "<div class='contentText'>Enter the location of the store. For example, https://store.gov</div>" +
+            "<div class='contentText userInput'>Store URL <input id='storeUrl'></input></div>" +
+            "<div class='controlButtons'>" +
+            "<div class='next button'>Next</div>" +
+            "<div class='cancel button'>Cancel</div>" +
+            "</div>" +
+            "</div>" +
+            "<div id='editStep' style='display:none;'>" +
+            "<div class='contentTitle'>Review or Edit</div>" +
+            "<div class='contentText'>User will see this Store icon and name. If it is correct, click Save.</div>" +
+            "<div class='contentText userInput iconText'>Icon <input id='iconUrl'></input></div>" +
+            "<div class='contentText userInput'>Store Name <input id='storeName'></input></div>" +
+            "<div class='controlButtons'>" +
+            "<div class='back button'>Back</div>" +
+            "<div class='save button'>Save</div>" +
+            "<div class='cancel button'>Cancel</div>" +
+            "</div>" +
+            "</div>" +
             "</div>";
 
 
@@ -117,7 +117,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
         $('.step1').removeClass('active');
         $('.step1').addClass('complete');
         $('#editStep').slideToggle();
-        $('.step2').addClass('active');        
+        $('.step2').addClass('active');
 
         $('#iconUrl').val(this.record.get('image'));
         $('#storeName').val(this.record.get('name'));
