@@ -12,7 +12,6 @@ Ext.define('Ozone.components.window.StoreWizard', {
     closable: true,
     title: '',
     cls: 'system-window',
-    store: null,
     typeStore: null,
     groupStore: null,
 
@@ -171,8 +170,10 @@ Ext.define('Ozone.components.window.StoreWizard', {
 
     nextButtonHandler: function() {
         var me = this,
-            storeUrl = Ext.String.trim($('#storeUrl').val()),
-            storeDescriptor = Ext.String.trim(storeUrl + '/public/storeDescriptor');
+            storeUrl = Ext.String.trim($('#storeUrl').val());
+
+        storeUrl = this.stripTrailingSlash(storeUrl);
+        var storeDescriptor = Ext.String.trim(storeUrl + '/public/storeDescriptor');
 
         if (storeUrl == null || storeUrl == '' || !storeUrl.replace(/\s/g, '').length) {
             alert('Please enter a URL');
@@ -261,28 +262,28 @@ Ext.define('Ozone.components.window.StoreWizard', {
             var guid = me.record.get('widgetGuid');
 
             me.store.add(me.record);
-            me.store.onBatchOperationComplete = function() {
+            me.store.on('write', function() {
                 //ajax call to the server to save group
-                Ozone.util.Transport.send({
+                Ext.Ajax.request({
                     url: Ozone.util.contextPath() + '/widget',
-                    method: "PUT",
-                    onSuccess: Ext.bind(function(json) {
-                        console.log('successfully added marketplace to user group');
-                    }, this),
-                    onFailure: function(errorMsg) {
-                        console.log('error adding user group to marketplace');
-                    },
-                    autoSendVersion: false,
-                    content: {
-                        data: gadgets.json.stringify([userGroup.data]),
+                    method: 'POST',
+                    params: {
+                        data: Ext.JSON.encode([userGroup.data]),
                         tab: 'groups',
                         update_action: 'add',
                         widget_id: guid
+                    },
+                    callback: function(options, success, response) {
+                        if (success) {
+                            console.log('successfully added marketplace to user group');
+                        } else {
+                            console.log('error adding user group to marketplace');
+                        }
                     }
                 });
-            };
+            });
 
-            me.store.save();
+            me.store.sync();
 
             me.close();
 
@@ -300,6 +301,12 @@ Ext.define('Ozone.components.window.StoreWizard', {
         $('.next').on('click', $.proxy(me.nextButtonHandler, me));
         $('.back').on('click', $.proxy(me.backButtonHandler, me));
         $('.save').on('click', $.proxy(me.saveButtonHandler, me));
-    }
+    },
 
+    stripTrailingSlash: function (str) {
+        if(str.substr(str.length - 1) == '/') {
+            return str.substr(0, str.length - 1);
+        }
+        return str;
+    }
 })
