@@ -1,7 +1,7 @@
 Ext.define('Ozone.components.window.StoreWizard', {
     extend: 'Ozone.components.window.ModalWindow',
     alias: 'widget.storewizard',
-
+    
     modal: true,
     preventHeader: true,
     modalAutoClose: true,
@@ -37,12 +37,15 @@ Ext.define('Ozone.components.window.StoreWizard', {
     record: null,
 
     initComponent: function() {
+    	var me = this
         this.loadMask = Ext.create('Ozone.components.mask.LoadMask', Ext.getBody(), {
             zIndexManager: Ext.WindowManager
         });
-
-        this.store = Ext.create('Ozone.data.stores.AdminWidgetStore', {
-            callback: this.saveCallback
+    	
+    	this.widgetStore = Ext.StoreManager.lookup('widgetStore');
+    	
+        this.adminStore = Ext.create('Ozone.data.stores.AdminWidgetStore', {
+            callback: this.saveCallback,
         });
 
         this.typeStore = Ext.create('Ozone.data.WidgetTypeStore');
@@ -59,10 +62,10 @@ Ext.define('Ozone.components.window.StoreWizard', {
         });
 
         if (this.editing && this.existingStoreId) {
-            this.store.load({
+            this.adminStore.load({
                 scope: this,
                 callback: function(records, operation, success) {
-                    this.record = this.store.getAt(this.store.findExact('widgetGuid', this.existingStoreId));
+                    this.record = this.adminStore.getAt(this.adminStore.findExact('widgetGuid', this.existingStoreId));
                     this.setupForEditing();
                 }
             });
@@ -261,8 +264,8 @@ Ext.define('Ozone.components.window.StoreWizard', {
 
             var guid = me.record.get('widgetGuid');
 
-            me.store.add(me.record);
-            me.store.on('write', function() {
+            me.adminStore.add(me.record);
+            me.adminStore.on('write', function() {
                 //ajax call to the server to save group
                 Ext.Ajax.request({
                     url: Ozone.util.contextPath() + '/widget',
@@ -273,9 +276,13 @@ Ext.define('Ozone.components.window.StoreWizard', {
                         update_action: 'add',
                         widget_id: guid
                     },
-                    callback: function(options, success, response) {
+                    callback: function(success, response) {
                         if (success) {
                             console.log('successfully added marketplace to user group');
+                            if(me.widgetStore)
+                            	me.widgetStore.load();
+                            
+                            me.close();
                         } else {
                             console.log('error adding user group to marketplace');
                         }
@@ -283,9 +290,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
                 });
             });
 
-            me.store.sync();
-
-            me.close();
+            me.adminStore.sync();
 
         } else {
             alert("Error: The new Store could not be saved.");
