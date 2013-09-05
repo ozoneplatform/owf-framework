@@ -202,7 +202,7 @@ class WidgetDefinitionController extends BaseOwfRestController {
         }
     }
 
-    def doesMarketplaceWidgetDefinitionExist = {
+    def hasMarketplace = {
 
         def jsonResult
         StopWatch stopWatch = null;
@@ -210,11 +210,11 @@ class WidgetDefinitionController extends BaseOwfRestController {
         if (log.isInfoEnabled()) {
             stopWatch = new StopWatch();
             stopWatch.start();
-            log.info("Executing widgetDefinitionService: doesMarketplaceWidgetDefinitionExist");
+            log.info("Executing widgetDefinitionService: hasMarketplace");
         }
         try
         {
-            def result = widgetDefinitionService.doesMarketplaceWidgetDefinitionExist()
+            def result = widgetDefinitionService.hasMarketplace()
             jsonResult = [msg: result as JSON, status: 200]
         }
         catch (Exception e) {
@@ -224,7 +224,7 @@ class WidgetDefinitionController extends BaseOwfRestController {
         renderResult(jsonResult)
 
         if (log.isInfoEnabled()) {
-            log.info("Executed widgetDefinitionService: doesMarketplaceWidgetDefinitionExist in "+stopWatch);
+            log.info("Executed widgetDefinitionService: hasMarketplace in "+stopWatch);
         }
 
     }

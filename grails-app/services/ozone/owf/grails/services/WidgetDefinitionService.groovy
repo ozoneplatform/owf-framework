@@ -1016,9 +1016,9 @@ class WidgetDefinitionService {
         }
     }
 
-    public def doesMarketplaceWidgetDefinitionExist() {
+    public def hasMarketplace() {
         def marketplaceWidgetType = WidgetType.findByName('marketplace')
-        return [success:true, marketplaceWidgetDefinitionExists: marketplaceWidgetType?.widgetDefinitions?.size() > 0 ? true : false]
+        return [data: marketplaceWidgetType?.widgetDefinitions?.size() > 0 ? true : false]
     }
 
     private def isNull(obj) {
