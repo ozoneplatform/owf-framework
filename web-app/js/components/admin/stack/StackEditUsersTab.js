@@ -40,6 +40,14 @@ Ext.define('Ozone.components.admin.stack.StackEditUsersTab', {
         });
         this.callParent(arguments);
 
+        Ext.Ajax.request({
+            url: Ozone.util.contextPath() + '/widget/hasMarketplace',
+            success: function(response) {
+                var json = Ext.decode(response.responseText);
+                self.hasMarketplace = json.data;
+            }
+        });
+
         this.on({
             activate: {
                 scope: this,
@@ -53,7 +61,7 @@ Ext.define('Ozone.components.admin.stack.StackEditUsersTab', {
 
                     if (cmp && cmp.ownerCt && cmp.ownerCt.record && cmp.ownerCt.record.data) {
                         var stack = cmp.ownerCt.record.data;
-                        if (!stack.approved) {
+                        if (!stack.approved && self.hasMarketplace) {
 
                             // disable the add button
                             var button = Ext.getCmp('adminUsersTabAddButton'),

@@ -43,6 +43,14 @@ Ext.define('Ozone.components.admin.stack.StackEditGroupsTab', {
             }
         });
 
+        Ext.Ajax.request({
+            url: Ozone.util.contextPath() + '/widget/hasMarketplace',
+            success: function(response) {
+                var json = Ext.decode(response.responseText);
+                self.hasMarketplace = json.data;
+            }
+        });
+
         // this is to disable the add/remove buttons if the app has not been approved
         this.on({
             activate: {
@@ -52,7 +60,7 @@ Ext.define('Ozone.components.admin.stack.StackEditGroupsTab', {
 
                     if (cmp && cmp.ownerCt && cmp.ownerCt.record && cmp.ownerCt.record.data) {
                         var stack = cmp.ownerCt.record.data;
-                        if (!stack.approved) {
+                        if (!stack.approved && self.hasMarketplace) {
 
                             // disable the add button
                             var button = Ext.getCmp('adminGroupsTabAddButton'),
