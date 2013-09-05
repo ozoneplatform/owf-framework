@@ -201,4 +201,31 @@ class WidgetDefinitionController extends BaseOwfRestController {
             log.info("Executed widgetDefinitionService: dependents in "+stopWatch);
         }
     }
+
+    def doesMarketplaceWidgetDefinitionExist = {
+
+        def jsonResult
+        StopWatch stopWatch = null;
+
+        if (log.isInfoEnabled()) {
+            stopWatch = new StopWatch();
+            stopWatch.start();
+            log.info("Executing widgetDefinitionService: doesMarketplaceWidgetDefinitionExist");
+        }
+        try
+        {
+            def result = widgetDefinitionService.doesMarketplaceWidgetDefinitionExist()
+            jsonResult = [msg: result as JSON, status: 200]
+        }
+        catch (Exception e) {
+            jsonResult = handleError(e)
+        }
+
+        renderResult(jsonResult)
+
+        if (log.isInfoEnabled()) {
+            log.info("Executed widgetDefinitionService: doesMarketplaceWidgetDefinitionExist in "+stopWatch);
+        }
+
+    }
 }

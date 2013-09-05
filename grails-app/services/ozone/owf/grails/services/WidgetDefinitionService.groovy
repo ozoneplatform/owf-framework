@@ -1016,6 +1016,11 @@ class WidgetDefinitionService {
         }
     }
 
+    public def doesMarketplaceWidgetDefinitionExist() {
+        def marketplaceWidgetType = WidgetType.findByName('marketplace')
+        return [success:true, marketplaceWidgetDefinitionExists: marketplaceWidgetType?.widgetDefinitions?.size() > 0 ? true : false]
+    }
+
     private def isNull(obj) {
         if (obj == null) {
             return true

@@ -251,6 +251,8 @@ class UrlMappings {
 		
         "/prefs/widgetList" ( controller:'personWidgetDefinition', action:'widgetList' )
 
+        "/prefs/doesMarketplaceWidgetDefinitionExist" ( controller: 'widgetDefinition', action: 'doesMarketplaceWidgetDefinitionExist')
+
         // Mapping for dashboard objects
         "/dashboard/$guid?" {
             controller = "dashboard"
