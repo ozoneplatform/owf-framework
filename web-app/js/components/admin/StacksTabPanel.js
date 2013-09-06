@@ -206,7 +206,16 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
     onAddClicked: function (button, e) {
         var record = this.ownerCt.record,
             itemName = record.get('name') ? record.get('name') : record.get('userRealName'),
-            tip;
+            tip,
+            self = this;
+
+        Ext.Ajax.request({
+            url: Ozone.util.contextPath() + '/widget/hasMarketplace',
+            success: function(response) {
+                var json = Ext.decode(response.responseText);
+                self.hasMarketplace = json.data;
+            }
+        });
 
         var win = Ext.widget('admineditoraddwindow', {
             addType: 'App',
@@ -231,7 +240,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                     button = win.down('#ok');
 
                                 // disable the ok button if the app is not approved
-                                if (!stack.approved) {
+                                if (!stack.approved && self.hasMarketplace) {
                                     button.setDisabled(true);
 
                                     // firefox handles tooltips on disabled buttons differently than the other browsers
