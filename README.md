@@ -13,7 +13,7 @@ The Ozone Widget Framework (OWF) is a web application for composing other lightw
 ![Dashboards](http://i.imgur.com/7FFlu.png)
 
 ## Technology components
-For Version 7 of OWF, the front-end user interface uses ExtJS, and the back-end uses Grails.  User preferences are stored in a relational database - anything supported by Hibernate.  Authentication of users is a modular function provided by Spring Security.  There is a re-factoring effort planned for 2013 to improve performance  modularity and maintainability, which is expected to eliminate the dependency on Grails and ExtJS.
+For Version 7 of OWF, the front-end user interface uses Ext JS, and the back-end uses Grails.  User preferences are stored in a relational database - anything supported by Hibernate.  Authentication of users is a modular function provided by Spring Security.  There is a re-factoring effort planned for 2013 to improve performance, modularity, and maintainability, which is expected to eliminate the dependency on Grails and Ext JS.
  
  
 ## Browser Support
@@ -22,13 +22,13 @@ Numbered releases are tested on IE7, IE8, IE9, Firefox 3.6 and the latest public
 ## Copyrights
 > Software (c) 2012 [Next Century Corporation](http://www.nextcentury.com/ "Next Century")
 
-> Portions (c) 2009 [TexelTek Inc.](http://www.texeltek.com/"TexelTek")
+> Portions (c) 2009 [TexelTek Inc.](http://www.texeltek.com/ "TexelTek")
 
 > The United States Government has unlimited rights in this software, pursuant to the contracts under which it was developed.  
  
-The Ozone Widget Framework is released to the public as Open Source Software, because it's the Right Thing To Do. Also, it was required by [Section 924 of the 2012 National Defense Authorization Act.](http://www.gpo.gov/fdsys/pkg/PLAW-112publ81/pdf/PLAW-112publ81.pdf "NDAA FY12")
+The Ozone Widget Framework is released to the public as Open Source Software, because it's the Right Thing To Do. Also, it was required by [Section 924 of the 2012 National Defense Authorization Act](http://www.gpo.gov/fdsys/pkg/PLAW-112publ81/pdf/PLAW-112publ81.pdf "NDAA FY12").
 
-Released under the [Apache License, Version 2.](http://www.apache.org/licenses/LICENSE-2.0.html "Apache Licence v2")
+Released under the [Apache License, Version 2](http://www.apache.org/licenses/LICENSE-2.0.html "Apache License v2").
  
 ## Community
 
@@ -46,7 +46,7 @@ OWF started as a project at a single US Government agency, but developed into a 
 ### Contributions
 
 #### Non-Government
-Contributions to the baseline project from outside the US Federal Government should be submitted as a pull request to the core project on GitHub.  Before patches will be accepted by the core project, contributors have a signed Contributor License Agreement on file with the core team.  If you or your company wish your copyright in your contribution to be annotated in the project documentation (such as this README), then your pull request should include that annotation.
+Contributions to the baseline project from outside the US Federal Government should be submitted as a pull request to the core project on GitHub.  Before patches will be accepted by the core project, contributors have a signed [Contributor License Agreement](https://www.ozoneplatform.org/ContributorLicenseAgreement1-3OZONE.docx) on file with the core team.  If you or your company wish your copyright in your contribution to be annotated in the project documentation (such as this README), then your pull request should include that annotation.
  
 #### Government
 Contributions from government agencies do not need to have a CLA on file, but do require verification that the government has unlimited rights to the contribution.  An email to goss-support@owfgoss.org is sufficient, stating that the contribution was developed by an employee of the United States Government in the course of his or her duties. Alternatively, if the contribution was developed by a contractor, the email should provide the name of the Contractor, Contract number, and an assertion that the contract included the standard "Unlimited rights" clause specified by [DFARS 252.227.7014](http://www.acq.osd.mil/dpap/dars/dfars/html/current/252227.htm#252.227-7014) "Rights in noncommercial computer software and noncommercial computer software documentation".
@@ -55,7 +55,7 @@ Government agencies are encouraged to submit contributions as pull requests on G
  
 ### Roadmap
  
-At the Dec 2012 OWF GOSS board, the board agreed to a 6-month re-factoring effort which would re-implement using OSGi on the back end and eliminate the dependency on ExtJS for the front-end.  This work will be done on GitHub and will be completely transparent to the community.
+There is work underway to re-factor OWF to use OSGi on the back end, and eliminate the dependency on Ext JS for the front-end.  Multiple alphas have been released, and announced on [ozoneplatform-announce](https://groups.google.com/forum/?fromgroups#!forum/ozoneplatform-announce).  Although we initially intended a release for June 2013, we're revisiting our design to make sure it is fully scalable and enterprise-ready, both for OWF itself and for other capabilities built on top of the services of what we're calling _ozoneplatform_.  Watch [ozoneplatform-announce](https://groups.google.com/forum/?fromgroups#!forum/ozoneplatform-announce), as well as this page, for further information as to specific timelines and availability of alphas.
  
 ### Related projects
  
