@@ -4,7 +4,8 @@
         paths: {
             "jquery"                : "../../../../js-lib/jquery/jquery-1.8.0",
             "underscore"            : "../../../../js-lib/underscore/underscore-1.4.4",
-            "backbone"              : "../../../../js-lib/backbone/backbone-0.9.2"
+            "backbone"              : "../../../../js-lib/backbone/backbone-0.9.2",
+            "pnotify"               : '../../../../js-lib/pnotify-1.2.0/jquery.pnotify'
         },  
         shim: {
             underscore: {
@@ -17,6 +18,9 @@
             jqueryui: {
                 deps: ["jquery"],
                 exports: 'jqueryui'
+            },
+            pnotify: {
+                deps: ["jquery"]
             }
         }
     });

@@ -30,11 +30,6 @@ define([
             this.$el.data('store-id', this.model.get('widgetGuid'));
 
             return this;
-        },
-
-        remove: function() {
-            this.$el.empty();
-            Backbone.View.prototype.remove.call(this);
         }
     });
 });

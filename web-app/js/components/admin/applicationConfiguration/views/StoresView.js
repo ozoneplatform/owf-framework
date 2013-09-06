@@ -3,12 +3,14 @@ define([
     './StoreView',
     '../collections/Stores',
     'jquery',
+    'pnotify',
     'underscore',
     'backbone'
 ], function(ApplicationConfigurationDescriptionView,
     StoreView,
     Stores,
     $,
+    pnotify,
     _,
     Backbone) {
 
@@ -58,44 +60,40 @@ define([
                 data: $.param({
                     widgetTypes: 'store'
                 })
-            }).complete(_.bind(function() {
-                this.render();
-            }, this));
+            }).done(_.bind(this.render, this));
         },
 
         render: function() {
             this.descriptionView = new ApplicationConfigurationDescriptionView({
                 model: this.model
             });
-            this.descriptionView.render();
 
+            this.descriptionView.render();
             this.$el.append(this.descriptionView.el);
 
             this.collection.each(this.renderItem);
 
-            this.button = _.template(this.btnTpl, {});
-            this.$el.append(this.button);
+            this.$el.append(this.btnTpl);
         },
 
         renderItem: function(model) {
             var storeView = new StoreView({
-                model: model,
-                id: 'app-config-store-view-' + model.get('widgetGuid')
+                model: model
             });
 
-            storeView.render();
-            this.$el.append(storeView.el);
+            this.$el.append(storeView.render().el);
             this.storeViews[model.get('widgetGuid')] = storeView;
         },
 
         addBtnClicked: function(e) {
+            var me = this;
             e.preventDefault();
 
             Ext.widget('storewizard', {
                 id: 'storeWizard',
-                saveCallback: _.bind(function() {
-                    setTimeout(_.bind(this.refresh, this), 500);
-                }, this)
+                saveCallback: function() {
+                    setTimeout(_.bind(me.refresh, me), 500);
+                }
             }).show().center();
         },
 
@@ -127,16 +125,28 @@ define([
                     id: storeId
                 }
             })
-                .done(_.bind(function(resp) {
-                    me.removeStore(storeId);
-                }, me))
-                .fail(_.bind(function(data, textStatus, error) {
-                    console.log('second delete failed');
-                }, me));
+            .done(function(resp) {
+                $.pnotify({
+                    title: 'Store Removed',
+                    text: me.collection.get(storeId).get('name') + ' was removed from OWF.',
+                    type: 'success',
+                    addclass: "stack-bottomright",
+                    stack: {
+                        "dir1": "up",
+                        "dir2": "left",
+                        "firstpos1": 25,
+                        "firstpos2": 25
+                    },
+                    history: false,
+                    sticker: false,
+                    icon: false
+                });
+                me.removeStore(storeId);
+            });
         },
 
         removeStore: function(storeId) {
-            this.storeViews[storeId].$el.fadeOut('fast');
+            this.storeViews[storeId].remove();
             this.collection.remove(this.collection.get(storeId), {
                 silent: true
             });
@@ -151,7 +161,6 @@ define([
             _.invoke(_.values(this.storeViews), 'remove');
             delete this.storeViews;
             delete this.descriptionView;
-            delete this.button;
 
             Backbone.View.prototype.remove.call(this);
         }
