@@ -10,6 +10,7 @@ import ozone.owf.grails.domain.IntentDataType
 import ozone.owf.grails.domain.RelationshipType
 import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.grails.domain.WidgetDefinitionIntent
+import ozone.owf.grails.domain.WidgetType
 import ozone.owf.grails.services.DomainMappingService
 
 class WidgetDefinitionControllerTests extends OWFGroovyTestCase {
@@ -44,7 +45,7 @@ class WidgetDefinitionControllerTests extends OWFGroovyTestCase {
         widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent2, widgetDefinitionIntent1]
 	}
 	
-    def createWidgetDefinitionForTest(widgetName, imageUrlLarge, imageUrlSml, guid, widgetUrl, descriptorUrl, uname) {
+    def createWidgetDefinitionForTest(widgetName, imageUrlLarge, imageUrlSml, guid, widgetUrl, descriptorUrl, uname, widgetTypes = null) {
         def widgetDefinition = WidgetDefinition.build(
             descriptorUrl : '../examples/fake-widgets/' + descriptorUrl,
             displayName : widgetName,
@@ -55,7 +56,8 @@ class WidgetDefinitionControllerTests extends OWFGroovyTestCase {
             widgetGuid : guid,
             universalName : uname,
             widgetUrl : '../examples/fake-widgets/' + widgetUrl,
-            width : 980
+            width : 980,
+            widgetTypes: widgetTypes
         )
 
 		widgetDefinition.save(flush:true)
@@ -706,18 +708,23 @@ class WidgetDefinitionControllerTests extends OWFGroovyTestCase {
         assertNotNull WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
     }
 
-    /*void testDeleteWidgetDefinitionForUnauthorizedUser() {
-        loginAsUsernameAndRole('testUser1', ERoleAuthority.ROLE_USER.strVal)
-        createWidgetDefinitionForTest('Widget C','widgetC.gif','widgetCsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12551','widget-c.html')
-        
+    void testHasMarketplace() {
+        loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
+        def marketplaceType = [WidgetType.findByName('marketplace')]
         controller = new WidgetDefinitionController()
         controller.widgetDefinitionService = widgetDefinitionService
         controller.request.contentType = "text/json"
-        
-        controller.params.widgetGuid = '0c5435cf-4021-4f2a-ba69-dde451d12551'
+
+        // verify that there is no marketplace widget definition
+        assertEquals(false, controller.widgetDefinitionService.hasMarketplace().data)
+
+        // create marketplace1 instance then verify that it has a marketplace widget definition
+        createWidgetDefinitionForTest('Marketplace','marketplace.gif','marketplacesm.gif','88888888-4021-4f2a-ba69-dde451d12551','marketplace.html','marketplace.json', 'com.example.marketplace', marketplaceType)
+        assertEquals(true, controller.widgetDefinitionService.hasMarketplace().data)
+
+        // delete the marketplace widget then verify it doesn't have a marketplace widget definition
+        controller.params.id = '88888888-4021-4f2a-ba69-dde451d12551'
         controller.delete()
-        
-        assertEquals '"Error during delete: You are not authorized to access this entity. You are not authorized to delete widget definitions."', controller.response.contentAsString
-        assertNotNull WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
-    }*/
+        assertEquals(false, controller.widgetDefinitionService.hasMarketplace().data)
+    }
 }

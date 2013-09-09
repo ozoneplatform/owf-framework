@@ -1017,8 +1017,12 @@ class WidgetDefinitionService {
     }
 
     public def hasMarketplace() {
-        def marketplaceWidgetType = WidgetType.findByName('marketplace')
-        return [data: marketplaceWidgetType?.widgetDefinitions?.size() > 0 ? true : false]
+        def widgets = WidgetDefinition.createCriteria().list {
+            widgetTypes {
+                eq("name",'marketplace')
+            }
+        }
+        return [data: widgets.size() > 0 ? true : false]
     }
 
     private def isNull(obj) {
