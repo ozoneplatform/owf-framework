@@ -278,14 +278,11 @@ Ext.define('Ozone.components.window.StoreWizard', {
                     },
                     callback: function(success, response) {
                         if (success) {
-                            console.log('successfully added marketplace to user group');
                             if(me.widgetStore)
                             	me.widgetStore.load();
                             
                             me.close();
-                        } else {
-                            console.log('error adding user group to marketplace');
-                        }
+                        } 
                     }
                 });
             });
