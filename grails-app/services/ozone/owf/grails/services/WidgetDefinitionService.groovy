@@ -105,7 +105,6 @@ class WidgetDefinitionService {
 
         // Either group_id or groupIds is passed, but not both
         if (params?.group_id) {
-            def tempArr = []
             params.groupIds = "[" + params.group_id + "]"
         }
     
@@ -452,7 +451,7 @@ class WidgetDefinitionService {
                     def newIntent = Intent.findByAction(intent.action)
 
                     def newIntentDataTypes = []
-                    intent.dataTypes.collect() {
+                    intent.dataTypes.collect {
                         newIntentDataTypes.push(IntentDataType.findByDataType(it) ?: new IntentDataType(dataType: it))
                     }
 
@@ -462,7 +461,7 @@ class WidgetDefinitionService {
                     }
 
                     def existingDataTypes = []
-                    newIntent.dataTypes.each() { existingDataTypes.push(it.toString().toLowerCase()) }
+                    newIntent.dataTypes.each { existingDataTypes.push(it.toString().toLowerCase()) }
 
                     //Add any data types to the intent that don't already exist
                     for(newIntentDataType in newIntentDataTypes) {
@@ -478,7 +477,7 @@ class WidgetDefinitionService {
                     def newWidgetDefinitionIntent
                     if(i < lastSendIntent) {
                         //Create a new sending widget definition intent if one doesn't already exist
-                        newWidgetDefinitionIntent = WidgetDefinitionIntent.createCriteria().get() {
+                        newWidgetDefinitionIntent = WidgetDefinitionIntent.createCriteria().get {
                             eq('widgetDefinition', widgetDefinition)
                             eq('intent', newIntent)
                             eq('send', true)
@@ -491,7 +490,7 @@ class WidgetDefinitionService {
                         }
                     } else {
                         //Create a new receiving widget definition intent if one doesn't already exist
-                        newWidgetDefinitionIntent = WidgetDefinitionIntent.createCriteria().get() {
+                        newWidgetDefinitionIntent = WidgetDefinitionIntent.createCriteria().get {
                             eq('widgetDefinition', widgetDefinition)
                             eq('intent', newIntent)
                             eq('receive', true)
@@ -532,7 +531,7 @@ class WidgetDefinitionService {
                 def person = Person.findById(it.toLong(),[cache:true])
                 if (person) {
                     def criteria = PersonWidgetDefinition.createCriteria()
-                    def results = criteria.list() {
+                    def results = criteria.list {
                         eq("person", person)
                         eq("widgetDefinition", widgetDefinition)
                     }
@@ -594,7 +593,6 @@ class WidgetDefinitionService {
 
         if (params.update_action != null && params.update_action != '' && 'groups'==params.tab) {
             def updatedGroups = []
-            def group_ids = []
             def groups = JSON.parse(params.data);
 
             groups.each { it ->
@@ -622,7 +620,7 @@ class WidgetDefinitionService {
                 def person = Person.findById(it.id.toLong(),[cache:true])
                 if (person) {
                     def criteria = PersonWidgetDefinition.createCriteria()
-                    def results = criteria.list() {
+                    def results = criteria.list {
                         eq("person", person)
                         eq("widgetDefinition", widgetDefinition)
                     }

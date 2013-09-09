@@ -4,6 +4,8 @@ import grails.converters.JSON
 import org.apache.commons.lang.time.StopWatch
 import ozone.owf.grails.OwfException
 
+import javax.servlet.http.HttpServletResponse
+
 class WidgetDefinitionController extends BaseOwfRestController {
 	
     def accountService
@@ -24,7 +26,7 @@ class WidgetDefinitionController extends BaseOwfRestController {
         }
         try {
             def result = widgetDefinitionService.show(params)
-            statusCode = 200
+            statusCode = HttpServletResponse.SC_OK
             jsonResult = getJsonResult(result, modelName, params)
         }
         catch (OwfException owe) {
@@ -52,7 +54,7 @@ class WidgetDefinitionController extends BaseOwfRestController {
         }
         try {
           def result = widgetDefinitionService.list(params)
-          statusCode = 200
+          statusCode = HttpServletResponse.SC_OK
           jsonResult = result as JSON
         }
         catch (OwfException owe) {
@@ -69,7 +71,6 @@ class WidgetDefinitionController extends BaseOwfRestController {
     }
 	
     def create = {
-        def statusCode
         def jsonResult
         StopWatch stopWatch = null;
 
@@ -80,7 +81,7 @@ class WidgetDefinitionController extends BaseOwfRestController {
         }
         try {
             def result = widgetDefinitionService.createOrUpdate(params)
-            jsonResult = [msg: getJsonResult(result, modelName, params), status: 200]
+            jsonResult = [msg: getJsonResult(result, modelName, params), status: HttpServletResponse.SC_OK]
         }
         catch (Exception e) {
             jsonResult = handleError(e)
@@ -94,7 +95,6 @@ class WidgetDefinitionController extends BaseOwfRestController {
     }
 	
     def update = {
-        def statusCode
         def jsonResult
         StopWatch stopWatch = null;
 
@@ -110,7 +110,7 @@ class WidgetDefinitionController extends BaseOwfRestController {
             } else {
                 result = widgetDefinitionService.createOrUpdate(params)
             }
-            jsonResult = [msg: getJsonResult(result, modelName, params), status: 200]
+            jsonResult = [msg: getJsonResult(result, modelName, params), status: HttpServletResponse.SC_OK]
         }
         catch (Exception e) {
             jsonResult = handleError(e)
@@ -124,7 +124,6 @@ class WidgetDefinitionController extends BaseOwfRestController {
     }
 	
     def delete = {
-        def statusCode
         def jsonResult
         StopWatch stopWatch = null;
 
@@ -135,7 +134,7 @@ class WidgetDefinitionController extends BaseOwfRestController {
         }
         try {
             def result = widgetDefinitionService.delete(params)
-            jsonResult = [msg: result as JSON, status: 200]
+            jsonResult = [msg: result as JSON, status: HttpServletResponse.SC_OK]
         }
         catch (Exception e)
         {
@@ -150,7 +149,6 @@ class WidgetDefinitionController extends BaseOwfRestController {
     }
 
     def bulkDelete = {
-        def statusCode
         def jsonResult
         StopWatch stopWatch = null;
 
@@ -161,7 +159,7 @@ class WidgetDefinitionController extends BaseOwfRestController {
         }
         try {
             def result = widgetDefinitionService.bulkDelete(params)
-            jsonResult = [msg: result as JSON, status: 200]
+            jsonResult = [msg: result as JSON, status: HttpServletResponse.SC_OK]
         }
         catch (Exception e) {
             jsonResult = handleError(e)
@@ -188,7 +186,7 @@ class WidgetDefinitionController extends BaseOwfRestController {
         {
             def result = widgetDefinitionService.getDependents(params)
             
-            jsonResult = [msg: result as JSON, status: 200]
+            jsonResult = [msg: result as JSON, status: HttpServletResponse.SC_OK]
         }
         catch (Exception e) {
             jsonResult = handleError(e)
@@ -215,7 +213,7 @@ class WidgetDefinitionController extends BaseOwfRestController {
         try
         {
             def result = widgetDefinitionService.hasMarketplace()
-            jsonResult = [msg: result as JSON, status: 200]
+            jsonResult = [msg: result as JSON, status: HttpServletResponse.SC_OK]
         }
         catch (Exception e) {
             jsonResult = handleError(e)
