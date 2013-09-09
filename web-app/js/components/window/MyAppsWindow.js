@@ -202,7 +202,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         me.on('show', me.initCircularFocus, me, {single: true});
         me.on('show', me.goToActiveStackSlide, me);
         me.on('show', me.focusActiveDashboard, me);
-        me.mon(me.dashboardContainer, OWF.Events.Dashboard.CHANGED, me.onDashboardChanged, me);
+        me.mon(me.dashboardContainer, OWF.Events.Dashboard.CHANGED, me.onDashboardChanged, me);        
     },
 
     bindEvents: function () {
@@ -1500,5 +1500,9 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var $ = jQuery; 
         
         $(className).show();
+    },
+    
+    removeStackOrDashboard: function(stack){
+    	Ext.select("#stack" + stack.id).remove();
     }
 });

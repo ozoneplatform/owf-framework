@@ -396,17 +396,13 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var me = this;
 
         me.dashboardContainer.stackStore.remove( me.dashboardContainer.stackStore.getById(me.clickedStack.id) );
-        me.dashboardContainer.stackStore.save();
-        
+        me.dashboardContainer.stackStore.save();        
+        me.appsWindow.removeStackOrDashboard(me.clickedStack);
+
         if( me.appsWindow._lastExpandedStack === me.clickedStack) {
             me.appsWindow.hideStackDashboards();
         }
-
-        var $target = $(me.event.target.parentElement.parentElement);
-        var $prev = $target.prev();
-        $target.remove();
-        //$prev.focus(); //for keyboard nav which is no longet supported.
-        
+   
         me.appsWindow._deletedStackOrDashboards.push(me.clickedStack);
         me.appsWindow.reloadDashboards = true;
 
