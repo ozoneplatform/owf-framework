@@ -45,7 +45,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
     	this.widgetStore = Ext.StoreManager.lookup('widgetStore');
     	
         this.adminStore = Ext.create('Ozone.data.stores.AdminWidgetStore', {
-            callback: this.saveCallback,
+            callback: this.saveCallback
         });
 
         this.typeStore = Ext.create('Ozone.data.WidgetTypeStore');
