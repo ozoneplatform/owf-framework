@@ -147,7 +147,7 @@
     <!-- =================================
           target: clean
          ================================= -->
-    <target name="clean" description="--> Cleans a Grails application">
+    <target name="clean" unless="skipWar" description="--> Cleans a Grails application">
         <delete includeemptydirs="true" failonerror="false">
             <fileset dir="${basedir}/web-app/js-min" >
             </fileset>
@@ -368,7 +368,7 @@
           target: war
          ================================= -->
 
-    <target name="war" depends="test,jsdoc,about,compress_js,compile-themes" description="--> Creates a WAR of a Grails application">
+    <target name="war" depends="clean,-init,test,jsdoc,about,compress_js,compile-themes" unless="skipWar" description="--> Creates a WAR of a Grails application">
         <grails script="war" preargs="${offline.arg}"/>
         <move file="${basedir}/target/${app.name}-${app.version}.war" tofile="${basedir}/target/owf.war" />
     </target>
@@ -408,7 +408,7 @@
     end - test
    ================================= -->
 
-    <target name="bundle" depends="_init-ivy,-init,clean,war">
+    <target name="bundle" depends="_init-ivy,war">
         <!--<resolve ivyConf="bundle,jetty" />-->
         <resolve ivyConf="bundle,tomcat" />
         <mkdir dir="${staging.dir}" />
