@@ -16,7 +16,7 @@ coverage {
             "changelog*/**"
     ]
     xml = true
-    enabledByDefault = true
+    enabledByDefault = false
 }
 
 codenarc.reports = {
