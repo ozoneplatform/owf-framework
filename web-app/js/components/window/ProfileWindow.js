@@ -36,7 +36,7 @@ Ext.define('Ozone.components.window.ProfileWindow', {
           layout: {
             type: 'vbox',
             align: 'stretch',
-            pack: 'start',
+            pack: 'start'
           },
           items:[
             {
@@ -125,7 +125,7 @@ Ext.define('Ozone.components.window.ProfileWindow', {
                           '</tr>',
                           '</table>'
                   ),
-                  renderData: {checked: Ozone.config.showAnimations ? 'checked="checked"' : ''}
+                  renderData: {checked: ((Ozone.config.showAnimations) ? ('checked="checked"') : (''))}
                 }
               ],
               listeners: {
