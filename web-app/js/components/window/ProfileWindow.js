@@ -117,7 +117,7 @@ Ext.define('Ozone.components.window.ProfileWindow', {
                           '<table>',
                           '<tr>',
                             '<td>',
-                              '<input id="show-animations-checkbox" type="checkbox" {% if (showAnimations) { %} checked="checked" {% } %} />',
+                              '<input id="show-animations-checkbox" type="checkbox" {checked}/>',
                             '</td>',
                             '<td class="fieldLabel">',
                               'Enable animations',
@@ -125,7 +125,7 @@ Ext.define('Ozone.components.window.ProfileWindow', {
                           '</tr>',
                           '</table>'
                   ),
-                  renderData: {showAnimations: Ozone.config.showAnimations}
+                  renderData: {checked: Ozone.config.showAnimations ? 'checked="checked"' : ''}
                 }
               ],
               listeners: {
