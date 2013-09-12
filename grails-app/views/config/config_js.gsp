@@ -34,6 +34,9 @@ Ozone.config.prefsLocation = window.location.protocol + "//" + window.location.h
 
 Ozone.config.prefsLocation = Ozone.config.prefsLocation.replace(/\;jsessionid=.*/g,'');
 
+// grab whether the show animations user preference exists
+Ozone.config.showAnimations = ${showAnimations};
+
 //the default layout config for a new blank dashboard
 Ozone.config.defaultLayoutConfig = {
     xtype: 'container',

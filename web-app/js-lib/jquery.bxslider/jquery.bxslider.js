@@ -1378,4 +1378,7 @@
 		return this;
 	}
 
+	// expose defaults
+	$.fn.bxSlider.defaults = defaults;
+
 })(jQuery);

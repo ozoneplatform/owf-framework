@@ -15,9 +15,53 @@
         <!-- initialize ozone configuration from server -->
         <owfImport:jsOwf path="config" resource="config" />
 
+        <!-- modernizr-->
+        <script src="./js-lib/modernizr/modernizr-2.6.2.js"></script>
+        <!-- turn off Modernizr-based animations if needed -->
+        <script>
+            // limit the scope
+            ;(function(Ozone, Modernizr) {
+                // no animations?
+                if (!Ozone.config.showAnimations) {
+                    // turn off Modernizr-based animations
+                    Modernizr.csstransitions = false;
+                    Modernizr.cssanimations = false;
+                }
+            })(Ozone, Modernizr);
+        </script>
+
         <!-- include our server bundle, in dev mode a full list of js includes will appear -->
         <p:javascript src='owf-server'/>
         <!-- include our server bundle, in dev mode a full list of js includes will appear -->
+
+        <!-- turn off CSS- and jQuery-based animations if needed -->
+        <script>
+            // limit the scope
+            ;(function(Ozone, Ext, jQuery) {
+                // no animations?
+                if (!Ozone.config.showAnimations) {
+                    // turn off CSS-based animations
+                    var turnOffTransitionsAndAnimationsCss =
+                        '* {' +
+                            '-webkit-transition:    none !important;' + // Chrome, Safari
+                            '-moz-transition:       none !important;' + // Firefox
+                            '-ms-transition:        none !important;' + // IE
+                            '-o-transition:         none !important;' + // Opera
+                            'transition:            none !important;' + // CSS 3
+                            '-webkit-animation:     none !important;' + // Chrome, Safari
+                            '-moz-animation:        none !important;' + // Firefox
+                            '-ms-animation:         none !important;' + // IE
+                            '-o-animation:          none !important;' + // Opera
+                            'animation:             none !important;' + // CSS 3                   
+                        '}';
+                    Ext.util.CSS.createStyleSheet(turnOffTransitionsAndAnimationsCss);
+
+                    // turn off jQuery-based animations
+                    jQuery.fx.off = true;
+                    jQuery.fn.bxSlider.defaults.useCSS = false;
+                }
+            })(Ozone, Ext, jQuery);
+        </script>
 
         <link rel="stylesheet" type="text/css" href="./js-lib/jquery-ui-1.10.3/themes/base/jquery.ui.resizable.css">
 

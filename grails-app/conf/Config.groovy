@@ -531,7 +531,6 @@ uiperformance.bundles = [
                         '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.tooltip',
                         '../js-lib/backbone/backbone-1.0.0',
                         '../js-lib/jquery.bxslider/jquery.bxslider',
-                        '../js-lib/modernizr/modernizr-2.6.2',
                         '../js-lib/pnotify-1.2.0/jquery.pnotify',
                         '../js-lib/stubconsole',
                         '../js/util/css_events',

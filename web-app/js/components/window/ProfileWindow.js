@@ -11,10 +11,16 @@ Ext.define('Ozone.components.window.ProfileWindow', {
     modal: true,
     modalAutoClose: true,
     cls: 'profileWindow',
+
+    // destroy on close
+    closeAction: 'destroy',
     
     mixins: {
         escHelper: 'Ozone.components.focusable.EscCloseHelper'
     },
+
+    // cache JQuery show animations checkbox object
+    $showAnimationsCheckbox: null,
 
     initComponent: function() {
         var me = this;
@@ -27,15 +33,18 @@ Ext.define('Ozone.components.window.ProfileWindow', {
         me.minHeight = 250;
 
         Ext.apply(this, {
+          layout: {
+            type: 'vbox',
+            align: 'stretch',
+            pack: 'start',
+          },
           items:[
             {
               xtype: 'panel',
               cls: 'userInfo',
               title: 'User Information',
-              layout: {
-                type: 'fit'
-              },
-              autoScroll: true,
+              flex: 1,
+              frame: false,
               items: [
                 {
                   xtype: 'component',
@@ -93,6 +102,89 @@ Ext.define('Ozone.components.window.ProfileWindow', {
                   renderData: this.user
                 }
               ]
+            },
+            {
+              xtype: 'panel',
+              cls: 'userPref',
+              title: 'User Preferences',
+              flex: 1,
+              frame: false,
+              items: [
+                {
+                  xtype: 'component',
+                  cls: 'userPrefTable',
+                  renderTpl: new Ext.XTemplate(
+                          '<table>',
+                          '<tr>',
+                            '<td>',
+                              '<input id="show-animations-checkbox" type="checkbox" {% if (showAnimations) { %} checked="checked" {% } %} />',
+                            '</td>',
+                            '<td class="fieldLabel">',
+                              'Enable animations',
+                            '</td>',
+                          '</tr>',
+                          '</table>'
+                  ),
+                  renderData: {showAnimations: Ozone.config.showAnimations}
+                }
+              ],
+              listeners: {
+                afterrender: function() {
+                  // cache jQuery show animations checkbox object
+                  me.$showAnimationsCheckbox = $('#show-animations-checkbox');
+
+                  // listen for show animations checkbox changes
+                  me.$showAnimationsCheckbox.on('change.animation', function() {
+                    // checked?
+                    if (this.checked) {
+                      // create the show animations user preference
+                      Ozone.pref.PrefServer.setUserPreference({
+                        namespace: "owf",
+                        name: "show-animations",
+                        value: true,
+                        onSuccess: $.noop,
+                        onFailure: $.noop
+                      });
+                      // update the config
+                      Ozone.config.showAnimations = true;
+                    } else {
+                      // delete the show animations user preference
+                      Ozone.pref.PrefServer.deleteUserPreference({
+                        namespace: "owf",
+                        name: "show-animations",
+                        onSuccess: $.noop,
+                        onFailure: $.noop
+                      });
+                      // update the config
+                      Ozone.config.showAnimations = false;
+                    }
+
+                    // let the user know that refreshing
+                    // the browser would be a good idea
+                    var stack_bottomright = {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25};
+                    $.pnotify({
+                        title: 'Refresh Required',
+                        text: "Please refresh your browser to see the changes you've made in User Preferences.",
+                        type: 'success',
+                        addclass: "stack-bottomright",
+                        stack: stack_bottomright,
+                        history: false,
+                        sticker: false,
+                        icon: false,
+                        delay: 3000
+                    });
+                  });
+                },
+                destroy: function() {
+                  // stop listening for show animations checkbox changes
+                  if (
+                    me.$showAnimationsCheckbox &&
+                    me.$showAnimationsCheckbox.length > 0
+                  ) {
+                    me.$showAnimationsCheckbox.off('.animation');
+                  }
+                }
+              }
             }
           ]
         });

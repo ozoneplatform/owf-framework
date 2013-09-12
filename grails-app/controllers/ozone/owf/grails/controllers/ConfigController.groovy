@@ -2,6 +2,7 @@ package ozone.owf.grails.controllers
 
 import grails.converters.JSON
 import static ozone.owf.enums.OwfApplicationSetting.*
+import ozone.owf.grails.OwfException
 
 /**
  * User controller.
@@ -57,11 +58,26 @@ class ConfigController {
         conf.customHeaderFooter = customHeaderFooterService.configAsMap
         conf.backgroundURL =  owfApplicationConfigurationService.getApplicationConfiguration(CUSTOM_BACKGROUND_URL)?.value
 
+        // whether the show animations user preference exists
+        def showAnimations = false
+        try {
+            def showAnimationsPreference = preferenceService.showForUser([
+                namespace: "owf",
+                path: "show-animations"
+            ]);
+            showAnimations =
+                (showAnimationsPreference?.preference) ? (true) : (false)
+        }
+        catch(OwfException owe) {
+            handleError(owe)
+        }
+
         render(view: 'config_js',
                 model: [
                   user: curUserResult,
                   currentTheme: theme as JSON,
-                  conf: conf as JSON
+                  conf: conf as JSON,
+                  showAnimations: showAnimations
                  ],
                 contentType: 'text/javascript')
     }
