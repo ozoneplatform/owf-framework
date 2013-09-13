@@ -35,8 +35,7 @@ Ext.define('Ozone.components.window.ProfileWindow', {
         Ext.apply(this, {
           layout: {
             type: 'vbox',
-            align: 'stretch',
-            pack: 'start'
+            align: 'stretch'
           },
           items:[
             {
@@ -44,7 +43,6 @@ Ext.define('Ozone.components.window.ProfileWindow', {
               cls: 'userInfo',
               title: 'User Information',
               flex: 1,
-              frame: false,
               items: [
                 {
                   xtype: 'component',
@@ -108,7 +106,6 @@ Ext.define('Ozone.components.window.ProfileWindow', {
               cls: 'userPref',
               title: 'User Preferences',
               flex: 1,
-              frame: false,
               items: [
                 {
                   xtype: 'component',
