@@ -37,7 +37,7 @@ Ext.override(Ext.tip.Tip, {
         var me = this;
 
         if(!Modernizr.cssanimations) {
-            focusColor = focusColor || Ext.util.CSS.getRule('.x-focus').style.borderColor;
+            focusColor = focusColor || Ext.util.CSS.getRule('.x-focus', true).style.borderColor;
             me.el.frame(focusColor);
         }
         else {
