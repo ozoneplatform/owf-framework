@@ -56,7 +56,8 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
             existingDashboardRecord: me.existingDashboardRecord,
             existingStackRecord: me.existingStackRecord,
             headerText: me.headerText,
-            stackId: me.stackId
+            stackId: me.stackId,
+            parentWindow: me
         }];
 
         me.callParent();

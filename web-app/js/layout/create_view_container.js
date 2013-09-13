@@ -39,6 +39,9 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         premadeTabbed2Fit: {"xtype":"container","cls":"vbox ","layout":{"type":"vbox","align":"stretch"},"items":[{"xtype":"dashboarddesignerpane","cls":"top","flex":1,"htmlText":"50%","items":[],"widgets":[],"paneType":"tabbedpane"},{"xtype":"dashboardsplitter"},{"xtype":"container","cls":"hbox bottom","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"dashboarddesignerpane","cls":"left","flex":1,"htmlText":"50%","items":[],"widgets":[],"paneType":"fitpane"},{"xtype":"dashboardsplitter"},{"xtype":"dashboarddesignerpane","cls":"right","flex":1,"htmlText":"50%","items":[],"paneType":"fitpane"}],"flex":1}],"flex":3}
     },
 
+    freeTextWarningLabel: null, // the free text warning Ext label
+    parentWindow: null, // the parent Ext window
+
     /**
      *
      * Returns a dashboard store with non marketplace dashboards
@@ -82,6 +85,18 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             text: this.headerText,
             margins: '0 0 0 10'
         };
+        if (Ozone.config.freeTextEntryWarningMessage) {
+            this.freeTextWarningLabel = {
+                xtype: 'component',
+                name: 'freeTextWarningLabel',
+                height: 25,
+                margins: '0 0 0 10',
+                renderTpl: '<div class="dialogHeader">{message}</div>',
+                renderData: {
+                   message: Ozone.config.freeTextEntryWarningMessage
+                },               
+            };
+        }
 
         if (me.existingStackRecord) {
             defaultIconUrl = OWF.getContainerUrl() + Ozone.ux.DashboardMgmtString.stackIconPath;
@@ -613,6 +628,14 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         this.margin = '0 0 0 0';
 
         var childItems = [];
+        // free text warning Ext label?
+        if (this.freeTextWarningLabel) {
+            // resize the parent Ext window to make room for
+            // the 25-pixel tall free text warning Ext label
+            this.parentWindow.height = this.parentWindow.height + 25;
+            // insert the free text warning Ext label
+            childItems.push(this.freeTextWarningLabel);
+        }
         if (this.headerText) {
             childItems.push(this.headerLabel);
         }
