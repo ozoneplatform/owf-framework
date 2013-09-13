@@ -1503,6 +1503,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     },
     
     removeStackOrDashboard: function(stack){
-    	Ext.select("#stack" + stack.id).remove();
+    	var $ = jQuery;    	
+    	$("div[id='stack" + stack.id + "']").remove();
     }
 });
