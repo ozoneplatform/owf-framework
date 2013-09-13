@@ -19,8 +19,9 @@ Ext.define('Ozone.components.window.ProfileWindow', {
         escHelper: 'Ozone.components.focusable.EscCloseHelper'
     },
 
-    // cache JQuery show animations checkbox object
-    $showAnimationsCheckbox: null,
+    // cached JQuery objects
+    $showAnimationsRow: null,
+    $userPrefNotification: null,
 
     initComponent: function() {
         var me = this;
@@ -111,15 +112,18 @@ Ext.define('Ozone.components.window.ProfileWindow', {
                   xtype: 'component',
                   cls: 'userPrefTable',
                   renderTpl: new Ext.XTemplate(
+                          '<p class="user-pref-notification" style="display: none;">',
+                            "Please refresh your browser to see the changes you've made in User Preferences.",
+                          '</p>',
                           '<table>',
-                          '<tr>',
-                            '<td>',
-                              '<input id="show-animations-checkbox" type="checkbox" {checked}/>',
-                            '</td>',
-                            '<td class="fieldLabel">',
-                              'Enable animations',
-                            '</td>',
-                          '</tr>',
+                            '<tr class="show-animations-row">',
+                              '<td>',
+                                '<input class="show-animations-checkbox" type="checkbox" {checked}/>',
+                              '</td>',
+                              '<td class="fieldLabel">',
+                                'Enable animations',
+                              '</td>',
+                            '</tr>',
                           '</table>'
                   ),
                   renderData: {checked: ((Ozone.config.showAnimations) ? ('checked="checked"') : (''))}
@@ -127,13 +131,31 @@ Ext.define('Ozone.components.window.ProfileWindow', {
               ],
               listeners: {
                 afterrender: function() {
-                  // cache jQuery show animations checkbox object
-                  me.$showAnimationsCheckbox = $('#show-animations-checkbox');
+                  // cache jQuery objects
+                  var $el = $(this.el.dom);
+                  me.$showAnimationsRow = $el.find('.show-animations-row');
+                  me.$userPrefNotification = $el.find('.user-pref-notification');
 
-                  // listen for show animations checkbox changes
-                  me.$showAnimationsCheckbox.on('change.animation', function() {
-                    // checked?
-                    if (this.checked) {
+                  // listen for checkbox clicks
+                  me.$showAnimationsRow.on('click.show-animations', function(evt) {
+                    // grab the target and the checkbox
+                    var $target = $(evt.target);
+                    var $checkbox = me.$showAnimationsRow.find('.show-animations-checkbox');
+
+                    // grab whether the checkbox is the target
+                    // and whether the checkbox is checked
+                    var checkboxIsTarget = $checkbox.is($target);
+                    var checkboxIsChecked = $checkbox.is(':checked');
+
+                    // the checkbox is not the target?
+                    if (!checkboxIsTarget) {
+                      // manually toggle the checkbox
+                      checkboxIsChecked = !checkboxIsChecked;
+                      $checkbox.prop('checked', checkboxIsChecked);
+                    }
+                    
+                    // the checkbox is checked?
+                    if (checkboxIsChecked) {
                       // create the show animations user preference
                       Ozone.pref.PrefServer.setUserPreference({
                         namespace: "owf",
@@ -144,7 +166,9 @@ Ext.define('Ozone.components.window.ProfileWindow', {
                       });
                       // update the config
                       Ozone.config.showAnimations = true;
-                    } else {
+                    }
+                    // the checkboc is not checked?
+                    else {
                       // delete the show animations user preference
                       Ozone.pref.PrefServer.deleteUserPreference({
                         namespace: "owf",
@@ -158,27 +182,16 @@ Ext.define('Ozone.components.window.ProfileWindow', {
 
                     // let the user know that refreshing
                     // the browser would be a good idea
-                    var stack_bottomright = {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25};
-                    $.pnotify({
-                        title: 'Refresh Required',
-                        text: "Please refresh your browser to see the changes you've made in User Preferences.",
-                        type: 'success',
-                        addclass: "stack-bottomright",
-                        stack: stack_bottomright,
-                        history: false,
-                        sticker: false,
-                        icon: false,
-                        delay: 3000
-                    });
+                    me.$userPrefNotification.show();
                   });
                 },
                 destroy: function() {
                   // stop listening for show animations checkbox changes
                   if (
-                    me.$showAnimationsCheckbox &&
-                    me.$showAnimationsCheckbox.length > 0
+                    me.$showAnimationsRow &&
+                    me.$showAnimationsRow.length > 0
                   ) {
-                    me.$showAnimationsCheckbox.off('.animation');
+                    me.$showAnimationsRow.off('.show-animations');
                   }
                 }
               }
