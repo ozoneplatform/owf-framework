@@ -122,7 +122,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
         $('.step2').addClass('active');
 
         $('#iconUrl').val(this.record.get('image'));
-        $('#storeName').val(this.record.get('name'));
+        $('#storeName').val(Ext.htmlDecode(this.record.get('name')));
 
         $('.back.button').hide();
 
@@ -152,7 +152,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
         $('#enterURLStep').hide();
 
         $('#iconUrl').val(this.record.get('imageUrlSmall'));
-        $('#storeName').val(this.record.get('displayName'));
+        $('#storeName').val(Ext.htmlDecode(this.record.get('displayName')));
 
         //add the loaded icon as an img
         if ($('.loadedImg').size() === 0) {
@@ -242,7 +242,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
 
             me.record.set('imageUrlSmall', $('#iconUrl').val());
             me.record.set('imageUrlLarge', me.record.get('imageUrlSmall'));
-            me.record.set('displayName', $('#storeName').val());
+            me.record.set('displayName', Ext.htmlEncode($('#storeName').val()));
             me.record.set('name', me.record.get('displayName'));
             me.record.set('title', me.record.get('displayName'));
             me.record.set('image', me.record.get('imageUrlLarge'));
