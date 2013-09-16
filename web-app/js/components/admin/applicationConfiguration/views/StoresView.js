@@ -29,7 +29,9 @@ define([
         events: {
             'click #app-config-add-store': 'addBtnClicked',
             'click .app-config-store-view .edit': 'editBtnClicked',
-            'click .app-config-store-view .delete': 'deleteBtnClicked'
+            'click .app-config-store-view .delete': 'deleteBtnClicked',
+            'mouseover .app-config-store-view': 'onStoreViewMouseover',
+            'mouseout .app-config-store-view': 'onStoreViewMouseout'
         },
 
         initialize: function() {
@@ -143,6 +145,16 @@ define([
                 });
                 me.removeStore(storeId);
             });
+        },
+
+        // OP-3264: Controlling visibility on hover using CSS doesn't
+        // work in Chrome 25, so fall back to using mouseover & mouseout events.
+        onStoreViewMouseover: function(e) {
+            $(e.currentTarget).find('.edit, .delete').css('visibility', 'visible');
+        },
+
+        onStoreViewMouseout: function(e) {
+            $(e.currentTarget).find('.edit, .delete').css('visibility', 'hidden');
         },
 
         removeStore: function(storeId) {
