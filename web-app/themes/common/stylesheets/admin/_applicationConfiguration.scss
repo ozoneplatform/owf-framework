@@ -72,7 +72,7 @@
             
             padding: 5px 20px;
             
-            &:hover, &-hover {
+            &:hover, &.hover {
                 color: $appConfig-store-btn-color-hover;
                 background-color: $appConfig-store-btn-bg-color-hover;
             }
@@ -248,7 +248,7 @@ div.app_config_map_row{
     }
 
     // display edit and delete buttons only when hovering on parent element
-    &:hover, &-hover {
+    &:hover, &.hover {
         & .edit, & .delete {
             visibility: visible;
         }
