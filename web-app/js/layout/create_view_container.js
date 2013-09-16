@@ -89,9 +89,9 @@ Ext.define('Ozone.layout.CreateViewContainer', {
             this.freeTextWarningLabel = {
                 xtype: 'component',
                 name: 'freeTextWarningLabel',
-                height: 25,
+                height: 50,
                 margins: '0 0 0 10',
-                renderTpl: '<div class="dialogHeader">{message}</div>',
+                renderTpl: '<div class="freeTextWarning dialogHeader">{message}</div>',
                 renderData: {
                    message: Ozone.config.freeTextEntryWarningMessage
                 }           
@@ -632,7 +632,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
         if (this.freeTextWarningLabel) {
             // resize the parent Ext window to make room for
             // the 25-pixel tall free text warning Ext label
-            this.parentWindow.height = this.parentWindow.height + 25;
+            this.parentWindow.height = this.parentWindow.height + 50;
             // insert the free text warning Ext label
             childItems.push(this.freeTextWarningLabel);
         }

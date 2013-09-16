@@ -61,6 +61,12 @@ directly overriding the base ExtJS 4.0.1 rules.
           }
       }
 
+      // in case of a really long free text warning...
+      .freeTextWarning {
+        height: 45px;
+        overflow-y: hidden;
+      }
+
     //Create Dashboard/Views Container
     .cvc-createNewDashboardContainer {
         $label_width: 50%;
