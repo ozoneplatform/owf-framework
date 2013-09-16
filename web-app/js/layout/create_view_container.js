@@ -94,7 +94,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                 renderTpl: '<div class="dialogHeader">{message}</div>',
                 renderData: {
                    message: Ozone.config.freeTextEntryWarningMessage
-                },               
+                }           
             };
         }
 
