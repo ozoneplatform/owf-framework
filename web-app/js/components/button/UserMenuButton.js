@@ -384,13 +384,6 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                 me.hideUserMenu();
             }, me);
         });
-        
-        if(me.user.isAdmin) 
-            if(!$('.marketBtn').is(':visible')) 
-	        	Ext.widget('storewizard', {
-	                id: 'storeWizard'
-	            }).show().center();
-        
     },
 
     showUserMenu: function() {

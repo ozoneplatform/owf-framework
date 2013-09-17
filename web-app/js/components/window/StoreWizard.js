@@ -75,7 +75,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
     },
 
     getContent: function() {
-        var htmlData = "<h1 id='wizardTitle'>" + (this.editing ? "Edit Store" : "Connecting to a Store") + "</h1>" +
+        var htmlData = "<h1 id='wizardTitle'>" + (this.editing ? "Edit Store" : "Connecting to a Store") + "<div class='closeButton'></div></h1>" +
             "<div id='wizardButtons'>" +
             "<ul id='wizardProcessList'>" +
             "<li class='step1 active'><div><span class='stepNumber'>1</span> Enter Store URL</div></li>" +
@@ -297,6 +297,10 @@ Ext.define('Ozone.components.window.StoreWizard', {
     bindHandlers: function() {
         var me = this;
 
+        $('.closeButton').on('click', function() {
+            me.close()
+        });
+        
         $('.cancel').on('click', function() {
             me.close()
         });
