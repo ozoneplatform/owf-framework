@@ -44,7 +44,26 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
     },
 
     enableAppComponentsBtn: function() {
-        this.getAppComponentsBtn().enable();
+        this.getAppComponentsBtn().removeCls('x-item-disabled x-disabled x-btn-disabled disabled');
+        //in case user clicked button while disabled remove its selected class
+        this.getAppComponentsBtn().removeCls('x-btn-default-toolbar-banner-large-over x-btn-default-toolbar-banner-large-pressed ');
+        
+        if (Ext.getCmp('appComponentsBtnToolTip')) {
+            Ext.getCmp('appComponentsBtnToolTip').destroy();
+        }
+
+        Ext.create('Ext.tip.ToolTip', {
+            id: 'appComponentsBtnToolTip',
+            target: this.getAppComponentsBtn().id,
+            title: Ozone.layout.tooltipString.addWidgetsTitle,
+            html: Ozone.layout.tooltipString.addWidgetsContent,
+            anchor: 'bottom',
+            anchorToTarget: true,
+            anchorOffset: -5,
+            mouseOffset: [5, 0],
+            width: 500,
+            maxWidth: 500
+        });
     },
 
     disableAppComponentsBtn: function() {
@@ -52,7 +71,23 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             this.dashboardContainer.hideAppComponentsView();
         }
 
-        this.getAppComponentsBtn().disable();
+        this.getAppComponentsBtn().addCls('x-item-disabled x-disabled x-btn-disabled disabled');
+        
+        if (Ext.getCmp('appComponentsBtnToolTip')) {
+            Ext.getCmp('appComponentsBtnToolTip').destroy();
+        }
+        
+        Ext.create('Ext.tip.ToolTip', {
+            id: 'appComponentsBtnToolTip',
+            target: this.getAppComponentsBtn().id,
+            html: Ozone.layout.tooltipString.addWidgetsContentDisabled,
+            anchor: 'bottom',
+            anchorToTarget: true,
+            anchorOffset: -5,
+            mouseOffset: [5, 0],
+            width: 500,
+            maxWidth: 500
+        });
     },
 
     getUserMenuBtn: function() {
@@ -213,49 +248,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 cls: 'bannerBtn appComponentsBtn',
                 enableToggle: true,
                 scope: this.dashboardContainer,
-                handler: this.dashboardContainer.showAppComponentsView,
-                listeners: {
-                    disable: {
-                        fn: function(btn) {
-                            if (Ext.getCmp('appComponentsBtnToolTip')) {
-                                Ext.getCmp('appComponentsBtnToolTip').destroy();
-                            }
-                            
-                            Ext.create('Ext.tip.ToolTip', {
-                                id: 'appComponentsBtnToolTip',
-                                target: btn.getEl().id,
-                                html: Ozone.layout.tooltipString.addWidgetsContentDisabled,
-                                anchor: 'bottom',
-                                anchorToTarget: true,
-                                anchorOffset: -5,
-                                mouseOffset: [5, 0],
-                                width: 500,
-                                maxWidth: 500
-                            });
-                        }
-                    },
-
-                    enable: {
-                        fn: function(btn) {
-                            if (Ext.getCmp('appComponentsBtnToolTip')) {
-                                Ext.getCmp('appComponentsBtnToolTip').destroy();
-                            }
-
-                            Ext.create('Ext.tip.ToolTip', {
-                                id: 'appComponentsBtnToolTip',
-                                target: btn.getEl().id,
-                                title: Ozone.layout.tooltipString.addWidgetsTitle,
-                                html: Ozone.layout.tooltipString.addWidgetsContent,
-                                anchor: 'bottom',
-                                anchorToTarget: true,
-                                anchorOffset: -5,
-                                mouseOffset: [5, 0],
-                                width: 500,
-                                maxWidth: 500
-                            });
-                        }
-                    }
-                }
+                handler: this.dashboardContainer.showAppComponentsView
             },
             '-', {
                 xtype: 'button',
