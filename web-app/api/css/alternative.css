@@ -1,0 +1,344 @@
+/*
+ * HTML5 Boilerplate
+ *
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ */
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+/* line 13, sass/alternative.scss */
+a, a:hover, a:focus {
+  text-decoration: none;
+}
+
+/* ==========================================================================
+   Chrome Frame prompt
+   ========================================================================== */
+/* line 21, sass/alternative.scss */
+.chromeframe {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+/* ====== colors ====== */
+/* ====== size ====== */
+/* line 72, sass/alternative.scss */
+body {
+  background-color: #e6e9ed;
+  color: #434a54;
+}
+
+/* line 77, sass/alternative.scss */
+nav > a {
+  display: block;
+  padding: 1em;
+  color: #aab2bd;
+  border-bottom: 1px solid #656d78;
+}
+/* line 84, sass/alternative.scss */
+nav > a:hover, nav > a:focus {
+  background-color: #e6e9ed;
+  color: #434a54;
+}
+/* line 89, sass/alternative.scss */
+nav > a:last-child {
+  border-bottom: 0px;
+}
+
+/* line 94, sass/alternative.scss */
+.sidebar {
+  position: fixed;
+  width: 18em;
+  height: 100%;
+  background: #434a54;
+  overflow-y: scroll;
+  z-index: 4;
+}
+
+/* line 103, sass/alternative.scss */
+.doc-content {
+  position: absolute;
+  width: 100%;
+  padding: 1em 2em 2em 2em;
+  padding-left: 20em;
+}
+/* line 109, sass/alternative.scss */
+.doc-content > h3 {
+  margin-top: 0px;
+}
+
+/* ====== resource styles ====== */
+/* line 115, sass/alternative.scss */
+.resource {
+  padding: 1em;
+  margin: 2em 0;
+  background: #fff;
+}
+
+/* line 120, sass/alternative.scss */
+.resource-endpoint {
+  margin: 1em 0;
+  border: 1px solid #e6e9ed;
+  position: relative;
+  height: 100px;
+}
+/* line 127, sass/alternative.scss */
+.resource-endpoint .method-verb {
+  background-color: #a0d468;
+  position: absolute;
+  width: 100px;
+  height: 99px;
+  padding: 35px;
+}
+/* line 135, sass/alternative.scss */
+.resource-endpoint .method-info {
+  position: absolute;
+  left: 110px;
+}
+
+/* line 141, sass/alternative.scss */
+.resource-endpoint-get .method-verb {
+  background-color: #a0d468;
+}
+
+/* line 147, sass/alternative.scss */
+.resource-endpoint-post .method-verb {
+  background-color: #5d9cec;
+  padding: 35px 30px;
+}
+
+/* line 154, sass/alternative.scss */
+.resource-endpoint-put .method-verb {
+  background-color: #ffce54;
+}
+
+/* line 160, sass/alternative.scss */
+.resource-endpoint-delete .method-verb {
+  background-color: #fc6e51;
+  padding: 35px 25px;
+}
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+/*
+ * Image replacement
+ */
+/* line 179, sass/alternative.scss */
+.ir {
+  background-color: transparent;
+  border: 0;
+  overflow: hidden;
+  /* IE 6/7 fallback */
+  *text-indent: -9999px;
+}
+
+/* line 187, sass/alternative.scss */
+.ir:before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 150%;
+}
+
+/*
+ * Hide from both screenreaders and browsers: h5bp.com/u
+ */
+/* line 198, sass/alternative.scss */
+.hidden {
+  display: none !important;
+  visibility: hidden;
+}
+
+/*
+ * Hide only visually, but have it available for screenreaders: h5bp.com/v
+ */
+/* line 207, sass/alternative.scss */
+.visuallyhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+/*
+ * Extends the .visuallyhidden class to allow the element to be focusable
+ * when navigated to via the keyboard: h5bp.com/p
+ */
+/* line 224, sass/alternative.scss */
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+}
+
+/*
+ * Hide visually and from screenreaders, but maintain layout
+ */
+/* line 237, sass/alternative.scss */
+.invisible {
+  visibility: hidden;
+}
+
+/*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    `contenteditable` attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+/* line 254, sass/alternative.scss */
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
+}
+
+/* line 259, sass/alternative.scss */
+.clearfix:after {
+  clear: both;
+}
+
+/*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+/* line 268, sass/alternative.scss */
+.clearfix {
+  *zoom: 1;
+}
+
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+@media only screen and (min-width: 35em) {
+  /* Style adjustments for viewports that meet the condition */
+}
+@media print,
+(-o-min-device-pixel-ratio: 5/4),
+(-webkit-min-device-pixel-ratio: 1.25),
+(min-resolution: 120dpi) {
+  /* Style adjustments for high resolution devices */
+}
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: h5bp.com/r
+   ========================================================================== */
+@media print {
+  /* line 295, sass/alternative.scss */
+  * {
+    background: transparent !important;
+    color: #000 !important;
+    /* Black prints faster: h5bp.com/s */
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* line 303, sass/alternative.scss */
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  /* line 307, sass/alternative.scss */
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
+  /* line 311, sass/alternative.scss */
+  abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+
+  /*
+   * Don't show links for images, or javascript/internal links
+   */
+  /* line 321, sass/alternative.scss */
+  .ir a:after,
+  a[href^="javascript:"]:after,
+  a[href^="#"]:after {
+    content: "";
+  }
+
+  /* line 326, sass/alternative.scss */
+  pre,
+  blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+
+  /* line 331, sass/alternative.scss */
+  thead {
+    display: table-header-group;
+    /* h5bp.com/t */
+  }
+
+  /* line 336, sass/alternative.scss */
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+
+  /* line 340, sass/alternative.scss */
+  img {
+    max-width: 100% !important;
+  }
+
+  @page {
+    margin: 0.5cm;
+}
+
+  /* line 350, sass/alternative.scss */
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* line 356, sass/alternative.scss */
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+
+  /* line 360, sass/alternative.scss */
+  .sidebar {
+    display: none;
+  }
+
+  /* line 364, sass/alternative.scss */
+  .doc-content {
+    position: static;
+    width: 100%;
+    padding: 0em;
+  }
+
+  /* line 370, sass/alternative.scss */
+  .resource {
+    page-break-after: always;
+  }
+}
