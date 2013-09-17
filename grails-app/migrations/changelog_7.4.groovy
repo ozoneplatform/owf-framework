@@ -673,4 +673,27 @@ databaseChangeLog = {
         }
 
     }
+
+    String adminWidgetUrlList = "'admin/UserManagement.gsp', 'admin/UserEdit.gsp', 'admin/WidgetManagement.gsp', 'admin/WidgetEdit.gsp', 'admin/GroupManagement.gsp', 'admin/GroupEdit.gsp', 'admin/DashboardEdit.gsp', 'admin/StackManagement.gsp', 'admin/StackEdit.gsp', 'admin/Configuration.gsp'"
+
+    changeSet(author: "owf", id: "7.4-13", context: "upgrade, 7.4") {
+
+        comment("Remove the old admin widgets.")
+
+        delete(tableName: "widget_definition_widget_types") {
+            where("widget_definition_id in (select id from widget_definition where widget_url in (${adminWidgetUrlList}) and universal_name is null)")
+        }
+
+        delete(tableName: "domain_mapping") {
+            where("dest_type='widget_definition' and dest_id in (select id from widget_definition where widget_url in (${adminWidgetUrlList}) and universal_name is null)")
+        }
+
+        delete(tableName: "person_widget_definition") {
+            where("widget_definition_id in (select id from widget_definition where widget_url in (${adminWidgetUrlList}) and universal_name is null)")
+        }
+
+        delete(tableName: "widget_definition") {
+            where("widget_url in (${adminWidgetUrlList}) and universal_name is null")
+        }
+    }
 }

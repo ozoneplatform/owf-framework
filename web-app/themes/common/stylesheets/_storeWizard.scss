@@ -15,6 +15,24 @@
 	    z-index: 1;
 	 }
 	 
+	 .closeButton {
+	    height: 20px;
+	    width: 20px;
+	 	bottom: 35%;
+	    left: 95%;
+	    position: absolute;
+	    
+	    background: no-repeat theme-image($theme-name, 'tools/close-out.png');
+	 }
+	 
+	 .closeButton:hover {
+	 	 background: no-repeat theme-image($theme-name, 'tools/close-over.png');
+	 }
+	 
+	 .closeButton:active {
+	 	 background: no-repeat theme-image($theme-name, 'tools/close-down.png');
+	 }
+	 
 	 #wizardButtons {
 	 	width: 33%;
 	 	height: 90%;

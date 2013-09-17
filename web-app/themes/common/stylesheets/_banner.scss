@@ -80,6 +80,16 @@
         margin: 0px;
         padding: 0 10px 0 10px;
     }
+    
+    .x-item-disabled, .x-disabled, .x-btn-disabled, .disable {
+    	.x-btn-default-toolbar-banner-large, .x-btn-inner {
+    		*color: gray !important;
+    	}
+    }
+    
+    .x-item-disabled, .x-disabled, .x-btn-disabled, .disable{
+    	background-color:transparent !important;
+    }
 }
 
 .x-ie78 {
