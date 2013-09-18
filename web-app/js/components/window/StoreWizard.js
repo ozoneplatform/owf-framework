@@ -56,9 +56,9 @@ Ext.define('Ozone.components.window.StoreWizard', {
 
         this.html = this.getContent();
 
-        $('#iconUrl').change(function() {
+        $('.iconUrl').change(function() {
             var date = new Date();
-            $('.loadedImg').attr('src', $('#iconUrl').val() + "?" + date.getTime()).slideToggle().slideToggle();
+            $('.loadedImg').attr('src', $('.iconUrl').val() + "?" + date.getTime()).slideToggle().slideToggle();
         });
 
         if (this.editing && this.existingStoreId) {
@@ -75,32 +75,32 @@ Ext.define('Ozone.components.window.StoreWizard', {
     },
 
     getContent: function() {
-        var htmlData = "<h1 id='wizardTitle'>" + (this.editing ? "Edit Store" : "Connecting to a Store") + "<div class='closeButton'></div></h1>" +
-            "<div id='wizardButtons'>" +
-            "<ul id='wizardProcessList'>" +
+        var htmlData = "<h1 class='wizardTitle'>" + (this.editing ? "Edit Store" : "Connecting to a Store") + "<div class='closeButton'></div></h1>" +
+            "<div class='wizardButtons'>" +
+            "<ul class='wizardProcessList'>" +
             "<li class='step1 active'><div><span class='stepNumber'>1</span> Enter Store URL</div></li>" +
             "<li class='step2'><div><span class='stepNumber'>2</span> Review or Edit</div></li>" +
             "</ul>" +
-            "<div id='progressBar' >" +
-            "<div id='progressBarProgress' style='display:none;'>" +
+            "<div class='progressBar' >" +
+            "<div class='progressBarProgress' style='display:none;'>" +
             "</div>" +
             "</div>" +
             "</div>" +
-            "<div id='wizardContentBox'>" +
-            "<div id='enterURLStep'>" +
+            "<div class='wizardContentBox'>" +
+            "<div class='enterURLStep'>" +
             "<div class='contentTitle'>Enter Store URL</div>" +
             "<div class='contentText'>Enter the location of the store. For example, https://store.gov</div>" +
-            "<div class='contentText userInput'>Store URL <input id='storeUrl'></input></div>" +
+            "<div class='contentText userInput'>Store URL <input class='storeUrl'></input></div>" +
             "<div class='controlButtons'>" +
             "<div class='next button'>Next</div>" +
             "<div class='cancel button'>Cancel</div>" +
             "</div>" +
             "</div>" +
-            "<div id='editStep' style='display:none;'>" +
+            "<div class='editStep' style='display:none;'>" +
             "<div class='contentTitle'>Review or Edit</div>" +
             "<div class='contentText'>User will see this Store icon and name. If it is correct, click Save.</div>" +
-            "<div class='contentText userInput iconText'>Icon <input id='iconUrl'></input></div>" +
-            "<div class='contentText userInput'>Store Name <input id='storeName'></input></div>" +
+            "<div class='contentText userInput iconText'>Icon <input class='iconUrl'></input></div>" +
+            "<div class='contentText userInput'>Store Name <input class='storeName'></input></div>" +
             "<div class='controlButtons'>" +
             "<div class='back button'>Back</div>" +
             "<div class='save button'>Save</div>" +
@@ -114,15 +114,15 @@ Ext.define('Ozone.components.window.StoreWizard', {
     },
 
     setupForEditing: function() {
-        $('#enterURLStep').hide();
+        $('.enterURLStep').hide();
 
         $('.step1').removeClass('active');
         $('.step1').addClass('complete');
-        $('#editStep').slideToggle();
+        $('.editStep').slideToggle();
         $('.step2').addClass('active');
 
-        $('#iconUrl').val(this.record.get('image'));
-        $('#storeName').val(Ext.htmlDecode(this.record.get('name')));
+        $('.iconUrl').val(this.record.get('image'));
+        $('.storeName').val(Ext.htmlDecode(this.record.get('name')));
 
         $('.back.button').hide();
 
@@ -135,45 +135,45 @@ Ext.define('Ozone.components.window.StoreWizard', {
     },
 
     rollProgressForward: function() {
-        var progress = $('#progressBarProgress');
+        var progress = $('.progressBarProgress');
         progress.animate({
             width: 'toggle'
         });
     },
 
     rollProgressBack: function() {
-        var progress = $('#progressBarProgress');
+        var progress = $('.progressBarProgress');
         progress.animate({
             width: 'toggle'
         });
     },
 
     descriptorSuccess: function() {
-        $('#enterURLStep').hide();
+        $('.enterURLStep').hide();
 
-        $('#iconUrl').val(this.record.get('imageUrlSmall'));
-        $('#storeName').val(Ext.htmlDecode(this.record.get('displayName')));
+        $('.iconUrl').val(this.record.get('imageUrlSmall'));
+        $('.storeName').val(Ext.htmlDecode(this.record.get('displayName')));
 
         //add the loaded icon as an img
         if ($('.loadedImg').size() === 0) {
             $('#').add("<img src='" + this.record.get('imageUrlSmall') + "' class='loadedImg'/>").appendTo($('.iconText'))
         }
 
-        $('#iconUrl').change(function() {
+        $('.iconUrl').change(function() {
             var date = new Date();
-            $('.loadedImg').attr('src', $('#iconUrl').val() + "?" + date.getTime()).slideToggle().slideToggle();
+            $('.loadedImg').attr('src', $('.iconUrl').val() + "?" + date.getTime()).slideToggle().slideToggle();
         });
 
         $('.step1').removeClass('active');
         $('.step1').addClass('complete');
-        $('#editStep').slideToggle();
+        $('.editStep').slideToggle();
         $('.step2').addClass('active');
         this.rollProgressForward();
     },
 
     nextButtonHandler: function() {
         var me = this,
-            storeUrl = Ext.String.trim($('#storeUrl').val());
+            storeUrl = Ext.String.trim($('.storeUrl').val());
 
         storeUrl = this.stripTrailingSlash(storeUrl);
         var storeDescriptor = Ext.String.trim(storeUrl + '/public/storeDescriptor');
@@ -211,10 +211,10 @@ Ext.define('Ozone.components.window.StoreWizard', {
 
     backButtonHandler: function() {
         var me = this;
-        $('#editStep').hide();
+        $('.editStep').hide();
 
         $('.step2').removeClass('active');
-        $('#enterURLStep').slideToggle();
+        $('.enterURLStep').slideToggle();
         $('.step1').addClass('active');
         me.rollProgressBack();
     },
@@ -227,8 +227,8 @@ Ext.define('Ozone.components.window.StoreWizard', {
         var me = this;
         if (me.record) {
 
-            var iconUrl     = $('#iconUrl').val();
-            var displayName = $('#storeName').val();
+            var iconUrl     = $('.iconUrl').val();
+            var displayName = $('.storeName').val();
 
             if (me.isStoreDescriptorAttributeInvalid(iconUrl)) {
                 alert("Please fix the icon URL in the store's descriptor file.");
@@ -240,9 +240,9 @@ Ext.define('Ozone.components.window.StoreWizard', {
                 return;
             }
 
-            me.record.set('imageUrlSmall', $('#iconUrl').val());
+            me.record.set('imageUrlSmall', $('.iconUrl').val());
             me.record.set('imageUrlLarge', me.record.get('imageUrlSmall'));
-            me.record.set('displayName', Ext.htmlEncode($('#storeName').val()));
+            me.record.set('displayName', Ext.htmlEncode($('.storeName').val()));
             me.record.set('name', me.record.get('displayName'));
             me.record.set('title', me.record.get('displayName'));
             me.record.set('image', me.record.get('imageUrlLarge'));

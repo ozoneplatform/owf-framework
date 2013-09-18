@@ -4,7 +4,7 @@
 	 background-color: $store-wizard-modal-color !important;
 	 border-radius: 0 0 0 0;
 	 
-	 #wizardTitle {
+	 .wizardTitle {
 		background-color: $store-wizard-modal-color !important;
 	    color: $store-wizard-title-color;
 	    font-size: 24px;
@@ -33,12 +33,12 @@
 	 	 background: no-repeat theme-image($theme-name, 'tools/close-down.png');
 	 }
 	 
-	 #wizardButtons {
+	 .wizardButtons {
 	 	width: 33%;
 	 	height: 90%;
 	 	background-color: $store-wizard-modal-color !important;
 	 	
-	 	#wizardProcessList {
+	 	.wizardProcessList {
 	 		color:$store-wizard-unreached-step-color;
 	 		font-size: 16px;
 	 		
@@ -66,7 +66,7 @@
 	 		}
 	 	}
 	 	
-	 	#progressBar {
+	 	.progressBar {
 	 		background-color: $store-wizard-progress-bar-back-color;
 	 		border-radius: 3px;
 	 		width: 225px;
@@ -75,7 +75,7 @@
 	 		top: 71%;
 	 		position: relative;
 	 		
-	 		#progressBarProgress {
+	 		.progressBarProgress {
 	 			background-color: $store-wizard-progress-bar-front-color;
 	 			border-radius: 3px;
 	 			height: 30px;
@@ -84,7 +84,7 @@
 	 	}
 	 }
 	 
-	 #wizardContentBox {
+	 .wizardContentBox {
 	 	width: 67%;
 	 	height: 90%;
 	 	bottom: 90%;
@@ -128,7 +128,7 @@
    				width: 345px;
    			}
    			
-   			#iconUrl {
+   			.iconUrl {
    				width: 246px;
    				left : 140px;
    				position: relative;
