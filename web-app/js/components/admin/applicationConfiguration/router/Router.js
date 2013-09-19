@@ -10,20 +10,28 @@ define([
 
     return Backbone.Router.extend({
 
-        // current view instance
-        view: null,
+        view: null,        // current view instance
+        appConfigs: null,            // a map of the app config models associated by groupName
+        freeTextWarningModel: null,
 
         container: $('body'),
 
         routes: {
-            'config/:id': 'getGroup'
+            'config/:id': 'showGroup'
         },
 
         initialize: function() {
             var me = this;
-            this.collection = new ApplicationConfigurationCollection();
-            this.collection.fetch().complete(function() {
-                me.getGroup('AUDITING');
+            var configs = new ApplicationConfigurationCollection();
+            configs.fetch().complete(function() {
+                me.appConfigs = _.chain(configs.models)
+                                 .sortBy(function(mod) {
+                                     if(mod.get("code") === "free.warning.content") { me.freeTextWarningModel = mod }
+                                     return mod.get("id");
+                                 })
+                                 .groupBy(function(mod) { return mod.get("groupName"); })
+                                 .value();
+                me.showGroup('AUDITING');
             });
         },
 
@@ -32,7 +40,7 @@ define([
             delete this.view;
         },
 
-        getGroup: function (name) {
+        showGroup: function (name) {
             this.cleanup();
             switch (name) {
                 case "store":
@@ -42,26 +50,11 @@ define([
                     this.view = new ApplicationConfigurationPageView({
                         collection: new ApplicationConfigurationCollection()
                     });
-                    this.setModelsOnView(name);
+                    this.view.freeTextWarningModel = this.freeTextWarningModel;
+                    this.view.collection.reset(this.appConfigs[name]);
                     break;
             }
             this.container.append(this.view.el);
-        },
-
-        setModelsOnView: function(groupName) {
-            var viewModels = [];
-            var me = this;
-            this.collection.each(function(mod) {
-                var code = mod.get("code")
-                if(code === "free.warning.content") {
-                    me.view.freeTextWarningModel = mod;
-                }
-                if(mod.get("groupName") === groupName) {
-                    viewModels.push(mod);
-                }
-            });
-
-            this.view.collection.reset(viewModels);
         }
     });
 });
