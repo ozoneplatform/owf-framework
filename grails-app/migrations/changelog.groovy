@@ -10,6 +10,9 @@ databaseChangeLog = {
     property([name:"owf.personIdType", value:"java.sql.Types.BIGINT", dbms:"hsqldb, postgresql, mysql, oracle"])
     property([name:"owf.personIdType", value:"numeric(19,0)", dbms:"mssql"])
 
+    property([name:"appconfig.valColumn", value:"VALUE", dbms:"hsqldb"])
+    property([name:"appconfig.valColumn", value:"value", dbms:"mysql, oracle, postgresql, mssql"])
+
     //previous version change logs go here
     include file: 'changelog_3.7.0.groovy'
     include file: 'changelog_3.8.0.groovy'

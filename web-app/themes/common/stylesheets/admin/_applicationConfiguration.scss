@@ -179,6 +179,11 @@ div.app_config_map_row{
     color: $appConfig-error-color;
 }
 
+.app_config_free_text_warning {
+    font-size: 10px;
+    color: $warning-color;
+}
+
  // radio button styles
  .app_config_radio_button_area {
  }

@@ -57,7 +57,7 @@ class ConfigController {
 
         conf.customHeaderFooter = customHeaderFooterService.configAsMap
         conf.backgroundURL =  owfApplicationConfigurationService.getApplicationConfiguration(CUSTOM_BACKGROUND_URL)?.value
-
+        conf.freeTextEntryWarningMessage = owfApplicationConfigurationService.getApplicationConfiguration(FREE_WARNING_CONTENT)?.value ?: ""
         // whether the show animations user preference exists
         def showAnimations = false
         try {

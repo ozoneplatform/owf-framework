@@ -16,13 +16,13 @@
 
         <div class="app_config_menu">
             <div class="item auditing active">
-                <a href="#/config/auditing">Auditing</a>
+                <a href="#/config/AUDITING">Auditing</a>
             </div>
             <div class="item user_account_settings">
-                <a href="#/config/user_account_settings">User Account Settings</a>
+                <a href="#/config/USER_ACCOUNT_SETTINGS">User Account Settings</a>
             </div>
             <div class="item branding">
-                <a href="#/config/branding">Branding</a>
+                <a href="#/config/BRANDING">Branding</a>
             </div>
             <div class="item store">
                 <a href="#/config/store">Store</a>

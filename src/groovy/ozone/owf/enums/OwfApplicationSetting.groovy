@@ -29,7 +29,9 @@ public enum OwfApplicationSetting implements ApplicationSetting{
     CUSTOM_CSS_IMPORTS("owf.custom.css"),
 
     //OP-2015
-    CUSTOM_BACKGROUND_URL("owf.custom.background.url")
+    CUSTOM_BACKGROUND_URL("owf.custom.background.url"),
+
+    FREE_WARNING_CONTENT("free.warning.content")
 
 	OwfApplicationSetting(String code) {
 		this.code = code;

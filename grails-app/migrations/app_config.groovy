@@ -1,8 +1,5 @@
 databaseChangeLog = {
 
-    property([name:"appconfig.valColumn", value:"VALUE", dbms:"hsqldb"])
-    property([name:"appconfig.valColumn", value:"value", dbms:"mysql, oracle, postgresql, mssql"])
-
     def doConfigInsert = { appConfig, groupName, subGroupName, order ->
         insert(tableName: "application_configuration") {
             column(name: "code", value: appConfig.code)

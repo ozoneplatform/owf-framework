@@ -10,8 +10,7 @@ define([
 
         initialize: function(options) {
             Page.prototype.initialize.apply(this, arguments);
-            this.fetchAndRender();
+            this.freeTextWarningModel = new Backbone.Model({ value: "balh blah blah" });
         }
-        
     });
 });
