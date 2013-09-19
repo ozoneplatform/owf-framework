@@ -582,7 +582,8 @@ class DashboardService extends BaseService {
                 layoutConfig: params.layoutConfig.toString() ?: "",
                 stack: params.stack != null ? Stack.get(params.stack.id.toLong()) : null,
                 locked: params.locked != null ? params.locked : false,
-                publishedToStore: params.publishedToStore ? convertStringToBool(params.publishedToStore) : false)
+                publishedToStore: params.publishedToStore ? convertStringToBool(params.publishedToStore) : false,
+                markedForDeletion: params.markedForDeletion ? convertStringToBool(params.markedForDeletion) : false)
 
         //if this is not a group dashboard then assign it to the specified user
         //otherwise group dashboards are not associated with any user
