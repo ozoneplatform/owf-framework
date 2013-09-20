@@ -79,7 +79,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
             "<div class='wizardButtons'>" +
             "<ul class='wizardProcessList'>" +
             "<li class='step1 active'><div><span class='stepNumber'>1</span> Enter Store URL</div></li>" +
-            "<li class='step2'><div><span class='stepNumber'>2</span> Review or Edit</div></li>" +
+            "<li class='step2'><div><span class='stepNumber'>2</span> Review</div></li>" +
             "</ul>" +
             "<div class='progressBar' >" +
             "<div class='progressBarProgress' style='display:none;'>" +
@@ -97,8 +97,8 @@ Ext.define('Ozone.components.window.StoreWizard', {
             "</div>" +
             "</div>" +
             "<div class='editStep' style='display:none;'>" +
-            "<div class='contentTitle'>Review or Edit</div>" +
-            "<div class='contentText'>User will see this Store icon and name. If it is correct, click Save.</div>" +
+            "<div class='contentTitle'>Review</div>" +
+            "<div class='contentText'>All users will see this Store icon and name. Review them; if correct, click Save.</div>" +
             "<div class='contentText userInput iconText'>Icon <input class='iconUrl'></input></div>" +
             "<div class='contentText userInput'>Store Name <input class='storeName'></input></div>" +
             "<div class='controlButtons'>" +
