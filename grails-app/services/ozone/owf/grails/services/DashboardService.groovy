@@ -192,7 +192,7 @@ class DashboardService extends BaseService {
      */
     private boolean shouldCloneGroupDashboard(Dashboard groupDashboard, Person user) {
         boolean userIsTheOwner = groupDashboard?.stack?.owner == user
-        boolean noMarketplaces = !widgetDefinitionService.hasMarketplace()
+        boolean noMarketplaces = !widgetDefinitionService.hasMarketplace().data
         groupDashboard.publishedToStore || userIsTheOwner || noMarketplaces
     }
 
