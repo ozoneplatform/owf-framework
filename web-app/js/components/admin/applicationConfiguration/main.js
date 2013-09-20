@@ -4,7 +4,7 @@
         paths: {
             "jquery"                : "../../../../js-lib/jquery/jquery-1.8.0",
             "underscore"            : "../../../../js-lib/underscore/underscore-1.4.4",
-            "backbone"              : "../../../../js-lib/backbone/backbone-0.9.2",
+            "backbone"              : "../../../../js-lib/backbone/backbone-1.0.0",
             "pnotify"               : '../../../../js-lib/pnotify-1.2.0/jquery.pnotify'
         },  
         shim: {
@@ -58,7 +58,6 @@
         //Not sure if this is a good entry pointto the application or not.  For now it will route events on this
         //page to the appropriate place
         var app_router = new Router();
-        
         //Start Backbone history a necessary step for bookmarkable URL's
         Backbone.history.start();
          
