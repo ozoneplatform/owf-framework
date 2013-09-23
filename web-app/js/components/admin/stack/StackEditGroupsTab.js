@@ -51,7 +51,8 @@ Ext.define('Ozone.components.admin.stack.StackEditGroupsTab', {
             }
         });
 
-        // this is to disable the add/remove buttons if the app has not been approved
+        // This is to disable the add button if the app has not been approved.
+        // Remove button is never disabled.
         this.on({
             activate: {
                 scope: this,
@@ -66,23 +67,6 @@ Ext.define('Ozone.components.admin.stack.StackEditGroupsTab', {
                             var button = Ext.getCmp('adminGroupsTabAddButton'),
                                 tip;
 
-                            if (button) {
-                                button.setDisabled(true);
-
-                                // firefox handles tooltips on disabled buttons differently than the other browsers
-                                if (Ext.isGecko) {
-                                    tip = Ext.create('Ext.tip.ToolTip', {
-                                        target: button.id,
-                                        html: Ozone.layout.tooltipString.unapprovedStackEditMessage
-                                    });
-                                }
-                                else {
-                                    button.setTooltip(Ozone.layout.tooltipString.unapprovedStackEditMessage);
-                                }
-                            }
-
-                            // disable the remove button
-                            button = Ext.getCmp('adminGroupsTabRemoveButton');
                             if (button) {
                                 button.setDisabled(true);
 
