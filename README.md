@@ -1,8 +1,8 @@
-# Ozone Widget Framework 
+# OZONE Widget Framework 
  
 ## Description
 
-The Ozone Widget Framework (OWF) is a web application for composing other lightweight web applications called "widgets".  It's basically a glorified web portal engine, with the unusual characteristic that the content within the portal (i.e. the widgets) is decentralized.  It includes a secure, in-browser, pub-sub eventing system, allowing widgets from different domains to share information.  The combination of decentralized content and in-browser messaging makes OWF particularly suited for large distributed enterprises with legacy stovepipes that need to combine capability "at the glass".
+The OZONE Widget Framework (OWF) is a web application for composing other lightweight web applications called "widgets".  It's basically a glorified web portal engine, with the unusual characteristic that the content within the portal (i.e. the widgets) is decentralized.  It includes a secure, in-browser, pub-sub eventing system, allowing widgets from different domains to share information.  The combination of decentralized content and in-browser messaging makes OWF particularly suited for large distributed enterprises with legacy stovepipes that need to combine capability "at the glass".
  
 ## Screenshots
 
@@ -26,7 +26,7 @@ Numbered releases are tested on IE7, IE8, IE9, Firefox 3.6 and the latest public
 
 > The United States Government has unlimited rights in this software, pursuant to the contracts under which it was developed.  
  
-The Ozone Widget Framework is released to the public as Open Source Software, because it's the Right Thing To Do. Also, it was required by [Section 924 of the 2012 National Defense Authorization Act](http://www.gpo.gov/fdsys/pkg/PLAW-112publ81/pdf/PLAW-112publ81.pdf "NDAA FY12").
+The OZONE Widget Framework is released to the public as Open Source Software, because it's the Right Thing To Do. Also, it was required by [Section 924 of the 2012 National Defense Authorization Act](http://www.gpo.gov/fdsys/pkg/PLAW-112publ81/pdf/PLAW-112publ81.pdf "NDAA FY12").
 
 Released under the [Apache License, Version 2](http://www.apache.org/licenses/LICENSE-2.0.html "Apache License v2").
  
@@ -65,10 +65,10 @@ The US Army has done some work on a redesigned interface to OWF - particularly s
 #### OWF-Touchscreen
 The Army has also done work on a redesigned interface for touchscreen devices.  This is not part of the core project.  Yet.
  
-#### Ozone Marketplace
+#### OZONE Marketplace
 A "sister project" of OWF.  Marketplace is a search engine for "widgets", effectively the "apps store" for OWF.  This project was under heavy re-factoring in the fall of 2012 and is not in a state where it is ready to be released as open source, but should be expected to be released sometime in 2013.  US Government agencies can get Marketplace from OWFGOSS.org.
  
-#### Ozone Synapse
+#### OZONE Synapse
 A "sister project" of OWF.  Synapse provides a data-query/caching layer that is an optional add-on to OWF.  US Government agencies can get Synapse from OWFGOSS.org.
 
 #### Common Map Widget API
