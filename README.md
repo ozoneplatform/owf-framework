@@ -70,3 +70,20 @@ A "sister project" of OWF.  Marketplace is a search engine for "widgets", effect
  
 #### Ozone Synapse
 A "sister project" of OWF.  Synapse provides a data-query/caching layer that is an optional add-on to OWF.  US Government agencies can get Synapse from OWFGOSS.org.
+
+#### Common Map Widget API
+(CMAPI) is a specification that enables the interaction of data search/manipulation widgets from any provider with map widgets from any other provider by providing a standard way for the widgets to be able to communicate over some pre-defined OWF channels.  Visit the CMAPI [home page](http://www.cmwapi.org). 
+
+#### Extensible Map Platform
+An open  technology stack that implements the CMAPI and provides map widget functionality that programs can use as-is, or extend for their particular needs.  The stack includes the following:
+
+>A fully functional open source map widget that is designed to be extensible by other programs for their particular needs, and currently provides Google Earth, OpenLayers, Cesium and WorldWind renderers 
+
+>A mil-std 2525 symbology renderer widget that can be extended to non mil-std symbols
+
+>JavaScript library implementation of the CMAPI that can be used to make both map widgets and data widgets CMAPI conformant 
+
+>JavaScript library for GeoJSON to KML conversions
+
+>Ecosystem of map drawing tools that work with any CMAPI (v1.2 or later) conformant map widget
+
