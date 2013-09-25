@@ -7,6 +7,7 @@
         <!-- ** CSS ** -->
         <!-- base library -->
         <link rel='stylesheet' type='text/css' href='../themes/a_default.theme/css/a_default.css' />
+        <link rel='stylesheet' type='text/css' href='../themes/a_default.theme/css/applicationConfiguration.css' />
 
         <p:javascript src='owf-widget-configuration-widget' pathToRoot="../" />
     </head>
