@@ -1172,18 +1172,4 @@ databaseChangeLog = {
             where("widget_url in (${adminWidgetUrlList}) and universal_name is null")
         }
     }
-
-    changeSet(author: "owf", id: "7.3.0-30", context: "create, upgrade, 7.3.0") {
-        insert(tableName: "application_configuration") {
-            column(name: "code", value: "free.warning.content")
-            column(name: "type", value: "String")
-            column(name: "group_name", value: "BRANDING")
-            column(name: "mutable", valueBoolean: true)
-            column(name: "sub_group_order", valueNumeric: 8)
-            column(name: "version", valueNumeric: 0)
-            column(name: "title", value: "")
-            column(name: "sub_group_name", value: null)
-            column(name: '${appconfig.valColumn}', value: "")
-        }
-    }
 }

@@ -14,7 +14,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "app_config-7.3.0-1", dbms:"hsqldb, oracle, postgresql, mssql", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "app_config-7.3.0-1", dbms:"hsqldb, oracle, postgresql, mssql, mysql", context: "create, upgrade, 7.3.0") {
 
         [
             [code: "owf.enable.cef.logging", type: "Boolean", mutable: true, value: "true"],
