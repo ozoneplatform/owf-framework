@@ -8,13 +8,26 @@ databaseChangeLog = {
             column(name: "mutable", valueBoolean: appConfig.mutable)
             column(name: "sub_group_order", valueNumeric: order)
             column(name: "version", valueNumeric: 0)
-            column(name: "title", value: "")
+            column(name: "title", value: " ")
             column(name: "sub_group_name", value: subGroupName)
             column(name: '${appconfig.valColumn}', value: appConfig.value)
         }
     }
 
-    changeSet(author: "owf", id: "app_config-7.3.0-1", dbms:"hsqldb, oracle, postgresql, mssql, mysql", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "app_config-7.3.0-2", dbms: "oracle", context: "create, upgrade, 7.3.0") {
+        comment("Trigger for Oracle database to handle primary key generation based on a sequence during 'application_configuration' table insert statements")
+        sql(endDelimiter: "", splitStatements: false, sql: """
+            create or replace trigger app_config_insert before insert on application_configuration
+            for each row
+            when (new.id is null)
+            begin
+            select hibernate_sequence.nextval into :new.id from dual;
+            end;
+            /
+        """)
+    }
+
+    changeSet(author: "owf", id: "app_config-7.3.0-1", dbms:"hsqldb, oracle, postgresql, mssql", context: "create, upgrade, 7.3.0") {
 
         [
             [code: "owf.enable.cef.logging", type: "Boolean", mutable: true, value: "true"],
@@ -61,5 +74,13 @@ databaseChangeLog = {
         ].each { subGroup ->
             subGroup.items.eachWithIndex { appConfig, index -> doConfigInsert(appConfig, "BRANDING", subGroup.subGroupName, index+1) }
         }
+    }
+
+    changeSet(author: "owf", id: "app_config-7.3.0-3", dbms: "oracle", context: "create, upgrade, 7.3.0") {
+        comment("Drop the trigger")
+        sql(endDelimiter: "", splitStatements: false, sql: """
+            drop trigger app_config_insert;
+            /
+        """)
     }
 }

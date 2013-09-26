@@ -184,6 +184,43 @@ databaseChangeLog = {
 
     }
 
+    changeSet(author: "owf", id: "app_config-7.3.0-10.5", dbms: "oracle", context: "create, upgrade, 7.3.0") {
+        comment("Trigger for Oracle database to handle primary key generation based on a sequence during insert statements")
+        sql(endDelimiter: "", splitStatements: false, sql: """
+            create or replace trigger dashboard_insert before insert on dashboard
+            for each row
+            when (new.id is null)
+            begin
+            select hibernate_sequence.nextval into :new.id from dual;
+            end;
+            /
+
+            create or replace trigger domain_mapping_insert before insert on domain_mapping
+            for each row
+            when (new.id is null)
+            begin
+            select hibernate_sequence.nextval into :new.id from dual;
+            end;
+            /
+
+            create or replace trigger stack_insert before insert on stack
+            for each row
+            when (new.id is null)
+            begin
+            select hibernate_sequence.nextval into :new.id from dual;
+            end;
+            /
+
+            create or replace trigger owf_group_insert before insert on owf_group
+            for each row
+            when (new.id is null)
+            begin
+            select hibernate_sequence.nextval into :new.id from dual;
+            end;
+            /
+        """)
+    }
+
     changeSet(author: "owf", id: "7.3.0-11", context: "sampleData, 7.3.0-sampleData") {
 
         comment("Migrating the legacy sample dashboards to the new format")
@@ -520,7 +557,7 @@ databaseChangeLog = {
         insert(tableName: "stack") {
             column(name: "version", valueNumeric: "1")
             column(name: "name", value: "Administration")
-            column(name: "description", value: "This application collects the administrative components into a common set of application pages for managing system resources.  These pages can be used to create, modify, update, and delete Apps, App Components, Users & Groups, and system configuration settings.")
+            column(name: "description", value: "This application collects the administrative components into a common set of application pages for managing system resources.  These pages can be used to create, modify, update, and delete Apps, App Components, Users and Groups, and system configuration settings.")
             column(name: "stack_context", value: "ef8b5d6f-4b16-4743-9a57-31683c94b616")
             column(name: "image_url", value: "themes/common/images/admin/64x64_admin_app.png")
             column(name: "approved", valueBoolean: "true")
@@ -994,7 +1031,7 @@ databaseChangeLog = {
             column(name: "type", value: "")
             column(name: "marked_for_deletion", valueBoolean: "false")
             column(name: "guid", value: "94bf7ed8-bed9-45ad-933b-4d85584cb483")
-            column(name: "name", value: "Users & Groups")
+            column(name: "name", value: "Users and Groups")
             column(name: "icon_image_url", value: "themes/common/images/adm-tools/Groups64.png")
             column(name: "description", value: "Administer the Users and Groups in the system.")
             column(name: "layout_config", value: """{"xtype":"container","cls":"hbox ","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"fitpane","cls":"left","flex":1,"htmlText":"50%","items":[],"widgets":[{"universalName":"org.ozoneplatform.owf.admin.usermanagement","widgetGuid":"38070c45-5f6a-4460-810c-6e3496495ec4","uniqueId":"53783596-8233-9e34-4f91-72e92328785d","dashboardGuid":"94bf7ed8-bed9-45ad-933b-4d85584cb483","paneGuid":"7f3657f1-b391-4ab5-f6be-e4393ea5d72d","intentConfig":null,"launchData":null,"name":"Users","active":true,"x":0,"y":33,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":1,"singleton":false,"floatingWidget":false,"height":973,"width":775}],"paneType":"fitpane","defaultSettings":{"widgetStates":{"101f119e-b56a-4e16-8219-11048c020038":{"x":94,"y":199,"height":440,"width":581,"timestamp":1377274970150}}}},{"xtype":"dashboardsplitter"},{"xtype":"fitpane","cls":"right","flex":1,"htmlText":"50%","items":[],"paneType":"fitpane","widgets":[{"universalName":"org.ozoneplatform.owf.admin.groupmanagement","widgetGuid":"53a2a879-442c-4012-9215-a17604dedff7","uniqueId":"3e0647e3-62b4-cd08-6d6b-9ece1670b10e","dashboardGuid":"94bf7ed8-bed9-45ad-933b-4d85584cb483","paneGuid":"e9746a83-a610-6b01-43c4-d543278729b4","intentConfig":null,"launchData":null,"name":"Groups","active":true,"x":779,"y":33,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":1,"singleton":false,"floatingWidget":false,"height":973,"width":775}],"defaultSettings":{"widgetStates":{"d6ce3375-6e89-45ab-a7be-b6cf3abb0e8c":{"x":0,"y":0,"height":440,"width":581,"timestamp":1377274968504}}}}],"flex":1}""")
@@ -1172,4 +1209,19 @@ databaseChangeLog = {
             where("widget_url in (${adminWidgetUrlList}) and universal_name is null")
         }
     }
+
+    changeSet(author: "owf", id: "app_config-7.3.0-30", dbms: "oracle", context: "create, upgrade, 7.3.0") {
+        comment("Drop the triggers")
+        sql(endDelimiter: "", splitStatements: false, sql: """
+            drop trigger dashboard_insert;
+            /
+            drop trigger domain_mapping_insert;
+            /
+            drop trigger stack_insert;
+            /
+            drop trigger owf_group_insert;
+            /
+        """)
+    }
+
 }
