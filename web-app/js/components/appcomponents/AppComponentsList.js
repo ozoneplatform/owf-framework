@@ -185,8 +185,26 @@
                     of: view.$el
                 })
                 .on('click', '.widget-remove', function(evt) {
-                    evt.preventDefault();
-                    me.removeAppComponent(view, tip);
+                	var userGroups = Ozone.config.user.groups;
+                	var stackGroups = view.model.attributes.groups
+                	
+                	var groupAssignment
+                    // Find out whether stack belongs to one of the user's groups (including OWF Users and OFW Administrators)
+                    if (_.find(stackGroups, function(stackGroup) { return _.find(userGroups, {'id' : stackGroup.id})})) {
+                        groupAssignment = true;
+                    } else {
+                        // A hack to verify whether the stack is in one of the user's implicit groups
+                        groupAssignment = Boolean(_.find(stackGroups, { 'displayName': 'OWF Users' }) ||
+                            (Ozone.config.user.isAdmin && _.find(stackGroups, { 'displayName': 'OWF Administrators' })));
+                    }
+
+                    if(groupAssignment || view.model.attributes.groupWidget){
+                    	alert("You may not delete this app component because it is required by an app.")
+                    	me.removeDetailsTip();
+                	} else {
+	                    evt.preventDefault();
+	                    me.removeAppComponent(view, tip);
+                	}
                 });
             tip.shown();
         },
