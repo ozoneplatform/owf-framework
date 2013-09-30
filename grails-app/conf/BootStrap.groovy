@@ -237,11 +237,13 @@ class BootStrap {
   
     private loadWidgetTypes() {
         println "---- loadWidgetTypes() ----"
-        if(!WidgetType.findByName('standard')) saveInstance(new WidgetType(name: 'standard', displayName: 'standard'))
-        if(!WidgetType.findByName('administration')) saveInstance(new WidgetType(name: 'administration', displayName: 'administration'))
-        if(!WidgetType.findByName('metrics')) saveInstance(new WidgetType(name: 'metrics', displayName: 'metrics'))
-        if(!WidgetType.findByName('marketplace')) saveInstance(new WidgetType(name: 'marketplace', displayName: 'store'))
-        
+        WidgetType.withTransaction {
+            if(!WidgetType.findByName('standard')) saveInstance(new WidgetType(name: 'standard', displayName: 'standard'))
+            if(!WidgetType.findByName('administration')) saveInstance(new WidgetType(name: 'administration', displayName: 'administration'))
+            if(!WidgetType.findByName('metrics')) saveInstance(new WidgetType(name: 'metrics', displayName: 'metrics'))
+            if(!WidgetType.findByName('marketplace')) saveInstance(new WidgetType(name: 'marketplace', displayName: 'store'))
+        }
+
         flushAndClearCache()
     }
 
@@ -502,32 +504,34 @@ class BootStrap {
     }
 
     private createNewUser() {
-        def user = Person.findByUsername(Person.NEW_USER)
-        if (user == null)
-        {
-            //Create
-            user =  new Person(
-                username     : Person.NEW_USER,
-                userRealName : Person.NEW_USER,
-                //                                passwd       : 'password',
-                lastLogin    : new Date(),
-                email        : '',
-                emailShow    : false,
-                description  : '',
-                enabled      : true)
-            saveInstance(user)
-            def userRole = Role.findByAuthority(ERoleAuthority.ROLE_USER.strVal)
-            def users = Person.findAllByUsername(Person.NEW_USER)
-            if (userRole)
+        Person.withTransaction {
+            def user = Person.findByUsername(Person.NEW_USER)
+            if (user == null)
             {
-                if (!userRole.people)
-                userRole.people = users
-                else
-                userRole.people.add(Person.findByUsername(Person.NEW_USER))
-                saveInstance(userRole)
+                //Create
+                user =  new Person(
+                        username     : Person.NEW_USER,
+                        userRealName : Person.NEW_USER,
+                        //                                passwd       : 'password',
+                        lastLogin    : new Date(),
+                        email        : '',
+                        emailShow    : false,
+                        description  : '',
+                        enabled      : true)
+                saveInstance(user)
+                def userRole = Role.findByAuthority(ERoleAuthority.ROLE_USER.strVal)
+                def users = Person.findAllByUsername(Person.NEW_USER)
+                if (userRole)
+                {
+                    if (!userRole.people)
+                        userRole.people = users
+                    else
+                        userRole.people.add(Person.findByUsername(Person.NEW_USER))
+                    saveInstance(userRole)
+                }
             }
         }
-        
+
         flushAndClearCache()
     }
 
@@ -767,35 +771,37 @@ class BootStrap {
      * Creates the OWF Users and OWF Administrators group if they do not already exist.
      */
     private createSystemGroups() {
-        // Create OWF Administrators group if it doesn't already exist
-        def adminGroup = Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
-        if (adminGroup == null) {
-            // add it
-            adminGroup = new Group(
-                name: 'OWF Administrators',
-                description: 'OWF Administrators',
-                automatic: true,
-                status: 'active',
-                displayName: 'OWF Administrators'
-            )
+        Group.withTransaction {
+            // Create OWF Administrators group if it doesn't already exist
+            def adminGroup = Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
+            if (adminGroup == null) {
+                // add it
+                adminGroup = new Group(
+                        name: 'OWF Administrators',
+                        description: 'OWF Administrators',
+                        automatic: true,
+                        status: 'active',
+                        displayName: 'OWF Administrators'
+                )
 
-            adminGroup = saveInstance(adminGroup)
+                adminGroup = saveInstance(adminGroup)
+            }
+
+            def allUsers = Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
+            // Create the OWF Users group if it doesn't exist.
+            if (allUsers == null) {
+                // add it
+                allUsers = new Group(
+                        name: 'OWF Users',
+                        description: 'OWF Users',
+                        automatic: true,
+                        status: 'active',
+                        displayName: 'OWF Users'
+                )
+
+                allUsers = saveInstance(allUsers)
+            }
         }
-
-        def allUsers = Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
-        // Create the OWF Users group if it doesn't exist.
-        if (allUsers == null) {
-            // add it
-            allUsers = new Group(
-                name: 'OWF Users',
-                description: 'OWF Users',
-                automatic: true,
-                status: 'active',
-                displayName: 'OWF Users'
-            )
-
-            allUsers = saveInstance(allUsers)
-        } 
     }
 
     private assignDashboardsToGroup(Group group, String groupType, int numDashboards, int numDashboardsWidgets) {
