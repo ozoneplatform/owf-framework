@@ -46,16 +46,15 @@ class MarketplaceService extends BaseService {
             } else if (obj?.stackContext) {
                 def stack = Stack.findByStackContext(obj.stackContext)
 
-                // if the listing in marketplace has been approved, set it to approved here
-                if (obj?.approved) {
-                    stack.approved = obj.approved
-                }
-
                 if (!stack) {
                     obj.dashboards?.each { it.publishedToStore = true }
                     accountService.runAsAdmin {
                         stack = stackService.importStack([data: obj.toString()])
                     }
+                }
+                // if the listing in marketplace has been approved, set it to approved here
+                if (obj?.approved) {
+                    stack.approved = obj.approved
                 }
                 stack
             }
