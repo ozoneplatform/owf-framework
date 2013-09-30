@@ -144,7 +144,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     icon: false
                 });
 
-                addStackCallback && addStackCallback("The stack");
+                addStackCallback && addStackCallback("The application");
                 self.dashboardContainer.refreshAppComponentsView();
                 self.dashboardContainer.loadMask.hide();
             },
