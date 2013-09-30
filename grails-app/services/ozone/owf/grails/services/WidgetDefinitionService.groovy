@@ -1032,17 +1032,22 @@ class WidgetDefinitionService {
     }
 	
 	def groupOwnedWidget(widgetId, personId, isAdmin){
+		def adminQuery = ""
+		if(isAdmin as boolean)
+			adminQuery = "OR g.name = 'OWF Administrators'"
+			
+		log.debug("admin query in groupOwnedWidget = " + adminQuery)
 		
 		def ownedDefinitions = DomainMapping.findAll(" \
 			FROM DomainMapping dm, WidgetDefinition wd\
 			WHERE dm.srcType = 'group' AND dm.destType = 'widget_definition' AND dm.destId = wd.id \
 			AND wd.widgetGuid = :widgetId AND dm.srcId IN\
 			(SELECT g.id FROM Group g\
-					WHERE g.name = 'OWF Users' OR exists (FROM g.people AS p WHERE p.id = :personId)) ", [widgetId: widgetId, personId: personId as long])
+					WHERE g.name = 'OWF Users' "+adminQuery+" OR exists (FROM g.people AS p WHERE p.id = :personId)) ", [widgetId: widgetId, personId: personId as long])
 
 		ownedDefinitions = ownedDefinitions.collect { it[0]}
 		
-		log.info("Got widget definitions: " + ownedDefinitions)
+		log.debug("Got widget definitions: " + ownedDefinitions)
 		if(ownedDefinitions)
 			return true
 		
