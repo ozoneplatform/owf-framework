@@ -172,7 +172,7 @@
             evt.stopPropagation();
 
             this.removeDetailsTip();
-            
+
             tip = new DetailsTip({
                 model: view.model
             });
@@ -185,26 +185,32 @@
                     of: view.$el
                 })
                 .on('click', '.widget-remove', function(evt) {
-                	var userGroups = Ozone.config.user.groups;
-                	var stackGroups = view.model.attributes.groups
                 	
-                	var groupAssignment
-                    // Find out whether stack belongs to one of the user's groups (including OWF Users and OFW Administrators)
-                    if (_.find(stackGroups, function(stackGroup) { return _.find(userGroups, {'id' : stackGroup.id})})) {
-                        groupAssignment = true;
-                    } else {
-                        // A hack to verify whether the stack is in one of the user's implicit groups
-                        groupAssignment = Boolean(_.find(stackGroups, { 'displayName': 'OWF Users' }) ||
-                            (Ozone.config.user.isAdmin && _.find(stackGroups, { 'displayName': 'OWF Administrators' })));
-                    }
-
-                    if(groupAssignment || view.model.attributes.groupWidget){
-                    	alert("You may not delete this app component because it is required by an app.")
-                    	me.removeDetailsTip();
-                	} else {
-	                    evt.preventDefault();
-	                    me.removeAppComponent(view, tip);
-                	}
+                	// find out if the widget is owned by a group and display not delete-able message if true 
+                    Ext.Ajax.request({
+                        url: Ozone.util.contextPath() + '/widgetDefinition/groupOwnedWidget',
+                        method: 'GET',
+                        params: {
+                            widgetId:view.model.id, 
+                            personId: Ozone.config.user.id,
+                            isAdmin: Ozone.config.user.isAdmin
+                        },
+                        success: function(data) {
+                        	var response  = Ext.decode(data.responseText)
+                        	
+                        	if(response.isOwnedByGroup)
+                        		alert("You may not delete this app component because it is required by an app.")
+                        	else {
+                        		evt.preventDefault();
+                        		me.removeAppComponent(view, tip);
+                        	}
+                        },
+                        failure: function(response, opts) {
+                            // Fallback
+                            alert("There was an error attempting to remove this app component")
+                        }
+                    });
+                    
                 });
             tip.shown();
         },

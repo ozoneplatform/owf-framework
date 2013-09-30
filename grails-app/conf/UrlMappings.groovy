@@ -490,5 +490,10 @@ class UrlMappings {
 			controller = "applicationConfiguration"
 			action=[GET:"list", PUT:"update"]
 		}
+		
+		"/widgetDefinition/groupOwnedWidget" {
+			controller = "widgetDefinition"
+			action = "groupOwnedWidget"
+		}
     }
 }

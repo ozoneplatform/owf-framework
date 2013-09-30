@@ -16,6 +16,7 @@ import ozone.owf.grails.domain.IntentDataType
 import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.domain.WidgetDefinitionIntent
 import ozone.owf.grails.domain.WidgetType
+import ozone.owf.grails.domain.DomainMapping
 
 class WidgetDefinitionService {
 
@@ -1029,4 +1030,22 @@ class WidgetDefinitionService {
         }
         else return obj.equals(null)
     }
+	
+	def groupOwnedWidget(widgetId, personId, isAdmin){
+		
+		def ownedDefinitions = DomainMapping.findAll(" \
+			FROM DomainMapping dm, WidgetDefinition wd\
+			WHERE dm.srcType = 'group' AND dm.destType = 'widget_definition' AND dm.destId = wd.id \
+			AND wd.widgetGuid = :widgetId AND dm.srcId IN\
+			(SELECT g.id FROM Group g\
+					WHERE g.name = 'OWF Users' OR exists (FROM g.people AS p WHERE p.id = :personId)) ", [widgetId: widgetId, personId: personId as long])
+
+		ownedDefinitions = ownedDefinitions.collect { it[0]}
+		
+		log.info("Got widget definitions: " + ownedDefinitions)
+		if(ownedDefinitions)
+			return true
+		
+		return false
+	}
 }
