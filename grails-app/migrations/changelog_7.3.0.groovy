@@ -218,6 +218,14 @@ databaseChangeLog = {
             select hibernate_sequence.nextval into :new.id from dual;
             end;
             /
+
+            create or replace trigger widget_definition_insert before insert on widget_definition
+            for each row
+            when (new.id is null)
+            begin
+            select hibernate_sequence.nextval into :new.id from dual;
+            end;
+            /
         """)
     }
 
@@ -1220,6 +1228,8 @@ databaseChangeLog = {
             drop trigger stack_insert;
             /
             drop trigger owf_group_insert;
+            /
+            drop trigger widget_definition_insert;
             /
         """)
     }
