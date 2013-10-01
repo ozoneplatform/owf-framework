@@ -24,7 +24,9 @@ define([
         descriptionView: null,
         button: null,
 
-        btnTpl: '<div id="app-config-add-store-container">' + '<a href="#" target="_blank" id="app-config-add-store">Add Store</a>' + '</div>',
+        btnTpl: '<div id="app-config-add-store-container">' +
+                    '<a href="#" target="_blank" id="app-config-add-store">Add Store</a>' +
+                '</div>',
 
         events: {
             'click #app-config-add-store': 'addBtnClicked',
@@ -37,32 +39,34 @@ define([
         initialize: function() {
             this.storeViews = {};
 
-            _.bindAll(this, "renderItem");
+            _.bindAll(this, 'renderItem', 'render');
 
-            this.buildModel();
-            this.buildCollection();
+            this._buildModel();
+            this._buildCollection();
             this.loadAndRenderStores();
         },
 
-        buildModel: function() {
+        _buildModel: function() {
             this.model = new Backbone.Model({
                 title: 'Stores',
                 description: 'The icon and name for connected Stores is displayed here.'
             });
         },
 
-        buildCollection: function() {
+        _buildCollection: function() {
             this.collection = new Stores([], {
                 parse: true
             });
+            this.listenTo(this.collection, 'add', this.renderItem);
         },
 
         loadAndRenderStores: function() {
             this.collection.fetch({
+                silent: true,
                 data: $.param({
                     widgetTypes: 'store'
                 })
-            }).done(_.bind(this.render, this));
+            }).done(this.render);
         },
 
         render: function() {
@@ -71,11 +75,11 @@ define([
             });
 
             this.descriptionView.render();
+
             this.$el.append(this.descriptionView.el);
+            this.$el.append(this.btnTpl);
 
             this.collection.each(this.renderItem);
-
-            this.$el.append(this.btnTpl);
         },
 
         renderItem: function(model) {
@@ -83,7 +87,9 @@ define([
                 model: model
             });
 
-            this.$el.append(storeView.render().el);
+            this.$el.children('#app-config-add-store-container')
+                    .before(storeView.render().el);
+
             this.storeViews[model.get('widgetGuid')] = storeView;
         },
 
@@ -93,23 +99,31 @@ define([
 
             Ext.widget('storewizard', {
                 id: 'storeWizard',
-                saveCallback: function() {
-                    setTimeout(_.bind(me.refresh, me), 500);
-                }
+                saveCallback: _.bind(this._saveCallback, this)
             }).show().center();
         },
 
         editBtnClicked: function(e) {
+            var me = this;
             e.preventDefault();
 
             Ext.widget('storewizard', {
                 id: 'storeWizard',
                 editing: true,
                 existingStoreId: ($(e.currentTarget).parent().data('store-id')),
-                saveCallback: _.bind(function() {
-                    setTimeout(_.bind(this.refresh, this), 500);
-                }, this)
+                saveCallback: _.bind(this._saveCallback, this)
             }).show().center();
+        },
+
+        _saveCallback: function(operation, json) {
+            var action = operation.action,  // create, read
+                widget = json.data[0],
+                id = widget.id,
+                model = this.collection.get(id);
+
+            if(action === 'read') return;
+            
+            model ? model.set(model.parse(widget)) : this.collection.add(json, {parse: true});
         },
 
         deleteBtnClicked: function(e) {

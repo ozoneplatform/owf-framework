@@ -4,7 +4,9 @@ define([
     'backbone'
 ], function($, _, Backbone) {
 
-    return Backbone.View.extend({
+    var SuperClass = Backbone.View;
+
+    return SuperClass.extend({
 
         tagName: 'div',
         className: 'app-config-store-view',
@@ -14,9 +16,9 @@ define([
                 '<div class="edit" title="Edit Store">&nbsp;</div>' +
                 '<div class="delete" title="Delete Store">&nbsp;</div>',
 
-        refresh: function() {
-            this.$el.empty();
-            this.render();
+        initialize: function (options) {
+            SuperClass.prototype.initialize.call(this, options);
+            this.listenTo(this.model, 'change', _.bind(this.render, this));
         },
 
         render: function() {
