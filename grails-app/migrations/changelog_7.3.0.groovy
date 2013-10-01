@@ -184,48 +184,24 @@ databaseChangeLog = {
 
     }
 
-    changeSet(author: "owf", id: "app_config-7.3.0-10.5", dbms: "oracle", context: "create, upgrade, 7.3.0") {
+    String commonTriggerClause = """
+            for each row
+            when (new.id is null)
+            begin
+            select hibernate_sequence.nextval into :new.id from dual;
+            end;
+            /
+    """
+
+    List<String> triggerTables = ["dashboard", "domain_mapping", "stack", "owf_group", "widget_definition"]
+
+    changeSet(author: "owf", id: "app_config-7.3.0-10.5", dbms: "oracle", context: "create, upgrade, 7.3.0, sampleData, 7.3.0-sampleData") {
         comment("Trigger for Oracle database to handle primary key generation based on a sequence during insert statements")
         sql(endDelimiter: "", splitStatements: false, sql: """
-            create or replace trigger dashboard_insert before insert on dashboard
-            for each row
-            when (new.id is null)
-            begin
-            select hibernate_sequence.nextval into :new.id from dual;
-            end;
-            /
-
-            create or replace trigger domain_mapping_insert before insert on domain_mapping
-            for each row
-            when (new.id is null)
-            begin
-            select hibernate_sequence.nextval into :new.id from dual;
-            end;
-            /
-
-            create or replace trigger stack_insert before insert on stack
-            for each row
-            when (new.id is null)
-            begin
-            select hibernate_sequence.nextval into :new.id from dual;
-            end;
-            /
-
-            create or replace trigger owf_group_insert before insert on owf_group
-            for each row
-            when (new.id is null)
-            begin
-            select hibernate_sequence.nextval into :new.id from dual;
-            end;
-            /
-
-            create or replace trigger widget_definition_insert before insert on widget_definition
-            for each row
-            when (new.id is null)
-            begin
-            select hibernate_sequence.nextval into :new.id from dual;
-            end;
-            /
+            ${triggerTables.collect{table ->
+                "create or replace trigger ${table}_insert before insert on ${table} ${commonTriggerClause}"
+            }.join('\n')
+        }
         """)
     }
 
@@ -1218,19 +1194,12 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "app_config-7.3.0-30", dbms: "oracle", context: "create, upgrade, 7.3.0") {
-        comment("Drop the triggers")
+    changeSet(author: "owf", id: "app_config-7.3.0-30", dbms: "oracle", context: "create, upgrade, 7.3.0, sampleData, 7.3.0-sampleData") {
+        comment("Drop the insert triggers")
         sql(endDelimiter: "", splitStatements: false, sql: """
-            drop trigger dashboard_insert;
-            /
-            drop trigger domain_mapping_insert;
-            /
-            drop trigger stack_insert;
-            /
-            drop trigger owf_group_insert;
-            /
-            drop trigger widget_definition_insert;
-            /
+            ${triggerTables.collect{table ->
+                "drop trigger ${table}_insert;\n/"
+            }.join('\n')}
         """)
     }
 
