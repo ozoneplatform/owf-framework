@@ -157,10 +157,22 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
     addWidget:function (sender, config, marketplaceCallback) {
         this.dashboardContainer.loadMask.show();
+        var doLaunch = false,
+            baseUrl, id, visualizeAddition;
 
-        var visualizeAddition = this.getlistingVisualizer(sender, config, marketplaceCallback, "widget");
+        if(config.widgetsJSON) {
+            baseUrl = config.widgetsJSON.baseUrl;
+            id = config.widgetsJSON.itemId;
+            visualizeAddition = $.noop;
+        }
+        else {
+            baseUrl = config.baseUrl;
+            id = config.data.id;
+            doLaunch = config.doLaunch;
+            visualizeAddition = this.getlistingVisualizer(sender, config, marketplaceCallback, "widget");
+        }
 
-        this.processMarketplaceWidgetData(config.baseUrl, config.data.id, config.doLaunch, visualizeAddition, marketplaceCallback);
+        this.processMarketplaceWidgetData(baseUrl, id, doLaunch, visualizeAddition, marketplaceCallback);
     },
 
     processMarketplaceWidgetData: function(marketplaceUrl, widgetId, doLaunch, addWidgetCallback, doLaunchCallback) {

@@ -19,6 +19,7 @@ import org.apache.http.conn.ssl.TrustStrategy
 import org.apache.http.impl.client.BasicResponseHandler
 import org.apache.http.impl.client.DefaultHttpClient
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.codehaus.groovy.grails.web.json.JSONObject
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
 import ozone.owf.grails.domain.*
@@ -112,14 +113,14 @@ class MarketplaceService extends BaseService {
         widgetDefinition.with {
             displayName = obj.displayName
             description = obj.description
-            height = obj.height as Integer
+            height = obj.isNull("height") ? 650 : (obj.height as Integer)
+            width = obj.isNull("width") ? 1050 : (obj.width as Integer)
             imageUrlLarge = obj.imageUrlLarge
             imageUrlSmall = obj.imageUrlSmall
             universalName = universalNameIsNull ? null : obj.universalName
             widgetGuid = obj.widgetGuid
             widgetUrl = obj.widgetUrl
             widgetVersion = obj.widgetVersion
-            width = obj.width as Integer
             singleton = obj.singleton
             visible = obj.widgetUrl.isAllWhitespace() ? false : obj.visible
             background = obj.background
@@ -132,7 +133,8 @@ class MarketplaceService extends BaseService {
             // type to widgetTypes or add standard if there's no corresponding type.
             widgetDefinition.widgetTypes = []
 
-            obj.widgetTypes.each { String widgetTypeFromMP ->
+            obj.widgetTypes.each { widgetTypeFromMP ->
+                widgetTypeFromMP = JSONObject.NULL.equals(widgetTypeFromMP) ? WidgetType.standard.name : widgetTypeFromMP;
                 def typeFound = WidgetType.findByName(widgetTypeFromMP)
                 if (typeFound) {
                     widgetDefinition.widgetTypes << typeFound
@@ -161,7 +163,7 @@ class MarketplaceService extends BaseService {
         // Marketplace may not be configured to provide intents. In such
         // a case the send and receive lists are empty. DO NOT overwrite
         // intents that are already in OWF if MP is not providing them.
-        if (obj.intents &&
+        if (obj.intents && !JSONObject.NULL.equals(obj.intents) &&
                 ((obj.intents.send && obj.intents.send.size() > 0) ||
                         (obj.intents.receive && obj.intents.receive.size() > 0))) {
             // Structure of the intents field (forgive the bastardized BNF/schema mix)
@@ -236,7 +238,7 @@ class MarketplaceService extends BaseService {
             obj.intents.send?.each { addIntent(it, true, false) }
         }
         //OP-31: Intents as part of a listing. These are the intents directly from the ServiceItem
-        else if (obj.listingIntents && obj.listingIntents.size() > 0) {
+        else if (obj.listingIntents && !JSONObject.NULL.equals(obj.intents) && obj.listingIntents.size() > 0) {
             //Convert the AppsMall listing's intents to OWF's intents and add them to the widget definition
             obj.listingIntents.each { 
                 def dataType
@@ -262,8 +264,6 @@ class MarketplaceService extends BaseService {
                 widgetDefinition.addToWidgetDefinitionIntents(newWidgetDefinitionIntent)
             }
         }
-
-
 
         widgetDefinition.save(flush: true)
         return widgetDefinition
@@ -300,7 +300,7 @@ class MarketplaceService extends BaseService {
         //    ensureAdmin()
         //    user = Person.findById(params.userId)
         //    if (user == null) {
-        //        throw new OwfException(	message:'Invalid userId',
+        //        throw new OwfException(message:'Invalid userId',
         //            exceptionType: OwfExceptionTypes.Validation)
         //    }
         //}
