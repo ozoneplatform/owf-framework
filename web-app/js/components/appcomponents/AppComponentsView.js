@@ -103,9 +103,11 @@
                 addFilterFn: function (model, index) {
                     var name = model.get('name').toLowerCase(),
                         description = (model.get('description') || '').toLowerCase(),
-                        searchQuery = this.searchQuery.toLowerCase();
+                        searchQuery = this.searchQuery.toLowerCase(),
+                        isVisible = model.get('visible') && model.get('definitionVisible');
 
-                    if(_.contains(name, searchQuery) || _.contains(description, searchQuery)) {
+                    if(isVisible &&
+                        (_.contains(name, searchQuery) || _.contains(description, searchQuery))) {
                         return true;
                     }
                     return false;
