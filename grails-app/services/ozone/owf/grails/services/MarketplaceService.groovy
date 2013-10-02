@@ -133,8 +133,8 @@ class MarketplaceService extends BaseService {
             // type to widgetTypes or add standard if there's no corresponding type.
             widgetDefinition.widgetTypes = []
 
-            obj.widgetTypes.each { widgetTypeFromMP ->
-                widgetTypeFromMP = JSONObject.NULL.equals(widgetTypeFromMP) ? WidgetType.standard.name : widgetTypeFromMP;
+            obj.widgetTypes.each { widgetType ->
+                def widgetTypeFromMP = JSONObject.NULL.equals(widgetType) ? WidgetType.standard.name : widgetType;
                 def typeFound = WidgetType.findByName(widgetTypeFromMP)
                 if (typeFound) {
                     widgetDefinition.widgetTypes << typeFound
