@@ -880,8 +880,8 @@ environments {
     development {
         uiperformance.enabled = false
 
-        perfTest.enabled = false                 // Determines whether or not bootstrap is run
-        perfTest.assignToOWFUsersGroup = false  // Assign widgets, dashboards and stacks to OWF Users group only
+        perfTest.enabled = false                // Determines whether or not bootstrap is run
+        perfTest.assignToOWFUsersGroup = true   // Assign widgets, dashboards and stacks to OWF Users group only
         perfTest.clearCacheEvery = 1000
         perfTest.numDashboardsWidgets = 3       // The number of widgets on each dashboard
         perfTest.numAdmins = 5                  // The number of administrators
@@ -890,7 +890,7 @@ environments {
         perfTest.numGroupsPerUser = 2           // The number of groups each user is assigned to
         perfTest.numWidgetsInGroups = 5         // The number of widgets assigned to each group
         perfTest.numWidgetsPerUser = 5          // The number of widgets assigned to each user
-        perfTest.numPreferences = 10            // The number of preferences per user
+        perfTest.numPreferences = 0             // The number of preferences per user
         perfTest.numWidgets = 500               // The number of unique widget definitions
         perfTest.numStacks = 25                 // The number of stacks
         perfTest.numStacksPerUser = 3           // The number of stacks per user

@@ -203,10 +203,8 @@ class BootStrap {
             loadAdmins(numAdmins)
             loadPersons(numUsers)
 
-            assignToOWFUsersGroup ?
-                assignWidgetsToGroup(loadOWFUsersGroup(), numWidgetsInGroups) :
-                assignWidgetsToGroups(numGroups, numWidgetsInGroups)
-            flushAndClearCache() //Explicitly flush/clear
+            !assignToOWFUsersGroup && assignWidgetsToGroups(numGroups, numWidgetsInGroups)
+            flushAndClearCache()
 
             assignGroupsToPersons(numGroups, numGroupsPerUser)
             assignStacksToPersons(numStacks, numStacksPerUser)
@@ -253,18 +251,21 @@ class BootStrap {
             existingWidgetCount = WidgetDefinition.findAllByDisplayNameLike('Test Widget%').size()
 
         println('widgets already in system: ' + existingWidgetCount)
+        def owfUsersGroup = loadOWFUsersGroup()
+
         for (int i = existingWidgetCount + 1; i <= numWidgets; i++) {
-            saveInstance(new WidgetDefinition(
-                    displayName: 'Test Widget '+i,
-                    height: 440,
-                    imageUrlLarge: 'themes/common/images/widget-icons/HTMLViewer.png',
-                    imageUrlSmall: 'themes/common/images/widget-icons/HTMLViewer.png',
-                    widgetGuid: generateId(),
-                    widgetUrl: 'examples/walkthrough/widgets/HTMLViewer.gsp',
-                    widgetVersion: '1.0',
-                    widgetTypes: [standard],
-                    width: 540
-                ))
+            def widgetDefinition = saveInstance(new WidgetDefinition(
+                displayName: 'Test Widget '+i,
+                height: 440,
+                imageUrlLarge: 'themes/common/images/widget-icons/HTMLViewer.png',
+                imageUrlSmall: 'themes/common/images/widget-icons/HTMLViewer.png',
+                widgetGuid: generateId(),
+                widgetUrl: 'examples/walkthrough/widgets/HTMLViewer.gsp',
+                widgetVersion: '1.0',
+                widgetTypes: [standard],
+                width: 540
+            ))
+            assignToOWFUsersGroup && domainMappingService.createMapping(owfUsersGroup, RelationshipType.owns, widgetDefinition)
         }
         
         flushAndClearCache()
@@ -385,9 +386,13 @@ class BootStrap {
     }
 
     private assignWidgetsToGroup(group, numWidgetsInGroups) {
-        def widgets = WidgetDefinition.list(max:numWidgetsInGroups)
+        println "---- assignWidgetsToGroup() -----------------------"
+        def widgets = WidgetDefinition.withCriteria {
+            like("displayName", "Test Widget%")
+            maxResults(numWidgetsInGroups)
+        }
         widgets.each { widget ->
-            domainMappingService.createMapping(group,RelationshipType.owns,widget)
+            domainMappingService.createMapping(group, RelationshipType.owns, widget)
         }
     }
 
@@ -395,7 +400,6 @@ class BootStrap {
         println "---- assignWidgetsToGroups() ----"
         for (int i = 1; i <= numGroups; i++) {
             def group = Group.findByName('TestGroup' + i)
-
             assignWidgetsToGroup(group, numWidgetsInGroups)
         }
     }
@@ -407,7 +411,7 @@ class BootStrap {
             groups = Group.withCriteria {
                 and {
                     eq("stackDefault", false)
-                    like("name", "testGroup%")
+                    like("name", "TestGroup%")
                 }
             },
             randomOffset,
@@ -457,8 +461,10 @@ class BootStrap {
         flushAndClearCache()
     }
 
-    private loadPersonWidgetDefinitions(int numWidgetsPerUser) {
+    private loadPersonWidgetDefinitions(int numWidgetsPerUser, boolean assignToOWFUsersGroup = false) {
         println "---- loadPersonWidgetDefinitions() ----"
+        if(numWidgetsPerUser <= 0 || assignToOWFUsersGroup)
+            return
         // give every person access to standard widget
         def people = Person.findAll()
 
@@ -488,6 +494,9 @@ class BootStrap {
 
     private loadPreferences(int numPreferences) {
         println "---- loadPreferences() ----"
+        if (numPreferences <= 0)
+            return
+
         def persons = Person.list()
         persons.each { person ->
             for (int i = 0; i < numPreferences; i++) {
@@ -748,23 +757,9 @@ class BootStrap {
         flushAndClearCache()
     }
 
-    private loadOWFUsersGroup() {
+    private Group loadOWFUsersGroup() {
         def groups = Group.findAllByNameAndAutomatic('OWF Users', true)
-        if(groups.size() == 0) {
-            def allUsers = new Group(
-                name: 'OWF Users',
-                description: 'OWF Users',
-                automatic: true,
-                status: 'active',
-                displayName: 'OWF Users'
-            )
-            return saveInstance(allUsers)
-        }
         return groups[0]
-    }
-
-    private loadOWFAdminGroup() {
-        Group.findAllByNameAndAutomatic('OWF Administrators', true)
     }
 
     /**
