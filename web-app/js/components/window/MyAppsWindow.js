@@ -239,6 +239,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         // reorder dashboards
         $dom.on('mousedown', '.dashboard, .stack', function (evt) {
+            evt.preventDefault();
             me._dragging = true;
             $draggedItem = $(this);
             $draggedItemParent = $draggedItem.parents('.stack-dashboards');
@@ -255,7 +256,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 evt.stopPropagation();
             });
 
-            $doc.on('mousemove.reorder', function (evt) { 
+            $doc.on('mousemove.reorder', function (evt) {
+                evt.preventDefault();       // required for IE7
                 var pageX = evt.pageX,      // The mouse position relative to the left edge of the document.
                     pageY = evt.pageY;      // The mouse position relative to the top edge of the document.
 
@@ -323,7 +325,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 }
             });
 
-            $dom.on('mouseleave.reorder', '.dashboard, .stack', function (evt) {
+            $dom.on('mouseout.reorder', '.dashboard, .stack', function (evt) {
                 $(this).removeClass(me.DROP_LEFT_CLS + ' ' + me.DROP_RIGHT_CLS);
             });
 
