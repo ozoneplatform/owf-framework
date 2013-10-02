@@ -110,7 +110,23 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-7", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-7", context: "create, upgrade, 7.3.0", dbms: "mssql") {
+        comment("Create widget_def_intent table")
+
+        // Must be sql because owner_id needs to be numeric(19,0) exactly in mssql to match Person.id type.
+        sql (text = """
+            ALTER TABLE [dbo].[stack] ADD [owner_id] numeric(19,0)
+            GO
+        """)
+
+        createIndex(indexName: "FK68AC2888656347D", tableName: "stack") {
+            column(name: "owner_id")
+        }
+
+        addForeignKeyConstraint(baseColumnNames: "owner_id", baseTableName: "stack", constraintName: "FK68AC2888656347D", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
+    }
+
+    changeSet(author: "owf", id: "7.3.0-7", context: "create, upgrade, 7.3.0", dbms: "mysql,oracle,postgresql,hsqldb") {
 		addColumn(tableName: "stack") {
 			column(name: "owner_id", type: "bigint")
 		}
@@ -568,7 +584,14 @@ databaseChangeLog = {
 
     }
 
-    changeSet(author: "owf", id: "7.3.0-23", context: "create") {
+   changeSet(author: "owf", id: "7.3.0-23", context: "create", dbms:"mssql") {
+        comment(text="allow identity inserts")
+      sql ( text = """
+        SET IDENTITY_INSERT [dbo].[widget_definition] ON
+      """)
+    }
+
+    changeSet(author: "owf", id: "7.3.0-24", context: "create") {
         comment(text="Add new admin components that include universal names.  These will be the primary admin components moving forward.")
 
         // Insert the app component admin components.
@@ -765,8 +788,15 @@ databaseChangeLog = {
             """ )
     }
 
+    changeSet(author: "owf", id: "7.3.0-25", context: "create", dbms:"mssql") {
+        comment(text="allow identity inserts")
+        sql ( text = """
+        SET IDENTITY_INSERT [dbo].[widget_definition] OFF
+        """)
+    }
+
     // On upgrades, allow the
-    changeSet(author: "owf", id: "7.3.0-24", context: "upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-26", context: "upgrade, 7.3.0") {
         comment(text="Add new admin components that include universal names.  These will be the primary admin components moving forward.")
 
         // Insert the app component admin components.
@@ -953,7 +983,7 @@ databaseChangeLog = {
             """ )
     }
 
-    changeSet(author: "owf", id: "7.3.0-25", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-27", context: "create, upgrade, 7.3.0") {
         comment(text="Add the pages for the administrator's app.")
         insert(tableName: "dashboard") {
             // column(name: "id", valueNumeric: "322")
@@ -1041,7 +1071,7 @@ databaseChangeLog = {
 
     }
 
-    changeSet(author: "owf", id: "7.3.0-26", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-28", context: "create, upgrade, 7.3.0") {
         comment(text="Add the associations for the stack's default group to the app pages..")
 
         insert(tableName: "domain_mapping") {
@@ -1078,7 +1108,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-27", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-29", context: "create, upgrade, 7.3.0") {
         comment(text="Add the associations for the stack's default group to the admin components.")
         insert(tableName: "domain_mapping") {
             column(name: "version", valueNumeric: "0")
@@ -1154,7 +1184,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-28", context: "sampleData, 7.3.0-sampleData") {
+    changeSet(author: "owf", id: "7.3.0-30", context: "sampleData, 7.3.0-sampleData") {
 
         comment("Remove the old admin dashboard.")
 
@@ -1166,7 +1196,7 @@ databaseChangeLog = {
 
     String adminWidgetUrlList = "'admin/UserManagement.gsp', 'admin/UserEdit.gsp', 'admin/WidgetManagement.gsp', 'admin/WidgetEdit.gsp', 'admin/GroupManagement.gsp', 'admin/GroupEdit.gsp', 'admin/DashboardEdit.gsp', 'admin/StackManagement.gsp', 'admin/StackEdit.gsp', 'admin/Configuration.gsp'"
 
-    changeSet(author: "owf", id: "7.3.0-29", context: "upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-31", context: "upgrade, 7.3.0") {
 
         comment("Remove the old admin widgets.")
 
@@ -1191,12 +1221,12 @@ databaseChangeLog = {
         "drop trigger ${table}_insert;\n/"
     }.join('\n')
 
-    changeSet(author: "owf", id: "app_config-7.3.0-30", dbms: "oracle", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "app_config-7.3.0-32", dbms: "oracle", context: "create, upgrade, 7.3.0") {
         comment("Drop the insert triggers")
         sql(endDelimiter: "", splitStatements: false, sql: deleteTriggerSQL)
     }
 
-    changeSet(author: "owf", id: "app_config-7.3.0-31", dbms: "oracle", context: "sampleData, 7.3.0-sampleData") {
+    changeSet(author: "owf", id: "app_config-7.3.0-33", dbms: "oracle", context: "sampleData, 7.3.0-sampleData") {
         comment("Drop the sample data insert triggers")
         sql(endDelimiter: "", splitStatements: false, sql: deleteTriggerSQL)
     }
