@@ -236,6 +236,7 @@ databaseChangeLog = {
         comment("Migrating the legacy sample dashboards to the new format")
 
         insert(tableName: "owf_group") {
+            column(name: 'id', valueNumeric: '336')
             column(name: "version", valueNumeric: "0")
             column(name: "automatic", valueBoolean: "false")
             column(name: "description", value: "")
@@ -324,6 +325,7 @@ databaseChangeLog = {
         comment("Adding in the domain mapping changes that need to be made for the group dashboards in the sample data")
 
         insert(tableName: "domain_mapping") {
+            column(name: 'id', valueNumeric: '706')
             column(name: "version", valueNumeric: "0")
             column(name: "dest_id", valueComputed: "(SELECT id FROM dashboard WHERE guid='c62ce95c-d16d-4ffe-afae-c46fa64a689b' AND user_id IS NULL AND name='Sample')")
             column(name: "dest_type", value: "dashboard")
