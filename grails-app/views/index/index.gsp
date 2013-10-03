@@ -60,6 +60,13 @@
                     jQuery.fx.off = true;
                     jQuery.fn.bxSlider.defaults.useCSS = false;
                 }
+                else {
+                    var ss = document.createElement('link');
+                    ss.setAttribute('rel', 'stylesheet');
+                    ss.setAttribute('type', 'text/css');
+                    ss.setAttribute('href', './themes/a_default.theme/css/animations.css');
+                    document.getElementsByTagName('head')[0].appendChild(ss);
+                }
             })(Ozone, Ext, jQuery);
         </script>
 
