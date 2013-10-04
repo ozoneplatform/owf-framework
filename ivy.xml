@@ -25,8 +25,12 @@
             <artifact type="war" name="cas-server-owf"/>
         </dependency>
         <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}" rev="${owf.security.rev}" changing="true" transitive="false" />
-        <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}-project" rev="${owf.security.rev}" changing="true" transitive="false" />
-        <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}-extras" rev="${owf.security.rev}" changing="true" transitive="false" />
+        <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}-project" rev="${owf.security.rev}" changing="true" transitive="false">
+            <artifact name="${owf.security.module}-project" type="zip" />
+        </dependency>
+        <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}-extras" rev="${owf.security.rev}" changing="true" transitive="false">
+            <artifact name="${owf.security.module}-extras" type="zip" />
+        </dependency>
         <dependency org="ozone-widgeting-framework-legacy" name="OWFAntTasks" rev="1.0.0"  />
         <dependency org="net.alchim31.3rd.com.yahoo.platform.yui" name="yuicompressor" rev="2.4.2"  />
 

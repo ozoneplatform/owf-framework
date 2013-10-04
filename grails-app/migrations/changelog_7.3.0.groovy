@@ -1240,7 +1240,7 @@ databaseChangeLog = {
         sql(endDelimiter: "", splitStatements: false, sql: deleteTriggerSQL)
     }
 
-    changeSet(author: "owf", id: "app_config-7.3.0-3", dbms: "oracle", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "app_config-7.3.0-34", dbms: "oracle", context: "create, upgrade, 7.3.0") {
         comment("Drop the trigger")
         sql(endDelimiter: "", splitStatements: false, sql: """
             drop trigger stack_groups_insert;
