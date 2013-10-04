@@ -129,6 +129,17 @@ Ext.define('Ozone.components.ChannelListenerPanel', {
                 '|',
                 {
                   xtype: 'button',
+                  text: 'Add Channels (Bulk)',
+                  //cls: 'x-btn-text-icon',
+                  //icon: '../../../images/blue/icons/iconClearAll.gif',
+                  scope: this,
+                  handler: function() {
+                    this.subscribeToChannelBulk();
+                  }
+                },
+                '|',
+                {
+                  xtype: 'button',
                   text: 'Clear Channels',
                   //cls: 'x-btn-text-icon',
                   //icon: '../../../images/blue/icons/iconClearAll.gif',
@@ -380,7 +391,23 @@ Ext.define('Ozone.components.ChannelListenerPanel', {
     }
 
   },
+  subscribeToChannelBulk: function(channels){
+    // take list and subscribe
+    // aventually like to this to consume a JSON doc with the channels listed.
+    var channelToolbarTextField = this.down('#channelToolbarTextField');
+    var activeChannelGrid = this.down('#activeChannelGrid');
+    var text = channel ? channel : channelToolbarTextField.getValue();
+    var split = text.split(","); // not the most elegant way... 
+    for(var i = 0; i < split.length; i = i + 1){
+      text = split[i];
+      if (text != null && text != '' && activeChannelGrid.getStore().findExact('channel', text) == -1) {
+         var channelName = text;
+         activeChannelGrid.getStore().insert(0, {channel:Ext.htmlEncode(text)});
+      OWF.Eventing.subscribe(channelName, owfdojo.hitch(this, this.addToGrid));
+    }    
+    }
 
+  },
   clearAllChannels: function() {
     //check number of channels
     var activeChannelGrid = this.down('#activeChannelGrid');
