@@ -214,6 +214,20 @@ databaseChangeLog = {
         sql(endDelimiter: "", splitStatements: false, sql: triggerSQL)
     }
 
+    changeSet(author: "owf", id: "app_config-7.3.0-10.2", dbms: "oracle", context: "create, upgrate, 7.3.0") {
+        comment("Trigger for Oracle database to handle primary key generation based on a sequence during sample data inserts")
+        sql(endDelimiter: "", splitStatements: false, sql:"""
+            create or replace trigger stack_groups_insert before insert on stack_groups
+            for each row
+            when (new.group_id is null)
+            begin
+            select hibernate_sequence.nextval into :new.group_id from dual;
+            end;
+            /
+        """
+        )
+    }
+
     changeSet(author: "owf", id: "7.3.0-11", context: "sampleData, 7.3.0-sampleData") {
 
         comment("Migrating the legacy sample dashboards to the new format")
@@ -1224,6 +1238,14 @@ databaseChangeLog = {
     changeSet(author: "owf", id: "app_config-7.3.0-32", dbms: "oracle", context: "create, upgrade, 7.3.0") {
         comment("Drop the insert triggers")
         sql(endDelimiter: "", splitStatements: false, sql: deleteTriggerSQL)
+    }
+
+    changeSet(author: "owf", id: "app_config-7.3.0-3", dbms: "oracle", context: "create, upgrade, 7.3.0") {
+        comment("Drop the trigger")
+        sql(endDelimiter: "", splitStatements: false, sql: """
+            drop trigger stack_groups_insert;
+            /
+    """)
     }
 
     changeSet(author: "owf", id: "app_config-7.3.0-33", dbms: "oracle", context: "sampleData, 7.3.0-sampleData") {
