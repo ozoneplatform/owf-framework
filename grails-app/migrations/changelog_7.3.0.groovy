@@ -588,7 +588,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-22", context: "create, upgrade, 7.3.0") {
+/*    changeSet(author: "owf", id: "7.3.0-22", context: "create, upgrade, 7.3.0") {
         comment(text="Add Administration App to the OWF Administrators group.")
 
         insert(tableName: "stack_groups") {
@@ -596,7 +596,7 @@ databaseChangeLog = {
             column(name: "stack_id", valueComputed: "(SELECT id FROM stack WHERE stack_context='ef8b5d6f-4b16-4743-9a57-31683c94b616')")
         }
 
-    }
+    }*/
 
    changeSet(author: "owf", id: "7.3.0-23", context: "create", dbms:"mssql") {
         comment(text="allow identity inserts")
