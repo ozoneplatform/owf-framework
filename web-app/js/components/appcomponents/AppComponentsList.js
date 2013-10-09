@@ -185,6 +185,7 @@
                     of: view.$el
                 })
                 .on('click', '.widget-remove', function(evt) {
+                    evt.preventDefault();
                 	
                 	// find out if the widget is owned by a group and display not delete-able message if true 
                     Ext.Ajax.request({
