@@ -200,13 +200,6 @@ grails.project.dependency.resolution = {
 			'jsr250-api', 'log4j'
         }
 
-        compile("${config.appconfig.server.org}:${config.appconfig.server.module}:${config.appconfig.server.rev}") {
-            excludes 'gmaven-runtime-2.0', 'ant'
-        }
-        compile("${config.auditing.org}:${config.auditing.module}:${config.auditing.rev}") {
-            excludes 'gmaven-runtime-2.0'
-        }
-
 	runtime (
          //needed for code-coverage plugin
          //'asm:asm:3.3.1',
@@ -241,7 +234,7 @@ grails.project.dependency.resolution = {
 
         //need ant for createWebBundles.jar
         runtime 'org.apache.ant:ant:1.7.0'
-        compile('access:access:1.0')
+        //compile('access:access:1.0')
     }
 
 }
