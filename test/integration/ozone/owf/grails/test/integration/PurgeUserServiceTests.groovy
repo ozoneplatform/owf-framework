@@ -3,6 +3,7 @@ package ozone.owf.grails.test.integration
 import ozone.owf.grails.domain.Person
 import static ozone.owf.enums.OwfApplicationSetting.*
 import static ozone.owf.enums.OwfApplicationSettingType.*
+import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration;
 
 class PurgeUserServiceTests extends GroovyTestCase {
     def purgeUserService
@@ -77,13 +78,12 @@ class PurgeUserServiceTests extends GroovyTestCase {
     }
 
     private createRequiredConfigs() {
-        def group = USER_ACCOUNT_SETTINGS
-        def groupIndex = 0
 
-        owfApplicationConfigurationService.createOrUpdateApplicationConfig(DISABLE_INACTIVE_ACCOUNTS, USER_ACCOUNT_SETTINGS, "Boolean", "true", ++groupIndex, null)
-        owfApplicationConfigurationService.createOrUpdateApplicationConfig(INACTIVITY_THRESHOLD, USER_ACCOUNT_SETTINGS, "Integer", "90", ++groupIndex, null)
-        owfApplicationConfigurationService.createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_START, USER_ACCOUNT_SETTINGS, "String", "23:59:59", ++groupIndex, null)
-        owfApplicationConfigurationService.createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_INTERVAL, USER_ACCOUNT_SETTINGS, "Integer", "1440", ++groupIndex, null)
+		new ApplicationConfiguration(code: DISABLE_INACTIVE_ACCOUNTS.code, value: "true",title:"DISABLE_INACTIVE_ACCOUNTS", type: "Boolean",groupName: USER_ACCOUNT_SETTINGS.description).save()
+		new ApplicationConfiguration(code: INACTIVITY_THRESHOLD.code, value: "90",title:"INACTIVITY_THRESHOLD", type: "Integer",groupName: USER_ACCOUNT_SETTINGS.description).save()
+		new ApplicationConfiguration(code: JOB_DISABLE_ACCOUNTS_START.code, value: "23:59:59",title:"JOB_DISABLE_ACCOUNTS_START", type: "String",groupName: USER_ACCOUNT_SETTINGS.description).save()
+		new ApplicationConfiguration(code: JOB_DISABLE_ACCOUNTS_INTERVAL.code, value: "1440",title:"JOB_DISABLE_ACCOUNTS_INTERVAL", type: "Integer",groupName: USER_ACCOUNT_SETTINGS.description).save()
+		
         owfApplicationConfigurationService.handleDisableInactiveAccountsJobChange(owfApplicationConfigurationService.getApplicationConfiguration(DISABLE_INACTIVE_ACCOUNTS))
     }
 }
