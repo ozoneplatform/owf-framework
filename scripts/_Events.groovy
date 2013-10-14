@@ -50,7 +50,14 @@ eventRunAppHttpsStart = {
     println "compiling stylesheets in external themes dir"
     compileStyleSheets(basedir)
   }
-
+  
+  if(!System.properties.skipCopyAppConfig) {
+	  def applicationConfigUiDir = "${baseWebDir}/js/components/admin/applicationConfiguration"
+	  println "Use -DskipCopyAppConfig=true to omit this step"
+	  copyAppConfigFiles applicationConfigUiDir
+	  println "Finished copying app configuration files"
+  }
+  
 }
 
 eventRunAppStart = {
@@ -65,6 +72,13 @@ eventRunAppStart = {
         compileStyleSheets(basedir)
     }
 
+	if(!System.properties.skipCopyAppConfig) {
+		def applicationConfigUiDir = "${baseWebDir}/js/components/admin/applicationConfiguration"
+		println "Use -DskipCopyAppConfig=true to omit this step"
+		copyAppConfigFiles applicationConfigUiDir
+		println "Finished copying app configuration files"
+	}
+	
 }
 
 eventCreateWarStart = { name, stagingDir ->
@@ -113,4 +127,14 @@ eventCreateWarStart = { name, stagingDir ->
   // always be in the CLASSPATH when deployed
   ant.copy(file: "${basedir}/src/resources/empty_descriptor.html",
            todir: "${stagingDir}/WEB-INF/classes")
+}
+
+
+copyAppConfigFiles = { destinationDir ->
+	
+	String sourceDir = "${basedir}/plugins/aml-commons-appconfig-0.1/web-app/js/applicationConfiguration"
+		
+	new AntBuilder().copy(todir: destinationDir) {
+		fileset(dir: sourceDir)
+	}	
 }
