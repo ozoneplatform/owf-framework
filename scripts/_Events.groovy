@@ -38,50 +38,6 @@ private compileStyleSheets = { dir ->
   println "finished compiling sass stylesheets"
 }
 
-private copyAppConfigFiles = {
-
-    def libDir = "${basedir}/lib"
-    def extractDest = "${libDir}/temp"
-    def rev = metadata['appconfig.webclient.rev']
-    def module = metadata['appconfig.webclient.module']
-    def org = metadata['appconfig.webclient.org']
-    def moduleFile = "${libDir}/${module}-${rev}.zip"
-    def ivyFile = "${basedir}/temp-ivy.xml"
-
-    def ant = new AntBuilder()
-    ant.delete(file: ivyFile, quiet: true)
-    new File(ivyFile).withWriter { writer ->
-        def builder = new MarkupBuilder(writer)
-        builder.'ivy-module'(version: '2.0') {
-            info(organisation: 'ozone', module: 'owf')
-            dependencies() {
-                dependency(org: org, name: module, rev: rev, transitive: 'false') {
-                    artifact(name: module, type: 'zip')
-                }
-            }
-        }
-    }
-
-    def ivy = NamespaceBuilder.newInstance(ant, 'antlib:org.apache.ivy.ant')
-    ivy.resolve(file: ivyFile, transitive: false)
-    ivy.retrieve()
-
-    ant.unzip(
-        src: moduleFile,
-        dest: extractDest,
-        overwrite: "true"
-    )
-
-    ant.copy( todir: "${basedir}/web-app/js/components/admin/applicationConfiguration", overwrite: "true" ) {
-        fileset( dir: "${extractDest}/js" )
-    }
-
-    ant.delete(includeemptydirs: true) {
-        fileset(dir: extractDest)
-        file(file: ivyFile)
-        file(file: moduleFile)
-    }
-}
 
 eventRunAppHttpsStart = {
   def baseWebDir = "${basedir}/web-app"
@@ -94,13 +50,14 @@ eventRunAppHttpsStart = {
     println "compiling stylesheets in external themes dir"
     compileStyleSheets(basedir)
   }
-
-    if(!System.properties.skipCopyAppConfig) {
-        println "Retrieving the Application Configuration Client Files from Ivy"
-        println "Use -DskipCopyAppConfig=true to omit this step"
-        copyAppConfigFiles()
-        println "finished copying app configuration files"
-    }
+  
+  if(!System.properties.skipCopyAppConfig) {
+	  def applicationConfigUiDir = "${baseWebDir}/js/components/admin/applicationConfiguration"
+	  println "Use -DskipCopyAppConfig=true to omit this step"
+	  copyAppConfigFiles applicationConfigUiDir
+	  println "Finished copying app configuration files"
+  }
+  
 }
 
 eventRunAppStart = {
@@ -115,18 +72,21 @@ eventRunAppStart = {
         compileStyleSheets(basedir)
     }
 
-    if(!System.properties.skipCopyAppConfig) {
-        println "Retrieving the Application Configuration Client Files from Ivy"
-        println "Use -DskipCopyAppConfig=true to omit this step"
-        copyAppConfigFiles()
-        println "finished copying app configuration files"
-    }
+	if(!System.properties.skipCopyAppConfig) {
+		def applicationConfigUiDir = "${baseWebDir}/js/components/admin/applicationConfiguration"
+		println "Use -DskipCopyAppConfig=true to omit this step"
+		copyAppConfigFiles applicationConfigUiDir
+		println "Finished copying app configuration files"
+	}
+	
 }
 
 eventCreateWarStart = { name, stagingDir ->
-//  compileStyleSheets(stagingDir)
-  copyAppConfigFiles()
 
+  def applicationConfigUiDir = "${stagingDir}/js/applicationConfiguration"
+  copyAppConfigFiles applicationConfigUiDir
+	
+	
   println "copying help for help into war"
 
     def baseWebDir = "${basedir}/web-app"
@@ -171,4 +131,14 @@ eventCreateWarStart = { name, stagingDir ->
   // always be in the CLASSPATH when deployed
   ant.copy(file: "${basedir}/src/resources/empty_descriptor.html",
            todir: "${stagingDir}/WEB-INF/classes")
+}
+
+
+copyAppConfigFiles = { destinationDir ->
+	
+	String sourceDir = "${basedir}/plugins/aml-commons-appconfig-0.1/web-app/js/applicationConfiguration"
+		
+	new AntBuilder().copy(todir: destinationDir) {
+		fileset(dir: sourceDir)
+	}	
 }

@@ -192,40 +192,8 @@ grails.project.dependency.resolution = {
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
-  
-	compile ( 'org.springframework.security:spring-security-core:3.0.2.RELEASE',
-              "${config.owf.security.org}:${config.owf.security.module}:${config.owf.security.rev}" ){
-            excludes 'servlet-api', 'spring-aop','spring-beans', 'spring-core', 'spring-context', 'spring-tx', 'spring-web', 'jstl', 'jsp', 'standard',
-			'jasper-compiler', 'jasper-compiler-jdt', 'jasper-runtime', 'spring-jdbc', 'spring-test', 'cglib-nodep', 'ehcache', 'ehcache-parent',
-			'jsr250-api', 'log4j'
-        }
 
-        compile("${config.appconfig.server.org}:${config.appconfig.server.module}:${config.appconfig.server.rev}") {
-            excludes 'gmaven-runtime-2.0', 'ant'
-        }
-        compile("${config.auditing.org}:${config.auditing.module}:${config.auditing.rev}") {
-            excludes 'gmaven-runtime-2.0'
-        }
-
-	runtime (
-         //needed for code-coverage plugin
-         //'asm:asm:3.3.1',
-         //'net.sourceforge.cobertura:cobertura:1.9.4.1',
-         //needed for code-coverage plugin
-
-		'org.jasig.cas:cas-client-core:3.1.3',
-		'log4j:apache-log4j-extras:1.1',
-		'org.springframework.security:spring-security-core:3.0.2.RELEASE',
-		'org.springframework.security:spring-security-cas-client:3.0.2.RELEASE',
-		'org.springframework.security:spring-security-config:3.0.2.RELEASE', 
-        'net.sf.ehcache:ehcache-jgroupsreplication:1.4',
-
-        //ldap dependencies
-        'org.springframework.security:spring-security-ldap:3.0.2.RELEASE'
-        ){
-            excludes  'spring-aop','spring-beans', 'spring-core', 'spring-context', 'spring-tx', 'spring-web', 'jstl', 'jsp', 'standard',
-			'jasper-compiler', 'jasper-compiler-jdt', 'jasper-runtime', 'bsh'
-        }
+	runtime ('log4j:apache-log4j-extras:1.1', 'net.sf.ehcache:ehcache-jgroupsreplication:1.4')
 
       //only include these jdbc drivers for non production
       if (Environment.current != Environment.PRODUCTION) {
@@ -243,5 +211,7 @@ grails.project.dependency.resolution = {
         runtime 'org.apache.ant:ant:1.7.0'
         compile('access:access:1.0')
     }
-
+    plugins {
+        compile 'org.ozoneplatform:aml-commons-security:3.1.8'
+    }
 }

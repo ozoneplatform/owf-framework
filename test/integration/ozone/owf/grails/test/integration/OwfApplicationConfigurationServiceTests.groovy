@@ -174,21 +174,13 @@ public class OwfApplicationConfigurationServiceTests extends GroovyTestCase{
     }
 
     private void createRequiredConfigs() {
-        def group = USER_ACCOUNT_SETTINGS
-        int subGroupCtr = 0
-
-        owfApplicationConfigurationService.createOrUpdateApplicationConfig(SESSION_CONTROL_ENABLED, group,  "Boolean", "true", ++subGroupCtr, null)
-        owfApplicationConfigurationService.createOrUpdateApplicationConfig(SESSION_CONTROL_MAX_CONCURRENT, group,  "Integer", "1", ++subGroupCtr, null)
-
-        group = USER_ACCOUNT_SETTINGS
-        subGroupCtr = 0
-
-        owfApplicationConfigurationService.createOrUpdateApplicationConfig(DISABLE_INACTIVE_ACCOUNTS, group, "Boolean", "true", ++subGroupCtr, null)
-        owfApplicationConfigurationService.createOrUpdateApplicationConfig(INACTIVITY_THRESHOLD, group, "Integer", "90", ++subGroupCtr, null)
-        owfApplicationConfigurationService.createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_START, group, "String", "23:59:59", ++subGroupCtr, null)
-        owfApplicationConfigurationService.createOrUpdateApplicationConfig(JOB_DISABLE_ACCOUNTS_INTERVAL, group, "Integer", "1440", ++subGroupCtr, null)
-
-        owfApplicationConfigurationService.createRequired()
-
+				
+		new ApplicationConfiguration(code: SESSION_CONTROL_ENABLED.code, value: "true",title:"SESSION_CONTROL_ENABLED", type: "Boolean",groupName: USER_ACCOUNT_SETTINGS.description).save()
+		new ApplicationConfiguration(code: SESSION_CONTROL_MAX_CONCURRENT.code, value: "1",title:"SESSION_CONTROL_MAX_CONCURRENT", type: "Integer",groupName: USER_ACCOUNT_SETTINGS.description).save()
+		new ApplicationConfiguration(code: DISABLE_INACTIVE_ACCOUNTS.code, value: "true",title:"DISABLE_INACTIVE_ACCOUNTS", type: "Boolean",groupName: USER_ACCOUNT_SETTINGS.description).save()
+		new ApplicationConfiguration(code: INACTIVITY_THRESHOLD.code, value: "90",title:"INACTIVITY_THRESHOLD", type: "Integer",groupName: USER_ACCOUNT_SETTINGS.description).save()
+		new ApplicationConfiguration(code: JOB_DISABLE_ACCOUNTS_START.code, value: "23:59:59",title:"JOB_DISABLE_ACCOUNTS_START", type: "String",groupName: USER_ACCOUNT_SETTINGS.description).save()
+		new ApplicationConfiguration(code: JOB_DISABLE_ACCOUNTS_INTERVAL.code, value: "1440",title:"JOB_DISABLE_ACCOUNTS_INTERVAL", type: "Integer",groupName: USER_ACCOUNT_SETTINGS.description).save()
+				
     }
 }
