@@ -1116,7 +1116,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             });
 
             // If more than 1 dashboards are found, verify that we dont select the same dashboard to activate
-            if (length >= 2) {
+            if (sortedDashboards.length >= 2) {
                 if (sortedDashboards[0].guid === this.activeDashboard.guid) {
                     guid = sortedDashboards[1].guid;
                 } else {
