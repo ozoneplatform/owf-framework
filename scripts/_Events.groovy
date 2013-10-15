@@ -127,6 +127,16 @@ eventCreateWarStart = { name, stagingDir ->
 //  compileStyleSheets(stagingDir)
   copyAppConfigFiles()
 
+  // AppConfig files copied above will not be included in the WAR if this is
+  // the first time the above command was called on this system. (All static
+  // files for the WAR are resolved before eventCreateWarStart is called.)
+  // Must copy them to staging dir to ensure they get in the WAR.
+  def appConfigPath = "js/components/admin/applicationConfiguration"
+
+  ant.copy( todir: "${stagingDir}/${appConfigPath}", overwrite: "true" ) {
+    fileset( dir: "${basedir}/web-app/${appConfigPath}" )
+  }
+
   println "copying help for help into war"
 
     def baseWebDir = "${basedir}/web-app"
