@@ -1,0 +1,77 @@
+version: 1
+
+dn: o=Ozone,l=Columbia,st=Maryland,c=US
+objectClass: extensibleObject
+objectClass: domain
+dc: owf-1
+o: Ozone
+
+dn: ou=owfRoles,o=Ozone,l=Columbia,st=Maryland,c=US
+objectClass: organizationalUnit
+ou: owfRoles
+
+dn: cn=user,ou=owfRoles,o=Ozone,l=Columbia,st=Maryland,c=US
+objectClass: groupOfNames
+cn: user
+member: cn=testUser1,ou=Ozone,o=Ozone,l=Col
+ umbia,st=Maryland,c=US
+member: cn=testAdmin1,ou=Ozone,o=Ozone,l=C
+ olumbia,st=Maryland,c=US
+
+dn: cn=admin,ou=owfRoles,o=Ozone,l=Columbia,st=Maryland,c=US
+objectClass: groupOfNames
+cn: admin
+member: cn=testAdmin1,ou=Ozone,o=Ozone,l=C
+ olumbia,st=Maryland,c=US
+
+dn: ou=owfGroups,o=Ozone,l=Columbia,st=Maryland,c=US
+objectClass: organizationalUnit
+ou: owfGroups
+
+dn: cn=group1,ou=owfGroups,o=Ozone,l=Columbia,st=Maryland,c=US
+objectClass: groupOfNames
+cn: group1
+member: cn=testAdmin1,ou=Ozone,o=Ozone,l=C
+ olumbia,st=Maryland,c=US
+
+dn: cn=group2,ou=owfGroups,o=Ozone,l=Columbia,st=Maryland,c=US
+objectClass: groupOfNames
+cn: group2
+member: cn=testAdmin1,ou=Ozone,o=Ozone,l=C
+ olumbia,st=Maryland,c=US
+member: cn=testUser1,ou=Ozone,o=Ozone,l=Col
+ umbia,st=Maryland,c=US
+
+dn: ou=Ozone,o=Ozone,l=Columbia,st=Maryland,c=US
+objectClass: organizationalUnit
+ou: Ozone
+
+dn: cn=testAdmin1,ou=Ozone,o=Ozone,l=Columbia,st=Maryland,c=US
+objectClass: extensibleObject
+objectClass: uidObject
+objectClass: inetOrgPerson
+cn: testAdmin1
+sn: testAdmin1
+uid: testAdmin1
+c: US
+emailaddress: testAdmin1@gmail.com
+givenname: testAdmin1
+mail: testAdmin1@gmail.com
+o: Ozone
+st: Maryland
+userpassword: password
+
+dn: cn=testUser1,ou=Ozone,o=Ozone,l=Columbia,st=Maryland,c=US
+objectClass: extensibleObject
+objectClass: uidObject
+objectClass: inetOrgPerson
+cn: testUser1
+sn: testUser1
+uid: testUser1
+c: US
+emailaddress: testUser1@gmail.com
+givenname: testUser1
+mail: testUser1@gmail.com
+o: Ozone
+st: Maryland
+userpassword: password

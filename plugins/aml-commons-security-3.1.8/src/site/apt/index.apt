@@ -1,0 +1,22 @@
+ ------
+ Overview
+ ------
+
+OWF Security
+
+  This project contains the sample pluggable security models available for the Ozone Widgeting Framework.  There are several
+  examples already provided that can be configured with external files.  Source code and a build script can also be downloaded
+  to modify these, or create your own.
+  
+  The following security models are already provided:
+  
+    [[1]] x509 Authentication, fallback to CAS Authentication (default)
+  
+    [[2]] x509 Authentication only
+  
+    [[3]] CAS Authentication only
+  
+    [[4]] x509 Authentication with LDAP support for authorities
+  
+  
+  For more information on configuring and deploying the OWF Security jars, download the documentation {{{../downloads.html}here}}.
