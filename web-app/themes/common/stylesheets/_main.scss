@@ -702,3 +702,8 @@ img.widget-drag-proxy {
 .ui-sortable-helper {
     z-index: 10000002 !important;
 }
+
+body > .x-mask {
+    // OP-3362: Ext doesn't use viewport width
+    width: 100% !important;
+}

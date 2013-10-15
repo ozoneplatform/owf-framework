@@ -487,7 +487,7 @@ uiperformance.bundles = [
             "../js/util/guid",
             "../js/util/version",
             "../js/util/transport",
-            "../js-lib/ext-4.0.7/ext-all",
+            "../js-lib/ext-4.0.7/ext-all-debug",
             "../js/data/models/WidgetDefinition",
             "../js/data/models/WidgetType",
             "../js/components/mask/LoadMask",
