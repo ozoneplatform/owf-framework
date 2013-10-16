@@ -85,8 +85,8 @@ eventCreateWarStart = { name, stagingDir ->
 
   def applicationConfigUiDir = "${stagingDir}/js/applicationConfiguration"
   copyAppConfigFiles applicationConfigUiDir
-	
-	
+
+
   println "copying help for help into war"
 
     def baseWebDir = "${basedir}/web-app"
@@ -135,10 +135,10 @@ eventCreateWarStart = { name, stagingDir ->
 
 
 copyAppConfigFiles = { destinationDir ->
-	
+
 	String sourceDir = "${basedir}/plugins/aml-commons-appconfig-0.1/web-app/js/applicationConfiguration"
-		
+
 	new AntBuilder().copy(todir: destinationDir) {
 		fileset(dir: sourceDir)
-	}	
+	}
 }
