@@ -213,5 +213,7 @@ grails.project.dependency.resolution = {
     }
     plugins {
         compile 'org.ozoneplatform:aml-commons-security:3.1.8'
+        compile 'org.ozoneplatform:aml-commons-appconfig:0.1'
+        compile 'org.ozoneplatform:aml-commons-auditing:0.1'
     }
 }
