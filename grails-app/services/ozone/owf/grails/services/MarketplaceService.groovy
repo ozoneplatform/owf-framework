@@ -23,10 +23,10 @@ import org.codehaus.groovy.grails.web.json.JSONObject
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
 import ozone.owf.grails.domain.*
-
+import java.security.cert.CertificateException
 import java.security.KeyStore
 import java.security.cert.X509Certificate
-
+import grails.util.Environment
 class MarketplaceService extends BaseService {
 
     def config = ConfigurationHolder.config
@@ -520,7 +520,21 @@ class MarketplaceService extends BaseService {
         return mpUrls
     }
 
+	
     private SSLSocketFactory createSocketFactory() {
+		
+	
+		//In dev bypass all the keystore stuff
+		if (Environment.current == Environment.DEVELOPMENT){
+			return new SSLSocketFactory(new TrustStrategy(){
+				@Override
+				public boolean isTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+					return true;
+				}
+			})
+		}
+		
+		
         // Some initial setup pertaining to getting certs ready for
         // use (presuming SSL mutual handshake between servers).
         // Here is where the Grails REST plugin would really come to
