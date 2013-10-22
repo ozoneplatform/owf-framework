@@ -983,21 +983,23 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             //manner in IE
             setTimeout(function() {
                 // force dashboard save before showing dashboard switcher
-                me.activeDashboard.saveToServer(false, true);
+                me.activeDashboard.saveToServer(false, true, false, function(){
+                    //if necessary, refresh the dashboards before calling show
+                    if (me.dashboardsNeedRefresh) {
+                        if (myAppsWindow) {
+                            myAppsWindow.destroy();
+                            myAppsWindow = null;
+                        }
 
-                //if necessary, refresh the dashboards before calling show
-                if (me.dashboardsNeedRefresh) {
-                    if (myAppsWindow) {
-                        myAppsWindow.destroy();
-                        myAppsWindow = null;
-                    }
+                        me.dashboardsNeedRefresh = false;
 
-                    me.dashboardsNeedRefresh = false;
+                        me.reloadDashboards(show);
+                    } else {
+                        show();
+                    }                	
+                });
 
-                    me.reloadDashboards(show);
-                } else {
-                    show();
-                }
+
             }, 0);
         }
         return myAppsWindowDeferred.promise();
