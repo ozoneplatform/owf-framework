@@ -154,7 +154,7 @@ class StackService {
 
         }
 
-        return [data: stackList, results: stackList.size()]
+        return [data: stackList, results: results.totalCount]
 
     }
 
