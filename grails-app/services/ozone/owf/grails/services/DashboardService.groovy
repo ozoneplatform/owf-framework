@@ -718,8 +718,6 @@ class DashboardService extends BaseService {
         // Delete all mappings for this dashboard
         domainMappingService.purgeAllMappings(personalDashboard)
 
-        println "Deleted personal dashboard $personalDashboard.name"
-
         // Delete the dashboard
         personalDashboard.delete(flush:true)
 

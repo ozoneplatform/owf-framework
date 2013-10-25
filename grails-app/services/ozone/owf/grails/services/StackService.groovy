@@ -744,6 +744,7 @@ class StackService {
                 'name': stack.name,
                 'stackContext': stack.stackContext,
                 'description': stack.description,
+                'imageUrl': stack.imageUrl,
                 'dashboards': dashboards,
                 'widgets': widgets
         ]
