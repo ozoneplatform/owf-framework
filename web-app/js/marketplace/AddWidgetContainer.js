@@ -125,7 +125,6 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         var self = this;
         return owfdojo.xhrPost({
             url:Ozone.util.contextPath() + '/stack/',
-            sync:true,
             content:{
                 addExternalStackToUser:true,
                 guid:stackUuid
@@ -156,7 +155,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
     },
 
     addWidget:function (sender, config, marketplaceCallback) {
-        this.dashboardContainer.loadMask.show();
+        this.dashboardContainer.loadMask.show();    
+
         var doLaunch = false,
             baseUrl, id, visualizeAddition;
 
@@ -183,11 +183,15 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             content: {
                 id: widgetId
             },
-
             onSuccess: function(jsonData) {
                 var widgetListJson = [], data = jsonData.data;
                 for (var i = 0, len = data.length; i < len; i++) {
                     var serviceItem = data[i];
+
+                    // widget requires stacks, need to refresh dashboards
+                    if(serviceItem.owfProperties && serviceItem.owfProperties.stackDescriptor) {                        
+                        self.dashboardContainer.dashboardsNeedRefresh = true;
+                    }
 
                     var customFields = {};
                     Ext.Array.each(serviceItem.customFields, function(field, index, list) {
@@ -201,7 +205,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                             });
                         }
                     } else {
-                        widgetListJson.push(Ext.JSON.encode(self.createOwfWidgetJson(serviceItem, widgetId)));
+                        widgetListJson.push(self.createOwfWidgetJson(serviceItem, widgetId));
                     }
                 }
 
@@ -209,7 +213,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     // OZP-476: MP Synchronization
                     // Added the URL of the Marketplace we're looking at to the
                     // JSON we send to the widget controller.
-                    self.submitWidgetList(Ext.JSON.encode(widgetListJson), marketplaceUrl, doLaunch, addWidgetCallback, doLaunchCallback);
+                    self.submitWidgetList(widgetListJson, marketplaceUrl, doLaunch, addWidgetCallback, doLaunchCallback);
                 }
             },
             onFailure: function(json) {
@@ -290,7 +294,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             content:{
                 marketplaceUrl: mpUrl,
                 addExternalWidgetsToUser:true,
-                widgets:widgetList
+                widgets: Ext.JSON.encode(widgetList)
             },
             load:function (response, ioArgs) {
 
