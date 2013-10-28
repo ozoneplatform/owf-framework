@@ -112,7 +112,7 @@ class MarketplaceService extends BaseService {
 
         widgetDefinition.with {
             displayName = obj.displayName
-            description = obj.description
+            description = obj.isNull("description") ? '' : obj.description
             height = obj.isNull("height") ? 650 : (obj.height as Integer)
             width = obj.isNull("width") ? 1050 : (obj.width as Integer)
             imageUrlLarge = obj.imageUrlLarge
@@ -120,7 +120,7 @@ class MarketplaceService extends BaseService {
             universalName = universalNameIsNull ? null : obj.universalName
             widgetGuid = obj.widgetGuid
             widgetUrl = obj.widgetUrl
-            widgetVersion = obj.widgetVersion
+            widgetVersion = obj.isNull("widgetVersion") ? '' : obj.widgetVersion
             singleton = obj.singleton
             visible = obj.widgetUrl.isAllWhitespace() ? false : obj.visible
             background = obj.background
