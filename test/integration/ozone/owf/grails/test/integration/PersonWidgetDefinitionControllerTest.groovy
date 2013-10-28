@@ -302,51 +302,58 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         assertEquals 10, JSON.parse(controller.response.contentAsString).results
     }
 
-    void testWidgetListByIntentAction() {
-        loginAsUsernameAndRole('testAdmin1', 'role')
+	
+	void testWidgetListByIntentAction() {
+		loginAsUsernameAndRole('testAdmin1', 'role')
 
-        def pwd1 = createWidgetDefinitionForTest('Widget C','widgetC.gif','widgetCsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12551','widget-c.html', 1)
-        def pwd2 = createWidgetDefinitionForTest('Widget D','widgetD.gif','widgetDsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12552','widget-d.html', 2)
-        def pwd3 = createWidgetDefinitionForTest('Widget E','widgetE.gif','widgetEsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12553','widget-e.html', 3)
+		def pwd1 = createWidgetDefinitionForTest('Widget C','widgetC.gif','widgetCsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12551','widget-c.html', 1)
+		def pwd2 = createWidgetDefinitionForTest('Widget D','widgetD.gif','widgetDsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12552','widget-d.html', 2)
+		def pwd3 = createWidgetDefinitionForTest('Widget E','widgetE.gif','widgetEsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12553','widget-e.html', 3)
 
-        def intentDataType1 = IntentDataType.build(dataType: "Address")
-        def intentDataType2 = IntentDataType.build(dataType: "City")
-        def intentDataType3 = IntentDataType.build(dataType: "LongLat")
-        def intentDataType4 = IntentDataType.build(dataType: "Id")
+		def intentDataType1 = IntentDataType.build(dataType: "Address")
+		def intentDataType2 = IntentDataType.build(dataType: "City")
+		def intentDataType3 = IntentDataType.build(dataType: "LongLat")
+		def intentDataType4 = IntentDataType.build(dataType: "Id")
 
-        def intent1 = Intent.build(action: "Pan", dataTypes: [intentDataType1, intentDataType2])
-        def intent2 = Intent.build(action: "Plot", dataTypes: [intentDataType2, intentDataType1, intentDataType3])
-        def intent3 = Intent.build(action: "Zoom", dataTypes: [intentDataType1, intentDataType3])
-        def intent4 = Intent.build(action: "Open", dataTypes: [intentDataType4])
+		def intent1 = Intent.build(action: "Pan", dataTypes: [intentDataType1, intentDataType2])
+		def intent2 = Intent.build(action: "Plot", dataTypes: [intentDataType2, intentDataType1, intentDataType3])
+		def intent3 = Intent.build(action: "Zoom", dataTypes: [intentDataType1, intentDataType3])
+		def intent4 = Intent.build(action: "Open", dataTypes: [intentDataType4])
 
-        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition, 
-            intent1, [intentDataType1, intentDataType2], true, false)
-        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition, 
-            intent2, [intentDataType3, intentDataType2], false, true)
-        def widgetDefinitionIntent3 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition, 
-            intent4, [intentDataType3], false, true)
-        def widgetDefinitionIntent4 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition, 
-            intent3, [intentDataType3], false, true)
-        def widgetDefinitionIntent5 = createWidgetDefinitionIntentForTest(pwd3.widgetDefinition, 
-            intent1, [intentDataType1], true, false)
-        def widgetDefinitionIntent6 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition, 
-            intent3, [intentDataType1], true, false)
+		def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition,
+			intent1, [intentDataType1, intentDataType2], true, false)
+		def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition,
+			intent2, [intentDataType3, intentDataType2], false, true)
+		def widgetDefinitionIntent3 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition,
+			intent4, [intentDataType3], false, true)
+		def widgetDefinitionIntent4 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition,
+			intent3, [intentDataType3], false, true)
+		def widgetDefinitionIntent5 = createWidgetDefinitionIntentForTest(pwd3.widgetDefinition,
+			intent1, [intentDataType1], true, false)
+		def widgetDefinitionIntent6 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition,
+			intent3, [intentDataType1], true, false)
 
-        pwd1.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent1, widgetDefinitionIntent2, widgetDefinitionIntent6]
-        pwd2.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent3, widgetDefinitionIntent4]
-        pwd3.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent5]
+		pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1
+		pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent2
+		pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent6
 
-        controller = new PersonWidgetDefinitionController()
-        controller.personWidgetDefinitionService = personWidgetDefinitionService
-        controller.request.contentType = "text/json"
+		pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent3
+		pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent4
+		
+		pwd3.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent5
 
-        controller.params.intent = "{'action':'Pan'}"
-        controller.widgetList()
+		
+		controller = new PersonWidgetDefinitionController()
+		controller.personWidgetDefinitionService = personWidgetDefinitionService
+		controller.request.contentType = "text/json"
 
-        assertEquals 2, JSON.parse(controller.response.contentAsString).rows.size()
-        assertTrue(['Widget C', 'Widget E'] as Set == [JSON.parse(controller.response.contentAsString).rows[0].value.namespace,
-                JSON.parse(controller.response.contentAsString).rows[1].value.namespace] as Set)
-    }
+		controller.params.intent = "{'action':'Pan'}"
+		controller.widgetList()
+
+		assertEquals 2, JSON.parse(controller.response.contentAsString).rows.size()
+		assertTrue(['Widget C', 'Widget E'] as Set == [JSON.parse(controller.response.contentAsString).rows[0].value.namespace,
+				JSON.parse(controller.response.contentAsString).rows[1].value.namespace] as Set)
+	}
     
     void testWidgetListByIntentDataType() {
         loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
@@ -379,9 +386,14 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         def widgetDefinitionIntent6 = createWidgetDefinitionIntentForTest(pwd4.widgetDefinition, 
             intent2, [intentDataType1, intentDataType2, intentDataType3], true, false)
 
-        pwd1.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent1, widgetDefinitionIntent2]
-        pwd2.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent3, widgetDefinitionIntent4]
-        pwd3.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent5]
+        pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1 
+		pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent2
+			
+			
+        pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent3 
+		pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent4
+		
+        pwd3.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent5
         
         controller = new PersonWidgetDefinitionController()
         controller.personWidgetDefinitionService = personWidgetDefinitionService
@@ -415,8 +427,10 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         def widgetDefinitionIntent3 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition, 
             intent2, [intentDataType1, intentDataType2], false, true)
 
-        pwd1.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent1, widgetDefinitionIntent2]
-        pwd2.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent3]
+        pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1 
+		pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent2
+		
+        pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent3
         
         controller = new PersonWidgetDefinitionController()
         controller.personWidgetDefinitionService = personWidgetDefinitionService
@@ -446,8 +460,8 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition, 
             intent2, [intentDataType1], false, true)
 
-        pwd1.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent1]
-        pwd2.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent2]
+        pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1
+        pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent2
         
         controller = new PersonWidgetDefinitionController()
         controller.personWidgetDefinitionService = personWidgetDefinitionService
@@ -477,8 +491,8 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition, 
             intent2, [intentDataType1], false, true)
 
-        pwd1.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent1]
-        pwd2.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent2]
+        pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1
+        pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent2
         
         controller = new PersonWidgetDefinitionController()
         controller.personWidgetDefinitionService = personWidgetDefinitionService
@@ -507,8 +521,8 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition, 
             intent1, [intentDataType1], false, true)
 
-        pwd1.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent1]
-        pwd2.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent2]
+        pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1
+        pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent2
         
         controller = new PersonWidgetDefinitionController()
         controller.personWidgetDefinitionService = personWidgetDefinitionService
@@ -545,8 +559,9 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         def widgetDefinitionIntent5 = createWidgetDefinitionIntentForTest(pwd3.widgetDefinition, 
             intent1, [intentDataType2], false, true)
 
-        pwd1.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent1]
-        pwd2.widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent3, widgetDefinitionIntent4]
+        pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1
+        pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent3 
+		pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent4
         
         controller = new PersonWidgetDefinitionController()
         controller.personWidgetDefinitionService = personWidgetDefinitionService

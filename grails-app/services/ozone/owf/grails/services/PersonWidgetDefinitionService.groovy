@@ -573,14 +573,16 @@ class PersonWidgetDefinitionService {
             if(params.disabled) {
                 eq("disabled", params.disabled.toBoolean())
             }
-            def widgetTypeList = params.list('widgetTypes');
-            widgetDefinition {
-                widgetTypes {
-                    widgetTypeList.each { widgetType ->
-                        eq("name", widgetType)
-                    }
-                }
-            }
+			if(params.widgetTypes){
+				def widgetTypeList = params.list('widgetTypes');
+				widgetDefinition {
+					widgetTypes {
+						widgetTypeList.each { widgetType ->
+							eq("name", widgetType)
+						}
+					}
+				}
+			}
             if(!tagFilteredIds.isEmpty()) {
                 inList('id',tagFilteredIds)
             }
@@ -619,7 +621,7 @@ class PersonWidgetDefinitionService {
             cache(false)
         }
 
-        return [success: true, personWidgetDefinitionList: pwdList.collect {
+		return [success: true, personWidgetDefinitionList: pwdList.collect {
                 serviceModelService.createServiceModel(it,[groups:allGroupWidgetsToTagsMap[it.widgetDefinition.widgetGuid]])
             },
             count: pwdList.totalCount]

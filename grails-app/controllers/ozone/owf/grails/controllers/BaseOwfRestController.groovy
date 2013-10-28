@@ -31,12 +31,10 @@ class BaseOwfRestController {
     protected def handleError(Exception e)
     {
         log.error(e,e)
-        def jb = new JSONBuilder()
-        jb.json {
-            success(false)
-            errorMsg(e.message)
-        }
-        return [msg: jb.toString()?.encodeAsHTML(), status: 500]
+		def message = [:]
+		message['success'] = false
+		message['errorMsg'] = e.message
+        return [msg: message as JSON, status: 500]
     }
     protected def handleError(OwfException owe) {
         if ('INFO' == owe.logLevel) {
@@ -51,12 +49,10 @@ class BaseOwfRestController {
         
         owe.setMessage(owe.message?.encodeAsHTML());
         
-        def jb = new JSONBuilder()
-        jb.json {
-            success(false)
-            errorMsg( "${owe.exceptionType.generalMessage} ${owe.message}")
-        }
-        return [msg:jb.toString(), status: owe.exceptionType.normalReturnCode]
+        def message = [:]
+		message['success'] = false
+		message['errorMsg'] =  "${owe.exceptionType.generalMessage} ${owe.message}"
+        return [msg:message as JSON , status: owe.exceptionType.normalReturnCode]
     }
 
     protected renderResult(Map res)
@@ -93,7 +89,7 @@ class BaseOwfRestController {
         def sw = new StringWriter()
  
         def jb = new JSONBuilder()
-        jb.json {
+        jb.build {
             success(false)
             errorMsg('Field  Validation error!')
             errors {
