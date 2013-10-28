@@ -38,60 +38,33 @@ class MarketplaceService extends BaseService {
 
     // Performs some of the function of addExternalWidgetsToUser, found in the
     // WidgetDefinitionService.
-    def addListingsToDatabase(stMarketplaceJson) {
-        // The set could be greater than one in length because widgets do have
-        // dependencies.
-        def updatedWidgets = stMarketplaceJson.collect { obj ->
+    def addListingsToDatabase(Collection stMarketplaceJson) {
+        return stMarketplaceJson.collect { Map obj ->
             if (obj?.widgetGuid) {
                 return addWidgetToDatabase(obj)
             } else if (obj?.stackContext) {
-                def stack = Stack.findByStackContext(obj.stackContext)
-
-                if (!stack) {
-                    obj.dashboards?.each { it.publishedToStore = true }
-                    accountService.runAsAdmin {
-                        stack = stackService.importStack([data: obj.toString()])
-                    }
-                }
-                // if the listing in marketplace has been approved, set it to approved here
-                if (obj?.approved) {
-                    stack.approved = obj.approved
-                }
-                stack
+                return addStackToDatabase(obj)
             }
         }
-
-        // Yes, re-reading the set.  We need to add requirements after all widgets have been added
-        stMarketplaceJson.each { obj ->
-            // Same comment as before: this only applies to an updated OMP baseline which
-            // supports synchronization. Older baselines will have "obj" as an instance of
-            // WidgetDefinition.
-            if (obj instanceof Map && obj.containsKey("directRequired")) {
-                // delete and the recreate requirements
-                def widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache: true])
-                domainMappingService.deleteAllMappings(widgetDefinition, RelationshipType.requires, 'src')
-
-                def directRequired = obj.directRequired
-
-                if(directRequired instanceof String) {
-                    directRequired = JSON.parse(directRequired)
-                }
-
-                directRequired.each {
-                    if (log.isDebugEnabled()) {
-                        log.debug "obj.directRequired.each.it -> ${it}"
-                    }
-                    def requiredWidget = WidgetDefinition.findByWidgetGuid(it, [cache: true])
-                    if (requiredWidget != null) {
-                        domainMappingService.createMapping(widgetDefinition, RelationshipType.requires, requiredWidget)
-                    }
-                }
-            }
-        }
-        return updatedWidgets
     }
 
-    def addWidgetToDatabase(obj) {
+    private Stack addStackToDatabase(Map obj) {
+        def stack = Stack.findByStackContext(obj.stackContext)
+
+        if (!stack) {
+            obj.dashboards?.each { it.publishedToStore = true }
+            accountService.runAsAdmin {
+                stack = stackService.importStack([data: obj.toString()])
+            }
+        }
+        // if the listing in marketplace has been approved, set it to approved here
+        if (obj?.approved) {
+            stack.approved = obj.approved
+        }
+        return stack
+    }
+
+    private WidgetDefinition addWidgetToDatabase(Map obj) {
         def widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache: true])
 
         if (widgetDefinition == null) {
@@ -112,7 +85,7 @@ class MarketplaceService extends BaseService {
 
         widgetDefinition.with {
             displayName = obj.displayName
-            description = obj.description
+            description = obj.isNull("description") ? '' : obj.description
             height = obj.isNull("height") ? 650 : (obj.height as Integer)
             width = obj.isNull("width") ? 1050 : (obj.width as Integer)
             imageUrlLarge = obj.imageUrlLarge
@@ -120,7 +93,7 @@ class MarketplaceService extends BaseService {
             universalName = universalNameIsNull ? null : obj.universalName
             widgetGuid = obj.widgetGuid
             widgetUrl = obj.widgetUrl
-            widgetVersion = obj.widgetVersion
+            widgetVersion = obj.isNull("widgetVersion") ? '' : obj.widgetVersion
             singleton = obj.singleton
             visible = obj.widgetUrl.isAllWhitespace() ? false : obj.visible
             background = obj.background
@@ -276,40 +249,29 @@ class MarketplaceService extends BaseService {
         if (!stMarketplaceJson.isEmpty()) {
             def listings = addListingsToDatabase(stMarketplaceJson)
             if (listings.size() == 1) {
-                def stackDefaultGroup = listings.get(0).findStackDefaultGroup()
-                stackDefaultGroup.addToPeople(accountService.getLoggedInUser())
+                stackService.addToUser(listings.get(0), accountService.getLoggedInUser())
             }
         }
     }
 
+    /**
+     * Add widgets from marketplace/store.
+     * Since we're allowing system-system synchronization (OMP -> OWF, OMP -> OMP), we don't require a user to be an
+     * admin to add a listing from a well-known location.
+     * @param params
+     * @return
+     */
     def addExternalWidgetsToUser(params) {
         def mpSourceUrl = params.marketplaceUrl ?: "${grailsApplication.config.owf.marketplaceLocation}"
         def user = accountService.getLoggedInUser()
         def widgetDefinition = null
         def mapping = null
-        def tagLinks = null
         def usedMpPath = false
-
-        // OZP-476: MP Synchronization
-        // Since we're allowing system-system synchronization (OMP -> OWF, OMP -> OMP) this
-        // doesn't necessarily apply any more. We don't require a user to be an admin just
-        // to update a listing from a well-known location.
-        //
-        //user = accountService.getLoggedInUser()
-        //if (params.userId != null) {
-        //    ensureAdmin()
-        //    user = Person.findById(params.userId)
-        //    if (user == null) {
-        //        throw new OwfException(message:'Invalid userId',
-        //            exceptionType: OwfExceptionTypes.Validation)
-        //    }
-        //}
 
         //add widgets to db also add pwd mappings to current user
         def widgetDefinitions = []
         params.widgets = JSON.parse(params.widgets)
-        params.widgets?.each {
-            def obj = JSON.parse(it)
+        params.widgets.each { JSONObject obj ->
             if (obj.widgetGuid == null) {
                 throw new OwfException(message: 'WidgetGuid must be provided',
                         exceptionType: OwfExceptionTypes.Validation)
@@ -321,7 +283,7 @@ class MarketplaceService extends BaseService {
                 // The default is to fetch a widget from a well-known MP.  If we can't do that
                 // or if the fetch fails, then fall back to the original behavior, which reads
                 // the supplied JavaScript and creates a widget from that.
-                def setWidgets = new HashSet()
+                Set setWidgets = new HashSet()
                 try {
                     log.debug("Widget not found locally, building from marketplace with guid=${obj.widgetGuid} and mpUrl=${mpSourceUrl}")
                     setWidgets.addAll(addListingsToDatabase(buildWidgetListFromMarketplace(obj.widgetGuid, mpSourceUrl)))
@@ -336,10 +298,18 @@ class MarketplaceService extends BaseService {
                     log.debug("Importing from the JSON provided to us, since marketplace failed")
                     setWidgets.addAll(addListingsToDatabase([obj]))
                 }
-                // OZP-476: MP Synchronization
-                // See comments on the MarketplaceService regarding what functionality should/could
-                // be moved back into this service.
-                widgetDefinition = setWidgets.find { it.widgetGuid == obj.widgetGuid }
+
+                widgetDefinition = setWidgets.find {
+                    if(it instanceof  Stack) {
+                        stackService.addToUser(it, user)
+                    }
+                    it instanceof WidgetDefinition && it.widgetGuid == obj.widgetGuid
+                }
+
+                // added listing isn't widget definition, nothing to do
+                if(!widgetDefinition) {
+                    return;
+                }
             }
             widgetDefinitions.push(widgetDefinition)
 
@@ -385,25 +355,14 @@ class MarketplaceService extends BaseService {
             }
         }
 
-        // OZP-476: MP Synchronization
-        // The following block of code is functionally contained within the
-        // MarketplaceService.addListingsToDatabase call. 
-        //
         // Yes, re-reading the set.  We need to add requirements after all widgets have been added
-        params.widgets?.each {
-            def obj = JSON.parse(it)
+        params.widgets.each { JSONObject obj ->
             if (obj.directRequired != null) {
                 // delete and the recreate requirements
                 widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache: true])
                 domainMappingService.deleteAllMappings(widgetDefinition, RelationshipType.requires, 'src')
 
-                def requiredArr = obj.directRequired
-
-                if(requiredArr instanceof String) {
-                    requiredArr = JSON.parse(requiredArr)
-                }
-
-                requiredArr.each {
+                obj.directRequired.each {
                     def requiredWidget = WidgetDefinition.findByWidgetGuid(it, [cache: true])
                     if (requiredWidget != null) {
                         domainMappingService.createMapping(widgetDefinition, RelationshipType.requires, requiredWidget)

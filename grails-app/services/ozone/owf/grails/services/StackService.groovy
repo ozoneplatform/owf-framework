@@ -1,3 +1,4 @@
+
 package ozone.owf.grails.services
 
 import grails.converters.JSON
@@ -931,7 +932,11 @@ class StackService {
 
         // Link the group dashboard with the personal one
         domainMappingService.createMapping(personalDashboard, RelationshipType.cloneOf, [id: groupDashboard.id, TYPE: 'dashboard'])
+    }
 
+    def addToUser(Stack stack, Person user) {
+        def stackDefaultGroup = stack.findStackDefaultGroup()
+        stackDefaultGroup.addToPeople(user)
     }
 
     //If a user is no longer assigned to a stack directly or through a group, this method

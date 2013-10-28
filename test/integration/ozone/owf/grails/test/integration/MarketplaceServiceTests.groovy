@@ -83,7 +83,7 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
       //add a dummy widgets that would be from marketplace
 
       //todo someday fix this crazy json string embedded structure
-      def widget1 = ([
+      def widget1 = [
               displayName: 'Widget1',
               imageUrlLarge: 'http://widget1.com',
               imageUrlSmall: 'http://widget1.com',
@@ -99,8 +99,8 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
               isExtAjaxFormat: true,
               tags: ([] as JSON).toString(),
               directRequired: (['79ae9905-ce38-4de6-ad89-fe598d497703'] as JSON).toString()
-      ] as JSON).toString()
-      def widget2 = ([
+      ]
+      def widget2 = [
               displayName: 'Widget2',
               imageUrlLarge: 'http://widget2.com',
               imageUrlSmall: 'http://widget2.com',
@@ -116,8 +116,8 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
               isExtAjaxFormat: true,
               tags: ([] as JSON).toString(),
               directRequired: (['6aca40aa-1b9e-4044-8bbe-d628e6d4518f'] as JSON).toString()
-      ] as JSON).toString()
-      def widget3 = ([
+      ]
+      def widget3 = [
               displayName: 'Widget3',
               imageUrlLarge: 'http://widget3.com',
               imageUrlSmall: 'http://widget3.com',
@@ -132,7 +132,7 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
               width: 200,
               isExtAjaxFormat: true,
               tags: ([] as JSON).toString(),
-      ] as JSON).toString()
+      ]
 
       def params = [
               widgets: ([widget1, widget2, widget3] as JSON).toString()
