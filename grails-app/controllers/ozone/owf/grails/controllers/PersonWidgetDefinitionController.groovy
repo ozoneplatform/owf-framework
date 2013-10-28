@@ -2,12 +2,13 @@ package ozone.owf.grails.controllers
 
 import grails.converters.JSON
 import org.apache.commons.lang.time.StopWatch
+import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.json.JSONArray
 import ozone.owf.grails.OwfException
 
 class PersonWidgetDefinitionController extends BaseOwfRestController {
 
-    def grailsApplication
+    GrailsApplication grailsApplication
   	def personWidgetDefinitionService
   	def widgetDefinitionService
 	def modelName = 'personWidgetDefinition'

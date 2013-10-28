@@ -5,7 +5,7 @@ import groovy.xml.NamespaceBuilder
 //import org.mortbay.jetty.webapp.*
 //import org.mortbay.jetty.handler.*
 
-private compileStyleSheets = { dir ->
+compileStyleSheets = { dir ->
   def ant = new AntBuilder()   // create an antbuilder
   if (System.properties['os.name'].toLowerCase().contains('windows')) {
     ant.exec(
@@ -136,7 +136,7 @@ eventCreateWarStart = { name, stagingDir ->
 
 copyAppConfigFiles = { destinationDir ->
 
-	String sourceDir = "${basedir}/plugins/aml-commons-appconfig-0.1/web-app/js/applicationConfiguration"
+	String sourceDir = "${basedir}/plugins/aml-commons-appconfig-0.2/web-app/js/applicationConfiguration"
 
 	new AntBuilder().copy(todir: destinationDir) {
 		fileset(dir: sourceDir)

@@ -2,7 +2,7 @@ package ozone.owf.grails.controllers
 
 import grails.converters.JSON
 import ozone.owf.grails.OwfException
-import grails.util.JSonBuilder
+import grails.web.JSONBuilder
 import grails.validation.ValidationException
 import java.lang.reflect.UndeclaredThrowableException
 
@@ -31,13 +31,12 @@ class BaseOwfRestController {
     protected def handleError(Exception e)
     {
         log.error(e,e)
-        def sw = new StringWriter()
-        def jb = new JSonBuilder(sw)
+        def jb = new JSONBuilder()
         jb.json {
             success(false)
             errorMsg(e.message)
         }
-        return [msg: sw.toString()?.encodeAsHTML(), status: 500]
+        return [msg: jb.toString()?.encodeAsHTML(), status: 500]
     }
     protected def handleError(OwfException owe) {
         if ('INFO' == owe.logLevel) {
@@ -52,13 +51,12 @@ class BaseOwfRestController {
         
         owe.setMessage(owe.message?.encodeAsHTML());
         
-        def sw = new StringWriter()
-        def jb = new JSonBuilder(sw)
+        def jb = new JSONBuilder()
         jb.json {
             success(false)
             errorMsg( "${owe.exceptionType.generalMessage} ${owe.message}")
         }
-        return [msg:sw.toString(), status: owe.exceptionType.normalReturnCode]
+        return [msg:jb.toString(), status: owe.exceptionType.normalReturnCode]
     }
 
     protected renderResult(Map res)
@@ -94,7 +92,7 @@ class BaseOwfRestController {
         if (!errs) return ''
         def sw = new StringWriter()
  
-        def jb = new JSonBuilder(sw)
+        def jb = new JSONBuilder()
         jb.json {
             success(false)
             errorMsg('Field  Validation error!')
@@ -106,6 +104,6 @@ class BaseOwfRestController {
                 }
             }
         }
-        sw.toString() 
+        jb.toString() 
     }
 }
