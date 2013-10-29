@@ -88,7 +88,7 @@
             <arg value="${gpreargs}" />
             <arg value="${gscript}" />
             <arg value="${gargs}" />
-        	<env key="GRAILS_HOME" value="/opt/grails-2.2.4"/>
+        	<env key="GRAILS_HOME" value="/opt/grails-2.2.4/bin"/>
         </exec>
     </target>
 
