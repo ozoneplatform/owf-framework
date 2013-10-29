@@ -96,6 +96,8 @@
         <attribute name="args" default="" />
         <attribute name="preargs" default="" />
         <sequential>
+        	<echo message="grails.home: ${grails.home}.  GRAILS_HOME:  ${GRAILS_HOME}"></echo>
+        	<env key="GRAILS_HOME" value="${grails.home}"/>
             <antcall target="${grailstask}">
                 <param name="gscript" value="@{script}" />
                 <param name="gargs" value="@{args}" />
