@@ -1,6 +1,6 @@
 import groovy.xml.MarkupBuilder
 import groovy.xml.NamespaceBuilder
-
+import org.codehaus.groovy.grails.plugins.GrailsPluginInfo
 //import grails.util.Metadata
 //import org.mortbay.jetty.webapp.*
 //import org.mortbay.jetty.handler.*
@@ -136,9 +136,16 @@ eventCreateWarStart = { name, stagingDir ->
 
 copyAppConfigFiles = { destinationDir ->
 
-	String sourceDir = "${basedir}/plugins/aml-commons-appconfig-0.2/web-app/js/applicationConfiguration"
+	
+	File pluginDir = new File("${basedir}/plugins/").eachDir{
+		if(it =~ /aml-commons-appconfig/){
+			String appConfigPluginDir = it.getName()
+			String sourceDir = "${basedir}/plugins/${appConfigPluginDir}/web-app/js/applicationConfiguration"
+			new AntBuilder().copy(todir: destinationDir) {
+				fileset(dir: sourceDir)
+			}
+			return
+		}
+	}	
 
-	new AntBuilder().copy(todir: destinationDir) {
-		fileset(dir: sourceDir)
-	}
 }
