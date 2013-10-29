@@ -83,7 +83,8 @@
     </target>
 
     <target name="linux_grails">
-        <exec executable="grails" failonerror="true">
+    	<echo  message="grails home = '${GRAILS_HOME}'"></echo>
+        <exec executable="/opt/grails-2.2.4/bin/grails" failonerror="true">
             <arg value="${gpreargs}" />
             <arg value="${gscript}" />
             <arg value="${gargs}" />
