@@ -87,6 +87,7 @@
             <arg value="${gpreargs}" />
             <arg value="${gscript}" />
             <arg value="${gargs}" />
+        	<env key="GRAILS_HOME" value="${grails.home}"/>
         </exec>
     </target>
 
