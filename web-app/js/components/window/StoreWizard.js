@@ -101,7 +101,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
             "<div class='contentTitle'>Review</div>" +
             "<div class='contentText'>All users will see this Store icon and name. Review them; if correct, click Save.</div>" +
             "<div class='contentText userInput iconText'>Icon <input class='iconUrl'></input></div>" +
-            "<div class='contentText userInput'>Store Name <input class='storeName'></input></div>" +
+            "<div class='contentText userInput'>Store Name <input class='storeName' maxlength='256'></input></div>" +
             "<div class='controlButtons'>" +
             "<div class='back button'>Back</div>" +
             "<div class='save button'>Save</div>" +
