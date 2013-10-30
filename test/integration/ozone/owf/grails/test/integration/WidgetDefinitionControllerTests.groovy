@@ -42,7 +42,8 @@ class WidgetDefinitionControllerTests extends OWFGroovyTestCase {
         def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(widgetDefinition, 
         	Intent.build(action: "Plot", dataTypes: [intentDataType2, intentDataType1, intentDataType3]),
         	[intentDataType1, intentDataType3], false, true)
-        widgetDefinition.widgetDefinitionIntents = [widgetDefinitionIntent2, widgetDefinitionIntent1]
+        widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent2
+		widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1
 	}
 	
     def createWidgetDefinitionForTest(widgetName, imageUrlLarge, imageUrlSml, guid, widgetUrl, descriptorUrl, uname, widgetTypes = null) {
@@ -179,9 +180,14 @@ class WidgetDefinitionControllerTests extends OWFGroovyTestCase {
         def widgetDefinitionIntent6 = createWidgetDefinitionIntentForTest(widgetDef1, 
         	intent3, [intentDataType1], true, false)
 
-        widgetDef1.widgetDefinitionIntents = [widgetDefinitionIntent1, widgetDefinitionIntent2, widgetDefinitionIntent6]
-        widgetDef2.widgetDefinitionIntents = [widgetDefinitionIntent3, widgetDefinitionIntent4]
-        widgetDef3.widgetDefinitionIntents = [widgetDefinitionIntent5]
+        widgetDef1.widgetDefinitionIntents << widgetDefinitionIntent1
+		widgetDef1.widgetDefinitionIntents << widgetDefinitionIntent2
+		widgetDef1.widgetDefinitionIntents << widgetDefinitionIntent6
+		
+        widgetDef2.widgetDefinitionIntents << widgetDefinitionIntent3
+		widgetDef2.widgetDefinitionIntents << widgetDefinitionIntent4
+		
+        widgetDef3.widgetDefinitionIntents << widgetDefinitionIntent5
 		
 		controller = new WidgetDefinitionController()
 		controller.widgetDefinitionService = widgetDefinitionService
@@ -215,8 +221,8 @@ class WidgetDefinitionControllerTests extends OWFGroovyTestCase {
         def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(widgetDef2, 
         	intent2, [intentDataType3, intentDataType1, intentDataType2], true, false)
 
-        widgetDef1.widgetDefinitionIntents = [widgetDefinitionIntent1]
-        widgetDef2.widgetDefinitionIntents = [widgetDefinitionIntent2]
+        widgetDef1.widgetDefinitionIntents << widgetDefinitionIntent1
+        widgetDef2.widgetDefinitionIntents << widgetDefinitionIntent2
 		
 		controller = new WidgetDefinitionController()
 		controller.widgetDefinitionService = widgetDefinitionService
@@ -263,9 +269,13 @@ class WidgetDefinitionControllerTests extends OWFGroovyTestCase {
         def widgetDefinitionIntent6 = createWidgetDefinitionIntentForTest(widgetDef4, 
         	intent2, [intentDataType1, intentDataType2, intentDataType3], true, false)
 
-        widgetDef1.widgetDefinitionIntents = [widgetDefinitionIntent1, widgetDefinitionIntent2]
-        widgetDef2.widgetDefinitionIntents = [widgetDefinitionIntent3, widgetDefinitionIntent4]
-        widgetDef3.widgetDefinitionIntents = [widgetDefinitionIntent5]
+        widgetDef1.widgetDefinitionIntents << widgetDefinitionIntent1
+		widgetDef1.widgetDefinitionIntents << widgetDefinitionIntent2
+		
+        widgetDef2.widgetDefinitionIntents << widgetDefinitionIntent3
+		widgetDef2.widgetDefinitionIntents << widgetDefinitionIntent4
+		
+        widgetDef3.widgetDefinitionIntents << widgetDefinitionIntent5
 		
 		controller = new WidgetDefinitionController()
 		controller.widgetDefinitionService = widgetDefinitionService
@@ -301,8 +311,10 @@ class WidgetDefinitionControllerTests extends OWFGroovyTestCase {
         def widgetDefinitionIntent3 = createWidgetDefinitionIntentForTest(widgetDef2, 
         	intent2, [intentDataType1, intentDataType2], false, true)
 
-        widgetDef1.widgetDefinitionIntents = [widgetDefinitionIntent1, widgetDefinitionIntent2]
-        widgetDef2.widgetDefinitionIntents = [widgetDefinitionIntent3]
+        widgetDef1.widgetDefinitionIntents << widgetDefinitionIntent1
+		widgetDef1.widgetDefinitionIntents << widgetDefinitionIntent2
+		
+        widgetDef2.widgetDefinitionIntents << widgetDefinitionIntent3
 		
 		controller = new WidgetDefinitionController()
 		controller.widgetDefinitionService = widgetDefinitionService
@@ -334,8 +346,8 @@ class WidgetDefinitionControllerTests extends OWFGroovyTestCase {
         def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(widgetDef2, 
             intent2, [intentDataType1], false, true)
 
-        widgetDef1.widgetDefinitionIntents = [widgetDefinitionIntent1]
-        widgetDef2.widgetDefinitionIntents = [widgetDefinitionIntent2]
+        widgetDef1.widgetDefinitionIntents << widgetDefinitionIntent1
+        widgetDef2.widgetDefinitionIntents << widgetDefinitionIntent2
         
         controller = new WidgetDefinitionController()
         controller.widgetDefinitionService = widgetDefinitionService
@@ -367,8 +379,8 @@ class WidgetDefinitionControllerTests extends OWFGroovyTestCase {
         def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(widgetDef2, 
             intent2, [intentDataType1], false, true)
 
-        widgetDef1.widgetDefinitionIntents = [widgetDefinitionIntent1]
-        widgetDef2.widgetDefinitionIntents = [widgetDefinitionIntent2]
+        widgetDef1.widgetDefinitionIntents << widgetDefinitionIntent1
+        widgetDef2.widgetDefinitionIntents << widgetDefinitionIntent2
         
         controller = new WidgetDefinitionController()
         controller.widgetDefinitionService = widgetDefinitionService
@@ -399,8 +411,8 @@ class WidgetDefinitionControllerTests extends OWFGroovyTestCase {
         def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(widgetDef2, 
             intent1, [intentDataType1], false, true)
 
-        widgetDef1.widgetDefinitionIntents = [widgetDefinitionIntent1]
-        widgetDef2.widgetDefinitionIntents = [widgetDefinitionIntent2]
+        widgetDef1.widgetDefinitionIntents << widgetDefinitionIntent1
+        widgetDef2.widgetDefinitionIntents << widgetDefinitionIntent2
         
         controller = new WidgetDefinitionController()
         controller.widgetDefinitionService = widgetDefinitionService
@@ -430,8 +442,8 @@ class WidgetDefinitionControllerTests extends OWFGroovyTestCase {
         def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(widgetDef2, 
             intent1, [intentDataType1], false, true)
 
-        widgetDef1.widgetDefinitionIntents = [widgetDefinitionIntent1]
-        widgetDef2.widgetDefinitionIntents = [widgetDefinitionIntent2]
+        widgetDef1.widgetDefinitionIntents << widgetDefinitionIntent1
+        widgetDef2.widgetDefinitionIntents << widgetDefinitionIntent2
         
         controller = new WidgetDefinitionController()
         controller.widgetDefinitionService = widgetDefinitionService
@@ -471,9 +483,11 @@ class WidgetDefinitionControllerTests extends OWFGroovyTestCase {
         def widgetDefinitionIntent5 = createWidgetDefinitionIntentForTest(widgetDef3, 
             intent1, [intentDataType2], false, true)
 
-        widgetDef1.widgetDefinitionIntents = [widgetDefinitionIntent1]
-        widgetDef2.widgetDefinitionIntents = [widgetDefinitionIntent3, widgetDefinitionIntent4]
-        
+        widgetDef1.widgetDefinitionIntents << widgetDefinitionIntent1
+		
+        widgetDef2.widgetDefinitionIntents << widgetDefinitionIntent3
+		widgetDef2.widgetDefinitionIntents << widgetDefinitionIntent4
+		
         controller = new WidgetDefinitionController()
         controller.widgetDefinitionService = widgetDefinitionService
         controller.request.contentType = "text/json"
@@ -644,7 +658,8 @@ class WidgetDefinitionControllerTests extends OWFGroovyTestCase {
         def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(widgetDef1, 
         	intent2, [intentDataType3, intentDataType2], false, true)
 
-        widgetDef1.widgetDefinitionIntents = [widgetDefinitionIntent1, widgetDefinitionIntent2]
+        widgetDef1.widgetDefinitionIntents << widgetDefinitionIntent1
+		widgetDef1.widgetDefinitionIntents << widgetDefinitionIntent2
 		
         controller = new WidgetDefinitionController()
         controller.widgetDefinitionService = widgetDefinitionService

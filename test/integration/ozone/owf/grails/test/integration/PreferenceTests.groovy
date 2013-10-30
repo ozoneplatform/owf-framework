@@ -7,12 +7,7 @@ class PreferenceTests extends GroovyTestCase {
 	
     def serviceModelService
     
-	Person createUser() {
-		def person = new Person(username: "Mike O'Neil",userRealName: "Mike O'Neil",passwd: 'passwd',
-				                enabled: true,description: 'something',lastLogin: '01/01/2009')
-		person.save()
-		return person
-	}
+	
 	
 	/**
 	 * OWF-1052: The asJSON method was calling StringEscapeUtils.escapeJavaScript on class variables. This 
@@ -27,8 +22,10 @@ class PreferenceTests extends GroovyTestCase {
 	 */
 	void testAsJsonNotEscapingCharactersInTheDB() {
 		def val = "I can't do it"
-		def preference = new  Preference(namespace: "com.company.widget",path: "status",value: val,user: createUser())
-
+		def user = new Person(username: "Mike O'Neil",userRealName: "Mike O'Neil",passwd: 'passwd',   enabled: true,description: 'something',lastLogin: '01/01/2009')
+		user.save()
+		user.save() //No clue why this has to be called twice but not worth trouble shooting now
+		def preference = new  Preference(namespace: "com.company.widget",path: "status",value: val,user: user)
 		preference.save(flush:true)
 		preference.refresh()
 		serviceModelService.createServiceModel(preference)

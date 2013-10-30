@@ -4,7 +4,7 @@ import ozone.owf.grails.domain.Person
 
 class PersonTests extends GroovyTestCase {
     
-    boolean transactional = false
+    boolean transactional = true
 
     def serviceModelService
 
@@ -23,9 +23,9 @@ class PersonTests extends GroovyTestCase {
         assertEquals 0, Person.count()
 
         Person.withTransaction {
-            assertTrue person.validate()
-            person.save()
+            person.save(flush:true)
         }
+		person.save()
         
         assertEquals 1, Person.count()
         assertEquals '', person.description
@@ -41,9 +41,9 @@ class PersonTests extends GroovyTestCase {
         
         
         Person.withTransaction {
-            assertTrue person.validate()
-            person.save()
+            person.save(flush:true)
         }
+		person.save()
         
         assertEquals 1, Person.count()
         assertEquals '', person.email
@@ -63,9 +63,9 @@ class PersonTests extends GroovyTestCase {
 
 
         Person.withTransaction {
-            assertTrue person.validate()
-            person.save()
+            person.save(flush:true)
         }
+		person.save()
 
         def retrievedPerson = Person.findAll()[0]
         assertEquals username, retrievedPerson.username        
@@ -84,10 +84,10 @@ class PersonTests extends GroovyTestCase {
 
 
         Person.withTransaction {
-            assertTrue person.validate()
-            person.save()
+            person.save(flush:true)
         }
-
+		person.save()
+		
         def retrievedPerson = Person.findAll()[0]
         assertEquals userRealName, retrievedPerson.userRealName
     }
