@@ -181,7 +181,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             url: marketplaceUrl + "/relationship/getOWFRequiredItems",
             method: "POST",
             content: {
-                id: widgetId
+                id: widgetId,
+                accessAlertShown: true  //avoid the access alert in older marketplaces
             },
             onSuccess: function(jsonData) {
                 var widgetListJson = [], data = jsonData.data;
