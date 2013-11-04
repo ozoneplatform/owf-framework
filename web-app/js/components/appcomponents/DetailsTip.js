@@ -28,10 +28,10 @@
                     '<a class="x-tool">' +
                         '<img src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="x-tool-close">' +
                     '</a>' +
-                    '<h3 class="widget-name"><%= name %></h3>'+
-                '</div>' + 
+                    '<h3 class="widget-name"><%- name %></h3>'+
+                '</div>' +
                 '<% if (typeof description === "string") { %>' +
-                    '<p class="widget-description" ><%= description %></p>' +
+                    '<p class="widget-description" ><%- description %></p>' +
                 '<% } %>' +
                 '<div class="footer">' +
                     '<a href="#" class="widget-remove"><span>Remove</span></a>' +
