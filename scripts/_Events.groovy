@@ -83,7 +83,7 @@ eventRunAppStart = {
 
 eventCreateWarStart = { name, stagingDir ->
 
-  def applicationConfigUiDir = "${stagingDir}/js/applicationConfiguration"
+  def applicationConfigUiDir = "${stagingDir}/js/components/admin/applicationConfiguration"
   copyAppConfigFiles applicationConfigUiDir
 
 
