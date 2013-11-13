@@ -334,7 +334,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
             me._syncApp(stack, function () {
                 me.appsWindow.notify(
                     'Share App',
-                    '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is successfully shared with other users!'
+                    '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> App can be shared with other users.'
                 );
             }, function (errorMsg) {
                 // Display error message
