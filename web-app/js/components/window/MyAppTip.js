@@ -70,6 +70,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
     getToolTip: function () {
         var me = this,
             banner = me.dashboardContainer.getBanner(),
+            hasMarketplace = banner.hasMarketplaceButton,
             icn = me.clickedStack.imageUrl && me.clickedStack.imageUrl != ' ' ? 
                 '<img class=\'tipIcon\'src=\'' + encodeURI(decodeURI(me.clickedStack.imageUrl)) + '\' />' : 
                 '<div class=\'tipIcon noIconGivenStack\'></div>',
@@ -86,26 +87,30 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         
         // append buttons
-        str += '<ul class=\'buttonBar\'>'+
-                    '<li class=\'addButton actionButton '+liAdjustCls+'\'>'+
-                        '<span class=\'createPageImg  \'></span>'+
-                        '<p class=\'actionText\'>Add Page</p>'+
+        str += '<ul class="buttonBar">'+
+                    '<li class="addButton actionButton '+liAdjustCls+'">'+
+                        '<span class="createPageImg"></span>'+
+                        '<p class="actionText">Add Page</p>'+
                     '</li>'+
-                    '<li class=\'pushButton actionButton\' data-qtip="">'+
-                        '<span class=\'pushImg\'></span>'+
-                        '<p class=\'actionText\'>Push to Store</p>'+
+                    '<li class="pushButton actionButton ' + (!hasMarketplace ? "hide" : "") + '" data-qtip="">'+
+                        '<span class="pushImg"></span>'+
+                        '<p class="actionText">Push to Store</p>'+
                     '</li>'+
-                    '<li class=\'restoreButton actionButton '+liAdjustCls+'\'>'+
-                        '<span class=\'restoreImg  \'></span>'+
-                        '<p class=\'actionText\'>Restore</p>'+
+                    '<li class="shareButton actionButton ' + (hasMarketplace ? "hide" : "") + '" data-qtip="">'+
+                        '<span class="pushImg"></span>'+
+                        '<p class="actionText">Share</p>'+
                     '</li>'+
-                    '<li class=\'editButton actionButton '+liAdjustCls+'\'>'+
-                        '<span class=\'editImg \'></span>'+
-                        '<p class=\'actionText\'>Edit</p>'+
+                    '<li class="restoreButton actionButton '+liAdjustCls+'">'+
+                        '<span class="restoreImg"></span>'+
+                        '<p class="actionText">Restore</p>'+
                     '</li>'+
-                    '<li class=\'deleteButton actionButton '+liAdjustCls+'\'>'+
-                        '<span class=\'deleteImg \'></span>'+
-                        '<p class=\'actionText\'>Delete</p>'+
+                    '<li class="editButton actionButton '+liAdjustCls+'">'+
+                        '<span class="editImg"></span>'+
+                        '<p class="actionText">Edit</p>'+
+                    '</li>'+
+                    '<li class="deleteButton actionButton '+liAdjustCls+'">'+
+                        '<span class="deleteImg"></span>'+
+                        '<p class="actionText">Delete</p>'+
                     '</li>'+
                '</ul>' +
               '</div>';
@@ -117,14 +122,17 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var me = this;
         var banner = me.dashboardContainer.getBanner();
 
-        if (!banner.hasMarketplaceButton)
-            me.hideButton('.pushButton');
+        // if (!banner.hasMarketplaceButton)
+        //     me.hideButton('.pushButton');
+        // else 
+        //     me.hideButton('.shareButton');
         
         if(me.clickedStack.isStack) {
 
             $('.addButton').on('click', $.proxy(me.addPageToApp, me));
             $('.restoreButton').on('click', $.proxy(me.handleStackRestore, me));
             $('.pushButton').on('click', $.proxy(me.handlePushToStore, me));
+            $('.shareButton').on('click', $.proxy(me.handleShareButton, me));
             $('.editButton').on('click', $.proxy(me.handleStackEdit, me));
             $('.deleteButton').on('click', $.proxy(me.handleStackDelete, me));
                 /*function(evt) {
@@ -260,6 +268,17 @@ Ext.define('Ozone.components.window.MyAppTip', {
         this.callParent(arguments);
     },
 
+    _syncApp: function (stack, onSuccess, onFailure) {
+        Ozone.util.Transport.send({
+            url : Ozone.util.contextPath()  + '/stack/share?id=' + stack.id,
+            method : "POST",
+            onSuccess: onSuccess,
+            onFailure: onFailure,
+            autoSendVersion : false,
+            handleAs: 'text'
+        });
+    },
+
     handlePushToStore: function (evt) {
         evt.stopPropagation();
         var me = this,
@@ -282,40 +301,53 @@ Ext.define('Ozone.components.window.MyAppTip', {
             modal: true,
             fn: function(btn) {
                 if (btn == 'ok') {
-
                     mpLauncher = banner.getMarketplaceLauncher();
 
                     // Get the stack json
-
-                    Ozone.util.Transport.send({
-
-                        url : Ozone.util.contextPath()  + '/stack/share?id=' + stack.id,
-                        method : "POST",
-                        onSuccess: function (json){
-                            me.sendRequest(json, mpLauncher, banner.marketplaceWidget, stack);
-                        },
-
-                        onFailure: function (errorMsg){
-                            // Display error message
-                            Ext.Msg.show({
-                                title: 'Error',
-                                msg: errorMsg,
-                                buttons: Ext.Msg.OK,
-                                closable: false,
-                                modal: true
-                            });
-                        },
-                        autoSendVersion : false,
-                        handleAs: 'text'
-
+                    me._syncApp(stack, function (json) {
+                        me.sendRequest(json, mpLauncher, banner.marketplaceWidget, stack);
+                    }, function (errorMsg) {
+                        // Display error message
+                        Ext.Msg.show({
+                            title: 'Error',
+                            msg: errorMsg,
+                            buttons: Ext.Msg.OK,
+                            closable: false,
+                            modal: true
+                        });
                     });
-
                 }
             }
         });
 
         me.close();
         me.appsWindow.close();
+    },
+
+    handleShareButton: function (evt) {
+        evt.stopPropagation();
+        var me = this,
+            stack = me.clickedStack,
+            msg = 'You are allowing this App to be shared with other users. To continue, click OK. Otherwise, click Cancel.';
+
+        me.warn('ok_cancel', function (btn) {
+            me._syncApp(stack, function () {
+                me.appsWindow.notify(
+                    'Share App',
+                    '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is successfully shared with other users!'
+                );
+            }, function (errorMsg) {
+                // Display error message
+                Ext.Msg.show({
+                    title: 'Error',
+                    msg: errorMsg,
+                    buttons: Ext.Msg.OK,
+                    closable: false,
+                    modal: true
+                });
+            });
+        }, msg);
+        return;
     },
 
     isAttributeSet: function(attr) {
