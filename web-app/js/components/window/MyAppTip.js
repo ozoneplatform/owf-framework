@@ -10,21 +10,21 @@ Ext.define('Ozone.components.window.MyAppTip', {
     target: null,
 
     listeners: {
-    	'close': {
-    		fn: function(){
-    			this.destroy()
-    		}
-    	},
-    	'afterRender': {
-    		fn: function() {
+        'close': {
+            fn: function(){
+                this.destroy()
+            }
+        },
+        'afterRender': {
+            fn: function() {
                 this.hideButtons();
                 this.bindHandlers();
                 $('.name').dotdotdot({
                     ellipsis: '…'
                 });
                 $('.name:contains(…)').tooltip();
-    		}
-    	}
+            }
+        }
     },
 
     dashboardContainer: null,
@@ -77,12 +77,12 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 '<h3 class=\'name\' title="'+ Ext.htmlEncode(me.clickedStack.name) +'">' + Ext.htmlEncode(me.clickedStack.name) + '</h3>';
 
         me.clickedStack.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedStack.description) +'</p></div>'):
-        										 (str += '<p class=\'tip-description\'>  </p>');
+                                                 (str += '<p class=\'tip-description\'>  </p>');
         
         var liAdjustCls = 'liStoreAdjust';
-        	
+            
         if (banner.hasMarketplaceButton)
-        	liAdjustCls = '';
+            liAdjustCls = '';
 
         
         // append buttons
@@ -92,8 +92,8 @@ Ext.define('Ozone.components.window.MyAppTip', {
                         '<p class=\'actionText\'>Add Page</p>'+
                     '</li>'+
                     '<li class=\'pushButton actionButton\' data-qtip="">'+
-                    	'<span class=\'pushImg\'></span>'+
-                    	'<p class=\'actionText\'>Push to Store</p>'+
+                        '<span class=\'pushImg\'></span>'+
+                        '<p class=\'actionText\'>Push to Store</p>'+
                     '</li>'+
                     '<li class=\'restoreButton actionButton '+liAdjustCls+'\'>'+
                         '<span class=\'restoreImg  \'></span>'+
@@ -115,10 +115,10 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
     bindHandlers: function() {
         var me = this;
-    	var banner = me.dashboardContainer.getBanner();
+        var banner = me.dashboardContainer.getBanner();
 
         if (!banner.hasMarketplaceButton)
-        	me.hideButton('.pushButton');
+            me.hideButton('.pushButton');
         
         if(me.clickedStack.isStack) {
 
@@ -135,17 +135,17 @@ Ext.define('Ozone.components.window.MyAppTip', {
         }
         
         $('#my-apps-window').click(function() {
-        	  //Hide the tip if outside click 
-        	me.destroy()
+              //Hide the tip if outside click 
+            me.destroy()
         });
     },
     
     hideButton: function(className) {
-    	$(className).hide();
+        $(className).hide();
     },
     
     showButton: function(className) {
-    	$(className).show();
+        $(className).show();
     },
 
     addPageToApp: function (evt) {
