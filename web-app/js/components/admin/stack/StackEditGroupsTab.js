@@ -61,11 +61,15 @@ Ext.define('Ozone.components.admin.stack.StackEditGroupsTab', {
 
                     if (cmp && cmp.ownerCt && cmp.ownerCt.record && cmp.ownerCt.record.data) {
                         var stack = cmp.ownerCt.record.data;
-                        if (!stack.approved && self.hasMarketplace) {
+                        if (!stack.approved) {
 
                             // disable the add button
                             var button = Ext.getCmp('adminGroupsTabAddButton'),
-                                tip;
+                                tip, msg;
+
+                            msg = self.hasMarketplace ? 
+                                    Ozone.layout.tooltipString.unapprovedStackEditMessage
+                                    : Ozone.layout.tooltipString.unapprovedStackWithoutMarkpetplaceEditMessage;
 
                             if (button) {
                                 button.setDisabled(true);
@@ -74,11 +78,11 @@ Ext.define('Ozone.components.admin.stack.StackEditGroupsTab', {
                                 if (Ext.isGecko) {
                                     tip = Ext.create('Ext.tip.ToolTip', {
                                         target: button.id,
-                                        html: Ozone.layout.tooltipString.unapprovedStackEditMessage
+                                        html: msg
                                     });
                                 }
                                 else {
-                                    button.setTooltip(Ozone.layout.tooltipString.unapprovedStackEditMessage);
+                                    button.setTooltip(msg);
                                 }
                             }
                         }

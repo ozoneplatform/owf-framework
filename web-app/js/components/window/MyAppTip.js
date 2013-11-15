@@ -80,7 +80,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
         me.clickedStack.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedStack.description) +'</p></div>'):
                                                  (str += '<p class=\'tip-description\'>  </p>');
         
-        var liAdjustCls = 'liStoreAdjust';
+        var liAdjustCls = ' liStoreAdjust ';
             
         if (banner.hasMarketplaceButton)
             liAdjustCls = '';
@@ -92,11 +92,11 @@ Ext.define('Ozone.components.window.MyAppTip', {
                         '<span class="createPageImg"></span>'+
                         '<p class="actionText">Add Page</p>'+
                     '</li>'+
-                    '<li class="pushButton actionButton ' + (!hasMarketplace ? "hide" : "") + '" data-qtip="">'+
+                    '<li class="pushButton actionButton ' + (!hasMarketplace ? "hide" : "") +liAdjustCls+ '" data-qtip="">'+
                         '<span class="pushImg"></span>'+
                         '<p class="actionText">Push to Store</p>'+
                     '</li>'+
-                    '<li class="shareButton actionButton ' + (hasMarketplace ? "hide" : "") + '" data-qtip="">'+
+                    '<li class="shareButton actionButton ' + (hasMarketplace ? "hide" : "") +liAdjustCls+ '" data-qtip="">'+
                         '<span class="pushImg"></span>'+
                         '<p class="actionText">Share</p>'+
                     '</li>'+
