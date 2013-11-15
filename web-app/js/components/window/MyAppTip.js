@@ -55,15 +55,10 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         if(me.clickedStackIsFullscreen()) {
             // Fullscreen stacks (which are created by the store for web apps) can only be deleted
-            me.hideButton('.addButton');
-            me.hideButton('.editButton');
-            me.hideButton('.pushButton');
-            me.hideButton('.restoreButton')
+            me.hideButton('.addButton, .editButton, .pushButton, .restoreButton, .shareButton');
         }
         else if(notOwner) {
-            me.hideButton('.addButton');
-            me.hideButton('.editButton');
-            me.hideButton('.pushButton');
+            me.hideButton('.addButton, .editButton, .pushButton, .shareButton');
         }
     },
 
@@ -120,12 +115,6 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
     bindHandlers: function() {
         var me = this;
-        var banner = me.dashboardContainer.getBanner();
-
-        // if (!banner.hasMarketplaceButton)
-        //     me.hideButton('.pushButton');
-        // else 
-        //     me.hideButton('.shareButton');
         
         if(me.clickedStack.isStack) {
 
