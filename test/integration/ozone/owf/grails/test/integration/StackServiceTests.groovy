@@ -213,6 +213,18 @@ class StackServiceTests extends GroovyTestCase {
         //Check user was removed from stack both ways
         assertEquals 0, stackService.list(["id": "${stackIds[0]}"]).data.totalDashboards[0]
     }
+
+    void testShare() {
+        def stackId = stackIds[0]
+        Stack stack = Stack.get(stackId)
+
+        // Assign owner to stack to enable sharing
+        stack.owner = Person.get(personId)
+
+        stackService.share(["id": stackId])
+        
+        assertTrue stack.approved
+    }
     
     void testRestore() {
         
