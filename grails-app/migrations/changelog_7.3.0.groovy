@@ -1,4 +1,25 @@
 databaseChangeLog = {
+    changeSet(author: 'owf', id: "7.3.0-0", context: "create, 7.3.0", dbms: 'postgresql') {
+        comment('Fixing Postgres id columns to have id generators')
+
+        ['dashboard', 'domain_mapping', 'owf_group',
+        'person', 'person_widget_definition', 'preference', 'requestmap', 'role',
+        'tag_links', 'tags', 'widget_definition'].each { table ->
+            sql("""
+                -- ensure that the sequence has been used, otherwise the currval calls
+                -- below will fail
+                select nextval('hibernate_sequence');
+
+                -- Updating hibernate_sequence id generator if necessary
+                SELECT setval('hibernate_sequence',
+                    (SELECT GREATEST(MAX(id) + 1, currval('hibernate_sequence')) FROM ${table}),
+                    false);
+
+                ALTER TABLE ${table} ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
+            """)
+        }
+    }
+
     changeSet(author: "owf", id: "7.3.0-1", context: "create, upgrade, 7.3.0") {
         comment("Add type to dashboard")
         addColumn(tableName: "dashboard") {
