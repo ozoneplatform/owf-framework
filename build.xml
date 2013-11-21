@@ -415,9 +415,6 @@
         <antcall target="stage-tomcat">
             <param name="bundle.dir" value="${staging.dir}" />
         </antcall>
-        <antcall target="stage-cas">
-            <param name="bundle.dir" value="${staging.dir}" />
-        </antcall>
         <antcall target="stage-owf" />
         <antcall target="post-bundle-cleanup" />
 
@@ -473,8 +470,6 @@
     </target>
 
     <target  name="post-bundle-cleanup" >
-        <delete file="${staging.dir}/cas-server-extras-${cas.server.rev}.zip" />
-    	<delete file="${staging.dir}/cas-server-owf-${cas.server.rev}.war" />
         <delete file="${staging.dir}/owf-security-extras-${owf.security.rev}.zip" />
         <delete file="${staging.dir}/owf-security-project-${owf.security.rev}.zip" />
     	<delete file="${staging.dir}/owf-security-${owf.security.rev}.jar" />
