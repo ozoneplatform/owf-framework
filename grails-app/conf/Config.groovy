@@ -101,7 +101,7 @@ uiperformance.exclusions = [
         "**/js-doh/**",
         "**/js-lib/**",
         "**/js-min/**",
-		"**/api/**"
+		"**/rest/**"
 
 ]
 
