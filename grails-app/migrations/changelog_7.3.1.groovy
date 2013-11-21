@@ -1,12 +1,33 @@
 databaseChangeLog = {
-    changeSet(author: "owf", id: "7.3.0-1", context: "create, upgrade, 7.3.0") {
+    changeSet(author: 'owf', id: "7.3.1-0", context: "create, 7.3.1", dbms: 'postgresql') {
+        comment('Fixing Postgres id columns to have id generators')
+
+        ['dashboard', 'domain_mapping', 'owf_group',
+        'person', 'person_widget_definition', 'preference', 'requestmap', 'role',
+        'tag_links', 'tags', 'widget_definition'].each { table ->
+            sql("""
+                -- ensure that the sequence has been used, otherwise the currval calls
+                -- below will fail
+                select nextval('hibernate_sequence');
+
+                -- Updating hibernate_sequence id generator if necessary
+                SELECT setval('hibernate_sequence',
+                    (SELECT GREATEST(MAX(id) + 1, currval('hibernate_sequence')) FROM ${table}),
+                    false);
+
+                ALTER TABLE ${table} ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
+            """)
+        }
+    }
+
+    changeSet(author: "owf", id: "7.3.1-1", context: "create, upgrade, 7.3.1") {
         comment("Add type to dashboard")
         addColumn(tableName: "dashboard") {
             column(name: "type", type: "varchar(255)")
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-2", context: "upgrade, 7.3.0, sampleData, 7.3.0-sampleData") {
+    changeSet(author: "owf", id: "7.3.1-2", context: "upgrade, 7.3.1, sampleData, 7.3.1-sampleData") {
         comment("Update existing dashboards to set type to marketplace if name is Apps Mall")
         update(tableName: "dashboard") {
             column(name: "type", value: 'marketplace')
@@ -15,7 +36,7 @@ databaseChangeLog = {
     }
 
 
-	changeSet(author: "owf", id: "7.3.0-3", context: "create, upgrade, 7.3.0") {
+	changeSet(author: "owf", id: "7.3.1-3", context: "create, upgrade, 7.3.1") {
 		createTable(tableName: "application_configuration") {
 
 			column(autoIncrement: "true", name: "id", type: "java.sql.Types.BIGINT") {
@@ -73,7 +94,7 @@ databaseChangeLog = {
 		}
 	}
 
-	changeSet(author: "owf", id: "7.3.0-4", context: "create, upgrade, 7.3.0") {
+	changeSet(author: "owf", id: "7.3.1-4", context: "create, upgrade, 7.3.1") {
 		createIndex(indexName: "FKFC9C0477666C6D2", tableName: "application_configuration") {
 			column(name: "created_by_id")
 		}
@@ -91,14 +112,14 @@ databaseChangeLog = {
 		addForeignKeyConstraint(baseColumnNames: "edited_by_id", baseTableName: "application_configuration", constraintName: "FKFC9C047E31CB353", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
 	}
 
-    changeSet(author: "owf", id: "7.3.0-5", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.1-5", context: "create, upgrade, 7.3.1") {
         comment("Add icon image url to dashboard")
         addColumn(tableName: "dashboard") {
             column(name: "icon_image_url", type: "varchar(2083)")
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-6", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.1-6", context: "create, upgrade, 7.3.1") {
         comment("Add published_to_store and marked_for_deletion columns to dashboard table")
         addColumn(tableName: "dashboard") {
             column(name: "published_to_store", type: "java.sql.Types.BOOLEAN") {
@@ -110,7 +131,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-7", context: "create, upgrade, 7.3.0", dbms: "mssql") {
+    changeSet(author: "owf", id: "7.3.1-7", context: "create, upgrade, 7.3.1", dbms: "mssql") {
         comment("Create widget_def_intent table")
 
         // Must be sql because owner_id needs to be numeric(19,0) exactly in mssql to match Person.id type.
@@ -126,7 +147,7 @@ databaseChangeLog = {
         addForeignKeyConstraint(baseColumnNames: "owner_id", baseTableName: "stack", constraintName: "FK68AC2888656347D", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
     }
 
-    changeSet(author: "owf", id: "7.3.0-7", context: "create, upgrade, 7.3.0", dbms: "mysql,oracle,postgresql,hsqldb") {
+    changeSet(author: "owf", id: "7.3.1-7", context: "create, upgrade, 7.3.1", dbms: "mysql,oracle,postgresql,hsqldb") {
 		addColumn(tableName: "stack") {
 			column(name: "owner_id", type: "bigint")
 		}
@@ -138,7 +159,7 @@ databaseChangeLog = {
 		addForeignKeyConstraint(baseColumnNames: "owner_id", baseTableName: "stack", constraintName: "FK68AC2888656347D", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
 	}
 
-    changeSet(author: "owf", id: "7.3.0-8", context: "upgrade, 7.3.0, sampleData, 7.3.0-sampleData") {
+    changeSet(author: "owf", id: "7.3.1-8", context: "upgrade, 7.3.1, sampleData, 7.3.1-sampleData") {
 
         comment("Change the name of Stack and Widget admin widgets to be Apps and App Component")
 
@@ -163,7 +184,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-9", context: "upgrade, 7.3.0, sampleData, 7.3.0-sampleData") {
+    changeSet(author: "owf", id: "7.3.1-9", context: "upgrade, 7.3.1, sampleData, 7.3.1-sampleData") {
 
         comment("Removing all references to Group Dashboards and renaming the Stack and Stack Editor widgets in the Admin dashboard")
 
@@ -204,17 +225,17 @@ databaseChangeLog = {
         "create or replace trigger ${table}_insert before insert on ${table} ${commonTriggerClause}"
     }.join('\n')
 
-    changeSet(author: "owf", id: "app_config-7.3.0-10", dbms: "oracle", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "app_config-7.3.1-10", dbms: "oracle", context: "create, upgrade, 7.3.1") {
         comment("Trigger for Oracle database to handle primary key generation based on a sequence during insert statements")
         sql(endDelimiter: "", splitStatements: false, sql: triggerSQL)
     }
 
-    changeSet(author: "owf", id: "app_config-7.3.0-10.1", dbms: "oracle", context: "sampleData, 7.3.0-sampleData") {
+    changeSet(author: "owf", id: "app_config-7.3.1-10.1", dbms: "oracle", context: "sampleData, 7.3.1-sampleData") {
         comment("Trigger for Oracle database to handle primary key generation based on a sequence during sample data inserts")
         sql(endDelimiter: "", splitStatements: false, sql: triggerSQL)
     }
 
-    changeSet(author: "owf", id: "app_config-7.3.0-10.2", dbms: "oracle", context: "create, upgrate, 7.3.0") {
+    changeSet(author: "owf", id: "app_config-7.3.1-10.2", dbms: "oracle", context: "create, upgrate, 7.3.1") {
         comment("Trigger for Oracle database to handle primary key generation based on a sequence during sample data inserts")
         sql(endDelimiter: "", splitStatements: false, sql:"""
             create or replace trigger stack_groups_insert before insert on stack_groups
@@ -228,7 +249,7 @@ databaseChangeLog = {
         )
     }
 
-    changeSet(author: "owf", id: "7.3.0-11", context: "sampleData, 7.3.0-sampleData") {
+    changeSet(author: "owf", id: "7.3.1-11", context: "sampleData, 7.3.1-sampleData") {
 
         comment("Migrating the legacy sample dashboards to the new format")
 
@@ -316,7 +337,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-12", context: "sampleData, 7.3.0-sampleData") {
+    changeSet(author: "owf", id: "7.3.1-12", context: "sampleData, 7.3.1-sampleData") {
 
         comment("Adding in the domain mapping changes that need to be made for the group dashboards in the sample data")
 
@@ -341,7 +362,7 @@ databaseChangeLog = {
     }
 
     // OP-2157: Sample data still references "dashboards" and "stacks"
-    changeSet(author: "owf", id: "7.3.0-13", context: "sampleData, 7.3.0-sampleData") {
+    changeSet(author: "owf", id: "7.3.1-13", context: "sampleData, 7.3.1-sampleData") {
 
         comment("Updating verbiage in the sample data; changing the word widget to app component; changing the word stack to app; changing the word dashboard to page")
 
@@ -445,7 +466,7 @@ databaseChangeLog = {
 
     }
 
-    changeSet(author: "owf", id: "7.3.0-14", context: "sampleData, 7.3.0-sampleData") {
+    changeSet(author: "owf", id: "7.3.1-14", context: "sampleData, 7.3.1-sampleData") {
 
         comment("Updating the unique widget count for sample and admin apps that we ship with.")
 
@@ -463,7 +484,7 @@ databaseChangeLog = {
         // }
     }
 
-    changeSet(author: "owf", id: "7.3.0-15", context: "sampleData, 7.3.0-sampleData") {
+    changeSet(author: "owf", id: "7.3.1-15", context: "sampleData, 7.3.1-sampleData") {
 
         comment("Associate sample app with owf users group and administration app with owf admin group. Disassociate the corresponding group dashboards from their groups.")
 
@@ -491,7 +512,7 @@ databaseChangeLog = {
     }
 
     //OP-2330: Type of App Component still listed as Marketplace
-    changeSet(author: "owf", id: "7.3.0-16", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.1-16", context: "create, upgrade, 7.3.1") {
 
         comment("Adding a column named display_name to the table widget_type so that the UI name is decoupled from the actual back-end name; The display_name will be the same as the name, except for marketplace, which will be displayed as store")
 
@@ -519,13 +540,13 @@ databaseChangeLog = {
 
     }
 
-    changeSet(author: "owf", id: "7.3.0-17", context: "create, 7.3.0, upgrade") {
+    changeSet(author: "owf", id: "7.3.1-17", context: "create, 7.3.1, upgrade") {
         addDefaultValue(tableName: "application_configuration", columnName: "version", defaultValueNumeric: 0)
     }
 
-    include file: "app_config_7.3.0.groovy"
+    include file: "app_config_7.3.1.groovy"
 
-    changeSet(author: "owf", id: "7.3.0-18", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.1-18", context: "create, upgrade, 7.3.1") {
         comment("Add isApproved to stack")
         addColumn(tableName: "stack") {
             column(name: "approved", type: "java.sql.Types.BOOLEAN") {
@@ -534,7 +555,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-19", context: "sampleData, 7.3.0-sampleData") {
+    changeSet(author: "owf", id: "7.3.1-19", context: "sampleData, 7.3.1-sampleData") {
         comment("Add isApproved to stack")
         update(tableName: "stack") {
             column(name: "approved", valueBoolean: true)
@@ -543,7 +564,7 @@ databaseChangeLog = {
     }
 
     // Create an admin group at creation time.  Upgrades are expected to have this group already.
-    changeSet(author: "owf", id: "7.3.0-20", context: "create") {
+    changeSet(author: "owf", id: "7.3.1-20", context: "create") {
         comment(text="Create an OWF Admin group.")
         //insert admin group
         insert(tableName: "owf_group") {
@@ -558,7 +579,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-21", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.1-21", context: "create, upgrade, 7.3.1") {
         comment(text="Create Administrator's App and its default group.")
 
         insert(tableName: "stack") {
@@ -588,7 +609,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-22", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.1-22", context: "create, upgrade, 7.3.1") {
         comment(text="Add Administration App to the OWF Administrators group.")
 
         insert(tableName: "stack_groups") {
@@ -598,14 +619,14 @@ databaseChangeLog = {
 
     }
 
-   changeSet(author: "owf", id: "7.3.0-23", context: "create", dbms:"mssql") {
+   changeSet(author: "owf", id: "7.3.1-23", context: "create", dbms:"mssql") {
         comment(text="allow identity inserts")
       sql ( text = """
         SET IDENTITY_INSERT [dbo].[widget_definition] ON
       """)
     }
 
-    changeSet(author: "owf", id: "7.3.0-24", context: "create") {
+    changeSet(author: "owf", id: "7.3.1-24", context: "create") {
         comment(text="Add new admin components that include universal names.  These will be the primary admin components moving forward.")
 
         // Insert the app component admin components.
@@ -802,7 +823,7 @@ databaseChangeLog = {
             """ )
     }
 
-    changeSet(author: "owf", id: "7.3.0-25", context: "create", dbms:"mssql") {
+    changeSet(author: "owf", id: "7.3.1-25", context: "create", dbms:"mssql") {
         comment(text="allow identity inserts")
         sql ( text = """
         SET IDENTITY_INSERT [dbo].[widget_definition] OFF
@@ -810,7 +831,7 @@ databaseChangeLog = {
     }
 
     // On upgrades, allow the
-    changeSet(author: "owf", id: "7.3.0-26", context: "upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.1-26", context: "upgrade, 7.3.1") {
         comment(text="Add new admin components that include universal names.  These will be the primary admin components moving forward.")
 
         // Insert the app component admin components.
@@ -997,7 +1018,7 @@ databaseChangeLog = {
             """ )
     }
 
-    changeSet(author: "owf", id: "7.3.0-27", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.1-27", context: "create, upgrade, 7.3.1") {
         comment(text="Add the pages for the administrator's app.")
         insert(tableName: "dashboard") {
             // column(name: "id", valueNumeric: "322")
@@ -1085,7 +1106,7 @@ databaseChangeLog = {
 
     }
 
-    changeSet(author: "owf", id: "7.3.0-28", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.1-28", context: "create, upgrade, 7.3.1") {
         comment(text="Add the associations for the stack's default group to the app pages..")
 
         insert(tableName: "domain_mapping") {
@@ -1122,7 +1143,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-29", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.1-29", context: "create, upgrade, 7.3.1") {
         comment(text="Add the associations for the stack's default group to the admin components.")
         insert(tableName: "domain_mapping") {
             column(name: "version", valueNumeric: "0")
@@ -1198,7 +1219,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-30", context: "sampleData, 7.3.0-sampleData") {
+    changeSet(author: "owf", id: "7.3.1-30", context: "sampleData, 7.3.1-sampleData") {
 
         comment("Remove the old admin dashboard.")
 
@@ -1210,7 +1231,7 @@ databaseChangeLog = {
 
     String adminWidgetUrlList = "'admin/UserManagement.gsp', 'admin/UserEdit.gsp', 'admin/WidgetManagement.gsp', 'admin/WidgetEdit.gsp', 'admin/GroupManagement.gsp', 'admin/GroupEdit.gsp', 'admin/DashboardEdit.gsp', 'admin/StackManagement.gsp', 'admin/StackEdit.gsp', 'admin/Configuration.gsp'"
 
-    changeSet(author: "owf", id: "7.3.0-31", context: "upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.1-31", context: "upgrade, 7.3.1") {
 
         comment("Remove the old admin widgets.")
 
@@ -1235,12 +1256,12 @@ databaseChangeLog = {
         "drop trigger ${table}_insert;\n/"
     }.join('\n')
 
-    changeSet(author: "owf", id: "app_config-7.3.0-32", dbms: "oracle", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "app_config-7.3.1-32", dbms: "oracle", context: "create, upgrade, 7.3.1") {
         comment("Drop the insert triggers")
         sql(endDelimiter: "", splitStatements: false, sql: deleteTriggerSQL)
     }
 
-    changeSet(author: "owf", id: "app_config-7.3.0-34", dbms: "oracle", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "app_config-7.3.1-34", dbms: "oracle", context: "create, upgrade, 7.3.1") {
         comment("Drop the trigger")
         sql(endDelimiter: "", splitStatements: false, sql: """
             drop trigger stack_groups_insert;
@@ -1248,7 +1269,7 @@ databaseChangeLog = {
     """)
     }
 
-    changeSet(author: "owf", id: "app_config-7.3.0-33", dbms: "oracle", context: "sampleData, 7.3.0-sampleData") {
+    changeSet(author: "owf", id: "app_config-7.3.1-33", dbms: "oracle", context: "sampleData, 7.3.1-sampleData") {
         comment("Drop the sample data insert triggers")
         sql(endDelimiter: "", splitStatements: false, sql: deleteTriggerSQL)
     }
