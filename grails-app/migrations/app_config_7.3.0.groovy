@@ -14,7 +14,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "app_config-7.3.1-2", dbms: "oracle", context: "create, upgrade, 7.3.1") {
+    changeSet(author: "owf", id: "app_config-7.3.0-2", dbms: "oracle", context: "create, upgrade, 7.3.0") {
         comment("Trigger for Oracle database to handle primary key generation based on a sequence during 'application_configuration' table insert statements")
         sql(endDelimiter: "", splitStatements: false, sql: """
             create or replace trigger app_config_insert before insert on application_configuration
@@ -27,7 +27,7 @@ databaseChangeLog = {
         """)
     }
 
-    changeSet(author: "owf", id: "app_config-7.3.1-1", dbms:"hsqldb, oracle, postgresql, mssql, mysql", context: "create, upgrade, 7.3.1") {
+    changeSet(author: "owf", id: "app_config-7.3.0-1", dbms:"hsqldb, oracle, postgresql, mssql, mysql", context: "create, upgrade, 7.3.0") {
 
         [
             [code: "owf.enable.cef.logging", type: "Boolean", mutable: true, value: "true"],
@@ -76,7 +76,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "app_config-7.3.1-3", dbms: "oracle", context: "create, upgrade, 7.3.1") {
+    changeSet(author: "owf", id: "app_config-7.3.0-3", dbms: "oracle", context: "create, upgrade, 7.3.0") {
         comment("Drop the trigger")
         sql(endDelimiter: "", splitStatements: false, sql: """
             drop trigger app_config_insert;
