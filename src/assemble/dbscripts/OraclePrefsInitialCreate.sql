@@ -2,7 +2,7 @@
 -- Update Database Script
 -- *********************************************************************
 -- Change Log: changelog.groovy
--- Ran at: 11/20/13 1:31 PM
+-- Ran at: 11/25/13 4:25 PM
 
 -- Liquibase version: 2.0.1
 -- *********************************************************************
@@ -578,7 +578,7 @@ ALTER TABLE application_configuration MODIFY version DEFAULT 0;
 
 INSERT INTO DATABASECHANGELOG (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', '', SYSTIMESTAMP, 'Add Default Value', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-17', '2.0.1', '3:cc301f6f6f73cf363fe77c5e28604b25', 70);
 
--- Changeset app_config_7.3.1.groovy::app_config-7.3.0-2::owf::(Checksum: 3:3326f132c1c44e600546e80651327dda)
+-- Changeset app_config_7.3.1.groovy::app_config-7.3.1-2::owf::(Checksum: 3:3326f132c1c44e600546e80651327dda)
 -- Trigger for Oracle database to handle primary key generation based on a sequence during 'application_configuration' table insert statements
 create or replace trigger app_config_insert before insert on application_configuration
             for each row
@@ -588,9 +588,9 @@ create or replace trigger app_config_insert before insert on application_configu
             end;
             /
 
-INSERT INTO DATABASECHANGELOG (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', 'Trigger for Oracle database to handle primary key generation based on a sequence during ''application_configuration'' table insert statements', SYSTIMESTAMP, 'Custom SQL', 'EXECUTED', 'app_config_7.3.1.groovy', 'app_config-7.3.0-2', '2.0.1', '3:3326f132c1c44e600546e80651327dda', 71);
+INSERT INTO DATABASECHANGELOG (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', 'Trigger for Oracle database to handle primary key generation based on a sequence during ''application_configuration'' table insert statements', SYSTIMESTAMP, 'Custom SQL', 'EXECUTED', 'app_config_7.3.1.groovy', 'app_config-7.3.1-2', '2.0.1', '3:3326f132c1c44e600546e80651327dda', 71);
 
--- Changeset app_config_7.3.1.groovy::app_config-7.3.0-1::owf::(Checksum: 3:b6de99e7893c65e875383c4167711771)
+-- Changeset app_config_7.3.1.groovy::app_config-7.3.1-1::owf::(Checksum: 3:b6de99e7893c65e875383c4167711771)
 INSERT INTO application_configuration (code, group_name, mutable, sub_group_name, sub_group_order, title, type, value, version) VALUES ('owf.enable.cef.logging', 'AUDITING', 1, NULL, 1, ' ', 'Boolean', 'true', 0);
 
 INSERT INTO application_configuration (code, group_name, mutable, sub_group_name, sub_group_order, title, type, value, version) VALUES ('owf.enable.cef.object.access.logging', 'AUDITING', 1, NULL, 2, ' ', 'Boolean', 'false', 0);
@@ -631,14 +631,14 @@ INSERT INTO application_configuration (code, group_name, mutable, sub_group_name
 
 INSERT INTO application_configuration (code, group_name, mutable, sub_group_name, sub_group_order, title, type, value, version) VALUES ('free.warning.content', 'BRANDING', 1, NULL, 1, ' ', 'String', NULL, 0);
 
-INSERT INTO DATABASECHANGELOG (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', '', SYSTIMESTAMP, 'Insert Row (x20)', 'EXECUTED', 'app_config_7.3.1.groovy', 'app_config-7.3.0-1', '2.0.1', '3:b6de99e7893c65e875383c4167711771', 72);
+INSERT INTO DATABASECHANGELOG (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', '', SYSTIMESTAMP, 'Insert Row (x20)', 'EXECUTED', 'app_config_7.3.1.groovy', 'app_config-7.3.1-1', '2.0.1', '3:b6de99e7893c65e875383c4167711771', 72);
 
--- Changeset app_config_7.3.1.groovy::app_config-7.3.0-3::owf::(Checksum: 3:fadb0299fa34351adf7213f2aa1aace6)
+-- Changeset app_config_7.3.1.groovy::app_config-7.3.1-3::owf::(Checksum: 3:fadb0299fa34351adf7213f2aa1aace6)
 -- Drop the trigger
 drop trigger app_config_insert;
             /
 
-INSERT INTO DATABASECHANGELOG (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', 'Drop the trigger', SYSTIMESTAMP, 'Custom SQL', 'EXECUTED', 'app_config_7.3.1.groovy', 'app_config-7.3.0-3', '2.0.1', '3:fadb0299fa34351adf7213f2aa1aace6', 73);
+INSERT INTO DATABASECHANGELOG (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', 'Drop the trigger', SYSTIMESTAMP, 'Custom SQL', 'EXECUTED', 'app_config_7.3.1.groovy', 'app_config-7.3.1-3', '2.0.1', '3:fadb0299fa34351adf7213f2aa1aace6', 73);
 
 -- Changeset changelog_7.3.1.groovy::7.3.1-18::owf::(Checksum: 3:e20a0daf3c5203f6a4aa2df0b27d0673)
 -- Add isApproved to stack
