@@ -31,10 +31,11 @@ Ozone.util.Transport = {
  *          cfg.autoSendVersion   -  true to send owf version to the server, false don't send (defaults to true)
  *          cfg.ignoredErrorCodes -  optional array of http error codes to ignore (if these happen onSucess will be called)
  *          cfg.forceXdomain      -  optional flag to force xdomain ajax call using dojo window.name
+ *          cfg.forceNoCors       -  FOR INTERNAL USE ONLY, set true when previous CORS request failed
  *
  *  @returns void, use callbacks
  *
- *  Static method.  Must use 2 callbacks since javascript is asyncronous
+ *  Static method.  Must use 2 callbacks since javascript is asynchronous
  *  we have to wait for the response.
  *
  *  This implementation uses the dojox.windowName hack for a remote server,
@@ -111,6 +112,10 @@ Ozone.util.Transport.send = function(cfg) {
         handleAs = cfg.handleAs;
     }
 
+    // Always try CORS first for cross domain if supported by browser. (Will
+    // fall back to window.name on failure.)
+    var tryCors = Ozone.util.Transport.browserHasCors && !cfg.forceNoCors;
+
     // Use AJAX if we can
     if (Ozone.util.isUrlLocal(cfg.url) && !cfg.forceXdomain) {
         return owfdojo.xhr(methodToUse.toUpperCase(), {
@@ -149,6 +154,23 @@ Ozone.util.Transport.send = function(cfg) {
                 }
             }
         }, hasBody);
+    } else if (tryCors) {
+        console.log('browser supports CORS');
+
+        cfg.method = methodToUse.toUpperCase();
+
+        var originalOnFailure = cfg.onFailure;
+
+        cfg.onFailure = function() {
+            cfg.forceNoCors = true;
+            console.log('CORS failed');
+
+            cfg.onFailure = originalOnFailure;
+
+            Ozone.util.Transport.send(cfg);
+        };
+
+        Ozone.util.Transport.sendWithCors(cfg);
     } else {
         // Use window.name transport
         try {
@@ -283,6 +305,10 @@ Ozone.util.Transport.sendAndForget = function(cfg) {
         content = cfg.content;
     }
 
+    // Always try CORS first for cross domain if supported by browser. (Will
+    // fall back to window.name on failure.)
+    var tryCors = Ozone.util.Transport.browserHasCors && !cfg.forceNoCors;
+
     // Use AJAX if we can
     if (Ozone.util.isUrlLocal(cfg.url)) {
         owfdojo.xhr(methodToUse.toUpperCase(), {
@@ -291,6 +317,20 @@ Ozone.util.Transport.sendAndForget = function(cfg) {
             preventCache: true,
             sync:  cfg.async == false? false : true //defaults to true
         }, hasBody);
+    } else if (tryCors) {
+        console.log('browser supports CORS');
+
+        cfg.method = methodToUse.toUpperCase();
+        cfg.content = content;
+
+        cfg.onFailure = function() {
+            cfg.forceNoCors = true;
+            console.log('CORS failed');
+
+            Ozone.util.Transport.send(cfg);
+        };
+
+        Ozone.util.Transport.sendWithCors(cfg);
     } else {
         // Use window.name transport
         try {
@@ -356,3 +396,86 @@ Ozone.util.Transport.sendToFirst = function(cfg) {
         content:cfg.content
         });
 };
+
+/**
+ * @private
+ * Perform a request using Cross Origin Resource sharing.
+ *
+ * @params  cfg.url               -  url of the request
+ *          cfg.method            -  HTTP verb
+ *          cfg.onSuccess         -  callback function to capture the success result
+ *          cfg.onFailure         -  callback to execute if there is an error
+ *          cfg.content           -  optional content to send with the request, ie {value: 'x', _method: 'PUT'}
+ *          cfg.handleAs          -  text or json
+ */
+Ozone.util.Transport.sendWithCors = function(cfg) {
+    if (!Ozone.util.Transport.browserHasCors) {
+        throw 'Browser does not support standard CORS via XHR';
+    }
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.withCredentials = true;
+
+    xhr.open(cfg.method.toUpperCase(), cfg.url);
+
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+
+    xhr.onload = function(e) {
+        console.log('Got CORS data ' + xhr.responseText);
+
+        if (cfg.onSuccess) {
+            if (!cfg.handleAs || cfg.handleAs == 'json') {
+                try {
+                    var json = Ozone.util.parseJson(xhr.responseText);
+                    cfg.onSuccess(json);
+                } catch(e) {
+                    cfg.onFailure(e.name + " : " + e.message);
+                }
+            } else {
+                cfg.onSuccess(xhr.responseText);
+            }
+        }
+    };
+
+    xhr.onerror = function() {
+        if (cfg.onFailure) {
+            cfg.onFailure();
+        }
+    };
+
+    var formData = null;
+
+    if (cfg.content) {
+        for (key in cfg.content) {
+            if (formData) {
+                formData += '&';
+            } else {
+                formData = '';
+            }
+
+            formData += key + '=' + encodeURIComponent(cfg.content[key]);
+        }
+    }
+
+    xhr.send(formData);
+};
+
+/**
+ * @private
+ * Determine if the web browser natively supports CORS through XHR. Returns
+ * false in Internet Explorer 8 and 9 as they use a nonstandard object
+ * (XDomainRequest) for CORS support.
+ */
+Ozone.util.Transport.browserHasCors = (function() {
+    var result = false;
+
+    var xhr = new XMLHttpRequest();
+
+    // Ensure this browser supports XMLHTTPRequest2
+    if ("withCredentials" in xhr && "onload" in xhr && "onerror" in xhr) {
+        result = true;
+    }
+
+    return result;
+})();
