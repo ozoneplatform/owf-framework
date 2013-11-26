@@ -2,30 +2,30 @@
 -- Update Database Script
 -- *********************************************************************
 -- Change Log: changelog.groovy
--- Ran at: 11/20/13 1:35 PM
+-- Ran at: 11/20/13 12:23 PM
 
 -- Liquibase version: 2.0.1
 -- *********************************************************************
 
 -- Lock Database
--- Changeset changelog_7.3.1.groovy::7.3.1-1::owf::(Checksum: 3:da90c894252394662881278c5011df4f)
+-- Changeset changelog_7.3.0.groovy::7.3.0-1::owf::(Checksum: 3:da90c894252394662881278c5011df4f)
 -- Add type to dashboard
 ALTER TABLE `dashboard` ADD `type` VARCHAR(255);
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add type to dashboard', NOW(), 'Add Column', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-1', '2.0.1', '3:da90c894252394662881278c5011df4f', 1);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add type to dashboard', NOW(), 'Add Column', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-1', '2.0.1', '3:da90c894252394662881278c5011df4f', 1);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-2::owf::(Checksum: 3:fe230a1ac4b1d1f7ea94cf131fcd8827)
+-- Changeset changelog_7.3.0.groovy::7.3.0-2::owf::(Checksum: 3:fe230a1ac4b1d1f7ea94cf131fcd8827)
 -- Update existing dashboards to set type to marketplace if name is Apps Mall
 UPDATE `dashboard` SET `type` = 'marketplace' WHERE name='Apps Mall';
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Update existing dashboards to set type to marketplace if name is Apps Mall', NOW(), 'Update Data', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-2', '2.0.1', '3:fe230a1ac4b1d1f7ea94cf131fcd8827', 2);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Update existing dashboards to set type to marketplace if name is Apps Mall', NOW(), 'Update Data', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-2', '2.0.1', '3:fe230a1ac4b1d1f7ea94cf131fcd8827', 2);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-3::owf::(Checksum: 3:85d934f83517b58484131edbd73d1252)
+-- Changeset changelog_7.3.0.groovy::7.3.0-3::owf::(Checksum: 3:85d934f83517b58484131edbd73d1252)
 CREATE TABLE `application_configuration` (`id` BIGINT AUTO_INCREMENT  NOT NULL, `version` BIGINT NOT NULL, `created_by_id` BIGINT, `created_date` DATE, `edited_by_id` BIGINT, `edited_date` DATE, `code` VARCHAR(250) NOT NULL, `VALUE` VARCHAR(2000), `title` VARCHAR(250) NOT NULL, `description` VARCHAR(2000), `type` VARCHAR(250) NOT NULL, `group_name` VARCHAR(250) NOT NULL, `sub_group_name` VARCHAR(250), `mutable` TINYINT(1) NOT NULL, `sub_group_order` BIGINT, `help` VARCHAR(2000), CONSTRAINT `application_configurationPK` PRIMARY KEY (`id`), UNIQUE (`code`)) ENGINE=InnoDB;
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', '', NOW(), 'Create Table', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-3', '2.0.1', '3:85d934f83517b58484131edbd73d1252', 3);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', '', NOW(), 'Create Table', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-3', '2.0.1', '3:85d934f83517b58484131edbd73d1252', 3);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-4::owf::(Checksum: 3:3d651aa99a57515a9d4c96f06568ad93)
+-- Changeset changelog_7.3.0.groovy::7.3.0-4::owf::(Checksum: 3:3d651aa99a57515a9d4c96f06568ad93)
 -- Create index for application_configuration.group_name
 CREATE INDEX `FKFC9C0477666C6D2` ON `application_configuration`(`created_by_id`);
 
@@ -37,32 +37,32 @@ ALTER TABLE `application_configuration` ADD CONSTRAINT `FKFC9C0477666C6D2` FOREI
 
 ALTER TABLE `application_configuration` ADD CONSTRAINT `FKFC9C047E31CB353` FOREIGN KEY (`edited_by_id`) REFERENCES `person` (`id`);
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Create index for application_configuration.group_name', NOW(), 'Create Index (x3), Add Foreign Key Constraint (x2)', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-4', '2.0.1', '3:3d651aa99a57515a9d4c96f06568ad93', 4);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Create index for application_configuration.group_name', NOW(), 'Create Index (x3), Add Foreign Key Constraint (x2)', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-4', '2.0.1', '3:3d651aa99a57515a9d4c96f06568ad93', 4);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-5::owf::(Checksum: 3:ebf4c6cfc522e45a5efc657a72cc6b8d)
+-- Changeset changelog_7.3.0.groovy::7.3.0-5::owf::(Checksum: 3:ebf4c6cfc522e45a5efc657a72cc6b8d)
 -- Add icon image url to dashboard
 ALTER TABLE `dashboard` ADD `icon_image_url` VARCHAR(2083);
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add icon image url to dashboard', NOW(), 'Add Column', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-5', '2.0.1', '3:ebf4c6cfc522e45a5efc657a72cc6b8d', 5);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add icon image url to dashboard', NOW(), 'Add Column', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-5', '2.0.1', '3:ebf4c6cfc522e45a5efc657a72cc6b8d', 5);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-6::owf::(Checksum: 3:05b0697fb3adb15e703588ccfbdc0f7c)
+-- Changeset changelog_7.3.0.groovy::7.3.0-6::owf::(Checksum: 3:05b0697fb3adb15e703588ccfbdc0f7c)
 -- Add published_to_store and marked_for_deletion columns to dashboard table
 ALTER TABLE `dashboard` ADD `published_to_store` TINYINT(1);
 
 ALTER TABLE `dashboard` ADD `marked_for_deletion` TINYINT(1);
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add published_to_store and marked_for_deletion columns to dashboard table', NOW(), 'Add Column', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-6', '2.0.1', '3:05b0697fb3adb15e703588ccfbdc0f7c', 6);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add published_to_store and marked_for_deletion columns to dashboard table', NOW(), 'Add Column', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-6', '2.0.1', '3:05b0697fb3adb15e703588ccfbdc0f7c', 6);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-7::owf::(Checksum: 3:e50b259c6a288dbdafc06dcd1ef34c37)
+-- Changeset changelog_7.3.0.groovy::7.3.0-7::owf::(Checksum: 3:e50b259c6a288dbdafc06dcd1ef34c37)
 ALTER TABLE `stack` ADD `owner_id` BIGINT;
 
 CREATE INDEX `FK68AC2888656347D` ON `stack`(`owner_id`);
 
 ALTER TABLE `stack` ADD CONSTRAINT `FK68AC2888656347D` FOREIGN KEY (`owner_id`) REFERENCES `person` (`id`);
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', '', NOW(), 'Add Column, Create Index, Add Foreign Key Constraint', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-7', '2.0.1', '3:e50b259c6a288dbdafc06dcd1ef34c37', 7);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', '', NOW(), 'Add Column, Create Index, Add Foreign Key Constraint', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-7', '2.0.1', '3:e50b259c6a288dbdafc06dcd1ef34c37', 7);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-8::owf::(Checksum: 3:0ed4f5bc7205d2c13ef27bb516e27d18)
+-- Changeset changelog_7.3.0.groovy::7.3.0-8::owf::(Checksum: 3:0ed4f5bc7205d2c13ef27bb516e27d18)
 -- Change the name of Stack and Widget admin widgets to be Apps and App Component
 UPDATE `widget_definition` SET `display_name` = 'App Components' WHERE display_name='Widgets';
 
@@ -72,9 +72,9 @@ UPDATE `widget_definition` SET `display_name` = 'Apps' WHERE display_name='Stack
 
 UPDATE `widget_definition` SET `display_name` = 'App Editor' WHERE display_name='Stack Editor';
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Change the name of Stack and Widget admin widgets to be Apps and App Component', NOW(), 'Update Data (x4)', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-8', '2.0.1', '3:0ed4f5bc7205d2c13ef27bb516e27d18', 8);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Change the name of Stack and Widget admin widgets to be Apps and App Component', NOW(), 'Update Data (x4)', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-8', '2.0.1', '3:0ed4f5bc7205d2c13ef27bb516e27d18', 8);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-9::owf::(Checksum: 3:63dabf04f3e3d7526260fff486e719d5)
+-- Changeset changelog_7.3.0.groovy::7.3.0-9::owf::(Checksum: 3:63dabf04f3e3d7526260fff486e719d5)
 -- Removing all references to Group Dashboards and renaming the Stack and Stack Editor widgets in the Admin dashboard
 DELETE FROM `widget_definition_widget_types`  WHERE widget_definition_id = (select id from widget_definition where widget_url = 'admin/GroupDashboardManagement.gsp');
 
@@ -86,9 +86,9 @@ DELETE FROM `tag_links`  WHERE tag_ref = (select id from widget_definition where
 
 DELETE FROM `widget_definition`  WHERE widget_url = 'admin/GroupDashboardManagement.gsp';
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Removing all references to Group Dashboards and renaming the Stack and Stack Editor widgets in the Admin dashboard', NOW(), 'Delete Data (x5)', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-9', '2.0.1', '3:63dabf04f3e3d7526260fff486e719d5', 9);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Removing all references to Group Dashboards and renaming the Stack and Stack Editor widgets in the Admin dashboard', NOW(), 'Delete Data (x5)', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-9', '2.0.1', '3:63dabf04f3e3d7526260fff486e719d5', 9);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-16::owf::(Checksum: 3:2eb18ef95e182e90bae0a3f9caf69fc2)
+-- Changeset changelog_7.3.0.groovy::7.3.0-16::owf::(Checksum: 3:2eb18ef95e182e90bae0a3f9caf69fc2)
 -- Adding a column named display_name to the table widget_type so that the UI name is decoupled from the actual back-end name; The display_name will be the same as the name, except for marketplace, which will be displayed as store
 ALTER TABLE `widget_type` ADD `display_name` VARCHAR(256);
 
@@ -98,20 +98,63 @@ UPDATE `widget_type` SET `display_name` = 'store' WHERE name = 'marketplace';
 
 ALTER TABLE `widget_type` MODIFY `display_name` VARCHAR(256) NOT NULL;
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Adding a column named display_name to the table widget_type so that the UI name is decoupled from the actual back-end name; The display_name will be the same as the name, except for marketplace, which will be displayed as store', NOW(), 'Add Column, Update Data (x2), Add Not-Null Constraint', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-16', '2.0.1', '3:2eb18ef95e182e90bae0a3f9caf69fc2', 10);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Adding a column named display_name to the table widget_type so that the UI name is decoupled from the actual back-end name; The display_name will be the same as the name, except for marketplace, which will be displayed as store', NOW(), 'Add Column, Update Data (x2), Add Not-Null Constraint', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-16', '2.0.1', '3:2eb18ef95e182e90bae0a3f9caf69fc2', 10);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-17::owf::(Checksum: 3:cc301f6f6f73cf363fe77c5e28604b25)
+-- Changeset changelog_7.3.0.groovy::7.3.0-17::owf::(Checksum: 3:cc301f6f6f73cf363fe77c5e28604b25)
 ALTER TABLE `application_configuration` ALTER `version` SET DEFAULT 0;
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', '', NOW(), 'Add Default Value', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-17', '2.0.1', '3:cc301f6f6f73cf363fe77c5e28604b25', 11);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', '', NOW(), 'Add Default Value', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-17', '2.0.1', '3:cc301f6f6f73cf363fe77c5e28604b25', 11);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-18::owf::(Checksum: 3:e20a0daf3c5203f6a4aa2df0b27d0673)
+-- Changeset app_config_7.3.0.groovy::app_config-7.3.0-1::owf::(Checksum: 3:b6de99e7893c65e875383c4167711771)
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.enable.cef.logging', 'AUDITING', 1, NULL, 1, ' ', 'Boolean', 'true', 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.enable.cef.object.access.logging', 'AUDITING', 1, NULL, 2, ' ', 'Boolean', 'false', 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.cef.sweep.log.location', 'AUDITING', 1, NULL, 3, ' ', 'Boolean', 'true', 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.cef.log.location', 'AUDITING', 1, NULL, 4, ' ', 'String', '/usr/share/tomcat6', 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.enable.cef.log.sweep', 'AUDITING', 1, NULL, 5, ' ', 'String', '/var/log/cef', 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.security.level', 'AUDITING', 1, NULL, 6, ' ', 'String', NULL, 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.session.control.enabled', 'USER_ACCOUNT_SETTINGS', 1, 'Session Control', 1, ' ', 'Boolean', 'false', 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.session.control.max.concurrent', 'USER_ACCOUNT_SETTINGS', 1, 'Session Control', 2, ' ', 'Integer', '1', 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.disable.inactive.accounts', 'USER_ACCOUNT_SETTINGS', 1, 'Inactive Accounts', 1, ' ', 'Boolean', 'true', 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.inactivity.threshold', 'USER_ACCOUNT_SETTINGS', 1, 'Inactive Accounts', 2, ' ', 'Integer', '90', 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.job.disable.accounts.start.time', 'HIDDEN', 1, NULL, 1, ' ', 'String', '23:59:59', 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.job.disable.accounts.interval', 'HIDDEN', 1, NULL, 2, ' ', 'Integer', '1440', 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.custom.background.url', 'BRANDING', 1, 'Custom Background', 1, ' ', 'String', '', 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.custom.header.url', 'BRANDING', 1, 'Custom Header and Footer', 1, ' ', 'String', NULL, 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.custom.header.height', 'BRANDING', 1, 'Custom Header and Footer', 2, ' ', 'Integer', '0', 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.custom.footer.url', 'BRANDING', 1, 'Custom Header and Footer', 3, ' ', 'String', NULL, 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.custom.footer.height', 'BRANDING', 1, 'Custom Header and Footer', 4, ' ', 'Integer', '0', 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.custom.css', 'BRANDING', 1, 'Custom Header and Footer', 5, ' ', 'String', NULL, 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('owf.custom.jss', 'BRANDING', 1, 'Custom Header and Footer', 6, ' ', 'String', NULL, 0);
+
+INSERT INTO `application_configuration` (`code`, `group_name`, `mutable`, `sub_group_name`, `sub_group_order`, `title`, `type`, `value`, `version`) VALUES ('free.warning.content', 'BRANDING', 1, NULL, 1, ' ', 'String', NULL, 0);
+
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', '', NOW(), 'Insert Row (x20)', 'EXECUTED', 'app_config_7.3.0.groovy', 'app_config-7.3.0-1', '2.0.1', '3:b6de99e7893c65e875383c4167711771', 12);
+
+-- Changeset changelog_7.3.0.groovy::7.3.0-18::owf::(Checksum: 3:e20a0daf3c5203f6a4aa2df0b27d0673)
 -- Add isApproved to stack
 ALTER TABLE `stack` ADD `approved` TINYINT(1);
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add isApproved to stack', NOW(), 'Add Column', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-18', '2.0.1', '3:e20a0daf3c5203f6a4aa2df0b27d0673', 12);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add isApproved to stack', NOW(), 'Add Column', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-18', '2.0.1', '3:e20a0daf3c5203f6a4aa2df0b27d0673', 13);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-21::owf::(Checksum: 3:8c5356773157ee7fa260d2d83900cba5)
+-- Changeset changelog_7.3.0.groovy::7.3.0-21::owf::(Checksum: 3:8c5356773157ee7fa260d2d83900cba5)
 -- Create Administrator's App and its default group.
 INSERT INTO `stack` (`approved`, `description`, `image_url`, `name`, `stack_context`, `unique_widget_count`, `version`) VALUES (1, 'This application collects the administrative components into a common set of application pages for managing system resources.  These pages can be used to create, modify, update, and delete Apps, App Components, Users and Groups, and system configuration settings.', 'themes/common/images/admin/64x64_admin_app.png', 'Administration', 'ef8b5d6f-4b16-4743-9a57-31683c94b616', 5, 1);
 
@@ -119,15 +162,15 @@ INSERT INTO `owf_group` (`automatic`, `description`, `display_name`, `email`, `n
 
 INSERT INTO `stack_groups` (`group_id`, `stack_id`) VALUES ((SELECT id FROM owf_group WHERE name='9e05a814-c1a4-4db1-a672-bccae0f0b311'), (SELECT id FROM stack WHERE stack_context='ef8b5d6f-4b16-4743-9a57-31683c94b616'));
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Create Administrator''s App and its default group.', NOW(), 'Insert Row (x3)', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-21', '2.0.1', '3:8c5356773157ee7fa260d2d83900cba5', 13);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Create Administrator''s App and its default group.', NOW(), 'Insert Row (x3)', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-21', '2.0.1', '3:8c5356773157ee7fa260d2d83900cba5', 14);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-22::owf::(Checksum: 3:5fdc73b48e8adc3314e2644e28a3f072)
+-- Changeset changelog_7.3.0.groovy::7.3.0-22::owf::(Checksum: 3:5fdc73b48e8adc3314e2644e28a3f072)
 -- Add Administration App to the OWF Administrators group.
 INSERT INTO `stack_groups` (`group_id`, `stack_id`) VALUES ((SELECT id FROM owf_group WHERE name='OWF Administrators'), (SELECT id FROM stack WHERE stack_context='ef8b5d6f-4b16-4743-9a57-31683c94b616'));
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add Administration App to the OWF Administrators group.', NOW(), 'Insert Row', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-22', '2.0.1', '3:5fdc73b48e8adc3314e2644e28a3f072', 14);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add Administration App to the OWF Administrators group.', NOW(), 'Insert Row', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-22', '2.0.1', '3:5fdc73b48e8adc3314e2644e28a3f072', 15);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-26::owf::(Checksum: 3:95cb3388cf30baf28ba7223567b328b7)
+-- Changeset changelog_7.3.0.groovy::7.3.0-26::owf::(Checksum: 3:95cb3388cf30baf28ba7223567b328b7)
 -- Add new admin components that include universal names.  These will be the primary admin components moving forward.
 INSERT INTO `widget_definition` (`background`, `display_name`, `height`, `image_url_large`, `image_url_small`, `singleton`, `universal_name`, `version`, `visible`, `widget_guid`, `widget_url`, `widget_version`, `width`) VALUES (0, 'App Component Editor', 440, 'themes/common/images/adm-tools/Widgets64.png', 'themes/common/images/adm-tools/Widgets24.png', 0, 'org.ozoneplatform.owf.admin.appcomponentedit', 0, 0, '679294b3-ccc3-4ace-a061-e3f27ed86451', 'admin/WidgetEdit.gsp', '1.0', 581);
 
@@ -164,9 +207,9 @@ insert into widget_definition_widget_types (widget_definition_id, widget_type_id
                 '2445afb9-eb3f-4b79-acf8-6b12180921c3'
             );
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add new admin components that include universal names.  These will be the primary admin components moving forward.', NOW(), 'Insert Row (x10), Custom SQL', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-26', '2.0.1', '3:95cb3388cf30baf28ba7223567b328b7', 15);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add new admin components that include universal names.  These will be the primary admin components moving forward.', NOW(), 'Insert Row (x10), Custom SQL', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-26', '2.0.1', '3:95cb3388cf30baf28ba7223567b328b7', 16);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-27::owf::(Checksum: 3:013901f70bd73571c7ae872101df29db)
+-- Changeset changelog_7.3.0.groovy::7.3.0-27::owf::(Checksum: 3:013901f70bd73571c7ae872101df29db)
 -- Add the pages for the administrator's app.
 INSERT INTO `dashboard` (`altered_by_admin`, `dashboard_position`, `description`, `guid`, `icon_image_url`, `isdefault`, `layout_config`, `locked`, `marked_for_deletion`, `name`, `published_to_store`, `type`, `version`) VALUES (0, 1, 'Administer the Apps in the system.', 'cbb92835-7d13-41dc-8f28-3eba59a6a6d5', 'themes/common/images/adm-tools/Stacks64.png', 0, '{"widgets":[{"universalName":"org.ozoneplatform.owf.admin.appmanagement","widgetGuid":"391dd2af-a207-41a3-8e51-2b20ec3e7241","uniqueId":"bf05736e-a52e-d4ee-7da5-4e39c6df53c8","dashboardGuid":"cbb92835-7d13-41dc-8f28-3eba59a6a6d5","paneGuid":"6ff1c292-9689-4240-7cd8-e4a251978395","intentConfig":null,"launchData":null,"name":"Apps","active":true,"x":0,"y":33,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":1,"singleton":false,"floatingWidget":false,"height":973,"width":1554}],"height":"100%","items":[],"xtype":"fitpane","flex":1,"paneType":"fitpane","defaultSettings":{}}', 0, 0, 'Apps', 1, '', 0);
 
@@ -184,9 +227,9 @@ INSERT INTO `dashboard` (`altered_by_admin`, `dashboard_position`, `description`
 
 update dashboard set stack_id = (select id from stack where stack_context = 'ef8b5d6f-4b16-4743-9a57-31683c94b616') where guid = '976cbf75-5537-410f-88a3-375c5cf970bc';
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add the pages for the administrator''s app.', NOW(), 'Insert Row, Custom SQL, Insert Row, Custom SQL, Insert Row, Custom SQL, Insert Row, Custom SQL', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-27', '2.0.1', '3:013901f70bd73571c7ae872101df29db', 16);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add the pages for the administrator''s app.', NOW(), 'Insert Row, Custom SQL, Insert Row, Custom SQL, Insert Row, Custom SQL, Insert Row, Custom SQL', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-27', '2.0.1', '3:013901f70bd73571c7ae872101df29db', 17);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-28::owf::(Checksum: 3:f5a487dba681fe5229c69ee043168f2f)
+-- Changeset changelog_7.3.0.groovy::7.3.0-28::owf::(Checksum: 3:f5a487dba681fe5229c69ee043168f2f)
 -- Add the associations for the stack's default group to the app pages..
 INSERT INTO `domain_mapping` (`dest_id`, `dest_type`, `relationship_type`, `src_id`, `src_type`, `version`) VALUES ((SELECT id FROM dashboard WHERE guid='cbb92835-7d13-41dc-8f28-3eba59a6a6d5'), 'dashboard', 'owns', (SELECT id FROM owf_group WHERE name='9e05a814-c1a4-4db1-a672-bccae0f0b311'), 'group', 0);
 
@@ -196,9 +239,9 @@ INSERT INTO `domain_mapping` (`dest_id`, `dest_type`, `relationship_type`, `src_
 
 INSERT INTO `domain_mapping` (`dest_id`, `dest_type`, `relationship_type`, `src_id`, `src_type`, `version`) VALUES ((SELECT id FROM dashboard WHERE guid='976cbf75-5537-410f-88a3-375c5cf970bc'), 'dashboard', 'owns', (SELECT id FROM owf_group WHERE name='9e05a814-c1a4-4db1-a672-bccae0f0b311'), 'group', 0);
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add the associations for the stack''s default group to the app pages..', NOW(), 'Insert Row (x4)', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-28', '2.0.1', '3:f5a487dba681fe5229c69ee043168f2f', 17);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add the associations for the stack''s default group to the app pages..', NOW(), 'Insert Row (x4)', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-28', '2.0.1', '3:f5a487dba681fe5229c69ee043168f2f', 18);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-29::owf::(Checksum: 3:eb228dae1ba67f1dc85a7a60397e32ae)
+-- Changeset changelog_7.3.0.groovy::7.3.0-29::owf::(Checksum: 3:eb228dae1ba67f1dc85a7a60397e32ae)
 -- Add the associations for the stack's default group to the admin components.
 INSERT INTO `domain_mapping` (`dest_id`, `dest_type`, `relationship_type`, `src_id`, `src_type`, `version`) VALUES ((SELECT id FROM widget_definition WHERE widget_guid='72c382a3-89e7-4abf-94db-18db7779e1df'), 'widget_definition', 'owns', (SELECT id FROM owf_group WHERE name='9e05a814-c1a4-4db1-a672-bccae0f0b311'), 'group', 0);
 
@@ -218,9 +261,9 @@ INSERT INTO `domain_mapping` (`dest_id`, `dest_type`, `relationship_type`, `src_
 
 INSERT INTO `domain_mapping` (`dest_id`, `dest_type`, `relationship_type`, `src_id`, `src_type`, `version`) VALUES ((SELECT id FROM widget_definition WHERE widget_guid='38070c45-5f6a-4460-810c-6e3496495ec4'), 'widget_definition', 'owns', (SELECT id FROM owf_group WHERE name='9e05a814-c1a4-4db1-a672-bccae0f0b311'), 'group', 0);
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add the associations for the stack''s default group to the admin components.', NOW(), 'Insert Row (x9)', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-29', '2.0.1', '3:eb228dae1ba67f1dc85a7a60397e32ae', 18);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Add the associations for the stack''s default group to the admin components.', NOW(), 'Insert Row (x9)', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-29', '2.0.1', '3:eb228dae1ba67f1dc85a7a60397e32ae', 19);
 
--- Changeset changelog_7.3.1.groovy::7.3.1-31::owf::(Checksum: 3:923bc0f0a83220ac48a155d89e8d1c1c)
+-- Changeset changelog_7.3.0.groovy::7.3.0-31::owf::(Checksum: 3:923bc0f0a83220ac48a155d89e8d1c1c)
 -- Remove the old admin widgets.
 DELETE FROM `widget_definition_widget_types`  WHERE widget_definition_id in (select id from widget_definition where widget_url in ('admin/UserManagement.gsp', 'admin/UserEdit.gsp', 'admin/WidgetManagement.gsp', 'admin/WidgetEdit.gsp', 'admin/GroupManagement.gsp', 'admin/GroupEdit.gsp', 'admin/DashboardEdit.gsp', 'admin/StackManagement.gsp', 'admin/StackEdit.gsp', 'admin/Configuration.gsp') and universal_name is null);
 
@@ -230,6 +273,6 @@ DELETE FROM `person_widget_definition`  WHERE widget_definition_id in (select id
 
 DELETE FROM `widget_definition`  WHERE widget_url in ('admin/UserManagement.gsp', 'admin/UserEdit.gsp', 'admin/WidgetManagement.gsp', 'admin/WidgetEdit.gsp', 'admin/GroupManagement.gsp', 'admin/GroupEdit.gsp', 'admin/DashboardEdit.gsp', 'admin/StackManagement.gsp', 'admin/StackEdit.gsp', 'admin/Configuration.gsp') and universal_name is null;
 
-INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Remove the old admin widgets.', NOW(), 'Delete Data (x4)', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-31', '2.0.1', '3:923bc0f0a83220ac48a155d89e8d1c1c', 19);
+INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', 'Remove the old admin widgets.', NOW(), 'Delete Data (x4)', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-31', '2.0.1', '3:923bc0f0a83220ac48a155d89e8d1c1c', 20);
 
 -- Release Database Lock
