@@ -210,6 +210,8 @@ grails.project.dependency.resolution = {
         //need ant for createWebBundles.jar
         runtime 'org.apache.ant:ant:1.7.0'
         compile('access:access:1.0')
+
+        runtime 'com.thetransactioncompany:cors-filter:1.8'
     }
     plugins {
         compile 'org.ozoneplatform:aml-commons-security:3.1.8'
