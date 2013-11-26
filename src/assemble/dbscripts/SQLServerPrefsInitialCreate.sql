@@ -2,7 +2,7 @@
 -- Update Database Script
 -- *********************************************************************
 -- Change Log: changelog.groovy
--- Ran at: 11/25/13 4:24 PM
+-- Ran at: 11/20/13 1:30 PM
 
 -- Liquibase version: 2.0.1
 -- *********************************************************************
@@ -761,7 +761,7 @@ GO
 INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', '', GETDATE(), 'Add Default Value', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-17', '2.0.1', '3:cc301f6f6f73cf363fe77c5e28604b25', 73)
 GO
 
--- Changeset app_config_7.3.1.groovy::app_config-7.3.1-1::owf::(Checksum: 3:b6de99e7893c65e875383c4167711771)
+-- Changeset app_config_7.3.1.groovy::app_config-7.3.0-1::owf::(Checksum: 3:b6de99e7893c65e875383c4167711771)
 INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.enable.cef.logging', 'AUDITING', 1, NULL, 1, ' ', 'Boolean', 'true', 0)
 GO
 
@@ -822,7 +822,7 @@ GO
 INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('free.warning.content', 'BRANDING', 1, NULL, 1, ' ', 'String', NULL, 0)
 GO
 
-INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', '', GETDATE(), 'Insert Row (x20)', 'EXECUTED', 'app_config_7.3.1.groovy', 'app_config-7.3.1-1', '2.0.1', '3:b6de99e7893c65e875383c4167711771', 74)
+INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', '', GETDATE(), 'Insert Row (x20)', 'EXECUTED', 'app_config_7.3.1.groovy', 'app_config-7.3.0-1', '2.0.1', '3:b6de99e7893c65e875383c4167711771', 74)
 GO
 
 -- Changeset changelog_7.3.1.groovy::7.3.1-18::owf::(Checksum: 3:e20a0daf3c5203f6a4aa2df0b27d0673)

@@ -2,7 +2,7 @@
 -- Update Database Script
 -- *********************************************************************
 -- Change Log: changelog.groovy
--- Ran at: 11/25/13 4:30 PM
+-- Ran at: 11/20/13 1:36 PM
 
 -- Liquibase version: 2.0.1
 -- *********************************************************************
@@ -146,76 +146,12 @@ GO
 INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', '', GETDATE(), 'Add Default Value', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-17', '2.0.1', '3:cc301f6f6f73cf363fe77c5e28604b25', 11)
 GO
 
--- Changeset app_config_7.3.1.groovy::app_config-7.3.1-1::owf::(Checksum: 3:b6de99e7893c65e875383c4167711771)
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.enable.cef.logging', 'AUDITING', 1, NULL, 1, ' ', 'Boolean', 'true', 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.enable.cef.object.access.logging', 'AUDITING', 1, NULL, 2, ' ', 'Boolean', 'false', 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.cef.sweep.log.location', 'AUDITING', 1, NULL, 3, ' ', 'Boolean', 'true', 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.cef.log.location', 'AUDITING', 1, NULL, 4, ' ', 'String', '/usr/share/tomcat6', 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.enable.cef.log.sweep', 'AUDITING', 1, NULL, 5, ' ', 'String', '/var/log/cef', 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.security.level', 'AUDITING', 1, NULL, 6, ' ', 'String', NULL, 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.session.control.enabled', 'USER_ACCOUNT_SETTINGS', 1, 'Session Control', 1, ' ', 'Boolean', 'false', 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.session.control.max.concurrent', 'USER_ACCOUNT_SETTINGS', 1, 'Session Control', 2, ' ', 'Integer', '1', 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.disable.inactive.accounts', 'USER_ACCOUNT_SETTINGS', 1, 'Inactive Accounts', 1, ' ', 'Boolean', 'true', 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.inactivity.threshold', 'USER_ACCOUNT_SETTINGS', 1, 'Inactive Accounts', 2, ' ', 'Integer', '90', 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.job.disable.accounts.start.time', 'HIDDEN', 1, NULL, 1, ' ', 'String', '23:59:59', 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.job.disable.accounts.interval', 'HIDDEN', 1, NULL, 2, ' ', 'Integer', '1440', 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.custom.background.url', 'BRANDING', 1, 'Custom Background', 1, ' ', 'String', '', 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.custom.header.url', 'BRANDING', 1, 'Custom Header and Footer', 1, ' ', 'String', NULL, 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.custom.header.height', 'BRANDING', 1, 'Custom Header and Footer', 2, ' ', 'Integer', '0', 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.custom.footer.url', 'BRANDING', 1, 'Custom Header and Footer', 3, ' ', 'String', NULL, 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.custom.footer.height', 'BRANDING', 1, 'Custom Header and Footer', 4, ' ', 'Integer', '0', 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.custom.css', 'BRANDING', 1, 'Custom Header and Footer', 5, ' ', 'String', NULL, 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('owf.custom.jss', 'BRANDING', 1, 'Custom Header and Footer', 6, ' ', 'String', NULL, 0)
-GO
-
-INSERT INTO [dbo].[application_configuration] ([code], [group_name], [mutable], [sub_group_name], [sub_group_order], [title], [type], [value], [version]) VALUES ('free.warning.content', 'BRANDING', 1, NULL, 1, ' ', 'String', NULL, 0)
-GO
-
-INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', '', GETDATE(), 'Insert Row (x20)', 'EXECUTED', 'app_config_7.3.1.groovy', 'app_config-7.3.1-1', '2.0.1', '3:b6de99e7893c65e875383c4167711771', 12)
-GO
-
 -- Changeset changelog_7.3.1.groovy::7.3.1-18::owf::(Checksum: 3:e20a0daf3c5203f6a4aa2df0b27d0673)
 -- Add isApproved to stack
 ALTER TABLE [dbo].[stack] ADD [approved] BIT
 GO
 
-INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Add isApproved to stack', GETDATE(), 'Add Column', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-18', '2.0.1', '3:e20a0daf3c5203f6a4aa2df0b27d0673', 13)
+INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Add isApproved to stack', GETDATE(), 'Add Column', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-18', '2.0.1', '3:e20a0daf3c5203f6a4aa2df0b27d0673', 12)
 GO
 
 -- Changeset changelog_7.3.1.groovy::7.3.1-21::owf::(Checksum: 3:8c5356773157ee7fa260d2d83900cba5)
@@ -229,7 +165,7 @@ GO
 INSERT INTO [dbo].[stack_groups] ([group_id], [stack_id]) VALUES ((SELECT id FROM owf_group WHERE name='9e05a814-c1a4-4db1-a672-bccae0f0b311'), (SELECT id FROM stack WHERE stack_context='ef8b5d6f-4b16-4743-9a57-31683c94b616'))
 GO
 
-INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Create Administrator''s App and its default group.', GETDATE(), 'Insert Row (x3)', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-21', '2.0.1', '3:8c5356773157ee7fa260d2d83900cba5', 14)
+INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Create Administrator''s App and its default group.', GETDATE(), 'Insert Row (x3)', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-21', '2.0.1', '3:8c5356773157ee7fa260d2d83900cba5', 13)
 GO
 
 -- Changeset changelog_7.3.1.groovy::7.3.1-22::owf::(Checksum: 3:5fdc73b48e8adc3314e2644e28a3f072)
@@ -237,7 +173,7 @@ GO
 INSERT INTO [dbo].[stack_groups] ([group_id], [stack_id]) VALUES ((SELECT id FROM owf_group WHERE name='OWF Administrators'), (SELECT id FROM stack WHERE stack_context='ef8b5d6f-4b16-4743-9a57-31683c94b616'))
 GO
 
-INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Add Administration App to the OWF Administrators group.', GETDATE(), 'Insert Row', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-22', '2.0.1', '3:5fdc73b48e8adc3314e2644e28a3f072', 15)
+INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Add Administration App to the OWF Administrators group.', GETDATE(), 'Insert Row', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-22', '2.0.1', '3:5fdc73b48e8adc3314e2644e28a3f072', 14)
 GO
 
 -- Changeset changelog_7.3.1.groovy::7.3.1-26::owf::(Checksum: 3:95cb3388cf30baf28ba7223567b328b7)
@@ -288,7 +224,7 @@ insert into widget_definition_widget_types (widget_definition_id, widget_type_id
             )
 GO
 
-INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Add new admin components that include universal names.  These will be the primary admin components moving forward.', GETDATE(), 'Insert Row (x10), Custom SQL', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-26', '2.0.1', '3:95cb3388cf30baf28ba7223567b328b7', 16)
+INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Add new admin components that include universal names.  These will be the primary admin components moving forward.', GETDATE(), 'Insert Row (x10), Custom SQL', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-26', '2.0.1', '3:95cb3388cf30baf28ba7223567b328b7', 15)
 GO
 
 -- Changeset changelog_7.3.1.groovy::7.3.1-27::owf::(Checksum: 3:013901f70bd73571c7ae872101df29db)
@@ -317,7 +253,7 @@ GO
 update dashboard set stack_id = (select id from stack where stack_context = 'ef8b5d6f-4b16-4743-9a57-31683c94b616') where guid = '976cbf75-5537-410f-88a3-375c5cf970bc'
 GO
 
-INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Add the pages for the administrator''s app.', GETDATE(), 'Insert Row, Custom SQL, Insert Row, Custom SQL, Insert Row, Custom SQL, Insert Row, Custom SQL', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-27', '2.0.1', '3:013901f70bd73571c7ae872101df29db', 17)
+INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Add the pages for the administrator''s app.', GETDATE(), 'Insert Row, Custom SQL, Insert Row, Custom SQL, Insert Row, Custom SQL, Insert Row, Custom SQL', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-27', '2.0.1', '3:013901f70bd73571c7ae872101df29db', 16)
 GO
 
 -- Changeset changelog_7.3.1.groovy::7.3.1-28::owf::(Checksum: 3:f5a487dba681fe5229c69ee043168f2f)
@@ -334,7 +270,7 @@ GO
 INSERT INTO [dbo].[domain_mapping] ([dest_id], [dest_type], [relationship_type], [src_id], [src_type], [version]) VALUES ((SELECT id FROM dashboard WHERE guid='976cbf75-5537-410f-88a3-375c5cf970bc'), 'dashboard', 'owns', (SELECT id FROM owf_group WHERE name='9e05a814-c1a4-4db1-a672-bccae0f0b311'), 'group', 0)
 GO
 
-INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Add the associations for the stack''s default group to the app pages..', GETDATE(), 'Insert Row (x4)', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-28', '2.0.1', '3:f5a487dba681fe5229c69ee043168f2f', 18)
+INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Add the associations for the stack''s default group to the app pages..', GETDATE(), 'Insert Row (x4)', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-28', '2.0.1', '3:f5a487dba681fe5229c69ee043168f2f', 17)
 GO
 
 -- Changeset changelog_7.3.1.groovy::7.3.1-29::owf::(Checksum: 3:eb228dae1ba67f1dc85a7a60397e32ae)
@@ -366,7 +302,7 @@ GO
 INSERT INTO [dbo].[domain_mapping] ([dest_id], [dest_type], [relationship_type], [src_id], [src_type], [version]) VALUES ((SELECT id FROM widget_definition WHERE widget_guid='38070c45-5f6a-4460-810c-6e3496495ec4'), 'widget_definition', 'owns', (SELECT id FROM owf_group WHERE name='9e05a814-c1a4-4db1-a672-bccae0f0b311'), 'group', 0)
 GO
 
-INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Add the associations for the stack''s default group to the admin components.', GETDATE(), 'Insert Row (x9)', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-29', '2.0.1', '3:eb228dae1ba67f1dc85a7a60397e32ae', 19)
+INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Add the associations for the stack''s default group to the admin components.', GETDATE(), 'Insert Row (x9)', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-29', '2.0.1', '3:eb228dae1ba67f1dc85a7a60397e32ae', 18)
 GO
 
 -- Changeset changelog_7.3.1.groovy::7.3.1-31::owf::(Checksum: 3:923bc0f0a83220ac48a155d89e8d1c1c)
@@ -383,7 +319,7 @@ GO
 DELETE FROM [dbo].[widget_definition]  WHERE widget_url in ('admin/UserManagement.gsp', 'admin/UserEdit.gsp', 'admin/WidgetManagement.gsp', 'admin/WidgetEdit.gsp', 'admin/GroupManagement.gsp', 'admin/GroupEdit.gsp', 'admin/DashboardEdit.gsp', 'admin/StackManagement.gsp', 'admin/StackEdit.gsp', 'admin/Configuration.gsp') and universal_name is null
 GO
 
-INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Remove the old admin widgets.', GETDATE(), 'Delete Data (x4)', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-31', '2.0.1', '3:923bc0f0a83220ac48a155d89e8d1c1c', 20)
+INSERT INTO [dbo].[DATABASECHANGELOG] ([AUTHOR], [COMMENTS], [DATEEXECUTED], [DESCRIPTION], [EXECTYPE], [FILENAME], [ID], [LIQUIBASE], [MD5SUM], [ORDEREXECUTED]) VALUES ('owf', 'Remove the old admin widgets.', GETDATE(), 'Delete Data (x4)', 'EXECUTED', 'changelog_7.3.1.groovy', '7.3.1-31', '2.0.1', '3:923bc0f0a83220ac48a155d89e8d1c1c', 19)
 GO
 
 -- Release Database Lock
