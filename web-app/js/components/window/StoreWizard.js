@@ -183,10 +183,8 @@ Ext.define('Ozone.components.window.StoreWizard', {
             alert('Please enter a URL');
         } else {
             me.loadMask.show();
-            Ozone.util.Transport.send({
+            Ozone.util.Transport.getDescriptor({
                 url: storeDescriptor,
-                method: "GET",
-                forceXdomain: true,
                 onSuccess: function(data) {
                     me.record = new Ozone.data.WidgetDefinition(data);
                     me.loadMask.hide();
@@ -204,8 +202,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
                 onFailure: function() {
                     me.loadMask.hide();
                     alert("There was an error with the Store URL")
-                },
-                autoSendVersion: false
+                }
             });
         }
     },

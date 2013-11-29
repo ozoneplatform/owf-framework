@@ -26,12 +26,12 @@ Ozone.util.Transport = {
  *          cfg.onSuccess         -  callback function to capture the success result
  *          cfg.onFailure         -  callback to execute if there is an error
  *          cfg.content           -  optional content to send with the request, ie {value: 'x', _method: 'PUT'}
- *          cfg.async			  -  optional (default is true, asynchronous send, only applies to Ajax call)
- *          cfg.handleAs          - text or json
+ *          cfg.async             -  optional (default is true, asynchronous send, only applies to Ajax call)
+ *          cfg.handleAs          -  text or json
  *          cfg.autoSendVersion   -  true to send owf version to the server, false don't send (defaults to true)
  *          cfg.ignoredErrorCodes -  optional array of http error codes to ignore (if these happen onSucess will be called)
  *          cfg.forceXdomain      -  optional flag to force xdomain ajax call using dojo window.name
- *          cfg.forceNoCors       -  FOR INTERNAL USE ONLY, set true when previous CORS request failed
+ *          cfg.forceNoCors       -  FOR INTERNAL USE ONLY, set true when CORS request fails in order to force window.name on retry
  *
  *  @returns void, use callbacks
  *
@@ -155,15 +155,18 @@ Ozone.util.Transport.send = function(cfg) {
             }
         }, hasBody);
     } else if (tryCors) {
-        console.log('browser supports CORS');
-
         cfg.method = methodToUse.toUpperCase();
 
         var originalOnFailure = cfg.onFailure;
 
         cfg.onFailure = function() {
             cfg.forceNoCors = true;
-            console.log('CORS failed');
+
+            if (Ozone.log) {
+                Ozone.log.getDefaultLogger().warning(
+                    'CORS failed. Will try window.name transport.' +
+                    ' URL = ' + cfg.url);
+            }
 
             cfg.onFailure = originalOnFailure;
 
@@ -252,7 +255,7 @@ Ozone.util.Transport.send = function(cfg) {
  * @params  cfg.url              -  url of the request
  *          cfg.method           -  HTTP verb (only POST or GET, use _method = PUT or DELETE with a POST )
  *          cfg.content          -  optional content to send with the request, ie {value: 'x', _method: 'PUT'}
- *          cfg.async			 -  optional (default is true, asynchronous send, only applies to Ajax call)          
+ *          cfg.async            -  optional (default is true, asynchronous send, only applies to Ajax call)
  *
  *  @returns void
  *
@@ -318,14 +321,17 @@ Ozone.util.Transport.sendAndForget = function(cfg) {
             sync:  cfg.async == false? false : true //defaults to true
         }, hasBody);
     } else if (tryCors) {
-        console.log('browser supports CORS');
-
         cfg.method = methodToUse.toUpperCase();
         cfg.content = content;
 
         cfg.onFailure = function() {
             cfg.forceNoCors = true;
-            console.log('CORS failed');
+
+            if (Ozone.log) {
+                Ozone.log.getDefaultLogger().warning(
+                    'CORS failed. Will try window.name transport.' +
+                    ' URL = ' + cfg.url);
+            }
 
             Ozone.util.Transport.send(cfg);
         };
@@ -357,10 +363,10 @@ Ozone.util.Transport.sendAndForget = function(cfg) {
 /**
  * @private
  *
- *  @params  cfg.urls              -  Array of urls to try
+ *  @params  cfg.urls             -  Array of urls to try
  *           cfg.method           -  HTTP verb (only POST or GET, use _method = PUT or DELETE with a POST )
  *           cfg.onSuccess        -  callback function to capture the success result
- *           cfg.onLastFailure        -  callback to execute if there is an error
+ *           cfg.onLastFailure    -  callback to execute if there is an error
  *           cfg.content          -  optional content to send with the request, ie {value: 'x', _method: 'PUT'}
  *
  *  @returns void, use callbacks
@@ -399,7 +405,10 @@ Ozone.util.Transport.sendToFirst = function(cfg) {
 
 /**
  * @private
- * Perform a request using Cross Origin Resource sharing.
+ * Perform a request using Cross Origin Resource sharing (CORS). This method
+ * really does not do anything special aside from verifying the browser has
+ * CORS and setting the request for authentication in the right place. (Also
+ * uses XMLHTTPRequest2 for simplicity.)
  *
  * @params  cfg.url               -  url of the request
  *          cfg.method            -  HTTP verb
@@ -415,15 +424,13 @@ Ozone.util.Transport.sendWithCors = function(cfg) {
 
     var xhr = new XMLHttpRequest();
 
-    xhr.withCredentials = true;
-
     xhr.open(cfg.method.toUpperCase(), cfg.url);
+
+    xhr.withCredentials = true; // Must set after open!
 
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 
     xhr.onload = function(e) {
-        console.log('Got CORS data ' + xhr.responseText);
-
         if (cfg.onSuccess) {
             if (!cfg.handleAs || cfg.handleAs == 'json') {
                 try {
@@ -479,3 +486,89 @@ Ozone.util.Transport.browserHasCors = (function() {
 
     return result;
 })();
+
+/**
+ * @private
+ * Read and parse a widget or stack descriptor from a remote server. Said
+ * descriptors were originally designed for window.name transport, but must
+ * also be readable in a CORS environment.
+ *
+ * The OWF descriptor is a HTML file with embedded JSON. For historical
+ * reasons the JavaScript in the HTML must be executed in order to process
+ * the file correctly. (For example, some existing descriptor files have
+ * code that does computations using window.location in order to allow the
+ * same descriptor to be reused on different widget servers without hard
+ * coding an absolute path for the widget launch URL.)
+ *
+ * @params  cfg.url        -  url of the descriptor file
+ *          cfg.onSuccess  -  callback function to capture the success result
+ *          cfg.onFailure  -  callback to execute if there is an error
+ */
+Ozone.util.Transport.getDescriptor = function(cfg) {
+    var handleFailure = function(error) {
+        if (cfg.onFailure) cfg.onFailure(error);
+    };
+
+    Ozone.util.Transport.send({
+        url: cfg.url,
+        method: 'GET',
+        handleAs: 'text', // Descriptor file is in HTML, not JSON!
+        forceXdomain: true,
+        autoSendVersion: false,
+        onSuccess: function(response) {
+            // Transport tries CORS first and then falls back to
+            // window.name. If window.name was used the result has already
+            // been converted to a JSON object. Otherwise we need to
+            // evaluate JavaScript wrapped within HTML to get the actual
+            // descriptor information.
+
+            if (response) {
+                if (typeof(response) == "string" ||
+                    (typeof(response) == "object" && response.constructor === String)) {
+                    var allScript = '';
+                    var el = document.createElement("div");
+                    el.innerHTML = response;
+                    var scriptTags = el.getElementsByTagName("script");
+
+                    if (scriptTags && scriptTags.length) {
+                        for (var i = 0; i < scriptTags.length; i++) {
+                            allScript += scriptTags[i].innerHTML;
+                        }
+
+                        // Execute scripts in a sandbox and then read results
+                        // from window.name
+                        var json = (function() {
+                            // Set empty objects for known global variables
+                            // to prevent them from being altered by script
+                            // execution via eval() below
+                            var window = {};
+                            var Ozone = {};
+                            var owfdojo = {};
+                            var Ext = {};
+
+                            window.location = {};
+                            window.location.pathname = cfg.url;
+
+                            eval(allScript);
+
+                            return window.name;
+                        })();
+
+                        json = Ozone.util.parseJson(json);
+
+                        // The data property contains actual descriptor info
+                        cfg.onSuccess(json.data);
+                    } else {
+                        handleFailure("Invalid descriptor file at " + cfg.url);
+                    }
+                } else {
+                    cfg.onSuccess(response);
+                }
+            } else {
+                handleFailure("Empty content for descriptor at" + cfg.url);
+            }
+
+        },
+        onFailure: handleFailure
+    });
+};
