@@ -2885,7 +2885,7 @@ databaseChangeLog = {
       SET IDENTITY_INSERT [dbo].[owf_group] ON
     """)
   }
-  changeSet(author: "owf", id: "4.0.0-22", context: "sampleData, 4.0.0-sampleData") {
+  changeSet(author: "owf", id: "4.0.0-22", dbms: "hsqldb,mysql,mssql,oracle", context: "sampleData, 4.0.0-sampleData") {
       comment(text="insert new sample data")
     insert(tableName: "owf_group") {
         column(name: "id", valueNumeric: "4")
@@ -2919,6 +2919,34 @@ databaseChangeLog = {
         column(name: "automatic", valueBoolean: "false")
     }
   }
+
+  changeSet(author: "owf", id: "4.0.0-22-pg", dbms: "postgresql", context: "sampleData, 4.0.0-sampleData") {
+    // DO NOT assume hard coded id 4 is available. It may already be taken
+    // if the owf_group table and others are incrementing based on the
+    // hibernate sequence as in 7.3.0 and the create script inserted values
+    // into other tables before owf_group.
+    comment(text="insert new sample data")
+    insert(tableName: "owf_group") {
+        column(name: "id", valueComputed: "nextval('hibernate_sequence')")
+        column(name: "version", valueNumeric: "0")
+        column(name: "status", value: "active")
+        column(name: "email", value: "testgroup1@group1.com")
+        column(name: "description", value: "TestGroup1")
+        column(name: "name", value: "TestGroup1")
+        column(name: "automatic", valueBoolean: "false")
+    }
+
+    insert(tableName: "owf_group") {
+        column(name: "id", valueComputed: "nextval('hibernate_sequence')")
+        column(name: "version", valueNumeric: "0")
+        column(name: "status", value: "active")
+        column(name: "email", value: "testgroup2@group2.com")
+        column(name: "description", value: "TestGroup2")
+        column(name: "name", value: "TestGroup2")
+        column(name: "automatic", valueBoolean: "false")
+    }
+  }
+
   changeSet(author: "owf", id: "4.0.0-23", dbms:"mssql", context: "sampleData, 4.0.0-sampleData") {
       comment(text="allow identity inserts")
     sql ( text = """
@@ -2936,25 +2964,25 @@ databaseChangeLog = {
   changeSet(author: "owf", id: "4.0.0-25", context: "sampleData, 4.0.0-sampleData") {
       comment(text="insert new sample data")
     insert(tableName: "owf_group_people") {
-        column(name: "group_id", valueNumeric: "4")
+        column(name: "group_id", valueComputed: "(SELECT id FROM owf_group WHERE description = 'TestGroup1')")
 
         column(name: "person_id", valueNumeric: "2")
     }
 
     insert(tableName: "owf_group_people") {
-        column(name: "group_id", valueNumeric: "4")
+        column(name: "group_id", valueComputed: "(SELECT id FROM owf_group WHERE description = 'TestGroup1')")
 
         column(name: "person_id", valueNumeric: "1")
     }
 
     insert(tableName: "owf_group_people") {
-        column(name: "group_id", valueNumeric: "5")
+        column(name: "group_id", valueComputed: "(SELECT id FROM owf_group WHERE description = 'TestGroup2')")
 
         column(name: "person_id", valueNumeric: "2")
     }
 
     insert(tableName: "owf_group_people") {
-        column(name: "group_id", valueNumeric: "5")
+        column(name: "group_id", valueComputed: "(SELECT id FROM owf_group WHERE description = 'TestGroup2')")
 
         column(name: "person_id", valueNumeric: "1")
     }
@@ -3263,7 +3291,7 @@ databaseChangeLog = {
 
         column(name: "version", valueNumeric: "0")
 
-        column(name: "src_id", valueNumeric: "4")
+        column(name: "src_id", valueComputed: "(SELECT id FROM owf_group WHERE description = 'TestGroup1')")
 
         column(name: "src_type", value: "group")
 
@@ -3279,7 +3307,7 @@ databaseChangeLog = {
 
         column(name: "version", valueNumeric: "0")
 
-        column(name: "src_id", valueNumeric: "4")
+        column(name: "src_id", valueComputed: "(SELECT id FROM owf_group WHERE description = 'TestGroup1')")
 
         column(name: "src_type", value: "group")
 
@@ -3295,7 +3323,7 @@ databaseChangeLog = {
 
         column(name: "version", valueNumeric: "0")
 
-        column(name: "src_id", valueNumeric: "5")
+        column(name: "src_id", valueComputed: "(SELECT id FROM owf_group WHERE description = 'TestGroup2')")
 
         column(name: "src_type", value: "group")
 
@@ -3311,7 +3339,7 @@ databaseChangeLog = {
 
         column(name: "version", valueNumeric: "0")
 
-        column(name: "src_id", valueNumeric: "5")
+        column(name: "src_id", valueComputed: "(SELECT id FROM owf_group WHERE description = 'TestGroup1')")
 
         column(name: "src_type", value: "group")
 
