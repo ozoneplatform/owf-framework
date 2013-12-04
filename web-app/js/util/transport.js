@@ -178,8 +178,7 @@ Ozone.util.Transport.send = function(cfg) {
         // Use window.name transport
         try {
             var methodToUse = cfg.method;
-            if (methodToUse == "PUT" || methodToUse == "DELETE")
-            {
+            if (methodToUse == "PUT" || methodToUse == "DELETE") {
                 methodToUse = "POST";
             }
             var deferred = owfdojox.io.windowName.send(methodToUse.toUpperCase(), {
@@ -187,8 +186,7 @@ Ozone.util.Transport.send = function(cfg) {
                 content: content,
                 preventCache: true,
                 timeout: cfg.timeout ? cfg.timeout : 20000,
-                load:
-                function(result) {
+                load: function(result) {
                     try {
                         // OWF-2750 - handle timeout errors which are already JSON objects
                         var json = null;
@@ -230,8 +228,7 @@ Ozone.util.Transport.send = function(cfg) {
                         cfg.onFailure(e2.name + " : " + e2.message);
                     }
                 },
-                error:
-                function(result){
+                error: function(result){
                     if (result.dojoType=='cancel') { return; }
                     if (result instanceof Error){
                         cfg.onFailure(result.name + " : " + result.message);
@@ -521,50 +518,59 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
             // been converted to a JSON object. Otherwise we need to
             // evaluate JavaScript wrapped within HTML to get the actual
             // descriptor information.
+            var responseJson;
 
-            if (response) {
-                if (typeof(response) == "string" ||
-                    (typeof(response) == "object" && response.constructor === String)) {
-                    var allScript = '';
-                    var el = document.createElement("div");
-                    el.innerHTML = response;
-                    var scriptTags = el.getElementsByTagName("script");
+            try {
+                responseJson = Ozone.util.parseJson(response);
+            }
+            catch(e) {} 
 
-                    if (scriptTags && scriptTags.length) {
-                        for (var i = 0; i < scriptTags.length; i++) {
-                            allScript += scriptTags[i].innerHTML;
-                        }
+            // handle json
+            if(responseJson) {
+                cfg.onSuccess(responseJson.data);
+            }
+            // handle window.name response
+            else if(response.indexOf('<html>') >= 0) {
+                var allScript = '';
+                var el = document.createElement("div");
+                el.innerHTML = response;
+                var scriptTags = el.getElementsByTagName("script");
 
-                        // Execute scripts in a sandbox and then read results
-                        // from window.name
-                        var json = (function() {
-                            // Set empty objects for known global variables
-                            // to prevent them from being altered by script
-                            // execution via eval() below
-                            var window = {};
-                            var Ozone = {};
-                            var owfdojo = {};
-                            var Ext = {};
-
-                            window.location = {};
-                            window.location.pathname = cfg.url;
-
-                            eval(allScript);
-
-                            return window.name;
-                        })();
-
-                        json = Ozone.util.parseJson(json);
-
-                        // The data property contains actual descriptor info
-                        cfg.onSuccess(json.data);
-                    } else {
-                        handleFailure("Invalid descriptor file at " + cfg.url);
+                if (scriptTags && scriptTags.length) {
+                    for (var i = 0; i < scriptTags.length; i++) {
+                        allScript += scriptTags[i].innerHTML;
                     }
-                } else {
-                    cfg.onSuccess(response);
+
+                    // Execute scripts in a sandbox and then read results
+                    // from window.name
+                    var json = (function() {
+                        // Set empty objects for known global variables
+                        // to prevent them from being altered by script
+                        // execution via eval() below
+                        // TODO: use iframe instead
+                        var window = {};
+                        var Ozone = {};
+                        var owfdojo = {};
+                        var Ext = {};
+
+                        window.location = {};
+                        window.location.pathname = cfg.url;
+
+                        eval(allScript);
+
+                        return window.name;
+                    })();
+
+                    json = Ozone.util.parseJson(json);
+
+                    // The data property contains actual descriptor info
+                    cfg.onSuccess(json.data);
                 }
-            } else {
+                else {
+                    handleFailure("Invalid descriptor file at " + cfg.url);
+                }
+            }
+            else {
                 handleFailure("Empty content for descriptor at" + cfg.url);
             }
 
