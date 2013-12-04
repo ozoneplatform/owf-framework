@@ -1,15 +1,17 @@
 databaseChangeLog = {
-    changeSet(author: 'owf', id: "7.3.0-0", context: "create, 7.3.0", dbms: 'postgresql') {
+    def setupPgIdGenerators = {
         comment('Fixing Postgres id columns to have id generators')
+
+        sql("""
+            -- ensure that the sequence has been used, otherwise the currval calls
+            -- below will fail
+            select nextval('hibernate_sequence');
+        """)
 
         ['dashboard', 'domain_mapping', 'owf_group',
         'person', 'person_widget_definition', 'preference', 'requestmap', 'role',
         'tag_links', 'tags', 'widget_definition'].each { table ->
             sql("""
-                -- ensure that the sequence has been used, otherwise the currval calls
-                -- below will fail
-                select nextval('hibernate_sequence');
-
                 -- Updating hibernate_sequence id generator if necessary
                 SELECT setval('hibernate_sequence',
                     (SELECT GREATEST(MAX(id) + 1, currval('hibernate_sequence')) FROM ${table}),
@@ -18,6 +20,21 @@ databaseChangeLog = {
                 ALTER TABLE ${table} ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
             """)
         }
+    }
+
+    changeSet(author: 'owf', id: "7.3.0-0-pg", context: "create, 7.3.0", dbms: 'postgresql') {
+        setupPgIdGenerators()
+    }
+
+    changeSet(author: 'owf', id: "7.3.0-0-pg-sampleData", context: "sampleData, 7.3.0-sampleData", dbms: 'postgresql') {
+        // We must reinitialize the ID generators during the sample data
+        // script since the hibernate sequence is dropped by some older
+        // sample data change sets. Also must have different change set ID
+        // from the identical code used in create since the sample data
+        // script is run as separate script after create. (Such a conflict
+        // does not occur with the upgrade script as either create or
+        // upgrade is run; never both.)
+        setupPgIdGenerators()
     }
 
     changeSet(author: "owf", id: "7.3.0-1", context: "create, upgrade, 7.3.0") {
