@@ -2,7 +2,7 @@
 -- Update Database Script
 -- *********************************************************************
 -- Change Log: changelog.groovy
--- Ran at: 11/26/13 8:29 AM
+-- Ran at: 12/4/13 10:57 AM
 
 -- Liquibase version: 2.0.1
 -- *********************************************************************
@@ -457,11 +457,11 @@ INSERT INTO widget_type (id, name, version) VALUES (5, 'fullscreen', 0);
 
 INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', 'Add fullscreen widget types to table', NOW(), 'Insert Row', 'EXECUTED', 'changelog_7.2.0.groovy', '7.2.0-1', '2.0.1', '3:69c7062f6bb536836805960380dfdb90', 60);
 
--- Changeset changelog_7.3.0.groovy::7.3.0-0::owf::(Checksum: 3:45f52094ad67d4066c6a42d4fdf9230e)
+-- Changeset changelog_7.3.0.groovy::7.3.0-0-pg::owf::(Checksum: 3:4f38e9240c096801990deaee6dba750a)
 -- Fixing Postgres id columns to have id generators
 -- ensure that the sequence has been used, otherwise the currval calls
-                -- below will fail
-                select nextval('hibernate_sequence');
+            -- below will fail
+            select nextval('hibernate_sequence');
 
 -- Updating hibernate_sequence id generator if necessary
                 SELECT setval('hibernate_sequence',
@@ -470,20 +470,12 @@ INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXEC
 
 ALTER TABLE dashboard ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
 
--- ensure that the sequence has been used, otherwise the currval calls
-                -- below will fail
-                select nextval('hibernate_sequence');
-
 -- Updating hibernate_sequence id generator if necessary
                 SELECT setval('hibernate_sequence',
                     (SELECT GREATEST(MAX(id) + 1, currval('hibernate_sequence')) FROM domain_mapping),
                     false);
 
 ALTER TABLE domain_mapping ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
-
--- ensure that the sequence has been used, otherwise the currval calls
-                -- below will fail
-                select nextval('hibernate_sequence');
 
 -- Updating hibernate_sequence id generator if necessary
                 SELECT setval('hibernate_sequence',
@@ -492,20 +484,12 @@ ALTER TABLE domain_mapping ALTER COLUMN id SET DEFAULT nextval('hibernate_sequen
 
 ALTER TABLE owf_group ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
 
--- ensure that the sequence has been used, otherwise the currval calls
-                -- below will fail
-                select nextval('hibernate_sequence');
-
 -- Updating hibernate_sequence id generator if necessary
                 SELECT setval('hibernate_sequence',
                     (SELECT GREATEST(MAX(id) + 1, currval('hibernate_sequence')) FROM person),
                     false);
 
 ALTER TABLE person ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
-
--- ensure that the sequence has been used, otherwise the currval calls
-                -- below will fail
-                select nextval('hibernate_sequence');
 
 -- Updating hibernate_sequence id generator if necessary
                 SELECT setval('hibernate_sequence',
@@ -514,20 +498,12 @@ ALTER TABLE person ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
 
 ALTER TABLE person_widget_definition ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
 
--- ensure that the sequence has been used, otherwise the currval calls
-                -- below will fail
-                select nextval('hibernate_sequence');
-
 -- Updating hibernate_sequence id generator if necessary
                 SELECT setval('hibernate_sequence',
                     (SELECT GREATEST(MAX(id) + 1, currval('hibernate_sequence')) FROM preference),
                     false);
 
 ALTER TABLE preference ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
-
--- ensure that the sequence has been used, otherwise the currval calls
-                -- below will fail
-                select nextval('hibernate_sequence');
 
 -- Updating hibernate_sequence id generator if necessary
                 SELECT setval('hibernate_sequence',
@@ -536,20 +512,12 @@ ALTER TABLE preference ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence')
 
 ALTER TABLE requestmap ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
 
--- ensure that the sequence has been used, otherwise the currval calls
-                -- below will fail
-                select nextval('hibernate_sequence');
-
 -- Updating hibernate_sequence id generator if necessary
                 SELECT setval('hibernate_sequence',
                     (SELECT GREATEST(MAX(id) + 1, currval('hibernate_sequence')) FROM role),
                     false);
 
 ALTER TABLE role ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
-
--- ensure that the sequence has been used, otherwise the currval calls
-                -- below will fail
-                select nextval('hibernate_sequence');
 
 -- Updating hibernate_sequence id generator if necessary
                 SELECT setval('hibernate_sequence',
@@ -558,20 +526,12 @@ ALTER TABLE role ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
 
 ALTER TABLE tag_links ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
 
--- ensure that the sequence has been used, otherwise the currval calls
-                -- below will fail
-                select nextval('hibernate_sequence');
-
 -- Updating hibernate_sequence id generator if necessary
                 SELECT setval('hibernate_sequence',
                     (SELECT GREATEST(MAX(id) + 1, currval('hibernate_sequence')) FROM tags),
                     false);
 
 ALTER TABLE tags ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
-
--- ensure that the sequence has been used, otherwise the currval calls
-                -- below will fail
-                select nextval('hibernate_sequence');
 
 -- Updating hibernate_sequence id generator if necessary
                 SELECT setval('hibernate_sequence',
@@ -580,7 +540,7 @@ ALTER TABLE tags ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
 
 ALTER TABLE widget_definition ALTER COLUMN id SET DEFAULT nextval('hibernate_sequence');
 
-INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', 'Fixing Postgres id columns to have id generators', NOW(), 'Custom SQL (x11)', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-0', '2.0.1', '3:45f52094ad67d4066c6a42d4fdf9230e', 61);
+INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', 'Fixing Postgres id columns to have id generators', NOW(), 'Custom SQL (x12)', 'EXECUTED', 'changelog_7.3.0.groovy', '7.3.0-0-pg', '2.0.1', '3:4f38e9240c096801990deaee6dba750a', 61);
 
 -- Changeset changelog_7.3.0.groovy::7.3.0-1::owf::(Checksum: 3:da90c894252394662881278c5011df4f)
 -- Add type to dashboard
