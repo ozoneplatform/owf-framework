@@ -3339,7 +3339,7 @@ databaseChangeLog = {
 
         column(name: "version", valueNumeric: "0")
 
-        column(name: "src_id", valueComputed: "(SELECT id FROM owf_group WHERE description = 'TestGroup1')")
+        column(name: "src_id", valueComputed: "(SELECT id FROM owf_group WHERE description = 'TestGroup2')")
 
         column(name: "src_type", value: "group")
 
