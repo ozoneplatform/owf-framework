@@ -163,7 +163,7 @@ Ozone.util.Transport.send = function(cfg) {
             cfg.forceNoCors = true;
 
             if (Ozone.log) {
-                Ozone.log.getDefaultLogger().warning(
+                Ozone.log.getDefaultLogger().warn(
                     'CORS failed. Will try window.name transport.' +
                     ' URL = ' + cfg.url);
             }
@@ -325,7 +325,7 @@ Ozone.util.Transport.sendAndForget = function(cfg) {
             cfg.forceNoCors = true;
 
             if (Ozone.log) {
-                Ozone.log.getDefaultLogger().warning(
+                Ozone.log.getDefaultLogger().warn(
                     'CORS failed. Will try window.name transport.' +
                     ' URL = ' + cfg.url);
             }
@@ -514,19 +514,18 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
         autoSendVersion: false,
         onSuccess: function(response) {
             // Transport tries CORS first and then falls back to
-            // window.name. If window.name was used the result has already
-            // been converted to a JSON object. Otherwise we need to
-            // evaluate JavaScript wrapped within HTML to get the actual
-            // descriptor information.
+            // window.name. If window.name was used the result is a JSON
+            // string. Otherwise we need to evaluate JavaScript wrapped
+            // within HTML to get the actual descriptor information.
             var responseJson;
 
             try {
                 responseJson = Ozone.util.parseJson(response);
             }
-            catch(e) {} 
+            catch(e) {}
 
             // handle json
-            if(responseJson) {
+            if (responseJson && responseJson.data) {
                 cfg.onSuccess(responseJson.data);
             }
             // handle window.name response
@@ -543,7 +542,7 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
 
                     // Execute scripts in a sandbox and then read results
                     // from window.name
-                    var json = (function() {
+                    responseJson = (function() {
                         // Set empty objects for known global variables
                         // to prevent them from being altered by script
                         // execution via eval() below
@@ -561,19 +560,21 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
                         return window.name;
                     })();
 
-                    json = Ozone.util.parseJson(json);
+                    try {
+                        responseJson = Ozone.util.parseJson(responseJson);
+                    } catch(e) {
+                        responseJson = null;
+                    }
 
-                    // The data property contains actual descriptor info
-                    cfg.onSuccess(json.data);
-                }
-                else {
-                    handleFailure("Invalid descriptor file at " + cfg.url);
+                    if (responseJson && responseJson.data) {
+                        cfg.onSuccess(responseJson.data);
+                    }
                 }
             }
-            else {
-                handleFailure("Empty content for descriptor at" + cfg.url);
-            }
 
+            if (!responseJson || !responseJson.data) {
+                handleFailure("Invalid descriptor file at " + cfg.url);
+            }
         },
         onFailure: handleFailure
     });
