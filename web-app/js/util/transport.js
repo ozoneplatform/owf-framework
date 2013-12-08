@@ -527,54 +527,49 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
             // handle json
             if (responseJson && responseJson.data) {
                 cfg.onSuccess(responseJson.data);
+                return;
             }
-            // handle window.name response
+            // handle window.name html response
             else if(response.indexOf('<html>') >= 0) {
-                var allScript = '';
+                var a = document.createElement('a');
+                a.href = cfg.url;
+
                 var el = document.createElement("div");
                 el.innerHTML = response;
+                
                 var scriptTags = el.getElementsByTagName("script");
 
                 if (scriptTags && scriptTags.length) {
+                    var scripts = '';
                     for (var i = 0; i < scriptTags.length; i++) {
-                        allScript += scriptTags[i].innerHTML;
+                        scripts += scriptTags[i].innerHTML;
                     }
+                    
+                    var getWindowNameFunc = '';
+                    getWindowNameFunc = 'var window = {};var Ozone = {};var owfdojo={};var Ext={};';
 
-                    // Execute scripts in a sandbox and then read results
-                    // from window.name
-                    responseJson = (function() {
-                        // Set empty objects for known global variables
-                        // to prevent them from being altered by script
-                        // execution via eval() below
-                        // TODO: use iframe instead
-                        var window = {};
-                        var Ozone = {};
-                        var owfdojo = {};
-                        var Ext = {};
-
-                        window.location = {};
-                        window.location.pathname = cfg.url;
-
-                        eval(allScript);
-
-                        return window.name;
-                    })();
+                    // set window.location to anchor tag as anchor tag contains all props of location
+                    getWindowNameFunc += 'window.location = a;';
+                    
+                    getWindowNameFunc += scripts;
+                    getWindowNameFunc += 'return window.name;';
 
                     try {
+                        responseJson = (new Function('a', getWindowNameFunc))(a);
                         responseJson = Ozone.util.parseJson(responseJson);
-                    } catch(e) {
+                    }
+                    catch(e) {
                         responseJson = null;
                     }
 
                     if (responseJson && responseJson.data) {
                         cfg.onSuccess(responseJson.data);
+                        return;
                     }
                 }
             }
 
-            if (!responseJson || !responseJson.data) {
-                handleFailure("Invalid descriptor file at " + cfg.url);
-            }
+            handleFailure("Invalid descriptor file at " + cfg.url);
         },
         onFailure: handleFailure
     });
