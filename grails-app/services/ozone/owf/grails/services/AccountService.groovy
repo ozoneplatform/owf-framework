@@ -1,6 +1,9 @@
 package ozone.owf.grails.services
 
+import org.springframework.security.core.authority.GrantedAuthorityImpl
+import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder as SCH
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import grails.converters.JSON
 import ozone.owf.grails.AuditOWFWebRequestsLogger
 import ozone.owf.grails.OwfException
@@ -16,7 +19,7 @@ import ozone.owf.grails.domain.WidgetDefinition
 import org.hibernate.CacheMode
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.annotation.Propagation
-
+import ozone.security.authentication.OWFUserDetailsImpl
 
 /**
  * Service for account-related operations.
@@ -600,4 +603,30 @@ class AccountService {
                 exceptionType: OwfExceptionTypes.JsonToDomainColumnMapping)
         }
     }
+	
+	
+	//There are times that OWF might pick up a request when a user is not logged in, for example during sync
+	//This will create a security context with the incoming userName.  The user name could be SYSTEM or it could be a user name from an audit field (editedBy
+	public void doWithSecurityContext(Closure closure, String userName = "SYSTEM"){
+		if(!SCH.context.authentication){
+			log.debug "Creating a PreAuthenticatedAuthenticationToken for ${userName}"
+			
+			def auths = [new GrantedAuthorityImpl(ERoleAuthority.ROLE_USER.strVal)]
+					
+			def userDetails = new OWFUserDetailsImpl(userName, null, auths, [])
+			userDetails.username = userName
+			
+			def token = new PreAuthenticatedAuthenticationToken(userDetails, null, auths)
+			
+			SCH.getContext().setAuthentication(token)
+			
+			closure()
+			
+			SCH.getContext().setAuthentication(null)
+			
+		} else {
+			closure()	
+		}
+	}
+	
 }

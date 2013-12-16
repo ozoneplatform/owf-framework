@@ -9,6 +9,7 @@ package ozone.owf.grails.controllers
 import grails.converters.JSON
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import ozone.owf.grails.domain.*
+import ozone.owf.grails.services.AccountService
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
 
@@ -16,7 +17,8 @@ class MarketplaceController extends BaseOwfRestController {
 
     def config = ConfigurationHolder.config
     def marketplaceService
-
+	AccountService accountService
+	
     def retrieveFromMarketplace = {
         // Initial setup to include testing that there's a meaningful GUID supplied.
         def stMarketplaceJson = new HashSet()
@@ -56,9 +58,16 @@ class MarketplaceController extends BaseOwfRestController {
                         statusCode = 200
                         log.info("MP Sync: ${statusMessage}")
                 } else {
-
                     if (!stMarketplaceJson.isEmpty()) {
-                        marketplaceService.addListingsToDatabase(stMarketplaceJson)
+						
+						//This is the listing that matches the GUID passed in.  We can make the assumption that the editedBy value
+						//is who kicked off this event
+						def editedListing =	stMarketplaceJson.find{params.guid == it.widgetUuid}
+						
+						accountService.doWithSecurityContext({
+							marketplaceService.addListingsToDatabase(stMarketplaceJson)							
+						}, editedListing?.editedBy)
+						
                         statusKey = 'updatedGuid'
                         statusMessage = params.guid
                         statusCode = 200
