@@ -64,10 +64,9 @@ class MarketplaceController extends BaseOwfRestController {
 						//is who kicked off this event
 						def editedListing =	stMarketplaceJson.find{params.guid == it.widgetUuid}
 						
-						accountService.doWithSecurityContext({
-							marketplaceService.addListingsToDatabase(stMarketplaceJson)							
-						}, editedListing?.editedBy)
-						
+						accountService.createSecurityContext(editedListing?.editedBy)
+						marketplaceService.addListingsToDatabase(stMarketplaceJson)
+
                         statusKey = 'updatedGuid'
                         statusMessage = params.guid
                         statusCode = 200

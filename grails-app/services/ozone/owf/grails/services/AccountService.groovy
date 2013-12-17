@@ -607,7 +607,8 @@ class AccountService {
 	
 	//There are times that OWF might pick up a request when a user is not logged in, for example during sync
 	//This will create a security context with the incoming userName.  The user name could be SYSTEM or it could be a user name from an audit field (editedBy
-	public void doWithSecurityContext(Closure closure, String userName = "SYSTEM"){
+	public void createSecurityContext(String userName = "SYSTEM"){
+		//If there is no security context then a user is not logged in so this is a system process or we can use the passed in userName to create the details
 		if(!SCH.context.authentication){
 			log.debug "Creating a PreAuthenticatedAuthenticationToken for ${userName}"
 			
@@ -619,13 +620,6 @@ class AccountService {
 			def token = new PreAuthenticatedAuthenticationToken(userDetails, null, auths)
 			
 			SCH.getContext().setAuthentication(token)
-			
-			closure()
-			
-			SCH.getContext().setAuthentication(null)
-			
-		} else {
-			closure()	
 		}
 	}
 	
