@@ -1,0 +1,64 @@
+# .gitignore for owf
+
+# logs
+/stacktrace.log
+/test/reports
+/logs
+
+# older plugin install locations
+# /plugins
+/web-app/plugins
+/web-app/WEB-INF/classes
+
+# "temporary" files
+/staging
+/build-base*
+#/src
+target
+/build.number
+/cobertura.ser
+/lib
+/work
+js-min
+/js-plugins/*.gz.js
+/bin
+/target-eclipse
+/prodDb.properties
+/prodDb.log
+/prodDb.bak
+*.sass-cache
+*.css
+web-app/WEB-INF/grails-app
+test-widgets/html-widgets/src/main/webapp/images/dragAndDrop/
+test-widgets/html-widgets/src/main/webapp/js-lib/
+test-widgets/html-widgets/src/main/webapp/js/
+test-widgets/standalone-container/src/main/webapp/js-min/
+/src/assemble/docs/jsdoc/
+*.zip
+owf-widget-debug.js
+owf-widget-min.js
+owf-widget-min.gz.js
+
+# OS generated files #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# IDE support files
+/.classpath
+/.launch
+/.project
+/.settings
+/*.launch
+/*.tmproj
+/ivy*
+/eclipse
+/.idea
+/*.iml
+/*.iws
+/*.ipr
