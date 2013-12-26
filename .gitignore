@@ -14,12 +14,12 @@
 /staging
 /build-base*
 #/src
-/target
+target
 /build.number
 /cobertura.ser
 /lib
 /work
-/web-app/js-min
+js-min
 /js-plugins/*.gz.js
 /bin
 /target-eclipse
@@ -28,6 +28,15 @@
 /prodDb.bak
 *.sass-cache
 *.css
+web-app/WEB-INF/grails-app
+test-widgets/html-widgets/src/main/webapp/images/dragAndDrop/
+test-widgets/html-widgets/src/main/webapp/js-lib/
+test-widgets/html-widgets/src/main/webapp/js/
+/src/assemble/docs/jsdoc/
+*.zip
+owf-widget-debug.js
+owf-widget-min.js
+owf-widget-min.gz.js
 
 # OS generated files #
 .DS_Store

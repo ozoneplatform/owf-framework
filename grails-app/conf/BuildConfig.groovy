@@ -79,22 +79,6 @@ grails.war.copyToWebApp = { args ->
 
       exclude(name: "js-min/**")
 
-      exclude(name: "js-lib/ext-4.0.7/ext-all-debug-w-comments.js")
-      exclude(name: "js-lib/ext-4.0.7/ext-all-dev.js")
-      exclude(name: "js-lib/ext-4.0.7/ext-dev.js")
-      exclude(name: "js-lib/ext-4.0.7/build/**")
-      exclude(name: "js-lib/ext-4.0.7/builds/**")
-      exclude(name: "js-lib/ext-4.0.7/deploy/**")
-      exclude(name: "js-lib/ext-4.0.7/docs/**")
-      exclude(name: "js-lib/ext-4.0.7/examples/**")
-      exclude(name: "js-lib/ext-4.0.7/jsbuilder/**")
-      exclude(name: "js-lib/ext-4.0.7/overview/**")
-      exclude(name: "js-lib/ext-4.0.7/pkgs/**")
-      exclude(name: "js-lib/ext-4.0.7/resources/themes/images/access/**")
-      exclude(name: "js-lib/ext-4.0.7/resources/themes/images/gray/**")
-      exclude(name: "js-lib/ext-4.0.7/src/**")
-      exclude(name: "js-lib/ext-4.0.7/welcome/**")
-
       if (!System.properties.includeJsTests || !System.properties.includeJsTests.toString().toBoolean()) {
         exclude(name: "js-doh/**")
         exclude(name: "js-lib/dojo-release-*/**")
