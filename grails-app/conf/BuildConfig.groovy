@@ -211,14 +211,15 @@ grails.project.dependency.resolution = {
         //need ant for createWebBundles.jar
         runtime 'org.apache.ant:ant:1.7.0'
         compile('access:access:1.0')
-		
+
 		runtime "hsqldb:hsqldb:1.8.0.10"
 
-		
+
     }
     plugins {
 		compile 'org.ozoneplatform:aml-commons-security:3.1.9'
 		compile 'org.ozoneplatform:aml-commons-appconfig:2.0'
 		compile 'org.ozoneplatform:aml-commons-auditing:0.1'
+        runtime ':cors:1.1.4' // OP-3931
     }
 }
