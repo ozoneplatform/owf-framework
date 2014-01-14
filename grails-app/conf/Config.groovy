@@ -912,6 +912,7 @@ environments {
             //debug 'org.hibernate.SQL'
             //trace 'org.hibernate.type'
             //trace 'org.hibernate.cache'
+            trace  'org.jivesoftware'
             appenders {
                 appender new RollingFileAppender(name:"owfStackTraceLog", maxFileSize:8192,
                     file:"logs/owf-stacktrace.log",
@@ -1134,4 +1135,8 @@ keystore = 'certs/keystore.jks'
 casSettings.useCas=true
 casSettings.FullServiceURL='https://localhost:8443/cas'
 
-
+xmpp.username="amlnotify_owfuser"
+xmpp.password="()IOJKNM78yughvb"
+xmpp.resourceName="owfchat1.goss.owfgoss.org" // Service name
+xmpp.port=5222
+xmpp.notifications.enabled = true

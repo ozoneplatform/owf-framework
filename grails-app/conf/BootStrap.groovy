@@ -26,8 +26,9 @@ import ozone.owf.grails.domain.RelationshipType
 import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.domain.WidgetType
 import ozone.owf.grails.services.OwfApplicationConfigurationService
+import ozone.owf.grails.services.OwfMessagingService
 import org.springframework.beans.factory.annotation.Autowired
-
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CFG
 class BootStrap {
     
     def grailsApplication
@@ -39,6 +40,8 @@ class BootStrap {
 	
     OwfApplicationConfigurationService owfApplicationConfigurationService
 	
+    OwfMessagingService owfMessagingService
+    
     def init = { servletContext ->
 
         println 'BootStrap running!'
@@ -139,6 +142,10 @@ class BootStrap {
 		    owfApplicationConfigurationService.createRequired()
         }
 
+        
+        if(CFG.config.xmpp.notifications.enabled)
+            owfMessagingService.listen()
+        
         println 'BootStrap finished!'
     }
     def destroy = {
