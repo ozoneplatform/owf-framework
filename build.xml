@@ -418,6 +418,9 @@
         <antcall target="stage-owf" />
         <antcall target="post-bundle-cleanup" />
 
+        <!-- Ensure shell scripts are executable (for local dev testing) -->
+        <chmod dir="${staging.dir}" perm="+x" includes="**/*.sh"/>
+
         <!-- create owf bundle -->
         <zip destfile="${staging.dir}/${app.name}-bundle.zip" >
         	<zipfileset dir="${staging.dir}" excludes="**/*.sh, help/**" />
@@ -466,7 +469,7 @@
         <unzip src="${staging.dir}/owf-security-extras-${owf.security.rev}.zip" dest="${staging.dir}" />
         <antcall target='stage-extras' />
         <copy file="LICENSE.txt"  tofile="${staging.dir}/LICENSE.txt"/>
-	<copy file="COPYRIGHT.txt" tofile="${staging.dir}/COPYRIGHT.txt" />
+        <copy file="COPYRIGHT.txt" tofile="${staging.dir}/COPYRIGHT.txt" />
     </target>
 
     <target  name="post-bundle-cleanup" >

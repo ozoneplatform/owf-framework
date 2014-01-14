@@ -3,24 +3,24 @@ Ozone.version = Ozone.version || {};
 
 Ozone.version = {
 
-	owfversion: '7.5.0-GA',
+    owfversion: '7.9.0',
 
-	mpversion: '2.5',
+    mpversion: '2.5',
 
-	preference: '-v1',
+    preference: '-v1',
 
-	eventing: '-v1',
+    eventing: '-v1',
 
-	widgetLauncher: '-v1',
+    widgetLauncher: '-v1',
 
-	state: '-v1',
+    state: '-v1',
 
-	dragAndDrop: '-v1',
+    dragAndDrop: '-v1',
 
-	widgetChrome: '-v1',
+    widgetChrome: '-v1',
 
-	logging: '-v1',
+    logging: '-v1',
 
-	language: '-v1'
+    language: '-v1'
 
 };
