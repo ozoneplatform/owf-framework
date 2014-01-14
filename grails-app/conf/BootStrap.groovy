@@ -140,11 +140,10 @@ class BootStrap {
         if(grails.util.Environment.current.name != 'test') {
             owfApplicationConfigurationService.checkThatConfigsExist()
 		    owfApplicationConfigurationService.createRequired()
+            
+            if(CFG.config.xmpp.notifications.enabled)
+                owfMessagingService.listen()
         }
-
-        
-        if(CFG.config.xmpp.notifications.enabled)
-            owfMessagingService.listen()
         
         println 'BootStrap finished!'
     }
