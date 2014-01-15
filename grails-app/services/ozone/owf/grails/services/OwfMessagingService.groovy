@@ -8,9 +8,9 @@ class OwfMessagingService {
     
     
     public void listen(){
-        println "REgistering the listening service...."
+        //For now this is invoked in bootstrap but in reality this will be from a controller
         messageService.listenForMessage("amlnotify_owfuser", "amlnotify@conference.goss.owfgoss.org", { message ->
-            println "Got some message in OWF from the chat it looks like : " + message
+            log.info "Message recieved.  The contents are: ${message}."
         });
     
     }
