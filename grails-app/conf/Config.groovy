@@ -1139,4 +1139,4 @@ xmpp.username="amlnotify_owfuser"
 xmpp.password="()IOJKNM78yughvb"
 xmpp.resourceName="owfchat1.goss.owfgoss.org" // Service name
 xmpp.port=5222
-xmpp.notifications.enabled = true
+xmpp.notifications.enabled = false
