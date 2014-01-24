@@ -2,7 +2,6 @@ package ozone.owf.grails.services
 
 
 import org.ozoneplatform.messaging.service.api.MessageService
-import org.ozoneplatform.messaging.payload.AmlMessage
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CFG
 import ozone.owf.cache.OwfMessageCache
 class OwfMessagingService {
