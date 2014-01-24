@@ -1,0 +1,230 @@
+//
+// Buttons
+// --------------------------------------------------
+
+
+// Base styles
+// --------------------------------------------------
+
+// Core
+.btn {
+  display: inline-block;
+  @include ie7-inline-block();
+  padding: 4px 12px;
+  margin-bottom: 0; // For input.btn
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  @include buttonBackground($btn-default-bg, $btn-default-color, $btn-default-border);
+  @include border-radius($border-radius-base);
+  @include ie7-restore-left-whitespace(); // Give IE7 some love
+
+  // Hover/focus state
+  &:hover,
+  &:focus {
+    text-decoration: none;
+    background-position: 0 -15px;
+
+    // transition is only when going to hover/focus, otherwise the background
+    // behind the gradient (there for IE<=9 fallback) gets mismatched
+    @include transition(background-position .1s linear);
+  }
+
+  // Focus state for keyboard and accessibility
+  &:focus {
+    @include tab-focus();
+  }
+
+  // Disabled state
+  &.disabled,
+  &[disabled] {
+    cursor: default;
+    background-image: none;
+    @include opacity(65);
+    @include box-shadow(none);
+
+    &:active {
+      @include opacity(65);
+      @include box-shadow(none);
+    }
+  }
+
+  // Active state
+  &.active,
+  &:active {
+    background-image: none;
+    outline: 0;
+    @include opacity(100);
+    @include box-shadow(inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05));
+  }
+
+}
+
+
+
+// Button Sizes
+// --------------------------------------------------
+
+// Large
+.btn-large {
+  padding: $padding-large;
+  font-size: $font-size-large;
+  @include border-radius($border-radius-large);
+}
+.btn-large [class^="icon-"],
+.btn-large [class*=" icon-"] {
+  margin-top: 4px;
+}
+
+// Small
+.btn-small {
+  padding: $padding-small;
+  font-size: $font-size-small;
+  @include border-radius($border-radius-small);
+}
+.btn-small [class^="icon-"],
+.btn-small [class*=" icon-"] {
+  margin-top: 0;
+}
+.btn-mini [class^="icon-"],
+.btn-mini [class*=" icon-"] {
+  margin-top: -1px;
+}
+
+// Mini
+.btn-mini {
+  padding: $padding-mini;
+  font-size: $font-size-mini;
+  @include border-radius($border-radius-small);
+}
+
+
+// Block button
+// -------------------------
+
+.btn-block {
+  display: block;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  @include box-sizing(border-box);
+}
+
+// Vertically space out multiple block buttons
+.btn-block + .btn-block {
+  margin-top: 5px;
+}
+
+// Specificity overrides
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  &.btn-block {
+    width: 100%;
+  }
+}
+
+
+
+// Alternate buttons
+// --------------------------------------------------
+
+// Provide *some* extra contrast for those who can get it
+.btn-primary.active,
+.btn-warning.active,
+.btn-danger.active,
+.btn-success.active,
+.btn-info.active,
+.btn-inverse.active {
+  color: rgba(255,255,255,.75);
+}
+
+// Set the backgrounds
+// -------------------------
+.btn-primary {
+  @include buttonBackground($btn-primary-bg, $btn-primary-color, $btn-primary-border);
+}
+// Warning appears are orange
+.btn-warning {
+  @include buttonBackground($btn-warning-bg, $btn-warning-color, $btn-warning-border);
+}
+// Danger and error appear as red
+.btn-danger {
+  @include buttonBackground($btn-danger-bg, $btn-danger-color, $btn-danger-border);
+}
+// Success appears as green
+.btn-success {
+  @include buttonBackground($btn-success-bg, $btn-success-color, $btn-success-border);
+}
+// Info appears as a neutral blue
+.btn-info {
+  @include buttonBackground($btn-info-bg, $btn-info-color, $btn-info-border);
+}
+// Inverse appears as dark gray
+.btn-inverse {
+  @include buttonBackground($btn-inverse-bg, $btn-inverse-color, $btn-inverse-border);
+}
+
+
+// Cross-browser Jank
+// --------------------------------------------------
+
+button.btn,
+input[type="submit"].btn {
+
+  // Firefox 3.6 only I believe
+  &::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+  }
+
+  // IE7 has some default padding on button controls
+  *padding-top: 3px;
+  *padding-bottom: 3px;
+
+  &.btn-large {
+    *padding-top: 7px;
+    *padding-bottom: 7px;
+  }
+  &.btn-small {
+    *padding-top: 3px;
+    *padding-bottom: 3px;
+  }
+  &.btn-mini {
+    *padding-top: 1px;
+    *padding-bottom: 1px;
+  }
+}
+
+
+// Link buttons
+// --------------------------------------------------
+
+// Make a button look and behave like a link
+.btn-link,
+.btn-link:active,
+.btn-link[disabled] {
+  background-color: transparent;
+  background-image: none;
+  @include box-shadow(none);
+}
+.btn-link {
+  border-color: transparent;
+  cursor: pointer;
+  color: $link-color;
+  @include border-radius(0);
+}
+.btn-link:hover,
+.btn-link:focus {
+  color: $link-color-hover;
+  text-decoration: underline;
+  background-color: transparent;
+  border-color: transparent;
+}
+.btn-link[disabled]:hover,
+.btn-link[disabled]:focus {
+  color: $gray-dark;
+  text-decoration: none;
+}

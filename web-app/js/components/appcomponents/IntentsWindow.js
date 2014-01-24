@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Next Century Corporation 
+ * Copyright 2013 Next Century Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 
  ;(function () {
-    
+
     Ozone.components.appcomponents = Ozone.components.appcomponents || {};
 
-    var SuperClass = Ozone.components.BaseView;
+    var SuperClass = Ozone.views.BaseView;
     var ondragstart;
 
     Ozone.components.appcomponents.IntentsWindow = SuperClass.extend({
@@ -60,7 +60,7 @@
                                     '<img src="' + this.BLANK_IMAGE_SRC + '" class="x-tool-close">' +
                                 '</a>' +
                                 '<span>' + this.getHeaderText() + '</span>'+
-                            '</div>' + 
+                            '</div>' +
                             '<div class="body"></div>' +
                             '<div class="footer"></div>'
             );
@@ -91,7 +91,7 @@
             if(this.isShowingOpenInstances) {
                 footerHTML += '<p>OR send the information to a different <a href="#" class="show-new-component">App Component</a></p>';
             }
-            
+
             footerHTML += '<input type="checkbox" class="remember-checkbox">' +
                             '<label class="remember">Remember this decision</label>';
 
@@ -156,7 +156,7 @@
             this.renderSubView()
                 .renderFooter()
                 .shown();
-            
+
             this.$body.insertAfter($header);
         },
 

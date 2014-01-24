@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Next Century Corporation 
+ * Copyright 2013 Next Century Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 
  ;(function () {
-    
+
     Ozone.components.appcomponents = Ozone.components.appcomponents || {};
 
-    var SuperClass = Ozone.components.BaseView;
+    var SuperClass = Ozone.views.BaseView;
 
     var $window = $(window),
         $document = $(document),
@@ -192,10 +192,10 @@
         hide: function () {
             $window.off('resize', this._refreshDebounce);
             this.carousel.removeDetailsTip();
-            
+
             this.$shim && this.$shim.remove();
             this.$shim = null;
-            
+
             return SuperClass.prototype.hide.call(this);
         },
 
@@ -213,7 +213,7 @@
         },
 
         getState: function () {
-            var state = { 
+            var state = {
                 pinned: this.pinned
             };
 
@@ -277,7 +277,7 @@
             setTimeout(function () {
                 me.launch(model, false, false);
             }, 200);
-            
+
         }, 201, {
             leading: true,
             trailing: false
@@ -365,7 +365,7 @@
 
         _destroySortable: function () {
             var $slides;
-            
+
             $slides = this.carousel.getSlides();
             $slides && $slides.sortable('destroy');
 
