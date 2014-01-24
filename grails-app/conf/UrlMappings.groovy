@@ -495,5 +495,12 @@ class UrlMappings {
 			controller = "widgetDefinition"
 			action = "groupOwnedWidget"
 		}
+        
+        
+        "/messages" {
+            controller = "messages"
+            action=[GET:"list"]
+        }
+        
     }
 }
