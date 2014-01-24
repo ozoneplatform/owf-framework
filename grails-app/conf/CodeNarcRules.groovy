@@ -137,12 +137,8 @@ ruleset {
     // rulesets/grails.xml
     GrailsDomainHasEquals 
     GrailsDomainHasToString 
-//    GrailsDuplicateConstraint
-//    GrailsDuplicateMapping
-   // GrailsPublicControllerMethod 
     GrailsServletContextReference 
-    GrailsStatelessService
-    
+
     // rulesets/imports.xml
     DuplicateImport
     ImportFromSamePackage
