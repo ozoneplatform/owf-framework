@@ -4,6 +4,7 @@ import ozone.owf.grails.services.AutoLoginAccountService
 import ozone.owf.grails.domain.ERoleAuthority
 import ozone.owf.grails.services.AccountService
 import ozone.owf.nineci.hibernate.AuditTrailInterceptor
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as configHolder
 
 beans = {
 
@@ -17,7 +18,12 @@ beans = {
         owfApplicationConfigurationService = ref('owfApplicationConfigurationService')
         grailsApplication = ref('grailsApplication')
     }
-	
+    	
+    
+    owfMessageCache(ozone.owf.cache.OwfMessageCache){
+       
+    }
+    
     // wire up a different account service if -Duser=something and environment is development
     if (GrailsUtil.environment == "development") {
         switch (System.properties.user) {

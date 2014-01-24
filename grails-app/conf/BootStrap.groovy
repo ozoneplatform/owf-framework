@@ -141,8 +141,10 @@ class BootStrap {
             owfApplicationConfigurationService.checkThatConfigsExist()
 		    owfApplicationConfigurationService.createRequired()
             
-            if(CFG.config.xmpp.notifications.enabled)
+            if(CFG.config.xmpp.notifications.enabled){
                 owfMessagingService.listen()
+            }
+             
         }
         
         println 'BootStrap finished!'
