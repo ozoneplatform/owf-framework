@@ -7,53 +7,45 @@ class OwfMessageCache {
     
     private SortedMap items
     
-    private int MAX_CACHE_SIZE
-
     private Date lastReceivedTimeStamp
     
+    //This is in minutes
+    private int expiration = 5 
+    
     public OwfMessageCache(){
-        this(1500)
-    }
-        
-    public OwfMessageCache(int maxSize){
-        this.MAX_CACHE_SIZE = maxSize
         items = Collections.synchronizedSortedMap(new TreeMap())
     }    
     
     
-    public void add(AmlMessage message){
-        purge()
+    public synchronized void add(AmlMessage message){
         items.put(message.timestamp, message)
         lastReceivedTimeStamp = new Date()
+        purge()
     }
     
     
     //If the date is higher than 
-    public def getMessages(Date start){
-        
-        return this.items.tailMap(start).values()
+    public def getMessages(Date start){        
+        return new ArrayList(this.items.tailMap(start).values())
     }
     
-    private void purge(){
-        while(this.items.size() > MAX_CACHE_SIZE - 1){
-            this.items.remove(this.items.firstKey())
+    protected final void purge(){
+        Calendar calendar = new GregorianCalendar()
+        calendar.add(GregorianCalendar.MINUTE, -this.expiration) //Roll the date to now minus expiration minutes to find expired messages
+        new ArrayList(this.items.headMap(calendar.getTime()).values()).each {
+            this.items.remove(it.timestamp)
         }
     }
     
     public boolean contains(Date start){  
         if(this.items.isEmpty())
             return false
-        if(start >= this.items.firstKey() && start <= this.items.lastKey()){
-            return true
-        }
-        return false
+        def first = this.items.firstKey()
+        return first <= start
     }
     
     public Date getLastReceivedTimeStamp(){
         return this.lastReceivedTimeStamp
     }
-    
-    public Integer getMaxSize(){
-        return this.MAX_CACHE_SIZE
-    }
+
 }

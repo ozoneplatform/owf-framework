@@ -38,14 +38,17 @@ class OwfMessagingService {
         }
         
         //If the start date is greater than the last received date then there are no new messages
-        if(start > owfMessageCache?.getLastReceivedTimeStamp())
+        if(owfMessageCache.getLastReceivedTimeStamp() && start > owfMessageCache.getLastReceivedTimeStamp())
             return []
-                
+        
+        println "${owfMessageCache.getLastReceivedTimeStamp()} and start ${start}"            
         def messages = []
         //If the message is in the cache return it
         if(owfMessageCache.contains(start)){
+            println "Messages from cache"
             messages = owfMessageCache.getMessages(start)
         } else{
+            println "Messages from XMPP"
             def room = CFG.config.xmpp.roomName
             messages =  messageService.getMessages(room, start)
         }        
