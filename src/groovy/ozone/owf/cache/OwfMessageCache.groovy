@@ -9,6 +9,8 @@ class OwfMessageCache {
     
     private int MAX_CACHE_SIZE
 
+    private Date lastReceivedTimeStamp
+    
     public OwfMessageCache(){
         this(1500)
     }
@@ -22,12 +24,13 @@ class OwfMessageCache {
     public void add(AmlMessage message){
         purge()
         items.put(message.timestamp, message)
+        lastReceivedTimeStamp = new Date()
     }
     
     
     //If the date is higher than 
     public def getMessages(Date start){
-     
+        
         return this.items.tailMap(start).values()
     }
     
@@ -40,14 +43,15 @@ class OwfMessageCache {
     public boolean contains(Date start){  
         if(this.items.isEmpty())
             return false
-        if(start >= this.items.firstKey()){
+        def first = this.items.firstKey()
+        def last = this.items.lastKey()
+        if(start >= first && start <= last){
             return true
         }
         return false
     }
     
-   
-    public getMaxSize(){
-        MAX_CACHE_SIZE
+    public Date getLastReceivedTimeStamp(){
+        return this.lastReceivedTimeStamp
     }
 }

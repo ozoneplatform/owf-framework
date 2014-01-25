@@ -27,21 +27,27 @@ class OwfMessagingService {
     }
     
     
-    public List getMessages(Date start){
-        def messages = []      
-        def room = CFG.config.xmpp.roomName
+    public List getMessages(Date start){            
+
         String loggedInUserName = accountService.getLoggedInUsername()
+        
+        //If there is no start date then get it from the last logged in date TODO get it from preferences
         if(!start){
             Person currentUser = Person.findByUsername(loggedInUserName)
-            start = currentUser.getLastLogin() 
+            start = new Date(currentUser.getLastLogin().time) 
         }
         
+        //If the start date is greater than the last received date then there are no new messages
+        if(start > owfMessageCache?.getLastReceivedTimeStamp())
+            return []
+                
+        def messages = []
         //If the message is in the cache return it
         if(owfMessageCache.contains(start)){
             messages = owfMessageCache.getMessages(start)
         } else{
-            if(start < new Date())
-                messages =  messageService.getMessages(room, start)
+            def room = CFG.config.xmpp.roomName
+            messages =  messageService.getMessages(room, start)
         }        
         
         messages.findAll{ AmlMessage message ->
