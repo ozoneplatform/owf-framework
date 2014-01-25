@@ -43,9 +43,7 @@ class OwfMessageCache {
     public boolean contains(Date start){  
         if(this.items.isEmpty())
             return false
-        def first = this.items.firstKey()
-        def last = this.items.lastKey()
-        if(start >= first && start <= last){
+        if(start >= this.items.firstKey() && start <= this.items.lastKey()){
             return true
         }
         return false
@@ -53,5 +51,9 @@ class OwfMessageCache {
     
     public Date getLastReceivedTimeStamp(){
         return this.lastReceivedTimeStamp
+    }
+    
+    public Integer getMaxSize(){
+        return this.MAX_CACHE_SIZE
     }
 }

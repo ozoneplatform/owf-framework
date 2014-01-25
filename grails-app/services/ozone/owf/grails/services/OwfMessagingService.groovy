@@ -51,7 +51,7 @@ class OwfMessagingService {
         }        
         
         messages.findAll{ AmlMessage message ->
-            message.recipients?.contains(loggedInUserName)
+            message.timestamp >= start && message.recipients?.contains(loggedInUserName)
         }
     }
     
