@@ -41,7 +41,6 @@ class OwfMessageCache {
         if(this.items.isEmpty())
             return false
         def first = this.items.firstKey()
-        def last = this.items.lastKey()
         return first <= start
     }
     
