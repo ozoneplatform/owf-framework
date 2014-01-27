@@ -10,9 +10,11 @@
     );
 
     var NotificationDetailsView = Superclass.extend({
-        events: {
-            '.close': 'dismiss'
-        },
+        events: _.extend({
+            'click .close': 'dismiss'
+        }, Superclass.prototype.events),
+
+        className: 'notification-details',
 
         render: function() {
             //for the template, use the model attributes plus a fuzzy time string

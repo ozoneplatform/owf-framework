@@ -4,7 +4,7 @@
     var Superclass = Ozone.views.BaseView;
 
     var NotificationsBadge = Superclass.extend({
-        cls: 'notification-badge',
+        className: 'notification-badge',
 
         tag: 'span',
 

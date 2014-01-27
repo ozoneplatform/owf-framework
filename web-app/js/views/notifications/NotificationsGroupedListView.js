@@ -3,12 +3,15 @@
 
     var Superclass = Ozone.views.BaseView;
 
-    var headerHtml = '<h2 class="notification-list-header">Notifications' +
+    var headerHtml = '<h3 class="notification-list-header">Notifications' +
         '<span class="close"></span>' +
-    '</h2>';
+    '</h3>';
 
     var NotificationsGroupedListView = Superclass.extend(_.extend({},
             Ozone.views.PopoverViewMixin, {
+
+        className: 'notifications-grouped-list',
+
         //map from message sourceUrl to UI section
         sections: {},
 

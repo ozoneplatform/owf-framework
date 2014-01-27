@@ -12,8 +12,11 @@
         menu: null,
         growl: null,
         badge: null,
+        $button: null,
 
         childView: [],
+
+        className: 'notifications',
 
         collection: null,
 
@@ -38,10 +41,11 @@
         },
 
         render: function() {
-            this.$el.append($('<button class="notifications-button"/>'));
+            this.$button = $('<button class="notifications-button"/>');
+            this.$el.append(this.$button);
             this.badge.$el.appendTo(this.$el);
-            this.growl.render(this.$el);
-            this.menu.render(this.$el);
+            this.growl.render(this.$button);
+            this.menu.render(this.$button);
 
             return this;
         },

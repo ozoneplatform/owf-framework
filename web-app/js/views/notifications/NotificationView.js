@@ -7,7 +7,7 @@
      * A simple view of a notification that simply displays the message
      */
     var NotificationView = Superclass.extend({
-        cls: 'notification',
+        className: 'notification',
 
         render: function() {
             this.$el.text(this.model.get('body'));

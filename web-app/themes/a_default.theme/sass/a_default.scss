@@ -4,7 +4,7 @@
 @import 'functions/owf_functions';
 @import 'compass'; //pull in base functions and mixins provided by the compass framework
 
-$theme-name: 'owf';
+@import 'theme_base';
 
 $body-background-gradient-start: #e6e7e8;
 $body-background-gradient-end: #ffffff;

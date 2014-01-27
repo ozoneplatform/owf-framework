@@ -1,0 +1,44 @@
+.notifications {
+    .close {
+        background-image: theme-image($theme-name, '/tools/close-out.png');
+        height: 15px;
+        width: 15px;
+        display: inline-block;
+        float: none;
+    }
+
+    .popover {
+        max-width: 376px;
+        @include border-radius(0);
+
+        .popover-content {
+            padding: 0
+        }
+    }
+}
+
+.notification-details {
+    .message, .time {
+        display: inline-block;
+    }
+
+    .message {
+        width: 60%;
+    }
+
+    .time {
+        width: 30%;
+        text-align: right;
+    }
+
+    .close {
+        width: 10%;
+
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+}
+
+.notifications-grouped-list {
+    width: 350px;
+}

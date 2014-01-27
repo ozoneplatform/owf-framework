@@ -7,7 +7,7 @@
 
     var NotificationsSectionHeader = Superclass.extend({
         tag: 'h3',
-        cls: 'notification-section-header',
+        className: 'notification-section-header',
 
         //NOTE This render function can safely be called repeatedly
         render: function() {
