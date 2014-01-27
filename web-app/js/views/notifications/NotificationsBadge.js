@@ -1,4 +1,6 @@
-(function(Backbone, $) {
+(function(Backbone, $, Ozone) {
+    'use strict';
+
     var Superclass = Ozone.views.BaseView;
 
     var NotificationsBadge = Superclass.extend({
@@ -23,4 +25,4 @@
     });
 
     $.extend(true, Ozone, { views: {notifications: { NotificationsBadge: NotificationsBadge}}});
-})(Backbone, $);
+})(window.Backbone, window.$, window.Ozone);

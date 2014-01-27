@@ -15,6 +15,8 @@
  */
 
 ;(function($, _, Ozone) {
+    'use strict';
+
     var Superclass = Ozone.views.BaseView;
 
     var CollectionView = Superclass.extend({
@@ -133,4 +135,4 @@
     });
 
     Ozone.views.CollectionView = CollectionView;
-})($, _, Ozone);
+})(window.$, window._, window.Ozone);

@@ -1,4 +1,6 @@
 ;(function(Ozone, Handlebars) {
+    'use strict';
+
     var Superclass = Ozone.views.BaseView;
 
     var template = Handlebars.compile('<img src="{{headerIcon}}" />{{originalName}}');
@@ -14,4 +16,4 @@
     });
 
     Ozone.views.notifications.NotificationsSectionHeader = NotificationsSectionHeader;
-})(Ozone, Handlebars);
+})(window.Ozone, window.Handlebars);

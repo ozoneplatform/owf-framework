@@ -1,4 +1,5 @@
 (function(Backbone, _, $, Ext, Ozone, undefined) {
+    'use strict';
 
     var Superclass = Ozone.views.BaseView,
         CollectionClass = Ozone.notifications.XMPPNotificationsCollection;
@@ -33,7 +34,7 @@
                 collection: this.collection
             });
 
-            childViews = [this.badge, this.growl, this.menu];
+            this.childViews = [this.badge, this.growl, this.menu];
         },
 
         render: function() {
@@ -58,4 +59,4 @@
 
     $.extend(true, Ozone, { views: { notifications: {
         NotificationsButton: NotificationsButton}}});
-})(Backbone, _, $, Ext, Ozone);
+})(window.Backbone, window._, window.$, window.Ext, window.Ozone);

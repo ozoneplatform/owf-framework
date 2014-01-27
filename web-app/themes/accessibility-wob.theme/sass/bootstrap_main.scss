@@ -1,0 +1,9 @@
+//bootstrap override variables can go here
+
+@import 'variables';
+@import 'mixins';
+
+//import bootstrap
+.bootstrap-active {
+    @import 'bootstrap';
+}

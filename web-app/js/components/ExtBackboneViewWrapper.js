@@ -1,25 +1,32 @@
-/**
- * A Ext wrapper for Backbone views
- */
-Ext.define('Ozone.components.ExtBackboneViewWrapper', {
-    extend: 'Ext.Component',
+/* global Ext */
+/*jshint strict:false */
+;(function(Ext) {
+    /**
+     * A Ext wrapper for Backbone views
+     */
+    Ext.define('Ozone.components.ExtBackboneViewWrapper', {
+        extend: 'Ext.Component',
 
-    ViewClass: null,
+        ViewClass: null,
 
-    backboneArgs: null,
+        backboneArgs: null,
 
-    initComponent: function() {
-        this.callParent(arguments);
-        this.backboneView = new this.ViewClass(this.backboneArgs);
-    },
+        //enable bootstrap css in backbone views
+        cls: 'bootstrap-active',
 
-    onRender: function() {
-        this.callParent(arguments);
-        this.backboneView.render().$el.appendTo(this.getEl().dom);
-    },
+        initComponent: function() {
+            this.callParent(arguments);
+            this.backboneView = new this.ViewClass(this.backboneArgs);
+        },
 
-    onDestroy: function() {
-        if (this.backboneView) this.backboneView.remove();
-        this.callParent(arguments);
-    }
-});
+        onRender: function() {
+            this.callParent(arguments);
+            this.backboneView.render().$el.appendTo(this.getEl().dom);
+        },
+
+        onDestroy: function() {
+            if (this.backboneView) this.backboneView.remove();
+            this.callParent(arguments);
+        }
+    });
+})(window.Ext);

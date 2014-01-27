@@ -53,6 +53,10 @@
     padding: 0px;
     border-color: black;
 
+    &, & > .x-box-inner {
+        overflow: visible;
+    }
+
     // old class for logo. Now is background image for .x-box-inner
     .logo-img {
         text-align: center;
@@ -80,13 +84,13 @@
         margin: 0px;
         padding: 0 10px 0 10px;
     }
-    
+
     .x-item-disabled, .x-disabled, .x-btn-disabled, .disable {
     	.x-btn-default-toolbar-banner-large, .x-btn-inner {
     		*color: gray !important;
     	}
     }
-    
+
     .x-item-disabled, .x-disabled, .x-btn-disabled, .disable{
     	background-color:transparent !important;
     }
@@ -100,19 +104,19 @@
 
 @include extjs-button-ui(
     'default-toolbar-banner-large',
-    
+
     $color: #ffffff,
     $color-over: #ffffff,
     $color-focus: #ffffff,
     $color-pressed: #ffffff,
     $color-disabled: #ffffff,
-    
+
     $font-size: $owf-font-size,
     $font-size-over: $owf-font-size,
     $font-size-focus: $owf-font-size,
     $font-size-pressed: $owf-font-size,
     $font-size-disabled: $owf-font-size,
-    
+
     $font-family: $owf-font-family,
     $font-family-over: $owf-font-family,
     $font-family-focus: $owf-font-family,
@@ -215,14 +219,22 @@
     }
 }
 
-#userMenuBtn {
+#banner-right-container {
     @include owf-background-gradient($banner-button-background);
     border-left: 1px solid $user-menu-button-border-color;
     margin: 0px;
     top: 0px !important; //ext tries to override this at runtime
 
-    padding-left: 10px;
-    padding-right: 10px;
+    height: 100%;
+
+    > * {
+        display: inline-block;
+    }
+}
+
+#userMenuBtn {
+    margin-left: 10px;
+    margin-right: 10px;
 
     .userMenuIcon {
         background-image: $user-menu-icon;
@@ -240,6 +252,25 @@
     .userMenuIcon {
         background-position: center center;
     }
+
+    .x-btn-inner {
+        line-height: 32px;
+        color: white;
+
+        display: inline;
+    }
+
+    .x-btn-icon {
+        height: 32px;
+        width: 32px;
+
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .x-btn-inner, .x-btn-icon {
+        position: static;
+    }
 }
 
 @mixin round-bottom {
@@ -255,8 +286,8 @@
     border-top-style: none;
 
     *width: 368px;
-    
-    #owfMenu { 
+
+    #owfMenu {
         border-right: 1px solid $user-menu-button-border-color;
     }
 
@@ -276,31 +307,31 @@
 		background: none !important;
 		border: 1px solid $user-menu-background-color;
 	}
-	
+
 	.x-btn-group-default-framed {
     	border: 1px solid $user-menu-background-color;
     	box-shadow: none;
 	}
-	
+
 	.x-btn-default-toolbar-small, .x-btn-default-small {
 		background-image: none;
         border: none;
         @include border-radius(0);
 	}
-	
+
 	.x-btn {
         @include owf-background-color($user-menu-background-color, $owf_css_not_important, false);
 
 		width: 100%;
 		border-color: transparent;
 		padding-left: 10px;
-        
+
         .x-btn-inner {
             @include owf-background-color($user-menu-background-color, $owf_css_not_important, false);
             *border-color: transparent;
         }
 	}
-	
+
 	.x-btn-over {
 		background: none $user-menu-item-over-background-color !important;
 		border: none;
@@ -309,15 +340,15 @@
             background: $user-menu-item-over-background-color !important;
         }
 	}
-	
+
 	#userMenu-body {
 
         .x-menu-icon-separator {
             background: none;
             border-left: 0px none;
         }
-		
-        .x-box-inner .x-panel-default { 
+
+        .x-box-inner .x-panel-default {
             border: none !important;
         }
 
@@ -334,7 +365,7 @@
                 background: none $owf-logout-color !important;
             }
 	    }
-	    
+
 	    #owfMenuTitle, #prevLogin, #marketplaceMenuTitle {
 	    	background: none !important;
             cursor: default !important;
@@ -344,11 +375,11 @@
                 cursor: default !important;
             }
 	    }
-	    
+
 	    div {
-	
+
     	    @include owf-background-color($user-menu-background-color);
-    	    
+
     	    font-family: tahoma, arial, verdana, sans-serif;
             *width:150px;
 
@@ -363,16 +394,16 @@
 		    	font-size: 1.4em;
                 font-weight: bold;
 		    }
-			
+
 			#prevLogin-btnInnerEl {
 				color: $owf-prev-login-text-color !important;
 			    font-size: .78em;
 			    font-weight: bold;
 		    }
-	        
+
 	    }
-	
-	    //this selector gets the last 
+
+	    //this selector gets the last
 	    //item in the list. This item
 	    //needs to have rounded borders
 	    //to conform to the list borders.
@@ -381,7 +412,7 @@
 	    > :last-child {
 	        @include round-bottom;
 	    }
-	
+
 	    .spacer {
             // Adding any padding to the spacer will cause it to grow vertically
 	  	    padding: 0px !important;
@@ -410,13 +441,13 @@
 	#userMenu {
 		#userMenu-body {
 			div {
-				//ie gradient esque fix 
+				//ie gradient esque fix
     	    	filter: none;
-			
+
 				#owfMenuTitle-btnEl {
                     width: 150px !important;
 			    }
-			    
+
 			    #marketplaceMenuTitle-btnEl {
                     width: 150px !important;
 		    	}
@@ -463,7 +494,7 @@
     }
 }
 
-@keyframes blink {    
+@keyframes blink {
     20% {
         box-shadow: inset 0 0 10px 1px $owf-focus-color;
     }

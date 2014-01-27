@@ -1,4 +1,6 @@
 ;(function(Backbone, _, Handlebars, Ozone) {
+    'use strict';
+
     var Superclass = Ozone.views.BaseView;
 
     var moreNotificationsTemplate = Handlebars.compile('<span class="notification-icon"></span>' +
@@ -10,6 +12,10 @@
     var NotificationsGrowl = Superclass.extend(_.extend({}, Ozone.views.PopoverViewMixin, {
         modelEvents: {
             'fetchMore': 'updateGrowl'
+        },
+
+        popoverConfig: {
+            placement: 'bottom'
         },
 
         sectionHeader: null,
@@ -61,4 +67,4 @@
     }));
 
     $.extend(true, Ozone, { views: { notifications: { NotificationsGrowl: NotificationsGrowl}}});
-})(Backbone, _, Handlebars, Ozone);
+})(window.Backbone, window._, window.Handlebars, window.Ozone);

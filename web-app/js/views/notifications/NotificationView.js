@@ -1,4 +1,6 @@
 ;(function(Backbone, _, Handlebars, Ozone) {
+    'use strict';
+
     var Superclass = Ozone.views.BaseView;
 
     /**
@@ -8,10 +10,10 @@
         cls: 'notification',
 
         render: function() {
-            this.$el.text(this.model.message);
+            this.$el.text(this.model.get('body'));
             return this;
         }
     });
 
     $.extend(true, Ozone, { views: { notifications: { NotificationView: NotificationView}}});
-})(Backbone, _, Handlebars, Ozone);
+})(window.Backbone, window._, window.Handlebars, window.Ozone);

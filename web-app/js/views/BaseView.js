@@ -15,6 +15,7 @@
  */
 
 ;(function(Backbone, $, _, Ozone) {
+    'use strict';
 
     var SuperClass = Backbone.View;
 
@@ -163,4 +164,4 @@
 
     Ozone.views = $.extend(Ozone.views, { BaseView: BaseView });
 
-})(Backbone, jQuery, _, Ozone);
+})(window.Backbone, window.jQuery, window._, window.Ozone);

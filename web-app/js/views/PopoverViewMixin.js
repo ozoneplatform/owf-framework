@@ -1,4 +1,5 @@
 ;(function(_, Ozone) {
+    'use strict';
 
     /**
      * A view that is contained within a Bootstrap popover. Views that use this mixin are expected
@@ -14,11 +15,32 @@
         render: function(parentEl) {
             this.innerRender();
 
-            parentEl.popover(_.extend({
-                content: this.$el
-            }, this.popoverConfig));
+            this.parentEl = parentEl;
 
+            return this;
+        },
+
+        /**
+         * Set up the popover on show, not render.  This allows multiple PopoverViews
+         * to be attached to the same parent, as long as only one is open at a time
+         */
+        show: function() {
+            this.parentEl.popover(_.extend({
+                html: true,
+                content: this.el,
+                show: true,
+                trigger: 'manual'
+            }, this.popoverConfig)).popover('show');
+
+            this.$el.trigger('show');
+            return this;
+        },
+
+        hide: function() {
+            this.parentEl.popover('destroy');
+
+            this.$el.trigger('hide');
             return this;
         }
     };
-})(_, Ozone);
+})(window._, window.Ozone);

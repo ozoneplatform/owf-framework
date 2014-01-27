@@ -197,10 +197,27 @@
 // --------------------------------------------------
 
 // Border Radius
-@mixin border-radius($radius) {
-  -webkit-border-radius: $radius;
-     -moz-border-radius: $radius;
-          border-radius: $radius;
+@mixin border-radius($radius, $radius2: null, $radius3: null, $radius4: null) {
+  @if $radius2 == null {
+    -webkit-border-radius: $radius;
+       -moz-border-radius: $radius;
+            border-radius: $radius;
+  }
+  @else if $radius3 == null {
+    -webkit-border-radius: $radius $radius2;
+       -moz-border-radius: $radius $radius2;
+            border-radius: $radius $radius2;
+  }
+  @else if $radius4 == null {
+    -webkit-border-radius: $radius $radius2 $radius3;
+       -moz-border-radius: $radius $radius2 $radius3;
+            border-radius: $radius $radius2 $radius3;
+  }
+  @else {
+    -webkit-border-radius: $radius $radius2 $radius3 $radius4;
+       -moz-border-radius: $radius $radius2 $radius3 $radius4;
+            border-radius: $radius $radius2 $radius3 $radius4;
+  }
 }
 
 // Single Corner Border Radius
@@ -244,18 +261,50 @@
 }
 
 // Drop shadows
-@mixin box-shadow($shadow...) {
-  -webkit-box-shadow: $shadow;
+/*@mixin box-shadow($shadow...) {*/
+  /*-webkit-box-shadow: $shadow;*/
+     /*-moz-box-shadow: $shadow;*/
+          /*box-shadow: $shadow;*/
+/*}*/
+@mixin box-shadow($shadow, $shadow1: null, $shadow2: null) {
+  @if $shadow1 == null {
+    -webkit-box-shadow: $shadow;
      -moz-box-shadow: $shadow;
           box-shadow: $shadow;
+  }
+  @else if $shadow2 != null {
+    -webkit-box-shadow: $shadow, $shadow1;
+     -moz-box-shadow: $shadow, $shadow1;
+          box-shadow: $shadow, $shadow1;
+  }
+  @else {
+    -webkit-box-shadow: $shadow, $shadow1, $shadow2;
+     -moz-box-shadow: $shadow, $shadow1, $shadow2;
+          box-shadow: $shadow, $shadow1, $shadow2;
+  }
+
 }
 
 // Transitions
-@mixin transition($transition...) {
-  -webkit-transition: $transition;
-     -moz-transition: $transition;
-       -o-transition: $transition;
-          transition: $transition;
+/*@mixin transition($transition...) {*/
+  /*-webkit-transition: $transition;*/
+     /*-moz-transition: $transition;*/
+       /*-o-transition: $transition;*/
+          /*transition: $transition;*/
+/*}*/
+@mixin transition($transition1, $transition2: null) {
+  @if $transition2 == null {
+    -webkit-transition: $transition1;
+       -moz-transition: $transition1;
+         -o-transition: $transition1;
+            transition: $transition1;
+  }
+  @else {
+    -webkit-transition: $transition1, $transition2;
+       -moz-transition: $transition1, $transition2;
+         -o-transition: $transition1, $transition2;
+            transition: $transition1, $transition2;
+  }
 }
 @mixin transition-delay($transition-delay) {
   -webkit-transition-delay: $transition-delay;
@@ -471,7 +520,7 @@
   background-image: -webkit-linear-gradient($angle, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
   background-image: -moz-linear-gradient($angle, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
   background-image: -o-linear-gradient($angle, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
-  background-image: linear-gradient($angle, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient($angle, rgba(255,255,255,.15) 25%, rgba(255,255,255,0) 25%, rgba(255,255,255,0) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, rgba(255,255,255,0) 75%, rgba(255,255,255,0));
 }
 
 // Reset filters for IE

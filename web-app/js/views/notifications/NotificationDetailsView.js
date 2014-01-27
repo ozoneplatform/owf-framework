@@ -1,8 +1,10 @@
 ;(function(Backbone, _, Handlebars, moment, Ozone) {
+    'use strict';
+
     var Superclass = Ozone.views.notifications.NotificationView;
 
     var template = Handlebars.compile(
-        '<span class="message">{{message}}</span>' +
+        '<span class="message">{{body}}</span>' +
         '<span class="time">{{relativeTime}}</span>' +
         '<span class="close"></span>'
     );
@@ -34,4 +36,4 @@
 
     $.extend(true, Ozone, { views: { notifications: {
         NotificationDetailsView: NotificationDetailsView}}});
-})(Backbone, _, Handlebars, moment, Ozone);
+})(window.Backbone, window._, window.Handlebars, window.moment, window.Ozone);

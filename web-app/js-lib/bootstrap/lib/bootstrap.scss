@@ -10,7 +10,10 @@
 
 // Core variables and mixins
 @import "variables"; // Modify this for custom colors, font-sizes, etc
-@import "mixins";
+
+//OWF customization - since this file is included inside a block,
+//and mixins cannot be defined within a block, this import is commented out
+//@import "mixins";
 
 // CSS Reset
 @import "reset";

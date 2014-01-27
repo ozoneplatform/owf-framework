@@ -1,4 +1,6 @@
 ;(function(Backbone, _, Ozone) {
+    'use strict';
+
     var Superclass = Ozone.views.BaseView;
 
     var headerHtml = '<h2 class="notification-list-header">Notifications' +
@@ -18,6 +20,10 @@
             'remove': 'removeFromSection'
         },
 
+        popoverConfig: {
+            placement: 'bottom'
+        },
+
         innerRender: function() {
             this.$el.append(headerHtml);
             this.renderSections();
@@ -31,11 +37,11 @@
                 me = this;
 
             _.each(urls, function(url) {
-                if (sections[url]) {
+                if (me.sections[url]) {
                     throw new Error("Duplicate sections being created");
                 }
 
-                section = me.makeSection(url, new Backbone.Collection(groupedWidgets[url]));
+                var section = me.makeSection(url, new Backbone.Collection(groupedWidgets[url]));
 
                 me.$el.append(section.render().$el);
                 me.sections[url] = section;
@@ -44,14 +50,14 @@
 
         addToSection: function(model) {
             var url = model.get('url'),
-                section = sections[url] || makeSection(url);
+                section = this.sections[url] || this.makeSection(url);
 
             section.collection.add(model);
         },
 
         removeFromSection: function(model) {
             var url = model.get('url'),
-                section = sections[url];
+                section = this.sections[url];
 
             if (section) section.collection.remove(model);
         },
@@ -73,4 +79,4 @@
 
     $.extend(true, Ozone, { views: { notifications: {
         NotificationsGroupedListView: NotificationsGroupedListView}}});
-})(Backbone, _, Ozone);
+})(window.Backbone, window._, window.Ozone);

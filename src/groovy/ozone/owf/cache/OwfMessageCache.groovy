@@ -9,7 +9,7 @@ class OwfMessageCache {
     
     
     public void add(Date time, AmlMessage message){
-        items.put(message.sentDt, message)
+        items.put(message.timestamp, message)
     }
     
     

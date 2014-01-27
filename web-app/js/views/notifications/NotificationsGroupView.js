@@ -1,4 +1,6 @@
 ;(function(Backbone, _, Ozone) {
+    'use strict';
+
     var Superclass = Ozone.views.CollectionView;
 
     var ItemView = Ozone.views.notifications.NotificationDetailsView.extend({
@@ -12,4 +14,4 @@
 
     $.extend(true, Ozone, { views: { notifications: {
         NotificationsGroupView: NotificationsGroupView}}});
-})(Backbone, _, Ozone);
+})(window.Backbone, window._, window.Ozone);

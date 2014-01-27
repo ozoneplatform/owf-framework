@@ -2,12 +2,12 @@
     var Superclass = Backbone.Collection;
 
     var XMPPNotificationsCollection = Superclass.extend({
-        url: Ozone.util.contextPath() + '/notification',
+        url: Ozone.util.contextPath() + '/messages',
         model: Ozone.notifications.NotificationModel,
 
         //sort in reverse date order
         comparator: function(model) {
-            return -(moment(model.get('timestamp')).getTime());
+            return -(moment(model.get('timestamp')).unix());
         },
 
         //do not remove previous notifications when a new fetch occurs
