@@ -38,6 +38,7 @@ class Person implements Serializable {
         email(nullable: true, blank: true)
         lastLogin(nullable: true)
         prevLogin(nullable: true)
+        lastNotification(nullable: true)
     }
 
 	/** Username */
@@ -79,4 +80,5 @@ class Person implements Serializable {
       username ? username.hashCode() : 0
     }
 
+    Date lastNotification
 }

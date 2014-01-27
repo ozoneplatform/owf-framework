@@ -21,7 +21,7 @@ beans = {
     	
     
     owfMessageCache(ozone.owf.cache.OwfMessageCache){
-       
+        expiration = 15
     }
     
     // wire up a different account service if -Duser=something and environment is development

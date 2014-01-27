@@ -10,7 +10,7 @@ class OwfMessageCache {
     private Date lastReceivedTimeStamp
     
     //This is in minutes
-    private int expiration = 5 
+    private int expiration
     
     public OwfMessageCache(){
         items = Collections.synchronizedSortedMap(new TreeMap())
@@ -41,11 +41,16 @@ class OwfMessageCache {
         if(this.items.isEmpty())
             return false
         def first = this.items.firstKey()
+        def last = this.items.lastKey()
         return first <= start
     }
     
     public Date getLastReceivedTimeStamp(){
         return this.lastReceivedTimeStamp
+    }
+    
+    public void setExpiration(int expiration){
+        this.expiration = expiration
     }
 
 }

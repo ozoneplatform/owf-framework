@@ -7,6 +7,10 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder as CFG
 import ozone.owf.cache.OwfMessageCache
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.services.AccountService
+import org.springframework.transaction.annotation.Transactional
+
+
+@Transactional(readOnly=true)
 class OwfMessagingService {
 
     MessageService messageService
@@ -27,35 +31,38 @@ class OwfMessagingService {
     }
     
     
-    public List getMessages(Date start){            
+    @Transactional(readOnly=false)
+    public List pollMessages(){            
 
         String loggedInUserName = accountService.getLoggedInUsername()
+        Person currentUser = Person.findByUsername(loggedInUserName)
         
-        //If there is no start date then get it from the last logged in date TODO get it from preferences
-        if(!start){
-            Person currentUser = Person.findByUsername(loggedInUserName)
-            start = new Date(currentUser.getLastLogin().time) 
-        }
-        
-        //If the start date is greater than the last received date then there are no new messages
-        if(owfMessageCache.getLastReceivedTimeStamp() && start > owfMessageCache.getLastReceivedTimeStamp())
+        //Since date is the last notification date if it exists otherwise the last login date then fall back to now
+        Date since = currentUser.getLastNotification() ?: currentUser.getLastLogin() ?: new Date()
+        since = new Date(since.time)  //Make our own copy and also ensure its of type Date as opposed to Timestamp   
+             
+        //If the 'since' date is greater than the last received date then there are no new messages
+        if(owfMessageCache.getLastReceivedTimeStamp() && since > owfMessageCache.getLastReceivedTimeStamp())
             return []
         
-        println "${owfMessageCache.getLastReceivedTimeStamp()} and start ${start}"            
         def messages = []
         //If the message is in the cache return it
-        if(owfMessageCache.contains(start)){
-            println "Messages from cache"
-            messages = owfMessageCache.getMessages(start)
+        if(owfMessageCache.contains(since)){
+            messages = owfMessageCache.getMessages(since)
         } else{
-            println "Messages from XMPP"
             def room = CFG.config.xmpp.roomName
-            messages =  messageService.getMessages(room, start)
+            messages =  messageService.getMessages(room, since)
         }        
         
-        messages.findAll{ AmlMessage message ->
-            message.timestamp >= start && message.recipients?.contains(loggedInUserName)
+        //Remove messages that are earlier than the since date and where the recipient list does not include the current user
+        messages.removeAll{ AmlMessage message ->
+            message.timestamp <= since && message.recipients?.contains(loggedInUserName)
         }
+        
+        currentUser.lastNotification = new Date()
+        currentUser.save()
+        
+        return messages
     }
     
     

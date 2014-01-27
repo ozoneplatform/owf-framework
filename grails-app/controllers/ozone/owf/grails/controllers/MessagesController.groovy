@@ -10,9 +10,7 @@ class MessagesController {
     
     def list = {
 
-        def start = session.last_message_timestamp as Date ?: null
-        def messages = owfMessagingService.getMessages(start)
-        session.last_message_timestamp = new Date()
+        def messages = owfMessagingService.pollMessages()
         
         render messages as JSON
         
