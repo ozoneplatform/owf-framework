@@ -1,4 +1,6 @@
-;(function(Backbone, $, _, Ozone) {
+;(function(Backbone, moment, $, _, Ozone) {
+    'use strict';
+
     var Superclass = Backbone.Collection;
 
     var XMPPNotificationsCollection = Superclass.extend({
@@ -56,4 +58,4 @@
     $.extend(Ozone, { notifications: {
         XMPPNotificationsCollection: XMPPNotificationsCollection
     }});
-})(Backbone, $, _, Ozone);
+})(window.Backbone, window.moment, window.$, window._, window.Ozone);

@@ -41,22 +41,19 @@
                     throw new Error("Duplicate sections being created");
                 }
 
-                var section = me.makeSection(url, new Backbone.Collection(groupedWidgets[url]));
-
-                me.$el.append(section.render().$el);
-                me.sections[url] = section;
+                me.makeSection(url, new Backbone.Collection(groupedWidgets[url]));
             });
         },
 
         addToSection: function(model) {
-            var url = model.get('url'),
+            var url = model.get('sourceUrl'),
                 section = this.sections[url] || this.makeSection(url);
 
             section.collection.add(model);
         },
 
         removeFromSection: function(model) {
-            var url = model.get('url'),
+            var url = model.get('sourceUrl'),
                 section = this.sections[url];
 
             if (section) section.collection.remove(model);
@@ -68,10 +65,13 @@
         makeSection: function(sourceUrl, collection) {
             var extSourceWidget = Ozone.util.findWidgetDefinitionByLongestUrlMatch(sourceUrl),
                 sourceWidget = Ozone.util.convertExtModelToBackboneModel(extSourceWidget),
-                section = new Ozone.view.notifications.NotifcationsGroupView({
+                section = new Ozone.views.notifications.NotificationsGroupView({
                     sourceWidget: sourceWidget,
                     collection: collection || new Backbone.Collection()
                 });
+
+            this.$el.append(section.render().$el);
+            this.sections[sourceUrl] = section;
 
             return section;
         }

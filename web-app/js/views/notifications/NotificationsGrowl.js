@@ -63,6 +63,8 @@
             else {
                 this.$moreNotificationsEl.hide();
             }
+
+            this.show();
         }
     }));
 
