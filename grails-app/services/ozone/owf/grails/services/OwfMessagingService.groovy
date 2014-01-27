@@ -45,11 +45,9 @@ class OwfMessagingService {
         if(owfMessageCache.getLastReceivedTimeStamp() && since > owfMessageCache.getLastReceivedTimeStamp())
             return []
         
-        def messages = []
+        def messages = owfMessageCache.getMessages(since)
         //If the message is in the cache return it
-        if(owfMessageCache.contains(since)){
-            messages = owfMessageCache.getMessages(since)
-        } else{
+        if(messages.size() == 0){
             def room = CFG.config.xmpp.roomName
             messages =  messageService.getMessages(room, since)
         }        

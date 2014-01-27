@@ -25,7 +25,7 @@ class OwfMessageCache {
     
     
     //If the date is higher than 
-    public def getMessages(Date start){        
+    public List getMessages(Date start){        
         return new ArrayList(this.items.tailMap(start).values())
     }
     
@@ -35,13 +35,6 @@ class OwfMessageCache {
         new ArrayList(this.items.headMap(calendar.getTime()).values()).each {
             this.items.remove(it.timestamp)
         }
-    }
-    
-    public boolean contains(Date start){  
-        if(this.items.isEmpty())
-            return false
-        def first = this.items.firstKey()
-        return first <= start
     }
     
     public Date getLastReceivedTimeStamp(){
