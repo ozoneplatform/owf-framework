@@ -9,11 +9,8 @@ class MessagesController {
     
     
     def list = {
-        
-        Calendar calendar = new GregorianCalendar(2014,0,21)
-        def start = calendar.getTime()
-        def messages = owfMessagingService.getMessages(start)
-        
+
+        def messages = owfMessagingService.pollMessages()
         
         render messages as JSON
         
