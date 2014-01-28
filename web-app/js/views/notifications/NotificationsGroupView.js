@@ -4,12 +4,47 @@
     var Superclass = Ozone.views.CollectionView;
 
     var ItemView = Ozone.views.notifications.NotificationDetailsView.extend({
-        tag: 'li'
+        tagName: 'li'
     });
 
     var NotificationsGroupView = Superclass.extend({
-        tag: 'ol',
-        CollectionItemView: ItemView
+        CollectionItemView: ItemView,
+
+        className: 'notifications-group',
+
+        header: null,
+        sourceWidgetModel: null,
+
+        //the containing element for the individual notification views
+        $container: null,
+
+        initialize: function(options) {
+            this.sourceWidgetModel = options.sourceWidgetModel;
+
+            Superclass.prototype.initialize.apply(this, arguments);
+
+            this.header = new Ozone.views.notifications.NotificationsSectionHeader({
+                parentView: this,
+                model: this.sourceWidgetModel,
+                notificationsCollection: this.collection
+            });
+        },
+
+        render: function() {
+            this.$el
+                .append(this.header.render().$el)
+                .append(this.$container = $('<ol>'));
+
+            return Superclass.prototype.render.apply(this, arguments);
+        },
+
+        addOne: function(model) {
+            Superclass.prototype.addOne.call(this, model, this.$container);
+        },
+
+        toggleCollapse: function() {
+            this.$el.toggleClass('collapsed');
+        }
     });
 
     $.extend(true, Ozone, { views: { notifications: {

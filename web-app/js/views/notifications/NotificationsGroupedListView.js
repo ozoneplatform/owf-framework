@@ -3,9 +3,7 @@
 
     var Superclass = Ozone.views.BaseView;
 
-    var headerHtml = '<h3 class="notification-list-header">Notifications' +
-        '<span class="close"></span>' +
-    '</h3>';
+    var headerHtml = '<h3 class="notification-list-header">Notifications</h3>';
 
     var NotificationsGroupedListView = Superclass.extend(_.extend({},
             Ozone.views.PopoverViewMixin, {
@@ -27,9 +25,20 @@
             placement: 'bottom'
         },
 
-        innerRender: function() {
+        initialize: function(options) {
+            Superclass.prototype.initialize.apply(this, arguments);
+            Ozone.views.PopoverViewMixin.initialize.call(this, {
+                parentEl: options.parentEl,
+                preventClickClose: true
+            });
+        },
+
+        render: function() {
             this.$el.append(headerHtml);
             this.renderSections();
+
+            Ozone.views.PopoverViewMixin.render.apply(this, arguments);
+            return this;
         },
 
         renderSections: function() {
@@ -59,7 +68,30 @@
             var url = model.get('sourceUrl'),
                 section = this.sections[url];
 
-            if (section) section.collection.remove(model);
+            if (section) {
+                section.collection.remove(model);
+
+                /*
+                 * normally this would happen automatically, but
+                 * it turns out that backbone prevents remove events for models that
+                 * are owned by a different collection from having any effect, so the remove
+                 * listener in the section does not get called
+                 */
+                section.removeOne(model);
+
+                if (section.collection.isEmpty()) {
+                    delete this.sections[url];
+                    section.remove();
+                }
+            }
+        },
+
+        dismissAll: function() {
+            _.each(this.sections, function(section) {
+                section.collection.reset();
+            });
+
+            this.collection.reset();
         },
 
         /**
@@ -69,7 +101,7 @@
             var extSourceWidget = Ozone.util.findWidgetDefinitionByLongestUrlMatch(sourceUrl),
                 sourceWidget = Ozone.util.convertExtModelToBackboneModel(extSourceWidget),
                 section = new Ozone.views.notifications.NotificationsGroupView({
-                    sourceWidget: sourceWidget,
+                    sourceWidgetModel: sourceWidget,
                     collection: collection || new Backbone.Collection()
                 });
 

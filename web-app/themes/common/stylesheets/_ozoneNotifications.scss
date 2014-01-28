@@ -15,6 +15,22 @@
             padding: 0
         }
     }
+
+    .collapse-toggle {
+        &:before {
+            @extend .icon-chevron-down:before;
+        }
+    }
+
+    .notification-badge {
+        display: none;
+    }
+
+    &.has-notifications {
+        .notification-badge {
+            display: block;
+        }
+    }
 }
 
 .notification-details {
@@ -41,4 +57,19 @@
 
 .notifications-grouped-list {
     width: 350px;
+}
+
+.notifications-group {
+    &.collapsed {
+        .collapse-toggle {
+            &:before {
+                @extend .icon-chevron-up:before;
+            }
+        }
+
+        ol {
+            display: none;
+        }
+    }
+
 }

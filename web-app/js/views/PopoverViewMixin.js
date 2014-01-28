@@ -6,18 +6,33 @@
      * to have a popoverCOnfig attribute that provies the configuration values for the popover
      */
      Ozone.views.PopoverViewMixin = {
-        /**
-         * Views that use this mixin are expected to implement innerRender so that
-         * this render function can work.  This function requires the parent element so
-         * that the popover plugin can be invoked on it.  If the parent class render needs
-         * to be called, call it in innerRender
-         */
-        render: function(parentEl) {
-            this.innerRender();
+         /**
+          * options:
+          *     parentEl (required) The parent element for the popover to attach to
+          *     preventClickOnClose (optional) If true, clicks on the popover will
+          *     not automatically cause to to close like they normally would
+          */
+        initialize: function(options) {
+            this.parentEl = options.parentEl;
 
-            this.parentEl = parentEl;
+            //optionally prevent clicks from automatically
+            //closing the popover
+            if (options.preventClickClose) {
+                //add the delegateEvents to the event name so that it automatically
+                //get cleaned up by the view when it is removed
+                this.$el.on('click.delegateEvents' + this.cid, function(e) {
+                    e.stopPropagation();
+                });
+            }
+        },
 
-            return this;
+        render: function() {
+            this.parentEl.popover(_.extend({
+                html: true,
+                content: this.el,
+                show: true,
+                trigger: 'manual'
+            }, this.popoverConfig));
         },
 
         /**
@@ -25,20 +40,16 @@
          * to be attached to the same parent, as long as only one is open at a time
          */
         show: function() {
-            this.parentEl.popover(_.extend({
-                html: true,
-                content: this.el,
-                show: true,
-                trigger: 'manual'
-            }, this.popoverConfig)).popover('show');
+            if (!this.isVisible()) {
+                this.parentEl.popover('show');
+                this.$el.trigger('show');
+            }
 
-            this.$el.trigger('show');
             return this;
         },
 
         hide: function() {
-            this.parentEl.popover('destroy');
-
+            this.parentEl.popover('hide');
             this.$el.trigger('hide');
             return this;
         }

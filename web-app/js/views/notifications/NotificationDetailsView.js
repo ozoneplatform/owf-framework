@@ -27,12 +27,17 @@
             return this;
         },
 
-        dismiss: function() {
+        dismiss: function(e) {
             var collection = this.model.collection;
 
             if (collection) {
                 collection.remove(this.model);
             }
+
+            this.stopListening(this.model);
+            this.model = null;
+
+            e.stopPropagation();
         }
     });
 

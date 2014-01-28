@@ -1,12 +1,3 @@
 //bootstrap override variables can go here
 
-@import 'variables';
-@import 'mixins';
-
-//import bootstrap
-.bootstrap-active {
-    @import 'bootstrap';
-}
-
-@import 'theme_base';
-@import 'owf_bootstrap';
+@import 'bootstrap_all';

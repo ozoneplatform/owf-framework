@@ -46,8 +46,12 @@
 
         modelEvents: {
             'add': 'addOneFromEvent',
-            'reset': 'addAll'
+            'reset': 'addAll',
+            'remove': 'removeOne'
         },
+
+        //A map from model cid to child view
+        viewMap: {},
 
         initialize: function () {
             this.CollectionItemView = this.CollectionItemView || this.options.CollectionItemView;
@@ -89,6 +93,8 @@
             $container = $container || this.$el;
 
             $container.append(view.el);
+            this.viewMap[item.cid] = view;
+
             return view;
         },
 
@@ -104,9 +110,21 @@
         addAll: function() {
             var me = this;
 
+            //clear out old views
+            _.each(this.viewMap, function(view) {
+                view.remove();
+            });
+            this.viewMap = {};
+
+            //add new views
             this.collection.each(function(item) {
                 me.addOne(item);
             });
+        },
+
+        //Remove the child view associated with this model
+        removeOne: function(model) {
+            this.viewMap[model.cid].remove();
         },
 
         // handle item clicks

@@ -713,6 +713,7 @@ uiperformance.bundles = [
                         'views/notifications/NotificationsButton',
                         'views/notifications/NotificationsGroupView',
                         'views/notifications/NotificationsGroupedListView',
+                        'views/notifications/NotificationsHeader',
                         'views/notifications/NotificationsSectionHeader',
                         'components/ExtBackboneViewWrapper',
                         'components/appcomponents/AppComponent',

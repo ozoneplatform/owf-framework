@@ -6,11 +6,12 @@
     var NotificationsBadge = Superclass.extend({
         className: 'notification-badge',
 
-        tag: 'span',
+        tagName: 'strong',
 
         modelEvents: {
             'add': 'updateCount',
-            'remove': 'updateCount'
+            'remove': 'updateCount',
+            'reset': 'updateCount'
         },
 
         //update the count in the UI and show or hide the badge as necessary
@@ -20,7 +21,6 @@
             if (!this.isRendered()) this.render();
 
             this.$el.text(count);
-            this[this.count ? 'show' : 'hide']();
         }
     });
 
