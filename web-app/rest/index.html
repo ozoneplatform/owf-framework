@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>OWF 7.3 REST Documentation</title>
+    <title>OWF 7.10 REST Documentation</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
 
@@ -33,10 +33,10 @@
             <a href="#administration" class="group">Administration</a>
         
             
-            <a href="#audit" class="group">Audit</a>
+            <a href="#applicationconfiguration" class="group">ApplicationConfiguration</a>
         
             
-            <a href="#applicationconfiguration" class="group">ApplicationConfiguration</a>
+            <a href="#audit" class="group">Audit</a>
         
             
             <a href="#dashboard" class="group">Dashboard</a>
@@ -45,16 +45,13 @@
             <a href="#group" class="group">Group</a>
         
             
-            <a href="#mergeddirectoryresource" class="group">MergedDirectoryResource</a>
-        
-            
             <a href="#marketplace" class="group">Marketplace</a>
         
             
-            <a href="#metric" class="group">Metric</a>
+            <a href="#mergeddirectoryresource" class="group">MergedDirectoryResource</a>
         
             
-            <a href="#preference" class="group">Preference</a>
+            <a href="#metric" class="group">Metric</a>
         
             
             <a href="#person" class="group">Person</a>
@@ -63,7 +60,7 @@
             <a href="#personwidgetdefinition" class="group">PersonWidgetDefinition</a>
         
             
-            <a href="#widgetdefinition" class="group">WidgetDefinition</a>
+            <a href="#preference" class="group">Preference</a>
         
             
             <a href="#stack" class="group">Stack</a>
@@ -75,13 +72,16 @@
             <a href="#widget" class="group">Widget</a>
         
             
+            <a href="#widgetdefinition" class="group">WidgetDefinition</a>
+        
+            
             <a href="#widgettype" class="group">WidgetType</a>
         
     </nav>
 
     <section class="doc-content">
-        <h3 class="doc-name">OWF 7.3 REST Documentation</h3>
-        <p>The following APIs reference OZONE 7.3d. They are subject to change [in future versions].</p>
+        <h3 class="doc-name">OWF 7.10 REST Documentation</h3>
+        <p>The following APIs reference OZONE 7.10. They are subject to change [in future versions].</p>
 
 
         
@@ -399,80 +399,6 @@ String accessLevel = access level of message
             </section>
         
             
-            <section id="audit" class="resource">
-                <h3>Audit</h3>
-                <p class="resource-description"></p>
-
-                
-                    
-                        
-                        
-                        <div class="resource-endpoint resource-endpoint-get ">
-                            <div class="row">
-                                <div class="col-md-1 method-verb">get</div>
-                                <div class="col-md-11 resource-uri">/audit</div>
-                            </div>
-                            <div class="method-info">
-                                <h5 class="method-title"></h5>
-                                <p class="method-description">Logs a message.
-
-String sendingWidget = sending widget's universal name;
-String receivingWidget = receiving widget's universal name;
-String accessLevel = access level;
-String outcomeCategory = outcome category;
-boolean accessOutcomeGood = whether the outcome was good (either "true" or "false");
-
-</p>
-                            </div>
-                            <div class="resource-endpoint-details">
-                                <div class="request-details">
-                                    <h6>Request:</h6>
-                                    
-
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="request-body">
-                                                    {"sendingWidget":"ChannelShouter","receivingWidget":"ChannelListener","accessLevel":"Test Access Level","outcomeGood":true}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-
-                                </div>
-                                <div class="response-details">
-                                    <h6>Response:</h6>
-                                    
-
-                                        
-                                            <div class="response-header">
-                                                <span class="key">Content-Type: </span>
-                                                <span class="value">application/json;charset=UTF-8</span>
-                                            </div>
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="response-body">
-                                                    
-                                                    {"success":true,"data":{"message":"Sender: [ChannelShouter], Receiver: [ChannelListener], accessLevel: [Test Access Level], [null]"}}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                
-            </section>
-        
-            
             <section id="applicationconfiguration" class="resource">
                 <h3>ApplicationConfiguration</h3>
                 <p class="resource-description"></p>
@@ -606,6 +532,80 @@ String data = JSON application configuration object (only allowed to appear in t
             </section>
         
             
+            <section id="audit" class="resource">
+                <h3>Audit</h3>
+                <p class="resource-description"></p>
+
+                
+                    
+                        
+                        
+                        <div class="resource-endpoint resource-endpoint-get ">
+                            <div class="row">
+                                <div class="col-md-1 method-verb">get</div>
+                                <div class="col-md-11 resource-uri">/audit</div>
+                            </div>
+                            <div class="method-info">
+                                <h5 class="method-title"></h5>
+                                <p class="method-description">Logs a message.
+
+String sendingWidget = sending widget's universal name;
+String receivingWidget = receiving widget's universal name;
+String accessLevel = access level;
+String outcomeCategory = outcome category;
+boolean accessOutcomeGood = whether the outcome was good (either "true" or "false");
+
+</p>
+                            </div>
+                            <div class="resource-endpoint-details">
+                                <div class="request-details">
+                                    <h6>Request:</h6>
+                                    
+
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="request-body">
+                                                    {"sendingWidget":"ChannelShouter","receivingWidget":"ChannelListener","accessLevel":"Test Access Level","outcomeGood":true}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+
+                                </div>
+                                <div class="response-details">
+                                    <h6>Response:</h6>
+                                    
+
+                                        
+                                            <div class="response-header">
+                                                <span class="key">Content-Type: </span>
+                                                <span class="value">application/json;charset=UTF-8</span>
+                                            </div>
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="response-body">
+                                                    
+                                                    {"success":true,"data":{"message":"Sender: [ChannelShouter], Receiver: [ChannelListener], accessLevel: [Test Access Level], [null]"}}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    
+                
+            </section>
+        
+            
             <section id="dashboard" class="resource">
                 <h3>Dashboard</h3>
                 <p class="resource-description"></p>
@@ -681,7 +681,7 @@ String data = JSON application configuration object (only allowed to appear in t
                             </div>
                             <div class="method-info">
                                 <h5 class="method-title"></h5>
-                                <p class="method-description">Create a dashboard and return it. 
+                                <p class="method-description">Create a dashboard and return it.
 
 </p>
                             </div>
@@ -732,7 +732,7 @@ String data = JSON application configuration object (only allowed to appear in t
                             </div>
                             <div class="method-info">
                                 <h5 class="method-title"></h5>
-                                <p class="method-description">Update a dashboard and return it. 
+                                <p class="method-description">Update a dashboard and return it.
 
 </p>
                             </div>
@@ -999,7 +999,7 @@ String data = JSON application configuration object (only allowed to appear in t
                             </div>
                             <div class="method-info">
                                 <h5 class="method-title"></h5>
-                                <p class="method-description">Update a dashboard. 
+                                <p class="method-description">Update a dashboard.
 
 </p>
                             </div>
@@ -1556,6 +1556,76 @@ String data = the widgets (JSON array of widget objects);
             </section>
         
             
+            <section id="marketplace" class="resource">
+                <h3>Marketplace</h3>
+                <p class="resource-description"></p>
+
+                
+                    
+                        
+                        
+                        <div class="resource-endpoint resource-endpoint-get ">
+                            <div class="row">
+                                <div class="col-md-1 method-verb">get</div>
+                                <div class="col-md-11 resource-uri">/marketplace/sync/$guid</div>
+                            </div>
+                            <div class="method-info">
+                                <h5 class="method-title"></h5>
+                                <p class="method-description">Notify OWF that a publishable "Listing" has been updated on a Marketplace server. Said "Listing" must correspond to a web application that can be used as an OWF widget. This will cause OWF to search known Marketplaces for an updated definition of the corresponding widget. Compatible with Ozone Marketplace 7.0.
+
+String guid = the listing's GUID;
+
+</p>
+                            </div>
+                            <div class="resource-endpoint-details">
+                                <div class="request-details">
+                                    <h6>Request:</h6>
+                                    
+
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="request-body">
+                                                    {"guid":"57320d71-c0f8-4154-ade9-6182e608d4a7"}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+
+                                </div>
+                                <div class="response-details">
+                                    <h6>Response:</h6>
+                                    
+
+                                        
+                                            <div class="response-header">
+                                                <span class="key">Content-Type: </span>
+                                                <span class="value">application/json;charset=UTF-8</span>
+                                            </div>
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="response-body">
+                                                    
+                                                    {"updatedGuid":"57320d71-c0f8-4154-ade9-6182e608d4a7"}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    
+                
+            </section>
+        
+            
             <section id="mergeddirectoryresource" class="resource">
                 <h3>MergedDirectoryResource</h3>
                 <p class="resource-description"></p>
@@ -1658,76 +1728,6 @@ String subPath = the subpath to the theme resource;
             </section>
         
             
-            <section id="marketplace" class="resource">
-                <h3>Marketplace</h3>
-                <p class="resource-description"></p>
-
-                
-                    
-                        
-                        
-                        <div class="resource-endpoint resource-endpoint-get ">
-                            <div class="row">
-                                <div class="col-md-1 method-verb">get</div>
-                                <div class="col-md-11 resource-uri">/marketplace/sync/$guid</div>
-                            </div>
-                            <div class="method-info">
-                                <h5 class="method-title"></h5>
-                                <p class="method-description">Notify OWF that a publishable "Listing" has been updated on a Marketplace server. Said "Listing" must correspond to a web application that can be used as an OWF widget. This will cause OWF to search known Marketplaces for an updated definition of the corresponding widget. Compatible with Ozone Marketplace 7.0.
-
-String guid = the listing's GUID;
-
-</p>
-                            </div>
-                            <div class="resource-endpoint-details">
-                                <div class="request-details">
-                                    <h6>Request:</h6>
-                                    
-
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="request-body">
-                                                    {"guid":"57320d71-c0f8-4154-ade9-6182e608d4a7"}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-
-                                </div>
-                                <div class="response-details">
-                                    <h6>Response:</h6>
-                                    
-
-                                        
-                                            <div class="response-header">
-                                                <span class="key">Content-Type: </span>
-                                                <span class="value">application/json;charset=UTF-8</span>
-                                            </div>
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="response-body">
-                                                    
-                                                    {"updatedGuid":"57320d71-c0f8-4154-ade9-6182e608d4a7"}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                
-            </section>
-        
-            
             <section id="metric" class="resource">
                 <h3>Metric</h3>
                 <p class="resource-description"></p>
@@ -1793,342 +1793,6 @@ String widgetData = any additional data for metric of type metricTypeId (JSON ob
                                                 <div class="response-body">
                                                     
                                                     {"success":false,"data":"Error creating SSL socket: peer not authenticated"}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                
-            </section>
-        
-            
-            <section id="preference" class="resource">
-                <h3>Preference</h3>
-                <p class="resource-description"></p>
-
-                
-                    
-                        
-                        
-                        <div class="resource-endpoint resource-endpoint-get ">
-                            <div class="row">
-                                <div class="col-md-1 method-verb">get</div>
-                                <div class="col-md-11 resource-uri">/prefs/hasPreference/$namespace/$path</div>
-                            </div>
-                            <div class="method-info">
-                                <h5 class="method-title"></h5>
-                                <p class="method-description">Retrieves whether the preference exists for the current user.
-
-String namespace = the preference namespace;
-String path = the preference path;
-
-</p>
-                            </div>
-                            <div class="resource-endpoint-details">
-                                <div class="request-details">
-                                    <h6>Request:</h6>
-                                    
-
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="request-body">
-                                                    {"namespace":"owf.admin.DashboardEditCopy","path":"guid_to_launch"}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-
-                                </div>
-                                <div class="response-details">
-                                    <h6>Response:</h6>
-                                    
-
-                                        
-                                            <div class="response-header">
-                                                <span class="key">Content-Type: </span>
-                                                <span class="value">application/json;charset=UTF-8</span>
-                                            </div>
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="response-body">
-                                                    
-                                                    { "preferenceExist": true,"statusCode": 200}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                
-                    
-                        
-                        
-                        <div class="resource-endpoint resource-endpoint-get ">
-                            <div class="row">
-                                <div class="col-md-1 method-verb">get</div>
-                                <div class="col-md-11 resource-uri">/prefs/preference/$namespace/$path</div>
-                            </div>
-                            <div class="method-info">
-                                <h5 class="method-title"></h5>
-                                <p class="method-description">Retrieves a preference.
-
-</p>
-                            </div>
-                            <div class="resource-endpoint-details">
-                                <div class="request-details">
-                                    <h6>Request:</h6>
-                                    
-
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="request-body">
-                                                    {"namespace":"owf.admin.DashboardEditCopy","path":"guid_to_launch"}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-
-                                </div>
-                                <div class="response-details">
-                                    <h6>Response:</h6>
-                                    
-
-                                        
-                                            <div class="response-header">
-                                                <span class="key">Content-Type: </span>
-                                                <span class="value">application/json;charset=UTF-8</span>
-                                            </div>
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="response-body">
-                                                    
-                                                    {"id":153,"namespace":"owf.admin.DashboardEditCopy","path":"guid_to_launch","value":"a540f672-a34c-4989-962c-dcbd559c3792","user":{"userId":"testAdmin1"}}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        
-                        
-                        <div class="resource-endpoint resource-endpoint-post ">
-                            <div class="row">
-                                <div class="col-md-1 method-verb">post</div>
-                                <div class="col-md-11 resource-uri">/prefs/preference/$namespace/$path</div>
-                            </div>
-                            <div class="method-info">
-                                <h5 class="method-title"></h5>
-                                <p class="method-description">Create a preference.
-
-</p>
-                            </div>
-                            <div class="resource-endpoint-details">
-                                <div class="request-details">
-                                    <h6>Request:</h6>
-                                    
-
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="request-body">
-                                                    {"value": "idk"}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-
-                                </div>
-                                <div class="response-details">
-                                    <h6>Response:</h6>
-                                    
-
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="response-body">
-                                                    
-                                                    {"id":157,"namespace":"namespace","path":"name","value":"idk","user":{"userId":"testAdmin1"}}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        
-                        
-                        <div class="resource-endpoint resource-endpoint-put ">
-                            <div class="row">
-                                <div class="col-md-1 method-verb">put</div>
-                                <div class="col-md-11 resource-uri">/prefs/preference/$namespace/$path</div>
-                            </div>
-                            <div class="method-info">
-                                <h5 class="method-title"></h5>
-                                <p class="method-description">Update a preference.
-
-</p>
-                            </div>
-                            <div class="resource-endpoint-details">
-                                <div class="request-details">
-                                    <h6>Request:</h6>
-                                    
-
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="request-body">
-                                                    {"value": "idk"}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-
-                                </div>
-                                <div class="response-details">
-                                    <h6>Response:</h6>
-                                    
-
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="response-body">
-                                                    
-                                                    {"id":157,"namespace":"namespace","path":"name","value":"idk","user":{"userId":"testAdmin1"}}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        
-                        
-                        <div class="resource-endpoint resource-endpoint-delete ">
-                            <div class="row">
-                                <div class="col-md-1 method-verb">delete</div>
-                                <div class="col-md-11 resource-uri">/prefs/preference/$namespace/$path</div>
-                            </div>
-                            <div class="method-info">
-                                <h5 class="method-title"></h5>
-                                <p class="method-description">Delete a preference.
-
-</p>
-                            </div>
-                            <div class="resource-endpoint-details">
-                                <div class="request-details">
-                                    <h6>Request:</h6>
-                                    
-
-                                        
-
-                                        
-
-                                    
-
-                                </div>
-                                <div class="response-details">
-                                    <h6>Response:</h6>
-                                    
-
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="response-body">
-                                                    
-                                                    {"id":157,"namespace":"namespace","path":"name","value":"idk","user":{"userId":"testAdmin1"}}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                
-                    
-                        
-                        
-                        <div class="resource-endpoint resource-endpoint-get ">
-                            <div class="row">
-                                <div class="col-md-1 method-verb">get</div>
-                                <div class="col-md-11 resource-uri">/prefs/server/resources</div>
-                            </div>
-                            <div class="method-info">
-                                <h5 class="method-title"></h5>
-                                <p class="method-description">Retrieves OWF server version.
-
-</p>
-                            </div>
-                            <div class="resource-endpoint-details">
-                                <div class="request-details">
-                                    <h6>Request:</h6>
-                                    
-
-                                        
-
-                                        
-
-                                    
-
-                                </div>
-                                <div class="response-details">
-                                    <h6>Response:</h6>
-                                    
-
-                                        
-                                            <div class="response-header">
-                                                <span class="key">Content-Type: </span>
-                                                <span class="value">application/json;charset=UTF-8</span>
-                                            </div>
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="response-body">
-                                                    
-                                                    {"serverVersion":"7.3"}
 
                                                 </div>
                                             </code></pre>
@@ -3004,7 +2668,7 @@ String filters = the advanced filters (JSON array of objects, each object has a 
                             </div>
                             <div class="method-info">
                                 <h5 class="method-title"></h5>
-                                <p class="method-description">Creates a personal widget for a user. Admin only. 
+                                <p class="method-description">Creates a personal widget for a user. Admin only.
 
 String guid = widget GUID;
 int personId = user ID;
@@ -3065,7 +2729,7 @@ int personId = user ID;
                             </div>
                             <div class="method-info">
                                 <h5 class="method-title"></h5>
-                                <p class="method-description">Updates a personal widget definition for a user. Admin or owner only. 
+                                <p class="method-description">Updates a personal widget definition for a user. Admin or owner only.
 
 String guid = widget GUID;
 int personId = user ID;
@@ -3249,25 +2913,25 @@ boolean updateOrder = whether to update the widget position (either "true" or "f
             </section>
         
             
-            <section id="widgetdefinition" class="resource">
-                <h3>WidgetDefinition</h3>
+            <section id="preference" class="resource">
+                <h3>Preference</h3>
                 <p class="resource-description"></p>
 
                 
                     
                         
                         
-                        <div class="resource-endpoint resource-endpoint-delete ">
+                        <div class="resource-endpoint resource-endpoint-get ">
                             <div class="row">
-                                <div class="col-md-1 method-verb">delete</div>
-                                <div class="col-md-11 resource-uri">/prefs/widgetDefinition</div>
+                                <div class="col-md-1 method-verb">get</div>
+                                <div class="col-md-11 resource-uri">/prefs/hasPreference/$namespace/$path</div>
                             </div>
                             <div class="method-info">
                                 <h5 class="method-title"></h5>
-                                <p class="method-description">Deletes widget definitions. Admin only. 
+                                <p class="method-description">Retrieves whether the preference exists for the current user.
 
-String data = widgets to delete (JSON array of widget objects);
-String id = widgets to delete (comma-separated array of widget GUIDs, overwitten by data);
+String namespace = the preference namespace;
+String path = the preference path;
 
 </p>
                             </div>
@@ -3281,7 +2945,7 @@ String id = widgets to delete (comma-separated array of widget GUIDs, overwitten
                                         
                                             <pre><code>
                                                 <div class="request-body">
-                                                    {"data":[{"id":"eb5435cf-4021-4f2a-ba69-dde451d12551","namespace":"widget","value":{"universalName":null,"namespace":"Channel Shouter","description":null,"url":"examples/walkthrough/widgets/ChannelShouter.gsp","headerIcon":"themes/common/images/widget-icons/ChannelShouter.png","image":"themes/common/images/widget-icons/ChannelShouter.png","smallIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","largeIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","width":295,"height":250,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":4,"totalGroups":3,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"eb5435cf-4021-4f2a-ba69-dde451d12551"}]}
+                                                    {"namespace":"owf.admin.DashboardEditCopy","path":"guid_to_launch"}
 
                                                 </div>
                                             </code></pre>
@@ -3305,69 +2969,7 @@ String id = widgets to delete (comma-separated array of widget GUIDs, overwitten
                                             <pre><code>
                                                 <div class="response-body">
                                                     
-                                                    {"success":true,"data":[]}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                
-                    
-                        
-                        
-                        <div class="resource-endpoint resource-endpoint-delete ">
-                            <div class="row">
-                                <div class="col-md-1 method-verb">delete</div>
-                                <div class="col-md-11 resource-uri">/prefs/widgetDefinition?widgetGuidsToDelete=</div>
-                            </div>
-                            <div class="method-info">
-                                <h5 class="method-title"></h5>
-                                <p class="method-description">Bulk deletes widget definitions. Admin only. Duplicates functionality of "/prefs/widgetDefinition". 
-
-String widgetGuidsToDelete = widgets to delete (JSON array of widget objects);
-
-</p>
-                            </div>
-                            <div class="resource-endpoint-details">
-                                <div class="request-details">
-                                    <h6>Request:</h6>
-                                    
-
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="request-body">
-                                                    {"widgetGuidsToDelete":[{"id":"eb5435cf-4021-4f2a-ba69-dde451d12551","namespace":"widget","value":{"universalName":null,"namespace":"Channel Shouter","description":null,"url":"examples/walkthrough/widgets/ChannelShouter.gsp","headerIcon":"themes/common/images/widget-icons/ChannelShouter.png","image":"themes/common/images/widget-icons/ChannelShouter.png","smallIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","largeIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","width":295,"height":250,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":4,"totalGroups":3,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"eb5435cf-4021-4f2a-ba69-dde451d12551"}]}
-
-                                                </div>
-                                            </code></pre>
-                                        
-
-                                    
-
-                                </div>
-                                <div class="response-details">
-                                    <h6>Response:</h6>
-                                    
-
-                                        
-                                            <div class="response-header">
-                                                <span class="key">Content-Type: </span>
-                                                <span class="value">application/json;charset=UTF-8</span>
-                                            </div>
-                                        
-
-                                        
-                                            <pre><code>
-                                                <div class="response-body">
-                                                    
-                                                    {"success":true,"data":[]}
+                                                    { "preferenceExist": true,"statusCode": 200}
 
                                                 </div>
                                             </code></pre>
@@ -3385,11 +2987,11 @@ String widgetGuidsToDelete = widgets to delete (JSON array of widget objects);
                         <div class="resource-endpoint resource-endpoint-get ">
                             <div class="row">
                                 <div class="col-md-1 method-verb">get</div>
-                                <div class="col-md-11 resource-uri">/prefs/widgetDefinition/dependents</div>
+                                <div class="col-md-11 resource-uri">/prefs/preference/$namespace/$path</div>
                             </div>
                             <div class="method-info">
                                 <h5 class="method-title"></h5>
-                                <p class="method-description">Returns a list of dependent widget defintions
+                                <p class="method-description">Retrieves a preference.
 
 </p>
                             </div>
@@ -3403,7 +3005,7 @@ String widgetGuidsToDelete = widgets to delete (JSON array of widget objects);
                                         
                                             <pre><code>
                                                 <div class="request-body">
-                                                    {"id":"b787b976-7721-4955-aba4-f14f45aaad68"}
+                                                    {"namespace":"owf.admin.DashboardEditCopy","path":"guid_to_launch"}
 
                                                 </div>
                                             </code></pre>
@@ -3427,7 +3029,212 @@ String widgetGuidsToDelete = widgets to delete (JSON array of widget objects);
                                             <pre><code>
                                                 <div class="response-body">
                                                     
-                                                    {"success":true,"data":[{"id":"250e0694-0124-4ee6-a66b-349cc919a11f","namespace":"widget","value":{"universalName":"","namespace":"Component with requirements","description":"","url":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","headerIcon":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","image":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","smallIconUrl":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","largeIconUrl":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","width":1050,"height":650,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1","totalUsers":1,"totalGroups":0,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":"","definitionVisible":true,"directRequired":["b787b976-7721-4955-aba4-f14f45aaad68"],"allRequired":["b787b976-7721-4955-aba4-f14f45aaad68"],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"250e0694-0124-4ee6-a66b-349cc919a11f"}]}
+                                                    {"id":153,"namespace":"owf.admin.DashboardEditCopy","path":"guid_to_launch","value":"a540f672-a34c-4989-962c-dcbd559c3792","user":{"userId":"testAdmin1"}}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    
+                        
+                        
+                        <div class="resource-endpoint resource-endpoint-post ">
+                            <div class="row">
+                                <div class="col-md-1 method-verb">post</div>
+                                <div class="col-md-11 resource-uri">/prefs/preference/$namespace/$path</div>
+                            </div>
+                            <div class="method-info">
+                                <h5 class="method-title"></h5>
+                                <p class="method-description">Create a preference.
+
+</p>
+                            </div>
+                            <div class="resource-endpoint-details">
+                                <div class="request-details">
+                                    <h6>Request:</h6>
+                                    
+
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="request-body">
+                                                    {"value": "idk"}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+
+                                </div>
+                                <div class="response-details">
+                                    <h6>Response:</h6>
+                                    
+
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="response-body">
+                                                    
+                                                    {"id":157,"namespace":"namespace","path":"name","value":"idk","user":{"userId":"testAdmin1"}}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    
+                        
+                        
+                        <div class="resource-endpoint resource-endpoint-put ">
+                            <div class="row">
+                                <div class="col-md-1 method-verb">put</div>
+                                <div class="col-md-11 resource-uri">/prefs/preference/$namespace/$path</div>
+                            </div>
+                            <div class="method-info">
+                                <h5 class="method-title"></h5>
+                                <p class="method-description">Update a preference.
+
+</p>
+                            </div>
+                            <div class="resource-endpoint-details">
+                                <div class="request-details">
+                                    <h6>Request:</h6>
+                                    
+
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="request-body">
+                                                    {"value": "idk"}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+
+                                </div>
+                                <div class="response-details">
+                                    <h6>Response:</h6>
+                                    
+
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="response-body">
+                                                    
+                                                    {"id":157,"namespace":"namespace","path":"name","value":"idk","user":{"userId":"testAdmin1"}}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    
+                        
+                        
+                        <div class="resource-endpoint resource-endpoint-delete ">
+                            <div class="row">
+                                <div class="col-md-1 method-verb">delete</div>
+                                <div class="col-md-11 resource-uri">/prefs/preference/$namespace/$path</div>
+                            </div>
+                            <div class="method-info">
+                                <h5 class="method-title"></h5>
+                                <p class="method-description">Delete a preference.
+
+</p>
+                            </div>
+                            <div class="resource-endpoint-details">
+                                <div class="request-details">
+                                    <h6>Request:</h6>
+                                    
+
+                                        
+
+                                        
+
+                                    
+
+                                </div>
+                                <div class="response-details">
+                                    <h6>Response:</h6>
+                                    
+
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="response-body">
+                                                    
+                                                    {"id":157,"namespace":"namespace","path":"name","value":"idk","user":{"userId":"testAdmin1"}}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    
+                
+                    
+                        
+                        
+                        <div class="resource-endpoint resource-endpoint-get ">
+                            <div class="row">
+                                <div class="col-md-1 method-verb">get</div>
+                                <div class="col-md-11 resource-uri">/prefs/server/resources</div>
+                            </div>
+                            <div class="method-info">
+                                <h5 class="method-title"></h5>
+                                <p class="method-description">Retrieves OWF server version.
+
+</p>
+                            </div>
+                            <div class="resource-endpoint-details">
+                                <div class="request-details">
+                                    <h6>Request:</h6>
+                                    
+
+                                        
+
+                                        
+
+                                    
+
+                                </div>
+                                <div class="response-details">
+                                    <h6>Response:</h6>
+                                    
+
+                                        
+                                            <div class="response-header">
+                                                <span class="key">Content-Type: </span>
+                                                <span class="value">application/json;charset=UTF-8</span>
+                                            </div>
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="response-body">
+                                                    
+                                                    {"serverVersion":"7.3"}
 
                                                 </div>
                                             </code></pre>
@@ -4825,6 +4632,199 @@ int loadTime = widget load time in miliseconds;
                         </div>
                     
                 
+                    
+                
+            </section>
+        
+            
+            <section id="widgetdefinition" class="resource">
+                <h3>WidgetDefinition</h3>
+                <p class="resource-description"></p>
+
+                
+                    
+                        
+                        
+                        <div class="resource-endpoint resource-endpoint-delete ">
+                            <div class="row">
+                                <div class="col-md-1 method-verb">delete</div>
+                                <div class="col-md-11 resource-uri">/prefs/widgetDefinition</div>
+                            </div>
+                            <div class="method-info">
+                                <h5 class="method-title"></h5>
+                                <p class="method-description">Deletes widget definitions. Admin only.
+
+String data = widgets to delete (JSON array of widget objects);
+String id = widgets to delete (comma-separated array of widget GUIDs, overwitten by data);
+
+</p>
+                            </div>
+                            <div class="resource-endpoint-details">
+                                <div class="request-details">
+                                    <h6>Request:</h6>
+                                    
+
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="request-body">
+                                                    {"data":[{"id":"eb5435cf-4021-4f2a-ba69-dde451d12551","namespace":"widget","value":{"universalName":null,"namespace":"Channel Shouter","description":null,"url":"examples/walkthrough/widgets/ChannelShouter.gsp","headerIcon":"themes/common/images/widget-icons/ChannelShouter.png","image":"themes/common/images/widget-icons/ChannelShouter.png","smallIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","largeIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","width":295,"height":250,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":4,"totalGroups":3,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"eb5435cf-4021-4f2a-ba69-dde451d12551"}]}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+
+                                </div>
+                                <div class="response-details">
+                                    <h6>Response:</h6>
+                                    
+
+                                        
+                                            <div class="response-header">
+                                                <span class="key">Content-Type: </span>
+                                                <span class="value">application/json;charset=UTF-8</span>
+                                            </div>
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="response-body">
+                                                    
+                                                    {"success":true,"data":[]}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    
+                
+                    
+                        
+                        
+                        <div class="resource-endpoint resource-endpoint-delete ">
+                            <div class="row">
+                                <div class="col-md-1 method-verb">delete</div>
+                                <div class="col-md-11 resource-uri">/prefs/widgetDefinition?widgetGuidsToDelete=</div>
+                            </div>
+                            <div class="method-info">
+                                <h5 class="method-title"></h5>
+                                <p class="method-description">Bulk deletes widget definitions. Admin only. Duplicates functionality of "/prefs/widgetDefinition".
+
+String widgetGuidsToDelete = widgets to delete (JSON array of widget objects);
+
+</p>
+                            </div>
+                            <div class="resource-endpoint-details">
+                                <div class="request-details">
+                                    <h6>Request:</h6>
+                                    
+
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="request-body">
+                                                    {"widgetGuidsToDelete":[{"id":"eb5435cf-4021-4f2a-ba69-dde451d12551","namespace":"widget","value":{"universalName":null,"namespace":"Channel Shouter","description":null,"url":"examples/walkthrough/widgets/ChannelShouter.gsp","headerIcon":"themes/common/images/widget-icons/ChannelShouter.png","image":"themes/common/images/widget-icons/ChannelShouter.png","smallIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","largeIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","width":295,"height":250,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":4,"totalGroups":3,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"eb5435cf-4021-4f2a-ba69-dde451d12551"}]}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+
+                                </div>
+                                <div class="response-details">
+                                    <h6>Response:</h6>
+                                    
+
+                                        
+                                            <div class="response-header">
+                                                <span class="key">Content-Type: </span>
+                                                <span class="value">application/json;charset=UTF-8</span>
+                                            </div>
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="response-body">
+                                                    
+                                                    {"success":true,"data":[]}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    
+                
+                    
+                        
+                        
+                        <div class="resource-endpoint resource-endpoint-get ">
+                            <div class="row">
+                                <div class="col-md-1 method-verb">get</div>
+                                <div class="col-md-11 resource-uri">/prefs/widgetDefinition/dependents</div>
+                            </div>
+                            <div class="method-info">
+                                <h5 class="method-title"></h5>
+                                <p class="method-description">Returns a list of dependent widget defintions
+
+</p>
+                            </div>
+                            <div class="resource-endpoint-details">
+                                <div class="request-details">
+                                    <h6>Request:</h6>
+                                    
+
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="request-body">
+                                                    {"id":"b787b976-7721-4955-aba4-f14f45aaad68"}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+
+                                </div>
+                                <div class="response-details">
+                                    <h6>Response:</h6>
+                                    
+
+                                        
+                                            <div class="response-header">
+                                                <span class="key">Content-Type: </span>
+                                                <span class="value">application/json;charset=UTF-8</span>
+                                            </div>
+                                        
+
+                                        
+                                            <pre><code>
+                                                <div class="response-body">
+                                                    
+                                                    {"success":true,"data":[{"id":"250e0694-0124-4ee6-a66b-349cc919a11f","namespace":"widget","value":{"universalName":"","namespace":"Component with requirements","description":"","url":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","headerIcon":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","image":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","smallIconUrl":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","largeIconUrl":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","width":1050,"height":650,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1","totalUsers":1,"totalGroups":0,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":"","definitionVisible":true,"directRequired":["b787b976-7721-4955-aba4-f14f45aaad68"],"allRequired":["b787b976-7721-4955-aba4-f14f45aaad68"],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"250e0694-0124-4ee6-a66b-349cc919a11f"}]}
+
+                                                </div>
+                                            </code></pre>
+                                        
+
+                                    
+                                </div>
+                            </div>
+                        </div>
                     
                 
             </section>
