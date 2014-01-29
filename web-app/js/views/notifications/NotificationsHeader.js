@@ -12,6 +12,8 @@
         //NOTE This render function can safely be called repeatedly
         render: function() {
             this.$el.html(template(this.model.attributes));
+
+            return this;
         }
     });
 

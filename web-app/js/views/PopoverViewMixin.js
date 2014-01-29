@@ -43,12 +43,19 @@
             if (!this.isVisible()) {
                 this.parentEl.popover('show');
                 this.$el.trigger('show');
+
+                //have to re-attach event handlers that get lost when show is performed
+                this.delegateEvents();
             }
 
             return this;
         },
 
         hide: function() {
+            //popover show/hide causes event handlers to get lost, so we might
+            //as well clean them up properly to avoid memory leaks
+            this.undelegateEvents();
+
             this.parentEl.popover('hide');
             this.$el.trigger('hide');
             return this;

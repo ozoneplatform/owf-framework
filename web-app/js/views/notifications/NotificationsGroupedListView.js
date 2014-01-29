@@ -109,6 +109,24 @@
             this.sections[sourceUrl] = section;
 
             return section;
+        },
+
+        //to deal with popover issues, remove and re-add events on hide-show
+        hide: function() {
+            Ozone.views.PopoverViewMixin.hide.apply(this, arguments);
+
+            _.each(this.sections, function(section) {
+                section.recursiveUndelegateEvents();
+            });
+        },
+
+        show: function() {
+            Ozone.views.PopoverViewMixin.show.apply(this, arguments);
+
+            _.each(this.sections, function(section) {
+                section.delegateEvents();
+                section.recursiveDelegateEvents();
+            });
         }
     }));
 

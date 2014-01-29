@@ -1,19 +1,24 @@
 ;(function(Ozone, Handlebars, _) {
     'use strict';
 
-    var Superclass = Ozone.views.notifications.NotificationsHeader;
+    var Superclass = Ozone.views.BaseView;
 
     var collapseBtnHtml = '<span class="collapse-toggle"></span>',
         extraBtnsHtml = '<span class="count"></span>' +
-            '<a href="" class="dismiss-all">Dismiss All</a>';
+            '<a class="dismiss-all">Dismiss All</a>';
 
     var NotificationsSectionHeader = Superclass.extend({
         tag: 'h4',
+
+        className: 'section-header',
 
         events: {
             'click .dismiss-all': 'dismissAll',
             'click .collapse-toggle': 'toggleCollapse'
         },
+
+        //The inner NotificationHeader
+        innerView: null,
 
         /**
          * Expected options:
@@ -30,30 +35,35 @@
             this.parentView = options.parentView;
             this.notificationCollection = options.notificationCollection;
 
-
+            this.innerView = new Ozone.views.notifications.NotificationsHeader({
+                model: this.model
+            });
 
             this.listenTo(this.notificationsCollection, {
                 add: updateCount,
                 remove: updateCount,
                 reset: updateCount
             });
+
+            this.listenTo(this.parentView, {
+                hide: _.bind(this.undelegateEvents, this),
+                show: _.bind(this.delegateEvents, this)
+            });
         },
 
         //NOTE This render function can safely be called repeatedly
         render: function() {
-            Superclass.prototype.render.apply(this, arguments);
+            this.$el
+                .append(collapseBtnHtml)
+                .append(this.innerView.render().$el)
+                .append(extraBtnsHtml);
 
-            //add the collapse/expand button and the dismiss all button
-            this.$el.prepend(collapseBtnHtml).append(extraBtnsHtml);
             this.updateCount();
 
             return this;
         },
 
-        dismissAll: function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-
+        dismissAll: function() {
             //make a copy of the models list since iterating over the original list
             //while removing doesn't work right
             var models = _.clone(this.notificationsCollection.models);

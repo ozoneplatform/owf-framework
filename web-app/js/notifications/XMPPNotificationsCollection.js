@@ -50,7 +50,7 @@
             this.fetch().always(function() {
                 this.fetchTimeout = window.setTimeout(thisFn,
                         //Ozone.config.notificationPollingInterval);
-                        60000); //TODO remove once the config is in place
+                        30000); //TODO remove once the config is in place
             });
         }
     });

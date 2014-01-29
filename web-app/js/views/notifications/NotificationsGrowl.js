@@ -3,8 +3,7 @@
 
     var Superclass = Ozone.views.BaseView;
 
-    var moreNotificationsTemplate = Handlebars.compile('<span class="notification-icon"></span>' +
-        '{{count}} other notifications');
+    var moreNotificationsTemplate = Handlebars.compile('{{count}} other notifications');
 
     var FADE_TIMEOUT_LENGTH = 5000;
 
@@ -12,6 +11,9 @@
      * This view is a popover
      */
     var NotificationsGrowl = Superclass.extend(_.extend({}, Ozone.views.PopoverViewMixin, {
+
+        className: 'notifications-growl',
+
         modelEvents: {
             'fetchMore': 'updateGrowl'
         },
@@ -20,34 +22,37 @@
             placement: 'bottom'
         },
 
-        //events: {
-            //'mouseenter': 'onMouseEnter',
-            //'mouseleave': 'onMouseLeave'
-        //},
+        events: {
+            'mouseenter': 'onMouseEnter',
+            'mouseleave': 'onMouseLeave',
+            'click .more-notifications': 'openNotifications',
+            'click .close': 'hide'
+        },
 
         sectionHeader: null,
         notificationView: null,
         $moreNotificationsEl: null,
 
+        //the view that contains the toggleMenu method that shows the notifications menu
+        notificationsControllerView: null,
+
         initialize: function(options) {
+            this.notificationsControllerView = options.notificationsControllerView;
+
             Superclass.prototype.initialize.apply(this, arguments);
             Ozone.views.PopoverViewMixin.initialize.call(this, { parentEl: options.parentEl });
 
             this.sectionHeader = new Ozone.views.notifications.NotificationsHeader();
             this.notificationView = new Ozone.views.notifications.NotificationView();
-
-            this.$el.on({
-                'mouseenter': _.bind(this.onMouseEnter, this),
-                'mouseleave': _.bind(this.onMouseLeave, this)
-            });
         },
 
         render: function() {
-            this.$moreNotificationsEl = $('<div class="more-notifications"/>');
+            this.$moreNotificationsEl = $('<a class="more-notifications"></a>');
 
             this.$el
-                .append('<button class="close"></button>')
-                .append(this.sectionHeader.$el)
+                .append($('<div class="header-container">')
+                    .append(this.sectionHeader.$el)
+                    .append('<button class="close"></button>'))
                 .append(this.notificationView.$el)
                 .append(this.$moreNotificationsEl);
 
@@ -76,10 +81,11 @@
             if (newNotificationCount > 1) {
                 this.$moreNotificationsEl.html(moreNotificationsTemplate({
                     count: newNotificationCount - 1
-                })).show();
+                })).css('display', ''); //don't use show/hide methods because they get confused
+                                        //when the popover hasn't rendered yet
             }
             else {
-                this.$moreNotificationsEl.hide();
+                this.$moreNotificationsEl.css('display', 'none');
             }
         },
 
@@ -139,6 +145,11 @@
         onMouseLeave: function() {
             this.mouseIsOver = false;
             this.startFadeTimer();
+        },
+
+        //open the notifications menu
+        openNotifications: function() {
+            this.notificationsControllerView.toggleMenu();
         }
     }));
 

@@ -6,7 +6,7 @@
     var template = Handlebars.compile(
         '<span class="message">{{body}}</span>' +
         '<span class="time">{{relativeTime}}</span>' +
-        '<span class="close"></span>'
+        '<button class="close"></button>'
     );
 
     var NotificationDetailsView = Superclass.extend({

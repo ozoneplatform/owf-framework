@@ -44,7 +44,25 @@
 
         toggleCollapse: function() {
             this.$el.toggleClass('collapsed');
-        }
+        },
+
+        recursiveUndelegateEvents: function() {
+            this.undelegateEvents();
+
+            this.header.undelegateEvents();
+            _.each(this.viewMap, function(view) {
+                view.undelegateEvents();
+            });
+        },
+
+        recursiveDelegateEvents: function() {
+            this.delegateEvents();
+
+            this.header.delegateEvents();
+            _.each(this.viewMap, function(view) {
+                view.delegateEvents();
+            });
+        },
     });
 
     $.extend(true, Ozone, { views: { notifications: {

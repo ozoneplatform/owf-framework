@@ -50,7 +50,8 @@
             });
             this.growl = new Ozone.views.notifications.NotificationsGrowl({
                 collection: this.collection,
-                parentEl: this.childEls.filter('.growl-container')
+                parentEl: this.childEls.filter('.growl-container'),
+                notificationsControllerView: this
             });
             this.badge = new Ozone.views.notifications.NotificationsBadge({
                 collection: this.collection
