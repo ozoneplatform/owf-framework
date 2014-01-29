@@ -1,17 +1,19 @@
 package ozone.owf.grails.services
 
 
+import org.ozoneplatform.appconfig.server.service.api.ApplicationConfigurationService
 import org.ozoneplatform.messaging.payload.AmlMessage
 import org.ozoneplatform.messaging.service.api.MessageService
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CFG
+import org.springframework.context.ApplicationListener
 import ozone.owf.cache.OwfMessageCache
 import ozone.owf.grails.domain.Person
-import ozone.owf.grails.services.AccountService
+import static ozone.owf.enums.OwfApplicationSetting.NOTIFICATIONS_ENABLED
+import org.ozoneplatform.appconfig.server.eventing.ConfigurationSaveEvent
 import org.springframework.transaction.annotation.Transactional
 
+class OwfMessagingService implements ApplicationListener<ConfigurationSaveEvent> {
 
-
-class OwfMessagingService {
+    ApplicationConfigurationService owfApplicationConfigurationService
 
     MessageService messageService
     
@@ -25,15 +27,19 @@ class OwfMessagingService {
     
     public void listen(){
         
-        log.info "Establisting a message listener"
-                
-        //For now this is invoked in bootstrap but in reality this will be from a controller
-        messageService.listenForMessage(CFG.config.xmpp.roomName, new Date(), { message ->
+        log.info "Establishing a message listener"
+
+        messageService.listenForMessage(new Date(), { message ->
             log.info "Message recieved.  The contents are: ${message}."
             owfMessageCache.add(message)
         });
     }
+
+    public void stopListening() {
+        //TODO: What happens here?
+    }
     
+    @Transactional(readOnly=false)
     public List pollMessages(){            
 
         String loggedInUserName = accountService.getLoggedInUsername()
@@ -46,12 +52,9 @@ class OwfMessagingService {
         //If the 'since' date is greater than the last received date then there are no new messages
         if(owfMessageCache.getLastReceivedTimeStamp() && since > owfMessageCache.getLastReceivedTimeStamp())
             return []
-        
         def messages = owfMessageCache.getMessages(since)
-        
         if(!messages.size()){
-            def room = CFG.config.xmpp.roomName
-            messages =  messageService.getMessages(room, since)
+            messages = messageService.getMessages(since)
         }        
         
         //Remove messages that are earlier than the since date and where the recipient list does not include the current user
@@ -65,5 +68,9 @@ class OwfMessagingService {
         return messages
     }
     
-    
+    void onApplicationEvent(ConfigurationSaveEvent event) {
+        if(event.configCode == NOTIFICATIONS_ENABLED.code) {
+            event.configValue.toBoolean() ? listen() : stopListening()
+        }
+    }
 }

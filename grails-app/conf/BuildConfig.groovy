@@ -154,40 +154,39 @@ grails.project.dependency.resolution = {
     excludes 'commons-logging'
     }
     log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
-    repositories {        
-      grailsPlugins()
-      grailsHome()
-//      grailsCentral()
-//
-//      mavenLocal()
-//      mavenCentral()
 
-	mavenRepo "https://www.owfgoss.org/nexus/content/groups/public"
- 	resolver createLocalResolver()
+    repositories {
+        grailsPlugins()
+        grailsHome()
+        mavenLocal()
+        mavenRepo "https://www.owfgoss.org/nexus/content/groups/public"
+        grailsCentral()
+        mavenCentral()
+        resolver createLocalResolver()
         def offline = System.getProperty('OFFLINE_REPO')
-      if (offline) {
+        if (offline) {
             println "OWF USING OFFLINE_REPO ${offline}"
             resolver createOfflineResolver()
         }
-      else{
-          //println "OWF USING LOCAL REPO"
-           // resolver createIvySvnResolver()
+        else{
+            //println "OWF USING LOCAL REPO"
+            //resolver createIvySvnResolver()
         }
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
-	runtime ('log4j:apache-log4j-extras:1.1', 'net.sf.ehcache:ehcache-jgroupsreplication:1.4')
+        runtime ('log4j:apache-log4j-extras:1.1', 'net.sf.ehcache:ehcache-jgroupsreplication:1.4')
 
-      //only include these jdbc drivers for non production
-      if (Environment.current != Environment.PRODUCTION) {
-        runtime 'com.oracle:ojdbc14:10.2.0.1.0'
-        runtime 'mysql:mysql-connector-java:5.1.6'
-        runtime 'net.sourceforge.jtds:jtds:1.2.4'
-        runtime 'postgresql:postgresql:8.4-701.jdbc3'
-      }
+        //only include these jdbc drivers for non production
+        if (Environment.current != Environment.PRODUCTION) {
+            runtime 'com.oracle:ojdbc14:10.2.0.1.0'
+            runtime 'mysql:mysql-connector-java:5.1.6'
+            runtime 'net.sourceforge.jtds:jtds:1.2.4'
+            runtime 'postgresql:postgresql:8.4-701.jdbc3'
+        }
 
-		// HTTP Client
+        // HTTP Client
         compile('org.apache.httpcomponents:httpcore:4.1.1', 'org.apache.httpcomponents:httpclient:4.1.1')
         runtime('org.apache.httpcomponents:httpcore:4.1.1', 'org.apache.httpcomponents:httpclient:4.1.1')
 
@@ -198,9 +197,9 @@ grails.project.dependency.resolution = {
         runtime 'com.thetransactioncompany:cors-filter:1.8'
     }
     plugins {
-        compile 'org.ozoneplatform:aml-commons-security:3.20'
-        compile 'org.ozoneplatform:aml-commons-appconfig:0.1'
+        compile "org.ozoneplatform:aml-commons-security:$config.owf.security.rev"
+        compile 'org.ozoneplatform:aml-commons-appconfig:0.3'
         compile 'org.ozoneplatform:aml-commons-auditing:0.1'
-        compile 'org.ozoneplatform:aml-commons-messaging:1.8'
+        compile 'org.ozoneplatform:aml-commons-messaging:1.9'
     }
 }

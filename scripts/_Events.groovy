@@ -136,7 +136,7 @@ eventCreateWarStart = { name, stagingDir ->
 
 copyAppConfigFiles = { destinationDir ->
 
-	String sourceDir = "${basedir}/plugins/aml-commons-appconfig-0.1/web-app/js/applicationConfiguration"
+	String sourceDir = "${basedir}/plugins/aml-commons-appconfig-0.3/web-app/js/applicationConfiguration"
 
 	new AntBuilder().copy(todir: destinationDir) {
 		fileset(dir: sourceDir)

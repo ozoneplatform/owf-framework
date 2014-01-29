@@ -1134,10 +1134,3 @@ keystore = 'certs/keystore.jks'
 
 casSettings.useCas=true
 casSettings.FullServiceURL='https://localhost:8443/cas'
-
-xmpp.username="amlnotify_owfuser"
-xmpp.password="()IOJKNM78yughvb"
-xmpp.serviceName="owfchat1.goss.owfgoss.org" 
-xmpp.roomName="amlnotify@conference.goss.owfgoss.org"
-xmpp.port=5222
-xmpp.notifications.enabled = false

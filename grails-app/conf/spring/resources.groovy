@@ -1,12 +1,16 @@
 import grails.util.GrailsUtil
+import org.springframework.context.event.SimpleApplicationEventMulticaster
 import ozone.owf.grails.OwfExceptionResolver
 import ozone.owf.grails.services.AutoLoginAccountService
 import ozone.owf.grails.domain.ERoleAuthority
 import ozone.owf.grails.services.AccountService
-import ozone.owf.nineci.hibernate.AuditTrailInterceptor
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as configHolder
+import java.util.concurrent.Executors
 
 beans = {
+
+    applicationEventMulticaster(SimpleApplicationEventMulticaster) {
+        taskExecutor = Executors.newCachedThreadPool()
+    }
 
 	xmlns context: 'http://www.springframework.org/schema/context'
 	context.'component-scan'('base-package': 'org.ozoneplatform.appconfig.server')

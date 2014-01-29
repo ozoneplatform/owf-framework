@@ -132,19 +132,14 @@ class BootStrap {
             //do nothing
             break
         }
-		println 'Creating or updating required database configurations'
+        println 'Creating or updating required database configurations'
 
         //TODO: all createRequired does now is initialize config dependent services - we probably should move/rename the method
         // don't want this to run in test mode since the needed configs won't be there
         // tests should create and set the configs they need
         if(grails.util.Environment.current.name != 'test') {
             owfApplicationConfigurationService.checkThatConfigsExist()
-		    owfApplicationConfigurationService.createRequired()
-            
-            if(CFG.config.xmpp.notifications.enabled){
-                owfMessagingService.listen()
-            }
-             
+            owfApplicationConfigurationService.createRequired()
         }
         
         println 'BootStrap finished!'
