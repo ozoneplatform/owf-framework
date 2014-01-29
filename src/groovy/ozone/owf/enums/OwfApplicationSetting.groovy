@@ -33,9 +33,9 @@ public enum OwfApplicationSetting implements ApplicationSetting{
 
     FREE_WARNING_CONTENT("free.warning.content"),
 
-    NOTIFICATIONS_ENABLED('notifications.enabled'),
+    NOTIFICATIONS_ENABLED('notifications.enabled')
 
-    APPLICATION_HOSTNAME_PUBLIC('url.public')
+    //APPLICATION_HOSTNAME_PUBLIC('url.public')
 
 	OwfApplicationSetting(String code) {
 		this.code = code;
