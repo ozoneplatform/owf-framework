@@ -1,0 +1,25 @@
+//
+// Hero unit
+// --------------------------------------------------
+
+
+.hero-unit {
+  padding: 60px;
+  margin-bottom: 30px;
+  font-size: 18px;
+  font-weight: 200;
+  line-height: $line-height-base * 1.5;
+  color: $hero-unit-lead-color;
+  background-color: $hero-unit-bg;
+  @include border-radius(6px);
+  h1 {
+    margin-bottom: 0;
+    font-size: 60px;
+    line-height: 1;
+    color: $hero-unit-heading-color;
+    letter-spacing: -1px;
+  }
+  li {
+    line-height: $line-height-base * 1.5; // Reset since we specify in type.scss
+  }
+}

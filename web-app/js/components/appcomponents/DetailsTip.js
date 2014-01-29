@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Next Century Corporation 
+ * Copyright 2013 Next Century Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  */
 
  ;(function () {
-    
+
     Ozone.components.appcomponents = Ozone.components.appcomponents || {};
 
-    var SuperClass = Ozone.components.BaseView;
+    var SuperClass = Ozone.views.BaseView;
 
     Ozone.components.appcomponents.DetailsTip = SuperClass.extend({
-        
+
         id: 'widget-details-tip',
 
         tpl:    '<div class="header">' +
@@ -60,11 +60,11 @@
             if(offset.left < 0) {
                 css.left = 0;
             }
-            
+
             if(offset.left + width > parentWidth) {
                 css.left = parentWidth - width;
             }
-            
+
             if(offset.top + height > parentHeight) {
                 css.top = parentHeight - height;
             }

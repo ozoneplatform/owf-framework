@@ -47,7 +47,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         this.getAppComponentsBtn().removeCls('x-item-disabled x-disabled x-btn-disabled disabled');
         //in case user clicked button while disabled remove its selected class
         this.getAppComponentsBtn().removeCls('x-btn-default-toolbar-banner-large-over x-btn-default-toolbar-banner-large-pressed ');
-        
+
         if (Ext.getCmp('appComponentsBtnToolTip')) {
             Ext.getCmp('appComponentsBtnToolTip').destroy();
         }
@@ -72,11 +72,11 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
         }
 
         this.getAppComponentsBtn().addCls('x-item-disabled x-disabled x-btn-disabled disabled');
-        
+
         if (Ext.getCmp('appComponentsBtnToolTip')) {
             Ext.getCmp('appComponentsBtnToolTip').destroy();
         }
-        
+
         Ext.create('Ext.tip.ToolTip', {
             id: 'appComponentsBtnToolTip',
             target: this.getAppComponentsBtn().id,
@@ -92,7 +92,8 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
     getUserMenuBtn: function() {
         if (!this.userMenuBtn) {
-            this.userMenuBtn = this.getComponent('userMenuBtn');
+            this.userMenuBtn = this.getComponent('banner-right-container')
+                .getComponent('userMenuBtn');
         }
 
         return this.userMenuBtn;
@@ -286,12 +287,19 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 xtype: 'component',
                 flex: 1
             }, {
-                xtype: 'usermenubutton',
-                arrowCls: '',
-                id: 'userMenuBtn',
-                height: '100%',
-                user: this.user,
-                dashboardContainer: this.dashboardContainer
+                xtype: 'container',
+                id: 'banner-right-container',
+                cls: 'banner-right-container',
+                items: [{
+                    xtype: 'notificationsbutton'
+                }, {
+                    xtype: 'usermenubutton',
+                    arrowCls: '',
+                    id: 'userMenuBtn',
+                    height: '100%',
+                    user: this.user,
+                    dashboardContainer: this.dashboardContainer
+                }]
             }
         ]);
 
@@ -310,7 +318,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
         if (!this.hasMarketplaceButton) {
             var banner = this;
-            
+
             banner.insert(this.marketplaceButtonIndex, {
                 xtype: 'tbseparator',
                 itemId: 'mpSeparator'
@@ -353,7 +361,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
             this.remove(marketBtnIndex);
             this.remove(marketBtnIndex - 1); //Remove separator
 
-            this.hasMarketplaceButton = false;    
+            this.hasMarketplaceButton = false;
         }
     },
 

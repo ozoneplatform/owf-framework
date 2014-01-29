@@ -2,16 +2,17 @@
 <%@ page contentType="text/html; UTF-8" %>
 <html>
     <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title id='title'>Ozone Widget Framework</title>
-        
+
         <link rel="shortcut icon" href="images/favicon.ico" />
         <script language="javascript">
             //console.time('page');
         </script>
         <!-- ** CSS ** -->
         <p:css id='theme' name='${owfCss.defaultCssPath()}' absolute='true'/>
+        <p:css id="bootstrap" name="${owfCss.bootstrapCssPath()}" absolute='true'/>
 
         <!-- initialize ozone configuration from server -->
         <owfImport:jsOwf path="config" resource="config" />
@@ -53,7 +54,7 @@
                             '-moz-animation:        none !important;' + // Firefox
                             '-ms-animation:         none !important;' + // IE
                             '-o-animation:          none !important;' + // Opera
-                            'animation:             none !important;' + // CSS 3                   
+                            'animation:             none !important;' + // CSS 3
                         '}';
                     Ext.util.CSS.createStyleSheet(turnOffTransitionsAndAnimationsCss);
 
@@ -105,10 +106,10 @@
                 Ext.util.CSS.createStyleSheet(css);
             }
 
-            function initLayoutComponents(customHeaderFooter, floatingWidgetManager, 
+            function initLayoutComponents(customHeaderFooter, floatingWidgetManager,
                     bannerManager, dashboardDesignerManager, modalWindowManager, tooltipManager) {
                 var layoutComponents = [];
-                
+
                 // create panel for custom header
                 var showHeader = (customHeaderFooter.header != "" && customHeaderFooter.headerHeight > 0);
                 var customHeader = {
@@ -130,7 +131,7 @@
                     hidden: !showFooter,
                     height: customHeaderFooter.footerHeight
                 };
-                
+
 
                 // calculate height offset for main component
                 var heightOffset = 0;
@@ -141,7 +142,7 @@
                 if (showFooter) {
                     heightOffset = heightOffset - customHeaderFooter.footerHeight;
                 }
-                
+
                 // Build the layout components array.  Add functional panels as necessary.
                 if (showHeader) {
                     customHeader.loader = {
@@ -202,7 +203,7 @@
                     layoutComponents.push(customFooter);
                 }
                 return layoutComponents;
-            } 
+            }
         </script>
         <script type="text/javascript">
 
@@ -224,7 +225,7 @@
             }
             Ext.useShims = OWF.config.useShims;
             Ext.onReady(function() {
-                
+
                 Ozone.version = Ozone.version || {};
                 Ozone.version.mpversion = "${(grailsApplication.config.owf.mpVersion)}" || "2.5";
 
@@ -274,12 +275,12 @@
                 // Use new shim for dd
                 Ext.dd.DragDropMgr.useShim = true;
 
-                var layoutComponents = initLayoutComponents(Ozone.config.customHeaderFooter, 
+                var layoutComponents = initLayoutComponents(Ozone.config.customHeaderFooter,
                         floatingWidgetManager, bannerManager, dashboardDesignerManager,
                         modalWindowManager, tooltipManager);
-                
+
                 var continueProcessingPage = function() {
-                    
+
                     console.time('initload');
 
                     OWF.Mask = new Ozone.ux.AutoHideLoadMask(Ext.getBody(), {

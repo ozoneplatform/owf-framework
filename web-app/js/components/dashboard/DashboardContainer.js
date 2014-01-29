@@ -25,7 +25,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
     suppressLockWarning: false,
 
-    // ZIndexManagers for the various z-index levels, must be instantiated in 
+    // ZIndexManagers for the various z-index levels, must be instantiated in
     // index.gsp so the tooltipManager can be used and still be created last
     floatingWidgetManager: null,
     bannerManager: null,
@@ -701,7 +701,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                 // add to buffer to keep removal consistent to respect cardBufferSize set
                 dashboardCardPanel.layout.cardBuffer.add(me.activeDashboard);
-                
+
                 me.activateDashboard(me.activeDashboard.id, true, me.activeDashboard.stackContext);
                 if (me.activeDashboard.configRecord.get('locked') || me.activeDashboard.configRecord.isMarketplaceDashboard()) {
                     me.getBanner().disableAppComponentsBtn();
@@ -863,11 +863,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                 // cache current state
                 me.appComponentsViewState.preference = me.appComponentsView.getState();
-                
+
                 // remove
                 me.appComponentsView.hide().remove();
                 me.appComponentsView = null;
-                
+
                 // show if it was visible before removal
                 isVisible && me.showAppComponentsView();
             }
@@ -892,7 +892,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
 
         if(!me.appComponentsView) {
-            state = _.isString(this.appComponentsViewState.preference) ? 
+            state = _.isString(this.appComponentsViewState.preference) ?
                         Ozone.util.parseJson(this.appComponentsViewState.preference) :
                         this.appComponentsViewState.preference;
 
@@ -996,7 +996,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                         me.reloadDashboards(show);
                     } else {
                         show();
-                    }                	
+                    }
                 });
 
 
@@ -1127,7 +1127,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 previousActiveDashboardModel = this.dashboardStore.getById(guid);
             }
         }
-       
+
 
         if (previousActiveDashboardModel) {
             stack = previousActiveDashboardModel.get('stack');
@@ -1146,7 +1146,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         if (!dashboardCardPanel) {
             return;
         }
-        
+
         this.previousActiveDashboard = dashboardCardPanel.layout.getActiveItem();
 
         if (guid && guid !== '') {
@@ -1182,9 +1182,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 if (dashboardPanel.cssanimations) {
                     dashboardPanel.on(OWF.Events.Dashboard.SHOWN, function() {
                         var me = this;
-                        
+
                         setTimeout(function () {
-                            me.fireEvent(OWF.Events.Dashboard.CHANGED, guid, dashboardPanel, me.previousActiveDashboard);    
+                            me.fireEvent(OWF.Events.Dashboard.CHANGED, guid, dashboardPanel, me.previousActiveDashboard);
                         }, 0);
                     }, this, {
                         single: true
@@ -1521,7 +1521,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             isRememberSelection = false,
             bodyEl = Ext.getBody(),
             maskEl = bodyEl.mask().addCls('intent-modal-mask');
-        
+
         this.hideAppComponentsView();
 
         function onHide() {
@@ -1653,7 +1653,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             noWidgetLaunchListener = {
                 noWidgetLaunched: {
                     fn: function() {
-                        
+
                     },
                     scope: this,
                     single: true
@@ -1824,10 +1824,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
         this.destroyMyAppsWindow();
 
-        // Without the timeout, updateDashboardsFromStore causes problems when dashboards are restored 
+        // Without the timeout, updateDashboardsFromStore causes problems when dashboards are restored
         // because widget destruction is delayed by 100ms to prevent memory leaks.
         // Because of the delay, widgets on a dashboard get rerendered while previous ones haven't been destroyed.
-        setTimeout(function() { 
+        setTimeout(function() {
             var dashboards = [];
 
             // Update various dashboard-related components.
@@ -1907,7 +1907,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 Ext.isFunction(callback) && callback(success);
             }
         });
-        
+
     },
 
     saveActiveDashboardToServer: function() {
@@ -1955,7 +1955,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             "isdefault": setAsDefault,
             "state": [],
             "layoutConfig": Ozone.config.defaultLayoutConfig,
-            "publishedToStore": true  //allow the user to get their own copy of the 
+            "publishedToStore": true  //allow the user to get their own copy of the
                                     //dashboard
         };
 
@@ -2188,7 +2188,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     toggleMarketplaceMenuOnDashboardSwitch: function(dashboard) {
-        var btn = this.getBanner().getComponent('userMenuBtn');
+        var btn = this.getBanner().getUserMenuBtn();
 
         if (dashboard.configRecord.isMarketplaceDashboard()) {
             btn.enableMarketplaceMenu();

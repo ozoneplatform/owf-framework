@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Next Century Corporation 
+ * Copyright 2013 Next Century Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  */
 
  ;(function () {
-    
+
     Ozone.components.appcomponents = Ozone.components.appcomponents || {};
 
-    var SuperClass = Ozone.components.BaseView;
+    var SuperClass = Ozone.views.BaseView;
 
     Ozone.components.appcomponents.AppComponent = SuperClass.extend({
-        
+
         className: 'widget',
 
         tpl: '<div class="thumb-wrap">' +
@@ -34,7 +34,7 @@
 
         // boolean flag indicating whether or not to show details link
         details: true,
-        
+
         attributes: function () {
             return {
                 tabindex: 0,

@@ -18,11 +18,20 @@ class ThemeCssTagLib implements ApplicationContextAware {
         out << themeService.getCurrentTheme().css.toString()
     }
 
+    def bootstrapCssPath = {
+        def mainTheme = themeService.getCurrentTheme().css.toString()
+
+        //replace the file after the last directory
+        def bootstrapTheme = (mainTheme =~ /[^\/]+$/).replaceFirst('bootstrap_main.css')
+
+        out << bootstrapTheme
+    }
+
     def getCurrentThemeName = {
         out << themeService.getCurrentTheme().name.toString()
     }
 
-    void setApplicationContext(ApplicationContext applicationContext) { 
+    void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext
     }
 }

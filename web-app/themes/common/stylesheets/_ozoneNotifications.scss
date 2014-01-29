@@ -1,0 +1,268 @@
+.notifications {
+    position: relative;
+    //give it plenty of room to grow without upsetting Ext
+    width: 35px;
+
+    button.close {
+        background-image: theme-image($theme-name, '/tools/close-out.png');
+        height: 15px;
+        width: 15px;
+        display: inline-block;
+        float: none;
+
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+
+    .popover {
+        max-width: 375px;
+        min-width: 250px;
+
+        border-style: none;
+        padding: 0;
+
+        @include border-radius(0);
+
+        .popover-content {
+            padding: 0
+        }
+    }
+
+    //get the popover arrows to appear in the right spot
+    .popover-container {
+        position: absolute;
+        bottom: -7px;
+        left: .5em;
+    }
+
+    .notification-badge {
+        display: none;
+
+        @include border-radius(.9em);
+
+        background-color: red;
+        color: white;
+
+        position: relative;
+        top: -.5em;
+        left: -.5em;
+
+        padding-left: .15em;
+        padding-right: .15em;
+
+        min-width: 1.2em;
+        height: 1.2em;
+
+        text-align: center;
+        font-size: .8em;
+    }
+
+    &.has-notifications {
+        .notification-badge {
+            display: inline-block;
+        }
+
+        .notifications-button {
+            color: #EEE;
+        }
+    }
+
+    .notifications-button {
+        background: transparent;
+        border-style: none;
+
+        font-weight: bold;
+
+        color: #555;
+
+        padding: 0;
+
+        &:before {
+            font-family: FontAwesome;
+            @extend .icon-bell:before;
+        }
+    }
+
+    a {
+        cursor: pointer;
+    }
+
+    //bootstrap's default font size
+    font-size: $font-size-base;
+
+    margin-left: 6px;
+}
+
+.notifications-grouped-list {
+    width: 350px;
+
+    font-size: .9em;
+}
+
+.notifications-group {
+    &.collapsed {
+        .collapse-toggle {
+            &:before {
+                @extend .icon-chevron-up:before;
+            }
+        }
+
+        ol {
+            display: none;
+        }
+    }
+
+    ol {
+        margin: 0;
+    }
+}
+
+a.more-notifications {
+    display: block;
+    width: 100%;
+    background-color: grey;
+
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+    line-height: 1.4em;
+
+    &:hover {
+        color: #DDD;
+    }
+
+    &:before {
+        @extend .icon-bell:before;
+        margin-right: 5px;
+    }
+}
+
+.notifications-header {
+    img {
+        max-height: 20px;
+        max-width: 20px;
+
+        margin-right: 3px;
+        vertical-align: -.1em;
+    }
+
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.section-header {
+    > .dismiss-all {
+        position: relative;
+        float: right;
+
+        margin-right: 5px;
+
+        line-height: 2.15em;
+        font-size: .9em;
+    }
+
+    > .notifications-header {
+        display: inline;
+    }
+
+    > .collapse-toggle {
+        margin: 0 3px 0 3px;
+
+        &:before {
+            @extend .icon-chevron-down:before;
+            vertical-align: 15%;
+        }
+    }
+
+    > .count {
+        font-size: 1.15em;
+
+        margin-left: 5px;
+    }
+
+    clear: both;
+
+    margin-top: 5px;
+    margin-bottom: 8px;
+}
+
+.notifications-growl {
+
+    .header-container {
+        margin: 5px 7px 5px 7px;
+
+        .notifications-header {
+            float: left;
+            position: relative;
+        }
+
+        button.close {
+            float: right;
+            display: block;
+            position: relative;
+
+            height: 20px;
+        }
+
+        clear: both;
+        overflow: hidden;
+    }
+
+    .notification {
+        margin: 5px;
+    }
+
+}
+
+h3.notification-list-header {
+    background-color: #BBB;
+    margin: 0;
+
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+//getting the right popover is a little ugly since it is a
+//sibling of its "container", not a child
+.notifications .menu-container+.popover > .arrow:after {
+    //notification menu popover arrow should be same color
+    //as header
+    border-bottom-color: #BBB;
+}
+
+li.notification-details {
+    line-height: 1.2;
+
+    padding: 3px 5px;
+
+    > * {
+        vertical-align: middle;
+    }
+
+    &:hover {
+        background-color: #CCC;
+
+        > .close {
+            display: inline-block;
+        }
+    }
+
+    > .message, > .time {
+        display: inline-block;
+    }
+
+    > .message {
+        width: 62.5%;
+    }
+
+    > .time {
+        width: 30%;
+        text-align: right;
+    }
+
+    > .close {
+        width: 7.5%;
+        display: none;
+    }
+}

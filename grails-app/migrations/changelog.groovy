@@ -27,7 +27,13 @@ databaseChangeLog = {
     include file: 'changelog_7.1.0.groovy'
     include file: 'changelog_7.2.0.groovy'
     include file: 'changelog_7.3.0.groovy'
-        
+    include file: 'changelog_7.4.0.groovy'
+    include file: 'changelog_7.5.0.groovy'
+    include file: 'changelog_7.6.0.groovy'
+    include file: 'changelog_7.7.0.groovy'
+    include file: 'changelog_7.8.0.groovy'
+    include file: 'changelog_7.9.0.groovy'
+
     //include/exclude current version's change log based on existence of dbmBuildPreviousVersion
     if (!System.properties.dbmBuildPreviousVersion) {
       include file: "changelog_${CH.config?.server.baseVersion}.groovy"
