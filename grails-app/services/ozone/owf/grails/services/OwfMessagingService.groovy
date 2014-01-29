@@ -10,7 +10,7 @@ import ozone.owf.grails.services.AccountService
 import org.springframework.transaction.annotation.Transactional
 
 
-@Transactional(readOnly=true)
+
 class OwfMessagingService {
 
     MessageService messageService
@@ -18,6 +18,10 @@ class OwfMessagingService {
     OwfMessageCache owfMessageCache
     
     AccountService accountService
+    
+    PersonService personService
+    
+    static transactional = false
     
     public void listen(){
         
@@ -30,8 +34,6 @@ class OwfMessagingService {
         });
     }
     
-    
-    @Transactional(readOnly=false)
     public List pollMessages(){            
 
         String loggedInUserName = accountService.getLoggedInUsername()
@@ -46,8 +48,8 @@ class OwfMessagingService {
             return []
         
         def messages = owfMessageCache.getMessages(since)
-        //If the message is in the cache return it
-        if(messages.size() == 0){
+        
+        if(!messages.size()){
             def room = CFG.config.xmpp.roomName
             messages =  messageService.getMessages(room, since)
         }        
@@ -58,8 +60,8 @@ class OwfMessagingService {
         }
         
         currentUser.lastNotification = new Date()
-        currentUser.save()
-        
+        personService.save(currentUser)
+                
         return messages
     }
     
