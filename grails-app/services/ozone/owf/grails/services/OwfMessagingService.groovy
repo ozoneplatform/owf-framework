@@ -9,7 +9,7 @@ import ozone.owf.cache.OwfMessageCache
 import ozone.owf.grails.domain.Person
 import static ozone.owf.enums.OwfApplicationSetting.NOTIFICATIONS_ENABLED
 import org.ozoneplatform.appconfig.server.eventing.ConfigurationSaveEvent
-import org.springframework.transaction.annotation.Transactional
+
 
 class OwfMessagingService implements ApplicationListener<ConfigurationSaveEvent> {
 
@@ -39,7 +39,6 @@ class OwfMessagingService implements ApplicationListener<ConfigurationSaveEvent>
         //TODO: What happens here?
     }
     
-    @Transactional(readOnly=false)
     public List pollMessages(){            
 
         String loggedInUserName = accountService.getLoggedInUsername()
@@ -52,7 +51,9 @@ class OwfMessagingService implements ApplicationListener<ConfigurationSaveEvent>
         //If the 'since' date is greater than the last received date then there are no new messages
         if(owfMessageCache.getLastReceivedTimeStamp() && since > owfMessageCache.getLastReceivedTimeStamp())
             return []
+        
         def messages = owfMessageCache.getMessages(since)
+        
         if(!messages.size()){
             messages = messageService.getMessages(since)
         }        
