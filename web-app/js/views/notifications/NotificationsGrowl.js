@@ -131,14 +131,12 @@
         },
 
         onMouseEnter: function() {
-console.debug('onMouseEnter');
             this.mouseIsOver = true;
             this.cancelFade();
             this._show();
         },
 
         onMouseLeave: function() {
-console.debug('onMouseLeave');
             this.mouseIsOver = false;
             this.startFadeTimer();
         }
