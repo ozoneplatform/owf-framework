@@ -81,4 +81,11 @@ class Person implements Serializable {
     }
 
     Date lastNotification
+    
+    
+    public Date getLastNotification(){
+        if(!lastNotification)
+            return null
+        return new Date(this.lastNotification.time)
+    }
 }
