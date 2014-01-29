@@ -15,6 +15,7 @@ Ext.define('Ozone.components.window.TipWarning', {
     	if(me.buttonConfig == 'ok') {
     		me.bbar = ['->',{
     			text: 'OK',
+                cls: 'cancelbutton',
     			handler: (me.buttonHandler ? me.buttonHandler : function() {
     				me.tip.close();
     			})
