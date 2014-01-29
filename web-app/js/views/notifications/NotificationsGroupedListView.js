@@ -1,4 +1,4 @@
-;(function(Backbone, _, Ozone) {
+    ;(function(Backbone, _, Ozone) {
     'use strict';
 
     var Superclass = Ozone.views.BaseView;
@@ -42,24 +42,30 @@
         },
 
         renderSections: function() {
-            var urls = _.unique(this.collection.map(function(model) {
-                    return model.get('sourceUrl');
+            var sourceWidgets = _.unique(this.collection.map(function(model) {
+                    return model.get('sourceWidget');
                 })),
-                groupedWidgets = this.collection.groupBy('url'),
+                //NOTE This only works assuming that the sourceUrl === the sourceWidget's url
+                groupedWidgets = this.collection.groupBy('sourceUrl'),
                 me = this;
 
-            _.each(urls, function(url) {
+
+
+            _.each(sourceWidgets, function(widget) {
+                var url = widget ? widget.get('url') : null;
+
                 if (me.sections[url]) {
                     throw new Error("Duplicate sections being created");
                 }
 
-                me.makeSection(url, new Backbone.Collection(groupedWidgets[url]));
+                me.makeSection(widget, new Backbone.Collection(groupedWidgets[url]));
             });
         },
 
         addToSection: function(model) {
-            var url = model.get('sourceUrl'),
-                section = this.sections[url] || this.makeSection(url);
+            var sourceWidget = model.get('sourceWidget'),
+                url = sourceWidget ? sourceWidget.get('url') : null,
+                section = this.sections[url] || this.makeSection(sourceWidget);
 
             section.collection.add(model);
         },
@@ -97,16 +103,20 @@
         /**
          * Create a section for the given source URL, with the given optional starting collection
          */
-        makeSection: function(sourceUrl, collection) {
-            var extSourceWidget = Ozone.util.findWidgetDefinitionByLongestUrlMatch(sourceUrl),
-                sourceWidget = Ozone.util.convertExtModelToBackboneModel(extSourceWidget),
-                section = new Ozone.views.notifications.NotificationsGroupView({
-                    sourceWidgetModel: sourceWidget,
-                    collection: collection || new Backbone.Collection()
-                });
+        makeSection: function(sourceWidget, collection) {
+            if (!sourceWidget) sourceWidget = new Backbone.Model({
+                url: null,
+                originalName: 'Unknown',
+                headerIcon: ''
+            });
+
+            var section = new Ozone.views.notifications.NotificationsGroupView({
+                sourceWidgetModel: sourceWidget,
+                collection: collection || new Backbone.Collection()
+            });
 
             this.$el.append(section.render().$el);
-            this.sections[sourceUrl] = section;
+            this.sections[sourceWidget.get('url')] = section;
 
             return section;
         },

@@ -66,9 +66,11 @@
             if (!newNotificationCount) return;
 
             var notificationToShow = this.collection.first(),
-                sourceUrl = notificationToShow.get('sourceUrl'),
-                extSourceWidget = Ozone.util.findWidgetDefinitionByLongestUrlMatch(sourceUrl),
-                sourceWidget = Ozone.util.convertExtModelToBackboneModel(extSourceWidget);
+                sourceWidget = notificationToShow.get('sourceWidget') || new Backbone.Model({
+                    url: null,
+                    originalName: 'Unknown',
+                    headerIcon: ''
+                });
 
             //update section header
             this.sectionHeader.setModel(sourceWidget);
@@ -91,8 +93,7 @@
 
         //start the timer that will cause the growl to fade out after awhile
         startFadeTimer: function() {
-            var fadeEl = this.$el,
-                me = this;
+            var me = this;
 
             //avoid having mulitple fade timers going at once
             if (this.fadeTimeout || this.mouseIsOver) return;
