@@ -1,6 +1,6 @@
 databaseChangeLog = {
     
-    changeSet(author: "owf", id: "7.10.0-1", dbms: "mysql,postgresql,oracle,hsqldb", context: "create, upgrade, 7.10.0") {
+    changeSet(author: "owf", id: "7.10.0-1", dbms: "mysql,postgresql,oracle", context: "create, upgrade, 7.10.0") {
         addColumn(tableName: "person") {
             column(name: "last_notification", type: "java.sql.Types.TIMESTAMP"){
                 constraints(nullable: "true")
@@ -30,7 +30,13 @@ databaseChangeLog = {
         }
     }
 
-    
+    changeSet(author: "owf", id: "7.10.0-3", dbms: "hsqldb", context: "create, upgrade, 7.10.0") {
+        addColumn(tableName: "person") {
+            column(name: "last_notification", type: "timestamp"){
+                constraints(nullable: "true")
+            }
+        }
+    }
     /*
     changeSet(author: 'marketplace', dbms: 'hsqldb, mssql, mysql, oracle, postgresql', id: '7.10.0-3', context: 'create, 7.10.0') {
         insert(tableName: 'application_configuration') {
