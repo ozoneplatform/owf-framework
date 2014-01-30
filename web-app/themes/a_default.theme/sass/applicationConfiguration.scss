@@ -377,4 +377,24 @@ body.configuration_widget {
             background-image: theme-image($theme-name, 'applicationConfiguration/Store_Active.png');
         }
     }
+
+    .notifications {
+        margin-left: 0;
+        position: relative;
+
+        .icon-bell {
+            position: absolute;
+            left: 0px;
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            top: 9px;
+            color: $link-color;
+        }
+
+        &:hover .icon-bell,
+        &.active .icon-bell {
+            color: $link-over-color;
+        }
+    }
 }
