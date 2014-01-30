@@ -1,9 +1,7 @@
-;(function(Ozone, Handlebars) {
+;(function(Ozone) {
     'use strict';
 
     var Superclass = Ozone.views.BaseView;
-
-    var template = Handlebars.compile('<img src="{{headerIcon}}" />{{originalName}}');
 
     var NotificationsHeader = Superclass.extend({
         tag: 'h4',
@@ -11,7 +9,14 @@
 
         //NOTE This render function can safely be called repeatedly
         render: function() {
-            this.$el.html(template(this.model.attributes));
+            this.$el.empty();
+
+            //only add the image if we have a url
+            if (this.model.get('headerIcon')) {
+                this.$el.append($('<img>').attr('src', this.model.get('headerIcon')));
+            }
+
+            this.$el.append(document.createTextNode(this.model.get('originalName')));
 
             return this;
         }
@@ -19,4 +24,4 @@
 
     $.extend(true, Ozone, { views: { notifications: {
         NotificationsHeader: NotificationsHeader }}});
-})(window.Ozone, window.Handlebars);
+})(window.Ozone);

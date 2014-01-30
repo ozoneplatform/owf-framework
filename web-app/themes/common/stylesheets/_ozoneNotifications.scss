@@ -21,6 +21,9 @@
         border-style: none;
         padding: 0;
 
+        //a little above the popout widget layer
+        z-index: 40000;
+
         @include border-radius(0);
 
         .popover-content {
@@ -105,6 +108,7 @@
 .notifications-group {
     &.collapsed {
         .collapse-toggle {
+
             &:before {
                 @extend .icon-chevron-up:before;
             }
@@ -170,6 +174,8 @@ a.more-notifications {
     }
 
     > .collapse-toggle {
+        cursor: pointer;
+
         margin: 0 3px 0 3px;
 
         &:before {
@@ -276,6 +282,16 @@ li.notification-details {
             font-family: FontAwesome;
             @extend .icon-bell;
         }
+
+        .menu-container+.popover > .arrow:after {
+            border-bottom-color: #BBB;
+        }
+    }
+
+    .section-header {
+        > .collapse-toggle {
+            @extend .icon-chevron-down;
+        }
     }
 
     .notifications-group {
@@ -287,12 +303,21 @@ li.notification-details {
     }
 
     a.more-notifications {
-        @extend .icon-bell;
+        min-width: 100%;
+        width: auto;
+        /*font-family: FontAwesome;*/
+        /*@extend .icon-bell;*/
     }
 
-    .section-header {
-        > .collapse-toggle {
-            @extend .icon-chevron-down;
+    li.notification-details {
+        > .message {
+            //the sum of widths for IE has to be < 100% to account for
+            //padding
+            width: 60%;
         }
+    }
+
+    .collapse-toggle {
+        font-family: FontAwesome;
     }
 }

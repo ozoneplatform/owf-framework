@@ -4,8 +4,8 @@
     var Superclass = Ozone.views.BaseView;
 
     var collapseBtnHtml = '<span class="collapse-toggle"></span>',
-        extraBtnsHtml = '<span class="count"></span>' +
-            '<a class="dismiss-all">Dismiss All</a>';
+        countHtml = '<span class="count"></span>',
+        dismissBtnHtml = '<a class="dismiss-all">Dismiss All</a>';
 
     var NotificationsSectionHeader = Superclass.extend({
         tag: 'h4',
@@ -54,9 +54,10 @@
         //NOTE This render function can safely be called repeatedly
         render: function() {
             this.$el
+                .append(dismissBtnHtml)
                 .append(collapseBtnHtml)
                 .append(this.innerView.render().$el)
-                .append(extraBtnsHtml);
+                .append(countHtml);
 
             this.updateCount();
 

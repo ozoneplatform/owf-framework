@@ -102,6 +102,12 @@
     }
 }
 
+.x-ie7 {
+    .banner {
+        z-index: 1;
+    }
+}
+
 @include extjs-button-ui(
     'default-toolbar-banner-large',
 
