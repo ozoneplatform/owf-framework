@@ -8,7 +8,6 @@ import ozone.owf.cache.OwfMessageCache
 import ozone.owf.grails.domain.Person
 import static ozone.owf.enums.OwfApplicationSetting.*
 import org.ozoneplatform.appconfig.server.eventing.ConfigurationSaveEvent
-import ozone.owf.grails.services.OwfApplicationConfigurationService
 
 class OwfMessagingService implements ApplicationListener<ConfigurationSaveEvent> {
 
@@ -24,7 +23,7 @@ class OwfMessagingService implements ApplicationListener<ConfigurationSaveEvent>
     
     static transactional = false
     
-    private static Logger log = Logger.getLogger(OwfMessagingService)
+    private static final Logger log = Logger.getLogger(OwfMessagingService)
     
 
     public void startListening(){
@@ -77,6 +76,10 @@ class OwfMessagingService implements ApplicationListener<ConfigurationSaveEvent>
     void onApplicationEvent(ConfigurationSaveEvent event) {
         if(event.configCode == NOTIFICATIONS_ENABLED.code) {
             event.configValue.toBoolean() ? startListening() : stopListening()
+        }
+        if(event.configCode == NOTIFICATIONS_QUERY_INTERVAL.code){
+            if(event.configValue)
+                owfMessageCache.setExpiration(event.configValue as Integer)
         }
     }
 }

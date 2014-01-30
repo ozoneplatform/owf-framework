@@ -24,9 +24,7 @@ beans = {
     }
     	
     
-    owfMessageCache(ozone.owf.cache.OwfMessageCache){
-        expiration = 15
-    }
+    owfMessageCache(ozone.owf.cache.OwfMessageCache){}
     
     // wire up a different account service if -Duser=something and environment is development
     if (GrailsUtil.environment == "development") {

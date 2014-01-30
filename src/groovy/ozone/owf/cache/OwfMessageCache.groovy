@@ -10,7 +10,7 @@ class OwfMessageCache {
     private Date lastReceivedTimeStamp
 
     //This is in minutes
-    private int expiration
+    private int expiration = 60
 
     public OwfMessageCache(){
         items = Collections.synchronizedSortedMap(new TreeMap())
@@ -41,8 +41,10 @@ class OwfMessageCache {
         return this.lastReceivedTimeStamp
     }
 
-    public void setExpiration(int expiration){
-        this.expiration = expiration
+    public void setExpiration(int pollingSeconds){
+        //We want the cache to be some multiple of the polling seconds...why not have it 60 times so that the cache in minutes
+        //is 60*polling seconds
+        this.expiration = pollingSeconds
     }
 
 }

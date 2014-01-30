@@ -11,6 +11,7 @@ import grails.converters.JSON
 import grails.converters.deep.XML as XMLD
 import grails.converters.XML
 import org.apache.commons.lang.time.StopWatch
+import ozone.owf.cache.OwfMessageCache
 import ozone.owf.grails.domain.Requestmap
 import ozone.owf.grails.web.converters.marshaller.json.ServiceModelObjectMarshaller
 import ozone.owf.grails.web.converters.marshaller.xml.ServiceModelObjectMarshaller as ServiceModelObjectMarshallerXML
@@ -42,6 +43,8 @@ class BootStrap {
     OwfApplicationConfigurationService owfApplicationConfigurationService
 	
     OwfMessagingService owfMessagingService
+    
+    OwfMessageCache owfMessageCache
     
     def init = { servletContext ->
 
@@ -146,6 +149,7 @@ class BootStrap {
         
         if(owfApplicationConfigurationService.is(NOTIFICATIONS_ENABLED)){
             owfMessagingService.startListening()
+            owfMessageCache.setExpiration(owfApplicationConfigurationService.valueOf(NOTIFICATIONS_QUERY_INTERVAL).toInteger())
         }
         
         println 'BootStrap finished!'
