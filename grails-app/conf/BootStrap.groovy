@@ -29,6 +29,7 @@ import ozone.owf.grails.services.OwfApplicationConfigurationService
 import ozone.owf.grails.services.OwfMessagingService
 import org.springframework.beans.factory.annotation.Autowired
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CFG
+import static ozone.owf.enums.OwfApplicationSetting.*
 class BootStrap {
     
     def grailsApplication
@@ -140,6 +141,11 @@ class BootStrap {
         if(grails.util.Environment.current.name != 'test') {
             owfApplicationConfigurationService.checkThatConfigsExist()
             owfApplicationConfigurationService.createRequired()
+        }
+        
+        
+        if(owfApplicationConfigurationService.is(NOTIFICATIONS_ENABLED)){
+            owfMessagingService.startListening()
         }
         
         println 'BootStrap finished!'

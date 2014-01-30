@@ -1,19 +1,18 @@
 package ozone.owf.grails.services
 
-
-import org.ozoneplatform.appconfig.server.service.api.ApplicationConfigurationService
+import org.apache.log4j.Logger;
 import org.ozoneplatform.messaging.payload.AmlMessage
 import org.ozoneplatform.messaging.service.api.MessageService
 import org.springframework.context.ApplicationListener
 import ozone.owf.cache.OwfMessageCache
 import ozone.owf.grails.domain.Person
-import static ozone.owf.enums.OwfApplicationSetting.NOTIFICATIONS_ENABLED
+import static ozone.owf.enums.OwfApplicationSetting.*
 import org.ozoneplatform.appconfig.server.eventing.ConfigurationSaveEvent
-
+import ozone.owf.grails.services.OwfApplicationConfigurationService
 
 class OwfMessagingService implements ApplicationListener<ConfigurationSaveEvent> {
 
-    ApplicationConfigurationService owfApplicationConfigurationService
+    OwfApplicationConfigurationService owfApplicationConfigurationService
 
     MessageService messageService
     
@@ -25,22 +24,28 @@ class OwfMessagingService implements ApplicationListener<ConfigurationSaveEvent>
     
     static transactional = false
     
-    public void listen(){
-        
-        log.info "Establishing a message listener"
+    private static Logger log = Logger.getLogger(OwfMessagingService)
+    
 
+    public void startListening(){
         messageService.listenForMessage(new Date(), { message ->
             log.info "Message recieved.  The contents are: ${message}."
             owfMessageCache.add(message)
         });
-    }
-
-    public void stopListening() {
-        //TODO: What happens here?
+        log.info "OWF is now listening for messages"
     }
     
+    public void stopListening() {
+        messageService.stopListening()
+    }
+   
     public List pollMessages(){            
 
+        
+        if(!owfApplicationConfigurationService.is(NOTIFICATIONS_ENABLED)){
+            return []
+        }
+        
         String loggedInUserName = accountService.getLoggedInUsername()
         Person currentUser = Person.findByUsername(loggedInUserName)
         
@@ -71,7 +76,7 @@ class OwfMessagingService implements ApplicationListener<ConfigurationSaveEvent>
     
     void onApplicationEvent(ConfigurationSaveEvent event) {
         if(event.configCode == NOTIFICATIONS_ENABLED.code) {
-            event.configValue.toBoolean() ? listen() : stopListening()
+            event.configValue.toBoolean() ? startListening() : stopListening()
         }
     }
 }
