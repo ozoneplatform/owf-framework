@@ -31,7 +31,7 @@ class OwfMessageCacheTests {
     public void testGetMessages(){
         assert this.cache.getMessages(keys[6]).size() == 1  //item 6 returned
         assert this.cache.getMessages(keys[3]).size() == 4  //items 3-6 returned
-        assert this.cache.getMessages(keys[0]).size() == 6  //items 1-6 returned
+        assert this.cache.getMessages(keys[0]).size() == 7  //items 1-6 returned
     }
 
     
