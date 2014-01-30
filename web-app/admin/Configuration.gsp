@@ -25,6 +25,9 @@
             <div class="item branding">
                 <a href="#/config/BRANDING">Branding</a>
             </div>
+            <div class="item notifications">
+                <a href="#/config/NOTIFICATIONS">Notifications</a>
+            </div>
             <div class="item store">
                 <a href="#/config/store">Store</a>
             </div>

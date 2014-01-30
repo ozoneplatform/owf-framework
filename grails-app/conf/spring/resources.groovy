@@ -8,9 +8,9 @@ import java.util.concurrent.Executors
 
 beans = {
 
-    applicationEventMulticaster(SimpleApplicationEventMulticaster) {
-        taskExecutor = Executors.newCachedThreadPool()
-    }
+    //applicationEventMulticaster(SimpleApplicationEventMulticaster) {
+    //    taskExecutor = Executors.newCachedThreadPool()
+    //}
 
 	xmlns context: 'http://www.springframework.org/schema/context'
 	context.'component-scan'('base-package': 'org.ozoneplatform.appconfig.server')
