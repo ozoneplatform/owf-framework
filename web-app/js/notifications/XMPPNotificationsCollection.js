@@ -52,8 +52,7 @@
             //after a fetch comes back, always do another one a little while later
             this.fetch().always(function() {
                 this.fetchTimeout = window.setTimeout(thisFn,
-                        //Ozone.config.notificationPollingInterval);
-                        30000); //TODO remove once the config is in place
+                        1000 * Ozone.config.notificationsPollingInterval);
             });
         }
     });

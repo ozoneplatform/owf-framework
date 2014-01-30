@@ -223,6 +223,20 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
         me.addKeyBindings();
 
+        var bannerRightItems = [{
+            xtype: 'usermenubutton',
+            arrowCls: '',
+            id: 'userMenuBtn',
+            height: '100%',
+            user: this.user,
+            dashboardContainer: this.dashboardContainer
+        }];
+
+        //only add the notifications UI if notifications are enabled
+        if (Ozone.config.notificationsEnabled) {
+            bannerRightItems.unshift({ xtype: 'notificationsbutton' });
+        }
+
         me.items = [];
         me.items.push([{
                 xtype: 'button',
@@ -290,16 +304,7 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
                 xtype: 'container',
                 id: 'banner-right-container',
                 cls: 'banner-right-container',
-                items: [{
-                    xtype: 'notificationsbutton'
-                }, {
-                    xtype: 'usermenubutton',
-                    arrowCls: '',
-                    id: 'userMenuBtn',
-                    height: '100%',
-                    user: this.user,
-                    dashboardContainer: this.dashboardContainer
-                }]
+                items: bannerRightItems
             }
         ]);
 

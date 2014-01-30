@@ -30,7 +30,7 @@ class ConfigController {
         if ("1 day ago".equalsIgnoreCase(pDateString)) { pDateString = 'Yesterday' }
 
         def groups = []
-        curUser.groups.each { 
+        curUser.groups.each {
             if (!it.stackDefault) { groups.add(serviceModelService.createServiceModel(it)) }
         }
         def emailString = curUser.email != null ? curUser.email : ''
@@ -48,16 +48,22 @@ class ConfigController {
         theme["themeName"] =  themeResults["name"]
         theme["themeContrast"] =  themeResults["contrast"]
         theme["themeFontSize"] =  themeResults["owf_font_size"]
-        
+
         //copy owf section of grails config, removing sensitive properties
         def conf = grailsApplication.config.owf.clone()
-        conf.metric = conf.metric.findAll { 
+        conf.metric = conf.metric.findAll {
             ! (it.key in ['keystorePass', 'truststorePass', 'keystorePath', 'truststorePath'])
         }
 
         conf.customHeaderFooter = customHeaderFooterService.configAsMap
         conf.backgroundURL =  owfApplicationConfigurationService.getApplicationConfiguration(CUSTOM_BACKGROUND_URL)?.value
         conf.freeTextEntryWarningMessage = owfApplicationConfigurationService.getApplicationConfiguration(FREE_WARNING_CONTENT)?.value ?: ""
+
+        conf.notificationsPollingInterval = owfApplicationConfigurationService.valueOf(NOTIFICATIONS_QUERY_INTERVAL) as Integer ?: 30
+        conf.notificationsEnabled =
+            new Boolean(owfApplicationConfigurationService.valueOf(NOTIFICATIONS_ENABLED)) ?:
+            false
+
         // whether the show animations user preference exists
         def showAnimations = false
         try {
