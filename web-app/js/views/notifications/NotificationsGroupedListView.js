@@ -10,10 +10,10 @@
 
         className: 'notifications-grouped-list',
 
-        //map from message sourceUrl to UI section
+        //map from message sourceURL to UI section
         sections: {},
 
-        //map from sourceUrl to collection
+        //map from sourceURL to collection
         collections: {},
 
         modelEvents: {
@@ -45,8 +45,8 @@
             var sourceWidgets = _.unique(this.collection.map(function(model) {
                     return model.get('sourceWidget');
                 })),
-                //NOTE This only works assuming that the sourceUrl === the sourceWidget's url
-                groupedWidgets = this.collection.groupBy('sourceUrl'),
+                //NOTE This only works assuming that the sourceURL === the sourceWidget's url
+                groupedWidgets = this.collection.groupBy('sourceURL'),
                 me = this;
 
 
@@ -71,7 +71,7 @@
         },
 
         removeFromSection: function(model) {
-            var url = model.get('sourceUrl'),
+            var url = model.get('sourceURL'),
                 section = this.sections[url];
 
             if (section) {

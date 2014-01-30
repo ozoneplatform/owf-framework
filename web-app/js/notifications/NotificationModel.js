@@ -3,12 +3,11 @@
 
     var NotificationModel = Backbone.Model.extend({
         parse: function(json) {
-            var extSourceWidget = Ozone.util.findWidgetDefinitionByLongestUrlMatch(
-                //TODO remove this testing code
-                'examples/walkthrough/widgets/ChannelShouter.gsp');
+            var extSourceWidget =
+                Ozone.util.findWidgetDefinitionByLongestUrlMatch(json.sourceURL);
 
             return {
-                sourceUrl: json.sourceUrl || null,
+                sourceURL: json.sourceUrl || null,
                 sourceWidget: extSourceWidget ?
                     Ozone.util.convertExtModelToBackboneModel(extSourceWidget) :
                     null,
