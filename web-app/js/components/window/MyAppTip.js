@@ -22,7 +22,6 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 $('.name').dotdotdot({
                     ellipsis: '…'
                 });
-                $('.name:contains(…)').tooltip();
             }
         }
     },
@@ -32,7 +31,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
     initComponent: function() {
         var me = this;
-        
+
         me.target = $(me.event.target.parentElement);
         me.html = me.getToolTip();
 
@@ -48,7 +47,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
     clickedStackIsFullscreen: function() {
         return this.clickedStack.dashboards.length == 1 && this.clickedStack.dashboards[0].type == 'fullscreen'
     },
-    
+
     hideButtons: function() {
         var me = this;
         var notOwner = !me.isUserTheOwner();
@@ -66,21 +65,21 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var me = this,
             banner = me.dashboardContainer.getBanner(),
             hasMarketplace = banner.hasMarketplaceButton,
-            icn = me.clickedStack.imageUrl && me.clickedStack.imageUrl != ' ' ? 
-                '<img class=\'tipIcon\'src=\'' + encodeURI(decodeURI(me.clickedStack.imageUrl)) + '\' />' : 
+            icn = me.clickedStack.imageUrl && me.clickedStack.imageUrl != ' ' ?
+                '<img class=\'tipIcon\'src=\'' + encodeURI(decodeURI(me.clickedStack.imageUrl)) + '\' />' :
                 '<div class=\'tipIcon noIconGivenStack\'></div>',
             str = '<div class=\'dashboard-tooltip-content\'>' + icn +
                 '<h3 class=\'name\' title="'+ Ext.htmlEncode(me.clickedStack.name) +'">' + Ext.htmlEncode(me.clickedStack.name) + '</h3>';
 
         me.clickedStack.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedStack.description) +'</p></div>'):
                                                  (str += '<p class=\'tip-description\'>  </p>');
-        
+
         var liAdjustCls = ' liStoreAdjust ';
-            
+
         if (banner.hasMarketplaceButton)
             liAdjustCls = '';
 
-        
+
         // append buttons
         str += '<ul class="buttonBar">'+
                     '<li class="addButton actionButton '+liAdjustCls+'">'+
@@ -109,13 +108,13 @@ Ext.define('Ozone.components.window.MyAppTip', {
                     '</li>'+
                '</ul>' +
               '</div>';
-         
+
         return str;
     },
 
     bindHandlers: function() {
         var me = this;
-        
+
         if(me.clickedStack.isStack) {
 
             $('.addButton').on('click', $.proxy(me.addPageToApp, me));
@@ -127,20 +126,20 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 /*function(evt) {
                 me.handleStackDelete(evt, me);
             });*/
-            
-            
+
+
         }
-        
+
         $('#my-apps-window').click(function() {
-              //Hide the tip if outside click 
+              //Hide the tip if outside click
             me.destroy()
         });
     },
-    
+
     hideButton: function(className) {
         $(className).hide();
     },
-    
+
     showButton: function(className) {
         $(className).show();
     },
@@ -195,10 +194,10 @@ Ext.define('Ozone.components.window.MyAppTip', {
             },
             success: function(response, opts) {
                 var json = Ext.decode(response.responseText);
-                
+
                 if (json != null && json.updatedDashboards != null && json.updatedDashboards.length > 0) {
                     me.appsWindow.notify('Restore App', '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is restored successfully to its default state!');
-                    
+
                     var dashboards = stack.dashboards;
                     for(var i = 0; i < dashboards.length; i++) {
                         for(var j = 0; j < json.updatedDashboards.length; j++) {
@@ -215,7 +214,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                             }
                         }
                     }
-                    
+
                     me.appsWindow.updateStackDashboardsEl(stack);
                     me.appsWindow.reloadDashboards = true;
                     //$stack.focus();
@@ -244,12 +243,12 @@ Ext.define('Ozone.components.window.MyAppTip', {
             buttonHandler: button_handler,
             text: text
         }));
-        
+
         me.width = 300;
 
         me.doLayout();
     },
- 
+
     onDestroy: function() {
         //clean up inner dom, including event handlers
         $(this.getEl().dom).empty();
@@ -341,7 +340,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
     isAttributeSet: function(attr) {
         return !(attr == null ||
-                 attr == undefined || 
+                 attr == undefined ||
                  Ext.isEmpty(Ext.String.trim(attr)));
     },
 
@@ -417,13 +416,13 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var me = this;
 
         me.dashboardContainer.stackStore.remove( me.dashboardContainer.stackStore.getById(me.clickedStack.id) );
-        me.dashboardContainer.stackStore.save();        
+        me.dashboardContainer.stackStore.save();
         me.appsWindow.removeStackOrDashboard(me.clickedStack);
 
         if( me.appsWindow._lastExpandedStack === me.clickedStack) {
             me.appsWindow.hideStackDashboards();
         }
-   
+
         me.appsWindow._deletedStackOrDashboards.push(me.clickedStack);
         me.appsWindow.reloadDashboards = true;
 
@@ -456,11 +455,11 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
 
                     //send only to this mp widget
-                    Ozone.eventing.Container.publish('ozone.marketplace.show', id, 
-                        Ozone.eventing.Container.getIframeId(instance.data.uniqueId)); 
+                    Ozone.eventing.Container.publish('ozone.marketplace.show', id,
+                        Ozone.eventing.Container.getIframeId(instance.data.uniqueId));
 
                     //hide loading mask once the widget has refreshed
-                    Ozone.eventing.Container.subscribe('ozone.marketplace.pageLoaded', 
+                    Ozone.eventing.Container.subscribe('ozone.marketplace.pageLoaded',
                             function() {
                         me.dashboardContainer.loadMask.hide();
                         Ozone.eventing.Container.unsubscribe('ozone.marketplace.pageLoaded');
