@@ -28,9 +28,12 @@
             });
         },
 
-        initialize: function() {
+        initialize: function(options) {
             Superclass.prototype.initialize.apply(this, arguments);
-            this.autoFetch();
+
+            //if autoFetch is set in the options, immediately beging autoFetching, otherwise,
+            //that method will need to be called explicitly by outside code
+            if (options && options.autoFetch) this.autoFetch();
         },
 
         /**

@@ -33,7 +33,7 @@ Ozone.util.isUrlLocal = function(url) {
 
     //this regex matches urls against the configured webcontext path https://<contextPath>/.....
     //only one match is possible since this regex matches from the start of the string
-    var regex = new RegExp("^(https?:)//([^/:]+):?(.*)" + webContextPath);
+    var regex = new RegExp("^(https?:)//([^/:]+):?(.*?)" + webContextPath);
     var server = url.match(regex);
 
     //check if this might be a relative url

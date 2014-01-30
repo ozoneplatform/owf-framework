@@ -1,4 +1,4 @@
-(function(Backbone, _, $, Ext, Ozone, undefined) {
+(function(Backbone, _, $, Ext, JSON, Ozone, undefined) {
     'use strict';
 
     var Superclass = Ozone.views.BaseView,
@@ -38,8 +38,19 @@
             'reset': 'handleCountChange'
         },
 
-        initialize: function(options) {
+        initialize: function() {
+            var me = this;
+
             this.collection = new CollectionClass();
+
+            //get the user's previous undismissed notifications, and then start auto-fetching
+            this.retrieveUndismissedNotifications().then(function(notifications) {
+                me.collection.add(notifications);
+                me.collection.autoFetch();
+            });
+
+            //on page unload, save the user's undismissed notifications
+            $(window).unload(_.bind(this.saveUndismissedNotifications, this));
 
             this.childEls = $(html);
 
@@ -93,10 +104,40 @@
                 method = verb + 'Class';
 
             this.$el[method]('has-notifications');
+        },
+
+        /**
+         * Persist the currently undismissed notifications to the OWF server using the
+         * preferences API
+         */
+        saveUndismissedNotifications: function() {
+            Ozone.pref.PrefServer.setUserPreference({
+                namespace: 'owf',
+                name: 'current_notifications',
+                value: JSON.stringify(this.collection.toJSON())
+                //no callbacks since this happens on unload
+            });
+        },
+
+        retrieveUndismissedNotifications: function() {
+            var deferred = $.Deferred();
+
+            Ozone.pref.PrefServer.getUserPreference({
+                namespace: 'owf',
+                name: 'current_notifications',
+                onSuccess: function(value) {
+                    deferred.resolve(JSON.parse(value.value));
+                },
+                onFailure: function() {
+                    deferred.reject(null);
+                }
+            });
+
+            return deferred.promise();
         }
     });
 
 
     $.extend(true, Ozone, { views: { notifications: {
         NotificationsButton: NotificationsButton}}});
-})(window.Backbone, window._, window.$, window.Ext, window.Ozone);
+})(window.Backbone, window._, window.$, window.Ext, window.JSON, window.Ozone);
