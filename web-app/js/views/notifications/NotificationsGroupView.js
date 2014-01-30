@@ -62,7 +62,7 @@
             _.each(this.viewMap, function(view) {
                 view.delegateEvents();
             });
-        },
+        }
     });
 
     $.extend(true, Ozone, { views: { notifications: {

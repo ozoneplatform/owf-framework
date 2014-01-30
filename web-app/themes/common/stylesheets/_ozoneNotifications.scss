@@ -269,3 +269,30 @@ li.notification-details {
         display: none;
     }
 }
+
+.x-ie7 {
+    .notifications {
+        .notifications-button {
+            font-family: FontAwesome;
+            @extend .icon-bell;
+        }
+    }
+
+    .notifications-group {
+        &.collapsed {
+            .collapse-toggle {
+                @extend .icon-chevron-up;
+            }
+        }
+    }
+
+    a.more-notifications {
+        @extend .icon-bell;
+    }
+
+    .section-header {
+        > .collapse-toggle {
+            @extend .icon-chevron-down;
+        }
+    }
+}

@@ -272,6 +272,24 @@
     }
 }
 
+.x-ie7 #userMenuBtn {
+    //Ext will try to mess with this
+    width: auto !important;
+
+    .x-btn-center, .x-btn-inner {
+        width: auto !important;
+    }
+
+    .x-btn-center {
+        vertical-align: middle;
+    }
+
+    .x-btn-inner {
+        zoom: 1;
+        height: 100%;
+    }
+}
+
 @mixin round-bottom {
     @include border-bottom-left-radius(10px);
     @include border-bottom-right-radius(10px);

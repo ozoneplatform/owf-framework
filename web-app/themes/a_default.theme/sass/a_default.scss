@@ -194,7 +194,7 @@ $user-menu-border-color: #090909;
     background-image: theme-image($theme-name, 'banner/banner-bg.png');
 }
 
-.x-ie #userMenuBtn {
+.x-ie #banner-right-container {
     background-color: #253551 !important;
 }
 
@@ -257,4 +257,11 @@ $close-button-width: 19px;
 
 #owf-body-mask {
     z-index: exponent(10, 7) !important;
+}
+
+.x-ie7 {
+    #banner-right-container > * {
+        display: inline;
+        zoom: 1;
+    }
 }
