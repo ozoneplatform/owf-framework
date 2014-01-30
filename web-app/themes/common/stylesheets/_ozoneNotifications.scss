@@ -97,6 +97,9 @@
     width: 350px;
 
     font-size: .9em;
+
+    max-height: 650px;
+    overflow-y: auto;
 }
 
 .notifications-group {
