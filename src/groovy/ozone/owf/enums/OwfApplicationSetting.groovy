@@ -33,9 +33,6 @@ public enum OwfApplicationSetting implements ApplicationSetting{
 
     FREE_WARNING_CONTENT("free.warning.content"),
 
-    NOTIFICATIONS_ENABLED('notifications.enabled'),
-    NOTIFICATIONS_QUERY_INTERVAL('notifications.query.interval'),
-
     URL_PUBLIC('url.public')
 
 	OwfApplicationSetting(String code) {

@@ -1,9 +1,7 @@
 import grails.util.GrailsUtil
-import org.apache.log4j.helpers.*
-import java.net.URL
-import java.util.Random
 import org.apache.log4j.xml.*
 import org.apache.log4j.helpers.*
+import static org.ozoneplatform.appconfig.NotificationsSetting.*
 import org.springframework.context.ApplicationContext
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
 import grails.converters.deep.JSON as JSOND
@@ -12,7 +10,6 @@ import grails.converters.deep.XML as XMLD
 import grails.converters.XML
 import org.apache.commons.lang.time.StopWatch
 import ozone.owf.cache.OwfMessageCache
-import ozone.owf.grails.domain.Requestmap
 import ozone.owf.grails.web.converters.marshaller.json.ServiceModelObjectMarshaller
 import ozone.owf.grails.web.converters.marshaller.xml.ServiceModelObjectMarshaller as ServiceModelObjectMarshallerXML
 import ozone.owf.grails.domain.WidgetDefinition
@@ -28,11 +25,9 @@ import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.domain.WidgetType
 import ozone.owf.grails.services.OwfApplicationConfigurationService
 import ozone.owf.grails.services.OwfMessagingService
-import org.springframework.beans.factory.annotation.Autowired
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CFG
-import static ozone.owf.enums.OwfApplicationSetting.*
+
 class BootStrap {
-    
+
     def grailsApplication
     def sessionFactory
     def domainMappingService

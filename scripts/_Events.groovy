@@ -1,10 +1,3 @@
-import groovy.xml.MarkupBuilder
-import groovy.xml.NamespaceBuilder
-
-//import grails.util.Metadata
-//import org.mortbay.jetty.webapp.*
-//import org.mortbay.jetty.handler.*
-
 private compileStyleSheets = { dir ->
   def ant = new AntBuilder()   // create an antbuilder
   if (System.properties['os.name'].toLowerCase().contains('windows')) {
@@ -136,7 +129,7 @@ eventCreateWarStart = { name, stagingDir ->
 
 copyAppConfigFiles = { destinationDir ->
 
-	String sourceDir = "${basedir}/plugins/aml-commons-appconfig-0.3/web-app/js/applicationConfiguration"
+	String sourceDir = "${basedir}/plugins/aml-commons-appconfig-0.4/web-app/js/applicationConfiguration"
 
 	new AntBuilder().copy(todir: destinationDir) {
 		fileset(dir: sourceDir)

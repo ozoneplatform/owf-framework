@@ -1,31 +1,23 @@
 import grails.util.GrailsUtil
-import org.springframework.context.event.SimpleApplicationEventMulticaster
 import ozone.owf.grails.OwfExceptionResolver
 import ozone.owf.grails.services.AutoLoginAccountService
 import ozone.owf.grails.domain.ERoleAuthority
 import ozone.owf.grails.services.AccountService
-import java.util.concurrent.Executors
 
 beans = {
 
-    //applicationEventMulticaster(SimpleApplicationEventMulticaster) {
-    //    taskExecutor = Executors.newCachedThreadPool()
-    //}
+    xmlns context: 'http://www.springframework.org/schema/context'
+    context.'component-scan'('base-package': 'ozone.owf.util')
 
-	xmlns context: 'http://www.springframework.org/schema/context'
-	context.'component-scan'('base-package': 'org.ozoneplatform.appconfig.server')
-	context.'component-scan'('base-package': 'ozone.owf.util')
-	
     auditLogListener(org.ozoneplatform.auditing.AuditLogListener) {
         sessionFactory = ref('sessionFactory')
         accountService = ref('accountService')
         owfApplicationConfigurationService = ref('owfApplicationConfigurationService')
         grailsApplication = ref('grailsApplication')
     }
-    	
-    
+
     owfMessageCache(ozone.owf.cache.OwfMessageCache){}
-    
+
     // wire up a different account service if -Duser=something and environment is development
     if (GrailsUtil.environment == "development") {
         switch (System.properties.user) {

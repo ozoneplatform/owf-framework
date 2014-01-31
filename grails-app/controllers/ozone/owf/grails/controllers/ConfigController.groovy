@@ -2,6 +2,7 @@ package ozone.owf.grails.controllers
 
 import grails.converters.JSON
 import static ozone.owf.enums.OwfApplicationSetting.*
+import static org.ozoneplatform.appconfig.NotificationsSetting.*
 import ozone.owf.grails.OwfException
 
 /**
