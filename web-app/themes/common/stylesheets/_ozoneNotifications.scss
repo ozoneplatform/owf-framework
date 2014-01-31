@@ -18,7 +18,7 @@
         max-width: 375px;
         min-width: 250px;
 
-        border-style: none;
+        border: 1px solid $owf-notifications-border-color;
         padding: 0;
 
         //a little above the popout widget layer
@@ -43,7 +43,7 @@
 
         @include border-radius(.9em);
 
-        background-color: red;
+        background-color: $owf-notifications-badge-background-color;
         color: white;
 
         position: relative;
@@ -66,7 +66,7 @@
         }
 
         .notifications-button {
-            color: #EEE;
+            color: $owf-notifications-button-active-color;
         }
     }
 
@@ -76,7 +76,7 @@
 
         font-weight: bold;
 
-        color: #555;
+        color: $owf-notifications-button-inactive-color;
 
         padding: 0;
 
@@ -101,6 +101,8 @@
 
     max-height: 650px;
     overflow-y: auto;
+
+    background-color: $owf-notifications-group-background-color;
 }
 
 .notifications-group {
@@ -120,26 +122,41 @@
     ol {
         margin: 0;
     }
+
+    $padding: 8px;
+    padding-top: $padding;
+
+    .section-header {
+        padding: 0 8px 0 8px;
+    }
+
+    li {
+        padding-left: 5px + $padding;
+        padding-right: 5px + $padding;
+    }
 }
 
 a.more-notifications {
     display: block;
     width: 100%;
-    background-color: grey;
+    background-color: $owf-notifications-more-background-color;
+
+    border-top: 1px solid $owf-notifications-border-color;
 
     text-align: center;
-    color: white;
+    color: $owf-notifications-more-text-color;
     text-decoration: none;
     font-size: 1.2em;
     line-height: 1.4em;
 
     &:hover {
-        color: #DDD;
+        color: $owf-notifications-more-text-hover-color;
     }
 
     &:before {
         @extend .icon-bell:before;
         margin-right: 5px;
+        color: $owf-notifications-more-icon-color;
     }
 }
 
@@ -153,7 +170,8 @@ a.more-notifications {
     }
 
     font-size: 1.4em;
-    font-weight: bold;
+    /*font-weight: bold;*/
+    color: $owf-notifications-header-color;
 }
 
 .section-header {
@@ -165,6 +183,12 @@ a.more-notifications {
 
         line-height: 2.15em;
         font-size: .9em;
+
+        color: $owf-notifications-dismiss-all-color;
+
+        &:hover {
+            color: $owf-notifications-dismiss-all-hover-color;
+        }
     }
 
     > .notifications-header {
@@ -173,6 +197,9 @@ a.more-notifications {
 
     > .collapse-toggle {
         cursor: pointer;
+
+        font-size: .8em;
+        color: $owf-notifications-collapse-toggle-color;
 
         margin: 0 3px 0 3px;
 
@@ -184,20 +211,22 @@ a.more-notifications {
 
     > .count {
         font-size: 1.15em;
+        color: $owf-notifications-count-color;
 
         margin-left: 5px;
     }
 
     clear: both;
 
-    margin-top: 5px;
     margin-bottom: 8px;
 }
 
 .notifications-growl {
 
     .header-container {
-        margin: 5px 7px 5px 7px;
+        margin: 0px 7px 5px 7px;
+
+        padding-top: 5px;
 
         .notifications-header {
             float: left;
@@ -217,38 +246,74 @@ a.more-notifications {
     }
 
     .notification {
-        margin: 5px;
+        margin: 5px 5px 0 5px;
+
+        padding-bottom: 5px;
     }
 
+    background-color: $owf-notifications-growl-background-color;
+
+    &:hover {
+        background-color: $owf-notifications-growl-background-hover-color;
+    }
 }
 
 h3.notification-list-header {
-    background-color: #BBB;
+    background-color: $owf-notifications-header-background-color;
+    border-bottom: 1px solid $owf-notifications-border-color;
+    color: $owf-notifications-header-color;
+
     margin: 0;
 
     padding-left: 10px;
     padding-right: 10px;
+
+    font-weight: normal;
 }
 
 //getting the right popover is a little ugly since it is a
 //sibling of its "container", not a child
-.notifications .menu-container+.popover > .arrow:after {
-    //notification menu popover arrow should be same color
-    //as header
-    border-bottom-color: #BBB;
+.notifications .menu-container+.popover > .arrow {
+    &:after {
+        //notification menu popover arrow should be same color
+        //as header
+        border-bottom-color: $owf-notifications-header-background-color;
+    }
+}
+
+.notifications .growl-container+.popover {
+    > .arrow:after {
+        //same color as growl
+        border-bottom-color: $owf-notifications-growl-background-color;
+    }
+
+    > &:hover > .arrow:after {
+        border-bottom-color: $owf-notifications-growl-background-hover-color;
+    }
+}
+
+.notifications .popover > .arrow {
+    //move it down 1 to cover up the border of the popover
+    top: -10px;
+}
+
+.notification {
+    font-size: .8em;
 }
 
 li.notification-details {
     line-height: 1.2;
+    font-size: .9em;
 
-    padding: 8px 5px;
+    padding-top: 8px;
+    padding-bottom: 8px;
 
     > * {
         vertical-align: middle;
     }
 
     &:hover {
-        background-color: #CCC;
+        background-color: $owf-notification-hover-background-color;
 
         > .close {
             display: inline-block;
@@ -257,6 +322,8 @@ li.notification-details {
 
     > .message, > .time {
         display: inline-block;
+
+        color: $owf-notification-text-color;
     }
 
     > .message {
@@ -266,6 +333,8 @@ li.notification-details {
     > .time {
         width: 30%;
         text-align: right;
+
+        color: $owf-notification-timestamp-color;
     }
 
     > .close {
