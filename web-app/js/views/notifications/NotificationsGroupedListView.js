@@ -42,12 +42,16 @@
         },
 
         renderSections: function() {
-            var sourceWidgets = _.unique(this.collection.map(function(model) {
-                    return model.get('sourceWidget');
-                })),
+            var me = this,
+                sourceWidgets = _.unique(this.collection.map(function(model) {
+                    return model.get('sourceWidget') ||
+                        me.fakeSourceWidget(model.get('sourceURL'));
+                }), null, function(sourceWidget) {
+                    //compute uniqueness based on the sourceWidget's URL
+                    return sourceWidget.get('url');
+                }),
                 //NOTE This only works assuming that the sourceURL === the sourceWidget's url
-                groupedWidgets = this.collection.groupBy('sourceURL'),
-                me = this;
+                groupedWidgets = this.collection.groupBy('sourceURL');
 
 
 
@@ -63,8 +67,9 @@
         },
 
         addToSection: function(model) {
-            var sourceWidget = model.get('sourceWidget'),
-                url = sourceWidget ? sourceWidget.get('url') : null,
+            var sourceWidget = model.get('sourceWidget') ||
+                    this.fakeSourceWidget(model.get('sourceURL')),
+                url = sourceWidget.get('url'),
                 section = this.sections[url] || this.makeSection(sourceWidget);
 
             section.collection.add(model);
@@ -100,16 +105,18 @@
             this.collection.reset();
         },
 
+        fakeSourceWidget: function(sourceURL) {
+            return new Backbone.Model({
+                url: sourceURL,
+                originalName: 'Unknown',
+                headerIcon: ''
+            });
+        },
+
         /**
          * Create a section for the given source URL, with the given optional starting collection
          */
         makeSection: function(sourceWidget, collection) {
-            if (!sourceWidget) sourceWidget = new Backbone.Model({
-                url: null,
-                originalName: 'Unknown',
-                headerIcon: ''
-            });
-
             var section = new Ozone.views.notifications.NotificationsGroupView({
                 sourceWidgetModel: sourceWidget,
                 collection: collection || new Backbone.Collection()

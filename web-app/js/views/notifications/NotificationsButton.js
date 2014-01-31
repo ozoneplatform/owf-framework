@@ -42,7 +42,15 @@
             var me = this;
 
             function startAutoFetch(notifications) {
-                me.collection.add(notifications, { parse: true });
+                try {
+                    me.collection.add(notifications, { parse: true });
+                }
+                catch (e) {
+                    //ensure that exceptions here don't prevent autoFetch from starting
+                    if (window.console) {
+                        window.console.log('Exception retrieving notifications:', e);
+                    }
+                }
                 me.collection.autoFetch();
             }
 

@@ -18,7 +18,8 @@
                 oldCount = me.size();
 
             return Superclass.prototype.fetch.call(me, _.defaults({
-                remove: false
+                remove: false,
+                cache: false
             }, options)).done(function() {
 
                 //fire the fetchMore event with the number of new notifications as the
