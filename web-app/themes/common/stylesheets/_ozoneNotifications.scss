@@ -151,6 +151,11 @@ a.more-notifications {
 
     &:hover {
         color: $owf-notifications-more-text-hover-color;
+
+        &:before {
+            //no underline on the bell
+            text-decoration: none;
+        }
     }
 
     &:before {
@@ -171,7 +176,7 @@ a.more-notifications {
 
     font-size: 1.4em;
     /*font-weight: bold;*/
-    color: $owf-notifications-header-color;
+    color: $owf-notifications-group-header-color;
 }
 
 .section-header {
@@ -252,10 +257,6 @@ a.more-notifications {
     }
 
     background-color: $owf-notifications-growl-background-color;
-
-    &:hover {
-        background-color: $owf-notifications-growl-background-hover-color;
-    }
 }
 
 h3.notification-list-header {
@@ -287,8 +288,14 @@ h3.notification-list-header {
         border-bottom-color: $owf-notifications-growl-background-color;
     }
 
-    > &:hover > .arrow:after {
-        border-bottom-color: $owf-notifications-growl-background-hover-color;
+    &:hover {
+        > .arrow:after {
+            border-bottom-color: $owf-notifications-growl-background-hover-color;
+        }
+
+        .notifications-growl {
+            background-color: $owf-notifications-growl-background-hover-color;
+        }
     }
 }
 
@@ -299,6 +306,8 @@ h3.notification-list-header {
 
 .notification {
     font-size: .8em;
+
+    color: $owf-notification-text-color;
 }
 
 li.notification-details {
