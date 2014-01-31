@@ -259,10 +259,3 @@ $close-button-width: 19px;
 #owf-body-mask {
     z-index: exponent(10, 7) !important;
 }
-
-.x-ie7 {
-    #banner-right-container > * {
-        display: inline;
-        zoom: 1;
-    }
-}

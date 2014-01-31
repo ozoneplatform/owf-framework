@@ -548,3 +548,10 @@
         border-bottom-color: $owf-focus-color !important;
     }
 }
+
+.x-ie7 {
+    #banner-right-container > * {
+        display: inline;
+        zoom: 1;
+    }
+}
