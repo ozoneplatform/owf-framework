@@ -41,13 +41,15 @@
         initialize: function() {
             var me = this;
 
+            function startAutoFetch(notifications) {
+                me.collection.add(notifications, { parse: true });
+                me.collection.autoFetch();
+            }
+
             this.collection = new CollectionClass();
 
             //get the user's previous undismissed notifications, and then start auto-fetching
-            this.retrieveUndismissedNotifications().then(function(notifications) {
-                me.collection.add(notifications);
-                me.collection.autoFetch();
-            });
+            this.retrieveUndismissedNotifications().always(startAutoFetch);
 
             //on page unload, save the user's undismissed notifications
             $(window).unload(_.bind(this.saveUndismissedNotifications, this));

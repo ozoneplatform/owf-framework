@@ -766,6 +766,8 @@ Ozone.util.findWidgetDefinitionByLongestUrlMatch = function(url) {
     var store = Ext.StoreManager.lookup('widgetStore'),
         match = null;
 
+    if (!url) return null;
+
     store.each(function(widget) {
         var widgetUrl = widget.get('url');
 
