@@ -11,6 +11,10 @@ class MessagesController {
     def list = {
 
         def messages = owfMessagingService.pollMessages()
+
+        header "Cache-Control", "no-cache, no-store"
+        header "Pragma", "no-cache"
+        header "Expires", "0"
         
         render messages as JSON
         
