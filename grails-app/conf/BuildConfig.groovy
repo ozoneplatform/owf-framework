@@ -200,6 +200,6 @@ grails.project.dependency.resolution = {
         compile "org.ozoneplatform:aml-commons-security:$config.owf.security.rev"
         compile 'org.ozoneplatform:aml-commons-appconfig:0.4'
         compile 'org.ozoneplatform:aml-commons-auditing:0.1'
-        compile 'org.ozoneplatform:aml-commons-messaging:1.12'
+        compile 'org.ozoneplatform:aml-commons-messaging:1.14'
     }
 }
