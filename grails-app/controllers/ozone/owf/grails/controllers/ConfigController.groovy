@@ -56,14 +56,18 @@ class ConfigController {
             ! (it.key in ['keystorePass', 'truststorePass', 'keystorePath', 'truststorePath'])
         }
 
-        conf.customHeaderFooter = customHeaderFooterService.configAsMap
-        conf.backgroundURL =  owfApplicationConfigurationService.getApplicationConfiguration(CUSTOM_BACKGROUND_URL)?.value
-        conf.freeTextEntryWarningMessage = owfApplicationConfigurationService.getApplicationConfiguration(FREE_WARNING_CONTENT)?.value ?: ""
+        conf.with {
+            customHeaderFooter = customHeaderFooterService.configAsMap
+            backgroundURL =  this.owfApplicationConfigurationService.getApplicationConfiguration(CUSTOM_BACKGROUND_URL)?.value
+            freeTextEntryWarningMessage = this.owfApplicationConfigurationService.getApplicationConfiguration(FREE_WARNING_CONTENT)?.value ?: ""
 
-        conf.notificationsPollingInterval = owfApplicationConfigurationService.valueOf(NOTIFICATIONS_QUERY_INTERVAL) as Integer ?: 30
-        conf.notificationsEnabled =
-            new Boolean(owfApplicationConfigurationService.valueOf(NOTIFICATIONS_ENABLED)) ?:
-            false
+            notificationsPollingInterval =
+                this.owfApplicationConfigurationService.valueOf(NOTIFICATIONS_QUERY_INTERVAL) as Integer ?:
+                30
+            notificationsEnabled =
+                Boolean.valueOf(this.owfApplicationConfigurationService.valueOf(NOTIFICATIONS_ENABLED)) ?:
+                false
+        }
 
         // whether the show animations user preference exists
         def showAnimations = false
