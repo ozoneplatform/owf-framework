@@ -18,6 +18,8 @@ class OwfMessageCache {
 
 
     public synchronized void add(AmlMessage message){
+        if(!message.timestamp)
+            return
         items.put(message.timestamp, message)
         lastReceivedTimeStamp = new Date()
         purge()
