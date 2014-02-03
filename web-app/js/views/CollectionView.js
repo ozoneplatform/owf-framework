@@ -104,11 +104,15 @@
          * Add the child view to the parent at the specified child index position
          */
         insertAtIndex: function(parent, child, position) {
+            var children = parent.children();
             if (position === 0) {
                 parent.prepend(child);
             }
+            else if (position >= children.length) {
+                parent.append(child);
+            }
             else {
-                parent.children(':nth-child(' + position + ')').after(child);
+                children.filter(':nth-child(' + position + ')').after(child);
             }
         },
 
