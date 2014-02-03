@@ -4,14 +4,17 @@
     width: 3em;
 
     button.close {
-        background-image: theme-image($theme-name, '/tools/close-out.png');
-        height: 15px;
-        width: 15px;
-        display: inline-block;
+        margin-top: -5px;
         float: none;
 
-        background-position: center center;
-        background-repeat: no-repeat;
+        color: $owf-notification-timestamp-color;
+        text-shadow: none;
+        @include opacity(100);
+
+        &:hover,&:focus {
+            color: $owf-notification-text-color;
+            @include opacity(100);
+        }
     }
 
     .popover {

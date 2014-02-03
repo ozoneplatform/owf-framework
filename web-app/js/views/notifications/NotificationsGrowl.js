@@ -52,7 +52,7 @@
             this.$el
                 .append($('<div class="header-container">')
                     .append(this.sectionHeader.$el)
-                    .append('<button class="close"></button>'))
+                    .append('<button class="close">&times;</button>'))
                 .append(this.notificationView.$el)
                 .append(this.$moreNotificationsEl);
 
