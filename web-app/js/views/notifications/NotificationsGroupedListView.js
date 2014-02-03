@@ -11,10 +11,7 @@
         className: 'notifications-grouped-list',
 
         //map from message sourceURL to UI section
-        sections: {},
-
-        //map from sourceURL to collection
-        collections: {},
+        sections: null,
 
         modelEvents: {
             'add': 'addToSection',
@@ -27,6 +24,9 @@
 
         initialize: function(options) {
             Superclass.prototype.initialize.apply(this, arguments);
+
+            this.sections = {};
+
             Ozone.views.PopoverViewMixin.initialize.call(this, {
                 parentEl: options.parentEl,
                 preventClickClose: true
@@ -44,8 +44,7 @@
         renderSections: function() {
             var me = this,
                 sourceWidgets = _.unique(this.collection.map(function(model) {
-                    return model.get('sourceWidget') ||
-                        me.fakeSourceWidget(model.get('sourceURL'));
+                    return me.getSourceWidget(model);
                 }), null, function(sourceWidget) {
                     //compute uniqueness based on the sourceWidget's URL
                     return sourceWidget.get('url');
@@ -67,8 +66,7 @@
         },
 
         addToSection: function(model) {
-            var sourceWidget = model.get('sourceWidget') ||
-                    this.fakeSourceWidget(model.get('sourceURL')),
+            var sourceWidget = this.getSourceWidget(model),
                 url = sourceWidget.get('url'),
                 section = this.sections[url] || this.makeSection(sourceWidget);
 
@@ -76,7 +74,8 @@
         },
 
         removeFromSection: function(model) {
-            var url = model.get('sourceURL'),
+            var sourceWidget = this.getSourceWidget(model),
+                url = sourceWidget.get('url'),
                 section = this.sections[url];
 
             if (section) {
@@ -111,6 +110,10 @@
                 originalName: 'Unknown',
                 headerIcon: ''
             });
+        },
+
+        getSourceWidget: function(model) {
+            return model.get('sourceWidget') || this.fakeSourceWidget(model.get('sourceURL'));
         },
 
         /**
