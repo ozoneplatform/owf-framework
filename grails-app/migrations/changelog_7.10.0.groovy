@@ -26,7 +26,7 @@ databaseChangeLog = {
         }
 
         [[code: 'notifications.xmpp.server.hostname', type: 'String', mutable: true],
-                [code: 'notifications.xmpp.server.port', type: 'String', mutable: true, value: '5222'],
+                [code: 'notifications.xmpp.server.port', type: 'Integer', mutable: true, value: '5222'],
                 [code: 'notifications.xmpp.room', type: 'String', mutable: true],
                 [code: 'notifications.xmpp.username', type: 'String', mutable: true],
                 [code: 'notifications.xmpp.password', type: 'String', mutable: true]

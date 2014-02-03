@@ -1,15 +1,13 @@
 package ozone.owf.grails.services
 
-import org.apache.log4j.Logger;
+import org.apache.log4j.Logger
 import static org.ozoneplatform.appconfig.NotificationsSetting.*
 import org.ozoneplatform.messaging.payload.AmlMessage
 import org.ozoneplatform.messaging.service.api.MessageService
-import org.springframework.context.ApplicationListener
 import ozone.owf.cache.OwfMessageCache
 import ozone.owf.grails.domain.Person
-import org.ozoneplatform.appconfig.server.eventing.ConfigurationSaveEvent
 
-class OwfMessagingService implements ApplicationListener<ConfigurationSaveEvent> {
+class OwfMessagingService {
 
     OwfApplicationConfigurationService owfApplicationConfigurationService
 
@@ -71,21 +69,5 @@ class OwfMessagingService implements ApplicationListener<ConfigurationSaveEvent>
         personService.save(currentUser)
                 
         return messages
-    }
-    
-    void onApplicationEvent(ConfigurationSaveEvent event) {
-        if(event.configItem.code == NOTIFICATIONS_QUERY_INTERVAL.code){
-            if(event.configItem.value)
-                owfMessageCache.setExpiration(event.configItem.value as Integer)
-        }
-        if(event.configItem.code == NOTIFICATIONS_ENABLED.code) {
-            if(event.configItem.value.toBoolean()) {
-                startListening()
-                if(!messageService.isConnected())
-                    throw new RuntimeException("Cannot enable notifications - failed to connect to the messaging server")
-            } else {
-                stopListening()
-            }
-        }
     }
 }
