@@ -57,7 +57,7 @@ class ConfigController {
         }
 
         conf.with {
-            customHeaderFooter = customHeaderFooterService.configAsMap
+            customHeaderFooter = this.customHeaderFooterService.configAsMap
             backgroundURL =  this.owfApplicationConfigurationService.getApplicationConfiguration(CUSTOM_BACKGROUND_URL)?.value
             freeTextEntryWarningMessage = this.owfApplicationConfigurationService.getApplicationConfiguration(FREE_WARNING_CONTENT)?.value ?: ""
 
