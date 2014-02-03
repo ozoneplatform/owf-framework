@@ -5,7 +5,7 @@
 
     var template = Handlebars.compile(
         '<span class="message">{{body}}</span>' +
-        '<span class="time">{{relativeTime}}</span>' +
+        '<span class="time"></span>' +
         '<button class="close">&times;</button>'
     );
 
@@ -16,13 +16,19 @@
 
         className: 'notification-details',
 
-        render: function() {
-            //for the template, use the model attributes plus a fuzzy time string
-            var attrs = _.extend({
-                relativeTime: moment(this.model.get('timestamp')).fromNow()
-            }, this.model.attributes);
+        fuzzyDateTimeout: null,
 
-            this.$el.html(template(attrs));
+        render: function() {
+            var me = this;
+
+            //update the fuzzy date once every minute
+            function fuzzyDateSetTimeout() {
+                me.updateFuzzyDate();
+                me.fuzzyDateTimeout = setTimeout(fuzzyDateSetTimeout, 60000);
+            }
+
+            this.$el.html(template(this.model.attributes));
+            fuzzyDateSetTimeout();
 
             return this;
         },
@@ -38,6 +44,22 @@
             this.model = null;
 
             e.stopPropagation();
+        },
+
+        updateFuzzyDate: function() {
+            this.$('.time').text(this.fuzzyDate());
+        },
+
+        fuzzyDate: function() {
+            //in some race condition that I haven't been able to track down, this.model
+            //is sometimes null here
+            return this.model ? moment(this.model.get('timestamp')).fromNow() :
+                '-';
+        },
+
+        remove: function() {
+            clearTimeout(this.fuzzyDateTimeout);
+            Superclass.prototype.remove.apply(this, arguments);
         }
     });
 

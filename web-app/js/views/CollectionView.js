@@ -88,14 +88,28 @@
         addOne: function(item, $container) {
             if (!this.allowAdd) { return false; }
 
-            var view = this.createOne( item );
+            var view = this.createOne( item ),
+                position = this.collection.indexOf(item);
 
             $container = $container || this.$el;
 
-            $container.append(view.el);
+            //insert the new view at the correct child index
+            this.insertAtIndex($container, view.$el, position);
             this.viewMap[item.cid] = view;
 
             return view;
+        },
+
+        /**
+         * Add the child view to the parent at the specified child index position
+         */
+        insertAtIndex: function(parent, child, position) {
+            if (position === 0) {
+                parent.prepend(child);
+            }
+            else {
+                parent.children(':nth-child(' + position + ')').after(child);
+            }
         },
 
         /**

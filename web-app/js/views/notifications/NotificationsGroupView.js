@@ -40,6 +40,12 @@
 
         addOne: function(model) {
             Superclass.prototype.addOne.call(this, model, this.$container);
+
+            _.each(this.viewMap, function(view) {
+                //make sure fuzzy dates are up to date so that they don't appear to be out
+                //of order
+                view.updateFuzzyDate();
+            });
         },
 
         toggleCollapse: function() {

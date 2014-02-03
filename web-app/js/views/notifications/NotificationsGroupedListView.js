@@ -61,7 +61,7 @@
                     throw new Error("Duplicate sections being created");
                 }
 
-                me.makeSection(widget, new Backbone.Collection(groupedWidgets[url]));
+                me.makeSection(widget, groupedWidgets[url]);
             });
         },
 
@@ -119,16 +119,25 @@
         /**
          * Create a section for the given source URL, with the given optional starting collection
          */
-        makeSection: function(sourceWidget, collection) {
+        makeSection: function(sourceWidget, models) {
+            var collection = this.makeCollection(models);
+
             var section = new Ozone.views.notifications.NotificationsGroupView({
                 sourceWidgetModel: sourceWidget,
-                collection: collection || new Backbone.Collection()
+                collection: collection
             });
 
             this.$el.append(section.render().$el);
             this.sections[sourceWidget.get('url')] = section;
 
             return section;
+        },
+
+        makeCollection: function(models) {
+            var collection = new Backbone.Collection(models);
+            collection.comparator = this.collection.comparator;
+
+            return collection;
         },
 
         //to deal with popover issues, remove and re-add events on hide-show
