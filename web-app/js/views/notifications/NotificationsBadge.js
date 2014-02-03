@@ -1,4 +1,4 @@
-(function(Backbone, $, Ozone) {
+;(function(Backbone, $, Ozone) {
     'use strict';
 
     var Superclass = Ozone.views.BaseView;
@@ -17,6 +17,8 @@
         //update the count in the UI and show or hide the badge as necessary
         updateCount: function() {
             var count = this.collection.size();
+
+            if (count > 99) count = '99+';
 
             if (!this.isRendered()) this.render();
 

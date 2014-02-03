@@ -1,7 +1,7 @@
 .notifications {
     position: relative;
     //give it plenty of room to grow without upsetting Ext
-    width: 35px;
+    width: 3em;
 
     button.close {
         background-image: theme-image($theme-name, '/tools/close-out.png');
