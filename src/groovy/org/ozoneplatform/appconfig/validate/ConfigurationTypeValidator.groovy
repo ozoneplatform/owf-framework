@@ -1,7 +1,6 @@
 package org.ozoneplatform.appconfig.validate
 
 import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
-import org.ozoneplatform.appconfig.validate.ConfigurationValidator
 import org.ozoneplatform.appconfig.server.service.api.ApplicationConfigurationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
