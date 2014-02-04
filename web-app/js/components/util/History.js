@@ -64,6 +64,23 @@ Ext.apply(Ext.History, {
     me.fireEvent('ready', me);
   },
 
+    add: function (token, preventDup) {
+        var me = this;
+
+        if (preventDup !== false) {
+            if (me.getToken() === token) {
+                return true;
+            }
+        }
+
+        if (me.oldIEMode) {
+            return me.updateIFrame(token);
+        } else {
+            window.location.hash = token;
+            return true;
+        }
+    },
+
   shutDown: function() {
     if (this.task != null) {
       Ext.TaskManager.stop(this.task);
