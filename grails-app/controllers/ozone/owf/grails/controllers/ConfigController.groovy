@@ -5,6 +5,8 @@ import static ozone.owf.enums.OwfApplicationSetting.*
 import static org.ozoneplatform.appconfig.NotificationsSetting.*
 import ozone.owf.grails.OwfException
 
+import ozone.security.SecurityUtils
+
 /**
  * User controller.
  */
@@ -38,9 +40,16 @@ class ConfigController {
 
         def isAdmin = accountService.getLoggedInUserIsAdmin()
 
-        def curUserResult = [displayName: curUser.username, userRealName:curUser.userRealName,
-                prevLogin: pDate, prettyPrevLogin: pDateString, id:curUser.id, groups:groups, email: emailString,
-                isAdmin: isAdmin] as JSON
+        def curUserResult = [
+            displayName: curUser.username,
+            userRealName:curUser.userRealName,
+            prevLogin: pDate,
+            prettyPrevLogin: pDateString,
+            id:curUser.id,
+            groups:groups,
+            email: emailString,
+            isAdmin: isAdmin
+        ]
 
         def themeResults = themeService.getCurrentTheme()
         def theme = [:]
@@ -58,9 +67,13 @@ class ConfigController {
 
         conf.with {
             customHeaderFooter = this.customHeaderFooterService.configAsMap
-            backgroundURL =  this.owfApplicationConfigurationService.getApplicationConfiguration(CUSTOM_BACKGROUND_URL)?.value
-            freeTextEntryWarningMessage = this.owfApplicationConfigurationService.getApplicationConfiguration(FREE_WARNING_CONTENT)?.value ?: ""
+            loginCookieName = Environment.current == Environment.DEVELOPMENT ?
+                null : SecurityUtils.LOGIN_COOKIE_NAME
 
+            backgroundURL =
+                this.owfApplicationConfigurationService.getApplicationConfiguration(CUSTOM_BACKGROUND_URL)?.value
+            freeTextEntryWarningMessage =
+                this.owfApplicationConfigurationService.getApplicationConfiguration(FREE_WARNING_CONTENT)?.value ?: ""
             notificationsPollingInterval =
                 this.owfApplicationConfigurationService.valueOf(NOTIFICATIONS_QUERY_INTERVAL) as Integer ?:
                 30
@@ -83,12 +96,13 @@ class ConfigController {
             handleError(owe)
         }
 
+        conf.currentTheme = theme
+        conf.user = curUserResult
+        conf.showAnimations = showAnimations
+
         render(view: 'config_js',
                 model: [
-                  user: curUserResult,
-                  currentTheme: theme as JSON,
-                  conf: conf as JSON,
-                  showAnimations: showAnimations
+                  conf: conf
                  ],
                 contentType: 'text/javascript')
     }
