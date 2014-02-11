@@ -19,6 +19,8 @@ class ConfigController {
     def serviceModelService
     def customHeaderFooterService
     def owfApplicationConfigurationService
+    def DashboardService
+    def personWidgetDefinitionService
 
 
     def config = {
@@ -67,6 +69,7 @@ class ConfigController {
 
         conf.with {
             customHeaderFooter = this.customHeaderFooterService.configAsMap
+            showAccessAlert = this.session.getAttribute('showAccessAlert')
             loginCookieName = Environment.current == Environment.DEVELOPMENT ?
                 null : SecurityUtils.LOGIN_COOKIE_NAME
 
@@ -100,11 +103,40 @@ class ConfigController {
         conf.user = curUserResult
         conf.showAnimations = showAnimations
 
+        def initialData = getInitialData()
+
         render(view: 'config_js',
                 model: [
-                  conf: conf
+                  conf: conf,
+                    initialData: initialData
                  ],
                 contentType: 'text/javascript')
     }
 
+    private getInitialData(){
+
+        def dashboards,
+            widgets,
+            appComponentsViewState
+
+        try {
+            dashboards =  dashboardService.list(params).dashboardList
+            widgets = personWidgetDefinitionService.list(params).personWidgetDefinitionList
+
+            appComponentsViewState = preferenceService.showForUser([
+                namespace: "owf",
+                path: "appcomponent-view"
+            ]);
+            appComponentsViewState?.preference = appComponentsViewState?.preference?.value;
+        }
+        catch (OwfException owe) {
+            handleError(owe)
+        }
+
+        return [
+            dashboards: dashboards,
+            widgets: widgets,
+            appComponentsViewState: appComponentsViewState
+        ]
+    }
 }

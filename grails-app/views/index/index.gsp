@@ -80,10 +80,10 @@
 
         <!-- bring in custom header/footer resources -->
         <g:each in="${grailsApplication.mainContext.getBean('customHeaderFooterService').jsImportsAsList}" var="jsImport">
-            <script type="text/javascript" src="${jsImport}"></script>
+            <script type="text/javascript" src="${jsImport.encodeAsURL().encodeAsHTML()}"></script>
         </g:each>
         <g:each in="${grailsApplication.mainContext.getBean('customHeaderFooterService').cssImportsAsList}" var="cssImport">
-            <link rel="stylesheet" href="${cssImport}" type="text/css" />
+            <link rel="stylesheet" href="${cssImport.encodeAsURL().encodeAsHTML()}" type="text/css" />
         </g:each>
 
         <!-- language switching -->
@@ -156,7 +156,7 @@
                  // user's dashboards instances
                 var dashboardStore = Ext.create('Ozone.data.DashboardStore', {
                     storeId: 'dashboardStore',
-                    data: ${dashboards}
+                    data: Ozone.initialData.dashboards
                 });
 
                 // user's widgets
@@ -164,7 +164,7 @@
                     storeId: 'widgetStore'
                 });
 
-                var widgets = ${widgets};
+                var widgets = Ozone.initialData.widgets;
                 OWF.Collections = {};
                 OWF.Collections.AppComponents = new Ozone.data.collections.Widgets({
                     results:  widgets.length,
@@ -175,7 +175,7 @@
 
                 // mappings are not supported in Models,
                 // they only supported through Ext Proxy Reader
-                widgetStore.loadRecords(widgetStore.proxy.reader.read(${widgets}).records);
+                widgetStore.loadRecords(widgetStore.proxy.reader.read(Ozone.initialData.widgets).records);
 
                 layoutComponents.push({
                     id: 'mainPanel',
@@ -186,7 +186,7 @@
                     anchor: '100% ' + heightOffset,
                     dashboardStore: dashboardStore,
                     widgetStore: widgetStore,
-                    appComponentsViewState: ${appComponentsViewState},
+                    appComponentsViewState: Ozone.initialData.appComponentsViewState,
                     floatingWidgetManager: floatingWidgetManager,
                     bannerManager: bannerManager,
                     dashboardDesignerManager: dashboardDesignerManager,
@@ -227,13 +227,14 @@
             Ext.onReady(function() {
 
                 Ozone.version = Ozone.version || {};
-                Ozone.version.mpversion = "${(grailsApplication.config.owf.mpVersion)}" || "2.5";
+                Ozone.version.mpversion = Ozone.config.mpVersion || "2.5";
 
                 //function to check if the login cookie
                 //exists and if not, force a refresh
                 //in order to force a re-login
                 var testLoginCookie = function() {
-                    var loggedIn = Ozone.config.loginCookieName == null || Ext.util.Cookies.get(Ozone.config.loginCookieName) != null;
+                    var loggedIn = Ozone.config.loginCookieName == null ||
+                        Ext.util.Cookies.get(Ozone.config.loginCookieName) != null;
                     if (!loggedIn) {
                         Ext.Msg.show({
                             buttons: Ext.Msg.OK,
@@ -309,7 +310,7 @@
               };
 
                 //show access alert window if it is configured to be on and only once per session
-                var sessionShowAccessAlert = '${session.getAttribute('showAccessAlert')}';
+                var sessionShowAccessAlert = Ozone.config.showAccessAlert
                 if (Ozone.config.showAccessAlert && (Ozone.config.showAccessAlert.toLowerCase() == "true" && (sessionShowAccessAlert == 'true' || sessionShowAccessAlert == ''))) {
                     var accessAlertMsg = Ozone.config.accessAlertMsg;
                     var okButton = Ext.widget('button', {
