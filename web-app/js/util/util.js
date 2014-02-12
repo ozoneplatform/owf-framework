@@ -503,13 +503,13 @@ Ozone.util.isReservedChannel = function(channel) {
                 channel == '_intents' ||
                 channel == '_intents_receive' ||
                 channel == 'Ozone._WidgetChromeChannel' ||
-                channel == '_WIDGET_LAUNCHER_CHANNEL' ||
                 channel == '_widgetReady' ||
                 channel == '_MARKETPLACE_MENU_ITEM_CLICK' ||
                 channel == '_MARKETPLACE_MENU_ADMIN_TOGGLE' ||
                 channel == 'ozone.marketplace.show' ||
                 channel == 'ozone.marketplace.pageLoaded' ||
-                channel == 'Ozone.eventing.widget.public')
+                channel == 'Ozone.eventing.widget.public' ||
+                channel == '_MARKETPLACE_LISTING_CHECK')
 
             return true;
     }

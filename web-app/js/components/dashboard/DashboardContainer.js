@@ -171,7 +171,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         this.setupDashboardChangeListeners();
         OWF.Collections.AppComponents.on('remove', this.removeAppComponent, this);
 
-
+        this.setupUserListingCheckService();
 
         $(window).on('resize', function () {
             if(me.appComponentsView && me.appComponentsView.isHidden()) {
@@ -2260,6 +2260,42 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         if (dashboardModel) {
             dashboardModel.reject();
         }
+    },
+
+    /**
+     * Register a private service that allows the Marketplace widget to
+     * determine via RPC if a particular listing has already been added by
+     * the current OWF user. This will save us a round trip to the server.
+     * Searches for both Apps (formerly stacks) and App Components
+     * (formerly widgets).
+     */
+    setupUserListingCheckService: function() {
+        var me = this;
+
+        var serviceName = '_MARKETPLACE_LISTING_CHECK';
+
+        // "msg" must contain a "guid" string to lookup
+        OWF.Container.Eventing.registerHandler(serviceName, function (msg) {
+            var result = false;
+
+            // Check all user Apps
+            for (var i = 0, len = me.dashboardStore.getCount(); i < len; i++) {
+                var model = me.dashboardStore.getAt(i).data;
+
+                if (model.stack && model.stack.stackContext &&
+                    model.stack.stackContext == msg.guid) {
+                    result = true;
+                    break;
+                }
+            }
+
+            // Check all user App Components
+            if(!result) {
+                result = OWF.Collections.AppComponents.findWhere({widgetGuid: msg.guid}) != null;
+            }
+
+            return result;
+        });
     }
 
 });
