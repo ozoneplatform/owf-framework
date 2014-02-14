@@ -49,7 +49,7 @@ Ext.apply(Ext.History, {
         if (newToken !== oldToken) {
           oldToken = newToken;
           me.handleStateChange(newToken);
-          window.top.location.hash = newToken;
+          window.location.hash = newToken;
           oldHash = newToken;
           me.doSave();
         } else if (newHash !== oldHash) {
