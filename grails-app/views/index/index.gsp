@@ -309,9 +309,8 @@
                     setInterval(testLoginCookie, 5000);
               };
 
-                //show access alert window if it is configured to be on and only once per session
-                var sessionShowAccessAlert = Ozone.config.showAccessAlert
-                if (Ozone.config.showAccessAlert && (Ozone.config.showAccessAlert.toLowerCase() == "true" && (sessionShowAccessAlert == 'true' || sessionShowAccessAlert == ''))) {
+                if (Ozone.config.showAccessAlert &&
+                        Ozone.config.showAccessAlert.toLowerCase() == "true") {
                     var accessAlertMsg = Ozone.config.accessAlertMsg;
                     var okButton = Ext.widget('button', {
                         id: 'accessAlertOKButton',

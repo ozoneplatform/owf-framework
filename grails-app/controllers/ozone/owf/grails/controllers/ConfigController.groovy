@@ -67,6 +67,15 @@ class ConfigController {
             ! (it.key in ['keystorePass', 'truststorePass', 'keystorePath', 'truststorePath'])
         }
 
+        String showAccessAlert = grailsApplication.config.owf.showAccessAlert
+        String sessionShowAccessAlert = session.getAttribute('showAccessAlert')
+        //not null or empty
+        if (sessionShowAccessAlert) {
+            showAccessAlert = sessionShowAccessAlert
+        }
+
+        conf.showAccessAlert = showAccessAlert
+
         conf.with {
             customHeaderFooter = this.customHeaderFooterService.configAsMap
             showAccessAlert = this.grailsApplication.config.owf.showAccessAlert
