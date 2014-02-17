@@ -69,7 +69,7 @@ class ConfigController {
 
         conf.with {
             customHeaderFooter = this.customHeaderFooterService.configAsMap
-            showAccessAlert = this.session.getAttribute('showAccessAlert')
+            showAccessAlert = this.grailsApplication.config.owf.showAccessAlert
             loginCookieName = Environment.current == Environment.DEVELOPMENT ?
                 null : SecurityUtils.LOGIN_COOKIE_NAME
 
