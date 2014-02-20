@@ -2,7 +2,7 @@
 
     <property file="${basedir}/application.properties" />
     <import file="build-base.xml" optional="true"/>
-    
+
     <property name="lib.dir" value="${basedir}/lib" />
     <property name="work.dir" value="${basedir}/work" />
     <property name="jstoolkit.dir" value="${work.dir}/jsdoc/jsdoc_toolkit-2.3.2/jsdoc-toolkit" />
@@ -221,7 +221,6 @@
 
     <target name="stage-extras" depends="compile-themes">
         <mkdir dir="${tomcat.dir}" />
-        <mkdir dir="${staging.dir}/etc/override" />
         <mkdir dir="${staging.dir}/owf-security" />
         <mkdir dir="${staging.dir}/etc/tools" />
 
@@ -229,7 +228,7 @@
         <zip destfile="${basedir}/tools/dbvalidation.zip" >
             <zipfileset dir="${basedir}/tools/TestDbConversion/target" includes="**/*" filemode="744" />
         </zip>
-        
+
         <copy todir="${staging.dir}/etc/tools" includeEmptyDirs="false">
             <fileset dir="tools">
                 <include name="*" />
@@ -240,7 +239,7 @@
         <delete file="${basedir}/tools/dbvalidation.zip" />
 
         <mkdir dir="${staging.dir}/etc/widget" />
-        
+
         <mkdir dir="${staging.dir}/etc/widget/js" />
             <copy todir="${staging.dir}/etc/widget/js">
                 <fileset dir="web-app/js-min">
@@ -272,7 +271,7 @@
                     <include name="dndNoMove.png" />
                 </fileset>
             </copy>
-            
+
         <mkdir dir="${staging.dir}/etc/widget/flash-dragAndDrop" />
             <copy todir="${staging.dir}/etc/widget/flash-dragAndDrop">
                 <fileset dir="flash-dragAndDrop" />
