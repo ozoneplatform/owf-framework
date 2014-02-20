@@ -155,7 +155,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
     },
 
     addWidget:function (sender, config, marketplaceCallback) {
-        this.dashboardContainer.loadMask.show();    
+        this.dashboardContainer.loadMask.show();
 
         var doLaunch = false,
             baseUrl, id, visualizeAddition;
@@ -190,7 +190,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     var serviceItem = data[i];
 
                     // widget requires stacks, need to refresh dashboards
-                    if(serviceItem.owfProperties && serviceItem.owfProperties.stackDescriptor) {                        
+                    if(serviceItem.owfProperties && serviceItem.owfProperties.stackDescriptor) {
                         self.dashboardContainer.dashboardsNeedRefresh = true;
                     }
 
@@ -266,7 +266,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         }
 
         if (directRequired.length > 0) {
-            widgetJson.directRequired = Ext.JSON.encode(directRequired);
+            widgetJson.directRequired = directRequired;
         }
         return widgetJson;
     },
