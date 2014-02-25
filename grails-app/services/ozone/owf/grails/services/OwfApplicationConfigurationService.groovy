@@ -37,6 +37,14 @@ class OwfApplicationConfigurationService extends ApplicationConfigurationService
         if(!applicationConfiguration)
             return
 
+        if(applicationConfiguration.code in [SESSION_CONTROL_MAX_CONCURRENT, INACTIVITY_THRESHOLD]*.code) {
+            def value = applicationConfiguration.value?.isInteger() ? applicationConfiguration.value.toInteger() : -1
+            if(value < 1) {
+                applicationConfiguration.errors.rejectValue('value', "application.configuration.invalid.number.required.gt.zero")
+                return
+            }
+        }
+
         if(applicationConfiguration.code == CUSTOM_HEADER_HEIGHT.code || applicationConfiguration.code == CUSTOM_FOOTER_HEIGHT.code) {
             def value = Integer.valueOf(applicationConfiguration.value)
             if(value > 150) {
