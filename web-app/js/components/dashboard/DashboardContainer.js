@@ -1752,7 +1752,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }, this), this.pollingInterval);
     },
 
-    deleteDashboards: function(dashboardsToDelete) {
+    deleteDashboards: function(dashboardsToDelete, destroyMyAppsWin) {
 
         // -----------------------------------------------------------
         // Remove dashboards from all dashboard-related components.
@@ -1793,7 +1793,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             }
         }
 
-        this.destroyMyAppsWindow();
+        if (destroyMyAppsWin !== false) {
+            this.destroyMyAppsWindow();
+        }
     },
 
     updateDashboardsFromStore: function(storeRecords, callbackOptions, loadSuccess, dashboardGuidToActivate) {

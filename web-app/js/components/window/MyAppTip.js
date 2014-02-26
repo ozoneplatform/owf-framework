@@ -427,6 +427,8 @@ Ext.define('Ozone.components.window.MyAppTip', {
         me.appsWindow.reloadDashboards = true;
 
         me.close();
+
+        me.removeOrphanFullscreenDashboards(me.clickedStack);
     },
 
     /**
@@ -540,6 +542,76 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 // A hack to verify whether the stack is in one of the user's implicit groups
                 return Boolean(_.find(stackGroups, { 'displayName': 'OWF Users' }) ||
                     (Ozone.config.user.isAdmin && _.find(stackGroups, { 'displayName': 'OWF Administrators' })));
+            }
+        }
+    },
+
+    /**
+     * Deletes "fullscreen" dashboards and App Components from client state.
+     * Said App Components are only added from Marketplace when a user runs
+     * a web-app in OWF that is NOT OZONE-aware. And "fullscreen" App
+     * Components are never shown in the App Components picker. (Only those
+     * with "standard" type are shown.)
+     * @param removedStack Model of stack that has already been removed from
+     *        the stackStore.
+     */
+    removeOrphanFullscreenDashboards: function(removedStack) {
+        var me = this;
+        var orphanAppComponents = [];
+        var orphanDashboardGuids = [];
+
+        for (var i = 0; i < removedStack.dashboards.length; i++) {
+            var dash = removedStack.dashboards[i];
+
+            if (dash.type === 'fullscreen' && dash.layoutConfig.widgets) {
+                orphanDashboardGuids.push(dash.guid);
+
+                for (var j = 0; j < dash.layoutConfig.widgets.length; j++) {
+                    var widget = dash.layoutConfig.widgets[j];
+                    var isOrphan = true;
+
+                    // Determine if widget is used on another dashboard
+                    me.dashboardContainer.stackStore.each(function(stack) {
+                        if (isOrphan && stack.data.dashboards) {
+                            for (var k = 0; k < stack.data.dashboards.length && isOrphan; k++) {
+                                var otherDash = stack.data.dashboards[k];
+
+                                // Search is simplified since fullscreen
+                                // components will only be on fullscreen
+                                // dashboards
+                                if (otherDash.data.type === 'fullscreen' &&
+                                    otherDash.data.layoutConfig.widgets) {
+                                    var widgetsList = otherDash.data.layoutConfig.widgets;
+
+                                    for (var l = 0; l < widgetsList.length; l++) {
+                                        if (widget.widgetGuid === widgetsList[l].widgetGuid) {
+                                            isOrphan = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    if (isOrphan) {
+                        orphanAppComponents.push(widget);
+                    }
+                }
+            }
+        }
+
+        me.dashboardContainer.deleteDashboards(orphanDashboardGuids, false);
+
+        for (var j = 0; j < orphanAppComponents.length; j++) {
+            var removeItem = OWF.Collections.AppComponents.findWhere({widgetGuid: orphanAppComponents[j].widgetGuid});
+
+            if (removeItem) {
+                var widgetType = removeItem.get('widgetTypes')[0];
+
+                if (widgetType.name === 'fullscreen') {
+                    OWF.Collections.AppComponents.remove(removeItem);
+                }
             }
         }
     }
