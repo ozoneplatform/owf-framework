@@ -13,6 +13,7 @@ Ozone.marketplace.AddWidgetContainer = function (eventingContainer, dashboardCon
 
     this.addWidgetChannelName = "_ADD_WIDGET_CHANNEL";
     this.addStackChannelName = "_ADD_STACK_CHANNEL";
+    this.launchStackChannelName = "_LAUNCH_STACK_CHANNEL";
     this.windowManager = null;
     this.ANIMATION_DURATION = 1000;
 
@@ -22,6 +23,7 @@ Ozone.marketplace.AddWidgetContainer = function (eventingContainer, dashboardCon
         this.eventingContainer = eventingContainer;
         //register on add widget channel
         var scope = this;
+
         this.eventingContainer.registerHandler(this.addWidgetChannelName, function (sender, msg) {
             var me = this;
 
@@ -29,10 +31,19 @@ Ozone.marketplace.AddWidgetContainer = function (eventingContainer, dashboardCon
                 me.callback && me.callback(result);
             });
         });
+
         this.eventingContainer.registerHandler(this.addStackChannelName, function (sender, msg) {
             var me = this;
             // Must return a value for the callback function to be invoked on the client side.
             return scope.addStack(Ozone.util.parseJson(sender), Ozone.util.parseJson(msg), function (result) {
+                me.callback && me.callback(result);
+            });
+        });
+
+        this.eventingContainer.registerHandler(this.launchStackChannelName, function (sender, msg) {
+            var me = this;
+
+            return scope.launchStack(Ozone.util.parseJson(sender), Ozone.util.parseJson(msg), function (result) {
                 me.callback && me.callback(result);
             });
         });
@@ -456,5 +467,45 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
     registerWindowManager:function (window_manager) {
         this.windowManager = window_manager;
+    },
+
+    launchStack: function(sender, config, launchedCallback) {
+        var me = this;
+
+        var findStack = function(stackContext) {
+            var result = null;
+
+            for (var i = 0, len = me.dashboardContainer.dashboardStore.getCount(); i < len; i++) {
+                var model = me.dashboardContainer.dashboardStore.getAt(i).data;
+
+                if (model.stack && model.stack.stackContext &&
+                    model.stack.stackContext == config.stackContext) {
+                    result = model.stack;
+                    break;
+                }
+            }
+
+            return result;
+        };
+
+        var targetStack = findStack(config.stackContext);
+
+        if (targetStack) {
+            me.dashboardContainer.activateDashboard(null, false, config.stackContext);
+            launchedCallback && launchedCallback(true);
+        } else {
+            // Reload from server and then select target stack
+            me.dashboardContainer.reloadDashboards(function() {
+                // Check if the desired stack was found
+                targetStack = findStack(config.stackContext);
+
+                if (targetStack) {
+                    // TODO: Handle stack with multiple pages
+                    launchedCallback && launchedCallback(true);
+                } else {
+                    launchedCallback && launchedCallback(false);
+                }
+            }, config.stackContext /* Will activate if found after load */);
+        }
     }
 };

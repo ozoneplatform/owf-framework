@@ -493,6 +493,8 @@ Ozone.util.isReservedChannel = function(channel) {
         if (channel.indexOf('_WIDGET_STATE_CHANNEL_') == 0 ||
                 channel == '_WIDGET_LAUNCHER_CHANNEL' ||
                 channel == '_ADD_WIDGET_CHANNEL' ||
+                channel == '_ADD_STACK_CHANNEL' ||
+                channel == '_LAUNCH_STACK_CHANNEL' ||
                 channel == '_dragStart' ||
                 channel == '_dragOverWidget' ||
                 channel == '_dragOutName' ||

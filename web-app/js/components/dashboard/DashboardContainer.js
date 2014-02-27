@@ -1798,11 +1798,15 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
     },
 
-    updateDashboardsFromStore: function(storeRecords, callbackOptions, loadSuccess, dashboardGuidToActivate) {
-
-        // ---------------------------------------------------------------------------------
-        // Update all dashboard-related components with newly-refreshed dashboardStore data.
-        // ---------------------------------------------------------------------------------
+    /**
+     * Update all dashboard-related components with newly-refreshed
+     * dashboardStore data.
+     * @private
+     * @param dashboardGuidToActivate GUID of dashboard to activate.
+     * @param stackContextToActivate Context ID of stack to activate. Will
+     * take precedence over dashboardGuidToActivate if found.
+     */
+    updateDashboardsFromStore: function(storeRecords, callbackOptions, loadSuccess, dashboardGuidToActivate, stackContextToActivate) {
         var me = this;
 
         if (storeRecords.length === 0 || (storeRecords.length === 1 && storeRecords[0].get("type") === "marketplace")) {
@@ -1837,14 +1841,28 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
 
                 var dsRecord = storeRecords[i1];
 
-                if (!dashboardGuidFound) {
-                    dashboardGuidFound = dashboardGuidToActivate === dsRecord.get('guid');
+                if (!dashboardGuidFound || stackContextToActivate) {
+                    var recordStack = dsRecord.get('stack');
+                    var recordGuid = dsRecord.get('guid');
 
-                    // OP-2799: Have to get the stack context from this record so the URL can change
-                    // correctly to the new dashboard when activated
-                    if (dashboardGuidFound) {
-                        stack = dsRecord.get('stack');
-                        stackContext = stack ? stack.stackContext : null;
+                    // stackContextToActivate takes precedence over
+                    // dashboardGuidToActivate
+                    if (stackContextToActivate && recordStack &&
+                        recordStack.stackContext &&
+                        recordStack.stackContext === stackContextToActivate) {
+                        // Force dashboard associated with target stack
+                        dashboardGuidToActivate = recordGuid;
+                        stackContext = stackContextToActivate;
+                        dashboardGuidFound = true;
+                    } else if (!dashboardGuidFound) {
+                        dashboardGuidFound = dashboardGuidToActivate === recordGuid;
+
+                        // OP-2799: Have to get the stack context from this
+                        // record so the URL can change correctly to the new
+                        // dashboard when activated
+                        if (dashboardGuidFound) {
+                            stackContext = recordStack ? recordStack.stackContext : null;
+                        }
                     }
                 }
 
@@ -1892,10 +1910,12 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
      * Reloads the dashboard store from the server.
      *
      * @param callback A callback function to execute when the
-     * load is complete.  This function is passed a boolean parameter indicating
-     * whether or not the refresh was successful
+     * load is complete. This function is passed a boolean parameter
+     * indicating whether or not the refresh was successful.
+     * @param stackContextToActivate Context ID of stack to activate. If
+     * null or not found the current dashboard will remain active.
      */
-    reloadDashboards: function(callback) {
+    reloadDashboards: function(callback, stackContextToActivate) {
         // TODO improvement: only restored dashboards should be refresh and deleted dashboard be removed
         var me = this;
 
@@ -1904,7 +1924,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 me.reloadStacks();
                 records = me.dashboardStore.data.items;
                 if (success == true) {
-                    me.updateDashboardsFromStore(records, options, success, me.activeDashboard.getGuid());
+                    me.updateDashboardsFromStore(records, options, success, me.activeDashboard.getGuid(), stackContextToActivate);
                 }
                 Ext.isFunction(callback) && callback(success);
             }
