@@ -486,7 +486,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 var model = me.dashboardContainer.stackStore.getAt(i).data;
 
                 if (model.stackContext &&
-                    model.stackContext == config.stackContext) {
+                    model.stackContext === stackContext) {
                     result = model;
                     break;
                 }
@@ -504,9 +504,11 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             // Handle stack with multiple pages
             if (stackModel.dashboards && stackModel.dashboards.length > 1) {
                 setTimeout(function() {
-                    me.dashboardContainer.showMyAppsWind().then(function(appsWindow) {
-                        appsWindow.focusActiveDashboard();
-                    });
+                    me.dashboardContainer.showMyAppsWind().then(
+                        function(appsWindow) {
+                            appsWindow.focusActiveDashboard();
+                        }
+                    );
                 }, activate ? 200 : 0);
             }
 
@@ -525,6 +527,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 targetStack = findStack(config.stackContext);
 
                 if (targetStack) {
+                    // The stack was already activated by the reload above
                     onStackLoaded(targetStack, false);
                 } else {
                     launchedCallback && launchedCallback(false);
