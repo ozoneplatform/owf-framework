@@ -1808,12 +1808,20 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
      */
     updateDashboardsFromStore: function(storeRecords, callbackOptions, loadSuccess, dashboardGuidToActivate, stackContextToActivate) {
         var me = this;
+        var updateDeferred = $.Deferred();
 
         if (storeRecords.length === 0 || (storeRecords.length === 1 && storeRecords[0].get("type") === "marketplace")) {
             me.createEmptyDashboard('desktop', true, function () {
-                me.updateDashboardsFromStore(storeRecords, callbackOptions, loadSuccess, dashboardGuidToActivate);
+                me.updateDashboardsFromStore(
+                    storeRecords, callbackOptions, loadSuccess,
+                    dashboardGuidToActivate, stackContextToActivate).then(
+                        function() {
+                            updateDeferred.resolve();
+                        }
+                    );
             });
-            return;
+
+            return updateDeferred.promise();
         }
 
         // Set default tab guid.
@@ -1903,7 +1911,11 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     dashboards[j].enableCssAnimations();
                 }
             }
+
+            updateDeferred.resolve();
         }, 200);
+
+        return updateDeferred.promise();
     },
 
     /**
@@ -1923,10 +1935,19 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             callback: function(records, options, success) {
                 me.reloadStacks();
                 records = me.dashboardStore.data.items;
-                if (success == true) {
-                    me.updateDashboardsFromStore(records, options, success, me.activeDashboard.getGuid(), stackContextToActivate);
+
+                var onCompletion = function() {
+                    Ext.isFunction(callback) && callback(success);
                 }
-                Ext.isFunction(callback) && callback(success);
+
+                if (success == true) {
+                    me.updateDashboardsFromStore(
+                        records, options, success,
+                        me.activeDashboard.getGuid(),
+                        stackContextToActivate).then(onCompletion);
+                } else {
+                    onCompletion();
+                }
             }
         });
 

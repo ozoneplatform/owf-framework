@@ -74,7 +74,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             animTargetBtn = "myAppsBtn";
         }
 
-        var visualizeAddition = function(definitionName) {
+        // fallbackToolTipText is only used if animations are disabled
+        var visualizeAddition = function(fallbackToolTipText) {
             var btn = Ext.getCmp(animTargetBtn);
             if(Modernizr.csstransitions && Modernizr.cssanimations) {
                 var listing = Ext.getCmp(sender.id),
@@ -104,19 +105,24 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     });
             }
             else {
-                var tip = Ext.create('Ext.tip.ToolTip', {
-                    html: definitionName + ' has been added successfully from AppsMall.',
-                    anchor: 'left',
-                    target: animTargetBtn,
-                    cls: 'focusTooltip',
-                    listeners: {
-                        hide: function () {
-                            tip.destroy();
-                        }
-                    }
-                });
                 btn.blink();
-                tip.show();
+
+                if (fallbackToolTipText) {
+                    var tip = Ext.create('Ext.tip.ToolTip', {
+                        html: fallbackToolTipText,
+                        anchor: 'left',
+                        target: animTargetBtn,
+                        cls: 'focusTooltip',
+                        listeners: {
+                            hide: function () {
+                                tip.destroy();
+                            }
+                        }
+                    });
+
+                    tip.show();
+                }
+
                 marketplaceCallback && marketplaceCallback(id);
             }
         };
@@ -154,7 +160,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     icon: false
                 });
 
-                addStackCallback && addStackCallback("The application");
+                addStackCallback && addStackCallback("The application has been added successfully from AppsMall.");
                 self.dashboardContainer.refreshAppComponentsView();
                 self.dashboardContainer.loadMask.hide();
             },
@@ -318,7 +324,6 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 // AML-2924 - This will display the dashboard switcher and add a listener to launch the widget if
                 // requested
 
-
                 var result = Ext.JSON.decode(response),
                     notifyText;
 
@@ -344,7 +349,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
                             } else {
                                 notifyText = "The App Component was successfully added.";
-                                addWidgetCallback && addWidgetCallback(widgetDefs.get(0).get('name'));
+                                addWidgetCallback && addWidgetCallback(widgetDefs.get(0).get('name') + ' has been added successfully from AppsMall.');
                             }
                         } else {
                             // Failure message
@@ -365,7 +370,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                         self.dashboardContainer.loadMask.hide();
                     });
 
-                }   else {
+                } else {
                     notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddWidget;
                     $.pnotify({
                         title: Ozone.layout.DialogMessages.added,
@@ -472,15 +477,17 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
     launchStack: function(sender, config, launchedCallback) {
         var me = this;
 
+        me.dashboardContainer.loadMask.show();
+
         var findStack = function(stackContext) {
             var result = null;
 
-            for (var i = 0, len = me.dashboardContainer.dashboardStore.getCount(); i < len; i++) {
-                var model = me.dashboardContainer.dashboardStore.getAt(i).data;
+            for (var i = 0, len = me.dashboardContainer.stackStore.getCount(); i < len; i++) {
+                var model = me.dashboardContainer.stackStore.getAt(i).data;
 
-                if (model.stack && model.stack.stackContext &&
-                    model.stack.stackContext == config.stackContext) {
-                    result = model.stack;
+                if (model.stackContext &&
+                    model.stackContext == config.stackContext) {
+                    result = model;
                     break;
                 }
             }
@@ -488,11 +495,29 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             return result;
         };
 
+        var onStackLoaded = function(stackModel, activate) {
+            if (activate) {
+                me.dashboardContainer.activateDashboard(null, false,
+                    stackModel.stackContext);
+            }
+
+            // Handle stack with multiple pages
+            if (stackModel.dashboards && stackModel.dashboards.length > 1) {
+                setTimeout(function() {
+                    me.dashboardContainer.showMyAppsWind().then(function(appsWindow) {
+                        appsWindow.focusActiveDashboard();
+                    });
+                }, activate ? 200 : 0);
+            }
+
+            launchedCallback && launchedCallback(true);
+            me.dashboardContainer.loadMask.hide();
+        }
+
         var targetStack = findStack(config.stackContext);
 
         if (targetStack) {
-            me.dashboardContainer.activateDashboard(null, false, config.stackContext);
-            launchedCallback && launchedCallback(true);
+            onStackLoaded(targetStack, true);
         } else {
             // Reload from server and then select target stack
             me.dashboardContainer.reloadDashboards(function() {
@@ -500,10 +525,13 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 targetStack = findStack(config.stackContext);
 
                 if (targetStack) {
-                    // TODO: Handle stack with multiple pages
-                    launchedCallback && launchedCallback(true);
+                    onStackLoaded(targetStack, false);
                 } else {
                     launchedCallback && launchedCallback(false);
+                    me.dashboardContainer.loadMask.hide();
+                    Ozone.Msg.alert(Ozone.layout.DialogMessages.error,
+                                    Ozone.util.ErrorMessageString.stackNotFound,
+                                    null, null, null);
                 }
             }, config.stackContext /* Will activate if found after load */);
         }

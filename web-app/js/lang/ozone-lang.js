@@ -334,7 +334,8 @@ Ozone.util.ErrorMessageString = {
     restrictedTagError: ' is a restricted tag.  You may not edit it or add it to other App Components',
     mpErrorTitle: 'Marketplace Error',
     mpErrorMsg: 'There has been an error accessing Marketplace. Please contact your System Administrator to verify that Marketplace connectivity has been correctly configured and that the Marketplace server is currently running.',
-    oneSingleton: 'Only one instance of a Singleton is permitted'
+    oneSingleton: 'Only one instance of a Singleton is permitted',
+    stackNotFound: 'Unable to find the selected App.'
 };
 
 Ozone.layout.MessageBoxButtonText = {
