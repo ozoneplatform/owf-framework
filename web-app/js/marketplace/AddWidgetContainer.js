@@ -515,7 +515,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
                             $.pnotify({
                                 title: Ozone.ux.DashboardMgmtString.selectDashboard,
-                                text: "The App has multiple pages. Please select one to open.",
+                                text: Ozone.layout.DialogMessages.marketplaceWindow_StackLaunchSelectPage,
                                 type: 'success',
                                 addclass: "stack-bottomright",
                                 stack: stack_bottomright,
