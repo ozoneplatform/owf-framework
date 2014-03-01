@@ -1862,6 +1862,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                         dashboardGuidToActivate = recordGuid;
                         stackContext = stackContextToActivate;
                         dashboardGuidFound = true;
+
+                        // Stop this check after first match
+                        stackContextToActivate = null;
                     } else if (!dashboardGuidFound) {
                         dashboardGuidFound = dashboardGuidToActivate === recordGuid;
 

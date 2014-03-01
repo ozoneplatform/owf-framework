@@ -507,13 +507,29 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     me.dashboardContainer.showMyAppsWind().then(
                         function(appsWindow) {
                             appsWindow.focusActiveDashboard();
+
+                            var stack_bottomright = {
+                                "dir1": "up", "dir2": "left",
+                                "firstpos1": 25, "firstpos2": 25
+                            };
+
+                            $.pnotify({
+                                title: Ozone.ux.DashboardMgmtString.selectDashboard,
+                                text: "The App has multiple pages. Please select one to open.",
+                                type: 'success',
+                                addclass: "stack-bottomright",
+                                stack: stack_bottomright,
+                                history: false,
+                                sticker: false,
+                                icon: false
+                            });
                         }
                     );
                 }, activate ? 200 : 0);
             }
 
-            launchedCallback && launchedCallback(true);
             me.dashboardContainer.loadMask.hide();
+            launchedCallback && launchedCallback(true);
         }
 
         var targetStack = findStack(config.stackContext);
@@ -530,8 +546,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     // The stack was already activated by the reload above
                     onStackLoaded(targetStack, false);
                 } else {
-                    launchedCallback && launchedCallback(false);
                     me.dashboardContainer.loadMask.hide();
+                    launchedCallback && launchedCallback(false);
                     Ozone.Msg.alert(Ozone.layout.DialogMessages.error,
                                     Ozone.util.ErrorMessageString.stackNotFound,
                                     null, null, null);
