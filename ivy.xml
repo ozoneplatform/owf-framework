@@ -19,11 +19,11 @@
         <dependency org="${tomcat.custom.org}" name="${tomcat.custom.module}" rev="${tomcat.custom.rev}" transitive="false" >
             <artifact name="${tomcat.custom.module}" type="zip" />
         </dependency>
-        <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}" rev="${owf.security.rev}" changing="true" transitive="false" />
-        <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}-project" rev="${owf.security.rev}" changing="true" transitive="false">
+        <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}" rev="${owf.security.rev}" transitive="false" />
+        <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}-project" rev="${owf.security.rev}" transitive="false">
             <artifact name="${owf.security.module}-project" type="zip" />
         </dependency>
-        <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}-extras" rev="${owf.security.rev}" changing="true" transitive="false">
+        <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}-extras" rev="${owf.security.rev}" transitive="false">
             <artifact name="${owf.security.module}-extras" type="zip" />
         </dependency>
         <dependency org="ozone-widgeting-framework-legacy" name="OWFAntTasks" rev="1.0.0"  />
