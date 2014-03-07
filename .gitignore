@@ -70,3 +70,7 @@ Thumbs.db
 /*.ipr
 atlassian-ide-plugin.xml
 .*.swp
+
+Vagrantfile
+/.vagrant/*
+/lib/access-1.0.jar
