@@ -95,14 +95,22 @@ class ConfigController {
         }
 
         // whether the show animations user preference exists
-        def showAnimations = false
+        def showAnimations = false,
+            showHints = false
+
         try {
             def showAnimationsPreference = preferenceService.showForUser([
                 namespace: "owf",
                 path: "show-animations"
             ]);
+            def showHintsPreference = preferenceService.showForUser([
+                namespace: "owf",
+                path: "show-hints"
+            ]);
             showAnimations =
                 (showAnimationsPreference?.preference) ? (true) : (false)
+            showHints =
+                (showHintsPreference?.preference) ? (true) : (false)
         }
         catch(OwfException owe) {
             handleError(owe)
@@ -111,6 +119,7 @@ class ConfigController {
         conf.currentTheme = theme
         conf.user = curUserResult
         conf.showAnimations = showAnimations
+        conf.showHints = showHints
 
         def initialData = getInitialData()
 
