@@ -24,7 +24,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         "isdefault": false,
         "locked": false,
         "guid": null,
-        //todo remove this in favor of using the actual store   
+        //todo remove this in favor of using the actual store
         "state": null
     },
     hideMode: 'visibility',
@@ -183,7 +183,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                     me.handleMarketplaceWidgetClose();
                 }
             });
-        }           
+        }
     },
 
     afterDashboardLayout: function() {
@@ -267,13 +267,12 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
             // On node drop we can interrogate the target to find the underlying
             // application object that is the real target of the dragged data.
-            onNodeDrop: function(target, dd, coordinates, data) {
+            onNodeDrop: function(target, dd, evt, data) {
                 if (me.configRecord.isMarketplaceDashboard()) {
-                    me.dashboardContainer.selectDashboardAndLaunchWidgets(data.widgetModel, true);
+                    me.dashboardContainer.selectDashboardAndLaunchWidgets(evt, data.widgetModel, true);
                 } else {
-                    me.launchWidgets(target, dd, coordinates, data);
+                    me.launchWidgets(target, dd, evt, data);
                 }
-
             }
         });
 
@@ -611,7 +610,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 return this.refreshWidgetLaunchMenu();
             case 'refreshDashboardStore':
                 var title = config.title || Ozone.layout.DialogMessages.refreshRequiredTitle;
-                
+
                 $.pnotify({
                     title: title,
                     text: Ozone.layout.DialogMessages.refreshRequiredBody,
@@ -779,7 +778,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             else {
                 widget.close();
             }
-            
+
             return true;
         }
         return false;
@@ -955,11 +954,11 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 onShow();
             }
         }
-        
+
         $('.widgetMenuItem').hide();
         if(this.config.type)
         	$('.'+this.config.type+'MenuItem').show();
-        
+
     },
 
     onDeActivate: function(cmp) {

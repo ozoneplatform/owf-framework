@@ -399,11 +399,54 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         delete this._paneWidgetsBox;
     },
 
+    showWidgetDragProxy: function (evt, widgetModel) {
+        if(!evt) {
+            return;
+        }
+        var template = Handlebars.compile(
+            '<div class="widget">' +
+                '<div class="thumb-wrap">' +
+                    '<img onerror="this.src="themes/common/images/settings/WidgetsIcon.png"" src="{{image}}" class="thumb">' +
+                '</div>' +
+                '<div class="thumb-text ellipsis" style="word-wrap: break-word;">{{name}}</div>' +
+            '</div>'
+        );
+        var $document = $(document),
+            $dragProxy = $(template(widgetModel.attributes));
+
+        function updateProxy (evt) {
+            var pageX, pageY;
+
+            pageX = evt instanceof Ext.EventObjectImpl ? evt.getPageX() : evt.pageX;
+            pageY = evt instanceof Ext.EventObjectImpl ? evt.getPageY() : evt.pageY;
+
+            $dragProxy.css({
+                'z-index': 10000000,
+                'position': 'absolute',
+                'left': (pageX + 25) + 'px',
+                'top': (pageY + 25) + 'px'
+            });
+            return $dragProxy;
+        }
+
+        $document
+            .on('mousemove.dragProxy', updateProxy)
+            .on('mouseup.dragProxy', function () {
+                $dragProxy.remove();
+                $document.off('dragProxy');
+            });
+        $('body').append(updateProxy(evt));
+    },
+
     /*
      * Launches widget on the current dashboard.
      */
-    launchWidgets: function(widgetModel, isEnterPressed, isDragAndDrop) {
+    launchWidgets: function(evt, widgetModel, isEnterPressed, isDragAndDrop) {
         var me = this;
+
+        if(!isDragAndDrop) {
+            this.showWidgetDragProxy(evt, widgetModel);
+        }
 
         return me.selectPane(isEnterPressed, isDragAndDrop).then(function(pane, e) {
             me.activeDashboard.launchWidgets(pane, null, e, {
@@ -420,13 +463,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     /*
      * Launches widget on a dashboard that user selects from Dashboard Switcher.
      */
-    selectDashboardAndLaunchWidgets: function(widgetModel, isEnterPressed) {
+    selectDashboardAndLaunchWidgets: function(evt, widgetModel, isEnterPressed) {
         var me = this;
 
         // Display dashboard switcher and launch widgets after the user selects a dashboard
         var dashboardSelectionPromise = me.selectDashboard();
-        dashboardSelectionPromise.done(function() {
-            me.launchWidgets(widgetModel, isEnterPressed);
+        dashboardSelectionPromise.done(function(evt, dashboardId) {
+            me.launchWidgets(evt, widgetModel, isEnterPressed);
         });
 
         // Show a notification with instructions for selecting a dashboard
@@ -1024,14 +1067,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         myAppsWindowPromise.done(function(myAppsWindow) {
             // Dashboard selection promise will resolve if a dashboard is selected in a switcher
             var dashboardSelectionPromise = myAppsWindow.getDashboardSelectionPromise();
-            dashboardSelectionPromise.done(function(dashboardGuid) {
+            dashboardSelectionPromise.done(function(evt, dashboardGuid) {
                 if (me.activeDashboard.guid === dashboardGuid) {
                     // The user selected the same dashboard
-                    dashboardActivatedDeferred.resolve();
+                    dashboardActivatedDeferred.resolve(evt, dashboardGuid);
                 } else {
                     // The user selected different dashboard, wait for it becoming active
                     me.addListener(OWF.Events.Dashboard.CHANGED, function() {
-                        dashboardActivatedDeferred.resolve();
+                        dashboardActivatedDeferred.resolve(evt, dashboardGuid);
                     })
                 }
 

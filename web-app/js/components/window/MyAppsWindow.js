@@ -827,14 +827,14 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
         	return;
         } else {
-            this.launchDashboard(dashboard);
+            this.launchDashboard(evt, dashboard);
         }
     },
 
-    launchDashboard: function(dashboard) {
+    launchDashboard: function(evt, dashboard) {
         var stackContext = dashboard.stack ? dashboard.stack.stackContext : null;
 
-        this.dashboardSelectionDeferred && this.dashboardSelectionDeferred.resolve(dashboard.guid);
+        this.dashboardSelectionDeferred && this.dashboardSelectionDeferred.resolve(evt, dashboard.guid);
         this.dashboardSelectionDeferred = null;
 
         this.activateDashboard(dashboard.guid, stackContext);
@@ -881,7 +881,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
             if( stack ) {
                 if (stack.dashboards && stack.dashboards.length === 1) {
-                    me.launchDashboard(stack.dashboards[0])
+                    me.launchDashboard(evt, stack.dashboards[0])
                 } else {
                     me.toggleStack(stack, $clickedStack);
                 }

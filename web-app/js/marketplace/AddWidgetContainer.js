@@ -444,7 +444,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
                 self.dashboardContainer.saveDashboard(dashboard.data, 'create', function(json) {
                     self.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
-                        self.dashboardContainer.launchWidgets(widgetDef, true);
+                        self.dashboardContainer.launchWidgets(null, widgetDef, true);
                         self.dashboardContainer.activeDashboard.config.locked = true;
                         self.dashboardContainer.saveDashboard(self.dashboardContainer.activeDashboard, 'update', function() {});
                         self.dashboardContainer.getBanner().disableAppComponentsBtn();
@@ -457,10 +457,10 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_WebappLaunchSuccessful;
             }
         } else {
-
             var dashboardSelectionPromise = self.dashboardContainer.selectDashboard();
-            dashboardSelectionPromise.done(function() {
-                self.dashboardContainer.launchWidgets(widgetDef, true);
+            dashboardSelectionPromise.done(function(evt, dashboardId) {
+                var model = OWF.Collections.AppComponents.findWhere({widgetGuid: widgetDef.data.widgetGuid});
+                self.dashboardContainer.launchWidgets(evt, model, true, false);
             });
 
             notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;

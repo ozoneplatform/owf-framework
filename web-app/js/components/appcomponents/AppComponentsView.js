@@ -127,12 +127,12 @@
             this.carousel.filter(query);
         },
 
-        launch: function (app, isEnterPressed, isDragAndDrop) {
+        launch: function (evt, view, isEnterPressed, isDragAndDrop) {
             var me = this;
 
             me.hide();
             me.dashboardContainer
-                .launchWidgets(app, isEnterPressed, isDragAndDrop)
+                .launchWidgets(evt, view.model, isEnterPressed, isDragAndDrop)
                 .always(function () {
                     // only show if pinned
                     if(me.pinned) {
@@ -270,12 +270,12 @@
         // debounce to prevent double-click from launching widget twice
         _onDblClick: _.debounce(function (evt) {
             var me = this,
-                model = $(evt.currentTarget).data('view').model;
+                view = $(evt.currentTarget).data('view');
 
             // delay call to launch to allow click event to bubble up so that it is not
             // considered as a pane click
             setTimeout(function () {
-                me.launch(model, false, false);
+                me.launch(evt, view, false, false);
             }, 200);
 
         }, 201, {
@@ -301,7 +301,7 @@
                         cursorAt: { left: -5, top: -25 },
 
                         start: function(evt, ui) {
-                            var model = ui.item.data('view').model;
+                            var view = ui.item.data('view');
                             me._sorting = true;
 
                             //OP-2183 Remove the drag proxy's details icon and remove the height style so it resizes
@@ -316,7 +316,7 @@
                             $doc.one('mousemove.launch', '.shim', function (evt) {
                                 me._sorting = false;
                                 me._launching = true;
-                                me.launch(model, false, true);
+                                me.launch(evt, view, false, true);
                             });
                         },
 

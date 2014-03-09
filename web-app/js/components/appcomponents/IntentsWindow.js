@@ -109,14 +109,14 @@
             }
         },
 
-        launch: function (model, isEnterPressed, isDragAndDrop) {
+        launch: function (evt, model, isEnterPressed, isDragAndDrop) {
             this.hide();
 
             if(this.isShowingOpenInstances) {
                 this.dashboardContainer.activeDashboard.handleAlreadyLaunchedWidget(model.attributes);
             }
             else {
-                this.dashboardContainer.launchWidgets(model, isEnterPressed, isDragAndDrop);
+                this.dashboardContainer.launchWidgets(evt, model, isEnterPressed, isDragAndDrop);
             }
         },
 
@@ -182,8 +182,8 @@
 
             evt.preventDefault();
 
-            me.$el.on('mouseleave.launch', function () {
-                me.launch(model, false, true);
+            me.$el.on('mouseleave.launch', function (evt) {
+                me.launch(evt, model, false, true);
             });
 
             $doc.on('mousemove.launch', function (evt) {
@@ -217,7 +217,7 @@
 
         _onComponentClick: function (evt) {
             var model = $(evt.currentTarget).data('view').model;
-            this.launch(model, false, false);
+            this.launch(evt, model, false, false);
         },
 
         _onRememberClick: function (evt) {
