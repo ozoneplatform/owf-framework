@@ -14,6 +14,7 @@ Ext.define('Ozone.components.dashboarddesigner.LayoutType', {
 		'<tpl for=".">',
 			'<div class="layout" tabindex="0">',
 				'<img height="100" width="100" src="{image}" alt="{imageBase}"></img>',
+				'<p align="center">{imageTitle}</p>',
 			'</div>',
 		'</tpl>'
 	),
@@ -25,31 +26,36 @@ Ext.define('Ozone.components.dashboarddesigner.LayoutType', {
 				paneType:'accordionpane',
 				displayName:Ozone.ux.DashboardMgmtString.accordion,
 				image: 'images/dashboard-designer/accordion.png',
-                imageBase: 'accordion'
+                imageBase: 'accordion',
+                imageTitle: 'Accordion'
 			},
 			{
 				paneType:'desktoppane',
 				displayName:Ozone.ux.DashboardMgmtString.desktop,
 				image: 'images/dashboard-designer/desktop.png',
-                imageBase: 'desktop'
+                imageBase: 'desktop',
+                imageTitle: 'Desktop'
 			},
 			{
 				paneType:'portalpane',
 				displayName:Ozone.ux.DashboardMgmtString.portal,
 				image: 'images/dashboard-designer/portal.png',
-                imageBase: 'portal'
+                imageBase: 'portal',
+                imageTitle: 'Portal'
 			},
 			{
 				paneType:'tabbedpane',
 				displayName:Ozone.ux.DashboardMgmtString.tabbed,
 				image: 'images/dashboard-designer/tabbed.png',
-                imageBase: 'tabbed'
+                imageBase: 'tabbed',
+                imageTitle: 'Tabbed'
 			},
             {
                 paneType:'fitpane',
                 displayName:Ozone.ux.DashboardMgmtString.fit,
                 image: 'images/dashboard-designer/fit.png',
-                imageBase: 'fit'
+                imageBase: 'fit',
+                imageTitle: 'Fitpane'
             }
 		]
 	})
