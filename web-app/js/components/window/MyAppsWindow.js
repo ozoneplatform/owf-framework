@@ -11,7 +11,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     ui: 'system-window',
     store: null,
     closable: true,
-    title: 'My Apps',
+    title: '<strong>My Apps</strong>',
     cls: 'system-window',
 
     resizable: false,

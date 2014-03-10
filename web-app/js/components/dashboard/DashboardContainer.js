@@ -363,7 +363,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             this.ddProxy.show();
             this.ddProxy.hide();
 
-            this.activeDashboard.enableWidgetMove(targetPane);
+            this.activeDashboard.enableWidgetMove(targetPane, true);
         }
     },
 
@@ -444,7 +444,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     launchWidgets: function(evt, widgetModel, isEnterPressed, isDragAndDrop) {
         var me = this;
 
-        if(!isDragAndDrop) {
+        if(!isDragAndDrop && this.activeDashboard.panes.length > 1) {
             this.showWidgetDragProxy(evt, widgetModel);
         }
 
@@ -507,7 +507,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             deferred.resolve(panes[0]);
         } else {
 
-            this.activeDashboard.enableWidgetMove(isUsingKeyboard === true && panes[0]);
+            this.activeDashboard.enableWidgetMove(isUsingKeyboard === true && panes[0], isDragAndDrop);
 
             doc.on('keydown', this._selectPaneOnKeyDown, this, {
                 capture: true,
@@ -977,10 +977,16 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     showMyAppsWindToSelectForWidgetLaunch: function() {
-        return this.showMyAppsWind(true);
+        return this.showMyAppsWind(true, {
+            title: '<strong>Click the App</strong> where you want the App Component to start'
+        }).done(function (myAppsWindow) {
+            var $el = $(myAppsWindow.body.dom);
+            $el.children('.my-apps-window-descriptor').css('visibility', 'hidden');
+            $el.children('.actions').css('visibility', 'hidden');
+        });
     },
 
-    showMyAppsWind: function(hideLockedDashboards) {
+    showMyAppsWind: function(hideLockedDashboards, options) {
         var me = this,
             myAppsWindowId = this.MY_APPS_WINDOW_ID,
             myAppsWindow = Ext.getCmp(myAppsWindowId),
@@ -996,14 +1002,14 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                     myAppsWindow.destroy();
                 }
 
-                myAppsWindow = Ext.widget('myappswindow', {
+                myAppsWindow = Ext.widget('myappswindow', _.extend({}, options, {
                     id: myAppsWindowId,
                     dashboardContainer: me,
                     activeDashboard: me.activeDashboard,
                     dashboardStore: me.dashboardStore,
                     hideLockedDashboards: hideLockedDashboards,
                     plugins: new Ozone.components.keys.HotKeyComponent(Ozone.components.keys.HotKeys.DASHBOARD_SWITCHER)
-                });
+                }));
 
                 myAppsWindow.activeDashboard = me.activeDashboard;
                 myAppsWindow.show().center();

@@ -1043,33 +1043,32 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     },
 
     //Enables widget move to all but the sourcePane that originated the drag
-    enableWidgetMove: function(sourcePane) {
+    enableWidgetMove: function(sourcePane, isDragAndDrop) {
         var panes = this.panes,
             isLocked = this.configRecord.get("locked");
 
         this.shimPanes();
 
         if(!isLocked) {
-            var $shims = $('.shim', this.el.dom),
-                $doc = $(document);
+            var el = this.el.dom,
+                $shims = $('.shim', el),
+                $doc = $(document),
+                $innerShims, hintText;
 
-            // TODO: find out why does this not work in IE7
-            // $shims.on('mousemove.launch', function () {
-            //     $shims.addClass('highlight-dashboard-designer-drop');
-            //     $(this).removeClass('highlight-dashboard-designer-drop');
-            // });
+            hintText = isDragAndDrop ? 'Drag and release to start the App Component' : 'Click to start the App Component';
+            $shims.before('<div class="inner-shim"></div><div class="hint-text">' + hintText + '</div>')
+            $innerShims = $('.inner-shim', el);
 
             $doc.on('mousemove.launch', '.shim', function (evt) {
-                $shims.addClass('highlight-dashboard-designer-drop');
-                $(evt.target).removeClass('highlight-dashboard-designer-drop');
+                $innerShims.addClass('highlight-dashboard-designer-drop');
+                $innerShims.siblings('.hint-text').css('display', 'none');
+                $(evt.target).siblings('.inner-shim').removeClass('highlight-dashboard-designer-drop').siblings('.hint-text').css('display', '');
             });
 
             $doc.one('mouseup', function () {
                 $doc.off('.launch');
-
-                $shims
-                    .removeClass('highlight-dashboard-designer-drop')
-                    .off('.launch');
+                $shims.removeClass('highlight-dashboard-designer-drop');
+                $('.hint-text, .inner-shim', el).remove();
             });
 
             if(sourcePane && sourcePane.el) {

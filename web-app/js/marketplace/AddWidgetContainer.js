@@ -325,6 +325,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 // requested
 
                 var result = Ext.JSON.decode(response),
+                    notifyTitle = Ozone.layout.DialogMessages.added,
                     notifyText;
 
                 if (result.success) {
@@ -346,7 +347,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                                 var widgetDef = widgetDefs.get(0);
 
                                 notifyText = self.launchWidget(widgetDef, doLaunchCallback);
-
+                                notifyTitle = 'Choose an App to Start App Component'
                             } else {
                                 notifyText = "The App Component was successfully added.";
                                 addWidgetCallback && addWidgetCallback(widgetDefs.get(0).get('name') + ' has been added successfully from AppsMall.');
@@ -357,7 +358,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                         }
                         //Display the message
                         notifyText && $.pnotify({
-                            title: Ozone.layout.DialogMessages.added,
+                            title: notifyTitle,
                             text: notifyText,
                             type: 'success',
                             addclass: "stack-bottomright",
@@ -373,7 +374,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 } else {
                     notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddWidget;
                     $.pnotify({
-                        title: Ozone.layout.DialogMessages.added,
+                        title: notifyTitle,
                         text: notifyText,
                         type: 'success',
                         addclass: "stack-bottomright",
