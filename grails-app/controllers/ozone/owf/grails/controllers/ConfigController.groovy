@@ -109,8 +109,9 @@ class ConfigController {
             ]);
             showAnimations =
                 (showAnimationsPreference?.preference) ? (true) : (false)
+
             showHints =
-                (showHintsPreference?.preference) ? (true) : (false)
+                (showHintsPreference?.preference == null || showHintsPreference?.preference.value == 'true') ? (true) : (false)
         }
         catch(OwfException owe) {
             handleError(owe)

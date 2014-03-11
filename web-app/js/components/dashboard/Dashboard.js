@@ -1056,13 +1056,13 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 $innerShims, hintText;
 
             hintText = isDragAndDrop ? 'Drag and release to start the App Component' : 'Click to start the App Component';
-            $shims.before('<div class="inner-shim"></div><div class="hint-text">' + hintText + '</div>')
+            $shims.before('<div class="inner-shim"></div><div class="hint-text">' + hintText + '</div>');
             $innerShims = $('.inner-shim', el);
 
             $doc.on('mousemove.launch', '.shim', function (evt) {
                 $innerShims.addClass('highlight-dashboard-designer-drop');
                 $innerShims.siblings('.hint-text').css('display', 'none');
-                $(evt.target).siblings('.inner-shim').removeClass('highlight-dashboard-designer-drop').siblings('.hint-text').css('display', '');
+                $(evt.target).siblings('.inner-shim').removeClass('highlight-dashboard-designer-drop').siblings('.hint-text').css('display', Ozone.config.showHints ? '' : 'none');
             });
 
             $doc.one('mouseup', function () {

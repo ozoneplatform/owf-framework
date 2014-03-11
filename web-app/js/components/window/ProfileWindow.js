@@ -139,7 +139,7 @@ Ext.define('Ozone.components.window.ProfileWindow', {
                   ),
                   renderData: {
                     animations: ((Ozone.config.showAnimations) ? ('checked="checked"') : ('')),
-                    hints: ((Ozone.config.hints) ? ('checked="checked"') : (''))
+                    hints: ((Ozone.config.showHints) ? ('checked="checked"') : (''))
                   }
                 }
               ],
@@ -152,23 +152,13 @@ Ext.define('Ozone.components.window.ProfileWindow', {
                     var $checkbox = $(evt.target),
                         name = $checkbox.attr('name');
 
-                    if ($checkbox.is(':checked')) {
-                      Ozone.pref.PrefServer.setUserPreference({
-                        namespace: "owf",
-                        name: name,
-                        value: true,
-                        onSuccess: $.noop,
-                        onFailure: $.noop
-                      });
-                    }
-                    else {
-                      Ozone.pref.PrefServer.deleteUserPreference({
-                        namespace: "owf",
-                        name: name,
-                        onSuccess: $.noop,
-                        onFailure: $.noop
-                      });
-                    }
+                    Ozone.pref.PrefServer.setUserPreference({
+                      namespace: "owf",
+                      name: name,
+                      value: $checkbox.is(':checked'),
+                      onSuccess: $.noop,
+                      onFailure: $.noop
+                    });
 
                     // let the user know that refreshing
                     // the browser would be a good idea
