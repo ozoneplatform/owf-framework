@@ -230,7 +230,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         widget = widget.card || widget;
 
         //Return if not a widget or is floating
-        if (!widget.isWidget || widget.floatingWidget) {
+        if (!widget.isWidget || widget.floatingWidget || this.activeDashboard.panes.length === 1) {
             return;
         }
 
