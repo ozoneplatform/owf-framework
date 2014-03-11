@@ -14,7 +14,7 @@ Ext.define('Ozone.components.dashboarddesigner.BaseLayout', {
 		'<tpl for=".">',
 			'<div class="layout-type" tabindex="0">',
 				'<img height="100" width="100" src="{image}" alt="{type}"></img>',
-				'<p align="center">{displayName}</p>',
+				'<p align="center" style="text-size:11px;">{displayName}</p>',
 			'</div>',
 		'</tpl>'
 	),
