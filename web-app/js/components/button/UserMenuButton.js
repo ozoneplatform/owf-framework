@@ -261,14 +261,6 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                     me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceThemes');
                 }, me)
             }, {
-                text: 'My Listings',
-                id: 'marketplaceMyListings',
-                height: 25,
-                clickable: true,
-                handler: Ext.bind(function(evt, obj) {
-                    me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceMyListings');
-                }, me)
-            }, {
                 text: 'Create Listing',
                 id: 'marketplaceCreateListing',
                 height: 25,
