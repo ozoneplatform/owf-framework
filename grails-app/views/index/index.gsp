@@ -80,10 +80,10 @@
 
         <!-- bring in custom header/footer resources -->
         <g:each in="${grailsApplication.mainContext.getBean('customHeaderFooterService').jsImportsAsList}" var="jsImport">
-            <script type="text/javascript" src="${jsImport.encodeAsURL().encodeAsHTML()}"></script>
+            <script type="text/javascript" src="${jsImport.encodeAsHTML()}"></script>
         </g:each>
         <g:each in="${grailsApplication.mainContext.getBean('customHeaderFooterService').cssImportsAsList}" var="cssImport">
-            <link rel="stylesheet" href="${cssImport.encodeAsURL().encodeAsHTML()}" type="text/css" />
+            <link rel="stylesheet" href="${cssImport.encodeAsHTML()}" type="text/css" />
         </g:each>
 
         <!-- language switching -->
