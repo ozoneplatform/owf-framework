@@ -249,16 +249,6 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 return e.getTarget('.shim');
             },
 
-            // On entry into a target node, highlight that node.
-            onNodeEnter: function(target, dd, e, data) {
-                Ext.fly(target).addCls('highlight-dashboard-designer-drop');
-            },
-
-            // On exit from a target node, unhighlight that node.
-            onNodeOut: function(target, dd, e, data) {
-                Ext.fly(target).removeCls('highlight-dashboard-designer-drop');
-            },
-
             // While over a target node, return the default drop allowed class which
             // places a "tick" icon into the drag proxy.
             onNodeOver: function(target, dd, e, data) {

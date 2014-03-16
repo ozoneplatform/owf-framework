@@ -141,7 +141,12 @@
 
 // OWF-6185: IE 7 crashes when certain configurations of the dashboard are attempted.
 .x-ie78 {
-	.highlight-dashboard-designer-drop {
+
+	.inner-shim {
+		background-color: transparent!important;
+	}
+
+	.inner-shim.highlight-dashboard-designer-drop {
 		background-color: $dashboard-designer-drop-shim-ie78-background-color !important;
 	}
 
