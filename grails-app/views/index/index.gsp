@@ -1,5 +1,13 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html; UTF-8" %>
+<%
+    String query = request.getQueryString();
+
+    if (query && query.toLowerCase().contains("csp-debug=true")) {
+        response.addHeader("Content-Security-Policy-Report-Only",
+                           "default-src 'self';")
+    }
+ %>
 <html>
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
