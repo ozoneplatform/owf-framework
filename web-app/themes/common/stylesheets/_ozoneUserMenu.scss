@@ -1,0 +1,80 @@
+#userMenuBtn {
+  margin: 0px;
+}
+
+.user-menu {
+
+  font-size: 1.1em;
+
+  .dropdown-menu {
+    left: auto;
+    right: 0px;
+
+    background-color: $owf-usermenu-background-color;
+    color: $owf-usermenu-color;
+
+    .divider {
+      border: 0.5px solid $owf-usermenu-color;
+      margin: 5px 1px;
+    }
+  }
+
+  .btn {
+    background-color: rgba(#000, 0);
+    color: $owf-usermenu-btn-color;
+    border-style: none;
+    padding: 0px 5px;
+    height: 32px;
+    min-width: 96px;
+
+    &:hover,&:focus {
+      border-style: none;
+      background-color: rgba(#000, 0);
+      color: $owf-usermenu-btn-color;
+    }
+  }
+
+  ul {
+    margin: 10px;
+  }
+
+  .logout-link {
+    margin: 10px;
+    cursor: pointer;
+  }
+}
+
+.user-menu-group {
+
+  .user-menu-item {
+    margin: 5px 0px 0px 5px;
+    cursor: pointer;
+  }
+
+  &.collapsed {
+    .collapse-toggle {
+      &:before {
+        @extend .icon-chevron-up:before;
+      }
+    }
+
+    .user-menu-item {
+      display: none;
+    }
+  }
+}
+
+.group-header {
+  .collapse-toggle {
+    cursor: pointer;
+    float: right;
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1.0em;
+
+    &:before {
+      @extend .icon-chevron-down:before;
+    }
+  }
+}

@@ -223,11 +223,17 @@ Ext.define('Ozone.components.banner.Banner', /** @lends Ozone.components.Banner.
 
         me.addKeyBindings();
 
-        var bannerRightItems = [{
+
+        var bannerRightItems = [/*{
             xtype: 'usermenubutton',
             arrowCls: '',
             id: 'userMenuBtn',
             height: '100%',
+            user: this.user,
+            dashboardContainer: this.dashboardContainer
+        }*/{
+            xtype: 'usermenubutton',
+            id: 'userMenuBtn',
             user: this.user,
             dashboardContainer: this.dashboardContainer
         }];
