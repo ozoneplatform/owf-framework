@@ -146,9 +146,9 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                                 } else {
                                     var loading = this.getComponent('descriptorUrlLoading');
                                     var field = this.getComponent('descriptorUrl');
-                                    if (this.xhr) {
+                                    /*if (this.xhr) {
                                         this.xhr.cancel();
-                                    }
+                                    }*/ // TODO: Remove cancel
                                     loading.hide();
                                     field.enable();
                                     btn.setText('Load');
@@ -485,10 +485,8 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
         field.disable();
         component.showProperties(false);
         loading.show();
-        component.xhr = Ozone.util.Transport.send({
+        Ozone.util.Transport.getDescriptor({
             url: text,
-            method: "GET",
-            forceXdomain: true,
             onSuccess: Ext.bind(component.updatePropertiesFromDescriptor, component),
             onFailure: function (json) {
                 if (component.record) {
@@ -501,8 +499,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                 field.enable();
                 btn.setText('Load');
                 component.getComponent('descriptorUrlErrorMsg').show();
-            },
-            autoSendVersion: false
+            }
         });
         btn.setText('Cancel');
         //Disable the apply button while descriptor is loading
