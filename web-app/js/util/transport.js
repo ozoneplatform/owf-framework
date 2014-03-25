@@ -536,7 +536,7 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
 
                 var el = document.createElement("div");
                 el.innerHTML = response;
-                
+
                 var scriptTags = el.getElementsByTagName("script");
 
                 if (scriptTags && scriptTags.length) {
@@ -544,7 +544,7 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
                     for (var i = 0; i < scriptTags.length; i++) {
                         scripts += scriptTags[i].innerHTML;
                     }
-                    
+
                     var getWindowNameFunc = '';
                     getWindowNameFunc = 'var window = {};var Ozone = {};var owfdojo={};var Ext={};';
 
@@ -554,12 +554,25 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
                     getWindowNameFunc += scripts;
                     getWindowNameFunc += 'return window.name;';
 
+                    // Marketplace descriptor has code that attempts to
+                    // modify the page header element; remove it.
+                    getWindowNameFunc = getWindowNameFunc.replace(
+                        /document\.getElementById[^;]*;/g, '');
+
                     try {
                         responseJson = (new Function('a', getWindowNameFunc))(a);
                         responseJson = Ozone.util.parseJson(responseJson);
                     }
                     catch(e) {
                         responseJson = null;
+
+                        if (Ozone.log) {
+                            Ozone.log.getDefaultLogger().error(
+                                'Unable to execute descriptor JavaScript.' +
+                                ' ERROR = ' + e);
+                            Ozone.log.getDefaultLogger().debug(
+                                'SCRIPT = "' + getWindowNameFunc + '"');
+                        }
                     }
 
                     if (responseJson && responseJson.data) {
