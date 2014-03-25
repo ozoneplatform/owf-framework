@@ -469,7 +469,29 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         var launchWidget = null,
             specifiedWidget = null,
             responseObj,
-            pane = Ext.getCmp(sender.id).pane;
+            currentPane = Ext.getCmp(sender.id).pane,
+            targetPane = currentPane,
+            targetPaneId = launchConfig.pane;
+
+        if(targetPaneId && this.panes.length > 1) {
+            if(targetPaneId === 'sibling') {
+                var siblingPane = targetPane.next() ? targetPane.next().next() : targetPane.prev().prev();
+
+                targetPane = siblingPane.xtype === 'container' ? siblingPane.items.items[0] : siblingPane;
+            }
+            else {
+                targetPane = _.findWhere(this.panes, {
+                    id: targetPaneId
+                });
+            }
+        }
+
+        // if target is not found, use current pane.
+        if(!targetPane) {
+            targetPane = currentPane;
+            targetPaneId = targetPane.id;
+            console.warn('Pane with id ' + targetPaneId + ' is not found, launching widget in the same pane.');
+        }
 
         specifiedWidget = this.findWidget(launchConfig);
 
@@ -508,7 +530,8 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             }
 
             // Determine which pane widget was last opened in
-            if (!pane.isXType('fitpane')) {
+            // only if, target pane isn't specified
+            if (!targetPane.isXType('fitpane') && !targetPaneId) {
                 if (this.panes && this.panes.length > 1) {
                     var widgetState, latest, latestPane;
                     for (var i = 0, len = this.panes.length; i < len; i++) {
@@ -528,7 +551,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
                     // If a pane is found, launch in that one
                     if (latestPane) {
-                        pane = latestPane;
+                        targetPane = latestPane;
                     }
                 }
             }
@@ -554,15 +577,16 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
             if (launchWidget == null) {
                 var uniqueId = guid.util.guid();
-                if (pane.fireEvent(OWF.Events.Widget.BEFORE_LAUNCH, pane, specifiedWidget, launchConfig.data) !== false) {
-                    pane.launchWidget(specifiedWidget, null, null, uniqueId, launchConfig.data, true);
+                if (targetPane.fireEvent(OWF.Events.Widget.BEFORE_LAUNCH, targetPane, specifiedWidget, launchConfig.data) !== false) {
+                    targetPane.launchWidget(specifiedWidget, null, null, uniqueId, launchConfig.data, true);
                 }
 
                 // Return success and the uniqueId of the widget instance
                 responseObj = {
                     error: false,
                     newWidgetLaunched: true,
-                    uniqueId: uniqueId
+                    uniqueId: uniqueId,
+                    pane: targetPaneId
                 };
             }
         }

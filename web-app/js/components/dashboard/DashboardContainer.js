@@ -1422,6 +1422,13 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
         }
     },
 
+    getPanes: function () {
+        var panes = this.activeDashboard.panes;
+        return _.map(panes, function (pane) {
+            return pane.getPaneUIState();
+        });
+    },
+
     initEventing: function() {
         Ozone.eventing.Container.init({
 
@@ -1438,6 +1445,8 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 },
                 scope: this
             },
+
+            getPanes: _.bind(this.getPanes, this),
 
             //override getOpenedWidgets
             getOpenedWidgets: {

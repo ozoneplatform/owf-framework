@@ -511,6 +511,8 @@ Ozone.util.isReservedChannel = function(channel) {
                 channel == 'ozone.marketplace.show' ||
                 channel == 'ozone.marketplace.pageLoaded' ||
                 channel == 'Ozone.eventing.widget.public' ||
+                channel == 'Ozone.eventing.widget.public' ||
+                channel == '_DASHBOARD_GET_PANES' ||
                 channel == '_MARKETPLACE_LISTING_CHECK')
 
             return true;
