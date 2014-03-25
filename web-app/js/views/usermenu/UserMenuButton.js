@@ -1,6 +1,6 @@
 ;(function (Backbone, _, $, Ozone, Handlebars) {
 
-    var html = Handlebars.compile('<button class="btn btn-small" data-toggle="dropdown">{{displayName}}<span class="caret"></span></button>' +
+    var html = Handlebars.compile('<button class="btn btn-small" data-toggle="dropdown">{{displayName}}<i class="icon-chevron-sign-down"></i></button>' +
                                    '<ul class="dropdown-menu" role="menu">' +
                                    '</ul>');
 

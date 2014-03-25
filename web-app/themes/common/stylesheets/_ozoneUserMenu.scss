@@ -5,56 +5,78 @@
 .user-menu {
 
   font-size: 1.1em;
+  -webkit-user-select: none;
 
   .dropdown-menu {
     left: auto;
     right: 0px;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-style: none;
 
     background-color: $owf-usermenu-background-color;
     color: $owf-usermenu-color;
 
     .divider {
-      border: 0.5px solid $owf-usermenu-color;
+      border-bottom: 1px solid $owf-usermenu-color;
       margin: 5px 1px;
     }
   }
 
   .btn {
-    background-color: rgba(#000, 0);
+    background-color: $owf-usermenu-btn-background-color;
     color: $owf-usermenu-btn-color;
     border-style: none;
-    padding: 0px 5px;
+    padding: 0px 8px;
     height: 32px;
-    min-width: 96px;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    font-family: sans-serif;
 
-    &:hover,&:focus {
-      border-style: none;
-      background-color: rgba(#000, 0);
+    &:focus {
+      background-color: $owf-usermenu-btn-background-color;
+      color: $owf-usermenu-btn-color;
+    }
+
+    &:hover {
+      background-color: $owf-usermenu-btn-background-color-hover;
       color: $owf-usermenu-btn-color;
     }
   }
 
   ul {
-    margin: 10px;
+    margin: 0px;
   }
 
   .logout-link {
-    margin: 10px;
     cursor: pointer;
+    padding: $owf-usermenu-group-header-padding;
+    line-height: $owf-usermenu-item-line-height;
+    &:hover {
+      background-color: $owf-usermenu-item-background-color-hover;
+      color: $owf-usermenu-item-color-hover;
+    }
   }
 }
 
 .user-menu-group {
 
   .user-menu-item {
-    margin: 5px 0px 0px 5px;
+    margin: 0px;
+    padding: 0px 5px 0px 16px;
     cursor: pointer;
+    line-height: $owf-usermenu-item-line-height;
+
+    &:hover {
+      background-color: $owf-usermenu-item-background-color-hover;
+      color: $owf-usermenu-item-color-hover;
+    }
   }
 
   &.collapsed {
     .collapse-toggle {
       &:before {
-        @extend .icon-chevron-up:before;
+        @extend .icon-chevron-down:before;
       }
     }
 
@@ -65,16 +87,22 @@
 }
 
 .group-header {
+  padding: $owf-usermenu-group-header-padding;
+  cursor: pointer;
+
   .collapse-toggle {
-    cursor: pointer;
     float: right;
     font-family: FontAwesome;
     font-weight: normal;
     font-style: normal;
-    font-size: 1.0em;
+    font-size: 1em;
 
     &:before {
-      @extend .icon-chevron-down:before;
+      @extend .icon-chevron-up:before;
     }
+  }
+
+  &:hover {
+    color: $owf-usermenu-btn-color;
   }
 }

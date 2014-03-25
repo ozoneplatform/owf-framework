@@ -14,7 +14,7 @@
 
         events: {
             'click .user-menu-item': 'handleItemClick',
-            'click .collapse-toggle': 'toggleCollapse'
+            'click .group-header': 'toggleCollapse'
         },
 
         initialize: function () {
