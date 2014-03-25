@@ -308,11 +308,6 @@ OWF = window.OWF ? window.OWF : {};
 			});
 		*/
 		getPanes: function(fn) {
-			if(!fn) {
-				fn = opts;
-				opts = {};
-			}
-
 			if(fn === undefined) {
 				throw 'Error: no arguments passed';
 				return;
@@ -323,8 +318,7 @@ OWF = window.OWF ? window.OWF : {};
 				return;
 			}
 
-			var jsonString = gadgets.json.stringify(opts);
-            gadgets.rpc.call('..', DASHBOARD_GET_PANES_SERVICE_NAME, fn, OWF.getIframeId(), jsonString);
+            gadgets.rpc.call('..', DASHBOARD_GET_PANES_SERVICE_NAME, fn, OWF.getIframeId());
 		}
 
 	});
