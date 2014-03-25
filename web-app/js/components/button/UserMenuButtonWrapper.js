@@ -244,9 +244,6 @@ Ext.define('Ozone.components.button.UserMenuButtonWrapper', {
             },{
                 itemText: 'Themes',
                 handler: this.themesHandler()
-            },{
-                itemText: 'About',
-                handler: this.aboutHandler()
             }]
         };
 
@@ -263,6 +260,11 @@ Ext.define('Ozone.components.button.UserMenuButtonWrapper', {
                 handler: this.administrationHandler()
             });
         }
+
+        group.items.push({
+            itemText: 'About',
+            handler: this.aboutHandler()
+        });
 
         return new Backbone.Model(group);
     },
