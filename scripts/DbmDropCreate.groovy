@@ -6,6 +6,7 @@ target(dbmCreateDrop: "Convenience script to drop and create a new schema for th
     doAndClose {
         liquibase.dropAll()
         liquibase.update 'create'
+        liquibase.update 'sampleData'
     }
 }
 
