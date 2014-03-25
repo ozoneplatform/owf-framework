@@ -421,7 +421,19 @@ Ozone.util.Transport.sendWithCors = function(cfg) {
 
     var xhr = new XMLHttpRequest();
 
-    xhr.open(cfg.method.toUpperCase(), cfg.url);
+    var onFailure = function(e) {
+        if (cfg.onFailure) {
+            cfg.onFailure(e);
+        }
+    };
+
+    // IE 11 denies access when HTTPS tries CORS to HTTP
+    try {
+        xhr.open(cfg.method.toUpperCase(), cfg.url);
+    } catch(e) {
+        onFailure(e.name + " : " + e.message);
+        return;
+    }
 
     xhr.withCredentials = true; // Must set after open!
 
@@ -434,7 +446,7 @@ Ozone.util.Transport.sendWithCors = function(cfg) {
                     var json = Ozone.util.parseJson(xhr.responseText);
                     cfg.onSuccess(json);
                 } catch(e) {
-                    cfg.onFailure(e.name + " : " + e.message);
+                    onFailure(e.name + " : " + e.message);
                 }
             } else {
                 cfg.onSuccess(xhr.responseText);
@@ -443,9 +455,7 @@ Ozone.util.Transport.sendWithCors = function(cfg) {
     };
 
     xhr.onerror = function() {
-        if (cfg.onFailure) {
-            cfg.onFailure();
-        }
+        onFailure();
     };
 
     var formData = null;
