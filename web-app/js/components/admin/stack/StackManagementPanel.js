@@ -1,15 +1,15 @@
 Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
     extend: 'Ozone.components.admin.ManagementPanel',
     alias: ['widget.stackmanagement'],
-    
+
     layout: 'fit',
-    
+
     gridStacks: null,
     pnlStackDetail: null,
     txtHeading: null,
     lastAction: null,
     guid_EditCopyWidget: null,
-    
+
     widgetStateHandler: null,
     dragAndDrop: true,
     launchesWidgets: true,
@@ -17,11 +17,11 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
     defaultTitle: 'Apps',
     minButtonWidth: 80,
     detailsAutoOpen: true,
-    
+
     initComponent: function() {
-        
+
         var me = this;
-        
+
         OWF.Preferences.getUserPreference({
             namespace: 'owf.admin.StackEditCopy',
             name: 'guid_to_launch',
@@ -32,7 +32,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                 me.showAlert('Preferences Error', 'Error looking up Application Editor: ' + err);
             }
         });
-        
+
         this.gridStacks = Ext.create('Ozone.components.admin.StacksGrid', {
             preventHeader: true,
             region: 'center',
@@ -48,7 +48,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
             }
         });
         this.relayEvents(this.gridStacks, ['datachanged', 'select', 'deselect', 'itemdblclick']);
-        
+
         this.pnlStackDetail = Ext.create('Ozone.components.admin.stack.StackDetailPanel', {
             layout: {
                 type: 'fit',
@@ -63,12 +63,12 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
             border: false,
             width: 200
         });
-        
+
         this.txtHeading = Ext.create('Ext.toolbar.TextItem', {
             text: '<span class="heading-bold">'+this.defaultTitle+'</span>'
         });
-        
-        
+
+
         this.searchBox = Ext.widget('searchbox');
 
         this.items = [{
@@ -80,7 +80,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                 this.pnlStackDetail
             ]
         }];
-        
+
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'top',
@@ -117,14 +117,14 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                     }
                 }
             }, {
-                xtype: 'button', 
+                xtype: 'button',
                 text: 'Delete',
                 itemId: 'btnDelete',
                 handler: function(button) {
                     me.doDelete();
                 }
             }, {
-                xtype: 'button', 
+                xtype: 'button',
                 text: 'Assign To Me',
                 itemId: 'btnAssignToMe',
                 handler: function(button) {
@@ -132,7 +132,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                 }
             }]
         }];
-    
+
         this.on(
             'datachanged',
             function(store, opts) {
@@ -149,7 +149,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
             },
             this
         );
-    
+
         this.on(
             'select',
             function(rowModel, record, index, opts) {
@@ -158,7 +158,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
             },
             this
         );
-            
+
         this.searchBox.on(
             'searchChanged',
             function(searchbox, value) {
@@ -182,17 +182,17 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                     this.doEdit(record.data.id, record.data.name);
             }
         }, this);
-        
+
         this.callParent(arguments);
-        
+
         OWF.Eventing.subscribe('AdminChannel', owfdojo.hitch(this, function(sender, msg, channel) {
             if(msg.domain === 'Stack') {
                 this.gridStacks.getBottomToolbar().doRefresh();
             }
         }));
-        
+
         this.on(
-            'afterrender', 
+            'afterrender',
             function() {
                 var splitterEl = this.el.down(".x-collapse-el");
                 splitterEl.on('click', function() {
@@ -204,7 +204,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                         this.detailsAutoOpen = false;
                     }
                 }, this);
-            }, 
+            },
             this
             );
     },
@@ -214,22 +214,26 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
             this.showAlert('Launch Error', 'Application Editor Launch Failed: ' + response.message);
         }
     },
-    
+
     doEdit: function(id ,title) {
-        var dataString = Ozone.util.toString({
-            id: id,
-            copyFlag: false
+        var me = this,
+            dataString = Ozone.util.toString({
+                id: id,
+                copyFlag: false
+            });
+
+        this.getTargetPane(function (pane) {
+            OWF.Launcher.launch({
+                pane: pane,
+                title: '$1 - ' + title,
+                titleRegex: /(.*)/,
+                guid: me.guid_EditCopyWidget,
+                launchOnlyIfClosed: false,
+                data: dataString
+            }, me.launchFailedHandler);
         });
-        
-        OWF.Launcher.launch({
-            title: '$1 - ' + title,
-            titleRegex: /(.*)/,
-            guid: this.guid_EditCopyWidget,
-            launchOnlyIfClosed: false,
-            data: dataString
-        }, this.launchFailedHandler);
     },
-    
+
     doDelete: function() {
         var records = this.gridStacks.getSelectionModel().getSelection();
         if (records && records.length > 0) {
@@ -259,14 +263,14 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
                            this.pnlStackDetail.removeData();
                            if (!this.pnlDashboardDetail.collapsed) {this.pnlDashboardDetail.collapse();}
                            this.refreshWidgetLaunchMenu();
-                           
+
                          },
                          scope: this,
                          single: true
                        }
                     });
                     store.save();
-                    
+
                     this.widgetStateHandler.handleWidgetRequest({
                         fn: 'refreshDashboardStore',
                         title: this.generateNotificationTitle(records.length)
@@ -281,12 +285,12 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
     generateNotificationTitle: function(numRecordsChanged) {
         return numRecordsChanged === 1 ? 'App Deleted' : 'Apps Deleted';
     },
-    
+
     doAssignToMe: function() {
         var records = this.gridStacks.getSelectionModel().getSelection();
         if (records && records.length === 1) {
             var record = records[0],
-                msg = 'This action will assign <span class="heading-bold">' + 
+                msg = 'This action will assign <span class="heading-bold">' +
                        Ext.htmlEncode(record.get('name')) + '</span> to you.',
                 owner = record.get('owner');
 
@@ -296,7 +300,7 @@ Ext.define('Ozone.components.admin.stack.StackManagementPanel', {
             else {
                 //If this App has an owner, give a more dire warning
                 if(owner) {
-                    msg += '<br/><br/><b>IMPORTANT:</b> This App is currently owned by <b>' + 
+                    msg += '<br/><br/><b>IMPORTANT:</b> This App is currently owned by <b>' +
                            Ext.htmlEncode(owner.username) + '</b> and cannot be reassigned ' +
                            'to this owner once this action is executed.';
                 }

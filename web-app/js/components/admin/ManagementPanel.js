@@ -20,29 +20,57 @@ Ext.define('Ozone.components.admin.ManagementPanel', {
         }
     },
 
+    getTargetPane: function (callback) {
+        OWF.getPanes(function (panes) {
+            var length = panes.length;
+
+            if(panes.length <= 2) {
+                callback('sibling');
+                return;
+            }
+
+            panes = Ext.Array.sort(panes, function (a, b) {
+                if(a.widgets.length === b.widgets.length)
+                    return 0;
+                else if(a.widgets.length < b.widgets.length)
+                    return -1;
+                else if(a.widgets.length > b.widgets.length)
+                    return 1;
+            });
+
+            callback(panes[0].widgets.length === 0 ? panes[0].id : 'sibling');
+        });
+    },
+
     doCreate: function() {
-        OWF.Launcher.launch({
-            pane: 'sibling',
-            guid: this.guid_EditCopyWidget,
-            launchOnlyIfClosed: false,
-            data: undefined
-        }, this.launchFailureHandler);
+        var me = this;
+
+        this.getTargetPane(function (pane) {
+            OWF.Launcher.launch({
+                pane: pane,
+                guid: me.guid_EditCopyWidget,
+                launchOnlyIfClosed: false,
+                data: undefined
+            }, me.launchFailureHandler);
+        });
     },
 
     doEdit: function(id, title) {
-        var dataString = Ozone.util.toString({
-            id: id,
-            copyFlag: false
+        var me = this,
+            dataString = Ozone.util.toString({
+                id: id,
+                copyFlag: false
+            });
+        this.getTargetPane(function (pane) {
+            OWF.Launcher.launch({
+                pane: pane,
+                guid: me.guid_EditCopyWidget,
+                title: '$1 - ' + title,
+                titleRegex: /(.*)/,
+                launchOnlyIfClosed: false,
+                data: dataString
+            }, me.launchFailureHandler);
         });
-
-        OWF.Launcher.launch({
-            pane: 'sibling',
-            guid: this.guid_EditCopyWidget,
-            title: '$1 - ' + title,
-            titleRegex: /(.*)/,
-            launchOnlyIfClosed: false,
-            data: dataString
-        }, this.launchFailureHandler);
     },
 
     doDelete: function() {

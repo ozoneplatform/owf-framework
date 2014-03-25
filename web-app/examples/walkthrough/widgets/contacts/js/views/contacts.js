@@ -92,19 +92,20 @@
             // -----------------------------------
 
             // launch a widget matching based on universalName
-            
+
             OWF.ready(function () {
 
                 OWF.Launcher.launch({
                     universalName: 'org.owfgoss.owf.examples.GoogleMaps',
                     launchOnlyIfClosed: true,
+                    pane: 'sibling',
                     data: model
                 }, function (result) {
 
 
 
                     // if an instance of it is already running, just
-                    // publish a message on a channel that the widget 
+                    // publish a message on a channel that the widget
                     // is listening to
 
                     if(result.newWidgetLaunched === false) {
