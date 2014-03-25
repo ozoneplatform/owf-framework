@@ -288,7 +288,26 @@ OWF = window.OWF ? window.OWF : {};
 			Ozone.eventing.getAllWidgets(fn);
 		},
 
-		getPanes: function(opts, fn) {
+		/**
+			Gets all layout panes on the current dashboard. Useful for launching widgets in other panes.
+
+			@param {Function} callback function to execute when layout panes are retrieved from OWF. Function is passed an array of objects with the structure below: <br>
+			{<br>
+				id: 'pane guid',<br>
+				type: 'fitpane', // fitpane, desktoppane, accordionpane, fitpane or portalpane <br>
+				height: 398,<br>
+				width: 715,<br>
+				x: 0,<br>
+				y: 33,<br>
+				widgets: [{widget state object}]'<br>
+			}<br>
+			@see <a href="#WidgetState.getState">widget state</a>
+			@example
+			OWF.getPanes(function(panes) {
+				...
+			});
+		*/
+		getPanes: function(fn) {
 			if(!fn) {
 				fn = opts;
 				opts = {};
@@ -838,19 +857,58 @@ OWF.DragAndDrop.onDrop(function(sender, msg) {
 	@methodOf OWF.Launcher
 
 	@param {Object} config object see example for structure
-	@param {Function} callback a function to be called once after the launchWidget is executed
+    @param {String} config.pane optional, valid values are 'sibling' or a pane guid. Value of 'sibling' launches the widget into the sibling pane if it exists. If a pane is not found, widget is launched in the same pane. See <a href="OWF.html#.getPanes">OWF.getPanes</a> to find out how to get panes.
+    @param {String} config.universalName universalName or guid maybe identify the widget to be launched
+    @param {String} config.guid widget definition guid of the widget to launch
+    @param {String} config.title title to use for the widget
+    @param {String} config.titleRegex optional regex used to replace the previous title with the new value of title
+    @param {Boolean} config.launchOnlyIfClosed If true, Widget will only be launched if it is not already opened. If it is opened, then the widget will be restored.
+    @param {String} config.data initial launch config data to be passed to a widget only if the widget is opened.
+    @param {Function} callback a function to be called once after the launchWidget is executed
+    @see <a href="Ozone.state.WidgetState.html#getWidgetState">getWidgetState</a> to see widget state object structure.
 
-	@example
+    @example
+// launch widget in the same pane
 OWF.Launcher.launch({
-    universalName: 'universal name of widget to launch',  //universalName or guid maybe identify the widget to be launched
-    guid: 'guid_of_widget_to_launch',
-    title: 'title to replace the widget title' the title will only be changed if the widget is opened.
-    titleRegex: optional regex used to replace the previous title with the new value of title
-    launchOnlyIfClosed: true,   //if true will only launch the widget if it is not already opened.
-                                //if it is opened then the widget will be brought to focus
-    data: dataString            //initial launch data to be passed to a widget only if the widget is opened. This must be a string.
-}, callback);
- */
+	universalName: 'universal name of widget to launch',
+	guid: 'guid of widget to launch',
+	title: 'title to replace the widgets title',
+	titleRegex: 'regex',
+	launchOnlyIfClosed: true,
+	data: 'dataString'
+});
+
+// launch widget in following preference: empty pane, sibling, or same pane.
+// this is done by sorting panes by no of widgets, and picking the pane with the lowest no of widgets.
+OWF.getPanes(function (panes) {
+    var pane;
+
+    if(panes.length <= 2) {
+        pane = 'sibling';
+    }
+    else {
+        panes = Ext.Array.sort(panes, function (a, b) {
+            if(a.widgets.length === b.widgets.length)
+                return 0;
+            else if(a.widgets.length < b.widgets.length)
+                return -1;
+            else if(a.widgets.length > b.widgets.length)
+                return 1;
+        });
+        pane = panes[0].widgets.length === 0 ? panes[0].id : 'sibling'
+    }
+
+    OWF.Launcher.launch({
+        pane: pane,
+        universalName: 'universal name of widget to launch',
+        guid: 'guid of widget to launch',
+        title: 'title to replace the widgets title',
+        titleRegex: 'regex',
+        launchOnlyIfClosed: true,
+        data: 'dataString'
+    });
+});
+*/
 
 /**
 	Retrieves initial launch data for this widget if it is opened by another widget.  If launched via an intent, it will return the JSON string { intents: true }.
