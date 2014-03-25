@@ -544,6 +544,13 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
                 var a = document.createElement('a');
                 a.href = cfg.url;
 
+                // In Internet Explorer anchor fails to populate all link
+                // properties when href is relative. After it is set once
+                // href becomes absolute and can thus solve the problem.
+                if (a.host == "") {
+                    a.href = a.href;
+                }
+
                 var el = document.createElement("div");
                 el.innerHTML = response;
 
@@ -555,17 +562,21 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
                         scripts += scriptTags[i].innerHTML;
                     }
 
-                    var getWindowNameFunc = '';
-                    getWindowNameFunc = 'var window = {};var Ozone = {};var owfdojo={};var Ext={};';
+                    var getWindowNameFunc = 'var window = {};' +
+                        'var Ozone = {};var owfdojo={};var Ext={};';
 
-                    // set window.location to anchor tag as anchor tag contains all props of location
+                    // Set window.location to anchor tag as anchor tag
+                    // contains all props of location
                     getWindowNameFunc += 'window.location = a;';
-                    
+
                     getWindowNameFunc += scripts;
                     getWindowNameFunc += 'return window.name;';
 
-                    // Marketplace descriptor has code that attempts to
-                    // modify the page header element; remove it.
+                    // Marketplace descriptor has code that inserts result
+                    // JSON into the page so user can see it for debugging
+                    // if viewing the descriptor in the browser. Remove said
+                    // code since the HTML it depends on is not part of our
+                    // current page and would fail.
                     getWindowNameFunc = getWindowNameFunc.replace(
                         /document\.getElementById[^;]*;/g, '');
 
@@ -577,11 +588,10 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
                         responseJson = null;
 
                         if (Ozone.log) {
-                            Ozone.log.getDefaultLogger().error(
-                                'Unable to execute descriptor JavaScript.' +
-                                ' ERROR = ' + e);
-                            Ozone.log.getDefaultLogger().debug(
-                                'SCRIPT = "' + getWindowNameFunc + '"');
+                            var logger = Ozone.log.getDefaultLogger();
+                            logger.error('Unable to execute descriptor ' +
+                                         'JavaScript. ERROR = ' + e);
+                            logger.debug('SCRIPT = "' + getWindowNameFunc + '"');
                         }
                     }
 
