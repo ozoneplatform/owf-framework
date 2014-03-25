@@ -4,33 +4,18 @@
 VAGRANTFILE_API_VERSION = "2"
 
 $script = <<SCRIPT
-mkdir -p /etc/ansible/facts.d
 
+yum install -y gcc python-devel python-setuptools libselinux-python git
+easy_install pip
+pip install paramiko PyYAML jinja2 boto ansible --upgrade
+
+mkdir -p /etc/ansible/
 cat > /etc/ansible/hosts << EOM
 [localhost]
 127.0.0.1 ansible_user=vagrant
 EOM
 
-cat > /etc/sysconfig/iptables << EOM
-*filter
-:INPUT ACCEPT [0:0]
-:FORWARD ACCEPT [0:0]
-:OUTPUT ACCEPT [0:0]
-
--A INPUT -p tcp --dport 8080 -j ACCEPT
--A INPUT -p tcp --dport 8443 -j ACCEPT
-
--A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
--A INPUT -p icmp -j ACCEPT
--A INPUT -i lo -j ACCEPT
--A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
--A INPUT -j REJECT --reject-with icmp-host-prohibited
--A FORWARD -j REJECT --reject-with icmp-host-prohibited
-COMMIT
-
-EOM
-
-service iptables restart
+ansible-pull -d /home/vagrant/ozone-build-pull -U https://github.com/rob-szew/ozoneops.git ansible/playbooks-pull/ozone_build_box.yml
 
 cat > /home/vagrant/.bashrc << EOM
 if [ -f /etc/bashrc ]; then
@@ -45,31 +30,27 @@ export GROOVY_HOME="/opt/groovy-1.8.9"
 export PATH="\\$JAVA_HOME/bin:\\$GRAILS_HOME/bin:\\$ANT_HOME/bin:\\$MAVEN_HOME/bin:\\$GROOVY_HOME/bin:\\$PATH"
 EOM
 
-cat > /home/vagrant/run-dev-admin << EOM
-#! /bin/bash
-cd /vagrant
-grails -Duser=testAdmin1 run-app --non-interactive
-EOM
-
-chown vagrant:vagrant /home/vagrant/run-dev-admin
-chmod 774 /home/vagrant/run-dev-admin
-
-ansible-pull -d /home/vagrant/ozone-build-pull -U https://github.com/rob-szew/ozoneops.git ansible/playbooks-pull/ozone_build_box.yml
-
 SCRIPT
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.box = "el-ansible"
-  config.vm.box_url = "https://dl.dropboxusercontent.com/u/8120141/el-ansible.box"
+  config.vm.box = "chef/centos-6.5"
 
   config.vm.network :forwarded_port, guest: 8080, host: 6080
   config.vm.network :forwarded_port, guest: 8443, host: 6443
+  config.vm.network :forwarded_port, guest: 5005, host: 6005
+
+  config.vm.provider "vmware_fusion" do |v|
+    v.gui = false
+    
+    v.vmx["memsize"] = "2048"
+    v.vmx["numvcpus"] = "2"
+  end
 
   config.vm.provider :virtualbox do |vb|
     vb.gui = false
   
-    vb.customize ["modifyvm", :id, "--memory", "2024"]
+    vb.customize ["modifyvm", :id, "--memory", "2048"]
     vb.customize ["modifyvm", :id, "--cpus", "2"]
   end
 
