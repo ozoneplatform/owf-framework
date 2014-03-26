@@ -516,6 +516,44 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
         if (cfg.onFailure) cfg.onFailure(error);
     };
 
+    // Create an object with the same properties as window.location, but for
+    // a given location
+    var makeLocation = function(url) {
+        var result = {};
+        var propNames = [];
+
+        for (var key in window.location) {
+            if (typeof(window.location[key]) === "string") {
+                propNames.push(key);
+            }
+        }
+
+        var a = document.createElement('a');
+
+        a.href = url;
+
+        // In Internet Explorer anchor fails to populate all link properties
+        // when href is relative. After it is set once href becomes absolute
+        // and can thus solve the problem.
+        if (a.host == "") {
+            a.href = a.href;
+        }
+
+        // Copy properties to a new object so we can fix some bad behavior
+        for (var i = 0; i < propNames.length; i++) {
+            var key = propNames[i];
+            result[key] = a[key];
+        }
+
+        // All browsers, except IE, always have leading '/' on pathname when
+        // fully qualified
+        if (result.pathname[0] !== '/') {
+            result.pathname = '/' + result.pathname;
+        }
+
+        return result;
+    }
+
     Ozone.util.Transport.send({
         url: cfg.url,
         method: 'GET',
@@ -541,17 +579,9 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
             }
             // handle window.name html response
             else if(response.indexOf('<html>') >= 0) {
-                var a = document.createElement('a');
-                a.href = cfg.url;
-
-                // In Internet Explorer anchor fails to populate all link
-                // properties when href is relative. After it is set once
-                // href becomes absolute and can thus solve the problem.
-                if (a.host == "") {
-                    a.href = a.href;
-                }
-
+                var a = makeLocation(cfg.url);
                 var el = document.createElement("div");
+
                 el.innerHTML = response;
 
                 var scriptTags = el.getElementsByTagName("script");
@@ -565,8 +595,8 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
                     var getWindowNameFunc = 'var window = {};' +
                         'var Ozone = {};var owfdojo={};var Ext={};';
 
-                    // Set window.location to anchor tag as anchor tag
-                    // contains all props of location
+                    // Set window.location to our object that simulates some
+                    // properties of location, but for the descriptor URL
                     getWindowNameFunc += 'window.location = a;';
 
                     getWindowNameFunc += scripts;
