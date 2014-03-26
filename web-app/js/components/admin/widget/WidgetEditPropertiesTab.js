@@ -146,9 +146,9 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                                 } else {
                                     var loading = this.getComponent('descriptorUrlLoading');
                                     var field = this.getComponent('descriptorUrl');
-                                    /*if (this.xhr) {
+                                    if (this.xhr) {
                                         this.xhr.cancel();
-                                    }*/ // TODO: Remove cancel
+                                    }
                                     loading.hide();
                                     field.enable();
                                     btn.setText('Load');
@@ -485,7 +485,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
         field.disable();
         component.showProperties(false);
         loading.show();
-        Ozone.util.Transport.getDescriptor({
+        component.xhr = Ozone.util.Transport.getDescriptor({
             url: text,
             onSuccess: Ext.bind(component.updatePropertiesFromDescriptor, component),
             onFailure: function (json) {

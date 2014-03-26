@@ -157,6 +157,7 @@ Ozone.util.Transport.send = function(cfg) {
     } else if (tryCors) {
         cfg.method = methodToUse.toUpperCase();
 
+        var retryXhr;
         var originalOnFailure = cfg.onFailure;
 
         cfg.onFailure = function() {
@@ -170,10 +171,23 @@ Ozone.util.Transport.send = function(cfg) {
 
             cfg.onFailure = originalOnFailure;
 
-            Ozone.util.Transport.send(cfg);
+            retryXhr = Ozone.util.Transport.send(cfg);
         };
 
-        Ozone.util.Transport.sendWithCors(cfg);
+        var xhr = Ozone.util.Transport.sendWithCors(cfg);
+
+        // Ensure the window.name retry can also be canceled
+        var originalCancel = xhr.cancel;
+
+        xhr.cancel = function() {
+            originalCancel();
+
+            if (retryXhr) {
+                retryXhr.cancel();
+            }
+        };
+
+        return xhr;
     } else {
         // Use window.name transport
         try {
@@ -420,6 +434,7 @@ Ozone.util.Transport.sendWithCors = function(cfg) {
     }
 
     var xhr = new XMLHttpRequest();
+    var deferred = new owfdojo.Deferred(function() { /* canceler */ xhr.abort();} );
 
     var onFailure = function(e) {
         if (cfg.onFailure) {
@@ -445,6 +460,7 @@ Ozone.util.Transport.sendWithCors = function(cfg) {
                 try {
                     var json = Ozone.util.parseJson(xhr.responseText);
                     cfg.onSuccess(json);
+                    deferred.resolve(json);
                 } catch(e) {
                     onFailure(e.name + " : " + e.message);
                 }
@@ -473,6 +489,8 @@ Ozone.util.Transport.sendWithCors = function(cfg) {
     }
 
     xhr.send(formData);
+
+    return deferred;
 };
 
 /**
@@ -554,7 +572,8 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
         return result;
     }
 
-    Ozone.util.Transport.send({
+    // Must return Deferred so user has ability to can cancel the request
+    return Ozone.util.Transport.send({
         url: cfg.url,
         method: 'GET',
         handleAs: 'text', // Descriptor file is in HTML, not JSON!

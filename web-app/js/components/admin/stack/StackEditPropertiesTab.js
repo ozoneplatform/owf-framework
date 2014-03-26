@@ -6,7 +6,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
         'widget.Ozone.components.admin.stack.StackEditPropertiesTab'
     ],
     cls: 'stackeditpropertiestab',
-    
+
     initComponent: function () {
         var me = this;
         Ext.applyIf(this, {
@@ -140,9 +140,9 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                                 } else {
                                     var loading = this.getComponent('descriptorUrlLoading');
                                     var field = this.getComponent('descriptorUrl');
-                                    /*if (this.xhr) {
+                                    if (this.xhr) {
                                         this.xhr.cancel();
-                                    }*/
+                                    }
                                     loading.hide();
                                     field.enable();
                                     btn.setText('Load');
@@ -308,7 +308,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
         field.disable();
         component.showProperties(false);
         loading.show();
-        Ozone.util.Transport.getDescriptor({
+        component.xhr = Ozone.util.Transport.getDescriptor({
             url : text,
             onSuccess: Ext.bind(component.updatePropertiesFromDescriptor, component),
             onFailure: function (json){
