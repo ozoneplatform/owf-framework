@@ -80,6 +80,10 @@
       }
     }
 
+    .collapse-toggle-cutout {
+      top: 7px;
+    }
+
     .user-menu-item {
       display: none;
     }
@@ -92,15 +96,22 @@
   cursor: pointer;
 
   .collapse-toggle {
-    float: right;
+    position: absolute;
     font-family: FontAwesome;
     font-weight: normal;
     font-style: normal;
-    font-size: 1em;
+    font-size: 1.2em;
+    right: 8px;
 
     &:before {
       @extend .icon-chevron-up:before;
     }
+  }
+
+  .collapse-toggle-cutout {
+    @extend .collapse-toggle;
+    top: 13px;
+    color: $owf-usermenu-background-color;
   }
 
   &:hover {

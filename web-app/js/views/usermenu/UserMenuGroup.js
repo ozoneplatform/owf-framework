@@ -3,7 +3,7 @@
     var SuperClass = Ozone.views.BaseView;
 
     var groupTemplate = Handlebars.compile('<ul class="user-menu-group">' +
-                                             '<li class="group-header">{{groupName}}<i class="collapse-toggle"></i></li>' +
+                                             '<li class="group-header">{{groupName}}<i class="collapse-toggle"></i><i class="collapse-toggle-cutout"></i></li>' +
                                              '{{#each items}}' +
                                              '<li class="user-menu-item {{itemClass}}">{{itemText}}</li>' +
                                              '{{/each}}' +
