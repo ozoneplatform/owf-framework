@@ -671,7 +671,7 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
 Ozone.util.Transport.isWindowNameBroken = (function() {
     // dojo.isIE is currently known to fail for IE 11. Need to do extra work
     // to check Trident engine version. Trident 7 is IE 11.
-    var trident = /Trident\/(\d)\.\d/g.exec(navigator.userAgent);
+    var trident = /Trident\/(\d+)\.\d/g.exec(navigator.userAgent);
 
     if (trident) {
         trident = Number(trident[1]);
