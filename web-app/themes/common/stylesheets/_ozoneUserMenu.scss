@@ -50,7 +50,7 @@
 
   .logout-link {
     cursor: pointer;
-    padding: $owf-usermenu-group-header-padding;
+    padding: 0px 5px 0px 8px;
     line-height: $owf-usermenu-item-line-height;
     &:hover {
       background-color: $owf-usermenu-item-background-color-hover;
@@ -81,7 +81,7 @@
     }
 
     .collapse-toggle-cutout {
-      top: 7px;
+      top: -3px;
     }
 
     .user-menu-item {
@@ -91,17 +91,17 @@
 }
 
 .group-header {
-  padding: $owf-usermenu-group-header-padding;
+  padding: 5px 8px 5px 8px;
   color: $owf-usermenu-group-header-text-color;
   cursor: pointer;
 
   .collapse-toggle {
-    position: absolute;
+    position: relative;
     font-family: FontAwesome;
     font-weight: normal;
     font-style: normal;
     font-size: 1.2em;
-    right: 8px;
+    float: right;
 
     &:before {
       @extend .icon-chevron-up:before;
@@ -110,7 +110,8 @@
 
   .collapse-toggle-cutout {
     @extend .collapse-toggle;
-    top: 13px;
+    left: 14px;
+    top: 3px;
     color: $owf-usermenu-background-color;
   }
 
