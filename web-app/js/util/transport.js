@@ -158,21 +158,26 @@ Ozone.util.Transport.send = function(cfg) {
         cfg.method = methodToUse.toUpperCase();
 
         var retryXhr;
-        var originalOnFailure = cfg.onFailure;
 
-        cfg.onFailure = function() {
-            cfg.forceNoCors = true;
+        // Ensure we fall back to window.name if CORS fails, unless we know
+        // the browser would hang on use of window.name
+        if (!Ozone.util.Transport.isWindowNameBroken) {
+            var originalOnFailure = cfg.onFailure;
 
-            if (Ozone.log) {
-                Ozone.log.getDefaultLogger().warn(
-                    'CORS failed. Will try window.name transport.' +
-                    ' URL = ' + cfg.url);
-            }
+            cfg.onFailure = function() {
+                cfg.forceNoCors = true;
 
-            cfg.onFailure = originalOnFailure;
+                if (Ozone.log) {
+                    Ozone.log.getDefaultLogger().warn(
+                        'CORS failed. Will try window.name transport.' +
+                        ' URL = ' + cfg.url);
+                }
 
-            retryXhr = Ozone.util.Transport.send(cfg);
-        };
+                cfg.onFailure = originalOnFailure;
+
+                retryXhr = Ozone.util.Transport.send(cfg);
+            };
+        }
 
         var xhr = Ozone.util.Transport.sendWithCors(cfg);
 
@@ -572,7 +577,7 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
         return result;
     }
 
-    // Must return Deferred so user has ability to can cancel the request
+    // Must return Deferred so user has ability to cancel the request
     return Ozone.util.Transport.send({
         url: cfg.url,
         method: 'GET',
@@ -656,3 +661,21 @@ Ozone.util.Transport.getDescriptor = function(cfg) {
         onFailure: handleFailure
     });
 };
+
+/**
+ * @private
+ * Determine if window.name transport is broken in the current browser.
+ * Internet Explorer 10 and 11 are known to hang if you attempt to use said
+ * technique.
+ */
+Ozone.util.Transport.isWindowNameBroken = (function() {
+    // dojo.isIE is currently known to fail for IE 11. Need to do extra work
+    // to check Trident engine version. Trident 7 is IE 11.
+    var trident = /Trident\/(\d)\.\d/g.exec(navigator.userAgent);
+
+    if (trident) {
+        trident = Number(trident[1]);
+    }
+
+    return (owfdojo.isIE && owfdojo.isIE >= 10) || trident >= 7;
+})();
