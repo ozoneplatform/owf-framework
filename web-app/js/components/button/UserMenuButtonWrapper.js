@@ -293,6 +293,13 @@ Ext.define('Ozone.components.button.UserMenuButtonWrapper', {
 
         if(this.marketplaceAdminMenuEnabled) {
             group.items.push({
+                itemText: 'Franchise Administration',
+                handler: function (evt, obj) {
+                    me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceFranchiseAdministration');
+                }
+            });
+
+            group.items.push({
                 itemText: 'Configuration',
                 handler: function () {
                     me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceConfigurationPages');
