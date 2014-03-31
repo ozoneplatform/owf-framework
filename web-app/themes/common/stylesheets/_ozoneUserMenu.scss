@@ -119,3 +119,13 @@
     color: $owf-usermenu-group-header-hover-color;
   }
 }
+
+.x-ie7 {
+  .group-header {
+    .collapse-toggle {
+      @extend .icon-chevron-down;
+      position: absolute;
+      right: 5px;
+    }
+  }
+}
