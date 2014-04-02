@@ -1,14 +1,3 @@
--- *********************************************************************
--- Update Database Script
--- *********************************************************************
--- Change Log: changelog.groovy
--- Ran at: 4/2/14 11:19 AM
--- Against: MP_STEPH2@jdbc:oracle:thin:@owfdb03.goss.owfgoss.org:1521:XE
--- Liquibase version: 2.0.1
--- *********************************************************************
-
--- Lock Database
--- Changeset changelog_7.10.0.groovy::7.10.0-1::owf::(Checksum: 3:115190a042e53f65034683e629f8cf47)
 ALTER TABLE person ADD last_notification TIMESTAMP;
 
 INSERT INTO DATABASECHANGELOG (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', '', SYSTIMESTAMP, 'Add Column', 'EXECUTED', 'changelog_7.10.0.groovy', '7.10.0-1', '2.0.1', '3:115190a042e53f65034683e629f8cf47', 1);
@@ -43,4 +32,3 @@ drop trigger app_config_insert;
 
 INSERT INTO DATABASECHANGELOG (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', '', SYSTIMESTAMP, 'Custom SQL, Insert Row (x8), Custom SQL', 'EXECUTED', 'changelog_7.10.0.groovy', '7.10.0-2', '2.0.1', '3:4bba210116efb0cd6c71f2147e3846e9', 2);
 
--- Release Database Lock
