@@ -101,7 +101,7 @@ uiperformance.exclusions = [
         "**/js-doh/**",
         "**/js-lib/**",
         "**/js-min/**",
-		"**/rest/**"
+        "**/rest/**"
 
 ]
 
@@ -591,7 +591,7 @@ uiperformance.bundles = [
                         'ux/MessageBoxPlus',
                         'ux/OWFVtypes',
                         '../js-lib/log4javascript/log4javascript',
-            			'audit/Audit',
+                        'audit/Audit',
                         'util/version',
                         'util/util',
                         'util/widget_utils',
@@ -756,11 +756,11 @@ uiperformance.bundles = [
                         'chrome/WidgetChromeContainer',
                         'components/widget/DeleteWidgetsPanel',
                         'metrics/BaseMetrics',
-						'../js/data/stores/AdminWidgetStore',
-						'../js/data/models/WidgetType',
-						'../js/data/stores/WidgetTypeStore',
-						'../js/data/models/Group',
-						'../js/data/stores/GroupStore',
+                        '../js/data/stores/AdminWidgetStore',
+                        '../js/data/models/WidgetType',
+                        '../js/data/stores/WidgetTypeStore',
+                        '../js/data/models/Group',
+                        '../js/data/stores/GroupStore',
             //this patch file should be at the end
                         '../js-lib/patches/RemoveListenerCaptureBugOverrides'
 
@@ -1065,33 +1065,23 @@ owf {
       //timeout = 1800000
     }
 
-    // Configuration elements for custom headers/footers.
-    customHeaderFooter {
-        header = ''
-        headerHeight = 0
-        footer = ''
-        footerHeight = 0
-        jsImports = []
-        cssImports = []
+    dataguard {
+        // Option to restrict messages between widgets based on access levels.
+        // If this option is set to false, all other dataguard options are ignored.
+        restrictMessages = false
+
+        // Option to audit all messages between widgets, not just failed messages.
+        // restrictMessages must be set to true
+        auditAllMessages = true
+
+        // Option to allow widgets to send messages without specifying their access level.
+        // restrictMessages must be set to true
+        allowMessagesWithoutAccessLevel = true
+
+        // The amount of time (in milliseconds) to cache a widget's access level.
+        // restrictMessages must be set to true
+        accessLevelCacheTimeout = 3600000
     }
-
-  	dataguard {
-	  	// Option to restrict messages between widgets based on access levels.
-	  	// If this option is set to false, all other dataguard options are ignored.
-	  	restrictMessages = false
-
-	  	// Option to audit all messages between widgets, not just failed messages.
-	  	// restrictMessages must be set to true
-	  	auditAllMessages = true
-
-	  	// Option to allow widgets to send messages without specifying their access level.
-	  	// restrictMessages must be set to true
-	  	allowMessagesWithoutAccessLevel = true
-
-	  	// The amount of time (in milliseconds) to cache a widget's access level.
-	  	// restrictMessages must be set to true
-	  	accessLevelCacheTimeout = 3600000
-  	}
 
     // OZP-476: Marketplace (MP) Synchronization
     mpSync {
