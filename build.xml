@@ -320,7 +320,8 @@
             </else>
         </if>
 
-        <copy todir="${staging.dir}/help/jsdoc" failonerror="false">
+        <mkdir dir="${staging.dir}/etc/docs/jsdoc" />
+        <copy todir="${staging.dir}/etc/docs/jsdoc" failonerror="false">
             <fileset dir="${basedir}/src/assemble/docs/jsdoc" />
         </copy>
         <copy todir="${tomcat.dir}/certs">
