@@ -200,7 +200,7 @@
                         	var response  = Ext.decode(data.responseText)
 
                         	if(response.isOwnedByGroup)
-                        		alert("You may not delete this app component because it is required by an app.")
+                        		alert("You may not delete this app component because it is required by an app or it belongs to a group.")
                         	else {
                         		evt.preventDefault();
                         		me.removeAppComponent(view, tip);
