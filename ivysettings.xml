@@ -1,6 +1,13 @@
 <ivysettings>
-    <settings defaultResolver="nexus"/>
+    <settings defaultResolver="chain" />
+    <property name="m2-pattern" value="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" override="false" />
     <resolvers>
-        <ibiblio name="nexus" m2compatible="true" root="https://www.owfgoss.org/nexus/content/groups/public"/>
+        <chain name="chain">
+            <filesystem name="local-maven2" m2compatible="true" >
+                <artifact pattern="${m2-pattern}"/>
+                <ivy pattern="${m2-pattern}"/>
+            </filesystem>
+            <ibiblio name="nexus" m2compatible="true" root="https://www.owfgoss.org/nexus/content/groups/public"/>
+        </chain>
     </resolvers>
 </ivysettings>
