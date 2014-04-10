@@ -162,7 +162,7 @@ class PersonControllerTests extends OWFGroovyTestCase {
 	
 	void testWhoamiAction() {
 		loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
-		def person = Person.build(username:'testAdmin1', userRealName:'Test Admin 1')
+		def person = Person.build(username:'testAdmin1', userRealName:'Test Admin 1', email: 'testAdmin1@ozone.com')
 
 	
 		controller.whoami()
@@ -171,7 +171,8 @@ class PersonControllerTests extends OWFGroovyTestCase {
                 currentUserName:person.username,
                 currentUser:person.userRealName,
                 currentUserPrevLogin:person.prevLogin,
-                currentId:person.id
+                currentId:person.id,
+                email: person.email
         ] as JSON).toString(), controller.response.contentAsString)
 	}
 }
