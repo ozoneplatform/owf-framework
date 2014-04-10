@@ -5,13 +5,13 @@
 .user-menu {
 
   font-size: 1.1em;
-  -webkit-user-select: none;
+  @include user-select(none);
 
   .dropdown-menu {
+    z-index: 10000004;
     left: auto;
     right: 0px;
-    border-radius: 0px;
-    -webkit-border-radius: 0px;
+    @include border-radius(0px);
     border-style: none;
 
     background-color: $owf-usermenu-background-color;
@@ -29,8 +29,7 @@
     border-style: none;
     padding: 0px 8px;
     height: 32px;
-    border-radius: 0px;
-    -webkit-border-radius: 0px;
+    @include border-radius(0px);
     font-family: sans-serif;
 
     &:focus {
