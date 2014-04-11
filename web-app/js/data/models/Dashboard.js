@@ -29,14 +29,21 @@ Ext.define('Ozone.data.Dashboard', {
     ],
 
     constructor: function(data, id, raw) {
-        if(data.layoutConfig && typeof data.layoutConfig === 'string' && data.layoutConfig !== Object.prototype.toString()) {
-            data.layoutConfig = Ext.JSON.decode(data.layoutConfig);
+        var layoutConfig = data.layoutConfig;
+        if(_.isString(layoutConfig)) {
+            try {
+                layoutConfig = Ext.JSON.decode(data.layoutConfig);
+            }
+            catch(e) {
+                console.warn('corrupt layoutConfig for dashboard ', data.name, ', layoutConfig', data.layoutConfig);
+                layoutConfig = '';
+            }
+        }
+        else if(!_.isObject(layoutConfig)) {
+            layoutConfig = ''
         }
 
-        //todo see if we still need this
-        if(data.layoutConfig === Object.prototype.toString()) {
-            data.layoutConfig = "";
-        }
+        data.layoutConfig = layoutConfig;
 
         if(!data.guid) {
             data.guid = guid.util.guid();
