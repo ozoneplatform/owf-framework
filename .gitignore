@@ -13,8 +13,8 @@
 /plugins/aml-commons-*
 
 # DB scripts that must be rebuilt for every release
-/src/assemble/dbscripts/*InitialCreate.sql
-/src/assemble/dbscripts/*PrefsUpdate*.sql
+#/src/assemble/dbscripts/*InitialCreate.sql
+#/src/assemble/dbscripts/*PrefsUpdate*.sql
 
 # "temporary" files
 /staging
