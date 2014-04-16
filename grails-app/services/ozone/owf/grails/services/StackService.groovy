@@ -588,6 +588,7 @@ class StackService {
         stackParams.description = params.data.description.equals(null) ? "" : params.data.description
         stackParams.stackContext = params.data.stackContext
         stackParams.descriptorUrl = params.data.descriptorUrl.equals(null)  ? "" : params.data.descriptorUrl
+        stackParams.imageUrl = params.data.imageUrl ?: ''
 
         def s = createOrUpdate(stackParams)
         def stack = Stack.findById(s.data[0].id)
