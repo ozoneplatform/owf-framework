@@ -195,9 +195,7 @@ grails.project.dependency.resolution = {
         runtime 'org.apache.ant:ant:1.7.0'
         compile('access:access:1.0')
 
-		runtime "hsqldb:hsqldb:1.8.0.10"
-		runtime 'com.thetransactioncompany:cors-filter:1.8'
-
+        runtime "hsqldb:hsqldb:1.8.0.10"
 
     }
     plugins {
