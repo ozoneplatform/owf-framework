@@ -201,7 +201,9 @@ grails.project.dependency.resolution = {
 
     }
     plugins {
-        compile "org.ozoneplatform:aml-commons-security:$config.owf.security.rev"
+        compile ':database-migration:1.3.6'
+        compile ':hibernate:3.6.10.12'
+        compile 'org.ozoneplatform:aml-commons-security:3.1.9'
         compile 'org.ozoneplatform:aml-commons-appconfig:0.5'
         compile 'org.ozoneplatform:aml-commons-auditing:1.0'
         compile 'org.ozoneplatform:aml-commons-messaging:1.15'
