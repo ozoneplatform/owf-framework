@@ -54,6 +54,7 @@ owf-widget-min.gz.js
 .Trashes
 ehthumbs.db
 Thumbs.db
+plugins/
 
 # IDE support files
 /.classpath
