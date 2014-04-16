@@ -203,7 +203,8 @@ Ozone.layout.tooltipString = {
         bannerDockContent:                      'Dock toolbar to banner at top of page.',
         bannerUndockTitle:                      'Undock',
         bannerUndockContent:                    'Undock toolbar to floating position and hide banner.',
-    unapprovedStackEditMessage:                 'The application <b>must be</b> approved in the Store before adding users or groups.'
+    unapprovedStackEditMessage:                 'The application <b>must be</b> approved in the Store before adding users or groups.',
+    unapprovedStackWithoutMarkpetplaceEditMessage: 'The application <b>must be</b> shared by owner before adding users or groups.'
 };
 
 Ozone.layout.admin = {
@@ -333,7 +334,8 @@ Ozone.util.ErrorMessageString = {
     restrictedTagError: ' is a restricted tag.  You may not edit it or add it to other App Components',
     mpErrorTitle: 'Marketplace Error',
     mpErrorMsg: 'There has been an error accessing Marketplace. Please contact your System Administrator to verify that Marketplace connectivity has been correctly configured and that the Marketplace server is currently running.',
-    oneSingleton: 'Only one instance of a Singleton is permitted'
+    oneSingleton: 'Only one instance of a Singleton is permitted',
+    stackNotFound: 'Unable to find the selected App.'
 };
 
 Ozone.layout.MessageBoxButtonText = {
@@ -424,13 +426,14 @@ Ozone.layout.DialogMessages = {
     formError_savePersonDefWidgets: 'An error occurred while attempting to save user App Component(s).',
     formError_saveWidgetDefinition: 'An error occurred while attempting to save the App Component.',
     personWidgetDef_WidgetContainerPanelTitle: 'Widgets',
-	marketplaceWindow_AddWidget: 'An error occurred while attempting to add the App Component from the Store.',
-	marketplaceWindow_currentUser: 'Could not retrieve current user name and id.',
+    marketplaceWindow_AddWidget: 'An error occurred while attempting to add the App Component from the Store.',
+    marketplaceWindow_currentUser: 'Could not retrieve current user name and id.',
     marketplaceWindow_AddSuccessful: 'The App Component was added successfully from the Store.',
     marketplaceWindow_WebappLaunchSuccessful: 'The web app was added successfully from the Store.',
     marketplaceWindow_LaunchSuccessful: 'The App Component was added successfully from the Store. Choose the App where the component will open.',
-	widgetAdded: 'Selected App Component is already added for this user',
-	marketplaceWindow_RequiredListingsAlertMsg: 'The App Component you have launched will not work without some dependencies.  These App Components are listed below and will be additionally added to the launch menu.',
+    marketplaceWindow_StackLaunchSelectPage: 'The App has multiple pages. Please select one to open.',
+    widgetAdded: 'Selected App Component is already added for this user',
+    marketplaceWindow_RequiredListingsAlertMsg: 'The App Component you have launched will not work without some dependencies.  These App Components are listed below and will be additionally added to the launch menu.',
     fitPaneFullWarning: 'This pane can only contain one App Component.',
     dashboardLockTitle: 'Lock Page',
     dashboardLockWarning: 'Locking this Page disables the App Components toolbar button. Users cannot start or add new App Components to this layout. Do you still want to lock this Page?',

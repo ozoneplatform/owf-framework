@@ -1,0 +1,28 @@
+$owf-notifications-border-color: #BFBFBF !default;
+$owf-notifications-header-background-color: #F2F2F2 !default;
+$owf-notifications-header-color: #2B6797 !default;
+
+$owf-notifications-group-background-color: #FFFFFF !default;
+$owf-notifications-group-header-color: $owf-notifications-header-color !default;
+
+$owf-notification-text-color: #4D4D4D !default;
+$owf-notification-timestamp-color: #A7ABAB !default;
+$owf-notification-hover-background-color: $owf-notifications-header-background-color !default;
+
+$owf-notifications-collapse-toggle-color: $owf-notification-timestamp-color !default;
+$owf-notifications-dismiss-all-color: #3989C9 !default;
+$owf-notifications-dismiss-all-hover-color: $owf-notifications-header-color !default;
+$owf-notifications-count-color: $owf-notification-timestamp-color !default;
+
+$owf-notifications-button-inactive-color: $owf-notifications-border-color !default;
+$owf-notifications-button-active-color: $owf-notification-text-color !default;
+
+$owf-notifications-badge-background-color: #EB1C24 !default;
+
+$owf-notifications-more-text-color: $owf-notifications-dismiss-all-color !default;
+$owf-notifications-more-text-hover-color: $owf-notifications-dismiss-all-hover-color !default;
+$owf-notifications-more-background-color: $owf-notifications-header-background-color !default;
+$owf-notifications-more-icon-color: $owf-notification-text-color !default;
+
+$owf-notifications-growl-background-color: $owf-notifications-group-background-color !default;
+$owf-notifications-growl-background-hover-color: $owf-notifications-header-background-color !default;

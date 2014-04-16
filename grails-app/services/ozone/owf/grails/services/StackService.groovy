@@ -679,6 +679,13 @@ class StackService {
 
         def stack = Stack.findById(params.id, [cache: true])
         def owner = stack.owner
+        boolean noMarketplaces = !widgetDefinitionService.hasMarketplace().data
+
+        // if no marketplace exits, approve stack
+        if(noMarketplaces) {
+            stack.approved = true
+            stack.save()
+        }
 
         //Construct the list of dashboards for the descriptor
         def dashboards = []

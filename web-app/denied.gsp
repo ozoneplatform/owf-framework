@@ -19,12 +19,14 @@
     Ext.BLANK_IMAGE_URL = '<owfImport:fileLibrary lib="ext" version="3.2.1" resource="resources/images/default/s.gif" />';
 
     Ext.onReady(function() {
+        var contextPath = '${request.contextPath}';
+
       //check current location to see if we failed from /owf/admin if so try to redirect to main OWF
-      if (window.location.href.match(new RegExp('^.*${request.contextPath}\/admin[\/\?]?.*$'))) {
+      if (window.location.href.match(new RegExp('^.*' + contextPath + '\/admin[\/\?]?.*$'))) {
         Ext.MessageBox.alert('Authorization Error',
                 'You are not authorized to access this page. You will be redirected to your default dashboard.',
                 function redirectToOzone() {
-                  window.location.href = '${request.contextPath}'
+                  window.location.href = contextPath;
                 });
       }
       else {

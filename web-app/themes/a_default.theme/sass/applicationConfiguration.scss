@@ -10,8 +10,8 @@ $theme-name: 'owf';
 // @import 'variables/applicationConfiguration';
 
 .editable_cell{
-    cursor: hand; 
-    cursor: pointer; 
+    cursor: hand;
+    cursor: pointer;
     min-width: 300px;
     width: 300px;
     min-height: 35px;
@@ -30,24 +30,24 @@ $theme-name: 'owf';
         //background-repeat: no-repeat;
         //background-position: 99% 4%;
     }
-}               
+}
 
 .editable_cell_image{
-    cursor: hand; 
-    cursor: pointer; 
+    cursor: hand;
+    cursor: pointer;
     min-width:  25px;
     max-width:  200px;
     min-height: 25px;
     max-height: 50px;
-    padding-right: 5px;     
-}       
+    padding-right: 5px;
+}
 
 .non_editable_cell{
     min-width: 250px;
-    min-height: 30px;  
+    min-height: 30px;
     font-size: 12px;
     color: $appConfig-noedit-cell-color;
-}   
+}
 
 .spinner {
     background: theme-image($theme-name, 'spinner.gif') no-repeat transparent;
@@ -80,9 +80,9 @@ $theme-name: 'owf';
 
             color: $appConfig-store-btn-color;
             background-color: $appConfig-store-btn-bg-color;
-            
+
             padding: 5px 20px;
-            
+
             &:hover, &.hover {
                 color: $appConfig-store-btn-color-hover;
                 background-color: $appConfig-store-btn-bg-color-hover;
@@ -90,7 +90,7 @@ $theme-name: 'owf';
         }
     }
 }
-                
+
 div.app_config_column_container{
     width: 100%;
     float: left;
@@ -106,16 +106,16 @@ div.app_config_section{
 
 
 div.app_config_column_left{
-    float: left; 
+    float: left;
     width: 46%;
 }
 
 div.app_config_column_right{
-    float: left; 
+    float: left;
     min-width: 50%;
-    max-width: 50%; 
+    max-width: 50%;
     padding-left: 20px;
-}                       
+}
 
 
 div.app_config_map_row{
@@ -168,9 +168,8 @@ div.app_config_map_row{
 .app_config_text_area{
     min-width: 300px;
     width: 300px;
-    min-height: 35px;
-    max-height: 100px;
-    //height: 35px;
+    min-height: 125px;
+    max-height: 200px;
     border: 1px solid $appConfig-cell-border-hover;
     background-color: $appConfig-cell-background-active;
     padding-left: 3px;
@@ -238,11 +237,11 @@ div.app_config_map_row{
         width: 12em;
         padding-left: 10px;
         padding-right: 10px;
-        
+
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        
+
         font: {
             size: 1.2em;
             weight: bold;
@@ -257,7 +256,7 @@ div.app_config_map_row{
 
         position: relative;
         top: 0.3em;
-        
+
         background-repeat: no-repeat;
         background-position: center center;
         cursor: pointer;
@@ -273,10 +272,10 @@ div.app_config_map_row{
     .edit {
         margin-left: 4em;
         background-image: theme-image($theme-name, 'applicationConfiguration/stores/Edit-out.png');
-        
+
         &:hover, &.hover {
-            background-image: theme-image($theme-name, 'applicationConfiguration/stores/Edit-over.png'); 
-        }   
+            background-image: theme-image($theme-name, 'applicationConfiguration/stores/Edit-over.png');
+        }
     }
 
     .delete {
@@ -284,7 +283,7 @@ div.app_config_map_row{
         background-image: theme-image($theme-name, 'applicationConfiguration/stores/Delete-out.png');
 
         &:hover, &.hover {
-            background-image: theme-image($theme-name, 'applicationConfiguration/stores/Delete-over.png'); 
+            background-image: theme-image($theme-name, 'applicationConfiguration/stores/Delete-over.png');
         }
     }
 }
@@ -338,33 +337,33 @@ body.configuration_widget {
     .auditing {
         background-image: theme-image($theme-name, 'applicationConfiguration/Auditing_Inactive.png');
         &:hover {
-            background-image: theme-image($theme-name, 'applicationConfiguration/Auditing_Hover.png');    
+            background-image: theme-image($theme-name, 'applicationConfiguration/Auditing_Hover.png');
         }
-        
+
         &.active {
-            background-image: theme-image($theme-name, 'applicationConfiguration/Auditing_Active.png');    
+            background-image: theme-image($theme-name, 'applicationConfiguration/Auditing_Active.png');
         }
     }
 
     .user_account_settings {
         background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Inactive.png');
         &:hover {
-            background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Hover.png');    
+            background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Hover.png');
         }
-        
+
         &.active {
-            background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Active.png');    
+            background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Active.png');
         }
     }
 
     .branding {
         background-image: theme-image($theme-name, 'applicationConfiguration/Branding_Inactive.png');
         &:hover {
-            background-image: theme-image($theme-name, 'applicationConfiguration/Branding_Hover.png');    
+            background-image: theme-image($theme-name, 'applicationConfiguration/Branding_Hover.png');
         }
 
         &.active {
-            background-image: theme-image($theme-name, 'applicationConfiguration/Branding_Active.png');    
+            background-image: theme-image($theme-name, 'applicationConfiguration/Branding_Active.png');
         }
     }
 
@@ -376,6 +375,26 @@ body.configuration_widget {
 
         &.active {
             background-image: theme-image($theme-name, 'applicationConfiguration/Store_Active.png');
+        }
+    }
+
+    .notifications {
+        margin-left: 0;
+        position: relative;
+
+        .icon-bell {
+            position: absolute;
+            left: 0px;
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            top: 9px;
+            color: $link-color;
+        }
+
+        &:hover .icon-bell,
+        &.active .icon-bell {
+            color: $link-over-color;
         }
     }
 }

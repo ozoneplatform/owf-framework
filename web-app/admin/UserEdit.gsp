@@ -8,7 +8,7 @@
 		<!-- ** CSS ** -->
 		<!-- base library -->
 		<g:if test="${params.themeName != null && params.themeName != ''} ">
-		<link rel='stylesheet' type='text/css' href='../themes/${params.themeName.encodeAsHTML()}.theme/css/${params.themeName.encodeAsHTML()}.css' />
+		<link rel='stylesheet' type='text/css' href='../themes/${params.themeName.encodeAsURL().encodeAsHTML()}.theme/css/${params.themeName.encodeAsURL().encodeAsHTML()}.css' />
 		</g:if>
 		<g:else>
 		<p:css name='../${owfCss.defaultCssPath()}' absolute='true'/>
@@ -21,7 +21,7 @@
         <p:javascript src='owf-admin-widget' pathToRoot="../" />
         <p:javascript src='owf-user-edit-widget' pathToRoot="../" />
         <!-- include our server bundle, in dev mode a full list of js includes will appear -->
-			
+
 		<script language = "javascript">
 			if(Ext.isIE) {
 				Ext.BLANK_IMAGE_URL = '../themes/common/images/s.gif';

@@ -13,6 +13,7 @@ Ozone.marketplace.AddWidgetContainer = function (eventingContainer, dashboardCon
 
     this.addWidgetChannelName = "_ADD_WIDGET_CHANNEL";
     this.addStackChannelName = "_ADD_STACK_CHANNEL";
+    this.launchStackChannelName = "_LAUNCH_STACK_CHANNEL";
     this.windowManager = null;
     this.ANIMATION_DURATION = 1000;
 
@@ -22,6 +23,7 @@ Ozone.marketplace.AddWidgetContainer = function (eventingContainer, dashboardCon
         this.eventingContainer = eventingContainer;
         //register on add widget channel
         var scope = this;
+
         this.eventingContainer.registerHandler(this.addWidgetChannelName, function (sender, msg) {
             var me = this;
 
@@ -29,10 +31,19 @@ Ozone.marketplace.AddWidgetContainer = function (eventingContainer, dashboardCon
                 me.callback && me.callback(result);
             });
         });
+
         this.eventingContainer.registerHandler(this.addStackChannelName, function (sender, msg) {
             var me = this;
             // Must return a value for the callback function to be invoked on the client side.
             return scope.addStack(Ozone.util.parseJson(sender), Ozone.util.parseJson(msg), function (result) {
+                me.callback && me.callback(result);
+            });
+        });
+
+        this.eventingContainer.registerHandler(this.launchStackChannelName, function (sender, msg) {
+            var me = this;
+
+            return scope.launchStack(Ozone.util.parseJson(sender), Ozone.util.parseJson(msg), function (result) {
                 me.callback && me.callback(result);
             });
         });
@@ -63,7 +74,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
             animTargetBtn = "myAppsBtn";
         }
 
-        var visualizeAddition = function(definitionName) {
+        // fallbackToolTipText is only used if animations are disabled
+        var visualizeAddition = function(fallbackToolTipText) {
             var btn = Ext.getCmp(animTargetBtn);
             if(Modernizr.csstransitions && Modernizr.cssanimations) {
                 var listing = Ext.getCmp(sender.id),
@@ -93,19 +105,24 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     });
             }
             else {
-                var tip = Ext.create('Ext.tip.ToolTip', {
-                    html: definitionName + ' has been added successfully from AppsMall.',
-                    anchor: 'left',
-                    target: animTargetBtn,
-                    cls: 'focusTooltip',
-                    listeners: {
-                        hide: function () {
-                            tip.destroy();
-                        }
-                    }
-                });
                 btn.blink();
-                tip.show();
+
+                if (fallbackToolTipText) {
+                    var tip = Ext.create('Ext.tip.ToolTip', {
+                        html: fallbackToolTipText,
+                        anchor: 'left',
+                        target: animTargetBtn,
+                        cls: 'focusTooltip',
+                        listeners: {
+                            hide: function () {
+                                tip.destroy();
+                            }
+                        }
+                    });
+
+                    tip.show();
+                }
+
                 marketplaceCallback && marketplaceCallback(id);
             }
         };
@@ -143,7 +160,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     icon: false
                 });
 
-                addStackCallback && addStackCallback("The application");
+                addStackCallback && addStackCallback("The application has been added successfully from AppsMall.");
                 self.dashboardContainer.refreshAppComponentsView();
                 self.dashboardContainer.loadMask.hide();
             },
@@ -155,7 +172,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
     },
 
     addWidget:function (sender, config, marketplaceCallback) {
-        this.dashboardContainer.loadMask.show();    
+        this.dashboardContainer.loadMask.show();
 
         var doLaunch = false,
             baseUrl, id, visualizeAddition;
@@ -190,7 +207,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                     var serviceItem = data[i];
 
                     // widget requires stacks, need to refresh dashboards
-                    if(serviceItem.owfProperties && serviceItem.owfProperties.stackDescriptor) {                        
+                    if(serviceItem.owfProperties && serviceItem.owfProperties.stackDescriptor) {
                         self.dashboardContainer.dashboardsNeedRefresh = true;
                     }
 
@@ -266,7 +283,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         }
 
         if (directRequired.length > 0) {
-            widgetJson.directRequired = Ext.JSON.encode(directRequired);
+            widgetJson.directRequired = directRequired;
         }
         return widgetJson;
     },
@@ -307,8 +324,8 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 // AML-2924 - This will display the dashboard switcher and add a listener to launch the widget if
                 // requested
 
-
                 var result = Ext.JSON.decode(response),
+                    notifyTitle = Ozone.layout.DialogMessages.added,
                     notifyText;
 
                 if (result.success) {
@@ -330,10 +347,10 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                                 var widgetDef = widgetDefs.get(0);
 
                                 notifyText = self.launchWidget(widgetDef, doLaunchCallback);
-
+                                notifyTitle = 'Choose an App to Start App Component'
                             } else {
                                 notifyText = "The App Component was successfully added.";
-                                addWidgetCallback && addWidgetCallback(widgetDefs.get(0).get('name'));
+                                addWidgetCallback && addWidgetCallback(widgetDefs.get(0).get('name') + ' has been added successfully from AppsMall.');
                             }
                         } else {
                             // Failure message
@@ -341,7 +358,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                         }
                         //Display the message
                         notifyText && $.pnotify({
-                            title: Ozone.layout.DialogMessages.added,
+                            title: notifyTitle,
                             text: notifyText,
                             type: 'success',
                             addclass: "stack-bottomright",
@@ -354,10 +371,10 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                         self.dashboardContainer.loadMask.hide();
                     });
 
-                }   else {
+                } else {
                     notifyText = Ozone.layout.DialogMessages.marketplaceWindow_AddWidget;
                     $.pnotify({
-                        title: Ozone.layout.DialogMessages.added,
+                        title: notifyTitle,
                         text: notifyText,
                         type: 'success',
                         addclass: "stack-bottomright",
@@ -428,7 +445,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
                 self.dashboardContainer.saveDashboard(dashboard.data, 'create', function(json) {
                     self.dashboardContainer.addListener(OWF.Events.Dashboard.CHANGED, function() {
-                        self.dashboardContainer.launchWidgets(widgetDef, true);
+                        self.dashboardContainer.launchWidgets(null, widgetDef, true);
                         self.dashboardContainer.activeDashboard.config.locked = true;
                         self.dashboardContainer.saveDashboard(self.dashboardContainer.activeDashboard, 'update', function() {});
                         self.dashboardContainer.getBanner().disableAppComponentsBtn();
@@ -441,10 +458,10 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                 notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_WebappLaunchSuccessful;
             }
         } else {
-
             var dashboardSelectionPromise = self.dashboardContainer.selectDashboard();
-            dashboardSelectionPromise.done(function() {
-                self.dashboardContainer.launchWidgets(widgetDef, true);
+            dashboardSelectionPromise.done(function(evt, dashboardId) {
+                var model = OWF.Collections.AppComponents.findWhere({widgetGuid: widgetDef.data.widgetGuid});
+                self.dashboardContainer.launchWidgets(evt, model, true, false);
             });
 
             notifyText =  Ozone.layout.DialogMessages.marketplaceWindow_LaunchSuccessful;
@@ -456,5 +473,87 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
 
     registerWindowManager:function (window_manager) {
         this.windowManager = window_manager;
+    },
+
+    launchStack: function(sender, config, launchedCallback) {
+        var me = this;
+
+        me.dashboardContainer.loadMask.show();
+
+        var findStack = function(stackContext) {
+            var result = null;
+
+            for (var i = 0, len = me.dashboardContainer.stackStore.getCount(); i < len; i++) {
+                var model = me.dashboardContainer.stackStore.getAt(i).data;
+
+                if (model.stackContext &&
+                    model.stackContext === stackContext) {
+                    result = model;
+                    break;
+                }
+            }
+
+            return result;
+        };
+
+        var onStackLoaded = function(stackModel, activate) {
+            if (activate) {
+                me.dashboardContainer.activateDashboard(null, false,
+                    stackModel.stackContext);
+            }
+
+            // Handle stack with multiple pages
+            if (stackModel.dashboards && stackModel.dashboards.length > 1) {
+                setTimeout(function() {
+                    me.dashboardContainer.showMyAppsWind().then(
+                        function(appsWindow) {
+                            appsWindow.focusActiveDashboard();
+
+                            var stack_bottomright = {
+                                "dir1": "up", "dir2": "left",
+                                "firstpos1": 25, "firstpos2": 25
+                            };
+
+                            $.pnotify({
+                                title: Ozone.ux.DashboardMgmtString.selectDashboard,
+                                text: Ozone.layout.DialogMessages.marketplaceWindow_StackLaunchSelectPage,
+                                type: 'success',
+                                addclass: "stack-bottomright",
+                                stack: stack_bottomright,
+                                history: false,
+                                sticker: false,
+                                icon: false
+                            });
+                        }
+                    );
+                }, activate ? 200 : 0);
+            }
+
+            me.dashboardContainer.loadMask.hide();
+            launchedCallback && launchedCallback(true);
+        }
+
+        var targetStack = findStack(config.stackContext);
+
+        if (targetStack) {
+            onStackLoaded(targetStack, true);
+        } else {
+            // Reload from server and then select target stack
+            me.dashboardContainer.reloadDashboards(function() {
+                // Check if the desired stack was found
+                targetStack = findStack(config.stackContext);
+
+                if (targetStack) {
+                    // The stack was already activated by the reload above
+                    onStackLoaded(targetStack, false);
+                } else {
+                    me.dashboardContainer.loadMask.hide();
+                    launchedCallback && launchedCallback(false);
+                    Ozone.Msg.alert(Ozone.layout.DialogMessages.error,
+                                    Ozone.util.ErrorMessageString.stackNotFound,
+                                    null, null, null);
+                }
+            }, config.stackContext /* Will activate if found after load */);
+        }
     }
 };

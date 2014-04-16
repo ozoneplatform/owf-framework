@@ -26,11 +26,11 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
     // array of all widgets for the dashboard
     // used when user removes all the panes by resetting dashboard
     allWidgets: null,
-    
+
     buildItemsArray: function(cfg) {
         if(!cfg || !cfg.items)
             return;
-        
+
         if(cfg.items.length === 0) {
             cfg.paneType = cfg.xtype;
             cfg.xtype = 'dashboarddesignerpane';
@@ -54,13 +54,13 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
 
         return cfg;
     },
-    
+
     initComponent: function() {
         var me = this,
             layoutConfig = me.dashboardExists ? me.dashboard.configRecord.get('layoutConfig'): me.dashboard.get('layoutConfig');
 
         me.locked = me.dashboardExists ? me.dashboard.configRecord.get('locked'): me.dashboard.get('locked');
-        
+
         me.allWidgets = [];
 
         me.layout = {
@@ -178,7 +178,7 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
             workArea = this.down('dashboarddesignerworkingarea'),
             ddpanes = this.query('dashboarddesignerpane'),
             firstEl;
-        
+
         // just after reset......or designing saved dashboard with no panes
         if(ddpanes.length === 0 || ddpanes.length === 1) {
             var target = ddpanes.length === 0 ? workArea : ddpanes[0];
@@ -239,7 +239,7 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
 
         if(!targetCmp)
             return;
-        
+
         ownerCt = targetCmp.ownerCt;
 
         layoutConfig = {
@@ -342,7 +342,7 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
             }
 
             //If more than 1 non-floating widget, confirm since widgets will be lost
-            if(paneWidgets.length > 1 && (cmp.isXType("dashboarddesignerworkingarea") 
+            if(paneWidgets.length > 1 && (cmp.isXType("dashboarddesignerworkingarea")
                     || (prevPaneType !== null && prevPaneType !== 'fitpane'))) {
                 this.confirmRemoveWidgets(cmp, paneWidgets);
             }
@@ -372,8 +372,8 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
 
         Ext.widget('alertwindow', {
             title: 'Warning',
-            html: '<p>You are about to set a single-widget Fit layout to a pane containing ' 
-                + paneWidgets.length + ' widgets. On save, all widgets in the pane except for <i>' 
+            html: '<p>You are about to set a single-widget Fit layout to a pane containing '
+                + paneWidgets.length + ' widgets. On save, all widgets in the pane except for <i>'
                 + Ext.htmlEncode(activeWidget.name) + '</i> will be removed from the dashboard.</p><br/>'
                 + '<p>Set to Fit layout and <b>permanently</b> remove the other widgets?</p>',
             width: 400,
@@ -388,15 +388,15 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
                     remainingWidgets = me.allWidgets;
                 }
                 else {
-                    remainingWidgets = cmp.initialConfig.items[0] 
-                        ? cmp.initialConfig.items[0].widgets 
+                    remainingWidgets = cmp.initialConfig.items[0]
+                        ? cmp.initialConfig.items[0].widgets
                         : cmp.initialConfig.widgets;
                 }
 
                 //Remove all widgets that aren't floating, background, or the active widget
                 for(var i = 0; i < remainingWidgets.length; i++) {
                     var widget = remainingWidgets[i];
-                    if(widget.floatingWidget !== true 
+                    if(widget.floatingWidget !== true
                             && widget.background !== true
                             && widget.uniqueId !== activeWidget.uniqueId) {
                         remainingWidgets[i] = null;
@@ -404,8 +404,8 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
                 }
                 remainingWidgets = Ext.Array.clean(remainingWidgets);
 
-                cmp.initialConfig.items[0] 
-                    ? cmp.initialConfig.items[0].widgets = remainingWidgets 
+                cmp.initialConfig.items[0]
+                    ? cmp.initialConfig.items[0].widgets = remainingWidgets
                     : cmp.initialConfig.widgets = remainingWidgets;
 
                 if(cmp.isXType("dashboarddesignerworkingarea")) {
@@ -429,13 +429,13 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
             },
 
             // On exit from a target node, unhighlight that node.
-            onNodeOut : function(target, dd, e, data){ 
+            onNodeOut : function(target, dd, e, data){
                 Ext.fly(target).removeCls('highlight-dashboard-designer-drop');
             },
 
             // While over a target node, return the default drop allowed class which
             // places a "tick" icon into the drag proxy.
-            onNodeOver : function(target, dd, e, data){ 
+            onNodeOver : function(target, dd, e, data){
                 return Ext.dd.DropZone.prototype.dropAllowed;
             },
 
@@ -462,7 +462,7 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
     reset: function() {
         var cmp = this.getComponent('dashboard-designer-working-area'),
             paneType = cmp.initialConfig.paneType;
-        
+
         cmp.removeAll(true);
         cmp.initialConfig.items = [];
         cmp.initialConfig.paneType = '';
@@ -486,7 +486,7 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
         }
         else {
             // dashboard is reset or not customized
-            dashboardLayoutConfig = Ext.applyIf({ 
+            dashboardLayoutConfig = Ext.applyIf({
                 paneType: (workArea.initialConfig.paneType || undefined), //prevent null
                 widgets: me.allWidgets
             }, Ozone.config.defaultLayoutConfig);
@@ -534,6 +534,18 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
 
                 // activate new dashboard
                 me.dashboardContainer.activateDashboard(json.guid);
+
+                $.pnotify({
+                    title: 'Add App Components',
+                    text: "Click App Components (in the toolbar) to find App Components. Drag them onto the screen to add them to this App.",
+                    type: 'success',
+                    addclass: "stack-bottomright",
+                    stack: {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25},
+                    history: false,
+                    sticker: false,
+                    icon: false,
+                    delay: 20000
+                });
             });
         }
 
@@ -571,7 +583,7 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
         var me = this,
             sidePanel = this.getComponent('dashboard-designer-side-panel'),
             lockButton = sidePanel.getComponent('dashboard-lock');
-        
+
         if(!this.locked) {
             if (!this.dashboardContainer.suppressLockWarning) {
                 //Must be instantiated first so it can be referenced as firstEl
@@ -601,9 +613,9 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
                     okFn: function() {
                         // set suppressMsg flag
                         //me.dashboardContainer.suppressLockWarning = checkbox.getValue();
-                        
+
                         me.locked = true;
-                        
+
                         // Toggle lock icon
                         var img = lockButton.el.down('img');
                         img.set({
@@ -619,14 +631,14 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
                 alertWindow.show().setZIndex(this.el.getStyle('z-index') + 10);
             } else {
                 this.locked = true;
-                
+
                 // Toggle lock icon
                 var img = lockButton.el.down('img');
                 img.set({
                     src: "themes/common/images/dashboard-designer/LockON.png"
                 });
             }
-        } else { 
+        } else {
             this.locked = false;
             // Toggle lock icon
             var img = lockButton.el.down('img');
@@ -635,7 +647,7 @@ Ext.define('Ozone.components.dashboarddesigner.DashboardDesigner', {
             });
         }
     },
-    
+
     cleanUp: function() {
         this.dropZone.destroy();
     }

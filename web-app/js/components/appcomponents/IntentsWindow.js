@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Next Century Corporation 
+ * Copyright 2013 Next Century Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 
  ;(function () {
-    
+
     Ozone.components.appcomponents = Ozone.components.appcomponents || {};
 
-    var SuperClass = Ozone.components.BaseView;
+    var SuperClass = Ozone.views.BaseView;
     var ondragstart;
 
     Ozone.components.appcomponents.IntentsWindow = SuperClass.extend({
@@ -60,7 +60,7 @@
                                     '<img src="' + this.BLANK_IMAGE_SRC + '" class="x-tool-close">' +
                                 '</a>' +
                                 '<span>' + this.getHeaderText() + '</span>'+
-                            '</div>' + 
+                            '</div>' +
                             '<div class="body"></div>' +
                             '<div class="footer"></div>'
             );
@@ -91,7 +91,7 @@
             if(this.isShowingOpenInstances) {
                 footerHTML += '<p>OR send the information to a different <a href="#" class="show-new-component">App Component</a></p>';
             }
-            
+
             footerHTML += '<input type="checkbox" class="remember-checkbox">' +
                             '<label class="remember">Remember this decision</label>';
 
@@ -109,14 +109,14 @@
             }
         },
 
-        launch: function (model, isEnterPressed, isDragAndDrop) {
+        launch: function (evt, model, isEnterPressed, isDragAndDrop) {
             this.hide();
 
             if(this.isShowingOpenInstances) {
                 this.dashboardContainer.activeDashboard.handleAlreadyLaunchedWidget(model.attributes);
             }
             else {
-                this.dashboardContainer.launchWidgets(model, isEnterPressed, isDragAndDrop);
+                this.dashboardContainer.launchWidgets(evt, model, isEnterPressed, isDragAndDrop);
             }
         },
 
@@ -156,7 +156,7 @@
             this.renderSubView()
                 .renderFooter()
                 .shown();
-            
+
             this.$body.insertAfter($header);
         },
 
@@ -182,8 +182,8 @@
 
             evt.preventDefault();
 
-            me.$el.on('mouseleave.launch', function () {
-                me.launch(model, false, true);
+            me.$el.on('mouseleave.launch', function (evt) {
+                me.launch(evt, model, false, true);
             });
 
             $doc.on('mousemove.launch', function (evt) {
@@ -217,7 +217,7 @@
 
         _onComponentClick: function (evt) {
             var model = $(evt.currentTarget).data('view').model;
-            this.launch(model, false, false);
+            this.launch(evt, model, false, false);
         },
 
         _onRememberClick: function (evt) {

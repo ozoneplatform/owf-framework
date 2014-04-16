@@ -51,12 +51,12 @@ Ext.define('Ozone.components.view.ToolDataView', {
         this.callParent(arguments);
     },
 
-    
-    onClick: function(dataView, record, item) {
-        this.up().callBtnHandler(record.data.name, item);
+
+    onClick: function(dataView, record, item, index, evt) {
+        this.up().callBtnHandler(evt, record.data.name, item);
         return true;
     },
-    
+
     onKeyDown: function(view, record, item, index, event, eOpts) {
         switch (event.getKey()) {
             case event.ENTER:

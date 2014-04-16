@@ -12,6 +12,10 @@
 /web-app/WEB-INF/classes
 /plugins/aml-commons-*
 
+# DB scripts that must be rebuilt for every release
+#/src/assemble/dbscripts/*InitialCreate.sql
+#/src/assemble/dbscripts/*PrefsUpdate*.sql
+
 # "temporary" files
 /staging
 /build-base*
@@ -34,7 +38,6 @@ web-app/WEB-INF/grails-app
 test-widgets/html-widgets/src/main/webapp/images/dragAndDrop/
 test-widgets/html-widgets/src/main/webapp/js-lib/
 test-widgets/html-widgets/src/main/webapp/js/
-test-widgets/standalone-container/src/main/webapp/js-min/
 /src/assemble/docs/jsdoc/
 /lib/compressjs
 *.zip
@@ -42,7 +45,7 @@ owf-widget-debug.js
 owf-widget-min.js
 owf-widget-min.gz.js
 /*.jks
-
+*.orig
 # OS generated files #
 .DS_Store
 .DS_Store?
@@ -67,3 +70,7 @@ Thumbs.db
 /*.ipr
 atlassian-ide-plugin.xml
 .*.swp
+
+Vagrantfile
+/.vagrant/*
+/lib/access-1.0.jar

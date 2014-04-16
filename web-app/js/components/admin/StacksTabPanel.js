@@ -237,18 +237,23 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
 
                                 Ext.QuickTips.init();
                                 var stack = record.data,
-                                    button = win.down('#ok');
+                                    button = win.down('#ok'),
+                                    msg;
 
                                 // disable the ok button if the app is not approved
-                                if (!stack.approved && self.hasMarketplace) {
+                                if (!stack.approved) {
                                     button.setDisabled(true);
+                                    
+                                    msg = self.hasMarketplace ? 
+                                            Ozone.layout.tooltipString.unapprovedStackEditMessage
+                                            : Ozone.layout.tooltipString.unapprovedStackWithoutMarkpetplaceEditMessage;
 
                                     // firefox handles tooltips on disabled buttons differently than the other browsers
                                     if (Ext.isGecko) {
                                         if (!tip) {
                                             tip = Ext.create('Ext.tip.ToolTip', {
                                                 target: button.id,
-                                                html: Ozone.layout.tooltipString.unapprovedStackEditMessage
+                                                html: msg
                                             });
                                         }
                                         else {
@@ -256,7 +261,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                         }
                                     }
                                     else {
-                                        button.setTooltip(Ozone.layout.tooltipString.unapprovedStackEditMessage);
+                                        button.setTooltip(msg);
                                     }
                                 }
                                 else {

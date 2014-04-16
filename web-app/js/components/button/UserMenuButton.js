@@ -1,6 +1,6 @@
 //TODO reimplement that class as a proper Ext.menu.Menu, the way it is now the menu this button creates uses a hardcoded
 //z-index and does not participate in Ext's ZindexManagement.  This makes it hard to use tooltips on the menu items
-Ext.define('Ozone.components.button.UserMenuButton', {
+/*Ext.define('Ozone.components.button.UserMenuButton', {
     extend: 'Ext.button.Button',
     alias: ['widget.usermenubutton', 'widget.Ozone.components.button.UserMenuButton'],
 
@@ -261,14 +261,6 @@ Ext.define('Ozone.components.button.UserMenuButton', {
                     me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceThemes');
                 }, me)
             }, {
-                text: 'My Listings',
-                id: 'marketplaceMyListings',
-                height: 25,
-                clickable: true,
-                handler: Ext.bind(function(evt, obj) {
-                    me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceMyListings');
-                }, me)
-            }, {
                 text: 'Create Listing',
                 id: 'marketplaceCreateListing',
                 height: 25,
@@ -523,4 +515,4 @@ Ext.define('Ozone.components.button.UserMenuButton', {
         franchiseAdminMenuItem.hide();
         spacer.hide();
     }
-});
+});*/

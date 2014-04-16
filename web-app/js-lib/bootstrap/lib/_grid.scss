@@ -1,0 +1,21 @@
+//
+// Grid system
+// --------------------------------------------------
+
+
+// Fixed (940px)
+@include grid-core($grid-column-width, $grid-gutter-width);
+
+// Fluid (940px)
+@include grid-fluid($fluid-grid-column-width, $fluid-grid-gutter-width);
+
+// Reset utility classes due to specificity
+[class*="span"].hide,
+.row-fluid [class*="span"].hide {
+  display: none;
+}
+
+[class*="span"].pull-right,
+.row-fluid [class*="span"].pull-right {
+  float: right;
+}

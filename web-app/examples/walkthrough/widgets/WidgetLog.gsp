@@ -2,7 +2,7 @@
 <html>
 <head>
     <g:if test="${params.themeName != null && params.themeName != ''}">
-        <link rel='stylesheet' type='text/css' href='../../../themes/${params.themeName.encodeAsHTML()}.theme/css/${params.themeName.encodeAsHTML()}.css' />
+        <link rel='stylesheet' type='text/css' href='../../../themes/${params.themeName.encodeAsURL().encodeAsHTML()}.theme/css/${params.themeName.encodeAsURL().encodeAsHTML()}.css' />
     </g:if>
     <g:else>
         <link href="../../../js-lib/ext-4.0.7/resources/css/ext-all.css" rel="stylesheet" type="text/css">

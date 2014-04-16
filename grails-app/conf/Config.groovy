@@ -101,7 +101,7 @@ uiperformance.exclusions = [
         "**/js-doh/**",
         "**/js-lib/**",
         "**/js-min/**",
-		"**/api/**"
+        "**/rest/**"
 
 ]
 
@@ -173,7 +173,7 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-admin-widget',
-    
+
         files: [
             '../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed',
             '../js-lib/ext-4.0.7/ext-all-debug',
@@ -226,7 +226,7 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-marketplace-approval-widget',
-                
+
         files: [
             '../js/data/models/WidgetDefinition',
             '../js/data/stores/AdminWidgetStore',
@@ -287,7 +287,7 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-group-edit-widget',
-    
+
         files: [
             '../js/data/models/Dashboard',
             '../js/data/stores/AdminDashboardStore',
@@ -337,7 +337,7 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-stack-edit-widget',
-    
+
         files: [
             '../js/data/models/User',
             '../js/data/stores/UserStore',
@@ -376,7 +376,7 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-user-management-widget',
-    
+
         files: [
             'data/models/User',
             'data/stores/UserStore',
@@ -389,7 +389,7 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-user-edit-widget',
-    
+
         files: [
             'util/guid',
             '../js/data/models/Dashboard',
@@ -446,7 +446,7 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-widget-edit-widget',
-    
+
         files: [
             'util/guid',
             '../js/data/ModelIdGenerator',
@@ -507,7 +507,7 @@ uiperformance.bundles = [
         name: "require-js",
         files: [
             "../js-lib/requirejs/require-2.1.6"
-        ]       
+        ]
     ],
     [
         type: 'js',
@@ -529,11 +529,13 @@ uiperformance.bundles = [
                         '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.position',
                         '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.sortable',
                         '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.resizable',
-                        '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.tooltip',
                         '../js-lib/backbone/backbone-1.0.0',
+                        '../js-lib/bootstrap/bootstrap-2.3.2',
                         '../js-lib/jquery.bxslider/jquery.bxslider',
                         '../js-lib/pnotify-1.2.0/jquery.pnotify',
                         '../js-lib/stubconsole',
+                        '../js-lib/moment',
+                        '../js-lib/handlebars/handlebars-1.0.0',
                         '../js/util/css_events',
                         '../js-plugins/Banner',
                         '../js-plugins/Dashboard',
@@ -589,7 +591,7 @@ uiperformance.bundles = [
                         'ux/MessageBoxPlus',
                         'ux/OWFVtypes',
                         '../js-lib/log4javascript/log4javascript',
-            			'audit/Audit',
+                        'audit/Audit',
                         'util/version',
                         'util/util',
                         'util/widget_utils',
@@ -692,13 +694,30 @@ uiperformance.bundles = [
                         'components/theming/ThemeSwitcherWindow',
                         'components/dashboard/DashboardContainer',
                         'components/dashboard/Dashboard',
-						'components/window/MyAppsWindow',
-						'components/window/MyAppTip',
-						'components/window/StoreWizard',
+                        'components/window/MyAppsWindow',
+                        'components/window/MyAppTip',
+                        'components/window/StoreWizard',
                         'components/window/TipWarning',
-						'components/window/MyPageTip',
+                        'components/window/MyPageTip',
                         'components/window/HelpWindow',
-                        'components/view/BaseView',
+                        'views/BaseView',
+                        'views/CollectionView',
+                        'views/PopoverViewMixin',
+                        'notifications/NotificationModel',
+                        'notifications/XMPPNotificationsCollection',
+                        'views/notifications/NotificationsBadge',
+                        'views/notifications/NotificationView',
+                        'views/notifications/NotificationDetailsView',
+                        'views/notifications/NotificationsGrowl',
+                        'views/notifications/NotificationsButton',
+                        'views/notifications/NotificationsGroupView',
+                        'views/notifications/NotificationsGroupedListView',
+                        'views/notifications/NotificationsHeader',
+                        'views/notifications/NotificationsSectionHeader',
+                        'views/usermenu/UserMenuGroup',
+                        'views/usermenu/UserMenu',
+                        'views/usermenu/UserMenuButton',
+                        'components/ExtBackboneViewWrapper',
                         'components/appcomponents/AppComponent',
                         'components/appcomponents/DetailsTip',
                         'components/appcomponents/AppComponentsList',
@@ -720,6 +739,8 @@ uiperformance.bundles = [
                         'components/view/ToolDataView',
                         'components/view/TagCloud',
                         'components/button/ShareButton',
+                        'components/button/NotificationsButtonWrapper',
+                        'components/button/UserMenuButtonWrapper',
                         'components/banner/Banner',
                         'components/widget/WidgetPortlet',
                         'components/widget/WidgetWindow',
@@ -735,11 +756,11 @@ uiperformance.bundles = [
                         'chrome/WidgetChromeContainer',
                         'components/widget/DeleteWidgetsPanel',
                         'metrics/BaseMetrics',
-						'../js/data/stores/AdminWidgetStore',
-						'../js/data/models/WidgetType',
-						'../js/data/stores/WidgetTypeStore',
-						'../js/data/models/Group',
-						'../js/data/stores/GroupStore',
+                        '../js/data/stores/AdminWidgetStore',
+                        '../js/data/models/WidgetType',
+                        '../js/data/stores/WidgetTypeStore',
+                        '../js/data/models/Group',
+                        '../js/data/stores/GroupStore',
             //this patch file should be at the end
                         '../js-lib/patches/RemoveListenerCaptureBugOverrides'
 
@@ -845,7 +866,7 @@ environments {
             //get rid of stdout logging
             rootLogger.removeAllAppenders()
 
-            //disable the creation of stacktrace.log since we 
+            //disable the creation of stacktrace.log since we
             //don't log anything to it
             appenders {
                 'null' name: 'stacktrace'
@@ -859,7 +880,7 @@ environments {
             }
 
             //this configuration is only active
-            //until the bootstrap phase when 
+            //until the bootstrap phase when
             //our log4j.xml gets loaded and overrides
             //these settings
             appenders {
@@ -895,7 +916,7 @@ environments {
         perfTest.numStacks = 25                 // The number of stacks
         perfTest.numStacksPerUser = 3           // The number of stacks per user
         perfTest.numStackDashboards = 2         // The number of dashboards each stack will get assigned to them
-        // TODO: perfTest.numPersonalStacks variable to assign stacks that haven't been published to each user only 
+        // TODO: perfTest.numPersonalStacks variable to assign stacks that haven't been published to each user only
 
         perfTest.createSampleWidgets = false
         perfTest.sampleWidgetBaseUrl = 'https://127.0.0.1:8443/owf/sampleWidgets/'
@@ -912,6 +933,7 @@ environments {
             //debug 'org.hibernate.SQL'
             //trace 'org.hibernate.type'
             //trace 'org.hibernate.cache'
+            trace  'org.jivesoftware'
             appenders {
                 appender new RollingFileAppender(name:"owfStackTraceLog", maxFileSize:8192,
                     file:"logs/owf-stacktrace.log",
@@ -936,7 +958,7 @@ environments {
     }
 
     test {
-        
+
         log4j =
         {
             appenders {
@@ -1002,7 +1024,7 @@ owf {
       defaultTheme = "a_default"
 
 
-      // showAccessAlert = "true"
+      showAccessAlert = "false"
       // accessAlertMsg = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla interdum eleifend sapien dignissim malesuada. Sed imperdiet augue vitae justo feugiat eget porta est blandit. Proin ipsum ipsum, rutrum ac gravida in, ullamcorper a augue. Sed at scelerisque augue. Morbi scelerisque gravida sapien ut feugiat. Donec dictum, nisl commodo dapibus pellentesque, enim quam consectetur quam, at dictum dui augue at risus. Ut id nunc in justo molestie semper. Curabitur magna velit, varius eu porttitor et, tempor pulvinar nulla. Nam at tellus nec felis tincidunt fringilla. Nunc nisi sem, egestas ut consequat eget, luctus et nisi. Nulla et lorem odio, vitae pretium ipsum. Integer tellus libero, molestie a feugiat a, imperdiet sit amet metus. Aenean auctor fringilla eros, sit amet suscipit felis eleifend a."
 
       // Specifies a freeTextEntryMessage to appear on all dialogs which allow text entry
@@ -1043,33 +1065,23 @@ owf {
       //timeout = 1800000
     }
 
-    // Configuration elements for custom headers/footers.
-    customHeaderFooter {
-        header = ''
-        headerHeight = 0
-        footer = ''
-        footerHeight = 0
-        jsImports = []
-        cssImports = []
-    }
+    dataguard {
+        // Option to restrict messages between widgets based on access levels.
+        // If this option is set to false, all other dataguard options are ignored.
+        restrictMessages = false
 
-  	dataguard {
-	  	// Option to restrict messages between widgets based on access levels.
-	  	// If this option is set to false, all other dataguard options are ignored.
-	  	restrictMessages = false
-	  	
-	  	// Option to audit all messages between widgets, not just failed messages.
-	  	// restrictMessages must be set to true
-	  	auditAllMessages = true
-	  	
-	  	// Option to allow widgets to send messages without specifying their access level.
-	  	// restrictMessages must be set to true
-	  	allowMessagesWithoutAccessLevel = true
-	  	
-	  	// The amount of time (in milliseconds) to cache a widget's access level.
-	  	// restrictMessages must be set to true
-	  	accessLevelCacheTimeout = 3600000
-  	}
+        // Option to audit all messages between widgets, not just failed messages.
+        // restrictMessages must be set to true
+        auditAllMessages = true
+
+        // Option to allow widgets to send messages without specifying their access level.
+        // restrictMessages must be set to true
+        allowMessagesWithoutAccessLevel = true
+
+        // The amount of time (in milliseconds) to cache a widget's access level.
+        // restrictMessages must be set to true
+        accessLevelCacheTimeout = 3600000
+    }
 
     // OZP-476: Marketplace (MP) Synchronization
     mpSync {
@@ -1134,4 +1146,9 @@ keystore = 'certs/keystore.jks'
 casSettings.useCas=true
 casSettings.FullServiceURL='https://localhost:8443/cas'
 
-
+xmpp.username="amlnotify_owfuser"
+xmpp.password="()IOJKNM78yughvb"
+xmpp.serviceName="owfchat1.goss.owfgoss.org"
+xmpp.roomName="amlnotify@conference.goss.owfgoss.org"
+xmpp.port=5222
+xmpp.notifications.enabled = false

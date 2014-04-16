@@ -1,9 +1,7 @@
 import grails.util.GrailsUtil
-import org.apache.log4j.helpers.*
-import java.net.URL
-import java.util.Random
 import org.apache.log4j.xml.*
 import org.apache.log4j.helpers.*
+import static org.ozoneplatform.appconfig.NotificationsSetting.*
 import org.springframework.context.ApplicationContext
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
 import grails.converters.deep.JSON as JSOND
@@ -11,7 +9,7 @@ import grails.converters.JSON
 import grails.converters.deep.XML as XMLD
 import grails.converters.XML
 import org.apache.commons.lang.time.StopWatch
-import ozone.owf.grails.domain.Requestmap
+import ozone.owf.cache.OwfMessageCache
 import ozone.owf.grails.web.converters.marshaller.json.ServiceModelObjectMarshaller
 import ozone.owf.grails.web.converters.marshaller.xml.ServiceModelObjectMarshaller as ServiceModelObjectMarshallerXML
 import ozone.owf.grails.domain.WidgetDefinition
@@ -26,10 +24,10 @@ import ozone.owf.grails.domain.RelationshipType
 import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.domain.WidgetType
 import ozone.owf.grails.services.OwfApplicationConfigurationService
-import org.springframework.beans.factory.annotation.Autowired
+import ozone.owf.grails.services.OwfMessagingService
 
 class BootStrap {
-    
+
     def grailsApplication
     def sessionFactory
     def domainMappingService
@@ -39,6 +37,10 @@ class BootStrap {
 	
     OwfApplicationConfigurationService owfApplicationConfigurationService
 	
+    OwfMessagingService owfMessagingService
+    
+    OwfMessageCache owfMessageCache
+    
     def init = { servletContext ->
 
         println 'BootStrap running!'
@@ -129,16 +131,22 @@ class BootStrap {
             //do nothing
             break
         }
-		println 'Creating or updating required database configurations'
+        println 'Creating or updating required database configurations'
 
         //TODO: all createRequired does now is initialize config dependent services - we probably should move/rename the method
         // don't want this to run in test mode since the needed configs won't be there
         // tests should create and set the configs they need
         if(grails.util.Environment.current.name != 'test') {
             owfApplicationConfigurationService.checkThatConfigsExist()
-		    owfApplicationConfigurationService.createRequired()
+            owfApplicationConfigurationService.createRequired()
         }
-
+        
+        
+        if(owfApplicationConfigurationService.is(NOTIFICATIONS_ENABLED)){
+            owfMessagingService.startListening()
+            owfMessageCache.setExpiration(owfApplicationConfigurationService.valueOf(NOTIFICATIONS_QUERY_INTERVAL).toInteger())
+        }
+        
         println 'BootStrap finished!'
     }
     def destroy = {

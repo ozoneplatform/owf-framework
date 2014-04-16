@@ -5,7 +5,7 @@
 	<title>HTML Viewer</title>
 
 	<g:if test="${params.themeName != null && params.themeName != ''}">
-		<link rel='stylesheet' type='text/css' href='../../../themes/${params.themeName.encodeAsHTML()}.theme/css/${params.themeName.encodeAsHTML()}.css' />
+		<link rel='stylesheet' type='text/css' href='../../../themes/${params.themeName.encodeAsURL().encodeAsHTML()}.theme/css/${params.themeName.encodeAsURL().encodeAsHTML()}.css' />
 	</g:if>
 	<g:else>
 		<link href="../../../js-lib/ext-4.0.7/resources/css/ext-all.css" rel="stylesheet" type="text/css">
@@ -16,43 +16,43 @@
 		.clickable {
 			color: black;
 		}
-		
+
 		.x-scroller-vertical {
 			border: 1px solid #BABFC3;
-		}	
-		
+		}
+
 		.gain {
 			color: green;
-		}	
-		
+		}
+
 		.loss {
 			color: red;
-		}	
+		}
 	</style>
 	<g:if test="${params.themeName == 'accessibility-wob'}">
-	<style type="text/css">		
+	<style type="text/css">
 		.clickable {
 			color: white;
 		}
-                
+
                 .x-grid-view-focus .x-grid-table .x-grid-row-selected.x-grid-row-selected .x-grid-cell .clickable {
                         color: black;
                 }
-		
+
 		.gain {
 			color: #8AE235;
-		}	
-		
+		}
+
 		.loss {
 			color: #FDD017;
-		}	
+		}
 	</style>
 	</g:if>
 	<g:if test="${params.themeName == 'large-text'}">
 	<style type="text/css">
 	</style>
 	</g:if>
-	
+
 	<!--[if lt IE 8]>
         <script type="text/javascript" src="../../../js-lib/json2.js"></script>
     <![endif]-->
@@ -77,7 +77,7 @@
       function init() {
           _tm = new Ozone.components.StockTimer(
               function(widgetId, proxy, data) {
-                  
+
                 OWF.getOpenedWidgets(function(widgetList) {
                     if (widgetList != null) {
                         var found = false;
@@ -100,9 +100,9 @@
             5000
         );
         _tm.start();
-          
+
 	    Ext.QuickTips.init();
-	    
+
 	    Ext.define('Stock', {
 	        extend: 'Ext.data.Model',
 	        fields: [
@@ -122,7 +122,7 @@
 	            {name: 'volume', type: 'float'}
 	         ]
 	    });
-	    
+
 	    // create the data stores
 	    var NYSEStore = Ext.create('Ext.data.Store', {
 	        model: 'Stock',
@@ -136,7 +136,7 @@
 		        }
 		    }
 	    });
-	
+
 	    /**
 	     * Custom function used for column renderer
 	     * @param {Object} val
@@ -161,8 +161,8 @@
         // create the Grid
         var sm = new Ext.selection.CheckboxModel({
             checkOnly: true
-        });	 
-		   
+        });
+
         new Ext.Viewport({
             layout: 'fit',
             items: [{
@@ -177,8 +177,8 @@
 		        columns: [
 		            {text: 'Symbol', dataIndex: 'symbol'},
 		            {
-		            	text: 'Company', 
-		            	flex: 1, 
+		            	text: 'Company',
+		            	flex: 1,
 		            	dataIndex: 'company',
 		            	renderer: function (value) {
 						    return '<a href="#" class="clickable">'+value+'</a>';
@@ -195,10 +195,10 @@
 		            stripeRows: true,
 				    listeners: {
 				        cellclick: function (view, cell, cellIndex, record, row, rowIndex, e) {
-				
+
 				            var linkClicked = (e.target.tagName == 'A'),
                                 clickedDataIndex = view.panel.headerCt.getHeaderAtIndex(cellIndex).dataIndex;
-				
+
 				            if (linkClicked && clickedDataIndex == 'company') {
                                 // Flag so the view doesn't auto-select the first row on focus
                                 view.disableFocusSelect = true;
@@ -211,13 +211,13 @@
                         			"<div class='phone'>" + record.data.phone + "<br /><hr /></div>" +
                         			"<div class='profile'>" + record.data.profile + "</div>" +
                         			"</div>";
-                        		
+
                                 var data = [];
                         		data.push({
 			                    	id: record.data.symbol ? record.data.symbol : record.data.company,
 			                    	html: html
                         		});
-	                        	
+
 					            OWF.Intents.startActivity(
 					                {
 					                    action:'View',
@@ -231,11 +231,11 @@
 				                        if (dest.length <= 0) {
 				                            // alert('Intent was canceled');
 				                        }
-				                    }					                
+				                    }
 					            );
 				            }
 				        }
-				    }		            
+				    }
 		        },
 	            dockedItems: [{
 	                xtype: 'toolbar',
@@ -259,7 +259,7 @@
 	                                    grid.getView().setLoading(true);
 	                                    if (!value)
 	                                        grid.getStore().clearFilter();
-	                                    else 
+	                                    else
 	                                        grid.getStore().filterBy(function(record, id) {
 	                                        	var val = value.toLowerCase();
 	                                        	return ((record.data.symbol.toLowerCase().indexOf(val) > -1) || (record.data.company.toLowerCase().indexOf(val) > -1))
@@ -283,7 +283,7 @@
                         	var data = [];
                             var symbols = [];
                             var dt = new Date();
-                        	
+
                         	for (var i = 0; i < selectedRows.length; i++) {
                         		var row = selectedRows[i];
                         		data.push({
@@ -293,7 +293,7 @@
                         		});
                                 symbols.push(row.data.symbol);
                         	}
-                        	
+
 				            OWF.Intents.startActivity(
 				                {
 				                    action:'Graph',
@@ -313,7 +313,7 @@
                                   else {
                                       // alert('Intent was canceled');
                                   }
-                              	}					                
+                              	}
                           	);
                       	}
                   	}
@@ -321,7 +321,7 @@
           	}]
       	});
 	}
-	      	
+
     Ext.onReady(function() {
       	OWF.ready(init);
     });

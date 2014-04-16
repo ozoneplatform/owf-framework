@@ -1,10 +1,3 @@
-import groovy.xml.MarkupBuilder
-import groovy.xml.NamespaceBuilder
-import org.codehaus.groovy.grails.plugins.GrailsPluginInfo
-//import grails.util.Metadata
-//import org.mortbay.jetty.webapp.*
-//import org.mortbay.jetty.handler.*
-
 compileStyleSheets = { dir ->
   def ant = new AntBuilder()   // create an antbuilder
   if (System.properties['os.name'].toLowerCase().contains('windows')) {

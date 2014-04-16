@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html; UTF-8" %>
+<%
+    String query = request.getQueryString();
+
+    if (query && query.toLowerCase().contains("csp-debug=true")) {
+        response.addHeader("Content-Security-Policy-Report-Only",
+                           "default-src 'self';")
+    }
+ %>
 <html>
     <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title id='title'>Ozone Widget Framework</title>
-        
+
         <link rel="shortcut icon" href="images/favicon.ico" />
         <script language="javascript">
             //console.time('page');
         </script>
         <!-- ** CSS ** -->
         <p:css id='theme' name='${owfCss.defaultCssPath()}' absolute='true'/>
+        <p:css id="bootstrap" name="${owfCss.bootstrapCssPath()}" absolute='true'/>
 
         <!-- initialize ozone configuration from server -->
         <owfImport:jsOwf path="config" resource="config" />
@@ -52,7 +62,7 @@
                             '-moz-animation:        none !important;' + // Firefox
                             '-ms-animation:         none !important;' + // IE
                             '-o-animation:          none !important;' + // Opera
-                            'animation:             none !important;' + // CSS 3                   
+                            'animation:             none !important;' + // CSS 3
                         '}';
                     Ext.util.CSS.createStyleSheet(turnOffTransitionsAndAnimationsCss);
 
@@ -78,10 +88,10 @@
 
         <!-- bring in custom header/footer resources -->
         <g:each in="${grailsApplication.mainContext.getBean('customHeaderFooterService').jsImportsAsList}" var="jsImport">
-            <script type="text/javascript" src="${jsImport}"></script>
+            <script type="text/javascript" src="${jsImport.encodeAsHTML()}"></script>
         </g:each>
         <g:each in="${grailsApplication.mainContext.getBean('customHeaderFooterService').cssImportsAsList}" var="cssImport">
-            <link rel="stylesheet" href="${cssImport}" type="text/css" />
+            <link rel="stylesheet" href="${cssImport.encodeAsHTML()}" type="text/css" />
         </g:each>
 
         <!-- language switching -->
@@ -104,10 +114,10 @@
                 Ext.util.CSS.createStyleSheet(css);
             }
 
-            function initLayoutComponents(customHeaderFooter, floatingWidgetManager, 
+            function initLayoutComponents(customHeaderFooter, floatingWidgetManager,
                     bannerManager, dashboardDesignerManager, modalWindowManager, tooltipManager) {
                 var layoutComponents = [];
-                
+
                 // create panel for custom header
                 var showHeader = (customHeaderFooter.header != "" && customHeaderFooter.headerHeight > 0);
                 var customHeader = {
@@ -129,7 +139,7 @@
                     hidden: !showFooter,
                     height: customHeaderFooter.footerHeight
                 };
-                
+
 
                 // calculate height offset for main component
                 var heightOffset = 0;
@@ -140,7 +150,7 @@
                 if (showFooter) {
                     heightOffset = heightOffset - customHeaderFooter.footerHeight;
                 }
-                
+
                 // Build the layout components array.  Add functional panels as necessary.
                 if (showHeader) {
                     customHeader.loader = {
@@ -154,7 +164,7 @@
                  // user's dashboards instances
                 var dashboardStore = Ext.create('Ozone.data.DashboardStore', {
                     storeId: 'dashboardStore',
-                    data: ${dashboards}
+                    data: Ozone.initialData.dashboards
                 });
 
                 // user's widgets
@@ -162,7 +172,7 @@
                     storeId: 'widgetStore'
                 });
 
-                var widgets = ${widgets};
+                var widgets = Ozone.initialData.widgets;
                 OWF.Collections = {};
                 OWF.Collections.AppComponents = new Ozone.data.collections.Widgets({
                     results:  widgets.length,
@@ -173,7 +183,7 @@
 
                 // mappings are not supported in Models,
                 // they only supported through Ext Proxy Reader
-                widgetStore.loadRecords(widgetStore.proxy.reader.read(${widgets}).records);
+                widgetStore.loadRecords(widgetStore.proxy.reader.read(Ozone.initialData.widgets).records);
 
                 layoutComponents.push({
                     id: 'mainPanel',
@@ -184,7 +194,7 @@
                     anchor: '100% ' + heightOffset,
                     dashboardStore: dashboardStore,
                     widgetStore: widgetStore,
-                    appComponentsViewState: ${appComponentsViewState},
+                    appComponentsViewState: Ozone.initialData.appComponentsViewState,
                     floatingWidgetManager: floatingWidgetManager,
                     bannerManager: bannerManager,
                     dashboardDesignerManager: dashboardDesignerManager,
@@ -201,7 +211,7 @@
                     layoutComponents.push(customFooter);
                 }
                 return layoutComponents;
-            } 
+            }
         </script>
         <script type="text/javascript">
 
@@ -223,15 +233,16 @@
             }
             Ext.useShims = OWF.config.useShims;
             Ext.onReady(function() {
-                
+
                 Ozone.version = Ozone.version || {};
-                Ozone.version.mpversion = "${(grailsApplication.config.owf.mpVersion)}" || "2.5";
+                Ozone.version.mpversion = Ozone.config.mpVersion || "2.5";
 
                 //function to check if the login cookie
                 //exists and if not, force a refresh
                 //in order to force a re-login
                 var testLoginCookie = function() {
-                    var loggedIn = Ozone.config.loginCookieName == null || Ext.util.Cookies.get(Ozone.config.loginCookieName) != null;
+                    var loggedIn = Ozone.config.loginCookieName == null ||
+                        Ext.util.Cookies.get(Ozone.config.loginCookieName) != null;
                     if (!loggedIn) {
                         Ext.Msg.show({
                             buttons: Ext.Msg.OK,
@@ -273,12 +284,12 @@
                 // Use new shim for dd
                 Ext.dd.DragDropMgr.useShim = true;
 
-                var layoutComponents = initLayoutComponents(Ozone.config.customHeaderFooter, 
+                var layoutComponents = initLayoutComponents(Ozone.config.customHeaderFooter,
                         floatingWidgetManager, bannerManager, dashboardDesignerManager,
                         modalWindowManager, tooltipManager);
-                
+
                 var continueProcessingPage = function() {
-                    
+
                     console.time('initload');
 
                     OWF.Mask = new Ozone.ux.AutoHideLoadMask(Ext.getBody(), {
@@ -306,9 +317,8 @@
                     setInterval(testLoginCookie, 5000);
               };
 
-                //show access alert window if it is configured to be on and only once per session
-                var sessionShowAccessAlert = '${session.getAttribute('showAccessAlert')}';
-                if (Ozone.config.showAccessAlert && (Ozone.config.showAccessAlert.toLowerCase() == "true" && (sessionShowAccessAlert == 'true' || sessionShowAccessAlert == ''))) {
+                if (Ozone.config.showAccessAlert &&
+                        Ozone.config.showAccessAlert.toLowerCase() == "true") {
                     var accessAlertMsg = Ozone.config.accessAlertMsg;
                     var okButton = Ext.widget('button', {
                         id: 'accessAlertOKButton',

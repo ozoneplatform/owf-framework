@@ -31,7 +31,9 @@ public enum OwfApplicationSetting implements ApplicationSetting{
     //OP-2015
     CUSTOM_BACKGROUND_URL("owf.custom.background.url"),
 
-    FREE_WARNING_CONTENT("free.warning.content")
+    FREE_WARNING_CONTENT("free.warning.content"),
+
+    URL_PUBLIC('url.public')
 
 	OwfApplicationSetting(String code) {
 		this.code = code;

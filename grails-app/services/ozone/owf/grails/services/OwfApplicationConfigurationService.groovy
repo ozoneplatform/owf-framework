@@ -5,16 +5,14 @@ import org.ozoneplatform.appconfig.server.service.impl.ApplicationConfigurationS
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.transaction.annotation.Transactional
 import ozone.owf.enums.OwfApplicationSetting
-
 import static ozone.owf.enums.OwfApplicationSetting.*
-import static ozone.owf.enums.OwfApplicationSettingType.*
 import ozone.owf.grails.jobs.DisableInactiveAccountsJob
 import grails.util.GrailsUtil
 
-class OwfApplicationConfigurationService  extends ApplicationConfigurationServiceImpl {
+class OwfApplicationConfigurationService extends ApplicationConfigurationServiceImpl {
 
     def quartzScheduler
-	
+
     //the spring security bean that is responsible for handling the max number of session.
     def concurrentSessionControlStrategy
 
@@ -39,20 +37,12 @@ class OwfApplicationConfigurationService  extends ApplicationConfigurationServic
         if(!applicationConfiguration)
             return
 
-        if(applicationConfiguration.type == "Integer"){
-            def val = applicationConfiguration.value
-            if(!val.isInteger() || Integer.valueOf(val) < 0){
-                applicationConfiguration.errors.rejectValue('value', "application.configuration.invalid.integer.gt.zero")
+        if(applicationConfiguration.code in [SESSION_CONTROL_MAX_CONCURRENT, INACTIVITY_THRESHOLD]*.code) {
+            def value = applicationConfiguration.value?.isInteger() ? applicationConfiguration.value.toInteger() : -1
+            if(value < 1) {
+                applicationConfiguration.errors.rejectValue('value', "application.configuration.invalid.number.required.gt.zero")
                 return
             }
-        }
-
-        if(applicationConfiguration.type == "Decimal"){
-            def val = applicationConfiguration.value
-            if(!val.isNumber() || Double.valueOf(val) < 0){
-                applicationConfiguration.errors.rejectValue('value', "application.configuration.invalid.number.gt.zero")
-                return
-            }               
         }
 
         if(applicationConfiguration.code == CUSTOM_HEADER_HEIGHT.code || applicationConfiguration.code == CUSTOM_FOOTER_HEIGHT.code) {

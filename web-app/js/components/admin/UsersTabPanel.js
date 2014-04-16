@@ -55,9 +55,7 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                 text: 'Add',
                 itemId: 'add',
                 id: 'adminUsersTabAddButton',
-                handler: function() {
-                  this.onAddClicked();
-                },
+                handler: this.onAddClicked,
                 scope: this
             }, {
                 xtype: 'button',

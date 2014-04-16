@@ -14,7 +14,7 @@ Ext.define('Ozone.components.window.ProfileWindow', {
 
     // destroy on close
     closeAction: 'destroy',
-    
+
     mixins: {
         escHelper: 'Ozone.components.focusable.EscCloseHelper'
     },
@@ -121,81 +121,52 @@ Ext.define('Ozone.components.window.ProfileWindow', {
                           '<table>',
                             '<tr class="show-animations-row">',
                               '<td>',
-                                '<input class="show-animations-checkbox" type="checkbox" {checked}/>',
+                                '<input name="show-animations" class="show-animations-checkbox" type="checkbox" {animations}/>',
                               '</td>',
                               '<td class="fieldLabel">',
                                 'Enable animations',
                               '</td>',
                             '</tr>',
+                            '<tr class="show-hints-row">',
+                              '<td>',
+                                '<input name="show-hints" class="show-hints-checkbox" type="checkbox" {hints}/>',
+                              '</td>',
+                              '<td class="fieldLabel">',
+                                'Enable hints',
+                              '</td>',
+                            '</tr>',
                           '</table>'
                   ),
-                  renderData: {checked: ((Ozone.config.showAnimations) ? ('checked="checked"') : (''))}
+                  renderData: {
+                    animations: ((Ozone.config.showAnimations) ? ('checked="checked"') : ('')),
+                    hints: ((Ozone.config.showHints) ? ('checked="checked"') : (''))
+                  }
                 }
               ],
               listeners: {
                 afterrender: function() {
-                  // cache jQuery objects
-                  var $el = $(this.el.dom);
-                  me.$showAnimationsRow = $el.find('.show-animations-row');
-                  me.$userPrefNotification = $el.find('.user-pref-notification');
+                  var $el = $(this.el.dom),
+                      $userPrefNotification = $el.find('.user-pref-notification');
 
-                  // listen for checkbox clicks
-                  me.$showAnimationsRow.on('click.show-animations', function(evt) {
-                    // grab the target and the checkbox
-                    var $target = $(evt.target);
-                    var $checkbox = me.$showAnimationsRow.find('.show-animations-checkbox');
+                  $el.on('click.save-prefs', 'input[type="checkbox"]', function(evt) {
+                    var $checkbox = $(evt.target),
+                        name = $checkbox.attr('name');
 
-                    // grab whether the checkbox is the target
-                    // and whether the checkbox is checked
-                    var checkboxIsTarget = $checkbox.is($target);
-                    var checkboxIsChecked = $checkbox.is(':checked');
-
-                    // the checkbox is not the target?
-                    if (!checkboxIsTarget) {
-                      // manually toggle the checkbox
-                      checkboxIsChecked = !checkboxIsChecked;
-                      $checkbox.prop('checked', checkboxIsChecked);
-                    }
-                    
-                    // the checkbox is checked?
-                    if (checkboxIsChecked) {
-                      // create the show animations user preference
-                      Ozone.pref.PrefServer.setUserPreference({
-                        namespace: "owf",
-                        name: "show-animations",
-                        value: true,
-                        onSuccess: $.noop,
-                        onFailure: $.noop
-                      });
-                      // update the config
-                      Ozone.config.showAnimations = true;
-                    }
-                    // the checkboc is not checked?
-                    else {
-                      // delete the show animations user preference
-                      Ozone.pref.PrefServer.deleteUserPreference({
-                        namespace: "owf",
-                        name: "show-animations",
-                        onSuccess: $.noop,
-                        onFailure: $.noop
-                      });
-                      // update the config
-                      Ozone.config.showAnimations = false;
-                    }
+                    Ozone.pref.PrefServer.setUserPreference({
+                      namespace: "owf",
+                      name: name,
+                      value: $checkbox.is(':checked'),
+                      onSuccess: $.noop,
+                      onFailure: $.noop
+                    });
 
                     // let the user know that refreshing
                     // the browser would be a good idea
-                    me.$userPrefNotification.show();
+                    $userPrefNotification.show();
                   });
                 },
                 destroy: function() {
-                  // stop listening for show animations checkbox changes
-                  if (
-                    me.$showAnimationsRow &&
-                    me.$showAnimationsRow.length > 0
-                  ) {
-                    me.$showAnimationsRow.off('.show-animations');
-                  }
+                  $(this.el.dom).off('.save-prefs');
                 }
               }
             }

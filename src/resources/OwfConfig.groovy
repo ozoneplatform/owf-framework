@@ -55,59 +55,47 @@ owf {
     //Applet/Flex have less zindex issues, but browser performance may suffer due to the additional shim frames being created
     useShims = false
 
-  //Locations for the optional external themes and help directories.
-  //Default: 'themes', 'help', and 'js-plugins' directories on the classpath.
-  //Can be configured to an arbitrary file path.  The following
-  //path styles are supported:
-  //  'file:/some/absolute/path' ('file:C:/some/absolute/path' on Windows)
-  //  'classpath:location/under/classpath'
-  //  'location/within/OWF/war/file'
+    //Locations for the optional external themes and help directories.
+    //Default: 'themes', 'help', and 'js-plugins' directories on the classpath.
+    //Can be configured to an arbitrary file path.  The following
+    //path styles are supported:
+    //  'file:/some/absolute/path' ('file:C:/some/absolute/path' on Windows)
+    //  'classpath:location/under/classpath'
+    //  'location/within/OWF/war/file'
     external{
         themePath = 'classpath:themes'
         helpPath = 'classpath:help'
         jsPluginPath = 'classpath:js-plugins'
     }
 
-	// Optional Configuration elements for custom headers/footers.
-	// Example values are shown.  File locations are relative or absolute paths to
-	// resources hosted on the owf web server.  Heights are in pixel amounts.
-	//customHeaderFooter {
-	//	header = 'location/within/web/context/example.html'
-	//	headerHeight = 0
-	//	footer = 'location/within/web/context/example.html'
-	//	footerHeight = 0
-	//	jsImports = ['location/for/exampleImport1.js', 'location/for/exampleImport2.js']
-	//	cssImports = ['location/for/exampleImport1.css', 'location/for/exampleImport2.css']
-	//}
+    metric {
+        enabled = false
+        url = 'https://localhost:8443/metric/metric'
 
-  metric {
-    enabled = false
-    url = 'https://localhost:8443/metric/metric'
+        //Optional additional properties with default values shown
+        //keystorePath = System.properties['javax.net.ssl.keyStore']
+        //keystorePass = System.properties['javax.net.ssl.keyStorePassword']
+        //truststorePath = System.properties['javax.net.ssl.trustStore']
+        //timeout = 1800000
+    }
 
-    //Optional additional properties with default values shown
-    //keystorePath = System.properties['javax.net.ssl.keyStore']
-    //keystorePass = System.properties['javax.net.ssl.keyStorePassword']
-    //truststorePath = System.properties['javax.net.ssl.trustStore']
-    //timeout = 1800000
-  }
+    dataguard {
+        // Option to restrict messages between widgets based on access levels.
+        // If this option is set to false, all other dataguard options are ignored.
+        restrictMessages = false
 
-  dataguard {
-    // Option to restrict messages between widgets based on access levels.
-    // If this option is set to false, all other dataguard options are ignored.
-    restrictMessages = false
+        // Option to audit all messages between widgets, not just failed messages.
+        // restrictMessages must be set to true
+        auditAllMessages = false
 
-    // Option to audit all messages between widgets, not just failed messages.
-    // restrictMessages must be set to true
-    auditAllMessages = false
+        // Option to allow widgets to send messages without specifying their access level.
+        // restrictMessages must be set to true
+        allowMessagesWithoutAccessLevel = true
 
-    // Option to allow widgets to send messages without specifying their access level.
-    // restrictMessages must be set to true
-    allowMessagesWithoutAccessLevel = true
-
-    // The amount of time (in milliseconds) to cache a widget's access level.
-    // restrictMessages must be set to true
-    accessLevelCacheTimeout = 3600000
-  }
+        // The amount of time (in milliseconds) to cache a widget's access level.
+        // restrictMessages must be set to true
+        accessLevelCacheTimeout = 3600000
+    }
 
     // OZP-476: Marketplace (MP) Synchronization
     mpSync {

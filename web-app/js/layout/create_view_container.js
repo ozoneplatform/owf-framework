@@ -94,7 +94,7 @@ Ext.define('Ozone.layout.CreateViewContainer', {
                 renderTpl: '<div class="freeTextWarning dialogHeader">{message}</div>',
                 renderData: {
                    message: Ozone.config.freeTextEntryWarningMessage
-                }           
+                }
             };
         }
 
@@ -786,6 +786,18 @@ Ext.define('Ozone.layout.CreateViewContainer', {
 
                                             // Activate new dashboard
                                             dashboardContainer.activateDashboard(json.guid);
+
+                                            $.pnotify({
+                                                title: 'Add App Components',
+                                                text: "Click App Components (in the toolbar) to find App Components. Drag them onto the screen to add them to this App.",
+                                                type: 'success',
+                                                addclass: "stack-bottomright",
+                                                stack: {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25},
+                                                history: false,
+                                                sticker: false,
+                                                icon: false,
+                                                delay: 20000
+                                            });
                                         });
 
                                         this.close();

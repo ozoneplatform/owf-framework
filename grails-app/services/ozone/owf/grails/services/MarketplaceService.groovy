@@ -213,7 +213,7 @@ class MarketplaceService extends BaseService {
         //OP-31: Intents as part of a listing. These are the intents directly from the ServiceItem
         else if (obj.listingIntents && !JSONObject.NULL.equals(obj.intents) && obj.listingIntents.size() > 0) {
             //Convert the AppsMall listing's intents to OWF's intents and add them to the widget definition
-            obj.listingIntents.each { 
+            obj.listingIntents.each {
                 def dataType
                 dataType = IntentDataType.findByDataType(it.dataType.title)
                 if (!dataType) {
@@ -479,10 +479,10 @@ class MarketplaceService extends BaseService {
         return mpUrls
     }
 
-	
+
     private SSLSocketFactory createSocketFactory() {
-		
-	
+
+
 		//In dev bypass all the keystore stuff
 		if (Environment.current == Environment.DEVELOPMENT){
 			return new SSLSocketFactory(new TrustStrategy(){
@@ -492,8 +492,8 @@ class MarketplaceService extends BaseService {
 				}
 			})
 		}
-		
-		
+
+
         // Some initial setup pertaining to getting certs ready for
         // use (presuming SSL mutual handshake between servers).
         // Here is where the Grails REST plugin would really come to

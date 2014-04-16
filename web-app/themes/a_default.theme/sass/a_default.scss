@@ -4,7 +4,7 @@
 @import 'functions/owf_functions';
 @import 'compass'; //pull in base functions and mixins provided by the compass framework
 
-$theme-name: 'owf';
+@import 'theme_base';
 
 $body-background-gradient-start: #e6e7e8;
 $body-background-gradient-end: #ffffff;
@@ -14,11 +14,11 @@ $owf-loadmask-background: #000;
 
 /*****************************************************************
  * Put yor theme customizations here.  If you hava many customizations,
- * you may want to put them in a separate file which you import here. 
+ * you may want to put them in a separate file which you import here.
  * The import statements in this file reference stylesheets from ext-js
- * and from the themes/common folder. You can look at 
+ * and from the themes/common folder. You can look at
  * themes/common/stylesheets/variables/-defaults in order to see what variables
- * may be changed. 
+ * may be changed.
  */
 
 
@@ -60,7 +60,7 @@ body {
 /*}*/
 
 // ===============================
-// =============== Theme Variables 
+// =============== Theme Variables
 // ===============================
 
 $owf-base-color: #222;
@@ -165,6 +165,7 @@ $my-apps-tooltip-color: #141414;
 $my-apps-tooltip-bar-color: #090909;
 
 $user-menu-border-color: #090909;
+
 //OWF-EXT VARIABLES
 @import 'variables/constants';
 @import 'variables/defaults';
@@ -177,7 +178,7 @@ $user-menu-border-color: #090909;
 @import 'mixins/owf_mixins';
 
 /*
- * These imports create the owf-specific stylesheets, based on the values of the 
+ * These imports create the owf-specific stylesheets, based on the values of the
  * variables that are defined in variables/defaults (which can be overridden in this
  * file).If extensive changes are required, you can delete some of these imports and
  * reimplement them as necessary
@@ -186,7 +187,7 @@ $user-menu-border-color: #090909;
 @import 'owf_all';
 
 // ===============================
-// ======================== Banner 
+// ======================== Banner
 // ===============================
 
 .banner {
@@ -194,26 +195,26 @@ $user-menu-border-color: #090909;
     background-image: theme-image($theme-name, 'banner/banner-bg.png');
 }
 
-.x-ie #userMenuBtn {
+.x-ie #banner-right-container {
     background-color: #253551 !important;
 }
 
 // ===============================
-// ======================== Button 
+// ======================== Button
 // ===============================
 
 // box shadows
 .owfButton {
-    @include box-shadow(inset 0px 1px 1px #D7DADC, inset 0px -1px 1px #A0A3A7); 
+    @include box-shadow(inset 0px 1px 1px #D7DADC, inset 0px -1px 1px #A0A3A7);
 
     &.x-btn-over {
-        @include box-shadow(inset 0px 1px 1px #868C91, inset 0px -1px 1px #DDDEE0); 
+        @include box-shadow(inset 0px 1px 1px #868C91, inset 0px -1px 1px #DDDEE0);
     }
     &.x-btn-pressed {
-        @include box-shadow(inset 0px 1px 1px #858B90, inset 0px -1px 1px #F6F7F7); 
+        @include box-shadow(inset 0px 1px 1px #858B90, inset 0px -1px 1px #F6F7F7);
     }
     &.x-btn-disabled {
-        @include box-shadow(inset 0px 1px 1px #ADB6BC, inset 0px -1px 1px #F9F9F9); 
+        @include box-shadow(inset 0px 1px 1px #ADB6BC, inset 0px -1px 1px #F9F9F9);
     }
 }
 

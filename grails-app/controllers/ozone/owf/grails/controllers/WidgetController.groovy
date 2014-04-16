@@ -5,7 +5,7 @@ import org.apache.commons.lang.time.StopWatch
 import ozone.owf.grails.OwfException
 
 class WidgetController extends BaseOwfRestController {
-	
+
     def accountService
     def widgetDefinitionService
     def administrationService
@@ -13,12 +13,12 @@ class WidgetController extends BaseOwfRestController {
     def marketplaceService
 
     def modelName = 'widgetDefinition'
-	
+
     def show = {
         def statusCode
         def jsonResult
         StopWatch stopWatch = null;
-	
+
         if (log.isInfoEnabled()) {
             stopWatch = new StopWatch();
             stopWatch.start();
@@ -35,9 +35,9 @@ class WidgetController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during show: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-		
+
         renderResult(jsonResult, statusCode)
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed widgetDefinitionService: show in "+stopWatch);
         }
@@ -63,14 +63,14 @@ class WidgetController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during list: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-		
+
         renderResult(jsonResult, statusCode)
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed WidgetController: list in "+stopWatch);
         }
     }
-	
+
     def createOrUpdate =
     {
         def jsonResult
@@ -96,12 +96,12 @@ class WidgetController extends BaseOwfRestController {
         }
 
         renderResult(jsonResult)
-        
+
         if (log.isInfoEnabled()) {
             log.info("Executed widgetDefinitionService: createOrUpdate in "+stopWatch);
         }
     }
-	
+
     def delete = {
         def jsonResult
         StopWatch stopWatch = null;
@@ -120,9 +120,9 @@ class WidgetController extends BaseOwfRestController {
             jsonResult = handleError(e)
 
         }
-		
+
         renderResult(jsonResult)
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed widgetDefinitionService: delete in "+stopWatch);
         }
@@ -183,11 +183,11 @@ class WidgetController extends BaseOwfRestController {
           log.info("Executed widgetDefinitionService: saveWidgetLoadTime in "+stopWatch);
       }
     }
-    
+
     def export = {
         def result
         StopWatch stopWatch = null;
-        
+
         if (log.isInfoEnabled()) {
             stopWatch = new StopWatch();
             stopWatch.start();
@@ -220,7 +220,7 @@ class WidgetController extends BaseOwfRestController {
             result = handleError(e)
             renderResult(result)
         }
-        
+
         if (log.isInfoEnabled()) {
             stopWatch.stop();
             log.info("Executed widgetDefinitionService: export in " + stopWatch);

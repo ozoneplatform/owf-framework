@@ -1,11 +1,11 @@
 {
     "name": "accessibility-bow",
-    "display_name": "Gold",
+    "display_name": "Oxygen",
     "type": "Black on White High Contrast",
     "author": "OWF Community Support Team",
     "contact_email": "ozone-developers@googlegroups.com",
     "created_date": "March 21, 2012",
-    "modified_date": "March 21, 2012",
+    "modified_date": "March 26, 2014",
     "description": "This is a high-contrast theme that features dark text over a white background for easier readability.",
     "css": "themes/accessibility-bow.theme/css/accessibility-bow.css",
     "base_url": "themes/accessibility-bow.theme/",

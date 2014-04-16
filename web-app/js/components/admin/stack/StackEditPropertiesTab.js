@@ -6,7 +6,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
         'widget.Ozone.components.admin.stack.StackEditPropertiesTab'
     ],
     cls: 'stackeditpropertiestab',
-    
+
     initComponent: function () {
         var me = this;
         Ext.applyIf(this, {
@@ -308,10 +308,8 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
         field.disable();
         component.showProperties(false);
         loading.show();
-        component.xhr = Ozone.util.Transport.send({
+        component.xhr = Ozone.util.Transport.getDescriptor({
             url : text,
-            method : "GET",
-            forceXdomain: true,
             onSuccess: Ext.bind(component.updatePropertiesFromDescriptor, component),
             onFailure: function (json){
                 if(component.record) {
@@ -324,8 +322,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                 field.enable();
                 btn.setText('Load');
                 component.getComponent('descriptorUrlErrorMsg').show();
-            },
-            autoSendVersion : false
+            }
         });
         btn.setText('Cancel');
         //Disable the apply button while descriptor is loading

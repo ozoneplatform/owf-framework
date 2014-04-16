@@ -24,7 +24,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         "isdefault": false,
         "locked": false,
         "guid": null,
-        //todo remove this in favor of using the actual store   
+        //todo remove this in favor of using the actual store
         "state": null
     },
     hideMode: 'visibility',
@@ -183,7 +183,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                     me.handleMarketplaceWidgetClose();
                 }
             });
-        }           
+        }
     },
 
     afterDashboardLayout: function() {
@@ -249,16 +249,6 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 return e.getTarget('.shim');
             },
 
-            // On entry into a target node, highlight that node.
-            onNodeEnter: function(target, dd, e, data) {
-                Ext.fly(target).addCls('highlight-dashboard-designer-drop');
-            },
-
-            // On exit from a target node, unhighlight that node.
-            onNodeOut: function(target, dd, e, data) {
-                Ext.fly(target).removeCls('highlight-dashboard-designer-drop');
-            },
-
             // While over a target node, return the default drop allowed class which
             // places a "tick" icon into the drag proxy.
             onNodeOver: function(target, dd, e, data) {
@@ -267,13 +257,12 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
             // On node drop we can interrogate the target to find the underlying
             // application object that is the real target of the dragged data.
-            onNodeDrop: function(target, dd, coordinates, data) {
+            onNodeDrop: function(target, dd, evt, data) {
                 if (me.configRecord.isMarketplaceDashboard()) {
-                    me.dashboardContainer.selectDashboardAndLaunchWidgets(data.widgetModel, true);
+                    me.dashboardContainer.selectDashboardAndLaunchWidgets(evt, data.widgetModel, true);
                 } else {
-                    me.launchWidgets(target, dd, coordinates, data);
+                    me.launchWidgets(target, dd, evt, data);
                 }
-
             }
         });
 
@@ -480,7 +469,29 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
         var launchWidget = null,
             specifiedWidget = null,
             responseObj,
-            pane = Ext.getCmp(sender.id).pane;
+            currentPane = Ext.getCmp(sender.id).pane,
+            targetPane = currentPane,
+            targetPaneId = launchConfig.pane;
+
+        if(targetPaneId && this.panes.length > 1) {
+            if(targetPaneId === 'sibling') {
+                var siblingPane = targetPane.next() ? targetPane.next().next() : targetPane.prev().prev();
+
+                targetPane = siblingPane.xtype === 'container' ? siblingPane.items.items[0] : siblingPane;
+            }
+            else {
+                targetPane = _.findWhere(this.panes, {
+                    id: targetPaneId
+                });
+            }
+        }
+
+        // if target is not found, use current pane.
+        if(!targetPane) {
+            targetPane = currentPane;
+            targetPaneId = targetPane.id;
+            console.warn('Pane with id ' + targetPaneId + ' is not found, launching widget in the same pane.');
+        }
 
         specifiedWidget = this.findWidget(launchConfig);
 
@@ -519,7 +530,8 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             }
 
             // Determine which pane widget was last opened in
-            if (!pane.isXType('fitpane')) {
+            // only if, target pane isn't specified
+            if (!targetPane.isXType('fitpane') && !targetPaneId) {
                 if (this.panes && this.panes.length > 1) {
                     var widgetState, latest, latestPane;
                     for (var i = 0, len = this.panes.length; i < len; i++) {
@@ -539,7 +551,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
                     // If a pane is found, launch in that one
                     if (latestPane) {
-                        pane = latestPane;
+                        targetPane = latestPane;
                     }
                 }
             }
@@ -565,15 +577,16 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
 
             if (launchWidget == null) {
                 var uniqueId = guid.util.guid();
-                if (pane.fireEvent(OWF.Events.Widget.BEFORE_LAUNCH, pane, specifiedWidget, launchConfig.data) !== false) {
-                    pane.launchWidget(specifiedWidget, null, null, uniqueId, launchConfig.data, true);
+                if (targetPane.fireEvent(OWF.Events.Widget.BEFORE_LAUNCH, targetPane, specifiedWidget, launchConfig.data) !== false) {
+                    targetPane.launchWidget(specifiedWidget, null, null, uniqueId, launchConfig.data, true);
                 }
 
                 // Return success and the uniqueId of the widget instance
                 responseObj = {
                     error: false,
                     newWidgetLaunched: true,
-                    uniqueId: uniqueId
+                    uniqueId: uniqueId,
+                    pane: targetPaneId
                 };
             }
         }
@@ -611,7 +624,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 return this.refreshWidgetLaunchMenu();
             case 'refreshDashboardStore':
                 var title = config.title || Ozone.layout.DialogMessages.refreshRequiredTitle;
-                
+
                 $.pnotify({
                     title: title,
                     text: Ozone.layout.DialogMessages.refreshRequiredBody,
@@ -779,7 +792,7 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
             else {
                 widget.close();
             }
-            
+
             return true;
         }
         return false;
@@ -955,11 +968,11 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 onShow();
             }
         }
-        
+
         $('.widgetMenuItem').hide();
         if(this.config.type)
         	$('.'+this.config.type+'MenuItem').show();
-        
+
     },
 
     onDeActivate: function(cmp) {
@@ -1044,33 +1057,32 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
     },
 
     //Enables widget move to all but the sourcePane that originated the drag
-    enableWidgetMove: function(sourcePane) {
+    enableWidgetMove: function(sourcePane, isDragAndDrop) {
         var panes = this.panes,
             isLocked = this.configRecord.get("locked");
 
         this.shimPanes();
 
         if(!isLocked) {
-            var $shims = $('.shim', this.el.dom),
-                $doc = $(document);
+            var el = this.el.dom,
+                $shims = $('.shim', el),
+                $doc = $(document),
+                $innerShims, hintText;
 
-            // TODO: find out why does this not work in IE7
-            // $shims.on('mousemove.launch', function () {
-            //     $shims.addClass('highlight-dashboard-designer-drop');
-            //     $(this).removeClass('highlight-dashboard-designer-drop');
-            // });
+            hintText = isDragAndDrop ? 'Drag and release to start the App Component' : 'Click to start the App Component';
+            $shims.before('<div class="inner-shim"></div><div class="hint-text">' + hintText + '</div>');
+            $innerShims = $('.inner-shim', el);
 
             $doc.on('mousemove.launch', '.shim', function (evt) {
-                $shims.addClass('highlight-dashboard-designer-drop');
-                $(evt.target).removeClass('highlight-dashboard-designer-drop');
+                $innerShims.addClass('highlight-dashboard-designer-drop');
+                $innerShims.siblings('.hint-text').css('display', 'none');
+                $(evt.target).siblings('.inner-shim').removeClass('highlight-dashboard-designer-drop').siblings('.hint-text').css('display', Ozone.config.showHints ? '' : 'none');
             });
 
             $doc.one('mouseup', function () {
                 $doc.off('.launch');
-
-                $shims
-                    .removeClass('highlight-dashboard-designer-drop')
-                    .off('.launch');
+                $shims.removeClass('highlight-dashboard-designer-drop');
+                $('.hint-text, .inner-shim', el).remove();
             });
 
             if(sourcePane && sourcePane.el) {

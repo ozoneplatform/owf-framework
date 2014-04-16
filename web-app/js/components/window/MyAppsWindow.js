@@ -11,7 +11,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     ui: 'system-window',
     store: null,
     closable: true,
-    title: 'My Apps',
+    title: '<strong>My Apps</strong>',
     cls: 'system-window',
 
     resizable: false,
@@ -122,12 +122,12 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             getId: function (values) {
                 return values.isStack ? values.id : values.guid;
             },
-            
+
             getClass: function (values) {
                 var name = this.getName(values);
                 return values.guid === me.activeDashboard.id ? name + ' ' + me.selectedPageCls: name;
             },
-            
+
             getName: function (values) {
                 return values.isStack ? 'stack' : 'dashboard';
             },
@@ -141,10 +141,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     return '<div class="thumb default"></div>';
                 }
             },
-            
+
             getActions: function (values) {
                 return	'<div class="details-btn hide"></div>';
-                        
+
             }
         });
 
@@ -152,14 +152,13 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                                     '<div class="stack-dashboards-anchor-tip x-tip-anchor x-tip-anchor-top"></div>'+
                                     '<div class="stack-dashboards"></div>'+
                                 '</div>';
-        
+
         me.on('afterrender', function (cmp) {
             me.tpl.overwrite( cmp.body, stackOrDashboards );
 
             $('.stack-name').dotdotdot({
                 ellipsis: '…'
             });
-            $('.stack-name:contains(…)').tooltip();
 
             Ext.DomHelper.append( cmp.body,
             '<div class="actions">'+
@@ -191,7 +190,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                         me.onSlideTransition.apply(me, arguments);
                     }, me)
                 });
-                
+
                 me.slider.disableSelection();
             }
         });
@@ -202,7 +201,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         me.on('show', me.initCircularFocus, me, {single: true});
         me.on('show', me.goToActiveStackSlide, me);
         me.on('show', me.focusActiveDashboard, me);
-        me.mon(me.dashboardContainer, OWF.Events.Dashboard.CHANGED, me.onDashboardChanged, me);        
+        me.mon(me.dashboardContainer, OWF.Events.Dashboard.CHANGED, me.onDashboardChanged, me);
     },
 
     bindEvents: function () {
@@ -251,7 +250,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             $(document.body).append($dragProxy);
 
             // prevent tooltips from showing while drag n drop
-            $dom.on('mouseover.reorder', '.dashboard, .stack', function (evt) { 
+            $dom.on('mouseover.reorder', '.dashboard, .stack', function (evt) {
                 evt.preventDefault();
                 evt.stopPropagation();
             });
@@ -270,7 +269,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             $dom.one('mousemove.reorder', '.dashboard, .stack', function (evt) {
                 var $el = $(this),
                     $parent;
-                
+
                 me._hideStackDashboardsOnMove($el);
 
                 $parent = $el.parents('.stack-dashboards');
@@ -298,10 +297,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 });
             });
 
-            $dom.on('mousemove.reorder', '.dashboard, .stack', function (evt) { 
+            $dom.on('mousemove.reorder', '.dashboard, .stack', function (evt) {
                 var $el = $(this);
 
-                // only allow reordering if parents match and 
+                // only allow reordering if parents match and
                 // prevent reordering stack dashboards outside of stack and vice versa.
                 if(isDraggingStackDashboard && $el.parents('.stack-dashboards').length === 0) {
                     isDropValid = false;
@@ -316,7 +315,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                     width = $el.outerWidth();
 
                 $el.removeClass(me.DROP_LEFT_CLS + ' ' + me.DROP_RIGHT_CLS);
-                
+
                 if( pageX <= offset.left + (width/2) ) {
                     $el.addClass(me.DROP_LEFT_CLS);
                 }
@@ -333,7 +332,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             $dom.on('mouseup.reorder', '.dashboard', function (evt) {
                 isDropValid && me._dropOnDashboard($draggedItem, $(this));
             });
-            
+
             // drop performed on a stack
             $dom.on('mouseup.reorder', '.stack', function (evt) {
                 isDropValid && me._dropOnStack($draggedItem, $(this));
@@ -375,7 +374,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         if (this.getActiveStackId() == null || this.activeDashboard.configRecord.isMarketplaceDashboard()) {
             return;
         }
-        
+
         var me = this,
             activeDashboardId = this.activeDashboard.id,
             $dashboardEl = $('#dashboard' + activeDashboardId, '.stack-dashboards .bx-slide:not(.bx-clone)'),
@@ -460,7 +459,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             var $this = $(this),
                 $next = $this.next(),
                 promise;
-            
+
             if($next.length === 1 && !$next.hasClass('dashboard') && !$next.hasClass('stack')) {
                 $next = $next.next();
             }
@@ -476,7 +475,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             else
                 move($this, $next);
         }
-            
+
 
         $(me.el.dom)
             .on('keyup', '.stack', function (evt) {
@@ -557,7 +556,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var me = this,
             dashboard = me.getDashboard( $dashboard ),
             draggedItem;
-        
+
         // dropped on the same element
         if($dashboard[0] === $draggedItem[0]) {
             $dashboard.removeClass(me.DROP_LEFT_CLS + ' ' + me.DROP_RIGHT_CLS);
@@ -584,7 +583,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             store.remove(draggedItem.model, true);
 
             var index = store.indexOf(dashboard.model);
-            
+
             if ( !droppedLeft ) {
                 index++;
             }
@@ -623,7 +622,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             if ( !droppedLeft ) {
                 index++;
             }
-            
+
             for(var i = 0, len = stackDashboards.length; i < len; i++) {
                 stackDashboard = stackDashboards[i];
                 store.insert(index++, stackDashboard.model);
@@ -642,7 +641,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var me = this,
             stack = me.getStack( $stack ),
             draggedItem;
-        
+
         // dropped on the same element
         if($stack[0] === $draggedItem[0]) {
             $stack.removeClass(me.DROP_LEFT_CLS + ' ' + me.DROP_RIGHT_CLS);
@@ -658,7 +657,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         if( $draggedItem.hasClass('dashboard') ) {
 
             draggedItem = me.getDashboard( $draggedItem );
-            
+
             store.remove(draggedItem.model, true);
 
             var index;
@@ -754,7 +753,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         me.reordered = true;
 
         setTimeout(function() {
-            
+
             me.slider.reloadSlider();
 
         }, 100);
@@ -811,13 +810,13 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     onDashboardClick: function (evt) {
         if (evt.type !== 'click' && evt.which !== Ext.EventObject.ENTER)
             return;
-        
+
         var $clickedDashboard = $(evt.currentTarget),
         dashboard = this.getDashboard( $clickedDashboard );
 
         if ($(evt.target).hasClass('details-btn')) {
         	Ext.select('.itemTip').destroy();
-        	
+
         	Ext.widget('mypagetip', {
                 clickedDashboard:dashboard,
                 $dashboard: $clickedDashboard,
@@ -825,17 +824,17 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 appsWindow: this,
         		event:evt
         	}).showAt([evt.clientX,evt.clientY]);
-        	
+
         	return;
         } else {
-            this.launchDashboard(dashboard);
+            this.launchDashboard(evt, dashboard);
         }
     },
 
-    launchDashboard: function(dashboard) {
+    launchDashboard: function(evt, dashboard) {
         var stackContext = dashboard.stack ? dashboard.stack.stackContext : null;
 
-        this.dashboardSelectionDeferred && this.dashboardSelectionDeferred.resolve(dashboard.guid);
+        this.dashboardSelectionDeferred && this.dashboardSelectionDeferred.resolve(evt, dashboard.guid);
         this.dashboardSelectionDeferred = null;
 
         this.activateDashboard(dashboard.guid, stackContext);
@@ -866,25 +865,25 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 $ = jQuery,
                 $clickedStack = $(evt.currentTarget),
                 stack = me.getStack( $clickedStack );
-            
+
             if ($(evt.target).hasClass('details-btn')) {
             	Ext.select('.itemTip').destroy();
-            	
+
             	Ext.widget('myapptip', {
             		clickedStack:stack,
                     dashboardContainer: me.dashboardContainer,
                     appsWindow: me,
             		event:evt
             	}).showAt([evt.clientX,evt.clientY]);
-            	
+
             	return;
-            } 
+            }
 
             if( stack ) {
                 if (stack.dashboards && stack.dashboards.length === 1) {
-                    me.launchDashboard(stack.dashboards[0])
+                    me.launchDashboard(evt, stack.dashboards[0])
                 } else {
-                    me.toggleStack(stack, $clickedStack);    
+                    me.toggleStack(stack, $clickedStack);
                 }
             }
 
@@ -1039,7 +1038,6 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         $('.dashboard-name').dotdotdot({
             ellipsis: '…'
         });
-        $('.dashboard-name:contains(…)').tooltip();
 
         if (me.appPageCarousel.getSlideCount() === 1) {
             $('.bx-pager', '.stack-dashboards').hide();
@@ -1083,10 +1081,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             dfd.resolve();
 
             this.$stackDashboards.remove();
-            
+
             me.collapseModal();
             this._lastExpandedStack = null;
-            
+
             return dfd.promise();
         }
         else {
@@ -1106,7 +1104,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         if (this._previouslyHoveredStackOrDashboard != null) {
             $('.details-btn', this._previouslyHoveredStackOrDashboard).addClass('hide');
         }
-            
+
         $('.details-btn', el).removeClass('hide');
 
         this._previouslyHoveredStackOrDashboard = el;
@@ -1126,23 +1124,23 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         $('.dashboard-name', $dashboard).text(dashboard.name)
         $el.fadeIn();
     },
-    
+
     updateStackDashboardsEl: function (stack) {
     	if(this.$stackDashboards) {
     		this.$stackDashboards.children('.dashboards').html( this.tpl.applyTemplate( stack.dashboards ) )
     	}
     },
-    
+
     switchToMarketplace: function() {
         var banner = this.dashboardContainer.getBanner()
         banner.getMarketplaceLauncher().gotoMarketplace(banner.marketplaceWidget, null);
         this.close();
     },
-    
+
     verifyDiscoverMoreButton: function() {
         var discoverMoreButton = $('.store-link-btn');
         var marketBtn = $('.marketBtn');
-    	
+
         if(marketBtn && $(marketBtn).is(':visible')) {
         	discoverMoreButton.show();
         } else {
@@ -1281,7 +1279,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var me = this,
             $stack = this.getElByClassFromEvent(evt, 'stack'),
             stack = this.getStack($stack);
-        
+
         this.warn('This action will return the application <span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> to its current default state. If an administrator changed any page in the application after it was assigned to you, the default state may differ from the one that originally appeared in your Switcher.', function () {
             Ext.Ajax.request({
                 url: Ozone.util.contextPath() + '/stack/restore',
@@ -1290,10 +1288,10 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                 },
                 success: function(response, opts) {
                     var json = Ext.decode(response.responseText);
-                    
+
                     if (json != null && json.updatedDashboards != null && json.updatedDashboards.length > 0) {
                         me.notify('Restore Application', '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is restored successfully to its default state!');
-                        
+
                         var dashboards = stack.dashboards;
                         for(var i = 0; i < dashboards.length; i++) {
                         	for(var j = 0; j < json.updatedDashboards.length; j++) {
@@ -1308,7 +1306,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
                         		}
                         	}
                         }
-                        
+
                         me.updateStackDashboardsEl(stack);
                         me.reloadDashboards = true;
                         $stack.focus();
@@ -1328,7 +1326,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         });
     },
 
-    
+
 
     warn: function (msg, okFn, cancelFn) {
         Ext.widget('alertwindow',{
@@ -1369,7 +1367,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             dashboards = this.body.select('> .all-dashboards').first(),
             item = dashboards.first().dom, //first dashboard/stack
             header = this.header;
-        
+
         if(!item)
             return;
 
@@ -1403,7 +1401,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         newHeight = (this.dashboardItemHeight + heightMargin) * this.maxDashboardsHeight;
 
         this.body.setSize(newWidth + 30);
-        
+
         //the extra 70 is for the stack row's triangle thing
         dashboards.setStyle('max-height', newHeight - this.actionsEl.getHeight() + 70 + 'px');
 
@@ -1420,7 +1418,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         var gridData = this.dashboardStore.data.items;
         var viewsToUpdate = [];
         var viewGuidsToDelete = [];
-    
+
         for (var i = 0; i < gridData.length; i++) {
             if (!gridData[i].data.removed) {
                 viewsToUpdate.push({
@@ -1450,7 +1448,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
 
     onClose: function() {
         var me = this;
-        
+
         Ext.select('.itemTip').destroy();
 
         //me.tearDownCircularFocus();
@@ -1494,18 +1492,18 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     },
     hideButton: function(className) {
         var $ = jQuery;
-        
+
         $(className).hide();
     },
-    
+
     showButton: function(className) {
-        var $ = jQuery; 
-        
+        var $ = jQuery;
+
         $(className).show();
     },
-    
+
     removeStackOrDashboard: function(stack){
-    	var $ = jQuery;    	
+    	var $ = jQuery;
     	$("div[id='stack" + stack.id + "']").remove();
     }
 });

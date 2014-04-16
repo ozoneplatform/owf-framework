@@ -3,15 +3,16 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <title>Configuration</title>
-        
+
         <!-- ** CSS ** -->
         <!-- base library -->
         <link rel='stylesheet' type='text/css' href='../themes/a_default.theme/css/a_default.css' />
+        <link rel='stylesheet' type='text/css' href='../themes/a_default.theme/css/bootstrap_main.css' />
         <link rel='stylesheet' type='text/css' href='../themes/a_default.theme/css/applicationConfiguration.css' />
 
         <p:javascript src='owf-widget-configuration-widget' pathToRoot="../" />
     </head>
-  
+
     <body class="configuration_widget">
         <br>
 
@@ -24,6 +25,9 @@
             </div>
             <div class="item branding">
                 <a href="#/config/BRANDING">Branding</a>
+            </div>
+            <div class="item notifications">
+                <a href="#/config/NOTIFICATIONS"><i class="icon-bell"></i>Notifications</a>
             </div>
             <div class="item store">
                 <a href="#/config/store">Store</a>

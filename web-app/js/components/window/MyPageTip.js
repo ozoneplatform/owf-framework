@@ -21,7 +21,6 @@ Ext.define('Ozone.components.window.MyPageTip', {
                 $('.name').dotdotdot({
                     ellipsis: '…'
                 });
-                $('.name:contains(…)').tooltip();
             }
         }
     },
@@ -29,19 +28,19 @@ Ext.define('Ozone.components.window.MyPageTip', {
     dashboardContainer: null,
     appsWindow: null,
     $dashboard: null,
-    
+
     getToolTip: function () {
         var me = this,
-            icn = me.clickedDashboard.iconImageUrl && me.clickedDashboard.iconImageUrl != ' ' ? 
-                '<img class=\'tipIcon\' src=\'' + encodeURI(decodeURI(me.clickedDashboard.iconImageUrl)) + 
+            icn = me.clickedDashboard.iconImageUrl && me.clickedDashboard.iconImageUrl != ' ' ?
+                '<img class=\'tipIcon\' src=\'' + encodeURI(decodeURI(me.clickedDashboard.iconImageUrl)) +
                 '\' />' : '<div class=\'tipIcon noIconGivenPage\'></div>',
-            str = '<div class=\'dashboard-tooltip-content\'>' + icn + 
+            str = '<div class=\'dashboard-tooltip-content\'>' + icn +
                 '<h3 class=\'name\' title="'+ Ext.htmlEncode(me.clickedDashboard.name) +'">'+ Ext.htmlEncode(me.clickedDashboard.name) + '</h3>';
 
         me.clickedDashboard.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedDashboard.description) +'  </p></div>') :
         								  (str += '<p class=\'tip-description\'>  </p>');
-        
-        // append buttons 
+
+        // append buttons
         str += '<ul style=\'buttonBar \'>' +
                     '<li class=\'restoreButton actionButton liPageAdjust\'>'+
                         '<span class=\'restoreImg \' ></span>'+
@@ -57,7 +56,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
                     '</li>'+
                '</ul>' +
               '</div>';
-         
+
         return str;
     },
 
@@ -76,10 +75,10 @@ Ext.define('Ozone.components.window.MyPageTip', {
             me.appsWindow.hideButton('.editButton');
         }
     },
-    
+
     initComponent: function() {
         var me = this;
-        
+
         me.target = me.event.target.parentElement.id;
         me.html = me.getToolTip();
 
@@ -93,9 +92,9 @@ Ext.define('Ozone.components.window.MyPageTip', {
             .on('click', '.editButton', $.proxy(me.editPage, me))
             .on('click', '.deleteButton', $.proxy(me.deletePage, me))
             .on('click', '.restoreButton', $.proxy(me.restorePage, me));
-        
+
         $('#my-apps-window').click(function() {
-	      	  //Hide the tip if outside click 
+	      	  //Hide the tip if outside click
 	      	me.destroy()
 	      });
     },
@@ -244,7 +243,7 @@ Ext.define('Ozone.components.window.MyPageTip', {
             buttonHandler: button_handler,
             text: text
         }));
-        
+
         me.width = 300;
 
         me.doLayout();

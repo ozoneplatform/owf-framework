@@ -15,6 +15,10 @@ Ext.define('Ozone.components.dashboarddesigner.SidePanel', {
 
         me.items = [
             {
+                xtype: 'tbtext',
+                text: '<p style="padding:5px;font-size:11px;">Click or drag dividers to divide the layout</p>'
+            },
+            {
                 xtype: 'dashboarddesignerbaselayout',
                 listeners: {
                     viewready: {
@@ -45,6 +49,10 @@ Ext.define('Ozone.components.dashboarddesigner.SidePanel', {
                         scope: me
                     }
                 }
+            },
+            {
+                xtype: 'tbtext',
+                text: '<p style="padding:5px;font-size:11px;" style="padding-top:5px;">Click or drag layouts to change a pane\'s layout</p>'
             },
             {
                 xtype: 'dashboarddesignerlayouttype',

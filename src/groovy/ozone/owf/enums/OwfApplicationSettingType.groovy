@@ -12,7 +12,8 @@ public enum OwfApplicationSettingType implements ApplicationSettingType  {
 	HIDDEN("HIDDEN"),
 	AUDITING("AUDITING"),
     // OP-727, OP-1103  User account settings
-    USER_ACCOUNT_SETTINGS("USER_ACCOUNT_SETTINGS")
+    USER_ACCOUNT_SETTINGS("USER_ACCOUNT_SETTINGS"),
+    NOTIFICATIONS("NOTIFICATIONS")
 
 	OwfApplicationSettingType(String description) {
 		this.description = description;

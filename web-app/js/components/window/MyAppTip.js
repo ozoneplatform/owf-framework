@@ -10,21 +10,20 @@ Ext.define('Ozone.components.window.MyAppTip', {
     target: null,
 
     listeners: {
-    	'close': {
-    		fn: function(){
-    			this.destroy()
-    		}
-    	},
-    	'afterRender': {
-    		fn: function() {
+        'close': {
+            fn: function(){
+                this.destroy()
+            }
+        },
+        'afterRender': {
+            fn: function() {
                 this.hideButtons();
                 this.bindHandlers();
                 $('.name').dotdotdot({
                     ellipsis: '…'
                 });
-                $('.name:contains(…)').tooltip();
-    		}
-    	}
+            }
+        }
     },
 
     dashboardContainer: null,
@@ -32,7 +31,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
     initComponent: function() {
         var me = this;
-        
+
         me.target = $(me.event.target.parentElement);
         me.html = me.getToolTip();
 
@@ -48,104 +47,101 @@ Ext.define('Ozone.components.window.MyAppTip', {
     clickedStackIsFullscreen: function() {
         return this.clickedStack.dashboards.length == 1 && this.clickedStack.dashboards[0].type == 'fullscreen'
     },
-    
+
     hideButtons: function() {
         var me = this;
         var notOwner = !me.isUserTheOwner();
 
         if(me.clickedStackIsFullscreen()) {
             // Fullscreen stacks (which are created by the store for web apps) can only be deleted
-            me.hideButton('.addButton');
-            me.hideButton('.editButton');
-            me.hideButton('.pushButton');
-            me.hideButton('.restoreButton')
+            me.hideButton('.addButton, .editButton, .pushButton, .restoreButton, .shareButton');
         }
         else if(notOwner) {
-            me.hideButton('.addButton');
-            me.hideButton('.editButton');
-            me.hideButton('.pushButton');
+            me.hideButton('.addButton, .editButton, .pushButton, .shareButton');
         }
     },
 
     getToolTip: function () {
         var me = this,
             banner = me.dashboardContainer.getBanner(),
-            icn = me.clickedStack.imageUrl && me.clickedStack.imageUrl != ' ' ? 
-                '<img class=\'tipIcon\'src=\'' + encodeURI(decodeURI(me.clickedStack.imageUrl)) + '\' />' : 
+            hasMarketplace = banner.hasMarketplaceButton,
+            icn = me.clickedStack.imageUrl && me.clickedStack.imageUrl != ' ' ?
+                '<img class=\'tipIcon\'src=\'' + encodeURI(decodeURI(me.clickedStack.imageUrl)) + '\' />' :
                 '<div class=\'tipIcon noIconGivenStack\'></div>',
             str = '<div class=\'dashboard-tooltip-content\'>' + icn +
                 '<h3 class=\'name\' title="'+ Ext.htmlEncode(me.clickedStack.name) +'">' + Ext.htmlEncode(me.clickedStack.name) + '</h3>';
 
         me.clickedStack.description ? (str += '<div class=\'description\'><p class=\'tip-description\'>' + Ext.htmlEncode(me.clickedStack.description) +'</p></div>'):
-        										 (str += '<p class=\'tip-description\'>  </p>');
-        
-        var liAdjustCls = 'liStoreAdjust';
-        	
-        if (banner.hasMarketplaceButton)
-        	liAdjustCls = '';
+                                                 (str += '<p class=\'tip-description\'>  </p>');
 
-        
+        var liAdjustCls = ' liStoreAdjust ';
+
+        if (banner.hasMarketplaceButton)
+            liAdjustCls = '';
+
+
         // append buttons
-        str += '<ul class=\'buttonBar\'>'+
-                    '<li class=\'addButton actionButton '+liAdjustCls+'\'>'+
-                        '<span class=\'createPageImg  \'></span>'+
-                        '<p class=\'actionText\'>Add Page</p>'+
+        str += '<ul class="buttonBar">'+
+                    '<li class="addButton actionButton '+liAdjustCls+'">'+
+                        '<span class="createPageImg"></span>'+
+                        '<p class="actionText">Add Page</p>'+
                     '</li>'+
-                    '<li class=\'pushButton actionButton\' data-qtip="">'+
-                    	'<span class=\'pushImg\'></span>'+
-                    	'<p class=\'actionText\'>Push to Store</p>'+
+                    '<li class="pushButton actionButton ' + (!hasMarketplace ? "hide" : "") +liAdjustCls+ '" data-qtip="">'+
+                        '<span class="pushImg"></span>'+
+                        '<p class="actionText">Push to Store</p>'+
                     '</li>'+
-                    '<li class=\'restoreButton actionButton '+liAdjustCls+'\'>'+
-                        '<span class=\'restoreImg  \'></span>'+
-                        '<p class=\'actionText\'>Restore</p>'+
+                    '<li class="shareButton actionButton ' + (hasMarketplace ? "hide" : "") +liAdjustCls+ '" data-qtip="">'+
+                        '<span class="pushImg"></span>'+
+                        '<p class="actionText">Share</p>'+
                     '</li>'+
-                    '<li class=\'editButton actionButton '+liAdjustCls+'\'>'+
-                        '<span class=\'editImg \'></span>'+
-                        '<p class=\'actionText\'>Edit</p>'+
+                    '<li class="restoreButton actionButton '+liAdjustCls+'">'+
+                        '<span class="restoreImg"></span>'+
+                        '<p class="actionText">Restore</p>'+
                     '</li>'+
-                    '<li class=\'deleteButton actionButton '+liAdjustCls+'\'>'+
-                        '<span class=\'deleteImg \'></span>'+
-                        '<p class=\'actionText\'>Delete</p>'+
+                    '<li class="editButton actionButton '+liAdjustCls+'">'+
+                        '<span class="editImg"></span>'+
+                        '<p class="actionText">Edit</p>'+
+                    '</li>'+
+                    '<li class="deleteButton actionButton '+liAdjustCls+'">'+
+                        '<span class="deleteImg"></span>'+
+                        '<p class="actionText">Delete</p>'+
                     '</li>'+
                '</ul>' +
               '</div>';
-         
+
         return str;
     },
 
     bindHandlers: function() {
         var me = this;
-    	var banner = me.dashboardContainer.getBanner();
 
-        if (!banner.hasMarketplaceButton)
-        	me.hideButton('.pushButton');
-        
         if(me.clickedStack.isStack) {
 
             $('.addButton').on('click', $.proxy(me.addPageToApp, me));
             $('.restoreButton').on('click', $.proxy(me.handleStackRestore, me));
             $('.pushButton').on('click', $.proxy(me.handlePushToStore, me));
+            $('.shareButton').on('click', $.proxy(me.handleShareButton, me));
             $('.editButton').on('click', $.proxy(me.handleStackEdit, me));
             $('.deleteButton').on('click', $.proxy(me.handleStackDelete, me));
                 /*function(evt) {
                 me.handleStackDelete(evt, me);
             });*/
-            
-            
+
+
         }
-        
+
         $('#my-apps-window').click(function() {
-        	  //Hide the tip if outside click 
-        	me.destroy()
+              //Hide the tip if outside click
+            me.destroy()
         });
     },
-    
+
     hideButton: function(className) {
-    	$(className).hide();
+        $(className).hide();
     },
-    
+
     showButton: function(className) {
-    	$(className).show();
+        $(className).show();
     },
 
     addPageToApp: function (evt) {
@@ -198,10 +194,10 @@ Ext.define('Ozone.components.window.MyAppTip', {
             },
             success: function(response, opts) {
                 var json = Ext.decode(response.responseText);
-                
+
                 if (json != null && json.updatedDashboards != null && json.updatedDashboards.length > 0) {
                     me.appsWindow.notify('Restore App', '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> is restored successfully to its default state!');
-                    
+
                     var dashboards = stack.dashboards;
                     for(var i = 0; i < dashboards.length; i++) {
                         for(var j = 0; j < json.updatedDashboards.length; j++) {
@@ -218,7 +214,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                             }
                         }
                     }
-                    
+
                     me.appsWindow.updateStackDashboardsEl(stack);
                     me.appsWindow.reloadDashboards = true;
                     //$stack.focus();
@@ -247,17 +243,28 @@ Ext.define('Ozone.components.window.MyAppTip', {
             buttonHandler: button_handler,
             text: text
         }));
-        
+
         me.width = 300;
 
         me.doLayout();
     },
- 
+
     onDestroy: function() {
         //clean up inner dom, including event handlers
         $(this.getEl().dom).empty();
 
         this.callParent(arguments);
+    },
+
+    _syncApp: function (stack, onSuccess, onFailure) {
+        Ozone.util.Transport.send({
+            url : Ozone.util.contextPath()  + '/stack/share?id=' + stack.id,
+            method : "POST",
+            onSuccess: onSuccess,
+            onFailure: onFailure,
+            autoSendVersion : false,
+            handleAs: 'text'
+        });
     },
 
     handlePushToStore: function (evt) {
@@ -282,34 +289,21 @@ Ext.define('Ozone.components.window.MyAppTip', {
             modal: true,
             fn: function(btn) {
                 if (btn == 'ok') {
-
                     mpLauncher = banner.getMarketplaceLauncher();
 
                     // Get the stack json
-
-                    Ozone.util.Transport.send({
-
-                        url : Ozone.util.contextPath()  + '/stack/share?id=' + stack.id,
-                        method : "POST",
-                        onSuccess: function (json){
-                            me.sendRequest(json, mpLauncher, banner.marketplaceWidget, stack);
-                        },
-
-                        onFailure: function (errorMsg){
-                            // Display error message
-                            Ext.Msg.show({
-                                title: 'Error',
-                                msg: errorMsg,
-                                buttons: Ext.Msg.OK,
-                                closable: false,
-                                modal: true
-                            });
-                        },
-                        autoSendVersion : false,
-                        handleAs: 'text'
-
+                    me._syncApp(stack, function (json) {
+                        me.sendRequest(json, mpLauncher, banner.marketplaceWidget, stack);
+                    }, function (errorMsg) {
+                        // Display error message
+                        Ext.Msg.show({
+                            title: 'Error',
+                            msg: errorMsg,
+                            buttons: Ext.Msg.OK,
+                            closable: false,
+                            modal: true
+                        });
                     });
-
                 }
             }
         });
@@ -318,9 +312,35 @@ Ext.define('Ozone.components.window.MyAppTip', {
         me.appsWindow.close();
     },
 
+    handleShareButton: function (evt) {
+        evt.stopPropagation();
+        var me = this,
+            stack = me.clickedStack,
+            msg = 'You are allowing this App to be shared with other users. To continue, click OK. Otherwise, click Cancel.';
+
+        me.warn('ok_cancel', function (btn) {
+            me._syncApp(stack, function () {
+                me.appsWindow.notify(
+                    'Share App',
+                    '<span class="heading-bold">' + Ext.htmlEncode(stack.name) + '</span> App can be shared with other users.'
+                );
+            }, function (errorMsg) {
+                // Display error message
+                Ext.Msg.show({
+                    title: 'Error',
+                    msg: errorMsg,
+                    buttons: Ext.Msg.OK,
+                    closable: false,
+                    modal: true
+                });
+            });
+        }, msg);
+        return;
+    },
+
     isAttributeSet: function(attr) {
         return !(attr == null ||
-                 attr == undefined || 
+                 attr == undefined ||
                  Ext.isEmpty(Ext.String.trim(attr)));
     },
 
@@ -396,17 +416,19 @@ Ext.define('Ozone.components.window.MyAppTip', {
         var me = this;
 
         me.dashboardContainer.stackStore.remove( me.dashboardContainer.stackStore.getById(me.clickedStack.id) );
-        me.dashboardContainer.stackStore.save();        
+        me.dashboardContainer.stackStore.save();
         me.appsWindow.removeStackOrDashboard(me.clickedStack);
 
         if( me.appsWindow._lastExpandedStack === me.clickedStack) {
             me.appsWindow.hideStackDashboards();
         }
-   
+
         me.appsWindow._deletedStackOrDashboards.push(me.clickedStack);
         me.appsWindow.reloadDashboards = true;
 
         me.close();
+
+        me.removeOrphanFullscreenDashboards(me.clickedStack);
     },
 
     /**
@@ -435,11 +457,11 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
 
                     //send only to this mp widget
-                    Ozone.eventing.Container.publish('ozone.marketplace.show', id, 
-                        Ozone.eventing.Container.getIframeId(instance.data.uniqueId)); 
+                    Ozone.eventing.Container.publish('ozone.marketplace.show', id,
+                        Ozone.eventing.Container.getIframeId(instance.data.uniqueId));
 
                     //hide loading mask once the widget has refreshed
-                    Ozone.eventing.Container.subscribe('ozone.marketplace.pageLoaded', 
+                    Ozone.eventing.Container.subscribe('ozone.marketplace.pageLoaded',
                             function() {
                         me.dashboardContainer.loadMask.hide();
                         Ozone.eventing.Container.unsubscribe('ozone.marketplace.pageLoaded');
@@ -520,6 +542,76 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 // A hack to verify whether the stack is in one of the user's implicit groups
                 return Boolean(_.find(stackGroups, { 'displayName': 'OWF Users' }) ||
                     (Ozone.config.user.isAdmin && _.find(stackGroups, { 'displayName': 'OWF Administrators' })));
+            }
+        }
+    },
+
+    /**
+     * Deletes "fullscreen" dashboards and App Components from client state.
+     * Said App Components are only added from Marketplace when a user runs
+     * a web-app in OWF that is NOT OZONE-aware. And "fullscreen" App
+     * Components are never shown in the App Components picker. (Only those
+     * with "standard" type are shown.)
+     * @param removedStack Model of stack that has already been removed from
+     *        the stackStore.
+     */
+    removeOrphanFullscreenDashboards: function(removedStack) {
+        var me = this;
+        var orphanAppComponents = [];
+        var orphanDashboardGuids = [];
+
+        for (var i = 0; i < removedStack.dashboards.length; i++) {
+            var dash = removedStack.dashboards[i];
+
+            if (dash.type === 'fullscreen' && dash.layoutConfig.widgets) {
+                orphanDashboardGuids.push(dash.guid);
+
+                for (var j = 0; j < dash.layoutConfig.widgets.length; j++) {
+                    var widget = dash.layoutConfig.widgets[j];
+                    var isOrphan = true;
+
+                    // Determine if widget is used on another dashboard
+                    me.dashboardContainer.stackStore.each(function(stack) {
+                        if (isOrphan && stack.data.dashboards) {
+                            for (var k = 0; k < stack.data.dashboards.length && isOrphan; k++) {
+                                var otherDash = stack.data.dashboards[k];
+
+                                // Search is simplified since fullscreen
+                                // components will only be on fullscreen
+                                // dashboards
+                                if (otherDash.data.type === 'fullscreen' &&
+                                    otherDash.data.layoutConfig.widgets) {
+                                    var widgetsList = otherDash.data.layoutConfig.widgets;
+
+                                    for (var l = 0; l < widgetsList.length; l++) {
+                                        if (widget.widgetGuid === widgetsList[l].widgetGuid) {
+                                            isOrphan = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    if (isOrphan) {
+                        orphanAppComponents.push(widget);
+                    }
+                }
+            }
+        }
+
+        me.dashboardContainer.deleteDashboards(orphanDashboardGuids, false);
+
+        for (var j = 0; j < orphanAppComponents.length; j++) {
+            var removeItem = OWF.Collections.AppComponents.findWhere({widgetGuid: orphanAppComponents[j].widgetGuid});
+
+            if (removeItem) {
+                var widgetType = removeItem.get('widgetTypes')[0];
+
+                if (widgetType.name === 'fullscreen') {
+                    OWF.Collections.AppComponents.remove(removeItem);
+                }
             }
         }
     }

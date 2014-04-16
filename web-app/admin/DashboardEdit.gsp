@@ -8,7 +8,7 @@
 		<!-- ** CSS ** -->
         <!-- base library -->
         <g:if test="${params.themeName != null && params.themeName != ''} ">
-        <link rel='stylesheet' type='text/css' href='../themes/${params.themeName.encodeAsHTML()}.theme/css/${params.themeName.encodeAsHTML()}.css' />
+        <link rel='stylesheet' type='text/css' href='../themes/${params.themeName.encodeAsURL().encodeAsHTML()}.theme/css/${params.themeName.encodeAsURL().encodeAsHTML()}.css' />
         </g:if>
         <g:else>
         <p:css name='../${owfCss.defaultCssPath()}' absolute='true'/>
@@ -26,7 +26,7 @@
 			if(Ext.isIE) {
 				Ext.BLANK_IMAGE_URL = '../themes/common/images/s.gif';
 			}
-			
+
 			Ext.onReady(function() {
 				OWF.ready(function(){
 					var viewport = Ext.create('Ext.container.Viewport', {

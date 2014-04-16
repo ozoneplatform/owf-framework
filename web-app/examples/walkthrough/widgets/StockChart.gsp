@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Stock Chart</title>
     <g:if test="${params.themeName != null && params.themeName != ''}">
-      <link rel='stylesheet' type='text/css' href='../../../themes/${params.themeName.encodeAsHTML()}.theme/css/${params.themeName.encodeAsHTML()}.css' />
+      <link rel='stylesheet' type='text/css' href='../../../themes/${params.themeName.encodeAsURL().encodeAsHTML()}.theme/css/${params.themeName.encodeAsURL().encodeAsHTML()}.css' />
     </g:if>
     <g:else>
       <link href="../../../js-lib/ext-4.0.7/resources/css/ext-all.css" rel="stylesheet" type="text/css">
@@ -21,13 +21,13 @@
     <script type="text/javascript" src="StockChart.js"></script>
     <script type="text/javascript" src="../chart/theme/accessibility-wob.js"></script>
     <script type='text/javascript'>
-      
+
         var _chart;
-        
+
         function doPlot(data) {
             if (_chart) { _chart.plot(JSON.parse(data)); }
         }
-      
+
         Ext.onReady(function () {
             OWF.ready(function () {
 			    var colorSchemes = {
@@ -68,7 +68,7 @@
 					    }]
 			    	}
 			    };
-				    
+
 			    // Set default theme
 			    var currentTheme = "${params.themeName.encodeAsHTML()}";
 			    if (!colorSchemes[currentTheme]) {
@@ -103,7 +103,7 @@
 					    }]
 			    	};
 			    }
-    
+
                 _chart = Ext.create('Ozone.components.StockChart', {
                   	legend: colorSchemes[currentTheme].legend || true,
                   	theme: colorSchemes[currentTheme].theme || 'Base',
@@ -121,14 +121,14 @@
                     layout: 'fit',
                     items: [_chart]
                 }).show();
-                
+
                 OWF.RPC.registerFunctions([
                     {
                         name: 'doPlot',
                         fn: doPlot
                     }
                 ]);
-               
+
                 OWF.Intents.receive(
                     {
                         action: 'Graph',

@@ -12,6 +12,7 @@ OWF = window.OWF ? window.OWF : {};
 (function(window, document, undefined) {
 
 	var WIDGET_READY_SERVICE_NAME = '_widgetReady',
+		DASHBOARD_GET_PANES_SERVICE_NAME = '_DASHBOARD_GET_PANES',
 
         isReady = false,
 		readyList = [],
@@ -20,12 +21,12 @@ OWF = window.OWF ? window.OWF : {};
 		dragAndDropController,
 		launchingController,
 		chromeController;
-	
+
 	owfdojo.mixin(OWF, /** @lends OWF */ {
 
 		/**
 		 * The OWF.Eventing object manages the eventing for an individual widget
-		 * 
+		 *
 		 * @namespace
 		 * @name OWF.Eventing
 		 */
@@ -39,14 +40,14 @@ OWF = window.OWF ? window.OWF : {};
 
 		/**
 		 * This object is used to create, retrieve, update and delete user preferences.
-		 * 
+		 *
 		 * @namespace
 		 * @name OWF.Preferences
 		 */
 		Preferences: {},
 
 		/**
-		 * This object is used launch other widgets. 
+		 * This object is used launch other widgets.
 		 *
 		 * @namespace
 		 * @name OWF.Launcher
@@ -55,14 +56,14 @@ OWF = window.OWF ? window.OWF : {};
 
 		/**
 		 * The OWF.DragAndDrop object manages the drag and drop for an individual widget.
-		 * 
+		 *
 		 * @namespace
 		 * @name OWF.DragAndDrop
 		 */
 		DragAndDrop: {},
 
 		/**
-		 * This object allows a widget to modify the button contained in the widget header (the chrome). 
+		 * This object allows a widget to modify the button contained in the widget header (the chrome).
 		 *
 		 * @namespace
 		 * @name OWF.Chrome
@@ -70,7 +71,7 @@ OWF = window.OWF ? window.OWF : {};
 		Chrome: {},
 
 		/**
-		 * Provides OWF utility methods for the widget developer 
+		 * Provides OWF utility methods for the widget developer
 		 *
 		 * @namespace
 		 * @name OWF.Util
@@ -78,7 +79,7 @@ OWF = window.OWF ? window.OWF : {};
 		Util: Ozone.util,
 
 		/**
-		 * 
+		 *
 		 *
 		 * @namespace
 		 * @name OWF.Metrics
@@ -87,7 +88,7 @@ OWF = window.OWF ? window.OWF : {};
 
 		/**
 		 * Provides functions to log messages and objects
-		 * 
+		 *
 		 * @namespace
 		 * @name OWF.Log
 		 */
@@ -100,9 +101,9 @@ OWF = window.OWF ? window.OWF : {};
 		 * @name OWF.Lang
 		 */
 		Lang: Ozone.lang,
-		
+
 		/**
-		 * 
+		 *
 		 *
 		 * @namespace
 		 * @name OWF.Audit
@@ -122,7 +123,7 @@ OWF = window.OWF ? window.OWF : {};
 				throw 'Error: no arguments passed';
 				return;
 			}
-			
+
 			if(typeof handler !== 'function') {
 				throw 'Error: handler must be a function';
 				return;
@@ -231,7 +232,7 @@ OWF = window.OWF ? window.OWF : {};
 		getContainerName: function() {
 			return widget.containerName;
 		},
-		
+
 		/**
 			Returns the version of the Container the Widget is in
 		*/
@@ -240,7 +241,7 @@ OWF = window.OWF ? window.OWF : {};
 		},
 
 		/**
-			Returns whether or not the dashboard in which the widget is opened is locked. 
+			Returns whether or not the dashboard in which the widget is opened is locked.
 		*/
 		isDashboardLocked : function() {
 			return widget.locked;
@@ -269,11 +270,11 @@ OWF = window.OWF ? window.OWF : {};
 			}<br>
 			@example
 			OWF.getOpenedWidgets(function(openedWidgets) {
-				
+
 			});
 		*/
 		getOpenedWidgets: function(fn) {
-			
+
 			if(fn === undefined) {
 				throw 'Error: no arguments passed';
 				return;
@@ -285,7 +286,41 @@ OWF = window.OWF ? window.OWF : {};
 			}
 
 			Ozone.eventing.getAllWidgets(fn);
+		},
+
+		/**
+			Gets all layout panes on the current dashboard. Useful for launching widgets in other panes.
+
+			@param {Function} callback function to execute when layout panes are retrieved from OWF. Function is passed an array of objects with the structure below: <br>
+			{<br>
+				id: 'pane guid',<br>
+				type: 'fitpane', // fitpane, desktoppane, accordionpane, fitpane or portalpane <br>
+				height: 398,<br>
+				width: 715,<br>
+				x: 0,<br>
+				y: 33,<br>
+				widgets: [{widget state object}]'<br>
+			}<br>
+			@see <a href="#WidgetState.getState">widget state</a>
+			@example
+			OWF.getPanes(function(panes) {
+				...
+			});
+		*/
+		getPanes: function(fn) {
+			if(fn === undefined) {
+				throw 'Error: no arguments passed';
+				return;
+			}
+
+			if(typeof fn !== 'function') {
+				throw 'Error: fn must be a function';
+				return;
+			}
+
+            gadgets.rpc.call('..', DASHBOARD_GET_PANES_SERVICE_NAME, fn, OWF.getIframeId());
 		}
+
 	});
 
 	// for backwards compatibility
@@ -307,7 +342,7 @@ OWF = window.OWF ? window.OWF : {};
 		// RPC/Directed Eventing API
 		function initRPC() {
 			OWF.RPC.registerFunctions = Ozone.eventing.registerFunctions;
-			
+
 			OWF.RPC.getWidgetProxy = function(widgetId, ready, accessLevel) {
 				Ozone.util.hasAccess( {
 					widgetId: widgetId,
@@ -317,10 +352,10 @@ OWF = window.OWF ? window.OWF : {};
 						if (response.hasAccess)
 							return Ozone.eventing.importWidget(widgetId, ready)
 					}
-				});				
+				});
 			}
 
-			
+
 			OWF.RPC.handleDirectMessage = function(fn) {
 				if(typeof fn !== 'function') {
 					throw 'Error: fn must be a function';
@@ -369,21 +404,21 @@ OWF = window.OWF ? window.OWF : {};
 			};
 
 			for(var i = 0, methods = ['addDropZoneHandler', 'getDragStartData', 'getDropEnabled', 'setDropEnabled', 'isDragging', 'getFlashWidgetId', 'setFlashWidgetId'] ; i < methods.length ; i++) {
-				
+
 				OWF.DragAndDrop[ methods[i] ] = function( methodName ) {
-					
+
 					return function() {
 						return dragAndDropController[methodName].apply(dragAndDropController, arguments);
 					};
 
 				}( methods[i] );
-			
+
 			}
 		}
 
 		// Chrome API
 		function initChrome() {
-			for(var i = 0, 
+			for(var i = 0,
 				methods = ['addHeaderButtons', 'addHeaderMenus', 'insertHeaderButtons', 'insertHeaderMenus',
                     'isModified', 'listHeaderButtons', 'listHeaderMenus', 'removeHeaderButtons', 'removeHeaderMenus',
                     'updateHeaderButtons', 'updateHeaderMenus', 'getTitle', 'setTitle'] ; i < methods.length ; i++) {
@@ -479,7 +514,7 @@ OWF = window.OWF ? window.OWF : {};
 	@param {String} [handler.sender] The first argument passed to the handler function is the id of the sender of the message. See <a href="OWF.html#.getIframeId">OWF.getIframeId</a> for a description of this id.
 	@param {Object} [handler.msg] The second argument passed to the handler function is the message itself.
 	@param {String} [handler.channel] The third argument passed to the handler function is the channel the message was published on.
-		
+
 	@example
 OWF.Eventing.subscribe("ClockChannel", this.update);
 var update = function(sender, msg, channel) {
@@ -493,7 +528,7 @@ var update = function(sender, msg, channel) {
 	@methodOf OWF.Eventing
 
 	@param {String} channelName The channel to unsubscribe to.
-	
+
 	@example
 OWF.Eventing.unsubscribe("ClockChannel");
  */
@@ -508,7 +543,7 @@ OWF.Eventing.unsubscribe("ClockChannel");
 	@param {String} [dest] The id of a particular destination.  Defaults to null which sends to all
 		subscribers on the channel.  See <a href="OWF.html#.getIframeId">OWF.getIframeId</a>
 		for a description of the id.
-	
+
 	@example
 OWF.Eventing.publish("ClockChannel", currentTimeString);
 */
@@ -619,7 +654,7 @@ OWF.RPC.handleDirectMessage(function(msg) {
 	only saved and used locally to the widget to identify whether a dragZone is in fact the node as a dropZone.  It will not be
 	sent to other events callbacks.
 	@param {Object} cfg.* other custom properties may be specified, these will be passed along to event handlers
-	
+
 	@example
 //add handler to text field for dragging
 owfdojo.connect(document.getElementById('dragSource'), 'onmousedown', this, function(e) {
@@ -668,7 +703,7 @@ OWF.DragAndDrop.addDropZoneHandler({
 
 	//this function is called only when a drop occurs over the grid (i.e. the mouse was released over the grid)
 	handler: (function(msg){
-	
+
 		var store = grid.getStore();
 		var processedSelections = [];
 		var errorMsg = null;
@@ -734,7 +769,7 @@ OWF.DragAndDrop.addDropZoneHandler({
 	@methodOf OWF.DragAndDrop
 
 	@param {Boolean} dropEnabled true to enable a drop, false to indicate a unsuccessful drop
-	
+
 	@example
 //attach mouseover callback to a particular area. If the mouse is here allow a drop
 cmp.getView().scroller.on('mouseover',function(e,t,o) {
@@ -756,7 +791,7 @@ cmp.getView().scroller.on('mouseout',function(e,t,o) {
 	Executes the callback passed when a drag starts in any widget.
 	@name onDragStart
 	@methodOf OWF.DragAndDrop
-	
+
 	@param {Function} callback The function to execute as a callback.
 	@param {Object} scope The scope (this reference) in which the function is executed. If omitted, defaults to the browser window.
 
@@ -778,7 +813,7 @@ OWF.DragAndDrop.onDragStart(function(sender, msg) {
 	Executes the callback passed when a drag stops in any widget.
 	@name onDragStop
 	@methodOf OWF.DragAndDrop
-	
+
 	@param {Function} callback The function to execute as a callback.
 	@param {Object} scope The scope (this reference) in which the function is executed. If omitted, defaults to the browser window.
 
@@ -793,7 +828,7 @@ OWF.DragAndDrop.onDragStop(function(sender, msg) {
 	Executes the callback passed when a drop occurs in the widget. If one has multiple dropZones in a widget it is easier to use <a href="#addDropZoneHandler">addDropZoneHandler</a>
 	@name onDrop
 	@methodOf OWF.DragAndDrop
-	
+
 	@param {Function} callback The function to execute as a callback.
 	@param {Object} scope The scope (this reference) in which the function is executed. If omitted, defaults to the browser window.
 
@@ -816,26 +851,65 @@ OWF.DragAndDrop.onDrop(function(sender, msg) {
 	@methodOf OWF.Launcher
 
 	@param {Object} config object see example for structure
-	@param {Function} callback a function to be called once after the launchWidget is executed
+    @param {String} config.pane optional, valid values are 'sibling' or a pane guid. Value of 'sibling' launches the widget into the sibling pane if it exists. If a pane is not found, widget is launched in the same pane. See <a href="OWF.html#.getPanes">OWF.getPanes</a> to find out how to get panes.
+    @param {String} config.universalName universalName or guid maybe identify the widget to be launched
+    @param {String} config.guid widget definition guid of the widget to launch
+    @param {String} config.title title to use for the widget
+    @param {String} config.titleRegex optional regex used to replace the previous title with the new value of title
+    @param {Boolean} config.launchOnlyIfClosed If true, Widget will only be launched if it is not already opened. If it is opened, then the widget will be restored.
+    @param {String} config.data initial launch config data to be passed to a widget only if the widget is opened.
+    @param {Function} callback a function to be called once after the launchWidget is executed
+    @see <a href="Ozone.state.WidgetState.html#getWidgetState">getWidgetState</a> to see widget state object structure.
 
-	@example
+    @example
+// launch widget in the same pane
 OWF.Launcher.launch({
-    universalName: 'universal name of widget to launch',  //universalName or guid maybe identify the widget to be launched
-    guid: 'guid_of_widget_to_launch',
-    title: 'title to replace the widget title' the title will only be changed if the widget is opened.
-    titleRegex: optional regex used to replace the previous title with the new value of title
-    launchOnlyIfClosed: true,   //if true will only launch the widget if it is not already opened.
-                                //if it is opened then the widget will be brought to focus
-    data: dataString            //initial launch data to be passed to a widget only if the widget is opened. This must be a string.
-}, callback);
- */
+	universalName: 'universal name of widget to launch',
+	guid: 'guid of widget to launch',
+	title: 'title to replace the widgets title',
+	titleRegex: 'regex',
+	launchOnlyIfClosed: true,
+	data: 'dataString'
+});
+
+// launch widget in following preference: empty pane, sibling, or same pane.
+// this is done by sorting panes by no of widgets, and picking the pane with the lowest no of widgets.
+OWF.getPanes(function (panes) {
+    var pane;
+
+    if(panes.length <= 2) {
+        pane = 'sibling';
+    }
+    else {
+        panes = Ext.Array.sort(panes, function (a, b) {
+            if(a.widgets.length === b.widgets.length)
+                return 0;
+            else if(a.widgets.length < b.widgets.length)
+                return -1;
+            else if(a.widgets.length > b.widgets.length)
+                return 1;
+        });
+        pane = panes[0].widgets.length === 0 ? panes[0].id : 'sibling'
+    }
+
+    OWF.Launcher.launch({
+        pane: pane,
+        universalName: 'universal name of widget to launch',
+        guid: 'guid of widget to launch',
+        title: 'title to replace the widgets title',
+        titleRegex: 'regex',
+        launchOnlyIfClosed: true,
+        data: 'dataString'
+    });
+});
+*/
 
 /**
 	Retrieves initial launch data for this widget if it is opened by another widget.  If launched via an intent, it will return the JSON string { intents: true }.
 	@name getLaunchData
 	@methodOf OWF.Launcher
 
-	@returns {Object} data object which contains initial launch data for the widget 
+	@returns {Object} data object which contains initial launch data for the widget
 
 	@example
 var launchData = OWF.Launcher.getLaunchData();
@@ -898,7 +972,7 @@ OWF.Chrome.isModified({
 	@param {String} cfg.items[*].text This property defines text to appear alongside the button.  This property is only used if the xtype is ‘button.’  ‘widgettool’ will not show text.
 	@param {Object} cfg.items[*].tooltip This property defines a tooltip.  It has two important sub properties, title and text.  tooltip is only used when the xtype is ‘button’
 	@param {Function} cfg.items[*].handler The handler attribute defines a function to be executed when the button is pressed. This function is executed using Widget Eventing API from inside the widget.  The internal channel name used is the itemId attribute. This function’s parameter list contains the standard parameters for an Eventing callback function.
-	
+
 	@example
 OWF.Chrome.addHeaderButtons({
 	items: [
@@ -961,7 +1035,7 @@ OWF.Chrome.addHeaderButtons({
 	@param {String} cfg.items[*].text This property defines text to appear alongside the button.  This property is only used if the xtype is ‘button.’  ‘widgettool’ will not show text.
 	@param {Object} cfg.items[*].tooltip This property defines a tooltip.  It has two important sub properties, title and text.  tooltip is only used when the xtype is ‘button’
 	@param {Function} cfg.items[*].handler The handler attribute defines a function to be executed when the button is pressed. This function is executed using Widget Eventing API from inside the widget.  The internal channel name used is the itemId attribute. This function’s parameter list contains the standard parameters for an Eventing callback function.
-		
+
 	@example
 OWF.Chrome.updateHeaderButtons({
 	items: [
@@ -1025,7 +1099,7 @@ OWF.Chrome.updateHeaderButtons({
 	@param {String} cfg.items[*].text This property defines text to appear alongside the button.  This property is only used if the xtype is ‘button.’  ‘widgettool’ will not show text.
 	@param {Object} cfg.items[*].tooltip This property defines a tooltip.  It has two important sub properties, title and text.  tooltip is only used when the xtype is ‘button’
 	@param {Function} cfg.items[*].handler The handler attribute defines a function to be executed when the button is pressed. This function is executed using Widget Eventing API from inside the widget.  The internal channel name used is the itemId attribute. This function’s parameter list contains the standard parameters for an Eventing callback function.
-	
+
 	@example
 OWF.Chrome.insertHeaderButtons({
 	pos: 0,
@@ -1084,7 +1158,7 @@ OWF.Chrome.insertHeaderButtons({
 	@param {Object[]} cfg.items an array of buttons configurations to remove to the chrome.  Only itemId is required.
 	See example below for button configs
 	@param {String} cfg.items[*].itemId itemId is a unique id among all buttons that are added.  It is a required property.  It is used for identification and defines the internal Eventing channel which is used to execute the handler function.  If itemId is not unique this may result in duplicate buttons which may not be able to be removed properly.
-	
+
 	@example
 OWF.Chrome.removeHeaderButtons({
 		items:[
@@ -1108,7 +1182,7 @@ OWF.Chrome.removeHeaderButtons({
 
 	@param {Object} cfg config object see below for properties
 	@param {Function} cfg.callback The function which receives the results.
-	
+
 	@example
 OWF.Chrome.listHeaderButtons({
 	callback: function(msg) {
@@ -1130,19 +1204,19 @@ OWF.Chrome.listHeaderButtons({
 
 	@param {Object} cfg config object see below for properties
 	@param {Object[]} cfg.items an array of menu configurations to add to the chrome.  See example for menu configs
-	@param {String} cfg.items[*].parentId itemId is the itemId of the menu to which this configuration should be added as a sub-menu.  If omitted, the configuration will be added as a main menu on the menu toolbar.  
+	@param {String} cfg.items[*].parentId itemId is the itemId of the menu to which this configuration should be added as a sub-menu.  If omitted, the configuration will be added as a main menu on the menu toolbar.
 	@param {String} cfg.items[*].itemId itemId is a unique id among all menus that are added.  It is a required property.  It is used for identification and defines the internal Eventing channel which is used to execute the handler function.  If itemId is not unique this may result in duplicate menus which may not be able to be removed properly.
 	@param {String} cfg.items[*].icon This property defines the URL of the image to be used for the menu.  If the URL is a relative path, it will be relative to the /owf context.  This is useful if the desired image is hosted by the OWF web server.  Otherwise a fully qualified URL should be used.  If type is being used to determine the image, the icon property is optional
-	@param {String} cfg.items[*].text This property defines text to appear alongside the menu.  
+	@param {String} cfg.items[*].text This property defines text to appear alongside the menu.
 	@param {Object} cfg.items[*].menu menu configuration object
 	@param {Object[]} cfg.items[*].menu.items an array of menu item configurations to add to the chrome.  See example for menu item configs
 	@param {String} cfg.items[*].menu.items[*].itemId itemId is a unique id among all menu items that are added.  It is a required property.  It is used for identification and defines the internal Eventing channel which is used to execute the handler function.
-	@param {String} cfg.items[*].menu.items[*].xtype xtype is used to specify the type of menu item to add.  This attribute should be omitted unless specifying a menuseparator. Setting this value to "menuseparator" adds a separator bar to a menu, used to divide logical groups of menu items. If specified, only xtype should be specified.  Generally you will add one of these by using "-" in your items config rather than creating one directly using xtype.  See example below for usage. 
+	@param {String} cfg.items[*].menu.items[*].xtype xtype is used to specify the type of menu item to add.  This attribute should be omitted unless specifying a menuseparator. Setting this value to "menuseparator" adds a separator bar to a menu, used to divide logical groups of menu items. If specified, only xtype should be specified.  Generally you will add one of these by using "-" in your items config rather than creating one directly using xtype.  See example below for usage.
 	@param {String} cfg.items[*].menu.items[*].icon This property defines the URL of the image to be used for the menu item.  If the URL is a relative path, it will be relative to the /owf context.  This is useful if the desired image is hosted by the OWF web server.  Otherwise a fully qualified URL should be used.  If type is being used to determine the image, the icon property is optional
-	@param {String} cfg.items[*].menu.items[*].text This property defines text to appear for the menu item. 
+	@param {String} cfg.items[*].menu.items[*].text This property defines text to appear for the menu item.
 	@param {Function} cfg.items[*].menu.items[*].handler The handler attribute defines a function to be executed when the menu item is clicked. This function is executed using Widget Eventing API from inside the widget.  The internal channel name used is the itemId attribute. This function's parameter list contains the standard parameters for an Eventing callback function.
 	@param {Object} cfg.items[*].menu.items[*].menu sub-menu configuration object.  See example for sub-menu config.
-	
+
 	@example
 OWF.Chrome.addHeaderMenus({
 	items: [
@@ -1204,7 +1278,7 @@ OWF.Chrome.addHeaderMenus({
 							]
 						}
 					},
-					'-', // another way to add a menu separator 
+					'-', // another way to add a menu separator
 					{
 						itemId:'cupcake',
 						icon: './themes/common/images/skin/exclamation.png',
@@ -1237,16 +1311,16 @@ OWF.Chrome.addHeaderMenus({
 	@param {Object[]} cfg.items an array of menu configurations to add to the chrome.  See example for menu configs
 	@param {String} cfg.items[*].itemId itemId is a unique id among all menus that are added.  It is a required property.  It is used for identification and defines the internal Eventing channel which is used to execute the handler function.  If itemId is not unique this may result in duplicate menus which may not be able to be removed properly.
 	@param {String} cfg.items[*].icon This property defines the URL of the image to be used for the menu.  If the URL is a relative path, it will be relative to the /owf context.  This is useful if the desired image is hosted by the OWF web server.  Otherwise a fully qualified URL should be used.  If type is being used to determine the image, the icon property is optional
-	@param {String} cfg.items[*].text This property defines text to appear alongside the menu.  
+	@param {String} cfg.items[*].text This property defines text to appear alongside the menu.
 	@param {Object} cfg.items[*].menu menu configuration object
 	@param {Object[]} cfg.items[*].menu.items an array of menu item configurations to add to the chrome.  See example for menu item configs
 	@param {String} cfg.items[*].menu.items[*].itemId itemId is a unique id among all menu items that are added.  It is a required property.  It is used for identification and defines the internal Eventing channel which is used to execute the handler function.
 	@param {String} cfg.items[*].menu.items[*].xtype xtype is used to specify the type of menu item to add.  This attribute should be omitted unless specifying a menuseparator. Setting this value to "menuseparator" adds a separator bar to a menu, used to divide logical groups of menu items. If specified, only xtype should be specified.  See example below for usage.
 	@param {String} cfg.items[*].menu.items[*].icon This property defines the URL of the image to be used for the menu item.  If the URL is a relative path, it will be relative to the /owf context.  This is useful if the desired image is hosted by the OWF web server.  Otherwise a fully qualified URL should be used.  If type is being used to determine the image, the icon property is optional
-	@param {String} cfg.items[*].menu.items[*].text This property defines text to appear for the menu item. 
+	@param {String} cfg.items[*].menu.items[*].text This property defines text to appear for the menu item.
 	@param {Function} cfg.items[*].menu.items[*].handler The handler attribute defines a function to be executed when the menu item is clicked. This function is executed using Widget Eventing API from inside the widget.  The internal channel name used is the itemId attribute. This function's parameter list contains the standard parameters for an Eventing callback function.
 	@param {Object} cfg.items[*].menu.items[*].menu sub-menu configuration object.  See example for sub-menu config.
-	
+
 	@example
 OWF.Chrome.updateHeaderMenus({
 	items:[
@@ -1308,7 +1382,7 @@ OWF.Chrome.updateHeaderMenus({
 							]
 						}
 					},
-					'-', // another way to add a menu separator 
+					'-', // another way to add a menu separator
 					{
 						itemId:'cupcake',
 						icon: './themes/common/images/skin/exclamation.png',
@@ -1340,7 +1414,7 @@ OWF.Chrome.updateHeaderMenus({
 	@param {Object} cfg config object see below for properties
 	@param {Number} [cfg.pos=0] 0-based index of where menus will be added, among any pre-existing menus.
 	@param {Object[]} cfg.items an array of menu configurations to add to the chrome.  See example for menu configs
-	@param {String} cfg.items[*].parentId itemId is the itemId of the menu to which this configuration should be added as a sub-menu.  If omitted, the configuration will be added as a main menu on the menu toolbar.  
+	@param {String} cfg.items[*].parentId itemId is the itemId of the menu to which this configuration should be added as a sub-menu.  If omitted, the configuration will be added as a main menu on the menu toolbar.
 	@param {String} cfg.items[*].itemId itemId is a unique id among all menus that are added.  It is a required property.  It is used for identification and defines the internal Eventing channel which is used to execute the handler function.  If itemId is not unique this may result in duplicate menus which may not be able to be removed properly.
 	@param {String} cfg.items[*].icon This property defines the URL of the image to be used for the menu.  If the URL is a relative path, it will be relative to the /owf context.  This is useful if the desired image is hosted by the OWF web server.  Otherwise a fully qualified URL should be used.  If type is being used to determine the image, the icon property is optional
 	@param {String} cfg.items[*].text This property defines text to appear alongside the menu.  This property is only used if the xtype is ‘menu.’  ‘widgettool’ will not show text.
@@ -1349,10 +1423,10 @@ OWF.Chrome.updateHeaderMenus({
 	@param {String} cfg.items[*].menu.items[*].itemId itemId is a unique id among all menu items that are added.  It is a required property.  It is used for identification and defines the internal Eventing channel which is used to execute the handler function.
 	@param {String} cfg.items[*].menu.items[*].xtype xtype is used to specify the type of menu item to add.  This attribute should be omitted unless specifying a menuseparator. Setting this value to "menuseparator" adds a separator bar to a menu, used to divide logical groups of menu items. If specified, only xtype should be specified.  See example below for usage.
 	@param {String} cfg.items[*].menu.items[*].icon This property defines the URL of the image to be used for the menu item.  If the URL is a relative path, it will be relative to the /owf context.  This is useful if the desired image is hosted by the OWF web server.  Otherwise a fully qualified URL should be used.  If type is being used to determine the image, the icon property is optional
-	@param {String} cfg.items[*].menu.items[*].text This property defines text to appear for the menu item. 
+	@param {String} cfg.items[*].menu.items[*].text This property defines text to appear for the menu item.
 	@param {Function} cfg.items[*].menu.items[*].handler The handler attribute defines a function to be executed when the menu item is clicked. This function is executed using Widget Eventing API from inside the widget.  The internal channel name used is the itemId attribute. This function's parameter list contains the standard parameters for an Eventing callback function.
 	@param {Object} cfg.items[*].menu.items[*].menu sub-menu configuration object.  See example for sub-menu config.
-	
+
 	@example
 OWF.Chrome.insertHeaderMenus({
 		pos: 0,
@@ -1381,7 +1455,7 @@ OWF.Chrome.insertHeaderMenus({
 							alert('You clicked the Inserted Menu menu item.');
 						}
 					},
-					'-', // another way to add a menu separator 
+					'-', // another way to add a menu separator
 					{
 						itemId:'insertedMenuItem3',
 						icon: './themes/common/images/skin/exclamation.png',
@@ -1404,7 +1478,7 @@ OWF.Chrome.insertHeaderMenus({
 	@param {Object} cfg config object see below for properties
 	@param {Object[]} cfg.items an array of objects containing itemIds for the menus to remove from the chrome.
 	  See example below for button configs
-	
+
 	@example
 OWF.Chrome.removeHeaderMenus({
 	items: [{
@@ -1420,7 +1494,7 @@ OWF.Chrome.removeHeaderMenus({
 
 	@param {Object} cfg config object see below for properties
 	@param {Function} cfg.callback The function which receives the results.
-	
+
 	@example
 OWF.Chrome.listHeaderMenus({
 	callback: function(msg) {
@@ -1904,46 +1978,46 @@ OWF.Chrome.listHeaderMenus({
  *   description: 'This is my dashboard',
  *   guid: guid.util.guid(),
  *   layoutConfig: {
- *       xtype: "desktoppane", 
- *       flex: 1, 
- *       height: "100%", 
+ *       xtype: "desktoppane",
+ *       flex: 1,
+ *       height: "100%",
  *       items: [
- *       ], 
- *       paneType: "desktoppane", 
+ *       ],
+ *       paneType: "desktoppane",
  *       widgets: [{
- *               widgetGuid: "ec5435cf-4021-4f2a-ba69-dde451d12551", 
- *               uniqueId: guid.util.guid(), 
- *               dashboardGuid: "6d7219cb-b485-ace5-946b-0affa1f227a3", 
- *               paneGuid: guid.util.guid(), 
- *               name: "Channel Listener", 
- *               active: false, 
- *               x: 50, 
- *               y: 66, 
- *               minimized: false, 
- *               maximized: false, 
- *               pinned: false, 
- *               collapsed: false, 
- *               columnPos: 0, 
- *               buttonId: null, 
- *               buttonOpened: false, 
- *               region: "none", 
- *               statePosition: 1, 
- *               intentConfig: null, 
- *               singleton: false, 
- *               floatingWidget: false, 
- *               background: false, 
- *               zIndex: 19050, 
- *               height: 440, 
+ *               widgetGuid: "ec5435cf-4021-4f2a-ba69-dde451d12551",
+ *               uniqueId: guid.util.guid(),
+ *               dashboardGuid: "6d7219cb-b485-ace5-946b-0affa1f227a3",
+ *               paneGuid: guid.util.guid(),
+ *               name: "Channel Listener",
+ *               active: false,
+ *               x: 50,
+ *               y: 66,
+ *               minimized: false,
+ *               maximized: false,
+ *               pinned: false,
+ *               collapsed: false,
+ *               columnPos: 0,
+ *               buttonId: null,
+ *               buttonOpened: false,
+ *               region: "none",
+ *               statePosition: 1,
+ *               intentConfig: null,
+ *               singleton: false,
+ *               floatingWidget: false,
+ *               background: false,
+ *               zIndex: 19050,
+ *               height: 440,
  *               width: 540
  *           }
- *       ], 
+ *       ],
  *       defaultSettings: {
  *           widgetStates: {
  *               "ec5435cf-4021-4f2a-ba69-dde451d12551": {
- *                   x: 50, 
- *                   y: 66, 
- *                   height: 440, 
- *                   width: 540, 
+ *                   x: 50,
+ *                   y: 66,
+ *                   height: 440,
+ *                   width: 540,
  *                   timestamp: 1349809747336
  *                }
  *           }
@@ -2303,7 +2377,7 @@ OWF.Chrome.listHeaderMenus({
 /**
  * @name findDashboardsByType
  * @methodOf OWF.Preferences
- * @deprecated Deprecated starting with OWF 7. Dashboards no longer have a specific type. This function is stubbed 
+ * @deprecated Deprecated starting with OWF 7. Dashboards no longer have a specific type. This function is stubbed
  * to return success with 0 results until removal.
  * @description Returns all dashboards for the logged in user filtered by the type of dashboard.
  * @param {Object} cfg config object see below for properties
@@ -2314,7 +2388,7 @@ OWF.Chrome.listHeaderMenus({
  *     {Boolean} success: true if dashboards found<br>
  *     {Number} results: number of dashboards found<br>
  *     {Array} data: an empty array<br>
- *     
+ *
  * <br>
  * @param {Function} [cfg.onFailure] Callback to execute if there is an error (optional, a default alert provided). Callback parameter is an error string.
  * @example
@@ -2382,8 +2456,8 @@ OWF.Chrome.listHeaderMenus({
 		{String} path: unnique widget identifier<br>
 	<br>
 	@param {Function} [cfg.onFailure] Callback to execute if there is an error (optional, a default alert provided). Callback parameter is an error string.
-	
-	@example	
+
+	@example
 var onSuccess = function(obj) {
 	if (obj.value) {
 		alert(obj.value.namespace);
@@ -2449,7 +2523,7 @@ OWF.Preferences.getWidget({
 		{String} path: unnique widget identifier<br>
 	<br>
 	@param {Function} [cfg.onFailure] callback to execute if there is an error (optional, a default alert provided).  This callback is called with two parameters: a error message string, and optionally a status code
-	
+
 	@example
 var onSuccess = function(widgets) {
 	if (widgets.length > 0) {
@@ -2503,7 +2577,7 @@ function:
 	},
 	"namespace":"com.mycompany.AnnouncingClock"
 }
-		@param {Function} [cfg.onFailure] This parameter is optional. If this function is not specified a default error 
+		@param {Function} [cfg.onFailure] This parameter is optional. If this function is not specified a default error
 		message will be displayed.This function is called if an error occurs on preference retrieval.  It is not
 		called if the preference is simply missing.
 		This function should accept two arguments:<br>
@@ -2516,7 +2590,7 @@ function:
 		500: An unexpected error occurred.<br>
 		404: The user preference was not found.<br>
 		400: The requested entity failed to pass validation.<br>
-		
+
 		@example
 The following shows how to make a call to getUserPreference:
 function onSuccess(pref){
@@ -2531,9 +2605,9 @@ function onFailure(error,status){
 // The following code calls getUserPreference with the above defined onSuccess and
 // onFailure callbacks.
 OWF.Preferences.getUserPreference({
-	namespace:'com.company.widget', 
+	namespace:'com.company.widget',
 	name:'First President',
-	onSuccess:onSuccess, 
+	onSuccess:onSuccess,
 	onFailure:onFailure
 });
 */
@@ -2555,7 +2629,7 @@ OWF.Preferences.getUserPreference({
     @param {Function} [cfg.onFailure] The callback function that is called if there was
     an error looking up the preference.  This function is <em>not</em> called
     if the preference simply does not exist
-	
+
 	@example
 var onSuccess = function(obj) {
 	if (obj.statusCode = 200) {
@@ -2590,7 +2664,7 @@ OWF.Preferences.doesUserPreferenceExist({
 		{Number} currentId: database pk index<br>
 	<br>
 	@param {Function} cfg.[onFailure] The callback function that is called when the system is unable to retrieve the current user logged in. Callback parameter is an error string.
-	
+
 	@example
 var onSuccess = function(obj) {
 	if (obj) {
@@ -2621,7 +2695,7 @@ OWF.Preferences.getCurrentUser({
 	<br>
 	@param {Function} [cfg.onFailure] The callback function that is called when the system fails to retrieve the server version of the OWF system. Callback parameter is an error string.
 	@example
-	
+
 var onSuccess = function(obj) {
 	if (obj) {
 		alert(obj.serverVersion);
@@ -2649,7 +2723,7 @@ OWF.Preferences.getServerVersion({
 	@param {String} cfg.value  The value of the user preference. The value can be any string including JSON.
 	@param {Function} cfg.onSuccess The function to be called if the user preference is successfully updated in
 	the database.
-	
+
 	@example
 The following is an example of a complete preference object passed to the onSuccess function:
 {
@@ -2672,7 +2746,7 @@ The following is an example of a complete preference object passed to the onSucc
 		500: An unexpected error occurred.<br>
 		404: The requested entity was not found.<br>
 		400: The requested entity failed to pass validation.<br>
-		
+
 		@example
 function onSuccess(pref){
 	alert(pref.value);
@@ -2777,7 +2851,7 @@ OWF.Preferences.deleteUserPreference({
 	This method returns flash/flex dom element from dom.
 	@name getFlashApp
 	@methodOf OWF.Util
-	
+
 	@param {String} id id of the flex dom element
 
 	@returns  flash/flex object from dom
@@ -2792,11 +2866,11 @@ OWF.Preferences.deleteUserPreference({
 	@param {String} userId
 	@param {String} userName
 	@param {String} metricSite Identifier, potentially URL, for source of metric - typically OWF instance
-	@param {String} componentName    
-	@param {String} componentId 
+	@param {String} componentName
+	@param {String} componentId
 	@param {String} componentInstanceId
 	@param {String} metricTypeId String describing metric - recommend package name construct
-	@param {String} metricData Any additional data for metric - do any necessary validation appropriate to metricTypeId before sending through 
+	@param {String} metricData Any additional data for metric - do any necessary validation appropriate to metricTypeId before sending through
  */
 
 /**
@@ -2807,16 +2881,16 @@ OWF.Preferences.deleteUserPreference({
  * @methodOf OWF.Metrics
  * @since OWF 6.0
  *
- * @param {Array} metrics 
+ * @param {Array} metrics
  * @param {String} metrics[*].userId
  * @param {String} metrics[*].userName
  * @param {Number} metrics[*].metricTime The time at which is metric was collected (in UNIX time)
  * @param {String} metrics[*].site Identifier, potentially URL, for source of metric - typically OWF instance
  * @param {String} metrics[*].component
- * @param {String} metrics[*].componentId 
+ * @param {String} metrics[*].componentId
  * @param {String} metrics[*].instanceId
  * @param {String} metrics[*].metricTypeId String describing metric - recommend package name construct
- * @param {String} metrics[*].widgetData Any additional data for metric - do any necessary validation appropriate to metricTypeId before sending through 
+ * @param {String} metrics[*].widgetData Any additional data for metric - do any necessary validation appropriate to metricTypeId before sending through
  * @param {String} metrics[*].userAgent Should be set to the user-agent string of the browser
  */
 
@@ -2825,11 +2899,11 @@ OWF.Preferences.deleteUserPreference({
 	@name logWidgetRender
 	@methodOf OWF.Metrics
 	@since OWF 3.8.0
-	
+
 	@param {String} userId     - see Ozone.metrics.logMetric userId
 	@param {String} userName   - see Ozone.metrics.logMetric userName
 	@param {String} metricSite - see Ozone.metrics.logMetric metricSite
-	@param {Object} widget   
+	@param {Object} widget
  */
 
 /**

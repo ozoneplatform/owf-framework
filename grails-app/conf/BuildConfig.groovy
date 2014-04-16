@@ -95,22 +95,6 @@ grails.war.copyToWebApp = { args ->
 
       exclude(name: "js-min/**")
 
-      exclude(name: "js-lib/ext-4.0.7/ext-all-debug-w-comments.js")
-      exclude(name: "js-lib/ext-4.0.7/ext-all-dev.js")
-      exclude(name: "js-lib/ext-4.0.7/ext-dev.js")
-      exclude(name: "js-lib/ext-4.0.7/build/**")
-      exclude(name: "js-lib/ext-4.0.7/builds/**")
-      exclude(name: "js-lib/ext-4.0.7/deploy/**")
-      exclude(name: "js-lib/ext-4.0.7/docs/**")
-      exclude(name: "js-lib/ext-4.0.7/examples/**")
-      exclude(name: "js-lib/ext-4.0.7/jsbuilder/**")
-      exclude(name: "js-lib/ext-4.0.7/overview/**")
-      exclude(name: "js-lib/ext-4.0.7/pkgs/**")
-      exclude(name: "js-lib/ext-4.0.7/resources/themes/images/access/**")
-      exclude(name: "js-lib/ext-4.0.7/resources/themes/images/gray/**")
-      exclude(name: "js-lib/ext-4.0.7/src/**")
-      exclude(name: "js-lib/ext-4.0.7/welcome/**")
-
       if (!System.properties.includeJsTests || !System.properties.includeJsTests.toString().toBoolean()) {
         exclude(name: "js-doh/**")
         exclude(name: "js-lib/dojo-release-*/**")
@@ -171,40 +155,39 @@ grails.project.dependency.resolution = {
     excludes 'commons-logging'
     }
     log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
-    repositories {        
-      grailsPlugins()
-      grailsHome()
-//      grailsCentral()
-//
-//      mavenLocal()
-//      mavenCentral()
 
-	mavenRepo "https://www.owfgoss.org/nexus/content/groups/public"
- 	resolver createLocalResolver()
+    repositories {
+        grailsPlugins()
+        grailsHome()
+        mavenLocal()
+        mavenRepo "https://www.owfgoss.org/nexus/content/groups/public"
+        grailsCentral()
+        mavenCentral()
+        resolver createLocalResolver()
         def offline = System.getProperty('OFFLINE_REPO')
-      if (offline) {
+        if (offline) {
             println "OWF USING OFFLINE_REPO ${offline}"
             resolver createOfflineResolver()
         }
-      else{
-          //println "OWF USING LOCAL REPO"
-           // resolver createIvySvnResolver()
+        else{
+            //println "OWF USING LOCAL REPO"
+            //resolver createIvySvnResolver()
         }
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
-	runtime ('log4j:apache-log4j-extras:1.1', 'net.sf.ehcache:ehcache-jgroupsreplication:1.4')
+        runtime ('log4j:apache-log4j-extras:1.1', 'net.sf.ehcache:ehcache-jgroupsreplication:1.4')
 
-      //only include these jdbc drivers for non production
-      if (Environment.current != Environment.PRODUCTION) {
-        runtime 'com.oracle:ojdbc14:10.2.0.1.0'
-        runtime 'mysql:mysql-connector-java:5.1.6'
-        runtime 'net.sourceforge.jtds:jtds:1.2.4'
-        runtime 'postgresql:postgresql:8.4-701.jdbc3'
-      }
+        //only include these jdbc drivers for non production
+        if (Environment.current != Environment.PRODUCTION) {
+            runtime 'com.oracle:ojdbc14:10.2.0.1.0'
+            runtime 'mysql:mysql-connector-java:5.1.6'
+            runtime 'net.sourceforge.jtds:jtds:1.2.4'
+            runtime 'postgresql:postgresql:8.4-701.jdbc3'
+        }
 
-		// HTTP Client
+        // HTTP Client
         compile('org.apache.httpcomponents:httpcore:4.1.1', 'org.apache.httpcomponents:httpclient:4.1.1')
         runtime('org.apache.httpcomponents:httpcore:4.1.1', 'org.apache.httpcomponents:httpclient:4.1.1')
 
@@ -213,13 +196,15 @@ grails.project.dependency.resolution = {
         compile('access:access:1.0')
 
 		runtime "hsqldb:hsqldb:1.8.0.10"
+		runtime 'com.thetransactioncompany:cors-filter:1.8'
 
 
     }
     plugins {
-		compile 'org.ozoneplatform:aml-commons-security:3.1.9'
-		compile 'org.ozoneplatform:aml-commons-appconfig:2.0'
-		compile 'org.ozoneplatform:aml-commons-auditing:0.1'
+        compile "org.ozoneplatform:aml-commons-security:$config.owf.security.rev"
+        compile 'org.ozoneplatform:aml-commons-appconfig:0.5'
+        compile 'org.ozoneplatform:aml-commons-auditing:1.0'
+        compile 'org.ozoneplatform:aml-commons-messaging:1.15'
         runtime ':cors:1.1.4' // OP-3931
     }
 }

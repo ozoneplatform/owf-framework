@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Next Century Corporation 
+ * Copyright 2013 Next Century Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 
  ;(function () {
-    
+
     Ozone.components.appcomponents = Ozone.components.appcomponents || {};
 
-    var SuperClass = Ozone.components.BaseView,
+    var SuperClass = Ozone.views.BaseView,
         DetailsTip = Ozone.components.appcomponents.DetailsTip,
         tip;
 
@@ -137,7 +137,7 @@
                     }
                 }
             }).show();
-            
+
             this.removeDetailsTip();
         },
 
@@ -186,21 +186,21 @@
                 })
                 .on('click', '.widget-remove', function(evt) {
                     evt.preventDefault();
-                	
-                	// find out if the widget is owned by a group and display not delete-able message if true 
+
+                	// find out if the widget is owned by a group and display not delete-able message if true
                     Ext.Ajax.request({
                         url: Ozone.util.contextPath() + '/widgetDefinition/groupOwnedWidget',
                         method: 'GET',
                         params: {
-                            widgetId:view.model.id, 
+                            widgetId:view.model.id,
                             personId: Ozone.config.user.id,
                             isAdmin: Ozone.config.user.isAdmin
                         },
                         success: function(data) {
                         	var response  = Ext.decode(data.responseText)
-                        	
+
                         	if(response.isOwnedByGroup)
-                        		alert("You may not delete this app component because it is required by an app.")
+                        		alert("You may not delete this app component because it is required by an app or it belongs to a group.")
                         	else {
                         		evt.preventDefault();
                         		me.removeAppComponent(view, tip);
@@ -211,7 +211,7 @@
                             alert("There was an error attempting to remove this app component")
                         }
                     });
-                    
+
                 });
             tip.shown();
         },

@@ -174,7 +174,13 @@ class PersonController extends BaseOwfRestController
 
         log.debug("executing whoami for user:: "+curUser);
 
-        def jsonResult = [currentUserName: curUser.username, currentUser:curUser.userRealName, currentUserPrevLogin: curUser.prevLogin, currentId:curUser.id] as JSON
+        def jsonResult = [
+            currentUserName: curUser.username, 
+            currentUser:curUser.userRealName,
+            currentUserPrevLogin: curUser.prevLogin,
+            currentId:curUser.id,
+            email: curUser.email
+        ] as JSON
         renderResult(jsonResult, 200)
     }
 
