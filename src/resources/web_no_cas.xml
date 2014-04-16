@@ -81,21 +81,6 @@
 	</filter-mapping>
 -->
 
-    <!-- OP-3931: Support CORS requests -->
-    <filter>
-        <filter-name>CORS</filter-name>
-        <filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
-        <init-param>
-            <param-name>cors.supportedMethods</param-name>
-            <param-value>GET, POST, HEAD, PUT, DELETE, OPTIONS</param-value>
-        </init-param>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>CORS</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
     <!-- End custom part -->
 
     <filter>
