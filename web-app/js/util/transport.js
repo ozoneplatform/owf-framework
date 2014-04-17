@@ -176,7 +176,7 @@ Ozone.util.Transport.send = function(cfg) {
                 cfg.onFailure = originalOnFailure;
 
                 cfg.content = cfg.content || {};
-                cfg.content.windowName = true;
+                cfg.content.windowname = true;
 
                 retryXhr = Ozone.util.Transport.send(cfg);
             };
