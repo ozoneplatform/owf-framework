@@ -170,5 +170,6 @@ grails.project.dependency.resolution = {
         compile ':ui-performance:1.2.2'
         compile ':build-test-data:2.1.2'
         compile ':quartz:0.4.2'
+        runtime ':cors:1.1.4' // OP-3931
     }
 }
