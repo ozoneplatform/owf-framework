@@ -18,7 +18,6 @@ target(dbmCreateDrop: "Convenience script to drop and create a new schema for th
         def lines = file.withReader { it.readLines() }
         file.delete()
 
-        def regex = /INSERT INTO DATABASECHANGELOGLOCK VALUES(1,[TRUE|FALSE],'(.*)','(.*)')/;
         def valuesRegex = /\((.*)\)/
 
         new File(fileName).withWriter { out ->
