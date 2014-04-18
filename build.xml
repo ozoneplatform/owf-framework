@@ -344,7 +344,7 @@
         </copy>
         <copy todir="${tomcat.dir}">
             <fileset dir="${basedir}">
-                <include name="prodDb.script" />
+                <include name="prodDb.log" />
             </fileset>
         </copy>
     </target>

@@ -143,6 +143,7 @@ grails.project.dependency.resolution = {
 */
 
         runtime 'hsqldb:hsqldb:1.8.0.10',
+                'log4j:apache-log4j-extras:1.1',
                 'net.sf.ehcache:ehcache-jgroupsreplication:1.4',
                 'com.oracle:ojdbc14:10.2.0.1.0',
                 'mysql:mysql-connector-java:5.1.6',
