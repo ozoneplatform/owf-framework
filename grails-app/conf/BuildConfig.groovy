@@ -150,12 +150,14 @@ grails.project.dependency.resolution = {
                 'net.sourceforge.jtds:jtds:1.2.4',
                 'postgresql:postgresql:8.4-701.jdbc3'
 
-        compile 'org.springframework.security:spring-security-core:3.2.3.RELEASE', 
-                'ozone-widgeting-framework-legacy:owf-security:3.24',
-                'org.igniterealtime.smack:smack:3.3.1',
+        compile 'org.igniterealtime.smack:smack:3.3.1',
                 'org.igniterealtime.smack:smackx:3.3.1',
                 'org.apache.httpcomponents:httpcore:4.1.1',
                 'org.apache.httpcomponents:httpclient:4.1.1'
+
+        compile('ozone-widgeting-framework-legacy:owf-security:3.25-SNAPSHOT') {
+            excludes([group: 'org.springframework']) 
+        }
 
     }
     plugins {
