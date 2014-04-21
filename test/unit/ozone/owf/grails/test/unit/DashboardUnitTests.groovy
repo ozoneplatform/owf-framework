@@ -10,9 +10,9 @@ import ozone.owf.grails.domain.Person
 import org.codehaus.groovy.grails.web.json.JSONObject
 
 class DashboardUnitTests extends GrailsUnitTestCase {
-    
+
 	def dashboard
-	
+
 	protected void setUp() {
         super.setUp()
         mockDomain(Dashboard)
@@ -23,17 +23,17 @@ class DashboardUnitTests extends GrailsUnitTestCase {
     protected void tearDown() {
         super.tearDown()
     }
-	
+
 	void testGuidRequired()
 	{
 		TestUtil.assertPropertyRequired('guid', dashboard)
 	}
-	
+
 	void testGuidIsGuidConstrained()
 	{
 		TestUtil.assertPropertyMatchesGuidConstraints('guid', dashboard)
 	}
-	
+
 	void testNameIsRequired()
 	{
 		TestUtil.assertPropertyRequired('name', dashboard)
@@ -68,21 +68,21 @@ class DashboardUnitTests extends GrailsUnitTestCase {
 		dashboard.name = "Hello World 1234567890!@\$%^&*()_+-|?><`~."
 		TestUtil.assertNoErrorOnProperty('name', dashboard)
 	}
-	
+
 	void testNameEscapedIsValid()
 	{
 		dashboard.name = "\u5317\u7F8E\u4E2D\u6587\u5831\u7D19"
 		TestUtil.assertNoErrorOnProperty('name', dashboard)
 	}
-	
-    
+
+
     void testAsJSONWithState() {
         //TODO: write a test here
     }
-    
+
 	void testNotLockedByDefault()
 	{
-		TestUtil.assertEquals(false, dashboard.locked)
+		assertEquals(false, dashboard.locked)
 	}
 
 }

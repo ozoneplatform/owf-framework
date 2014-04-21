@@ -3,7 +3,6 @@ package ozone.owf.grails.services
 import grails.converters.deep.JSON
 import grails.test.GrailsUnitTestCase
 import org.codehaus.groovy.grails.web.json.JSONArray
-import org.json.JSONString
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.domain.*
 
