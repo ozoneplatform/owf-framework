@@ -7,7 +7,7 @@ System.setProperty "ivy.checksums", ""
 grails.project.plugins.dir="${basedir}/plugins"
 //grails.work.dir='work'
 
-grails.config.base.webXml="file:///${basedir}/src/resources/web_no_cas.xml"
+grails.config.base.webXml="file:${basedir}/src/resources/web_no_cas.xml"
 // cas stuff added via the ozone-deploy plugin
 
 grails.project.dependency.resolver = "maven"
