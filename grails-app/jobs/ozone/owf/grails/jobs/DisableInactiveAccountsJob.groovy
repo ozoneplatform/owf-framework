@@ -1,10 +1,11 @@
 package ozone.owf.grails.jobs
 
 import org.quartz.Job
-import org.quartz.JobDetail
+import org.quartz.JobBuilder
 import org.quartz.JobExecutionContext
 import org.quartz.SimpleTrigger
-import org.quartz.Trigger
+import org.quartz.TriggerBuilder
+import org.quartz.SimpleScheduleBuilder
 import org.codehaus.groovy.grails.web.context.ServletContextHolder
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
 
@@ -80,12 +81,18 @@ class DisableInactiveAccountsJob implements Job {
 
 
     def schedule(def quartzScheduler) {
-        def job = new JobDetail(name, group, this.class)
-        def trigger = new SimpleTrigger(name, group, getStartDateTime(), null, SimpleTrigger.REPEAT_INDEFINITELY, getExecInterval())
+        def job = JobBuilder.newJob(this.class).withIdentity(name, group).build()
+        def trigger = TriggerBuilder.newTrigger()
+            .withIdentity(TriggerBuilder.triggerKey(name, group))
+            .startAt(getStartDateTime())
+            .withSchedule(SimpleScheduleBuilder.simpleSchedule()
+                .withIntervalInMilliseconds(getExecInterval())
+                .repeatForever()
+            ).build()
         if (quartzScheduler.getJobDetail(name, group)) {
             log.info "$name job already exists, don't schedule"
         } else {
-            quartzScheduler.scheduleJob(job, trigger)    
+            quartzScheduler.scheduleJob(job, trigger)
         }
     }
 

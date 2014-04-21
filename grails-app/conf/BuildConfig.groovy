@@ -156,7 +156,7 @@ grails.project.dependency.resolution = {
                 'org.apache.httpcomponents:httpclient:4.1.1'
 
         compile('ozone-widgeting-framework-legacy:owf-security:3.25-SNAPSHOT') {
-            excludes([group: 'org.springframework']) 
+            excludes([group: 'org.springframework'])
         }
 
     }
@@ -172,7 +172,7 @@ grails.project.dependency.resolution = {
         build   ':tomcat:7.0.52.1'
         compile ':ui-performance:1.2.2'
         compile ':build-test-data:2.1.2'
-        compile ':quartz:0.4.2'
+        compile ':quartz:1.0.1'
         runtime ':cors:1.1.4' // OP-3931
     }
 }
