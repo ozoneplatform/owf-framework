@@ -1,11 +1,15 @@
 package ozone.owf.grails.test.integration
 
 import grails.converters.JSON
+import grails.test.mixin.TestMixin
+import grails.test.mixin.integration.IntegrationTestMixin
+
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.domain.*
 import ozone.owf.grails.services.AutoLoginAccountService
 
-class WidgetDefinitionServiceTests extends GroovyTestCase {
+@TestMixin(IntegrationTestMixin)
+class WidgetDefinitionServiceTests {
 
     def domainMappingService
     def widgetDefinitionService
@@ -13,29 +17,38 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
 
     private final samplesArray = ["A", "D", "C", "AA", "B", "BB"]
 
-    protected void setUp() {
-        super.setUp()
+    void setUp() {
         origAccountService = widgetDefinitionService.accountService
+        cleanup()
 
         def acctService = new AutoLoginAccountService()
-        Person p = new Person(username: 'testWidgetDefinitionServiceTesting', userRealName: 'foo', enabled: true)
+        Person p = new Person(
+            username: 'testWidgetDefinitionServiceTesting',
+            userRealName: 'foo',
+            enabled: true
+        )
         p.save()
         acctService.autoAccountName = 'testWidgetDefinitionServiceTesting'
         acctService.autoRoles = [ERoleAuthority.ROLE_ADMIN.strVal]
         widgetDefinitionService.accountService = acctService
     }
 
-    protected void tearDown() {
-        super.tearDown()
+    void tearDown() {
         widgetDefinitionService.accountService = origAccountService
+        cleanup()
+    }
+
+    private void cleanup() {
+        Person.withTransaction { Person.findAll().each { it.delete() } }
+        WidgetDefinition.withTransaction { WidgetDefinition.findAll().each { it.delete() } }
     }
 
     void testCreate() {
         def resultOfCreate = widgetDefinitionService.create(WidgetDefinitionPostParams.generatePostParamsA())
-        assertTrue resultOfCreate.success
-        assertEquals "12345678-1234-1234-1234-1234567890a0", resultOfCreate.data[0].widgetGuid
+        assert resultOfCreate.success
+        assert "12345678-1234-1234-1234-1234567890a0" == resultOfCreate.data[0].widgetGuid
         def widgetDefinition = WidgetDefinition.findByWidgetGuid("12345678-1234-1234-1234-1234567890a0")
-        assertEquals widgetDefinition.widgetGuid, resultOfCreate.data[0].widgetGuid
+        assert widgetDefinition.widgetGuid == resultOfCreate.data[0].widgetGuid
     }
 
     void testUpdate() {
@@ -46,11 +59,11 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
         postParamsB.id = postParamsB.widgetGuid
         def resultOfUpdate = widgetDefinitionService.update(postParamsB)
 
-        assertTrue resultOfUpdate.success
-        assertEquals 1, WidgetDefinition.findAll().size()
+        assert resultOfUpdate.success
+        assert 1 == WidgetDefinition.findAll().size()
 
         def widgetDefinition = WidgetDefinition.findByWidgetGuid("12345678-1234-1234-1234-1234567890a0")
-        assertEquals "My Widget Updated", widgetDefinition.displayName
+        assert "My Widget Updated" == widgetDefinition.displayName
     }
 
     void testListWithStartAndLimit() {
@@ -58,7 +71,7 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
         def expectedOrder = samplesArray
 
         def widgets = widgetDefinitionService.list([offset: "4", max: "1"])
-        assertEquals expectedOrder[4], widgets.data[0].displayName
+        assert expectedOrder[4] == widgets.data[0].displayName
     }
 
     void testListWithSortAndDir() {
@@ -67,7 +80,7 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
 
         def widgets = widgetDefinitionService.list([sort: 'value.namespace', order: 'desc'])
 
-        assertEquals expectedOrder, widgets.data*.displayName
+        assert expectedOrder == widgets.data*.displayName
     }
 
     void testListWithSortAndDirAndStartAndLimit() {
@@ -76,17 +89,17 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
 
         def widgets = widgetDefinitionService.list([offset: "4", max: "1", sort: 'value.namespace', order: 'asc'])
 
-        assertEquals expectedOrder[4], widgets.data[0].displayName
+        assert expectedOrder[4] == widgets.data[0].displayName
     }
 
     void testListWithNoParams() {
         createDataForListTests()
-        assertEquals samplesArray.size(), widgetDefinitionService.list().data.size()
+        assert samplesArray.size() == widgetDefinitionService.list().data.size()
     }
 
     void testListCount() {
         createDataForListTests()
-        assertEquals WidgetDefinition.count(), widgetDefinitionService.list().results
+        assert WidgetDefinition.count() == widgetDefinitionService.list().results
     }
 
     void testListWithOnlySortParameter() {
@@ -95,7 +108,7 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
 
         def widgets = widgetDefinitionService.list([sort: 'value.namespace'])
 
-        assertEquals expectedOrder, widgets.data*.displayName
+        assert expectedOrder == widgets.data*.displayName
     }
 
     void testListWithWidgetTypesParameter() {
@@ -114,7 +127,7 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
 
         def widgets = widgetDefinitionService.list([widgetTypes: 'store'])
 
-        assertEquals 2, widgets.results
+        assert 2 == widgets.results
     }
 
     void testListWithStackId() {
@@ -158,11 +171,11 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
                         }],
                         "defaultSettings": {}
                     }],
-                    "xtype":"container", 
+                    "xtype":"container",
                     "layout":[{
-                        "align":"stretch", 
+                        "align":"stretch",
                         "type":"hbox"
-                    }], 
+                    }],
                     "flex":3
                 }""", description: 'This is a stack dashboard.')
 
@@ -183,20 +196,20 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
         domainMappingService.createMapping(stack1.findStackDefaultGroup(), RelationshipType.owns, stackDashboard2)
 
         def result = widgetDefinitionService.list([stack_id: stack1.id])
-        assertTrue result.success
-        assertEquals 3, result.results
+        assert result.success
+        assert 3 == result.results
     }
 
     void testListSuccess() {
         createDataForListTests()
-        assertTrue widgetDefinitionService.list().success
+        assert widgetDefinitionService.list().success
     }
 
     void testListWithNoWidgetDefinitions() {
         def list = widgetDefinitionService.list()
-        assertTrue list.success
-        assertEquals 0, list.data.size()
-        assertEquals 0, list.results
+        assert list.success
+        assert 0 == list.data.size()
+        assert 0 == list.results
     }
 
     void testListWithBadJSONNameParameter() {
@@ -240,23 +253,23 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
 
         def widgetDescriptor = widgetDefinitionService.export([id: widget.widgetGuid, filename: "test"])
 
-        assertTrue widgetDescriptor.contains('"displayName": "' + widget.displayName + '"')
-        assertTrue widgetDescriptor.contains('"universalName": "' + widget.universalName + '"')
-        assertTrue widgetDescriptor.contains('"widgetUrl": "' + widget.widgetUrl + '"')
-        assertTrue widgetDescriptor.contains('"imageUrlLarge": "' + widget.imageUrlLarge + '"')
-        assertTrue widgetDescriptor.contains('"imageUrlSmall": "' + widget.imageUrlSmall + '"')
-        assertTrue widgetDescriptor.contains('"description": "' + widget.description + '"')
-        assertTrue widgetDescriptor.contains('"widgetVersion": "' + widget.widgetVersion + '"')
-        assertTrue widgetDescriptor.contains('"defaultTags": ["' + tag + '"]')
-        assertTrue widgetDescriptor.contains('"widgetTypes": ["' + standardWidgetType.name + '"]')
-        assertTrue widgetDescriptor.contains('"height": ' + widget.height)
-        assertTrue widgetDescriptor.contains('"width": ' + widget.width)
-        assertTrue widgetDescriptor.contains('"visible": ' + widget.visible)
-        assertTrue widgetDescriptor.contains('"background": ' + widget.background)
-        assertTrue widgetDescriptor.contains('"singleton": ' + widget.singleton)
-        assertTrue widgetDescriptor.contains('"intents":')
-        assertTrue widgetDescriptor.contains('"send":')
-        assertTrue widgetDescriptor.contains('"receive":')
+        assert widgetDescriptor.contains('"displayName": "' + widget.displayName + '"')
+        assert widgetDescriptor.contains('"universalName": "' + widget.universalName + '"')
+        assert widgetDescriptor.contains('"widgetUrl": "' + widget.widgetUrl + '"')
+        assert widgetDescriptor.contains('"imageUrlLarge": "' + widget.imageUrlLarge + '"')
+        assert widgetDescriptor.contains('"imageUrlSmall": "' + widget.imageUrlSmall + '"')
+        assert widgetDescriptor.contains('"description": "' + widget.description + '"')
+        assert widgetDescriptor.contains('"widgetVersion": "' + widget.widgetVersion + '"')
+        assert widgetDescriptor.contains('"defaultTags": ["' + tag + '"]')
+        assert widgetDescriptor.contains('"widgetTypes": ["' + standardWidgetType.name + '"]')
+        assert widgetDescriptor.contains('"height": ' + widget.height)
+        assert widgetDescriptor.contains('"width": ' + widget.width)
+        assert widgetDescriptor.contains('"visible": ' + widget.visible)
+        assert widgetDescriptor.contains('"background": ' + widget.background)
+        assert widgetDescriptor.contains('"singleton": ' + widget.singleton)
+        assert widgetDescriptor.contains('"intents":')
+        assert widgetDescriptor.contains('"send":')
+        assert widgetDescriptor.contains('"receive":')
     }
 
     void testGetWidgetDescriptorJson() {
@@ -305,24 +318,24 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
         widgetDescriptor.intents.send[0].dataTypes.each { resultSendDataTypes.push(it) }
         widgetDescriptor.intents.receive[0].dataTypes.each { resultReceiveDataTypes.push(it) }
 
-        assertEquals widget.displayName, widgetDescriptor.displayName
-        assertEquals widget.universalName, widgetDescriptor.universalName
-        assertEquals widget.widgetUrl, widgetDescriptor.widgetUrl
-        assertEquals widget.imageUrlLarge, widgetDescriptor.imageUrlLarge
-        assertEquals widget.imageUrlSmall, widgetDescriptor.imageUrlSmall
-        assertEquals widget.description, widgetDescriptor.description
-        assertEquals widget.widgetVersion, widgetDescriptor.widgetVersion
-        assertEquals widget.height, widgetDescriptor.height
-        assertEquals widget.width, widgetDescriptor.width
-        assertEquals widget.visible, widgetDescriptor.visible
-        assertEquals widget.background, widgetDescriptor.background
-        assertEquals widget.singleton, widgetDescriptor.singleton
-        assertArrayEquals tags.toArray(), resultTags.toArray()
-        assertEquals '["' + widget.widgetTypes.toArray()[0].name + '"]', widgetDescriptor.widgetTypes.toString()
-        assertEquals widgetDefinitionIntent1.intent.action, widgetDescriptor.intents.send[0].action
-        assertArrayEquals widgetDefinitionIntent1DataTypes.toArray(), resultSendDataTypes.toArray()
-        assertEquals widgetDefinitionIntent2.intent.action, widgetDescriptor.intents.receive[0].action
-        assertArrayEquals widgetDefinitionIntent2DataTypes.toArray(), resultReceiveDataTypes.toArray()
+        assert widget.displayName == widgetDescriptor.displayName
+        assert widget.universalName == widgetDescriptor.universalName
+        assert widget.widgetUrl == widgetDescriptor.widgetUrl
+        assert widget.imageUrlLarge == widgetDescriptor.imageUrlLarge
+        assert widget.imageUrlSmall == widgetDescriptor.imageUrlSmall
+        assert widget.description == widgetDescriptor.description
+        assert widget.widgetVersion == widgetDescriptor.widgetVersion
+        assert widget.height == widgetDescriptor.height
+        assert widget.width == widgetDescriptor.width
+        assert widget.visible == widgetDescriptor.visible
+        assert widget.background == widgetDescriptor.background
+        assert widget.singleton == widgetDescriptor.singleton
+        assert tags.toArray() == resultTags.toArray()
+        assert '["' + widget.widgetTypes.toArray()[0].name + '"]' == widgetDescriptor.widgetTypes.toString()
+        assert widgetDefinitionIntent1.intent.action == widgetDescriptor.intents.send[0].action
+        assert widgetDefinitionIntent1DataTypes.toArray() == resultSendDataTypes.toArray()
+        assert widgetDefinitionIntent2.intent.action == widgetDescriptor.intents.receive[0].action
+        assert widgetDefinitionIntent2DataTypes.toArray() == resultReceiveDataTypes.toArray()
     }
 
     private void createDataForListTests() {

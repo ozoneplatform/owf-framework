@@ -1,6 +1,8 @@
 package ozone.owf.grails.test.integration
 
 import grails.converters.JSON;
+import grails.test.mixin.TestMixin
+import grails.test.mixin.integration.IntegrationTestMixin
 
 import ozone.owf.grails.controllers.PersonWidgetDefinitionController
 import ozone.owf.grails.domain.ERoleAuthority
@@ -16,169 +18,170 @@ import ozone.owf.grails.OwfException
 import ozone.owf.grails.services.DomainMappingService
 
 
+@TestMixin(IntegrationTestMixin)
 class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
-	
+
 	def widgetDefinitionService
 	def personWidgetDefinitionService
     def serviceModelService
 	def controller
-	
+
 	void testWidgetList() {
 	  loginAsUsernameAndRole('testAdmin1', 'role')
 	  createWidgetDefinitionForTest()
-	  
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
 		controller.widgetList()
 
-        assertNotNull JSON.parse(controller.response.contentAsString).rows
-		assertEquals "0c5435cf-4021-4f2a-ba69-dde451d12551", JSON.parse(controller.response.contentAsString).rows[0].path
-        assertNotNull JSON.parse(controller.response.contentAsString).results
-        assertTrue(JSON.parse(controller.response.contentAsString).success)
+        assert JSON.parse(controller.response.contentAsString).rows != null
+		assert "0c5435cf-4021-4f2a-ba69-dde451d12551" == JSON.parse(controller.response.contentAsString).rows[0].path
+        assert JSON.parse(controller.response.contentAsString).results != null
+        assert JSON.parse(controller.response.contentAsString).success
 	}
-	
+
 	void testListUserAndGroupWidgets() {
 		loginAsUsernameAndRole('testAdmin1', 'role')
 		createWidgetDefinitionForTest()
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.widgetDefinitionService = widgetDefinitionService
 		controller.request.contentType = "text/json"
 		controller.listUserAndGroupWidgets()
-		
-		assertEquals "0c5435cf-4021-4f2a-ba69-dde451d12551", JSON.parse(controller.response.contentAsString).id[0]
+
+		assert "0c5435cf-4021-4f2a-ba69-dde451d12551" == JSON.parse(controller.response.contentAsString).id[0]
 	}
-	
+
 	void testListUserAndGroupWidgetsByName() {
 		loginAsUsernameAndRole('testAdmin1', 'role')
 		createWidgetDefinitionForTest()
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.widgetDefinitionService = widgetDefinitionService
 		controller.request.contentType = "text/json"
 		controller.request.parameters = [widgetName:'%C%']
 		controller.listUserAndGroupWidgets()
-		
-		assertEquals "0c5435cf-4021-4f2a-ba69-dde451d12551", JSON.parse(controller.response.contentAsString).id[0]
+
+		assert "0c5435cf-4021-4f2a-ba69-dde451d12551" == JSON.parse(controller.response.contentAsString).id[0]
 	}
-	
+
 	void testListUserAndGroupWidgetsByExactName() {
 		loginAsUsernameAndRole('testAdmin1', 'role')
 		createWidgetDefinitionForTest()
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.widgetDefinitionService = widgetDefinitionService
 		controller.request.contentType = "text/json"
 		controller.request.parameters = [widgetName:'Widget C']
 		controller.listUserAndGroupWidgets()
-		
-		assertEquals "0c5435cf-4021-4f2a-ba69-dde451d12551", JSON.parse(controller.response.contentAsString).id[0]
+
+		assert "0c5435cf-4021-4f2a-ba69-dde451d12551" == JSON.parse(controller.response.contentAsString).id[0]
 	}
-	
+
 	void testListUserAndGroupWidgetsByVersion() {
 		loginAsUsernameAndRole('testAdmin1', 'role')
 		createWidgetDefinitionForTest()
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.widgetDefinitionService = widgetDefinitionService
 		controller.request.contentType = "text/json"
 		controller.request.parameters = [widgetVersion:'1.0']
 		controller.listUserAndGroupWidgets()
-		
-		assertEquals "0c5435cf-4021-4f2a-ba69-dde451d12551", JSON.parse(controller.response.contentAsString).id[0]
+
+		assert "0c5435cf-4021-4f2a-ba69-dde451d12551" == JSON.parse(controller.response.contentAsString).id[0]
 	}
-	
+
 	void testListUserAndGroupWidgetsByWidgetGuid() {
 		loginAsUsernameAndRole('testAdmin1', 'role')
 		createWidgetDefinitionForTest()
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.widgetDefinitionService = widgetDefinitionService
 		controller.request.contentType = "text/json"
 		controller.request.parameters = [widgetGuid:'0c5435cf-4021-4f2a-ba69-dde451d12551']
 		controller.listUserAndGroupWidgets()
-		
-		assertEquals "0c5435cf-4021-4f2a-ba69-dde451d12551", JSON.parse(controller.response.contentAsString).id[0]
+
+		assert "0c5435cf-4021-4f2a-ba69-dde451d12551" == JSON.parse(controller.response.contentAsString).id[0]
 	}
-	
+
 	void testListUserAndGroupWidgetsByUniqueId() {
 		loginAsUsernameAndRole('testAdmin1', 'role')
 		createWidgetDefinitionForTest()
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.widgetDefinitionService = widgetDefinitionService
 		controller.request.contentType = "text/json"
 		controller.request.parameters = [universalName:'com.company.widget.uuid']
 		controller.listUserAndGroupWidgets()
-		
-		assertEquals "0c5435cf-4021-4f2a-ba69-dde451d12551", JSON.parse(controller.response.contentAsString).id[0]
+
+		assert "0c5435cf-4021-4f2a-ba69-dde451d12551" == JSON.parse(controller.response.contentAsString).id[0]
 	}
-	
+
 	void testBulkDelete() {
 		loginAsUsernameAndRole('testAdmin1', 'role')
 		createWidgetDefinitionForTest()
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
 		controller.params.widgetGuidsToDelete = '["0c5435cf-4021-4f2a-ba69-dde451d12551"]'
-		
+
 		controller.bulkDelete()
-		
-		assertTrue JSON.parse(controller.response.contentAsString).success
+
+		assert JSON.parse(controller.response.contentAsString).success
 	}
-	
+
 	void testBulkUpdate() {
 		loginAsUsernameAndRole('testAdmin1', 'role')
 		createWidgetDefinitionForTest()
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
 		controller.params.widgetsToUpdate = '[{"guid":"0c5435cf-4021-4f2a-ba69-dde451d12551", "visible":true}]'
-		
+
 		controller.bulkUpdate()
-		
-		assertTrue JSON.parse(controller.response.contentAsString).success
+
+		assert JSON.parse(controller.response.contentAsString).success
 	}
-	
+
 	void testBulkDeleteWithoutParams() {
 		loginAsUsernameAndRole('testAdmin1', 'role')
 		createWidgetDefinitionForTest()
-		
+
 			controller = new PersonWidgetDefinitionController()
 			controller.personWidgetDefinitionService = personWidgetDefinitionService
 			controller.request.contentType = "text/json"
-			
+
 				controller.bulkDelete()
-				assertEquals '"Error during bulkDelete: The requested entity failed to pass validation. A fatal validation error occurred. WidgetsToDelete param required. Params: [:]"', controller.response.contentAsString
+				assert '"Error during bulkDelete: The requested entity failed to pass validation. A fatal validation error occurred. WidgetsToDelete param required. Params: [:]"' == controller.response.contentAsString
 	}
-	
+
 	void testBulkDeleteAndUpdateWithoutParams() {
 		loginAsUsernameAndRole('testAdmin1', 'role')
 		createWidgetDefinitionForTest()
-		
+
 			controller = new PersonWidgetDefinitionController()
 			controller.personWidgetDefinitionService = personWidgetDefinitionService
 			controller.request.contentType = "text/json"
-			
+
 				controller.bulkDeleteAndUpdate()
-				assertEquals '"Error during bulkDeleteAndUpdate: The requested entity failed to pass validation. A fatal validation error occurred. WidgetsToDelete param required. Params: [:]"', controller.response.contentAsString
+				assert '"Error during bulkDeleteAndUpdate: The requested entity failed to pass validation. A fatal validation error occurred. WidgetsToDelete param required. Params: [:]"' == controller.response.contentAsString
 	}
-	
+
 	void testBulkUpdateWithoutParams() {
 		loginAsUsernameAndRole('testAdmin1', 'role')
 		createWidgetDefinitionForTest()
-		
+
 			controller = new PersonWidgetDefinitionController()
 			controller.personWidgetDefinitionService = personWidgetDefinitionService
 			controller.request.contentType = "text/json"
-			
+
 				controller.bulkUpdate()
-				assertEquals '"Error during bulkUpdate: The requested entity failed to pass validation. A fatal validation error occurred. WidgetsToUpdate param required. Params: [:]"', controller.response.contentAsString
+				assert '"Error during bulkUpdate: The requested entity failed to pass validation. A fatal validation error occurred. WidgetsToUpdate param required. Params: [:]"' == controller.response.contentAsString
 	}
-	
+
     void testWidgetListWithPaging() {
         loginAsUsernameAndRole('testAdmin1', 'role')
         createWidgetDefinitionsForTest(10)
@@ -192,10 +195,10 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         //default sorts by name
         controller.widgetList()
 
-        assertEquals 5, JSON.parse(controller.response.contentAsString).rows.size()
-        assertEquals 10, JSON.parse(controller.response.contentAsString).results
-        assertEquals 'Widget 0', JSON.parse(controller.response.contentAsString).rows[0].value.namespace
-        assertEquals 'Widget 4', JSON.parse(controller.response.contentAsString).rows[4].value.namespace
+        assert 5 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert 10 == JSON.parse(controller.response.contentAsString).results
+        assert 'Widget 0' == JSON.parse(controller.response.contentAsString).rows[0].value.namespace
+        assert 'Widget 4' == JSON.parse(controller.response.contentAsString).rows[4].value.namespace
     }
 
     void testWidgetListWithPagingGetSecondPage() {
@@ -211,10 +214,10 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         //default sorts by name
         controller.widgetList()
 
-        assertEquals 5, JSON.parse(controller.response.contentAsString).rows.size()
-        assertEquals 10, JSON.parse(controller.response.contentAsString).results
-        assertEquals 'Widget 5', JSON.parse(controller.response.contentAsString).rows[0].value.namespace
-        assertEquals 'Widget 9', JSON.parse(controller.response.contentAsString).rows[4].value.namespace
+        assert 5 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert 10 == JSON.parse(controller.response.contentAsString).results
+        assert 'Widget 5' == JSON.parse(controller.response.contentAsString).rows[0].value.namespace
+        assert 'Widget 9' == JSON.parse(controller.response.contentAsString).rows[4].value.namespace
     }
 
     void testWidgetListWithPagingZeroMax() {
@@ -230,8 +233,8 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         //default sorts by name
         controller.widgetList()
 
-        assertEquals 0, JSON.parse(controller.response.contentAsString).rows.size()
-        assertEquals 10, JSON.parse(controller.response.contentAsString).results
+        assert 0 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert 10 == JSON.parse(controller.response.contentAsString).results
     }
 
     void testWidgetListWithPagingOffsetGreaterThanMax() {
@@ -247,8 +250,8 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         //default sorts by name
         controller.widgetList()
 
-        assertEquals 0, JSON.parse(controller.response.contentAsString).rows.size()
-        assertEquals 10, JSON.parse(controller.response.contentAsString).results
+        assert 0 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert 10 == JSON.parse(controller.response.contentAsString).results
     }
 
     void testWidgetListWithPagingMaxIsOne() {
@@ -264,8 +267,8 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         //default sorts by name
         controller.widgetList()
 
-        assertEquals 1, JSON.parse(controller.response.contentAsString).rows.size()
-        assertEquals 10, JSON.parse(controller.response.contentAsString).results
+        assert 1 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert 10 == JSON.parse(controller.response.contentAsString).results
     }
 
     void testWidgetListWithPagingOffsetSetToTotalMinusOne() {
@@ -281,8 +284,8 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         //default sorts by name
         controller.widgetList()
 
-        assertEquals 1, JSON.parse(controller.response.contentAsString).rows.size()
-        assertEquals 10, JSON.parse(controller.response.contentAsString).results
+        assert 1 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert 10 == JSON.parse(controller.response.contentAsString).results
     }
 
     void testWidgetListWithPagingNegativeValuesIgnored() {
@@ -298,11 +301,11 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         //default sorts by name
         controller.widgetList()
 
-        assertEquals 10, JSON.parse(controller.response.contentAsString).rows.size()
-        assertEquals 10, JSON.parse(controller.response.contentAsString).results
+        assert 10 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert 10 == JSON.parse(controller.response.contentAsString).results
     }
 
-	
+
 	void testWidgetListByIntentAction() {
 		loginAsUsernameAndRole('testAdmin1', 'role')
 
@@ -339,10 +342,10 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
 
 		pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent3
 		pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent4
-		
+
 		pwd3.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent5
 
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
@@ -350,11 +353,11 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
 		controller.params.intent = "{'action':'Pan'}"
 		controller.widgetList()
 
-		assertEquals 2, JSON.parse(controller.response.contentAsString).rows.size()
-		assertTrue(['Widget C', 'Widget E'] as Set == [JSON.parse(controller.response.contentAsString).rows[0].value.namespace,
+		assert 2 == JSON.parse(controller.response.contentAsString).rows.size()
+		assert (['Widget C', 'Widget E'] as Set == [JSON.parse(controller.response.contentAsString).rows[0].value.namespace,
 				JSON.parse(controller.response.contentAsString).rows[1].value.namespace] as Set)
 	}
-    
+
     void testWidgetListByIntentDataType() {
         loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 
@@ -373,41 +376,41 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         def intent3 = Intent.build(action: "Zoom", dataTypes: [intentDataType1, intentDataType3])
         def intent4 = Intent.build(action: "Open", dataTypes: [intentDataType4])
 
-        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition, 
+        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition,
             intent1, [intentDataType1, intentDataType2], true, false)
-        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition, 
+        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition,
             intent2, [intentDataType3, intentDataType2], false, true)
-        def widgetDefinitionIntent3 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition, 
+        def widgetDefinitionIntent3 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition,
             intent4, [intentDataType3], false, true)
-        def widgetDefinitionIntent4 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition, 
+        def widgetDefinitionIntent4 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition,
             intent3, [intentDataType3], false, true)
-        def widgetDefinitionIntent5 = createWidgetDefinitionIntentForTest(pwd3.widgetDefinition, 
+        def widgetDefinitionIntent5 = createWidgetDefinitionIntentForTest(pwd3.widgetDefinition,
             intent4, [intentDataType1], true, false)
-        def widgetDefinitionIntent6 = createWidgetDefinitionIntentForTest(pwd4.widgetDefinition, 
+        def widgetDefinitionIntent6 = createWidgetDefinitionIntentForTest(pwd4.widgetDefinition,
             intent2, [intentDataType1, intentDataType2, intentDataType3], true, false)
 
-        pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1 
+        pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1
 		pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent2
-			
-			
-        pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent3 
+
+
+        pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent3
 		pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent4
-		
+
         pwd3.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent5
-        
+
         controller = new PersonWidgetDefinitionController()
         controller.personWidgetDefinitionService = personWidgetDefinitionService
         controller.request.contentType = "text/json"
-        
+
         controller.params.intent = "{'dataType':'Address'}"
         controller.widgetList()
 
-        assertEquals 3, JSON.parse(controller.response.contentAsString).rows.size()
-        assertTrue(['Widget C', 'Widget F', 'Widget E'] as Set == [JSON.parse(controller.response.contentAsString).rows[0].value.namespace,
+        assert 3 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert (['Widget C', 'Widget F', 'Widget E'] as Set == [JSON.parse(controller.response.contentAsString).rows[0].value.namespace,
                 JSON.parse(controller.response.contentAsString).rows[1].value.namespace,
                 JSON.parse(controller.response.contentAsString).rows[2].value.namespace] as Set)
     }
-    
+
     void testWidgetListByIntentDataTypeAndAction() {
         loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 
@@ -420,30 +423,30 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         def intent1 = Intent.build(action: "Pan", dataTypes: [intentDataType1])
         def intent2 = Intent.build(action: "Plot", dataTypes: [intentDataType1, intentDataType2])
 
-        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition, 
+        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition,
             intent1, [intentDataType1], true, false)
-        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition, 
+        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition,
             intent2, [intentDataType2], false, true)
-        def widgetDefinitionIntent3 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition, 
+        def widgetDefinitionIntent3 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition,
             intent2, [intentDataType1, intentDataType2], false, true)
 
-        pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1 
+        pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1
 		pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent2
-		
+
         pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent3
-        
+
         controller = new PersonWidgetDefinitionController()
         controller.personWidgetDefinitionService = personWidgetDefinitionService
         controller.request.contentType = "text/json"
-        
+
         controller.params.intent = "{'action':'Plot','dataType':'Address'}"
         controller.widgetList()
 
-        assertEquals 1, JSON.parse(controller.response.contentAsString).rows.size()
-        assertEquals 'Widget D', JSON.parse(controller.response.contentAsString).rows[0].value.namespace
-        assertEquals 'Plot', JSON.parse(controller.response.contentAsString).rows[0].value.intents.receive[0].action
+        assert 1 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert 'Widget D' == JSON.parse(controller.response.contentAsString).rows[0].value.namespace
+        assert 'Plot' == JSON.parse(controller.response.contentAsString).rows[0].value.intents.receive[0].action
     }
-    
+
     void testWidgetListByIntentSend() {
         loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 
@@ -455,26 +458,26 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         def intent1 = Intent.build(action: "Pan", dataTypes: [intentDataType1])
         def intent2 = Intent.build(action: "Plot", dataTypes: [intentDataType1])
 
-        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition, 
+        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition,
             intent1, [intentDataType1], true, false)
-        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition, 
+        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition,
             intent2, [intentDataType1], false, true)
 
         pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1
         pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent2
-        
+
         controller = new PersonWidgetDefinitionController()
         controller.personWidgetDefinitionService = personWidgetDefinitionService
         controller.request.contentType = "text/json"
-        
+
         controller.params.intent = "{'send':'true'}"
         controller.widgetList()
 
-        assertEquals 1, JSON.parse(controller.response.contentAsString).rows.size()
-        assertEquals 'Widget C', JSON.parse(controller.response.contentAsString).rows[0].value.namespace
-        assertEquals 'Pan', JSON.parse(controller.response.contentAsString).rows[0].value.intents.send[0].action
+        assert 1 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert 'Widget C' == JSON.parse(controller.response.contentAsString).rows[0].value.namespace
+        assert 'Pan' == JSON.parse(controller.response.contentAsString).rows[0].value.intents.send[0].action
     }
-    
+
     void testWidgetListByIntentReceive() {
         loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 
@@ -486,26 +489,26 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         def intent1 = Intent.build(action: "Pan", dataTypes: [intentDataType1])
         def intent2 = Intent.build(action: "Plot", dataTypes: [intentDataType1])
 
-        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition, 
+        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition,
             intent1, [intentDataType1], true, false)
-        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition, 
+        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition,
             intent2, [intentDataType1], false, true)
 
         pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1
         pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent2
-        
+
         controller = new PersonWidgetDefinitionController()
         controller.personWidgetDefinitionService = personWidgetDefinitionService
         controller.request.contentType = "text/json"
-        
+
         controller.params.intent = "{'receive':'true'}"
         controller.widgetList()
 
-        assertEquals 1, JSON.parse(controller.response.contentAsString).rows.size()
-        assertEquals 'Widget D', JSON.parse(controller.response.contentAsString).rows[0].value.namespace
-        assertEquals 'Plot', JSON.parse(controller.response.contentAsString).rows[0].value.intents.receive[0].action
+        assert 1 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert 'Widget D' == JSON.parse(controller.response.contentAsString).rows[0].value.namespace
+        assert 'Plot' == JSON.parse(controller.response.contentAsString).rows[0].value.intents.receive[0].action
     }
-    
+
     void testWidgetListByIntentSendAndAction() {
         loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 
@@ -516,25 +519,25 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
 
         def intent1 = Intent.build(action: "Pan", dataTypes: [intentDataType1])
 
-        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition, 
+        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition,
             intent1, [intentDataType1], true, false)
-        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition, 
+        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition,
             intent1, [intentDataType1], false, true)
 
         pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1
         pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent2
-        
+
         controller = new PersonWidgetDefinitionController()
         controller.personWidgetDefinitionService = personWidgetDefinitionService
         controller.request.contentType = "text/json"
-        
+
         controller.params.intent = "{'action':'Pan','send':'true'}"
         controller.widgetList()
 
-        assertEquals 1, JSON.parse(controller.response.contentAsString).rows.size()
-        assertEquals 'Widget C', JSON.parse(controller.response.contentAsString).rows[0].value.namespace
+        assert 1 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert 'Widget C' == JSON.parse(controller.response.contentAsString).rows[0].value.namespace
     }
-    
+
     void testWidgetListByIntentSendDataTypeAndAction() {
         loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 
@@ -548,32 +551,32 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         def intent1 = Intent.build(action: "Pan", dataTypes: [intentDataType1, intentDataType2])
         def intent2 = Intent.build(action: "Zoom", dataTypes: [intentDataType1, intentDataType2])
 
-        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition, 
+        def widgetDefinitionIntent1 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition,
             intent1, [intentDataType1], true, false)
-        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition, 
+        def widgetDefinitionIntent2 = createWidgetDefinitionIntentForTest(pwd1.widgetDefinition,
             intent2, [intentDataType1], true, false)
-        def widgetDefinitionIntent3 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition, 
+        def widgetDefinitionIntent3 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition,
             intent1, [intentDataType1, intentDataType2], false, true)
-        def widgetDefinitionIntent4 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition, 
+        def widgetDefinitionIntent4 = createWidgetDefinitionIntentForTest(pwd2.widgetDefinition,
             intent2, [intentDataType1, intentDataType2], false, true)
-        def widgetDefinitionIntent5 = createWidgetDefinitionIntentForTest(pwd3.widgetDefinition, 
+        def widgetDefinitionIntent5 = createWidgetDefinitionIntentForTest(pwd3.widgetDefinition,
             intent1, [intentDataType2], false, true)
 
         pwd1.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent1
-        pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent3 
+        pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent3
 		pwd2.widgetDefinition.widgetDefinitionIntents << widgetDefinitionIntent4
-        
+
         controller = new PersonWidgetDefinitionController()
         controller.personWidgetDefinitionService = personWidgetDefinitionService
         controller.request.contentType = "text/json"
-        
+
         controller.params.intent = "{'action':'Pan','dataType':'Address','receive':'true'}"
         controller.widgetList()
 
-        assertEquals 1, JSON.parse(controller.response.contentAsString).rows.size()
-        assertEquals 'Widget D', JSON.parse(controller.response.contentAsString).rows[0].value.namespace
+        assert 1 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert 'Widget D' == JSON.parse(controller.response.contentAsString).rows[0].value.namespace
     }
-    
+
     void testWidgetListByGroupIds() {
         loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 
@@ -596,15 +599,15 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         controller = new PersonWidgetDefinitionController()
         controller.personWidgetDefinitionService = personWidgetDefinitionService
         controller.request.contentType = "text/json"
-        
+
         controller.params.groupIds = "['" + group1.id + "','" + group3.id + "']"
         controller.widgetList()
 
-        assertEquals 2, JSON.parse(controller.response.contentAsString).rows.size()
-        assertTrue(['Widget C', 'Widget E'] as Set == [JSON.parse(controller.response.contentAsString).rows[0].value.namespace,
+        assert 2 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert (['Widget C', 'Widget E'] as Set == [JSON.parse(controller.response.contentAsString).rows[0].value.namespace,
                 JSON.parse(controller.response.contentAsString).rows[1].value.namespace] as Set)
     }
-    
+
     void testWidgetListByTags() {
         loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 
@@ -620,45 +623,45 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         controller = new PersonWidgetDefinitionController()
         controller.personWidgetDefinitionService = personWidgetDefinitionService
         controller.request.contentType = "text/json"
-        
+
         controller.params.tags = "['tag1','tag3']"
         controller.widgetList()
 
-        assertEquals 2, JSON.parse(controller.response.contentAsString).rows.size()
-        assertTrue(['Widget D', 'Widget E'] as Set == [JSON.parse(controller.response.contentAsString).rows[0].value.namespace,
+        assert 2 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert (['Widget D', 'Widget E'] as Set == [JSON.parse(controller.response.contentAsString).rows[0].value.namespace,
                 JSON.parse(controller.response.contentAsString).rows[1].value.namespace] as Set)
     }
 
 	void testListByWidgetNameButNotFound() {
         loginAsUsernameAndRole('testAdmin1', 'role')
         createWidgetDefinitionForTest()
-                                 
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
 		controller.request.parameters = [widgetName:'1']
 		controller.list()
 
-		assertEquals null, JSON.parse(controller.response.contentAsString)[0]
+		assert null == JSON.parse(controller.response.contentAsString)[0]
 	}
-	
+
 	void testListByWidgetName() {
 		loginAsUsernameAndRole('testAdmin1', 'role')
 		createWidgetDefinitionForTest()
-	  
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
 		controller.request.parameters = [widgetName:'%C%']
 		controller.list()
 
-		assertEquals "0c5435cf-4021-4f2a-ba69-dde451d12551", JSON.parse(controller.response.contentAsString)[0].path
+		assert "0c5435cf-4021-4f2a-ba69-dde451d12551" == JSON.parse(controller.response.contentAsString)[0].path
 	}
-	
+
 	void testNotAuthorizedToCreateAWidget() {
 	   loginAsUsernameAndRole('testAdmin1', 'role')
 	   def person = Person.build();
-	   
+
 	   def widgetDefinition = WidgetDefinition.build(displayName : 'Widget C',
  		                                    height : 740,
  		                                    imageUrlLarge : '../images/blue/icons/widgetIcons/widgetC.gif',
@@ -673,11 +676,11 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
    	 controller.request.contentType = "text/json"
  		 controller.request.parameters = [guid:'0c5435cf-4021-4f2a-ba69-dde451d12551', personId:"#{person.id}", windowname:"true"]
  		 controller.create()
- 		 
+
  		 System.out.println("ResponseString: " + controller.modelAndView)
- 		 //assertTrue "\"Error during create: You are not authorized to access this entity. You are not authorized to create widgets for other users.\"".equals(controller.response.contentAsString)
+ 		 //assert "\"Error during create: You are not authorized to access this entity. You are not authorized to create widgets for other users.\"".equals(controller.response.contentAsString)
 	}
-	
+
 	void testDuplicateWidget() {
 	   createWidgetDefinitionForTest()
 	   loginAsUsernameAndRole('testAdmin1', 'role')
@@ -686,11 +689,11 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
    	 controller.request.contentType = "text/json"
  		 controller.request.parameters = [guid:'0c5435cf-4021-4f2a-ba69-dde451d12551', windowname:"true"]
  		 controller.create()
- 		 
+
  		 System.out.println("ResponseString: " + controller.modelAndView)
- 		 //assertTrue "\"Error during create: You are not authorized to access this entity. You are not authorized to create widgets for other users.\"".equals(controller.response.contentAsString)
+ 		 //assert "\"Error during create: You are not authorized to access this entity. You are not authorized to create widgets for other users.\"".equals(controller.response.contentAsString)
 	}
-	
+
 	void testCreatePersonWidgetDefinition() {
 		loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 
@@ -713,13 +716,13 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
 		controller.params.personId = person.id
 		controller.create()
 
-		assertEquals 'Widget C', JSON.parse(controller.response.contentAsString).value.namespace
-		assertEquals '0c5435cf-4021-4f2a-ba69-dde451d12551', JSON.parse(controller.response.contentAsString).path
+		assert 'Widget C' == JSON.parse(controller.response.contentAsString).value.namespace
+		assert '0c5435cf-4021-4f2a-ba69-dde451d12551' == JSON.parse(controller.response.contentAsString).path
 	}
-	
+
 	void testCreatePersonWidgetDefinitionByUnknownUser() {
 		loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
-		
+
 		def person = Person.findByUsername('testAdmin1')
 		def widgetDefinition = WidgetDefinition.build(displayName : 'Widget C',
 				height : 740,
@@ -730,22 +733,22 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
                 widgetVersion : '1.0',
 				widgetUrl : '../examples/fake-widgets/widget-c.html',
 				width : 980)
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
-		
+
 		controller.params.guid = '0c5435cf-4021-4f2a-ba69-dde451d12551'
 		controller.params.personId = 100000  // Unknown user
 		controller.create()
 
-		assertEquals '"Error during create: The requested entity was not found. Person with id of 100000 not found while attempting to create a widget for a user."', controller.response.contentAsString
-		assertNull PersonWidgetDefinition.findByWidgetDefinitionAndPerson(widgetDefinition, person)
+		assert '"Error during create: The requested entity was not found. Person with id of 100000 not found while attempting to create a widget for a user."' == controller.response.contentAsString
+		assert null ==  PersonWidgetDefinition.findByWidgetDefinitionAndPerson(widgetDefinition, person)
 	}
-	
+
 	void testCreatePersonWidgetDefinitionByUnauthorizedUser() {
 		loginAsUsernameAndRole('testUser1', ERoleAuthority.ROLE_USER.strVal)
-		
+
 		def person = Person.findByUsername('testUser2')
 		def widgetDefinition = WidgetDefinition.build(displayName : 'Widget C',
 				height : 740,
@@ -756,37 +759,37 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
                 widgetVersion : '1.0',
 				widgetUrl : '../examples/fake-widgets/widget-c.html',
 				width : 980)
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
-		
+
 		controller.params.guid = '0c5435cf-4021-4f2a-ba69-dde451d12551'
 		controller.params.personId = person.id // Unauthorized user
 		controller.create()
 
-		assertEquals '"Error during create: You are not authorized to access this entity. You are not authorized to create widgets for other users."', controller.response.contentAsString
-		assertNull PersonWidgetDefinition.findByWidgetDefinitionAndPerson(widgetDefinition, person)
+		assert '"Error during create: You are not authorized to access this entity. You are not authorized to create widgets for other users."' == controller.response.contentAsString
+		assert null ==  PersonWidgetDefinition.findByWidgetDefinitionAndPerson(widgetDefinition, person)
 	}
-	
+
 	void testShowPersonWidgetDefinitionByGuid() {
 		loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 		createWidgetDefinitionForTest()
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
-		
+
 		controller.params.guid = '0c5435cf-4021-4f2a-ba69-dde451d12551'
 		controller.show()
 
-		assertEquals 'Widget C', JSON.parse(controller.response.contentAsString).value.namespace
-		assertEquals '0c5435cf-4021-4f2a-ba69-dde451d12551', JSON.parse(controller.response.contentAsString).path
+		assert 'Widget C' == JSON.parse(controller.response.contentAsString).value.namespace
+		assert '0c5435cf-4021-4f2a-ba69-dde451d12551' == JSON.parse(controller.response.contentAsString).path
 	}
-	
+
 	void testShowNonexistentPersonWidgetDefinition() {
 		loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
-		
+
 		def person = Person.findByUsername('testUser1')
 		def widgetDefinition = WidgetDefinition.build(displayName : 'Widget C',
 													  height : 740,
@@ -797,80 +800,80 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
                                                       widgetVersion : '1.0',
 													  widgetUrl : '../examples/fake-widgets/widget-c.html',
 													  width : 980)
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
-		
+
 		controller.params.guid = '0c5435cf-4021-4f2a-ba69-dde451d12551'
 		controller.show()
 
-		assertEquals '"Error during show: The requested entity was not found. Widget with guid of 0c5435cf-4021-4f2a-ba69-dde451d12551 not found."', controller.response.contentAsString
-		assertNull PersonWidgetDefinition.findByWidgetDefinitionAndPerson(widgetDefinition, person)
+		assert '"Error during show: The requested entity was not found. Widget with guid of 0c5435cf-4021-4f2a-ba69-dde451d12551 not found."' == controller.response.contentAsString
+		assert null ==  PersonWidgetDefinition.findByWidgetDefinitionAndPerson(widgetDefinition, person)
 	}
 
 	void testShowPersonWidgetDefinitionWithUuid() {
 		loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 		createWidgetDefinitionForTest()
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
-		
+
 		controller.params.guid = '0c5435cf-4021-4f2a-ba69-dde451d12551'
 		controller.params.universalName = 'com.company.widget.uuid'
 		controller.show()
 
-		assertEquals 'Widget C', JSON.parse(controller.response.contentAsString).value.namespace
-		assertEquals '0c5435cf-4021-4f2a-ba69-dde451d12551', JSON.parse(controller.response.contentAsString).path
+		assert 'Widget C' == JSON.parse(controller.response.contentAsString).value.namespace
+		assert '0c5435cf-4021-4f2a-ba69-dde451d12551' == JSON.parse(controller.response.contentAsString).path
 	}
 
 	void testShowPersonWidgetDefinitionByUniqueIdWithoutUuid() {
 		loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 		createWidgetDefinitionForTest()
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
-		
+
 		controller.params.guid = 'com.company.widget.uuid'
 		controller.show()
 
-		assertEquals '"Error during show: The requested entity was not found. Widget with guid of com.company.widget.uuid not found."', controller.response.contentAsString
+		assert '"Error during show: The requested entity was not found. Widget with guid of com.company.widget.uuid not found."' == controller.response.contentAsString
 	}
 
 	void testShowPersonWidgetDefinitionByUuid() {
 		loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 		createWidgetDefinitionForTest()
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
-		
+
 		controller.params.universalName = 'com.company.widget.uuid'
 		controller.show()
 
-		assertEquals 'Widget C', JSON.parse(controller.response.contentAsString).value.namespace
-		assertEquals '0c5435cf-4021-4f2a-ba69-dde451d12551', JSON.parse(controller.response.contentAsString).path
+		assert 'Widget C' == JSON.parse(controller.response.contentAsString).value.namespace
+		assert '0c5435cf-4021-4f2a-ba69-dde451d12551' == JSON.parse(controller.response.contentAsString).path
 	}
-	
+
 	void testListPersonWidgetDefinition() {
 		loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 		createWidgetDefinitionForTest('Widget C','widgetC.gif','widgetCsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12551','widget-c.html', 1)
-		createWidgetDefinitionForTest('Widget D','widgetD.gif','widgetDsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12552','widget-d.html', 2)		
-		
+		createWidgetDefinitionForTest('Widget D','widgetD.gif','widgetDsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12552','widget-d.html', 2)
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
-		
+
 		controller.params.widgetName = '%Widget%'
 		controller.list()
-		
-		assertEquals 2, JSON.parse(controller.response.contentAsString).size()
-		assertEquals 'Widget C', JSON.parse(controller.response.contentAsString)[0].value.namespace
-		assertEquals 'Widget D', JSON.parse(controller.response.contentAsString)[1].value.namespace
+
+		assert 2 == JSON.parse(controller.response.contentAsString).size()
+		assert 'Widget C' == JSON.parse(controller.response.contentAsString)[0].value.namespace
+		assert 'Widget D' == JSON.parse(controller.response.contentAsString)[1].value.namespace
 	}
-	
+
 	void testUpdatePersonWidgetDefinition() {
 		loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 		createWidgetDefinitionForTest()
@@ -878,40 +881,40 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
 		def person = Person.findByUsername('testAdmin1')
 		def personWidgetDefinition = PersonWidgetDefinition.findByPerson(person)
 
-		assertEquals 'Widget C', personWidgetDefinition.widgetDefinition.displayName
+		assert 'Widget C' == personWidgetDefinition.widgetDefinition.displayName
 		personWidgetDefinition.widgetDefinition.displayName = 'Widget D'
 
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
-		
+
 		controller.params.guid = personWidgetDefinition.widgetDefinition.widgetGuid
 		controller.params.personId = person.id
 		controller.update()
-		
-		assertEquals 'Widget D', JSON.parse(controller.response.contentAsString).value.namespace
-		assertNotSame 'Widget C', JSON.parse(controller.response.contentAsString).value.namespace
+
+		assert 'Widget D' == JSON.parse(controller.response.contentAsString).value.namespace
+		assert 'Widget C' != JSON.parse(controller.response.contentAsString).value.namespace
 	}
-	
+
 	void testUpdateNonexistentPersonWidgetDefinition() {
 		loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 		createWidgetDefinitionForTest()
-		
+
 		def person = Person.findByUsername('testAdmin1')
 		def widgetDefinition = WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
-		
+
 		controller.params.guid = '0c5435cf-4021-4f2a-ba69-dde451d12559'
 		controller.params.personId = person.id
 		controller.update()
 
-		assertEquals '"Error during update: The requested entity was not found. Widget 0c5435cf-4021-4f2a-ba69-dde451d12559 not found."', controller.response.contentAsString
-		assertNotNull PersonWidgetDefinition.findByWidgetDefinitionAndPerson(widgetDefinition, person)
+		assert '"Error during update: The requested entity was not found. Widget 0c5435cf-4021-4f2a-ba69-dde451d12559 not found."' == controller.response.contentAsString
+		assert null != PersonWidgetDefinition.findByWidgetDefinitionAndPerson(widgetDefinition, person)
 	}
-	
+
 	void testDeletePersonWidgetDefinitionByWidgetGuidAndUsername() {
 		loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 		createWidgetDefinitionForTest()
@@ -919,61 +922,61 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
 		def person = Person.findByUsername('testAdmin1')
 		def personWidgetDefinition = PersonWidgetDefinition.findByPerson(person)
 		def widgetDefinition = personWidgetDefinition.widgetDefinition
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
-		
+
 		controller.params.guid = personWidgetDefinition.widgetDefinition.widgetGuid
 		controller.params.username = person.username
 		controller.params.adminEnabled = true
 		controller.delete()
 
-		assertEquals 'Widget C', JSON.parse(controller.response.contentAsString).value.namespace
-		assertEquals '0c5435cf-4021-4f2a-ba69-dde451d12551', JSON.parse(controller.response.contentAsString).path
-		assertNull PersonWidgetDefinition.findByWidgetDefinitionAndPerson(widgetDefinition, person)
+		assert 'Widget C' == JSON.parse(controller.response.contentAsString).value.namespace
+		assert '0c5435cf-4021-4f2a-ba69-dde451d12551' == JSON.parse(controller.response.contentAsString).path
+		assert null ==  PersonWidgetDefinition.findByWidgetDefinitionAndPerson(widgetDefinition, person)
 	}
-	
+
 	void testDeletePersonWidgetDefinitionByWidgetGuidAndPersonId() {
 		loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 		createWidgetDefinitionForTest()
-		
+
 		def person = Person.findByUsername('testAdmin1')
 		def personWidgetDefinition = PersonWidgetDefinition.findByPerson(person)
 		def widgetDefinition = personWidgetDefinition.widgetDefinition
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
-		
+
 		controller.params.guid = personWidgetDefinition.widgetDefinition.widgetGuid
 		controller.params.personId = person.id
 		controller.params.adminEnabled = true
 		controller.delete()
 
-		assertEquals 'Widget C', JSON.parse(controller.response.contentAsString).value.namespace
-		assertEquals '0c5435cf-4021-4f2a-ba69-dde451d12551', JSON.parse(controller.response.contentAsString).path
-		assertNull PersonWidgetDefinition.findByWidgetDefinitionAndPerson(widgetDefinition, person)		
+		assert 'Widget C' == JSON.parse(controller.response.contentAsString).value.namespace
+		assert '0c5435cf-4021-4f2a-ba69-dde451d12551' == JSON.parse(controller.response.contentAsString).path
+		assert null ==  PersonWidgetDefinition.findByWidgetDefinitionAndPerson(widgetDefinition, person)
 	}
-	
+
 	void testDeletePersonWidgetDefinitionByWidgetGuid() {
 		loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
 		createWidgetDefinitionForTest()
-		
+
 		def widgetDefinition = WidgetDefinition.findByDisplayName('Widget C')
-		
+
 		controller = new PersonWidgetDefinitionController()
 		controller.personWidgetDefinitionService = personWidgetDefinitionService
 		controller.request.contentType = "text/json"
-		
+
 		controller.params.guid = widgetDefinition.widgetGuid
 		controller.delete()
 
-		assertEquals 'Widget C', JSON.parse(controller.response.contentAsString).value.namespace
-		assertEquals '0c5435cf-4021-4f2a-ba69-dde451d12551', JSON.parse(controller.response.contentAsString).path
-		assertNull PersonWidgetDefinition.findByWidgetDefinition(widgetDefinition)		
+		assert 'Widget C' == JSON.parse(controller.response.contentAsString).value.namespace
+		assert '0c5435cf-4021-4f2a-ba69-dde451d12551' == JSON.parse(controller.response.contentAsString).path
+		assert null ==  PersonWidgetDefinition.findByWidgetDefinition(widgetDefinition)
 	}
-	
+
 	void createWidgetDefinitionForTest() {
 		def person = Person.findByUsername('testAdmin1')
 		def widgetDefinition = WidgetDefinition.build(displayName : 'Widget C',
@@ -985,12 +988,12 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
                                             widgetVersion : '1.0',
                                             widgetUrl : '../examples/fake-widgets/widget-c.html',
 		                                    width : 980)
-    	def personWidgetDefinition = PersonWidgetDefinition.build(person: person, 
-                                 widgetDefinition: widgetDefinition, 
+    	def personWidgetDefinition = PersonWidgetDefinition.build(person: person,
+                                 widgetDefinition: widgetDefinition,
                                  visible : true,
                                  pwdPosition: 1)
 	}
-	
+
 	def createWidgetDefinitionForTest(widgetName, imageUrlLarge, imageUrlSml, guid, widgetUrl, pwdPosition) {
 		def person = Person.findByUsername('testAdmin1')
 		def widgetDefinition = WidgetDefinition.build(displayName : widgetName,
@@ -1002,15 +1005,15 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
                 widgetVersion : '1.0',
 				widgetUrl : '../examples/fake-widgets/' + widgetUrl,
 				width : 980)
-		def personWidgetDefinition = PersonWidgetDefinition.build(person: person, 
-				widgetDefinition: widgetDefinition, 
+		def personWidgetDefinition = PersonWidgetDefinition.build(person: person,
+				widgetDefinition: widgetDefinition,
 				visible : true,
 				pwdPosition: pwdPosition)
 
         widgetDefinition.save(flush:true)
         return personWidgetDefinition
 	}
-	
+
     void createWidgetDefinitionsForTest(numWidgetDefinitions) {
       def person = Person.findByUsername('testAdmin1')
 

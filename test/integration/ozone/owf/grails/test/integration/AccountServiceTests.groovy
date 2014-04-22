@@ -17,12 +17,12 @@ class AccountServiceTests extends GroovyTestCase {
 
     protected void setUp() {
         super.setUp()
-        // login as a regular user.  Call loginAsAdmin if your test needs 
+        // login as a regular user.  Call loginAsAdmin if your test needs
         loginAsUsernameAndRole("testUser1","ROLE_USER")
-        
+
         accountService = new AccountService()
     }
-    
+
     protected void tearDown() {
         SCH.clearContext();
         super.tearDown();
@@ -39,7 +39,7 @@ class AccountServiceTests extends GroovyTestCase {
         person.save()
         assertEquals 1, accountService.getAllUsers().size
     }
-    
+
     void testGetAllUsersWithApos() {
         // this is used in the administrative service.  TODO:  Move this test there or refactor
         loginAsAdmin()
@@ -50,19 +50,19 @@ class AccountServiceTests extends GroovyTestCase {
         assertNotNull json
         assertEquals username, json[0].username
     }
-    
+
     private void loginAsAdmin() {
         loginAsUsernameAndRole("testAdmin1","ROLE_ADMIN")
     }
-    
+
     private void loginAsUsernameAndRole(def username, def role_string) {
         SCH.clearContext()
-        
-        GrantedAuthority[] authorities = [new GrantedAuthorityImpl(role_string)]
+
+        Collection<GrantedAuthority> authorities = [new GrantedAuthorityImpl(role_string)]
         SCH.context.authentication = new UsernamePasswordAuthenticationToken(
             new User(username, "password1", true, true, true, true, authorities),
             "password1"
         )
     }
-    
+
 }

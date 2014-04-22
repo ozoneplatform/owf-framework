@@ -8,11 +8,11 @@ class WidgetDefinitionControllerTests extends ControllerUnitTestCase {
       super(WidgetDefinitionController.class)
     }
 
-    protected void setUp() {
+    void setUp() {
         super.setUp()
     }
 
-    protected void tearDown() {
+    void tearDown() {
         super.tearDown()
     }
 

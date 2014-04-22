@@ -79,7 +79,7 @@ class PersonController extends BaseOwfRestController
      * he should be removed from those authorities which he is involved.
      */
     def delete = {
-      
+
         if (params.data) {
             params.personUserIDsToDelete = JSON.parse(params.data)
         }
@@ -151,21 +151,23 @@ class PersonController extends BaseOwfRestController
      * Person save action.
      */
     def createOrUpdate = {
-       
+
         def result
 
         try
         {
+println "createorUpdate params = $params"
             def results = accountService.createOrUpdate(params)
             result = [msg: results as JSON, status: 200]
         }
         catch (Exception e)
         {
+println "caught exception"
              result = handleError(e)
         }
 
        renderResult(result)
-     
+
     }
 
     def whoami = {
@@ -175,7 +177,7 @@ class PersonController extends BaseOwfRestController
         log.debug("executing whoami for user:: "+curUser);
 
         def jsonResult = [
-            currentUserName: curUser.username, 
+            currentUserName: curUser.username,
             currentUser:curUser.userRealName,
             currentUserPrevLogin: curUser.prevLogin,
             currentId:curUser.id,
@@ -209,5 +211,5 @@ class PersonController extends BaseOwfRestController
 //
 //        return [person: person, roleMap: roleMap]
 //    }
-	
+
 }

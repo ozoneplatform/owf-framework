@@ -1,5 +1,8 @@
 package ozone.owf.grails.test.integration
 
+import grails.test.mixin.TestMixin
+import grails.test.mixin.integration.IntegrationTestMixin
+
 import org.codehaus.groovy.grails.web.json.JSONArray
 import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.services.AutoLoginAccountService
@@ -16,6 +19,8 @@ import grails.converters.JSON
  * Time: 10:24 AM
  * To change this template use File | Settings | File Templates.
  */
+
+@TestMixin(IntegrationTestMixin)
 class MarketplaceServiceTests extends OWFGroovyTestCase {
     def marketplaceService
     def stackService
@@ -24,7 +29,7 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
     def widgetDefinitionService
     def grailsApplication
 
-    protected void setUp() {
+    void setUp() {
         super.setUp()
         def acctService = new AutoLoginAccountService()
         Person p = new Person(username:'testUserWidgetDefinitionServiceTesting', userRealName: 'foo', passwd: 'foo', enabled:true)
@@ -36,7 +41,7 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
         marketplaceService.accountService = acctService
     }
 
-    protected void tearDown() {
+    void tearDown() {
       super.tearDown()
     }
 
@@ -71,12 +76,12 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
         loginAsAdmin()
         def listings = marketplaceService.addListingsToDatabase(singleSimpleStack)
         def stack = listings[0]
-        assertNotNull(stack)
-        assertEquals(stack.name, singleSimpleStack[0].name)
-        assertEquals(stack.description, singleSimpleStack[0].description)
-        assertEquals(stack.stackContext, singleSimpleStack[0].stackContext)
+        assert stack != null
+        assert stack.name == singleSimpleStack[0].name
+        assert stack.description == singleSimpleStack[0].description
+        assert stack.stackContext == singleSimpleStack[0].stackContext
         def foundStack = Stack.findByName(singleSimpleStack[0].name)
-        assertEquals(stack, foundStack)
+        assert stack == foundStack
     }
 
     void testAddingWidgetFromMarketplace() {
@@ -143,50 +148,50 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
       def data = result.data
 
       //check for success
-      assertTrue result.success
+      assert result.success
 
       //check that widget1, widget2 and widget3 are in the return data
-      assertEquals data[0].displayName, "Widget1"
-      assertEquals data[1].displayName, "Widget2"
-      assertEquals data[2].displayName, "Widget3"
-      assertEquals data.size(), 3
+      assert data[0].displayName == "Widget1"
+      assert data[1].displayName == "Widget2"
+      assert data[2].displayName == "Widget3"
+      assert data.size() == 3
 
       //check to make sure that widget is in the admin widgetlist
       result = widgetDefinitionService.list()
       data = result.data
 
       //check for success
-      assertTrue result.success
+      assert result.success
 
       //check that widget1, widget2 and widget3 are in the return data
-      assertEquals data[0].displayName, "Widget1"
-      assertEquals data[1].displayName, "Widget2"
-      assertEquals data[2].displayName, "Widget3"
-      assertEquals data.size(), 3
+      assert data[0].displayName == "Widget1"
+      assert data[1].displayName == "Widget2"
+      assert data[2].displayName == "Widget3"
+      assert data.size() == 3
 
       result = personWidgetDefinitionService.listForAdminByTags(
               new GrailsParameterMap([tags: 'pending approval', sort: 'name', order: 'ASC'], null))
       data = result.data
 
       //check for success
-      assertTrue result.success
+      assert result.success
 
       //check that only widget1
       //println("data:${data}")
-      assertEquals data.size(), 0
+      assert data.size() == 0
 
       //check that the widgets are in the launch menu for the current user
       result = personWidgetDefinitionService.list(new GrailsParameterMap([:],null))
       data = result.personWidgetDefinitionList
 
       //check for success
-      assertTrue result.success
+      assert result.success
 
       //check that widget1, widget2 and widget3 are in the return data
-      assertEquals data[0].widgetDefinition.displayName, "Widget1"
-      assertEquals data[1].widgetDefinition.displayName, "Widget2"
-      assertEquals data[2].widgetDefinition.displayName, "Widget3"
-      assertEquals data.size(), 3
+      assert data[0].widgetDefinition.displayName == "Widget1"
+      assert data[1].widgetDefinition.displayName == "Widget2"
+      assert data[2].widgetDefinition.displayName == "Widget3"
+      assert data.size() == 3
 
     }
 

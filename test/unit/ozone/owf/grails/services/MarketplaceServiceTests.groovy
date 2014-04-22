@@ -11,7 +11,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
     def stackServiceMockClass
     def widgetDefinitionServiceMockClass
 
-    protected void setUp() {
+    void setUp() {
         super.setUp()
         marketplaceService = new MarketplaceService()
         def domainMappingServiceMockClass = mockFor(DomainMappingService)
@@ -43,7 +43,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         mockDomain(WidgetDefinition)
     }
 
-    protected void tearDown() {
+    void tearDown() {
         super.tearDown()
     }
     // copied from what Marketplace sends for a simple, no intents, no dependencies, widget
