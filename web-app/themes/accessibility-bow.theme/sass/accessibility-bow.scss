@@ -89,18 +89,36 @@ body {
     background-color: $owfgrey11;
 }
 
-/*
- * These styles will only be applied to the OWf container, not the admin widgets
- */
 #owf-body {
     height: 100%;
     outline: 0 none;
     cursor: default; // for IE8
-    background-color: #00050D;
+    background-color: #050b13;
     background-attachment:fixed;
     background-position: center center;
     background-repeat: no-repeat;
-    background-image: theme-image($theme-name, 'wallpapers/ic-bg.jpg');
+    /*background-image: theme-image($theme-name, 'wallpapers/owf-bg.png');*/
+}
+
+#owf-body.x-gecko { /* > ensures IE doesn't see this block */
+    background-image: $watermark-img-path, $stripe-img-path,
+        -moz-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
+}
+
+#owf-body.x-webkit {
+    background-image: $watermark-img-path, $stripe-img-path,
+        -webkit-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
+}
+
+/*
+ * linear background gradient for IE
+ */
+#owf-body.x-ie {
+    background: $body-background-gradient-end $stripe-img-path repeat repeat center center;
+    background-attachment:fixed;
+    #mainPanel {
+        background: $watermark-img-path no-repeat center;
+    }
 }
 
 //admin widget
