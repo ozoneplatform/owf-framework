@@ -1,5 +1,8 @@
 package ozone.owf.grails.test.integration
 
+import grails.test.mixin.TestMixin
+import grails.test.mixin.integration.IntegrationTestMixin
+
 import ozone.owf.grails.test.integration.WidgetDefinitionPostParams as WDPP
 
 import ozone.owf.grails.OwfException
@@ -12,7 +15,8 @@ import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.grails.services.AutoLoginAccountService
 
 
-class DashboardServiceTests extends GroovyTestCase {
+@TestMixin(IntegrationTestMixin)
+class DashboardServiceTests {
 
 	def dashboardService
 	def person
@@ -22,13 +26,12 @@ class DashboardServiceTests extends GroovyTestCase {
     def stack
     def stackForUpdate
 	def pwdCounter
-	
-	protected void setUp() {
-        super.setUp()
+
+	void setUp() {
 		def acctService = new AutoLoginAccountService()
         person = Person.build(username:'testUserDashboardServiceTesting', userRealName: 'foo', enabled:true)
         person.save()
-        stack = Stack.build(name:'Test Stack', description: 'This is a test stack', stackContext:'testStack', 
+        stack = Stack.build(name:'Test Stack', description: 'This is a test stack', stackContext:'testStack',
             imageUrl:'testStack.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
         stackForUpdate = Stack.build(name:'Test Stack 2', description: 'This is another test stack', stackContext:'testStack2',
             imageUrl:'testStack.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
@@ -41,14 +44,13 @@ class DashboardServiceTests extends GroovyTestCase {
 		widgetDefinitionService.accountService = acctService
 		pwdCounter = 0
     }
-	
-	protected void tearDown(){
+
+	void tearDown(){
         person.delete()
         stack.delete()
         stackForUpdate.delete()
-		super.tearDown()
 	}
-    
+
     private generatePostParamsTestDBWithStack() {
         [
             "alteredByAdmin": false,
@@ -789,16 +791,16 @@ class DashboardServiceTests extends GroovyTestCase {
     private def buildI()
     {
         //Create 7!!! Person Widget Definitions so the state objects match up.
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsI1())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsI2())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsI3())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsI4())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsI5())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsI6())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsI7())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsI1())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsI2())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsI3())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsI4())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsI5())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsI6())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsI7())
 
         def resultOfCreate = dashboardService.create(generatePostParamsI())
-        assertTrue resultOfCreate.success
+        assert resultOfCreate.success
 
         def dashboard = resultOfCreate.dashboard
     }
@@ -969,16 +971,16 @@ class DashboardServiceTests extends GroovyTestCase {
     private def buildJ(createDashboard)
     {
         //Create 3 Person Widget Definitions so the state objects match up.
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsJ1())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsJ2())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsJ3())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsJ1())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsJ2())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsJ3())
 
         def dashboard = null
 
         if (createDashboard)
         {
             def resultOfCreate = dashboardService.create(generatePostParamsJ())
-            assertTrue resultOfCreate.success
+            assert resultOfCreate.success
             dashboard = resultOfCreate.dashboard
         }
         return dashboard
@@ -1319,32 +1321,32 @@ class DashboardServiceTests extends GroovyTestCase {
 
     void testCreate() {
         //Create 3 Person Widget Definitions so the state objects match up.
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsA1())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsA2())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsA3())
-        assertEquals 3,PersonWidgetDefinition.list().size()
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsA1())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsA2())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsA3())
+        assert 3 ==PersonWidgetDefinition.list().size()
         def result = dashboardService.create(generatePostParamsA())
-        assertTrue result.success
-        assertNotNull result.dashboard
+        assert result.success
+        assert null != result.dashboard
     }
 
     void testCreateWithStack() {
         //Create 3 Person Widget Definitions so the state objects match up.
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsA1())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsB1())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsD1())
-        assertEquals 3,PersonWidgetDefinition.list().size()
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsA1())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsB1())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsD1())
+        assert 3 ==PersonWidgetDefinition.list().size()
 
         def result = dashboardService.create(generatePostParamsTestDBWithStack())
-        assertTrue result.success
-        assertNotNull result.dashboard
+        assert result.success
+        assert null != result.dashboard
     }
 
     void testCloneNonexisting() {
         buildJ(false)
         def resultOfClone = dashboardService.deepClone(generatePostParamsJ())
-        assertTrue resultOfClone.success
-        assertNotNull resultOfClone.dashboard
+        assert resultOfClone.success
+        assert null != resultOfClone.dashboard
     }
 
     // TODO: Rewrite; intent config data is now inside of layoutConfig within the widgets array.
@@ -1353,39 +1355,39 @@ class DashboardServiceTests extends GroovyTestCase {
         //Create all dashboards first...
 
         //Create 3 Person Widget Definitions so the state objects match up.
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsA1())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsA2())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsA3())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsA1())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsA2())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsA3())
 
         def resultOfCreateA = dashboardService.create(generatePostParams_BULK_A())
-        assertTrue resultOfCreateA.success
+        assert resultOfCreateA.success
         def dashboardA = Dashboard.findByGuid("12345678-1234-1234-1234-1234567890a0")
-        assertEquals "Accordion Window Manager (USER 3)", dashboardA.name
-        assertEquals dashboardA.isdefault, false
+        assert "Accordion Window Manager (USER 3)" == dashboardA.name
+        assert dashboardA.isdefault == false
 
         //Create 2 Person Widget Definitions so the state objects match up.
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsB1())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsB2())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsB1())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsB2())
 
         def resultOfCreateB = dashboardService.create(generatePostParams_BULK_B())
-        assertTrue resultOfCreateB.success
+        assert resultOfCreateB.success
         def dashboardB = Dashboard.findByGuid("12345678-1234-1234-1234-1234567891a0")
-        assertEquals "Tabbed Window Manager (USER 3)", dashboardB.name
-        assertFalse dashboardB.isdefault
+        assert "Tabbed Window Manager (USER 3)" == dashboardB.name
+        assert false == dashboardB.isdefault
 
         //It appears that C uses the same PersonWidgetDefinitions as B.
         def resultOfCreateC = dashboardService.create(generatePostParams_BULK_C())
-        assertTrue resultOfCreateC.success
+        assert resultOfCreateC.success
         def dashboardC = Dashboard.findByGuid("12345678-1234-1234-1234-1234567892a0")
-        assertEquals "Tabbed Window Manager (USER 3)", dashboardC.name
-        assertFalse dashboardC.isdefault
+        assert "Tabbed Window Manager (USER 3)" == dashboardC.name
+        assert false == dashboardC.isdefault
 
         //It appears that D uses the same PersonWidgetDefinitions as B.
         def resultOfCreateD = dashboardService.create(generatePostParams_BULK_D())
-        assertTrue resultOfCreateD.success
+        assert resultOfCreateD.success
         def dashboardD = Dashboard.findByGuid("12345678-1234-1234-1234-1234567893a0")
-        assertEquals "Tabbed Window Manager (USER 3)", dashboardD.name
-        assertFalse dashboardD.isdefault
+        assert "Tabbed Window Manager (USER 3)" == dashboardD.name
+        assert false == dashboardD.isdefault
     }
 
     void testBulkUpdate(){
@@ -1396,24 +1398,24 @@ class DashboardServiceTests extends GroovyTestCase {
         def bulkUpdatePostParams = generatePostParamsBulkUpdate()
         log.info "${bulkUpdatePostParams}"
         def resultOfBulkUpdate = dashboardService.bulkUpdate(bulkUpdatePostParams)
-        assertTrue resultOfBulkUpdate.success
+        assert resultOfBulkUpdate.success
 
         //Did it update?
         def dashboardA = Dashboard.findByGuid("12345678-1234-1234-1234-1234567890a0")
-        assertEquals "NEW NAME Accordion Window Manager (USER 3)", dashboardA.name
-        assertFalse dashboardA.isdefault
+        assert "NEW NAME Accordion Window Manager (USER 3)" == dashboardA.name
+        assert false == dashboardA.isdefault
 
         def dashboardB = Dashboard.findByGuid("12345678-1234-1234-1234-1234567891a0")
-        assertEquals "NEW NAME Tabbed Window Manager (USER 3)", dashboardB.name
-        assertFalse dashboardB.isdefault
+        assert "NEW NAME Tabbed Window Manager (USER 3)" == dashboardB.name
+        assert false == dashboardB.isdefault
 
         def dashboardC = Dashboard.findByGuid("12345678-1234-1234-1234-1234567892a0")
-        assertEquals "NEW Tabbed Window Manager (USER 3)", dashboardC.name
-        assertFalse dashboardC.isdefault
+        assert "NEW Tabbed Window Manager (USER 3)" == dashboardC.name
+        assert false == dashboardC.isdefault
 
         def dashboardD = Dashboard.findByGuid("12345678-1234-1234-1234-1234567893a0")
-        assertEquals "UPDATED Tabbed Window Manager (USER 3)", dashboardD.name
-        assertTrue dashboardD.isdefault
+        assert "UPDATED Tabbed Window Manager (USER 3)" == dashboardD.name
+        assert dashboardD.isdefault
 
         shouldFail(OwfException,{
             dashboardService.bulkUpdate(new HashMap()) //No viewsToUpdate....
@@ -1431,20 +1433,20 @@ class DashboardServiceTests extends GroovyTestCase {
         def bulkDeletePostParams = generatePostParamsBulkDelete()
         log.info "${bulkDeletePostParams}"
         def resultOfBulkDelete = dashboardService.bulkDelete(bulkDeletePostParams)
-        assertTrue resultOfBulkDelete.success
+        assert resultOfBulkDelete.success
 
         //Did it delete?
         def dashboardA = Dashboard.findByGuid("12345678-1234-1234-1234-1234567890a0")
-        assertNull dashboardA
+        assert null ==  dashboardA
 
         def dashboardB = Dashboard.findByGuid("12345678-1234-1234-1234-1234567891a0")
-        assertNull dashboardB
+        assert null ==  dashboardB
 
         def dashboardC = Dashboard.findByGuid("12345678-1234-1234-1234-1234567892a0")
-        assertNull dashboardC
+        assert null ==  dashboardC
 
         def dashboardD = Dashboard.findByGuid("12345678-1234-1234-1234-1234567893a0")
-        assertNull dashboardD
+        assert null ==  dashboardD
 
         //Great, now let's test error results...
         shouldFail(OwfException,{
@@ -1465,23 +1467,23 @@ class DashboardServiceTests extends GroovyTestCase {
         def bulkDeleteAndUpdatePostParams = generatePostParamsBulkDeleteAndUpdate()
         log.info "${bulkDeleteAndUpdatePostParams}"
         def resultOfBulkDeleteAndUpdate = dashboardService.bulkDeleteAndUpdate(bulkDeleteAndUpdatePostParams)
-        assertTrue resultOfBulkDeleteAndUpdate.success
+        assert resultOfBulkDeleteAndUpdate.success
 
         //Did it delete?
         def dashboardB = Dashboard.findByGuid("12345678-1234-1234-1234-1234567891a0")
-        assertNull dashboardB
+        assert null ==  dashboardB
 
         def dashboardC = Dashboard.findByGuid("12345678-1234-1234-1234-1234567892a0")
-        assertNull dashboardC
+        assert null ==  dashboardC
 
         //Did it update?
         def dashboardA = Dashboard.findByGuid("12345678-1234-1234-1234-1234567890a0")
-        assertEquals "NEW NAME Accordion Window Manager (USER 3)", dashboardA.name
-        assertFalse dashboardA.isdefault
+        assert "NEW NAME Accordion Window Manager (USER 3)" == dashboardA.name
+        assert false == dashboardA.isdefault
 
         def dashboardD = Dashboard.findByGuid("12345678-1234-1234-1234-1234567893a0")
-        assertEquals "UPDATED Tabbed Window Manager (USER 3)", dashboardD.name
-        assertTrue dashboardD.isdefault
+        assert "UPDATED Tabbed Window Manager (USER 3)" == dashboardD.name
+        assert dashboardD.isdefault
 
         //Great, now let's test error results... (bulkDelete should be done first, error results from it...)
         shouldFail(OwfException,{
@@ -1498,34 +1500,34 @@ class DashboardServiceTests extends GroovyTestCase {
             //A default dashboard exists. A new dashboard is created that is "set as default"
 
             //Create 2 Person Widget Definitions so the state objects match up.
-            assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsC1())
-            assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsC2())
+            assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsC1())
+            assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsC2())
 
             def resultOfInitialCreateDefault = dashboardService.create(generatePostParamsC())
-            assertTrue resultOfInitialCreateDefault.success
+            assert resultOfInitialCreateDefault.success
 
             def originalDefaultDashboard = Dashboard.findByGuid("12345678-1234-1234-1234-1234567890a0")
-            assertNotNull originalDefaultDashboard
-            assertTrue originalDefaultDashboard.isdefault
+            assert null != originalDefaultDashboard
+            assert originalDefaultDashboard.isdefault
 
 
             //This dashboard is also default. It should be default, and the original one should not be.
 
             //Create 2 Person Widget Definitions so the state objects match up.
-            assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsD1())
-            assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsD2())
+            assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsD1())
+            assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsD2())
 
             def resultOfSecondCreateDefault = dashboardService.create(generatePostParamsD())
-            assertTrue resultOfSecondCreateDefault.success
+            assert resultOfSecondCreateDefault.success
 
             def secondDefaultDashboard = Dashboard.findByGuid("12345678-1234-1234-1234-1234567890a1")
             originalDefaultDashboard =   Dashboard.findByGuid("12345678-1234-1234-1234-1234567890a0")
 
-            assertNotNull secondDefaultDashboard
-            assertNotNull originalDefaultDashboard
+            assert null != secondDefaultDashboard
+            assert null != originalDefaultDashboard
 
-            assertFalse originalDefaultDashboard.isdefault
-            assertTrue    secondDefaultDashboard.isdefault
+            assert false == originalDefaultDashboard.isdefault
+            assert    secondDefaultDashboard.isdefault
     }
 
     void testUpdateNewDefault()
@@ -1533,58 +1535,58 @@ class DashboardServiceTests extends GroovyTestCase {
        //A default dashboard exists. A different dashboard is updated to be "set as default"
 
         //Create 2 Person Widget Definitions so the state objects match up.
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsD1())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsD2())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsD1())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsD2())
 
         def resultOfInitialCreateDefault = dashboardService.create(generatePostParamsD())
-        assertTrue resultOfInitialCreateDefault.success
+        assert resultOfInitialCreateDefault.success
 
        def originalDefaultDashboard = Dashboard.findByGuid("12345678-1234-1234-1234-1234567890a1")
-       assertNotNull originalDefaultDashboard
-       assertTrue originalDefaultDashboard.isdefault
+       assert null != originalDefaultDashboard
+       assert originalDefaultDashboard.isdefault
 
         //In order to test the update portion, first we have to create a dashboard that is NOT default
         //Create 2 Person Widget Definitions so the state objects match up.
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsB1())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsB2())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsB1())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsB2())
 
         def resultOfSecondCreateNotDefault = dashboardService.create(generatePostParamsB())
-        assertTrue resultOfSecondCreateNotDefault.success
+        assert resultOfSecondCreateNotDefault.success
 
         def secondCreatedDashboardNotDefault = Dashboard.findByGuid("12345678-1234-1234-1234-1234567890a0")
-        assertNotNull secondCreatedDashboardNotDefault
-        assertFalse secondCreatedDashboardNotDefault.isdefault
+        assert null != secondCreatedDashboardNotDefault
+        assert false == secondCreatedDashboardNotDefault.isdefault
 
         //Now we set it to default. The second dashboard should now be default, and the first one should not.
         //B's PWDs work for C.
         def resultOfUpdateDashboard = dashboardService.update(generatePostParamsC())
-        assertTrue resultOfUpdateDashboard.success
+        assert resultOfUpdateDashboard.success
 
         def secondDefaultDashboard = Dashboard.findByGuid("12345678-1234-1234-1234-1234567890a0")
         originalDefaultDashboard =   Dashboard.findByGuid("12345678-1234-1234-1234-1234567890a1")
 
-        assertNotNull secondDefaultDashboard
-        assertNotNull originalDefaultDashboard
+        assert null != secondDefaultDashboard
+        assert null != originalDefaultDashboard
 
-        assertFalse originalDefaultDashboard.isdefault
-        assertTrue    secondDefaultDashboard.isdefault
+        assert false == originalDefaultDashboard.isdefault
+        assert    secondDefaultDashboard.isdefault
 
     }
 
     void testOrderCorrectOnCreate()
     {
         //Create 2 Person Widget Definitions so the state objects match up.
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsB1())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsB2())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsB1())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsB2())
 
         //Create 2 Person Widget Definitions so the state objects match up.
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsD1())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsD2())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsD1())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsD2())
 
 
         //Create 2 Person Widget Definitions so the state objects match up.
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsEF1())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsEF2())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsEF1())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsEF2())
 
         //Create 3 dashboards not ordered by GUID.
         dashboardService.create(generatePostParamsE())
@@ -1593,54 +1595,54 @@ class DashboardServiceTests extends GroovyTestCase {
 
         def resultOfBasicList = dashboardService.list(new HashMap())
 
-        assertTrue resultOfBasicList.success
+        assert resultOfBasicList.success
         def dashboards = resultOfBasicList.dashboardList
-        assertEquals 3, dashboards.size()
+        assert 3 == dashboards.size()
 
-        assertEquals "12345678-1234-1234-1234-1234567890a2", dashboards[0].guid
-        assertEquals "12345678-1234-1234-1234-1234567890a0", dashboards[1].guid
-        assertEquals "12345678-1234-1234-1234-1234567890a1", dashboards[2].guid
+        assert "12345678-1234-1234-1234-1234567890a2" == dashboards[0].guid
+        assert "12345678-1234-1234-1234-1234567890a0" == dashboards[1].guid
+        assert "12345678-1234-1234-1234-1234567890a1" == dashboards[2].guid
 
     }
 
     void testUpdateDashboardPosition()
     {
         //Create 2 Person Widget Definitions so the state objects match up.
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsD1())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsD2())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsD1())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsD2())
 
 
         //Create 2 Person Widget Definitions so the state objects match up.
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsEF1())
-        assertNotNull makePersonWidgetDefinition(WDPP.generateDSTPostParamsEF2())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsEF1())
+        assert null != makePersonWidgetDefinition(WDPP.generateDSTPostParamsEF2())
 
         def resultOfCreate = dashboardService.create(generatePostParamsD())
-        assertTrue resultOfCreate.success
+        assert resultOfCreate.success
 
         resultOfCreate = dashboardService.create(generatePostParamsE())
-        assertTrue resultOfCreate.success
+        assert resultOfCreate.success
 
         //Verify that the dashboards are in the correct, initial create order.
         def resultOfList = dashboardService.list(new HashMap())
         def dashboards = resultOfList.dashboardList
-        assertEquals "12345678-1234-1234-1234-1234567890a1", dashboards[0].guid //Dashboard D-G
-        assertEquals "12345678-1234-1234-1234-1234567890a2", dashboards[1].guid //Dashboard E-F
+        assert "12345678-1234-1234-1234-1234567890a1" == dashboards[0].guid //Dashboard D-G
+        assert "12345678-1234-1234-1234-1234567890a2" == dashboards[1].guid //Dashboard E-F
 
         //Reverse the positions
 
         //Let's now set Dashboard E's position to 0
         def resultOfUpdate = dashboardService.update(generatePostParamsF())
-        assertTrue resultOfUpdate.success
+        assert resultOfUpdate.success
 
         //Let's now set Dashbaord D's position to 1
         resultOfUpdate = dashboardService.update(generatePostParamsG())
-        assertTrue resultOfUpdate.success
+        assert resultOfUpdate.success
 
         //Verify that the dashboards have been reversed and are positioned correctly.
         resultOfList = dashboardService.list(new HashMap())
         dashboards = resultOfList.dashboardList
-        assertEquals "12345678-1234-1234-1234-1234567890a2", dashboards[0].guid //Dashboard E-F
-        assertEquals "12345678-1234-1234-1234-1234567890a1", dashboards[1].guid //Dashboard D-G
+        assert "12345678-1234-1234-1234-1234567890a2" == dashboards[0].guid //Dashboard E-F
+        assert "12345678-1234-1234-1234-1234567890a1" == dashboards[1].guid //Dashboard D-G
     }
 
 }

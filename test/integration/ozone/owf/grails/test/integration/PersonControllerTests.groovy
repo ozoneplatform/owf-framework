@@ -16,9 +16,20 @@ class PersonControllerTests extends OWFGroovyTestCase {
 
     void setUp() {
         super.setUp()
+        cleanup()
+
         controller = new PersonController()
         controller.accountService = accountService
         controller.request.contentType = "text/json"
+    }
+
+    void tearDown() {
+        super.tearDown()
+        cleanup()
+    }
+
+    void cleanup() {
+        Person.withTransaction { Person.list().each { it.delete() } }
     }
 
     void testListPersons() {
