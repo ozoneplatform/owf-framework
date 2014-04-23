@@ -21,6 +21,14 @@ class DashboardControllerTests extends OWFGroovyTestCase {
 	  dashboardService.accountService = accountService
 	}
 
+    void setUp() {
+        super.setUp()
+    }
+
+    void tearDown() {
+        super.tearDown()
+    }
+
   void testDashboardList() {
 	  loginAsUsernameAndRole('testAdmin1', 'role')
 	  createTestDashboards(10)

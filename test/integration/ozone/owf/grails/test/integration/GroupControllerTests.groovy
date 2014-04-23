@@ -17,6 +17,14 @@ class GroupControllerTests extends OWFGroovyTestCase {
 	def groupService
 	def controller
 
+    void setUp() {
+        super.setUp()
+    }
+
+    void tearDown() {
+        super.tearDown()
+    }
+
 	void createGroupForTest() {
 		Group.build(
 				name: 'Group1',
