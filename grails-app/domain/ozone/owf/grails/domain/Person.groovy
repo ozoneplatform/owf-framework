@@ -7,7 +7,7 @@ import org.hibernate.proxy.HibernateProxy
 
 class Person implements Serializable {
 
-     static String TYPE = 'person'
+    static String TYPE = 'person'
     static final long serialVersionUID = 700L
 
     static final String NEW_USER = "DEFAULT_USER"
@@ -16,7 +16,7 @@ class Person implements Serializable {
 //	static transients = ['pass']
 	static hasMany = [authorities: Role, dashboards: Dashboard,  personWidgetDefinitions: PersonWidgetDefinition, preferences:Preference, groups:Group]
 	static belongsTo = [Role, Group]
-	
+
 	static mappedBy = [dashboards: 'user']
 
   static mapping = {
@@ -33,7 +33,6 @@ class Person implements Serializable {
         username(blank: false, unique: true, maxSize: 200)
         userRealName(blank: false, maxSize: 200)
 //        passwd(blank: false)
-        enabled()
         description(nullable: true, blank: true)
         email(nullable: true, blank: true)
         lastLogin(nullable: true)
@@ -58,7 +57,7 @@ class Person implements Serializable {
 
 	/** plain password to create a MD5 password */
 //	String pass = '[secret]'
-	
+
 	Date lastLogin
     /** Retains previous lastLogin date */
 	Date prevLogin
@@ -81,8 +80,8 @@ class Person implements Serializable {
     }
 
     Date lastNotification
-    
-    
+
+
     public Date getLastNotification(){
         if(!lastNotification)
             return null

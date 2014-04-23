@@ -340,7 +340,6 @@ class PrefsDashboardControllerTests extends OWFGroovyTestCase {
 //		controller.params.personId = person.id
 //		controller.update()
 //
-//		println controller.response.contentAsString
 //	}
 
 	void testShowDashboard()
@@ -421,7 +420,7 @@ class PrefsDashboardControllerTests extends OWFGroovyTestCase {
 		loginAsUsernameAndRole('testAdmin3', ERoleAuthority.ROLE_ADMIN.strVal)
 
 		def person = Person.build(username:'testAdmin3')
-		Dashboard.build(name:'dashboard1', guid:'12345678-1234-1234-1234-1234567890a0', user:person)
+		Dashboard.build(name:'dashboard1', guid:'12345678-1234-1234-1234-1234567890a0', user:person, isdefault: true)
 
 		controller = new PrefsDashboardController()
 		controller.dashboardService = dashboardService

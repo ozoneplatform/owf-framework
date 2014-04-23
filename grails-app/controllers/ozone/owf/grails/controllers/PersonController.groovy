@@ -156,13 +156,11 @@ class PersonController extends BaseOwfRestController
 
         try
         {
-println "createorUpdate params = $params"
             def results = accountService.createOrUpdate(params)
             result = [msg: results as JSON, status: 200]
         }
         catch (Exception e)
         {
-println "caught exception"
              result = handleError(e)
         }
 

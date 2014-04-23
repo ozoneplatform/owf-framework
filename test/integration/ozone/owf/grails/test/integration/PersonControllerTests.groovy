@@ -21,6 +21,10 @@ class PersonControllerTests extends OWFGroovyTestCase {
         controller = new PersonController()
         controller.accountService = accountService
         controller.request.contentType = "text/json"
+
+        //without this, Person.build fails for some reason claiming that the username unique
+        //constraint was violated
+        Person.list()
     }
 
     void tearDown() {
@@ -87,7 +91,7 @@ class PersonControllerTests extends OWFGroovyTestCase {
 
 	void testUpdateAction() {
 		loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
-		def person = Person.build(username:'person1', userRealName:'Person', description:'Updating Person').save(failOnError: true)
+		def person = Person.build(username:'person1', userRealName:'Person', description:'Updating Person')
 
          controller.params.data = [[
                  id: person.id,
@@ -99,7 +103,6 @@ class PersonControllerTests extends OWFGroovyTestCase {
 		controller.createOrUpdate()
 
 		person = Person.get(person.id)
-println "Person = ${person.dump()}"
 		assert "New Person" == person.userRealName
 		assert "Updated Person" == person.description
 	}

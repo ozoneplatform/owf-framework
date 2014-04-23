@@ -43,7 +43,6 @@ class AccountService {
         c.with {
             switch(name) {
                 case 'lastLogin':
-                    System.out.println("Name: " + name + " Value: " + value)
                     break;
                 default:
                     ilike(name, '%' + value + '%')
@@ -288,9 +287,7 @@ class AccountService {
 
     @Transactional(readOnly=false)
     def createOrUpdate(params) {
-println "in accountService.createOrUpdate"
         if (!getLoggedInUserIsAdmin()) {
-println "throwing auth exception"
             throw new OwfException(message:'You are not authorized to see a list of users in the system.',
             exceptionType: OwfExceptionTypes.Authorization)
         }
@@ -309,14 +306,11 @@ println "throwing auth exception"
                         params[it.key] = it.value
                 }
                 def user = Person.findByUsername(params.username)
-println "found user $user"
                 if (user && !params.id) {
-println "throwing already exists exception"
                     throw new OwfException(message: 'A user with this name already exists.',exceptionType: OwfExceptionTypes.GeneralServerError)
                 }
                 if (!user)
                 {
-println "Create"
                     //Create
                     user = new Person()
                     user.enabled = true
@@ -327,9 +321,13 @@ println "Create"
                 }
                 params.lastLogin = params.lastLogin ? new Date(params.lastLogin) : null
                 params.prevLogin = params.prevLogin ? new Date(params.prevLogin) : null
-                user.properties = params
-println "Assigning properties $params"
-println "After properties assignment, user = ${user.dump()}"
+                params.entrySet().grep {
+                    it.key in ['username', 'userRealName', 'enabled', 'email', 'emailShow',
+                        'description', 'lastLogin', 'prevLogin']
+                }.each { entry ->
+                    user[entry.key] = entry.value
+                }
+
 
                 // Add to OWF Users group
                 if (isNewUser) {
