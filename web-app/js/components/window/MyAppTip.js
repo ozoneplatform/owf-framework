@@ -448,8 +448,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 url : urlString,
                 method : "POST",
                 content: {
-                    data: json,
-                    windowname: true
+                    data: json
                 },
 
                 onSuccess: function(result) {

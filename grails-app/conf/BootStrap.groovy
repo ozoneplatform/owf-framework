@@ -160,40 +160,40 @@ class BootStrap {
         log.info('Generate test data for OWF Users Group: ' + assignToOWFUsersGroup)
       
         if(enabled) {
-            def numWidgets = ((grailsApplication.config?.perfTest?.numWidgets && enabled) ? grailsApplication.config.perfTest?.numWidgets : 0);
+            def numWidgets = ((grailsApplication.config?.perfTest?.numWidgets) ? grailsApplication.config.perfTest?.numWidgets : 0);
             log.info 'numWidgets: ' + numWidgets
 
-            def numWidgetsPerUser = ((grailsApplication.config?.perfTest?.numWidgetsPerUser && enabled) ? grailsApplication.config.perfTest?.numWidgetsPerUser : 0);
+            def numWidgetsPerUser = ((grailsApplication.config?.perfTest?.numWidgetsPerUser) ? grailsApplication.config.perfTest?.numWidgetsPerUser : 0);
             log.info 'numWidgetsPerUser: ' + numWidgetsPerUser
 
-            def numAdmins = ((grailsApplication.config?.perfTest?.numAdmins && enabled) ? grailsApplication.config.perfTest?.numAdmins: 1);
+            def numAdmins = ((grailsApplication.config?.perfTest?.numAdmins) ? grailsApplication.config.perfTest?.numAdmins: 1);
             log.info 'numAdmins: ' + numAdmins
         
-            def numUsers = ((grailsApplication.config?.perfTest?.numUsers && enabled) ? grailsApplication.config.perfTest?.numUsers : 2);
+            def numUsers = ((grailsApplication.config?.perfTest?.numUsers) ? grailsApplication.config.perfTest?.numUsers : 2);
             log.info 'numUsers: ' + numUsers
 
-            def numGroups = ((grailsApplication.config?.perfTest?.numGroups && enabled) ? grailsApplication.config.perfTest?.numGroups : 2);
+            def numGroups = ((grailsApplication.config?.perfTest?.numGroups) ? grailsApplication.config.perfTest?.numGroups : 2);
             log.info 'numGroups: ' + numGroups
 
-            def numGroupsPerUser = ((grailsApplication.config?.perfTest?.numGroupsPerUser && enabled) ? grailsApplication.config.perfTest?.numGroupsPerUser : 2);
+            def numGroupsPerUser = ((grailsApplication.config?.perfTest?.numGroupsPerUser) ? grailsApplication.config.perfTest?.numGroupsPerUser : 2);
             log.info 'numGroupsPerUser: ' + numGroupsPerUser
 
-            def numWidgetsInGroups = ((grailsApplication.config?.perfTest?.numWidgetsInGroups && enabled) ? grailsApplication.config.perfTest?.numWidgetsInGroups : 2);
+            def numWidgetsInGroups = ((grailsApplication.config?.perfTest?.numWidgetsInGroups) ? grailsApplication.config.perfTest?.numWidgetsInGroups : 2);
             log.info 'numWidgetsInGroups: ' + numWidgetsInGroups
 
-            def numDashboardsWidgets = ((grailsApplication.config?.perfTest?.numDashboardsWidgets && enabled) ? grailsApplication.config.perfTest?.numDashboardsWidgets : 0);
+            def numDashboardsWidgets = ((grailsApplication.config?.perfTest?.numDashboardsWidgets) ? grailsApplication.config.perfTest?.numDashboardsWidgets : 0);
             log.info 'numDashboardsWidgets: ' + numDashboardsWidgets
 
-            def numStacks = ((grailsApplication.config?.perfTest?.numStacks && enabled) ? grailsApplication.config.perfTest?.numStacks : 0);
+            def numStacks = ((grailsApplication.config?.perfTest?.numStacks) ? grailsApplication.config.perfTest?.numStacks : 0);
             log.info 'numStacks: ' + numStacks
 
-            def numStacksPerUser = ((grailsApplication.config?.perfTest?.numStacksPerUser && enabled) ? grailsApplication.config.perfTest?.numStacksPerUser : 0);
+            def numStacksPerUser = ((grailsApplication.config?.perfTest?.numStacksPerUser) ? grailsApplication.config.perfTest?.numStacksPerUser : 0);
             log.info 'numStacksPerUser: ' + numStacksPerUser
         
-            def numStackDashboards = ((grailsApplication.config?.perfTest?.numStackDashboards && enabled) ? grailsApplication.config.perfTest?.numStackDashboards : 0);
+            def numStackDashboards = ((grailsApplication.config?.perfTest?.numStackDashboards) ? grailsApplication.config.perfTest?.numStackDashboards : 0);
             log.info 'numStackDashboards: ' + numStackDashboards
 
-            def numPreferences = ((grailsApplication.config?.perfTest?.numPreferences && enabled) ? grailsApplication.config.perfTest?.numPreferences : 2);
+            def numPreferences = ((grailsApplication.config?.perfTest?.numPreferences) ? grailsApplication.config.perfTest?.numPreferences : 0);
             log.info 'numPreferences: ' + numPreferences
 
             def createSampleWidgets = ((grailsApplication.config?.perfTest?.createSampleWidgets) ? grailsApplication.config.perfTest?.createSampleWidgets : false);
@@ -217,7 +217,7 @@ class BootStrap {
             assignGroupsToPersons(numGroups, numGroupsPerUser)
             assignStacksToPersons(numStacks, numStacksPerUser)
 
-            loadPersonWidgetDefinitions(numWidgetsPerUser)
+            loadPersonWidgetDefinitions(numWidgetsPerUser, assignToOWFUsersGroup)
             loadPreferences(numPreferences)
 
             //create sample widgetdefs
