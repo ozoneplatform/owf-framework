@@ -11,27 +11,27 @@ class UrlMappings {
 
         // parse _method to map to RESTful controller action
         String methodParam = params?."_method"?.toUpperCase()
-        if (methodParam) 
+        if (methodParam)
         method = methodParam
         switch(method)
         {
             case  'GET' :
             return "list"
-                
+
             case 'POST':
             return "createOrUpdate"
-                  
+
             case 'PUT':
             return "createOrUpdate"
-              
+
             case  'DELETE':
             return "delete"
-            
+
             default:
             return "list"
         }
     }
- 
+
     static def handleDashboardAction =
     {
         GrailsWebRequest webRequest = (GrailsWebRequest) RequestContextHolder.getRequestAttributes();
@@ -48,28 +48,28 @@ class UrlMappings {
         if (methodParam == 'PUT' || methodParam == 'DELETE' || methodParam == 'GET' || methodParam == 'POST') {
             method = methodParam
         }
-		
+
         //Perform both Bulk delete and Bulk update...
         //Bulk update...
         if ((params?."viewGuidsToDelete" != null) &&
             (params?."viewsToUpdate" != null) &&
             (method == 'PUT'))
         {
-			
+
             return "bulkDeleteAndUpdate"
         }
-		
+
         //Bulk delete...
         if ((params?."viewGuidsToDelete" != null) && (method == 'DELETE'))
         {
             return "bulkDelete"
-			
+
         }
-		
+
         //Bulk update...
         if ((params?."viewsToUpdate" != null) && (method == 'PUT'))
         {
-			
+
             return "bulkUpdate"
         }
 
@@ -77,7 +77,7 @@ class UrlMappings {
         {
             return "getdefault"
         }
-		
+
         if (params.guid)
         {
             // scan through methods to assign action
@@ -93,7 +93,7 @@ class UrlMappings {
                 return "show"
             }
         }
-		
+
         return "list"
     }
 
@@ -130,10 +130,10 @@ class UrlMappings {
                 if ((params?."preferencesToDelete" != null) && (method == 'DELETE'))
                 {
                     return "bulkDelete"
-						
+
                 }
-                
-                if (params.namespace || params.path) {               
+
+                if (params.namespace || params.path) {
                     // scan through methods to assign action
                     if (method == 'GET') {
                         return (params.path)? "show" : "list"
@@ -150,11 +150,11 @@ class UrlMappings {
                 return "list"
             }
         }
-		
+
         "/prefs/hasPreference/$namespace/$path" (controller:"preference", action:"doesPreferenceExist")
 
         "/prefs/server/resources" (controller:"preference", action:"serverResources")
-		
+
         //Mapping for widget definitions
         "/prefs/widgetDefinition/$widgetGuid?" {
             controller="widgetDefinition"
@@ -162,20 +162,20 @@ class UrlMappings {
                 GrailsWebRequest webRequest = (GrailsWebRequest) RequestContextHolder.getRequestAttributes();
                 String method = webRequest.getCurrentRequest().getMethod().toUpperCase()
                 Map params = webRequest.getParameterMap()
-            
+
                 // parse _method to map to RESTful controller action
                 String methodParam = params?."_method"?.toUpperCase()
                 if (methodParam == 'PUT' || methodParam == 'DELETE' || methodParam == 'GET' || methodParam == 'POST') {
                     method = methodParam
                 }
-	              
+
                 //Bulk delete...
                 if ((params?."widgetGuidsToDelete" != null) && (method == 'DELETE'))
                 {
                     return "bulkDelete"
-						
+
                 }
-	              
+
                 // scan through methods to assign action
                 if (method == 'GET') {
                     return (params.widgetGuid)? "show" : "list"
@@ -207,31 +207,31 @@ class UrlMappings {
                 if (methodParam == 'PUT' || methodParam == 'DELETE' || methodParam == 'GET' || methodParam == 'POST') {
                     method = methodParam
                 }
-                
+
                 //Perform both Bulk delete and Bulk update...
                 //Bulk update...
-                if ((params?."widgetGuidsToDelete" != null) && 
-                    (params?."widgetsToUpdate" != null) && 
+                if ((params?."widgetGuidsToDelete" != null) &&
+                    (params?."widgetsToUpdate" != null) &&
                     (method == 'PUT'))
                 {
-                	
+
                     return "bulkDeleteAndUpdate"
                 }
-                
+
                 //Bulk delete...
                 if ((params?."widgetGuidsToDelete" != null) && (method == 'DELETE'))
                 {
                     return "bulkDelete"
-                	
+
                 }
-				
+
                 //Bulk update...
                 if ((params?."widgetsToUpdate" != null) && (method == 'PUT'))
                 {
-                	
+
                     return "bulkUpdate"
                 }
-                
+
                 // scan through methods to assign action
                 if (method == 'GET') {
                     return (params.guid)? "show" : "list"
@@ -248,7 +248,7 @@ class UrlMappings {
         }
 
         "/prefs/widget/listUserAndGroupWidgets" ( controller:'personWidgetDefinition', action:'listUserAndGroupWidgets' )
-		
+
         "/prefs/widgetList" ( controller:'personWidgetDefinition', action:'widgetList' )
 
         "/widget/hasMarketplace" ( controller: 'widgetDefinition', action: 'hasMarketplace')
@@ -268,7 +268,7 @@ class UrlMappings {
             controller = "widgetDefinition"
             action = "dependents"
         }
-        
+
         "/prefs/personWidgetDefinition/dependents" {
             controller = "personWidgetDefinition"
             action = "dependents"
@@ -334,7 +334,7 @@ class UrlMappings {
             controller = "stack"
             action = UrlMappings.getAction
         }
-		
+
         //Mapping for widget definitions
         "/widget/$widgetGuid?" {
             controller="widget"
@@ -351,10 +351,6 @@ class UrlMappings {
         "/widget/listUserWidgets" {
             controller="personWidgetDefinition"
             action = "listPersonWidgetDefinitions"
-        }
-        "/widget/approve" {
-            controller="personWidgetDefinition"
-            action = "approvePersonWidgetDefinitions"
         }
         "/widgettype/list" {
             controller = "widgetType"
@@ -408,7 +404,7 @@ class UrlMappings {
             fileRoot={
                 /*
                  * The line below will not work until grails 2.0. At which point
-                 * ConfigurationHolder will be deprecated, so these should be 
+                 * ConfigurationHolder will be deprecated, so these should be
                  * switched then.  (Also switch in help url)
                  */
                 //grailsApplication.config.owf.external.themePath
@@ -485,22 +481,22 @@ class UrlMappings {
             action='checkAccess'
         }
         "500"(controller: 'error')
-		
+
 		"/applicationConfiguration/configs/$id?" {
 			controller = "applicationConfiguration"
 			action=[GET:"list", PUT:"update"]
 		}
-		
+
 		"/widgetDefinition/groupOwnedWidget" {
 			controller = "widgetDefinition"
 			action = "groupOwnedWidget"
 		}
-        
-        
+
+
         "/messages" {
             controller = "messages"
             action=[GET:"list"]
         }
-        
+
     }
 }

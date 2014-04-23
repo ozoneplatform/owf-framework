@@ -161,14 +161,13 @@ grails.project.dependency.resolution = {
 
     }
     plugins {
-        compile ':database-migration:1.3.8'
+        compile ':database-migration:1.4.0'
         compile ':hibernate:3.6.10.12'
         compile 'org.ozoneplatform:aml-commons-appconfig:0.5'
         compile 'org.ozoneplatform:aml-commons-auditing:1.0'
         compile 'org.ozoneplatform:aml-commons-messaging:1.15'
         compile ':codenarc:0.20'
-        compile ':pretty-time:0.3'
-        compile ':taggable:0.6.2'
+        compile ':pretty-time:2.1.3.Final-1.0.1'
         build   ':tomcat:7.0.52.1'
         compile ':ui-performance:1.2.2'
         compile ':build-test-data:2.1.2'

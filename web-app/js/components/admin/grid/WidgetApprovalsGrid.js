@@ -7,13 +7,9 @@ Ext.define('Ozone.components.admin.grid.WidgetApprovalsGrid', {
     },
 
   cls: 'grid-widget',
-  
+
   defaultPageSize: 50,
   //forceFit: true,
-  baseParams: {
-    tags: Ozone.config.carousel.pendingApprovalTagGroupName
-  },
-
   initComponent: function() {
 
     //create new store
@@ -23,7 +19,7 @@ Ext.define('Ozone.components.admin.grid.WidgetApprovalsGrid', {
         pageSize: this.defaultPageSize
       });
     }
-    
+
     if (this.baseParams) { this.setBaseParams(this.baseParams); }
 
     Ext.apply(this, {
@@ -63,12 +59,12 @@ Ext.define('Ozone.components.admin.grid.WidgetApprovalsGrid', {
               else {
                 url = contextPath + '/' + url;
               }
-              
+
               var blueDashboardIconRegX = /admin\/64x64_blue_dashboard.png/g;
               var blueGroupIconRegX = /admin\/64x64_blue_group.png/g;
               var blueUserIconRegX = /admin\/64x64_blue_user.png/g;
               var blueWidgetIconRegX = /admin\/64x64_blue_widget.png/g;
-              
+
               if(url.match(blueDashboardIconRegX)){
               	url = url.replace(blueDashboardIconRegX, "admin/24x24_blue_dashboard.png");
               }else if(url.match(blueGroupIconRegX)){
@@ -79,7 +75,7 @@ Ext.define('Ozone.components.admin.grid.WidgetApprovalsGrid', {
               	url = url.replace(blueWidgetIconRegX, "admin/24x24_blue_widget.png");
               }
             }
-          
+
             var retVal = '<div class="grid-icon-and-text-title-box"><div class="grid-icon-and-text-icon"><img class="grid-icon-and-text-icon-image" src="' + Ext.htmlEncode(url) + '">';
             retVal += '</div>';
             retVal += '<div class="grid-icon-and-text-title">' + Ext.htmlEncode(title) + '</div>';
@@ -243,7 +239,7 @@ Ext.define('Ozone.components.admin.grid.WidgetApprovalsGrid', {
           this.store.proxy.extraParams = params;
       }
   },
-  
+
   setStore: function(store, cols) {
       this.reconfigure(store, cols);
       var pgtb = this.getBottomToolbar();

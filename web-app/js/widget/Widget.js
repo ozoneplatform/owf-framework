@@ -2445,7 +2445,6 @@ OWF.Chrome.listHeaderMenus({
 		&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} minimized: true if widget is minimized<br>
 		&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} maximized: true if widget is maximized<br>
 		&nbsp;&nbsp;&nbsp;&nbsp;{String} widgetVersion: widget version<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;{Array} tags: array of tag strings<br>
 		&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} definitionVisible: true if definition is visible<br>
 		&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} singleton: true if widget is a singleton<br>
 		&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} background: true if widget runs in the background<br>
@@ -2512,7 +2511,6 @@ OWF.Preferences.getWidget({
 		&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} minimized: true if widget is minimized<br>
 		&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} maximized: true if widget is maximized<br>
 		&nbsp;&nbsp;&nbsp;&nbsp;{String} widgetVersion: widget version<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;{Array} tags: array of tag strings<br>
 		&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} definitionVisible: true if definition is visible<br>
 		&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} singleton: true if widget is a singleton<br>
 		&nbsp;&nbsp;&nbsp;&nbsp;{Boolean} background: true if widget runs in the background<br>

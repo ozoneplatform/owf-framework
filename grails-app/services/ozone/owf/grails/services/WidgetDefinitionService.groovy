@@ -36,14 +36,6 @@ class WidgetDefinitionService {
         if (params?.max) opts.max =(params.max instanceof String ? Integer.parseInt(params.max) : params.max)
         if (params?.stack_id) params.stack_id = (params.stack_id instanceof String ? Integer.parseInt(params.stack_id) : params.stack_id)
 
-        if(params?.filters) {
-            JSON.parse(params.filters).each {
-                if (it.filterField == 'tags') {
-                    params.tags = it.filterValue
-                }
-            }
-        }
-
         def stackFilteredIds = []
         if(params?.stack_id > -1) {
             def widgetGuids = []
@@ -57,8 +49,8 @@ class WidgetDefinitionService {
             // List the dashboards of the stack's default group
             def dashboards = domainMappingService.getMappings(stack.findStackDefaultGroup(),RelationshipType.owns,Dashboard.TYPE)?.collect{
                 Dashboard.get(it.destId)
-            }            
-            
+            }
+
             for(def i = 0; i < dashboards.size(); i++) {
                 //Get all the widgetGuids found in the layoutConfig
                 widgetGuids.addAll(inspectForWidgetGuids(JSON.parse(dashboards[i].layoutConfig)))
@@ -82,33 +74,12 @@ class WidgetDefinitionService {
                 return [success: true, results: 0, data: []]
             }
         }
-        
-        def tagFilteredIds = []
-        if(params?.tags) {
-            for(tag in JSON.parse(params?.tags)) {
-                def tempTagFilteredIds = []
-                WidgetDefinition.findAllByTag(tag).each {
-                    tempTagFilteredIds << it.id
-                }
-
-                if(tagFilteredIds.isEmpty()) {
-                    tagFilteredIds = tempTagFilteredIds
-                } else {
-                    tagFilteredIds = tagFilteredIds.intersect(tempTagFilteredIds)
-                }
-
-                //If tagFilteredIds empty now, return no results
-                if(tagFilteredIds.isEmpty()) {
-                    return [success: true, results: 0, data: []]
-                }
-            }
-        }
 
         // Either group_id or groupIds is passed, but not both
         if (params?.group_id) {
             params.groupIds = "[" + params.group_id + "]"
         }
-    
+
         //filter by any groups passed first
         def groupFilteredIds = []
         if(params?.groupIds) {
@@ -179,7 +150,7 @@ class WidgetDefinitionService {
                                     }
                                 }
                             } else {
-                                if (it.filterField != 'tags') ilike(it.filterField, '%' + it.filterValue + '%')
+                                ilike(it.filterField, '%' + it.filterValue + '%')
                             }
                         }
                     }
@@ -204,7 +175,7 @@ class WidgetDefinitionService {
                                 }
                             }
                         } else {
-                            if (it.filterField != 'tags') ilike(it.filterField, '%' + it.filterValue + '%')
+                            ilike(it.filterField, '%' + it.filterValue + '%')
                         }
                     }
                 }
@@ -249,9 +220,6 @@ class WidgetDefinitionService {
             if (!groupFilteredIds.isEmpty()) {
                 inList('id',groupFilteredIds)
             }
-            if (!tagFilteredIds.isEmpty()) {
-                inList('id',tagFilteredIds)
-            }
             if (!stackFilteredIds.isEmpty()) {
                 inList('id',stackFilteredIds)
             }
@@ -272,12 +240,12 @@ class WidgetDefinitionService {
                 ])
         }
         return [
-            success:true, 
-            results: widgetDefinition.totalCount, 
+            success:true,
+            results: widgetDefinition.totalCount,
             data : returnDomainObjects ? widgetDefinition : processedWidgets
         ]
     }
-    
+
     def listUserAndGroupWidgets(params) {
         def widgetResults = list(params)
         return widgetResults.data
@@ -291,15 +259,15 @@ class WidgetDefinitionService {
         }
         return [success:true, widgetDefinition: widgetDefinition]
     }
-    
+
     def create(params){
         createOrUpdate(params)
     }
-    
+
     def update(params){
         createOrUpdate(params)
     }
-    
+
     def createOrUpdate(params) {
         ensureAdmin()
         def widgets = []
@@ -326,14 +294,14 @@ class WidgetDefinitionService {
         }
         [success:true,data:results.flatten()]
     }
-    
+
     def updateWidget(params) {
         def widgetDefinition
         def returnValue = null
-    
+
         //check for id param if exists this is an update
         if (params.id || params.widget_id) {
-    
+
             params.id = params.id ? params.id : params.widget_id
             widgetDefinition = WidgetDefinition.findByWidgetGuid(params.id, [cache:true])
             if (widgetDefinition == null) {
@@ -355,7 +323,7 @@ class WidgetDefinitionService {
 				widgetDefinition = new WidgetDefinition()
 			}
         }
-    
+
         if (params.update_action == null || params.update_action == '') {
             //determine widgetType
             def newWidgetTypes = []
@@ -381,10 +349,10 @@ class WidgetDefinitionService {
 
             //Fail if universalName is already in use by another widget and this isn't from a stackDescriptor
             if (!isNull(params.universalName) && !params.stackDescriptor && !canUseUniversalName(widgetDefinition, params.universalName)) {
-                throw new OwfException(message: 'Another widget uses ' + params.universalName + ' as its Universal Name. ' 
+                throw new OwfException(message: 'Another widget uses ' + params.universalName + ' as its Universal Name. '
                     + 'Please select a unique Universal Name for this widget.', exceptionType: OwfExceptionTypes.GeneralServerError)
             }
-            
+
             // Convert null or whitespace universal names to null.
             def newUniversalName = null;
             if (!isNull(params.universalName)) {
@@ -416,7 +384,7 @@ class WidgetDefinitionService {
             if (params.directRequired != null) {
                 // delete and the recreate requirements
                 domainMappingService.deleteAllMappings(widgetDefinition, RelationshipType.requires, 'src')
-                
+
                 params?.directRequired.each {
                     def requiredWidget = WidgetDefinition.findByWidgetGuid(it, [cache:true])
                     if (requiredWidget != null) {
@@ -441,7 +409,7 @@ class WidgetDefinitionService {
                     allIntents.addAll(params.intents.send)
                 }
                 if(params.intents.receive != null) {
-                    allIntents.addAll(params.intents.receive) 
+                    allIntents.addAll(params.intents.receive)
                 }
 
                 //Save the last send intent to save their flags appropriately
@@ -485,7 +453,7 @@ class WidgetDefinitionService {
                             eq('receive', false)
                         }
                         if(!newWidgetDefinitionIntent) {
-                            newWidgetDefinitionIntent = new WidgetDefinitionIntent(widgetDefinition: widgetDefinition, intent: newIntent, 
+                            newWidgetDefinitionIntent = new WidgetDefinitionIntent(widgetDefinition: widgetDefinition, intent: newIntent,
                                 send: true, receive: false)
                             widgetDefinition.addToWidgetDefinitionIntents(newWidgetDefinitionIntent)
                         }
@@ -498,7 +466,7 @@ class WidgetDefinitionService {
                             eq('send', false)
                         }
                         if(!newWidgetDefinitionIntent) {
-                            newWidgetDefinitionIntent = new WidgetDefinitionIntent(widgetDefinition: widgetDefinition, intent: newIntent, 
+                            newWidgetDefinitionIntent = new WidgetDefinitionIntent(widgetDefinition: widgetDefinition, intent: newIntent,
                                 send: false, receive: true)
                             widgetDefinition.addToWidgetDefinitionIntents(newWidgetDefinitionIntent)
                         }
@@ -541,20 +509,16 @@ class WidgetDefinitionService {
                             def queryReturn = PersonWidgetDefinition.executeQuery("SELECT MAX(pwd.pwdPosition) AS retVal FROM PersonWidgetDefinition pwd WHERE pwd.person = ?", [person])
                             def maxPosition = (queryReturn[0] != null)? queryReturn[0] : -1
                             maxPosition++
-                            
+
                             def personWidgetDefinition = new PersonWidgetDefinition(
                                 person: person,
                                 widgetDefinition: widgetDefinition,
                                 visible: true,
                                 userWidget: true,
                                 pwdPosition: maxPosition)
-                            
+
                             person.addToPersonWidgetDefinitions(personWidgetDefinition)
                             widgetDefinition.addToPersonWidgetDefinitions(personWidgetDefinition)
-                            
-                            personWidgetDefinition.setTags(personWidgetDefinition.widgetDefinition.getTags()?.collect {
-                                ['name':it.tag.name,'visible':it.visible,'position':it.position]
-                            });
                         }
                         else {
                             results.each { result ->
@@ -577,7 +541,7 @@ class WidgetDefinitionService {
                             }
                         }
                     }
-                    
+
                     updatedPeople << person
                 }
             }
@@ -585,12 +549,8 @@ class WidgetDefinitionService {
                 returnValue = updatedPeople.collect{ serviceModelService.createServiceModel(it) }
             }
         }
-            
-        
-        
-        if (params.containsKey('tags')) {
-            widgetDefinition.setTags(params.tags)
-        }
+
+
 
         if (params.update_action != null && params.update_action != '' && 'groups'==params.tab) {
             def updatedGroups = []
@@ -616,7 +576,7 @@ class WidgetDefinitionService {
         else if (params.update_action != null && params.update_action != '' && 'users' == params.tab) {
             def updatedPeople = []
             def users = JSON.parse(params.data)
-            
+
             users?.eachWithIndex { it, i ->
                 def person = Person.findById(it.id.toLong(),[cache:true])
                 if (person) {
@@ -630,20 +590,16 @@ class WidgetDefinitionService {
                             def queryReturn = PersonWidgetDefinition.executeQuery("SELECT MAX(pwd.pwdPosition) AS retVal FROM PersonWidgetDefinition pwd WHERE pwd.person = ?", [person])
                             def maxPosition = (queryReturn[0] != null)? queryReturn[0] : -1
                             maxPosition++
-                            
+
                             def personWidgetDefinition = new PersonWidgetDefinition(
                                 person: person,
                                 widgetDefinition: widgetDefinition,
                                 userWidget: true,
                                 visible: true,
                                 pwdPosition: maxPosition)
-                            
+
                             person.addToPersonWidgetDefinitions(personWidgetDefinition)
                             widgetDefinition.addToPersonWidgetDefinitions(personWidgetDefinition)
-                            
-                            personWidgetDefinition.setTags(personWidgetDefinition.widgetDefinition.getTags()?.collect { pwd ->
-                                ['name':pwd.tag.name,'visible':pwd.visible,'position':pwd.position]
-                            });
                         }
                         else {
                             results.each { result ->
@@ -666,7 +622,7 @@ class WidgetDefinitionService {
                             }
                         }
                     }
-                    
+
                     updatedPeople << person
                 }
             }
@@ -677,16 +633,16 @@ class WidgetDefinitionService {
         else {
             returnValue = serviceModelService.createServiceModel(widgetDefinition)
         }
-        
+
         return returnValue
     }
 
     def delete(params){
-        
+
         ensureAdmin()
-        
+
         def widgets = []
-        
+
         if (params.data)
         {
             def json = JSON.parse(params.data)
@@ -697,7 +653,7 @@ class WidgetDefinitionService {
                 [id:it]
             }
         }
-        
+
         widgets.each {
             def widgetDefinition = WidgetDefinition.findByWidgetGuid(it.id,[cache:true])
             it.value = [:] // Need this for JSONReader on client side
@@ -708,12 +664,12 @@ class WidgetDefinitionService {
             else {
                 //delete all mappings
                 domainMappingService.purgeAllMappings(widgetDefinition)
-                
+
                 //delete group
                 widgetDefinition.delete(flush: true)
             }
         }
-        
+
         return [success: true, data: widgets]
     }
 
@@ -734,22 +690,22 @@ class WidgetDefinitionService {
       log.info msg
       [success:success, msg:msg]
     }
-    
+
     def getDependents(params) {
-        
+
         def srcGuids = params.ids
         def widgetDefs
-        
+
         widgetDefs = WidgetDefinition.withCriteria({
             inList('widgetGuid', srcGuids);
         });
-    
+
         def srcIds = widgetDefs.collect{ it.id }
         def depIds = null
         def accDepIds = []
-        
+
         def recs = domainMappingService.getDependentWidgets(srcIds)
-        
+
         if (params.noRecurse) {
             accDepIds = recs.collect{it.srcId}
         }
@@ -763,14 +719,14 @@ class WidgetDefinitionService {
                 recs = null
             }
         }
-        
+
         def processedWidgets = [];
-        
+
         if (accDepIds && accDepIds.size() > 0) {
             widgetDefs = WidgetDefinition.withCriteria({
                 inList('id', accDepIds);
             });
-            
+
             processedWidgets = widgetDefs.collect {
                 serviceModelService.createServiceModel(it,[
                     totalUsers: it.personWidgetDefinitions ? it.personWidgetDefinitions.size() : 0,
@@ -778,7 +734,7 @@ class WidgetDefinitionService {
                 ])
             }
         }
-        
+
         return [success: true, data: processedWidgets]
     }
 
@@ -890,9 +846,9 @@ class WidgetDefinitionService {
 
         return widgetGuids
     }
-    
+
     private def getWidgetDescriptorJson(widgetDefinition) {
-        
+
         def widgetData = [:]
         //Get only the values required for a widget descriptor
         widgetData.put("displayName", widgetDefinition.displayName)
@@ -912,10 +868,6 @@ class WidgetDefinitionService {
         widgetDefinition.description && widgetData.put("description", widgetDefinition.description)
         widgetDefinition.widgetVersion && widgetData.put("widgetVersion", widgetDefinition.widgetVersion)
 
-        def tags = []
-        widgetDefinition.getTags().each { tags.push(it.tag.name) }
-        tags && widgetData.put("defaultTags", tags)
-
         def intents = [:], sendIntents = [], receiveIntents = []
         widgetDefinition.widgetDefinitionIntents.each {
             def intent = [action: it.intent.action, dataTypes: it.dataTypes.dataType]
@@ -931,12 +883,12 @@ class WidgetDefinitionService {
 
         return widgetData
     }
-    
+
     //TODO: refactor this out when we have time.  I don't like this logic here
     //      potentially a createListCriteriaFromJSONParams or something in the Service
     //      or a static translation of json param to database fields in the domain
     private def convertJsonParamToDomainField(jsonParam) {
-        
+
         switch(jsonParam) {
             case ['name','displayName','value.namespace']:
             return 'displayName'
@@ -974,20 +926,20 @@ class WidgetDefinitionService {
                 exceptionType: OwfExceptionTypes.JsonToDomainColumnMapping)
         }
     }
-    
+
     private def ensureAdmin() {
         if (!accountService.getLoggedInUserIsAdmin()) {
             throw new OwfException(message: "You must be an admin", exceptionType: OwfExceptionTypes.Authorization)
         }
     }
-    
+
     public def reconcileGroupWidgetsFromDashboards(group, addOnly = true) {
 
         // Get all dashboards for this group.
         def dashboards = domainMappingService.getMappedObjects(group, RelationshipType.owns, Dashboard.TYPE)
         def groupWidgets = domainMappingService.getMappedObjects(group, RelationshipType.owns, WidgetDefinition.TYPE)
         def widgetGuids = []
-        
+
         dashboards?.each{ dashboard ->
             // For each dashboard get its list of widget guids.
             def dashGuids = inspectForWidgetGuids(JSON.parse(dashboard.layoutConfig))
@@ -995,7 +947,7 @@ class WidgetDefinitionService {
         }
         widgetGuids = widgetGuids.flatten()
         widgetGuids.unique()
-        
+
         // Remove any group widgets that aren't in the current dashboard layouts if we're not in add-only mode.
         if (!addOnly) {
             groupWidgets?.each { groupWidget ->
@@ -1004,7 +956,7 @@ class WidgetDefinitionService {
                 }
             }
         }
-        
+
         // Loop over the widgetGuids.  if there's not already a mapping to that widget for this group, add it.
         widgetGuids.each { widgetGuid ->
             def widget = WidgetDefinition.findByWidgetGuid(widgetGuid,[cache:true])
@@ -1030,14 +982,14 @@ class WidgetDefinitionService {
         }
         else return obj.equals(null)
     }
-	
+
 	def groupOwnedWidget(widgetId, personId, isAdmin){
 		def adminQuery = ""
 		if(isAdmin as boolean)
 			adminQuery = "OR g.name = 'OWF Administrators'"
-			
+
 		log.debug("admin query in groupOwnedWidget = " + adminQuery)
-		
+
 		def ownedDefinitions = DomainMapping.findAll(" \
 			FROM DomainMapping dm, WidgetDefinition wd\
 			WHERE dm.srcType = 'group' AND dm.destType = 'widget_definition' AND dm.destId = wd.id \
@@ -1046,11 +998,11 @@ class WidgetDefinitionService {
 					WHERE g.name = 'OWF Users' "+adminQuery+" OR exists (FROM g.people AS p WHERE p.id = :personId)) ", [widgetId: widgetId, personId: personId as long])
 
 		ownedDefinitions = ownedDefinitions.collect { it[0]}
-		
+
 		log.debug("Got widget definitions: " + ownedDefinitions)
 		if(ownedDefinitions)
 			return true
-		
+
 		return false
 	}
 }

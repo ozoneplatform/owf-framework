@@ -6,9 +6,7 @@ import ozone.owf.grails.services.model.PersonServiceModel
 
 import ozone.owf.grails.services.model.PreferenceServiceModel
 import ozone.owf.grails.services.model.WidgetDefinitionServiceModel
-import org.grails.taggable.TagLink
 import ozone.owf.grails.util.OWFDate
-import ozone.owf.grails.services.model.TagLinkServiceModel
 import ozone.owf.grails.services.model.PersonWidgetDefinitionServiceModel
 import ozone.owf.grails.services.model.GroupServiceModel
 import ozone.owf.grails.services.model.WidgetTypeServiceModel
@@ -25,7 +23,7 @@ import ozone.owf.grails.domain.WidgetDefinitionIntent
 import ozone.owf.grails.domain.WidgetType
 import ozone.owf.grails.domain.Stack
 
-import com.ocpsoft.pretty.time.PrettyTime
+import org.ocpsoft.prettytime.PrettyTime
 
 /**
  *
@@ -99,8 +97,7 @@ class ServiceModelService {
                         displayName: domain.displayName,
                         disabled: domain.disabled,
                         groups: params.groups != null ? params.groups.collect{ createServiceModel(it) } : [],
-                        editable: params.editable != null ? params.editable : true,
-                        tagLinks: params.tagLinks ? params.tagLinks.collect { createServiceModel(it) } : domain.getTags().collect { createServiceModel(it) }
+                        editable: params.editable != null ? params.editable : true
                         );
                 break
 
@@ -161,21 +158,11 @@ class ServiceModelService {
                         descriptorUrl: domain.descriptorUrl,
                         directRequired: params.directRequired ? params.directRequired : widgetDefinitionServiceBean.getDirectRequiredIds(domain),
                         allRequired:  params.allRequired ? params.allRequired : widgetDefinitionServiceBean.getAllRequiredIds(domain),
-                        tagLinks: params.tagLinks ? params.tagLinks.collect { createServiceModel(it) } : domain.getTags().collect { createServiceModel(it) },
                         intents: domain.widgetDefinitionIntents ?: [],
                         widgetTypes: domain.widgetTypes.collect{ createServiceModel(it) }
                         );
                 break
 
-            case TagLink:
-                TagLink tagLink = (TagLink) obj
-                model = new TagLinkServiceModel(
-                        name: tagLink.tag.name,
-                        visible: tagLink.visible,
-                        position: tagLink.position,
-                        editable: tagLink.editable
-                        );
-                break
             case WidgetType:
                 WidgetType widgetType = (WidgetType) obj
                 model = new WidgetTypeServiceModel(
@@ -190,7 +177,7 @@ class ServiceModelService {
                 // add groups to stack so we can decide client side whether to allow
                 // users to delete this stack
                 def groups = []
-                domain.groups?.each { 
+                domain.groups?.each {
                     groups << createServiceModel(it)
                 }
 

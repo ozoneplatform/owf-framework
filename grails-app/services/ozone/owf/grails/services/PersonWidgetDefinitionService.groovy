@@ -11,8 +11,6 @@ import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.Stack
-import org.grails.taggable.TagLink
-import org.grails.taggable.Tag
 
 import org.hibernate.CacheMode
 import ozone.owf.grails.domain.RelationshipType
@@ -26,106 +24,17 @@ class PersonWidgetDefinitionService {
     def serviceModelService
     def grailsApplication
 
-    def approveForAdminByTags(params){
-        if (!accountService.getLoggedInUserIsAdmin()) {
-            throw new OwfException(message:'You are not authorized to list admin personal widget definitions.', exceptionType: OwfExceptionTypes.Authorization)
-        }
-
-        JSON.parse(params.toApprove).each { w ->
-            def pwd = PersonWidgetDefinition.withCriteria {
-                createAlias('person','person')
-                createAlias('widgetDefinition','widgetDefinition')
-                cache(true)
-
-                if (w.id != null) {
-                    eq('id',w.id)
-                }
-                eq('person.username',w.userId)
-                eq('widgetDefinition.widgetGuid',w.widgetGuid)
-            }
-            if (pwd != null && pwd.size() > 0) {
-                pwd[0].disabled = false;
-                if (w.tags != null) {
-                    pwd[0].setTags(w.tags)
-                }
-                //           else {
-                //             //remove the pending approval tag
-                //             def pendingApprovalTagGroupName = grailsApplication.config.owf.pendingApprovalTagGroupName
-                //             pwd[0].removeTag(pendingApprovalTagGroupName)
-                //           }
-            }
-            else {
-                //create mapping so the user can use the widget
-                Person person = Person.findByUsername(w.userId,[cache:true])
-                if (person != null) {
-                    def widgetParams = [
-                                guid: w.widgetGuid,
-                                personId: person.id
-                            ]
-                    if (w.tags != null) {
-                        widgetParams.tags = w.tags
-                    }
-                    this.create(widgetParams)
-                }
-            }
-        }
-
-        JSON.parse(params.toDelete).each { w ->
-            def pwd = PersonWidgetDefinition.withCriteria {
-                createAlias('person','person')
-                createAlias('widgetDefinition','widgetDefinition')
-                cache(true)
-
-                if (w.id != null) {
-                    eq('id',w.id)
-                }
-                eq('person.username',w.userId)
-                eq('widgetDefinition.widgetGuid',w.widgetGuid)
-            }
-            if (pwd != null && pwd.size() > 0) {
-                pwd[0].person?.removeFromPersonWidgetDefinitions(pwd[0])
-                pwd[0].widgetDefinition?.removeFromPersonWidgetDefinitions(pwd[0])
-                pwd[0].delete();
-            }
-        }
-
-        return [success:true];
-    }
-
     def listForAdminPendingWidgets(params){
         if (!accountService.getLoggedInUserIsAdmin()) {
             throw new OwfException(message:'You are not authorized to list admin personal widget definitions.', exceptionType: OwfExceptionTypes.Authorization)
         }
 
-        def taggedIds = []
         def opts = [:]
         def pwds = []
 
         //handle paging parameters
         if (params?.offset) opts.offset = (params.offset instanceof String ? Integer.parseInt(params.offset) : params.offset)
         if (params?.max) opts.max =(params.max instanceof String ? Integer.parseInt(params.max) : params.max)
-
-        //      if (params?.tags) {
-        //          def tags = PersonWidgetDefinition.findAllTagsWithCriteria([max:null]) {
-        //            if (!Tag.preserveCase) {
-        //              inList('name', params.list('tags')*.toLowerCase())
-        //            }
-        //            else {
-        //              inList('name', params.list('tags'))
-        //            }
-        //          }
-        //
-        //          tags?.each {
-        //              PersonWidgetDefinition.findAllByTag(it).each {
-        //                  taggedIds << it.id
-        //              }
-        //          }
-        //
-        //          //if there are no widgetdefs associated with the tag then return no results
-        //          if (taggedIds.isEmpty()) {
-        //              return [success: true, data: [], results: 0]
-        //          }
-        //      }
 
         pwds = PersonWidgetDefinition.createCriteria().list(opts) {
             createAlias('person','person')
@@ -145,11 +54,6 @@ class PersonWidgetDefinitionService {
             //search for any disabled pwds
             eq('disabled',true)
 
-            //filter specific pwds via tag name
-            //        if (!taggedIds.isEmpty()) {
-            //            inList('id',taggedIds)
-            //        }
-
             //filter by passed filter params - all fields are matched via st
             if (params.filters) {
                 if (params.filterOperator?.toUpperCase() == 'OR') {
@@ -175,84 +79,6 @@ class PersonWidgetDefinitionService {
         return [success: true, results: pwds.totalCount, data: pwds.collect{ serviceModelService.createServiceModel(it) }]
     }
 
-
-    def listForAdminByTags(params){
-        if (!accountService.getLoggedInUserIsAdmin()) {
-            throw new OwfException(message:'You are not authorized to list admin personal widget definitions.', exceptionType: OwfExceptionTypes.Authorization)
-        }
-
-        def taggedIds = []
-        def opts = [:]
-        def pwds = []
-
-        //handle paging parameters
-        if (params?.offset) opts.offset = (params.offset instanceof String ? Integer.parseInt(params.offset) : params.offset)
-        if (params?.max) opts.max =(params.max instanceof String ? Integer.parseInt(params.max) : params.max)
-
-        if (params?.tags) {
-            def tags = PersonWidgetDefinition.findAllTagsWithCriteria([max:null]) {
-                if (!Tag.preserveCase) {
-                    inList('name', params.list('tags')*.toLowerCase())
-                }
-                else {
-                    inList('name', params.list('tags'))
-                }
-            }
-
-            tags?.each {
-                PersonWidgetDefinition.findAllByTag(it).each { taggedIds << it.id }
-            }
-
-            //if there are no widgetdefs associated with the tag then return no results
-            if (taggedIds.isEmpty()) {
-                return [success: true, data: [], results: 0]
-            }
-        }
-
-        pwds = PersonWidgetDefinition.createCriteria().list(opts) {
-            createAlias('person','person')
-            createAlias('widgetDefinition','widgetDefinition')
-
-            if(params?.pwds) {
-                or {
-                    JSON.parse(params.pwds).each { p ->
-                        and {
-                            eq('person.username',p.userId)
-                            eq('widgetDefinition.widgetGuid',p.widgetGuid)
-                        }
-                    }
-                }
-            }
-
-            //filter specific pwds via tag name
-            if (!taggedIds.isEmpty()) {
-                inList('id',taggedIds)
-            }
-
-            //filter by passed filter params - all fields are matched via st
-            if (params.filters) {
-                if (params.filterOperator?.toUpperCase() == 'OR') {
-                    or {
-                        JSON.parse(params.filters).each {
-                            ilike(convertJsonParamToDomainField(it.filterField), '%' + it.filterValue + '%')
-                        }
-                    }
-                } else {
-                    JSON.parse(params.filters).each {
-                        ilike(convertJsonParamToDomainField(it.filterField), '%' + it.filterValue + '%')
-                    }
-                }
-            }
-
-            //sort
-            if (params?.sort) {
-                order(convertJsonParamToDomainField(params.sort), params?.order?.toLowerCase() ?: 'asc')
-            }
-
-        }
-
-        return [success: true, results: pwds.totalCount, data: pwds.collect{ serviceModelService.createServiceModel(it) }]
-    }
 
     private def convertJsonParamToDomainField(jsonParam) {
         switch(jsonParam) {
@@ -313,7 +139,7 @@ class PersonWidgetDefinitionService {
         if (params?.max != null) opts.max =(params.max instanceof String ? Integer.parseInt(params.max) : params.max)
 
         def person = accountService.getLoggedInUser()
-  
+
         // Get stack default groups associated to the user.
         def stackDefaultGroups = []
         def stacks = Stack.withCriteria {
@@ -326,7 +152,7 @@ class PersonWidgetDefinitionService {
             cacheMode(CacheMode.GET)
         }
         stackDefaultGroups = stacks.collect { it.findStackDefaultGroup() }
-        
+
         // Get non stack default groups that contain this user.
         def groups = Group.withCriteria {
             people {
@@ -340,7 +166,7 @@ class PersonWidgetDefinitionService {
             //seems to be a bug where the people collection is cached with only one person due to the people association filter above
             cacheMode(CacheMode.GET)
         }
-        
+
         // Get the OWF Users Group and add it to the list
         def allUsersGroup = Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
         if (allUsersGroup) {
@@ -371,7 +197,7 @@ class PersonWidgetDefinitionService {
 
         // Generate a combined group list.
         groups = (groups << stackDefaultGroups).flatten()
-        
+
         def queryReturn = PersonWidgetDefinition.executeQuery("SELECT MAX(pwd.pwdPosition) AS retVal FROM PersonWidgetDefinition pwd WHERE pwd.person = ?", [person])
         def maxPosition = (queryReturn[0] != null)? queryReturn[0] : -1
 
@@ -389,7 +215,7 @@ class PersonWidgetDefinitionService {
                 //            groupWidgetsToTagsMap[widgetDef.widgetGuid] << ['name': group.name, 'visible': true, 'position': -1]
                 groupWidgetsToTagsMap[widgetDef.widgetGuid] << group
             }
-            
+
         }
 
         def allGroupWidgetsToTagsMap = groupWidgetsToTagsMap.clone();
@@ -410,7 +236,7 @@ class PersonWidgetDefinitionService {
                 groupWidgetsToTagsMap.remove(pwd.widgetDefinition.widgetGuid)
             }
             else {
-                // delete pwd if a group widget is no longer in a group and user is not 
+                // delete pwd if a group widget is no longer in a group and user is not
                 // directly associated to it.
                 if (!pwd.userWidget) {
                     Map newParams = new HashMap()
@@ -461,34 +287,6 @@ class PersonWidgetDefinitionService {
                 else if (!personWidgetDefinition.save()) {
                     throw new OwfException(message: 'A fatal error occurred while trying to save a widget. Params: ' + params.toString(),
                     exceptionType: OwfExceptionTypes.Database)
-                }
-
-                //use default tags defined in the widgetdef
-                personWidgetDefinition.setTags(personWidgetDefinition.widgetDefinition.getTags()?.collect {
-                    ['name': it.tag.name, 'visible': it.visible, 'position': it.position]
-                });
-            }
-
-            //now add group name tag
-            //personWidgetDefinition.addTags(groupWidgetsToTagsMap[personWidgetDefinition.widgetDefinition.widgetGuid]);
-        }
-
-        //search for group ids that match the passed in tags
-        def tagFilteredIds = []
-        if(params?.tags) {
-            for(tag in JSON.parse(params?.tags)) {
-                def tempTagFilteredIds = []
-                PersonWidgetDefinition.findAllByTag(tag).each { tempTagFilteredIds << it.id }
-
-                if(tagFilteredIds.isEmpty()) {
-                    tagFilteredIds = tempTagFilteredIds
-                } else {
-                    tagFilteredIds = tagFilteredIds.intersect(tempTagFilteredIds)
-                }
-
-                //If tagFilteredIds empty now, return no results
-                if(tagFilteredIds.isEmpty()) {
-                    return [success: true, personWidgetDefinitionList: [], count: 0]
                 }
             }
         }
@@ -583,9 +381,6 @@ class PersonWidgetDefinitionService {
 					}
 				}
 			}
-            if(!tagFilteredIds.isEmpty()) {
-                inList('id',tagFilteredIds)
-            }
             if(params.intent) {
                 widgetDefinition {
                     if(JSON.parse(params.intent).action) {
@@ -711,16 +506,6 @@ class PersonWidgetDefinitionService {
         }
         else
         {
-            //add tags
-            if (!params.tags.equals(null)) {
-                personWidgetDefinition.setTags(params.tags)
-            }
-            else {
-                //use default tags defined in the widgetdef
-                personWidgetDefinition.setTags(personWidgetDefinition.widgetDefinition.getTags()?.collect {
-                    ['name':it.tag.name,'visible':it.visible,'position':it.position]
-                });
-            }
             return [success: true, personWidgetDefinition: personWidgetDefinition]
         }
     }
@@ -830,11 +615,6 @@ class PersonWidgetDefinitionService {
             }
             else
             {
-                //add tags
-                if (!params.tags.equals(null)) {
-                    personWidgetDefinition.setTags(params.tags);
-                }
-
                 return [success: true, personWidgetDefinition: personWidgetDefinition]
             }
         }
@@ -870,9 +650,6 @@ class PersonWidgetDefinitionService {
             }
 
             newParams.personWidgetDefinition = personWidgetDefinition
-
-            //set tags
-            newParams.tags = it.tags
 
             def result = update(newParams)
             position ++
@@ -967,15 +744,11 @@ class PersonWidgetDefinitionService {
 
         toCreate.each{
             newParams.personId = it.id
-            //            newParams.tags = !it.tagLinks.isEmpty() ? it.tagLinks : null
-            newParams.tags = it.tagLinks
             create(newParams)
         }
 
         toUpdate.each{
             newParams.personId = it.id
-            //            newParams.tags = !it.tagLinks.isEmpty() ? it.tagLinks : null
-            newParams.tags = it.tagLinks
             update(newParams)
         }
 

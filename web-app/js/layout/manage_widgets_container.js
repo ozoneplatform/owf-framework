@@ -56,13 +56,13 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
 
     initComponent: function() {
         var scope = this;
-          
+
           // Set up a model to use in our Store
         var widgetJsonModel = Ext.define('widgetJsonModel', {
             extend: 'Ext.data.Model',
-            fields: ['widgetGuid', {name:'name', sortType:Ext.data.SortTypes.asUCString}, 'visible', 'removed', 'headerIcon','tags', 'editable', '_tags','_editable']
+            fields: ['widgetGuid', {name:'name', sortType:Ext.data.SortTypes.asUCString}, 'visible', 'removed', 'headerIcon', 'editable', '_editable']
         });
-          
+
           // Create data store
         this.store = Ext.create('Ext.data.JsonStore', {
             model:'widgetJsonModel',
@@ -79,27 +79,6 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                         for (var i = 0 ; i < store.getCount() ; i++) {
                             var rec = store.getAt(i);
                             var recData = rec.data;
-                            if (Ext.isArray(recData.tags) && recData.tags.length > 0) {
-                                var _tags = '';
-                                var editable = true;
-                                for (var j = 0 ; j < recData.tags.length ; j++) {
-                                    _tags +=recData.tags[j].name;
-                                    if (j < recData.tags.length -1) {
-                                        _tags+=', ';
-                                    }
-                                    if (recData.tags[j].editable === false) {
-                                        editable = false;
-                                    }
-                                }
-                                rec.set('_tags',_tags);
-                                rec.set('_editable',editable);
-                                rec.commit();
-                            }
-                            else {
-                                rec.set('_tags','');
-                                rec.set('_editable',true);
-                                rec.commit();
-                            }
                         }
                         store.resumeEvents();
                     },
@@ -115,33 +94,21 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
             blankText: Ozone.layout.DialogMessages.view_dashboardNameField_blankText,
             validator: function(value) {
                 if (this.value) {
-                    if (this.value.toUpperCase() != value.toUpperCase()) {                  
+                    if (this.value.toUpperCase() != value.toUpperCase()) {
                         for (var i = 0; i < store.data.items.length; i++) {
                             if(value.charAt(0) === ' ' || value.charAt(value.length-1) === ' ') {
                                 return Ozone.util.ErrorMessageString.invalidDashboardNameMsg;
                             }
                         }
-                    } 
+                    }
                     else {
                         if(this.value.charAt(0) === ' ' || this.value.charAt(this.value.length-1) === ' ') {
                             return Ozone.util.ErrorMessageString.invalidDashboardNameMsg;
-                        }                    
+                        }
                     }
                     return true;
                 }
                 return true;
-            }
-        });
-            
-        this.tagsField = Ext.create('Ext.form.field.Text', {
-            allowBlank: true,
-            validator: function(val) {
-                if (val.match(Ozone.config.carousel.restrictedTagGroupsRegex) != null) {
-                return '"'+val+'"'+Ozone.util.ErrorMessageString.restrictedTagError;
-                }
-                else {
-                return true;
-                }
             }
         });
 
@@ -159,7 +126,7 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                                 case Ext.EventObject.S:
                                     record.set('visible', !record.get('visible'));
                                     view.refreshNode(index);
-                                    
+
                                     //Fire the column's appropriate checked/unchecked method
                                     var col = this.down('#showCheckColumn');
                                     record.get('visible') ? col.onChecked(view, record) : col.onUnchecked(view, record);
@@ -168,7 +135,7 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                                 case Ext.EventObject.D:
                                     record.set('removed', !record.get('removed'));
                                     view.refreshNode(index);
-                                    
+
                                     //Fire the column's appropriate checked/unchecked method
                                     var col = this.down('#deleteCheckColumn');
                                     record.get('removed') ? col.onChecked(view, record) : col.onUnchecked(view, record);
@@ -186,7 +153,7 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                     },
                     afterrender: function (cmp) {
                         cmp.getEl().on('keyup', function(evt) {
-                            //prevent ESC key from escaping to the 
+                            //prevent ESC key from escaping to the
                             //body.  Since ESC keydown is stopped
                             //internally to the grid, we need to to
                             //stop the keyup as well
@@ -199,8 +166,8 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
             columns: [
                 {
                     xtype: 'gridcolumn',
-                    text: '<span class="gridHdr">Icon</span>', 
-                    dataIndex: 'headerIcon', 
+                    text: '<span class="gridHdr">Icon</span>',
+                    dataIndex: 'headerIcon',
                     width: 36,
                     sortable: false,
                     resizable: false,
@@ -210,7 +177,7 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                             metaData.attr = 'ext:qtip="This widget belongs to a Group and may not be edited or deleted"';
                             metaData.tdCls += ' x-item-disabled';
                         }
-                
+
                         var retVal = '<div><img width=\"24px\" height=\"24px\" src="'+val+'">';
                         retVal += '</div>';
 
@@ -219,7 +186,7 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                 },
                 {
                     xtype: 'textcolumn',
-                    text: '<span class="gridHdr">Widget</span>', 
+                    text: '<span class="gridHdr">Widget</span>',
                     dataIndex: 'name',
                     field: this.nameField,
                     width: 176,
@@ -236,37 +203,6 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                         return Ext.util.Format.htmlEncode(value);
                     }
                 },
-                /*{
-                    xtype:'textcolumn',
-                    menuDisabled: true,
-                    text: '<span class="gridHdr">Tags</span>',
-                    field : this.tagsField,
-                    dataIndex: '_tags',
-                    width: 170,
-                    sortable: false,
-                    resizable: false,
-                    renderer: function(value, metaData, record, rowIndex, colIndex, store) {
-                        metaData.tdCls = 'hd-tags';
-                        if (record.get('_editable') == false) {
-                            metaData.tdCls += ' x-item-disabled';
-                        }
-                        if (record.get('editable') == false) {
-                            metaData.tdAttr = 'data-qtip="This widget belongs to a Group and may not be edited or deleted"';
-                            metaData.tdCls += ' x-item-disabled';
-                        }
-                        if(record.get('editable') != false && record.get('_editable')!= false)
-                        {
-                            metaData.tdCls += ' manage-editable';
-                            var encValue = Ext.util.Format.htmlEncode(value);
-                            //work-around to html-encode html tags - can't just directly htmlEncode stuff
-                            //so we inject an XTemplate to handle it
-                            metaData.tdAttr = 'data-qtip="'+new Ext.XTemplate('{foo:htmlEncode}').apply({
-                                foo:encValue
-                            })+'"';
-                        }
-                        return Ext.util.Format.htmlEncode(value);  
-                    }
-                },*/
                 {
                     xtype:'checkcolumn',
                     itemId: 'showCheckColumn',
@@ -322,12 +258,6 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                         return true;
                     };
                     return isCellEditable(e.record);
-                },
-                //Handle After Edit has taken place
-                edit: function(editor, e) {
-                    if(editor.editors.items[e.column.id]) {
-                        e.record.set('_tags',editor.editors.items[e.column.id].field.value.toLowerCase());
-                    }
                 }
             }
         });
@@ -343,7 +273,7 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                 if(typeof column.onGridHeaderCtClick == 'function') {
                     column.onGridHeaderCtClick(this.widgetGrid, evt, htmlElem);
                 }
-            }, 
+            },
             this
         );
 
@@ -359,7 +289,7 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
             },
             scope: this
         });
-          
+
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -400,7 +330,7 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                 }
             ]
         }];
-          
+
         //Need this to get rid of destory errors with ExtJS
         this.on('beforedestroy', function(cmp) {
             cmp.dockedItems = null;
@@ -415,7 +345,7 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                         cmp.loadGridData();
                     });
 
-                    winCmp.setupFocus(cmp.widgetGrid.getView().getEl(), 
+                    winCmp.setupFocus(cmp.widgetGrid.getView().getEl(),
                     cmp.down('#cancelBtn').getFocusEl());
 
                 },
@@ -442,28 +372,10 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
             if (gridData[i].data.editable) {
                 if (!gridData[i].data.removed) {
                     var recData = gridData[i].data;
-                    var tags = [];
-                    if (recData._tags.length > 0 && recData._tags != '') {
-                        var splits = recData._tags.split(',');
-                        for (var j = 0 ; j < splits.length ; j++) {
-                            var name = Ext.String.trim(splits[j]);
-                            if (name != '') {
-                                tags.push({
-                                    name: name,
-                                    visible: true,
-
-                                    //todo use position to order groups for now just set to -1
-                                    position: -1,
-                                    editable: recData._editable
-                                });
-                            }
-                        }
-                    }
 
                     var widget = {
                         guid: gridData[i].data.widgetGuid,
-                        visible: gridData[i].data.visible,
-                        tags: tags
+                        visible: gridData[i].data.visible
                     };
                     var originalName = gridData[i].data.originalName;
                     if (gridData[i].data.name !== originalName) {
@@ -488,23 +400,23 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
             //Call method to refresh the 'widget launch menu' widgets.
             scope.dashboardContainer.retrieveUpdatedWidgets();
         }
-        
+
         function onFailure() {
             Ozone.Msg.alert(Ozone.util.ErrorMessageString.saveUpdatedWidgets, Ozone.util.ErrorMessageString.saveUpdatedWidgetsMsg,
                 null, null, null, scope.dashboardContainer.modalWindowManager);
         }
-        
+
         Ext.getCmp(this.winId).close();
         Ozone.pref.PrefServer.updateAndDeleteWidgets({
             widgetsToUpdate:widgetsToUpdate,
-            widgetGuidsToDelete:[], 
+            widgetGuidsToDelete:[],
             updateOrder:false,
-            onSuccess:onSuccess, 
+            onSuccess:onSuccess,
             onFailure:onFailure
         });
-      
+
         if (widgetGuidsToDelete.length > 0) {
-          
+
             Ext.create('Ext.window.Window', {
                 title: 'Deleting Widgets',
                 cls: 'delete-widgets-window',
@@ -527,7 +439,7 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                         //Ensure its on top
                         cmp.dashboardContainer.modalWindowManager.register(cmp);
                         cmp.dashboardContainer.modalWindowManager.bringToFront(cmp);
-                        
+
                         /*
                          * Needs to be deferred or it will happen before the
                          * window close in IE
@@ -538,7 +450,7 @@ Ext.define('Ozone.layout.ManageWidgetsContainer', {
                     }
                 }
             }).show();
-            
+
         }
     }
 });

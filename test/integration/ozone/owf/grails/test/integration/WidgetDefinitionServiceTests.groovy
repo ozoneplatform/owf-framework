@@ -237,9 +237,6 @@ class WidgetDefinitionServiceTests {
                 widgetTypes: [standardWidgetType]
         )
 
-        def tag = "tag"
-        widget.addTag(tag)
-
         def intentDataType1 = IntentDataType.build(dataType: "Address")
         def intentDataType2 = IntentDataType.build(dataType: "City")
         def intentDataType3 = IntentDataType.build(dataType: "LongLat")
@@ -260,7 +257,6 @@ class WidgetDefinitionServiceTests {
         assert widgetDescriptor.contains('"imageUrlSmall": "' + widget.imageUrlSmall + '"')
         assert widgetDescriptor.contains('"description": "' + widget.description + '"')
         assert widgetDescriptor.contains('"widgetVersion": "' + widget.widgetVersion + '"')
-        assert widgetDescriptor.contains('"defaultTags": ["' + tag + '"]')
         assert widgetDescriptor.contains('"widgetTypes": ["' + standardWidgetType.name + '"]')
         assert widgetDescriptor.contains('"height": ' + widget.height)
         assert widgetDescriptor.contains('"width": ' + widget.width)
@@ -290,9 +286,6 @@ class WidgetDefinitionServiceTests {
                 widgetTypes: [standardWidgetType]
         )
 
-        def tags = ["tag1", "tag2"]
-        tags.each { widget.addTag(it) }
-
         def intentDataType1 = IntentDataType.build(dataType: "Address")
         def intentDataType2 = IntentDataType.build(dataType: "City")
         def intentDataType3 = IntentDataType.build(dataType: "LongLat")
@@ -305,10 +298,6 @@ class WidgetDefinitionServiceTests {
                 [intentDataType1, intentDataType3], false, true)
 
         def widgetDescriptor = JSON.parse(widgetDefinitionService.getWidgetDescriptorJson(widget))
-
-        //Set up string array of the tags so it can be compared for equality
-        def resultTags = []
-        widgetDescriptor.defaultTags.each { resultTags.push(it) }
 
         //Set up string arrays of the intent data types so they can be compared for equality
         def widgetDefinitionIntent1DataTypes = [], widgetDefinitionIntent2DataTypes = []
@@ -330,7 +319,6 @@ class WidgetDefinitionServiceTests {
         assert widget.visible == widgetDescriptor.visible
         assert widget.background == widgetDescriptor.background
         assert widget.singleton == widgetDescriptor.singleton
-        assert tags.toArray() == resultTags.toArray()
         assert '["' + widget.widgetTypes.toArray()[0].name + '"]' == widgetDescriptor.widgetTypes.toString()
         assert widgetDefinitionIntent1.intent.action == widgetDescriptor.intents.send[0].action
         assert widgetDefinitionIntent1DataTypes.toArray() == resultSendDataTypes.toArray()

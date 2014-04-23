@@ -1,7 +1,7 @@
 Ext.define('Ozone.components.window.StoreWizard', {
     extend: 'Ozone.components.window.ModalWindow',
     alias: 'widget.storewizard',
-    
+
     modal: true,
     preventHeader: true,
     modalAutoClose: true,
@@ -41,9 +41,9 @@ Ext.define('Ozone.components.window.StoreWizard', {
         this.loadMask = Ext.create('Ozone.components.mask.LoadMask', Ext.getBody(), {
             zIndexManager: Ext.WindowManager
         });
-    	
+
     	this.widgetStore = Ext.StoreManager.lookup('widgetStore');
-    	
+
         this.adminStore = Ext.create('Ozone.data.stores.AdminWidgetStore', {
             pageSize: -1,
             callback: this.saveCallback
@@ -256,7 +256,6 @@ Ext.define('Ozone.components.window.StoreWizard', {
             }];
 
             me.record.beginEdit();
-            me.record.set('tags', []);
             me.record.set('widgetTypes', types);
             me.record.endEdit();
 
@@ -278,9 +277,9 @@ Ext.define('Ozone.components.window.StoreWizard', {
                         if (success) {
                             if(me.widgetStore)
                             	me.widgetStore.load();
-                            
+
                             me.close();
-                        } 
+                        }
                     }
                 });
             });
@@ -298,7 +297,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
         $('.closeButton').on('click', function() {
             me.close()
         });
-        
+
         $('.cancel').on('click', function() {
             me.close()
         });

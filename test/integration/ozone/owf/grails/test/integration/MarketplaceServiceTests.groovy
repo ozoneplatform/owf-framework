@@ -102,7 +102,6 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
               height: 200,
               width: 200,
               isExtAjaxFormat: true,
-              tags: ([] as JSON).toString(),
               directRequired: (['79ae9905-ce38-4de6-ad89-fe598d497703'] as JSON).toString()
       ]
       def widget2 = [
@@ -119,7 +118,6 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
               height: 200,
               width: 200,
               isExtAjaxFormat: true,
-              tags: ([] as JSON).toString(),
               directRequired: (['6aca40aa-1b9e-4044-8bbe-d628e6d4518f'] as JSON).toString()
       ]
       def widget3 = [
@@ -136,7 +134,6 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
               height: 200,
               width: 200,
               isExtAjaxFormat: true,
-              tags: ([] as JSON).toString(),
       ]
 
       def params = [
@@ -169,17 +166,6 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
       assert data[2].displayName == "Widget3"
       assert data.size() == 3
 
-      result = personWidgetDefinitionService.listForAdminByTags(
-              new GrailsParameterMap([tags: 'pending approval', sort: 'name', order: 'ASC'], null))
-      data = result.data
-
-      //check for success
-      assert result.success
-
-      //check that only widget1
-      //println("data:${data}")
-      assert data.size() == 0
-
       //check that the widgets are in the launch menu for the current user
       result = personWidgetDefinitionService.list(new GrailsParameterMap([:],null))
       data = result.personWidgetDefinitionList
@@ -194,6 +180,4 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
       assert data.size() == 3
 
     }
-
-
 }

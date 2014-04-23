@@ -288,19 +288,6 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         return widgetJson;
     },
 
-    createApprovalTag: function() {
-        var dt = new Date();
-        var dateString = Ext.Date.format(dt, 'Y-m-d');
-        var approvalTag = {
-            name:Ozone.config.carousel.approvedTagGroupName + ' on ' + dateString,
-            visible:true,
-            position:-1,
-            editable:true
-        };
-
-        return approvalTag;
-    },
-
     // OZP-476: MP Synchronization
     // Added the URL of the Marketplace we're looking at to the JSON we send to
     // the widget controller.

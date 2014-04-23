@@ -1,8 +1,6 @@
 package ozone.owf.grails.domain
 
-import org.grails.taggable.*
-
-class PersonWidgetDefinition implements Serializable, Comparable, Taggable {
+class PersonWidgetDefinition implements Serializable, Comparable {
 
     static final long serialVersionUID = 700L
 
@@ -17,7 +15,7 @@ class PersonWidgetDefinition implements Serializable, Comparable, Taggable {
 	Boolean disabled = false
 
 	static belongsTo = [person: Person, widgetDefinition: WidgetDefinition]
-	
+
     static constraints = {
         displayName(nullable:true, maxSize: 256)
 		visible(nullable:false)
@@ -28,19 +26,19 @@ class PersonWidgetDefinition implements Serializable, Comparable, Taggable {
 		pwdPosition(nullable:false, display:false)
 		widgetDefinition(unique:'person')
     }
-	
+
 	static mapping = {
         cache true
 		widgetDefinition lazy:true
 		person lazy:true
 	}
-	
-	
+
+
 	String toString() {
 		"${this.id}: ${this.widgetDefinition} - ${this.person} - visible=${this.visible}"
-		
+
 	}
-	
+
 	int compareTo(that) {
         this.pwdPosition <=> that.pwdPosition
     }

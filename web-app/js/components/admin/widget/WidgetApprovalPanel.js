@@ -254,7 +254,6 @@ Ext.define('Ozone.components.admin.widget.WidgetApprovalPanel', {
                           x: data[i].value.x,
                           y: data[i].value.y,
                           visible: data[i].value.visible,
-                          tags: data[i].value.tags,
                           userId: data[i].value.userId,
                           userRealName: data[i].value.userRealName,
                           totalUsers: data[i].value.totalUsers,

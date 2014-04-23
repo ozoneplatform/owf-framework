@@ -1,8 +1,6 @@
 package ozone.owf.grails.domain
 
-import org.grails.taggable.Taggable
-
-class DomainMapping implements Taggable {
+class DomainMapping {
 
   static String TYPE = 'domain_mapping'
   static final long serialVersionUID = 700L

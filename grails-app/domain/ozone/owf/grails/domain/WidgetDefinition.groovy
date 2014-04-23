@@ -1,8 +1,6 @@
 package ozone.owf.grails.domain
 
-import org.grails.taggable.Taggable
-
-class WidgetDefinition implements Taggable, Serializable {
+class WidgetDefinition implements Serializable {
 
     //	def domainMappingService
 
@@ -29,13 +27,13 @@ class WidgetDefinition implements Taggable, Serializable {
 
     static constraints = {
         universalName(nullable: true, blank: true, maxSize: 255)
-        widgetGuid(nullable:false, 
+        widgetGuid(nullable:false,
             matches: /^[A-Fa-f\d]{8}-[A-Fa-f\d]{4}-[A-Fa-f\d]{4}-[A-Fa-f\d]{4}-[A-Fa-f\d]{12}$/,
             unique:true) // TODO: potentially refactor the matches to use java.util.uuid
         displayName(maxSize: 256)
         description(nullable: true, blank: true)
         widgetVersion(nullable: true, blank: true, maxSize: 2083)
-        widgetUrl(maxSize: 2083) // see http://support.microsoft.com/kb/208427 
+        widgetUrl(maxSize: 2083) // see http://support.microsoft.com/kb/208427
         // and http://www.boutell.com/newfaq/misc/urllength.html
         imageUrlLarge(maxSize:2083)
         imageUrlSmall(maxSize:2083)
@@ -56,7 +54,7 @@ class WidgetDefinition implements Taggable, Serializable {
     String toString() {
         "${displayName}: " + "(${this.id} - " + "${this.widgetGuid})"
     }
-	
+
 //  List getAllRequired() {
 //      return getAllRequiredHelper(this).collect{it.widgetGuid}
 //  }

@@ -380,10 +380,6 @@ class AccountService {
 
                                     user.addToPersonWidgetDefinitions(personWidgetDefinition)
                                     widget.addToPersonWidgetDefinitions(personWidgetDefinition)
-                                    personWidgetDefinition.setTags(personWidgetDefinition.widgetDefinition.getTags()?.collect { pwd ->
-                                        ['name':pwd.tag.name,'visible':pwd.visible,'position':pwd.position]
-                                    });
-
                                 }
                                 // If the user already had this PWD, then set the direct user
                                 // assocation flag.

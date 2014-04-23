@@ -34,7 +34,7 @@ class SecurityFilters {
                         response.sendError(401)
                         return false
                     } else {
-    
+
                         log.debug("Username is " + username);
 
                         if (log.isInfoEnabled()) {
@@ -78,14 +78,14 @@ class SecurityFilters {
                             session["savedLastLogin"] = true
                         }
                         session.personID = personInDB.id
-						
+
                         def sezzion = session
                         // Last login value should exist if user has logged in before
-                        if(personInDB.lastLogin == null) 
+                        if(personInDB.lastLogin == null)
                         {
                             log.debug("Setting default lastlogin");
                             personInDB.lastLogin = new Date()
-                        } 
+                        }
 
                         //update last logged in if we haven't already done so and update name in case it changed (marriage, divorce etc)
                         // The real name is the display name provided by the custom security module.
@@ -232,9 +232,9 @@ class SecurityFilters {
                     response.sendError(401);
                     return false;
                 }
-            }			
+            }
         }
-		
+
 //        securityDashboardAdmin(controller:'dashboardAdmin', action:'*'){
 //            before = {
 //                if (! accountService.getLoggedInUserIsAdmin() ) {
@@ -391,7 +391,6 @@ class SecurityFilters {
                     )
                     userAdmin.addToWidgetTypes(adminWidgetType)
                     userAdmin = saveInstance(userAdmin)
-                    userAdmin.addTag('admin')
                 }
 
                 def userEdit = WidgetDefinition.findByWidgetUrl('admin/UserEdit.gsp',[cache:true]);
@@ -410,7 +409,6 @@ class SecurityFilters {
                     )
                     userEdit.addToWidgetTypes(adminWidgetType)
                     userEdit = saveInstance(userEdit)
-                    userEdit.addTag('admin')
                 }
 
                 def widgetAdmin = WidgetDefinition.findByWidgetUrl('admin/WidgetManagement.gsp',[cache:true]);
@@ -428,7 +426,6 @@ class SecurityFilters {
                     )
                     widgetAdmin.addToWidgetTypes(adminWidgetType)
                     widgetAdmin = saveInstance(widgetAdmin)
-                    widgetAdmin.addTag('admin')
                 }
 
                 def widgetEdit = WidgetDefinition.findByWidgetUrl('admin/WidgetEdit.gsp',[cache:true]);
@@ -447,7 +444,6 @@ class SecurityFilters {
                     )
                     widgetEdit.addToWidgetTypes(adminWidgetType)
                     widgetEdit = saveInstance(widgetEdit)
-                    widgetEdit.addTag('admin')
                 }
 
                 def groupAdmin = WidgetDefinition.findByWidgetUrl('admin/GroupManagement.gsp',[cache:true]);
@@ -465,7 +461,6 @@ class SecurityFilters {
                     )
                     groupAdmin.addToWidgetTypes(adminWidgetType)
                     groupAdmin = saveInstance(groupAdmin)
-                    groupAdmin.addTag('admin')
                 }
 
                 def groupEdit = WidgetDefinition.findByWidgetUrl('admin/GroupEdit.gsp',[cache:true]);
@@ -484,7 +479,6 @@ class SecurityFilters {
                     )
                     groupEdit.addToWidgetTypes(adminWidgetType)
                     groupEdit = saveInstance(groupEdit)
-                    groupEdit.addTag('admin')
                 }
 
                 def dashboardEdit = WidgetDefinition.findByWidgetUrl('admin/DashboardEdit.gsp',[cache:true]);
@@ -503,7 +497,6 @@ class SecurityFilters {
                     )
                     dashboardEdit.addToWidgetTypes(adminWidgetType)
                     dashboardEdit = saveInstance(dashboardEdit)
-                    dashboardEdit.addTag('admin')
                 }
 
                 def stackAdmin = WidgetDefinition.findByWidgetUrl('admin/StackManagement.gsp',[cache:true]);
@@ -521,7 +514,6 @@ class SecurityFilters {
                     )
                     stackAdmin.addToWidgetTypes(adminWidgetType)
                     stackAdmin = saveInstance(stackAdmin)
-                    stackAdmin.addTag('admin')
                 }
 
                 def stackEdit = WidgetDefinition.findByWidgetUrl('admin/StackEdit.gsp',[cache:true]);
@@ -540,7 +532,6 @@ class SecurityFilters {
                     )
                     stackEdit.addToWidgetTypes(adminWidgetType)
                     stackEdit = saveInstance(stackEdit)
-                    stackEdit.addTag('admin')
                 }
 
                 def configurationWidget = WidgetDefinition.findByWidgetUrl('admin/Configuration.gsp',[cache:true]);
@@ -558,7 +549,6 @@ class SecurityFilters {
                     )
                     configurationWidget.addToWidgetTypes(adminWidgetType)
                     configurationWidget = saveInstance(configurationWidget)
-                    configurationWidget.addTag('admin')
                 }
 
                 // Update preferences

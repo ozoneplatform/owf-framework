@@ -119,18 +119,6 @@ class MarketplaceService extends BaseService {
             widgetDefinition.widgetTypes = [WidgetType.standard]
         }
 
-        // Delete any existing tags.  Not a good bulk method for doing this, though
-        // could possibly use the setTags() method.
-        widgetDefinition.getTags().each { tagLinkRecord ->
-            widgetDefinition.removeTag(tagLinkRecord.tag.name)
-        }
-
-        // It will be a JSONObject if we've fetched from a Marketplace. If we're
-        // supporting the older OMP baseline, obj will be a WidgetDefinition object.
-        obj.defaultTags?.each { tagName ->
-            widgetDefinition.addTag(tagName, true, -1, true)
-        }
-
         // This is the MP-Sync intents that are part of the listing's custom field definitions
         // TODO: Remove this when everyone has switched to the new Intents code (seen below in the else block)
         // Marketplace may not be configured to provide intents. In such
@@ -338,19 +326,6 @@ class MarketplaceService extends BaseService {
                             message: 'A fatal error occurred while trying to save the person widget definition. Params: ' + params.toString() +
                                     "\n    on definition: " + obj.toString() + "\n    when trying to save mapping " + mapping.toString(),
                             exceptionType: OwfExceptionTypes.Database)
-                }
-                // OZP-476: MP Synchronization
-                // The following block of code is functionally contained within the
-                // MarketplaceService.addListingsToDatabase call.  However, to support
-                // Marketplaces based on an older baseline, we bracket with the
-                // usedMpPath.
-                if (!usedMpPath) {
-                    if (obj.tags) {
-                        def tags = JSON.parse(obj.tags)
-                        tags.each {
-                            mapping.addTag(it.name, it.visible, it.position, it.editable)
-                        }
-                    }
                 }
             }
         }

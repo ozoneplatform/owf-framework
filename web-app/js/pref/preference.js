@@ -768,46 +768,46 @@ Ozone.pref = Ozone.pref || {};
            *   description: 'This is my dashboard',
            *   guid: guid.util.guid(),
            *   layoutConfig: {
-           *       xtype: "desktoppane", 
-           *       flex: 1, 
-           *       height: "100%", 
+           *       xtype: "desktoppane",
+           *       flex: 1,
+           *       height: "100%",
            *       items: [
-           *       ], 
-           *       paneType: "desktoppane", 
+           *       ],
+           *       paneType: "desktoppane",
            *       widgets: [{
-           *               widgetGuid: "ec5435cf-4021-4f2a-ba69-dde451d12551", 
-           *               uniqueId: guid.util.guid(), 
-           *               dashboardGuid: "6d7219cb-b485-ace5-946b-0affa1f227a3", 
-           *               paneGuid: guid.util.guid(), 
-           *               name: "Channel Listener", 
-           *               active: false, 
-           *               x: 50, 
-           *               y: 66, 
-           *               minimized: false, 
-           *               maximized: false, 
-           *               pinned: false, 
-           *               collapsed: false, 
-           *               columnPos: 0, 
-           *               buttonId: null, 
-           *               buttonOpened: false, 
-           *               region: "none", 
-           *               statePosition: 1, 
-           *               intentConfig: null, 
-           *               singleton: false, 
-           *               floatingWidget: false, 
-           *               background: false, 
-           *               zIndex: 19050, 
-           *               height: 440, 
+           *               widgetGuid: "ec5435cf-4021-4f2a-ba69-dde451d12551",
+           *               uniqueId: guid.util.guid(),
+           *               dashboardGuid: "6d7219cb-b485-ace5-946b-0affa1f227a3",
+           *               paneGuid: guid.util.guid(),
+           *               name: "Channel Listener",
+           *               active: false,
+           *               x: 50,
+           *               y: 66,
+           *               minimized: false,
+           *               maximized: false,
+           *               pinned: false,
+           *               collapsed: false,
+           *               columnPos: 0,
+           *               buttonId: null,
+           *               buttonOpened: false,
+           *               region: "none",
+           *               statePosition: 1,
+           *               intentConfig: null,
+           *               singleton: false,
+           *               floatingWidget: false,
+           *               background: false,
+           *               zIndex: 19050,
+           *               height: 440,
            *               width: 540
            *           }
-           *       ], 
+           *       ],
            *       defaultSettings: {
            *           widgetStates: {
            *               "ec5435cf-4021-4f2a-ba69-dde451d12551": {
-           *                   x: 50, 
-           *                   y: 66, 
-           *                   height: 440, 
-           *                   width: 540, 
+           *                   x: 50,
+           *                   y: 66,
+           *                   height: 440,
+           *                   width: 540,
            *                   timestamp: 1349809747336
            *                }
            *           }
@@ -1206,7 +1206,7 @@ Ozone.pref = Ozone.pref || {};
           },
 
           /**
-           * @deprecated Deprecated starting with OWF 7. Dashboards no longer have a specific type. This function is stubbed 
+           * @deprecated Deprecated starting with OWF 7. Dashboards no longer have a specific type. This function is stubbed
            * to return success with 0 results until removal.
            * @description Returns all dashboards for the logged in user filtered by the type of dashboard.
            * @param {Object} cfg config object see below for properties
@@ -1217,7 +1217,7 @@ Ozone.pref = Ozone.pref || {};
            *     {Boolean} success: true if dashboards found<br>
            *     {Number} results: number of dashboards found<br>
            *     {Array} data: an empty array<br>
-           *     
+           *
            * <br>
            * @param {Function} [cfg.onFailure] Callback to execute if there is an error (optional, a default alert provided). Callback parameter is an error string.
            * @example
@@ -1243,7 +1243,7 @@ Ozone.pref = Ozone.pref || {};
            */
           findDashboardsByType : function (cfg){
               if (typeof cfg.onSuccess === 'function') {
-                  var retVal = { 
+                  var retVal = {
                           data: [],
                           results: 0,
                           success: true
@@ -1282,7 +1282,6 @@ Ozone.pref = Ozone.pref || {};
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} minimized: true if widget is minimized<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} maximized: true if widget is maximized<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} widgetVersion: widget version<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Array} tags: array of tag strings<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} definitionVisible: true if definition is visible<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} singleton: true if widget is a singleton<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} background: true if widget runs in the background<br>
@@ -1355,7 +1354,6 @@ Ozone.pref = Ozone.pref || {};
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} minimized: true if widget is minimized<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} maximized: true if widget is maximized<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{String} widgetVersion: widget version<br>
-           *     &nbsp;&nbsp;&nbsp;&nbsp;{Array} tags: array of tag strings<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} definitionVisible: true if definition is visible<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} singleton: true if widget is a singleton<br>
            *     &nbsp;&nbsp;&nbsp;&nbsp;{Boolean} background: true if widget runs in the background<br>

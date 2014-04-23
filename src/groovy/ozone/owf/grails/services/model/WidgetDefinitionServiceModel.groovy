@@ -15,7 +15,6 @@ class WidgetDefinitionServiceModel extends AbstractServiceModel {
     Integer totalUsers = 0
     Integer totalGroups = 0
     String widgetVersion
-    List tagLinks = []
     Boolean singleton
     Boolean visible
     Boolean background
@@ -47,7 +46,6 @@ class WidgetDefinitionServiceModel extends AbstractServiceModel {
                 widgetVersion: widgetVersion,
                 totalUsers: totalUsers,
                 totalGroups: totalGroups,
-                tags: tagLinks*.toDataMap(),
                 singleton: singleton,
                 visible: visible,
                 background: background,

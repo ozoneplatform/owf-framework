@@ -608,30 +608,6 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
                 JSON.parse(controller.response.contentAsString).rows[1].value.namespace] as Set)
     }
 
-    void testWidgetListByTags() {
-        loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
-
-        def pwd1 = createWidgetDefinitionForTest('Widget C','widgetC.gif','widgetCsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12551','widget-c.html', 1)
-        def pwd2 = createWidgetDefinitionForTest('Widget D','widgetD.gif','widgetDsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12552','widget-d.html', 2)
-        def pwd3 = createWidgetDefinitionForTest('Widget E','widgetE.gif','widgetEsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12553','widget-e.html', 3)
-
-        pwd1.setTags([[name:'tag1',visible:true,position:-1,editable:true],[name:'tag2',visible:true,position:-1,editable:true]])
-        pwd2.setTags([[name:'tag3',visible:true,position:-1,editable:true],[name:'tag1',visible:true,position:-1,editable:true]])
-        pwd3.setTags([[name:'tag1',visible:true,position:-1,editable:true],[name:'tag2',visible:true,position:-1,editable:true],
-            [name:'tag3',visible:true,position:-1,editable:true]])
-
-        controller = new PersonWidgetDefinitionController()
-        controller.personWidgetDefinitionService = personWidgetDefinitionService
-        controller.request.contentType = "text/json"
-
-        controller.params.tags = "['tag1','tag3']"
-        controller.widgetList()
-
-        assert 2 == JSON.parse(controller.response.contentAsString).rows.size()
-        assert (['Widget D', 'Widget E'] as Set == [JSON.parse(controller.response.contentAsString).rows[0].value.namespace,
-                JSON.parse(controller.response.contentAsString).rows[1].value.namespace] as Set)
-    }
-
 	void testListByWidgetNameButNotFound() {
         loginAsUsernameAndRole('testAdmin1', 'role')
         createWidgetDefinitionForTest()
