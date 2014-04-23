@@ -3824,7 +3824,7 @@ databaseChangeLog = {
     """)
   }
 
-  changeSet(author: "owf", id: "4.0.0-51", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 4.0.0") {
+  changeSet(author: "owf", id: "4.0.0-51", dbms:"h2,hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 4.0.0") {
     comment(text="Add widget types to table")
     insert(tableName: "widget_type") {
       column(name: "id", valueNumeric:"1")

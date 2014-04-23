@@ -80,9 +80,9 @@ databaseChangeLog = {
 				constraints(nullable: "false")
 			}
 
-			column(name: "layout_config", type: "varchar(255)")
+			column(name: "layout_config", type: "clob")
 
-			column(name: "locked", type: "boolean") {
+			column(name: "locked", type: "boolean", defaultValueBoolean: "false") {
 				constraints(nullable: "false")
 			}
 
@@ -200,7 +200,7 @@ databaseChangeLog = {
 				constraints(nullable: "false")
 			}
 
-			column(name: "stack_default", type: "boolean") {
+			column(name: "stack_default", type: "boolean", defaultValueBoolean: "false") {
 				constraints(nullable: "false")
 			}
 
@@ -406,7 +406,7 @@ databaseChangeLog = {
 				constraints(nullable: "false")
 			}
 
-			column(name: "unique_widget_count", type: "integer") {
+			column(name: "unique_widget_count", type: "bigint", defaultValue: 0) {
 				constraints(nullable: "false")
 			}
 		}
@@ -592,9 +592,7 @@ databaseChangeLog = {
 				constraints(nullable: "false")
 			}
 
-			column(name: "display_name", type: "varchar(255)") {
-				constraints(nullable: "false")
-			}
+			column(name: "display_name", type: "varchar(255)")
 
 			column(name: "name", type: "varchar(255)") {
 				constraints(nullable: "false")
