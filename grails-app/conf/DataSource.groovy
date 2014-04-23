@@ -2,7 +2,7 @@
 
 dataSource {
 	pooled = true
-	driverClassName = "org.hsqldb.jdbcDriver"
+	driverClassName = "org.h2.Driver"
 	username = "sa"
 	password = ""
 }
@@ -18,10 +18,10 @@ environments {
 	development {
 		dataSource {
             pooled = true
-            url = "jdbc:hsqldb:file:prodDb;shutdown=true"
+            url = "jdbc:h2:prodDb"
             //TO-DO Address the issue with bootstrap vs. prodDb.script...
             dbCreate = "none" // one of 'create', 'create-drop','update
-            properties {
+            /*properties {
                 minEvictableIdleTimeMillis = 180000
                 timeBetweenEvictionRunsMillis = 180000
                 numTestsPerEvictionRun = 3
@@ -29,7 +29,7 @@ environments {
                 testWhileIdle = true
                 testOnReturn = true
                 validationQuery = "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS"
-            }
+            }*/
         }
         /*
         dataSource {

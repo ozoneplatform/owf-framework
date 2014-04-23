@@ -1,53 +1,53 @@
 databaseChangeLog = {
 
-    changeSet(author: "owf", id: "7.0.0-1", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-1", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Expand a widget definition's description field to 4000 to match Marketplace")
 
         modifyDataType(tableName: "widget_definition", columnName: "description", newDataType: "varchar(4000)")
     }
- 
-    changeSet(author: "owf", id: "7.0.0-2", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-2", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Remove DashboardWidgetState since it is no longer used.")
         dropTable(tableName: "dashboard_widget_state")
     }
-  
+
     // NOTE: In SQL Server, the dropColumn command will fail if that column had a default
     // value set for it.  In this case, the default value must be dropped first.
     // Normally, this would be done using a liquibase dropDefaultValue statement.  However,
-    // there is a bug in liquibase (https://liquibase.jira.com/browse/CORE-1141) 
+    // there is a bug in liquibase (https://liquibase.jira.com/browse/CORE-1141)
     // that generates invalid SQL in certain versions of
     // SQL Server.  Here, we're using an explicit alter table command.
     changeSet(author: "owf", id: "7.0.0-3", dbms: "mssql", context: "create, upgrade, 7.0.0") {
         comment("Remove show_launch_menu since it is no longer used.")
         sql("ALTER TABLE [dbo].[dashboard] DROP CONSTRAINT DF_dashboard_show_launch_menu")
     }
-    
-    changeSet(author: "owf", id: "7.0.0-4", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-4", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Remove show_launch_menu since it is no longer used.")
         dropColumn(tableName: "dashboard", columnName: "show_launch_menu")
     }
-    
-    changeSet(author: "owf", id: "7.0.0-5", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-5", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Remove layout since it is no longer used.")
         dropColumn(tableName: "dashboard", columnName: "layout")
     }
-    
-    changeSet(author: "owf", id: "7.0.0-6", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-6", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Remove intent_config since it is no longer used.")
         dropColumn(tableName: "dashboard", columnName: "intent_config")
     }
-    
-    changeSet(author: "owf", id: "7.0.0-7", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-7", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Remove default_settings since it is no longer used.")
         dropColumn(tableName: "dashboard", columnName: "default_settings")
     }
-    
-    changeSet(author: "owf", id: "7.0.0-8", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-8", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Remove column_count since it is no longer used.")
         dropColumn(tableName: "dashboard", columnName: "column_count")
     }
-    
-    changeSet(author: "owf", id: "7.0.0-9", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-9", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Create stack table")
 
         createTable(tableName: "stack") {
@@ -74,7 +74,7 @@ databaseChangeLog = {
             }
         }
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-10", context: "create, upgrade, 7.0.0", dbms: "hsqldb, mysql, postgresql, oracle") {
         comment("Create stack_groups table")
 
@@ -87,37 +87,37 @@ databaseChangeLog = {
             }
         }
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-11", context: "create, upgrade, 7.0.0", dbms: "mssql") {
       sql ( text = """
         create table stack_groups (group_id numeric(19,0) not null, stack_id bigint not null);
       """)
     }
-    
-    changeSet(author: "owf", id: "7.0.0-12", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-12", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Add primary key constraint for group_id and stack_id in stack_groups table")
         addPrimaryKey(constraintName: "pk_stack_groups", tableName: "stack_groups", columnNames: "group_id,stack_id")
     }
-    
-    changeSet(author: "owf", id: "7.0.0-13", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-13", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Add foreign key constraints for group_id and stack_id in stack_groups table")
-        
-        addForeignKeyConstraint(constraintName: "FK9584AB6B6B3A1281", 
-            baseTableName: "stack_groups", baseColumnNames: "stack_id", 
+
+        addForeignKeyConstraint(constraintName: "FK9584AB6B6B3A1281",
+            baseTableName: "stack_groups", baseColumnNames: "stack_id",
             referencedTableName: "stack", referencedColumnNames: "id")
-        
-        addForeignKeyConstraint(constraintName: "FK9584AB6B3B197B21", 
-            baseTableName: "stack_groups", baseColumnNames: "group_id", 
+
+        addForeignKeyConstraint(constraintName: "FK9584AB6B3B197B21",
+            baseTableName: "stack_groups", baseColumnNames: "group_id",
             referencedTableName: "owf_group", referencedColumnNames: "id")
     }
-    
-    changeSet(author: "owf", id: "7.0.0-14", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-14", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Add stack_default field to group")
         addColumn(tableName: "owf_group") {
             column(name: "stack_default", type: "boolean", defaultValueBoolean: "false", valueBoolean: "false")
         }
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-15", context: "create, upgrade, 7.0.0", dbms: "hsqldb, mysql, mssql") {
         comment(text="Insert OWF stack")
         insert(tableName: "stack") {
@@ -128,21 +128,21 @@ databaseChangeLog = {
             column(name: "image_url", value: "themes/common/images/owf.png")
         }
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-16", context: "create, upgrade, 7.0.0", dbms: "oracle") {
         comment(text="Insert OWF stack")
         sql (text = """
             insert into stack (id, version, name, description, stack_context, image_url) values (hibernate_sequence.nextval, 0, 'OWF', 'OWF Stack', 'owf', 'themes/common/images/owf.png');
         """)
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-17", context: "create, upgrade, 7.0.0", dbms: "postgresql") {
         comment(text="Insert OWF stack")
         sql (text = """
             insert into stack (id, version, name, description, stack_context, image_url) values (nextval('hibernate_sequence'), 0, 'OWF', 'OWF Stack', 'owf', 'themes/common/images/owf.png');
         """)
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-18", context: "create, upgrade, 7.0.0", dbms: "hsqldb, mysql, mssql") {
         comment(text="Insert OWF stack default group")
         insert(tableName: "owf_group") {
@@ -153,77 +153,77 @@ databaseChangeLog = {
             column(name: "stack_default", valueBoolean: "true")
         }
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-19", context: "create, upgrade, 7.0.0", dbms: "oracle") {
         comment(text="Insert OWF stack default group")
         sql (text = """
             insert into owf_group (id, version, automatic, name, status, stack_default) values (hibernate_sequence.nextval, 0, 0, 'ce86a612-c355-486e-9c9e-5252553cc58e', 'active', 1);
         """)
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-20", context: "create, upgrade, 7.0.0", dbms: "postgresql") {
         comment(text="Insert OWF stack default group")
         sql (text = """
             insert into owf_group (id, version, automatic, name, status, stack_default) values (nextval('hibernate_sequence'), 0, false, 'ce86a612-c355-486e-9c9e-5252553cc58e', 'active', true);
         """)
     }
-    
-    changeSet(author: "owf", id: "7.0.0-21", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-21", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         sql (text = """
             insert into stack_groups (stack_id, group_id) values ((select id from stack where name = 'OWF'), (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58e'));
         """)
     }
-    
-    changeSet(author: "owf", id: "7.0.0-22", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-22", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Add a reference to a host stack to dashboard records to track where user instances should appear")
         addColumn(tableName: "dashboard") {
             column(name: "stack_id", type: "bigint")
         }
     }
-    
-    changeSet(author: "owf", id: "7.0.0-23", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-23", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Add foreign key constraint for stack_id in the dashboard table")
         addForeignKeyConstraint(constraintName: "FKC18AEA946B3A1281",
-            baseColumnNames: "stack_id", baseTableName: "dashboard", 
+            baseColumnNames: "stack_id", baseTableName: "dashboard",
             referencedColumnNames: "id", referencedTableName: "stack")
     }
-    
-    changeSet(author: "owf", id: "7.0.0-24", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-24", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Add a property to track the count of unique widgets present on the dashboards of a stack")
         addColumn(tableName: "stack") {
             column(name: "unique_widget_count", type: "bigint", defaultValue: 0)
         }
     }
-    
-    changeSet(author: "owf", id: "7.0.0-25", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-25", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         sql (text = """
             delete from stack_groups where stack_id = (select id from stack where name = 'OWF') and group_id = (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58e');
         """)
     }
-    
-    changeSet(author: "owf", id: "7.0.0-26", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-26", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Delete OWF Stack Group")
 
         delete(tableName: "owf_group") {
             where(text="name like 'ce86a612-c355-486e-9c9e-5252553cc58e'")
         }
     }
-    
-    changeSet(author: "owf", id: "7.0.0-27", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-27", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Delete OWF Stack")
 
         delete(tableName: "stack") {
             where(text="name like 'OWF'")
         }
     }
-    
-    changeSet(author: "owf", id: "7.0.0-28", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-28", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Add user_widget field to person_widget_definition table")
         addColumn(tableName: "person_widget_definition") {
             column(name: "user_widget", type: "boolean", defaultValueBoolean: "false", valueBoolean: "false")
         }
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-29", dbms: "mysql,mssql,oracle", context: "upgrade, 7.0.0, sampleData, 7.0.0-sampleData") {
         comment("Update existing PWD records to set whether they were added to a user directly or just via a group")
         update(tableName: "person_widget_definition") {
@@ -231,8 +231,8 @@ databaseChangeLog = {
             where("group_widget=0")
         }
     }
-    
-    changeSet(author: "owf", id: "7.0.0-29", dbms: "postgresql,hsqldb", context: "upgrade, 7.0.0, sampleData, 7.0.0-sampleData") {
+
+    changeSet(author: "owf", id: "7.0.0-29", dbms: "h2,postgresql,hsqldb", context: "upgrade, 7.0.0, sampleData, 7.0.0-sampleData") {
         comment("Update existing PWD records to set whether they were added to a user directly or just via a group")
         update(tableName: "person_widget_definition") {
             column(name: "user_widget", valueBoolean: true)
@@ -254,7 +254,7 @@ databaseChangeLog = {
         delete(tableName: "widget_definition_widget_types") {
             where(text="widget_definition_id = (select id from widget_definition where widget_url='admin/MarketplaceApprovals.gsp')")
         }
-        
+
         delete(tableName: "widget_def_intent_data_types") {
             where(text="widget_definition_intent_id in (select id from widget_def_intent where widget_definition_id = (select id from widget_definition where widget_url='admin/MarketplaceApprovals.gsp'))")
         }
@@ -528,7 +528,7 @@ databaseChangeLog = {
 
     changeSet(author: "owf", id: "7.0.0-48", context: "sampleData, 7.0.0-sampleData") {
         comment(text="Add Contacts Dashboards")
-        
+
         insert(tableName: "dashboard") {
             column(name: "id", valueNumeric: "323")
             column(name: "version", valueNumeric: "0")
@@ -579,13 +579,13 @@ databaseChangeLog = {
         """)
     }
 
-    changeSet(author: "owf", id: "7.0.0-53", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-53", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Expand a dashboard's description field to 4000 to match Marketplace")
 
         modifyDataType(tableName: "dashboard", columnName: "description", newDataType: "varchar(4000)")
     }
 
-    changeSet(author: "owf", id: "7.0.0-54", context: "sampleData, 7.0.0-sampleData", dbms:"hsqldb, mysql, mssql") {
+    changeSet(author: "owf", id: "7.0.0-54", context: "sampleData, 7.0.0-sampleData", dbms:"h2,hsqldb, mysql, mssql") {
         comment(text="Create Investments stack and its default group.")
 
         insert(tableName: "stack") {
@@ -607,7 +607,7 @@ databaseChangeLog = {
             insert into stack_groups (stack_id, group_id) values ((select id from stack where stack_context = 'investments'), (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'));
         """)
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-54", context: "sampleData, 7.0.0-sampleData", dbms: "oracle") {
         comment(text="Create Investments stack and its default group.")
         sql (text = """
@@ -622,7 +622,7 @@ databaseChangeLog = {
             insert into stack_groups (stack_id, group_id) values ((select id from stack where stack_context = 'investments'), (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'));
         """)
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-54", context: "sampleData, 7.0.0-sampleData", dbms: "postgresql") {
         comment(text="Create Investments stack and its default group.")
         sql (text = """
@@ -637,7 +637,7 @@ databaseChangeLog = {
             insert into stack_groups (stack_id, group_id) values ((select id from stack where stack_context = 'investments'), (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f'));
         """)
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-55", context: "sampleData, 7.0.0-sampleData") {
         comment(text="Add Investments stack to the OWF Users group.")
         sql (text = """
@@ -651,7 +651,7 @@ databaseChangeLog = {
             SET IDENTITY_INSERT [dbo].[domain_mapping] ON
         """)
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-57", context: "sampleData, 7.0.0-sampleData") {
         comment(text="Rename the Widget Intents dashboard to Watch List and add it to the Investments stack.")
 
@@ -678,7 +678,7 @@ databaseChangeLog = {
             SET IDENTITY_INSERT [dbo].[domain_mapping] OFF
         """)
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-59", context: "sampleData, 7.0.0-sampleData") {
         comment(text="Add the Contacts dashboard to the Investments stack.")
 
@@ -701,7 +701,7 @@ databaseChangeLog = {
         """)
     }
 
-    changeSet(author: "owf", id: "7.0.0-61", context: "sampleData, 7.0.0-sampleData", dbms:"hsqldb, mysql, mssql") {
+    changeSet(author: "owf", id: "7.0.0-61", context: "sampleData, 7.0.0-sampleData", dbms:"h2, hsqldb, mysql, mssql") {
         comment(text="Add Widget Intents and Contacts dashboards' widgets to Investments stack.")
 
         // Add the widgets in Watch List dashboard to the Investments stack
@@ -724,7 +724,7 @@ databaseChangeLog = {
             where("stack_context = 'investments'")
         }
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-61", context: "sampleData, 7.0.0-sampleData", dbms: "oracle") {
         comment(text="Add Widget Intents and Contacts dashboards' widgets to Investments stack.")
 
@@ -752,7 +752,7 @@ databaseChangeLog = {
             where("stack_context = 'investments'")
         }
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-61", context: "sampleData, 7.0.0-sampleData", dbms: "postgresql") {
         comment(text="Add Widget Intents and Contacts dashboards' widgets to Investments stack.")
 
@@ -873,90 +873,90 @@ databaseChangeLog = {
             where("widget_url = 'examples/walkthrough/widgets/NearlyEmptyWidget.html'")
         }
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-65", dbms:"mssql", context: "sampleData, 7.0.0-sampleData") {
         comment(text="allow identity inserts")
       sql ( text = """
           SET IDENTITY_INSERT [dbo].[widget_definition] ON
       """)
     }
-    
+
     // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
     // As of 7.4 this is done in creation scripts.
     // changeSet(author: "owf", id: "7.0.0-66", context: "sampleData, 7.0.0-sampleData") {
     //     comment(text="Add Stacks Admin widgets to sample data.")
     //     insert(tableName: "widget_definition") {
     //         column(name: "id", valueNumeric: "184")
-    
+
     //         column(name: "version", valueNumeric: "0")
-    
+
     //         column(name: "visible", valueBoolean: "false")
-    
+
     //         column(name: "image_url_large", value: "themes/common/images/adm-tools/Stacks64.png")
-    
+
     //         column(name: "image_url_small", value: "themes/common/images/adm-tools/Stacks24.png")
-    
+
     //         column(name: "singleton", valueBoolean: "false")
-    
+
     //         column(name: "width", valueNumeric: "581")
-    
+
     //         column(name: "widget_version", value: "1.0")
-    
+
     //         column(name: "height", valueNumeric: "440")
-    
+
     //         column(name: "widget_url", value: "admin/StackEdit.gsp")
-    
+
     //         column(name: "widget_guid", value: "9b5ebb40-8540-466c-8ccd-66092ec55636")
-    
+
     //         column(name: "display_name", value: "Stack Editor")
-    
+
     //         column(name: "background", valueBoolean: "false")
     //     }
-    
+
     //     insert(tableName: "widget_definition") {
     //         column(name: "id", valueNumeric: "185")
-    
+
     //         column(name: "version", valueNumeric: "0")
-    
+
     //         column(name: "visible", valueBoolean: "true")
-    
+
     //         column(name: "image_url_large", value: "themes/common/images/adm-tools/Stacks64.png")
-    
+
     //         column(name: "image_url_small", value: "themes/common/images/adm-tools/Stacks24.png")
-    
+
     //         column(name: "singleton", valueBoolean: "false")
-    
+
     //         column(name: "width", valueNumeric: "818")
-    
+
     //         column(name: "widget_version", value: "1.0")
-    
+
     //         column(name: "height", valueNumeric: "440")
-    
+
     //         column(name: "widget_url", value: "admin/StackManagement.gsp")
-    
+
     //         column(name: "widget_guid", value: "fe97f656-862e-4c54-928d-3cdd776daf5b")
-    
+
     //         column(name: "display_name", value: "Stacks")
-    
+
     //         column(name: "background", valueBoolean: "false")
     //     }
-        
+
     // }
-    
+
     changeSet(author: "owf", id: "7.0.0-67", dbms:"mssql", context: "sampleData, 7.0.0-sampleData") {
         comment(text="allow identity inserts")
         sql ( text = """
             SET IDENTITY_INSERT [dbo].[widget_definition] OFF
         """)
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-68", dbms:"mssql", context: "sampleData, 7.0.0-sampleData") {
         comment(text="allow identity inserts")
       sql ( text = """
           SET IDENTITY_INSERT [dbo].[domain_mapping] ON
       """)
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-69", context: "7.0.0-sampleData", dbms: "oracle") {
         comment(text="Add Widget Intents and Contacts dashboards' widgets to Investments stack.")
 
@@ -970,7 +970,7 @@ databaseChangeLog = {
             insert into domain_mapping VALUES (hibernate_sequence.nextval, 0, (select id from owf_group where id = 191), 'group', 'owns', 185, 'widget_definition');
         """)
     }
-       
+
     changeSet(author: "owf", id: "7.0.0-69", context: "7.0.0-sampleData", dbms: "postgresql") {
         comment(text="Add Widget Intents and Contacts dashboards' widgets to Investments stack.")
 
@@ -984,10 +984,10 @@ databaseChangeLog = {
             insert into domain_mapping VALUES (nextval('hibernate_sequence'), 0, (select id from owf_group where id = 191), 'group', 'owns', 185, 'widget_definition');
         """)
     }
-    
+
     // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
     // As of 7.4, the owf admin group and admin widgets are created/assigned in the database create scripts.
-    // changeSet(author: "owf", id: "7.0.0-69", context: "sampleData, 7.0.0-sampleData", dbms:"hsqldb, mysql, mssql") {
+    // changeSet(author: "owf", id: "7.0.0-69", context: "sampleData, 7.0.0-sampleData", dbms:"h2, hsqldb, mysql, mssql") {
     //     comment(text="Add the group ownership mappings for the stacks admin widgets.")
     //     insert(tableName: "domain_mapping") {
     //         column(name: "id", valueNumeric: "349")
@@ -1008,14 +1008,14 @@ databaseChangeLog = {
     //         column(name: "dest_type", value: "widget_definition")
     //     }
     // }
-    
+
     changeSet(author: "owf", id: "7.0.0-70", dbms:"mssql", context: "sampleData, 7.0.0-sampleData") {
         comment(text="allow identity inserts")
         sql ( text = """
             SET IDENTITY_INSERT [dbo].[domain_mapping] OFF
         """)
     }
-    
+
     // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
     // As of 7.4 this is done in creation scripts.
     // changeSet(author: "owf", id: "7.0.0-71", context: "sampleData, 7.0.0-sampleData") {
@@ -1029,23 +1029,23 @@ databaseChangeLog = {
     //         )
     //     """ )
     // }
-    
+
     // changeSet(author: "owf", id: "7.0.0-72", dbms: "mysql,mssql,postgresql,hsqldb", context: "sampleData, 7.0.0-sampleData") {
     //     comment(text="Update Administration Dashboards")
-        
+
     //     update(tableName: "dashboard") {
     //         column(name: "layout_config", value: """{"xtype":"container","cls":"hbox ","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"accordionpane","cls":"left","flex":1,"htmlText":"50%","items":[],"widgets":[{"universalName":null,"widgetGuid":"9d804b74-b2a6-448a-bd04-fe286905ab8f","uniqueId":"327a1df4-a879-f361-db47-03635a0f5730","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Group Dashboards","active":false,"x":0,"y":34,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":4,"singleton":false,"floatingWidget":false,"height":329,"width":675,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"412ec70d-a178-41ae-a8d9-6713a430c87c","uniqueId":"ca5b5bb3-14de-3a77-e689-1a752adca824","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Widgets","active":false,"x":0,"y":363,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":5,"singleton":false,"floatingWidget":false,"height":328,"width":675,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"fe97f656-862e-4c54-928d-3cdd776daf5b","uniqueId":"58f2f00b-a785-c61c-497f-7a99a59e350d","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Stacks","active":true,"x":0,"y":691,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":3,"singleton":false,"floatingWidget":false,"height":328,"width":675,"background":false,"columnOrder":""}],"paneType":"accordionpane","defaultSettings":{"widgetStates":{"9d804b74-b2a6-448a-bd04-fe286905ab8f":{"timestamp":1354917003344},"412ec70d-a178-41ae-a8d9-6713a430c87c":{"timestamp":1354917003349},"fe97f656-862e-4c54-928d-3cdd776daf5b":{"timestamp":1354917003354},"9b5ebb40-8540-466c-8ccd-66092ec55636":{"timestamp":1354916964296},"6cf4f84a-cc89-45ba-9577-15c34f66ee9c":{"timestamp":1354916988848},"a540f672-a34c-4989-962c-dcbd559c3792":{"timestamp":1354916998451}}}},{"xtype":"dashboardsplitter"},{"xtype":"container","cls":"vbox right","layout":{"type":"vbox","align":"stretch"},"items":[{"xtype":"tabbedpane","cls":"top","flex":1,"htmlText":"50%","items":[],"widgets":[{"universalName":null,"widgetGuid":"b87c4a3e-aa1e-499e-ba10-510f35388bb6","uniqueId":"49404ec0-c77c-f6b8-b3f9-d5c77fe465a1","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"da405d45-8f04-c2d6-f45c-5ba780aa97fc","intentConfig":null,"name":"Groups","active":false,"x":679,"y":62,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":3,"singleton":false,"floatingWidget":false,"height":462,"width":676,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"b3b1d04f-97c2-4726-9575-82bb1cf1af6a","uniqueId":"7437065e-fb6c-3253-866c-d05bf45d180a","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"da405d45-8f04-c2d6-f45c-5ba780aa97fc","intentConfig":null,"name":"Users","active":false,"x":679,"y":62,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":2,"singleton":false,"floatingWidget":false,"height":462,"width":676,"background":false,"columnOrder":""}],"paneType":"tabbedpane","defaultSettings":{"widgetStates":{"b87c4a3e-aa1e-499e-ba10-510f35388bb6":{"timestamp":1354916950506},"b3b1d04f-97c2-4726-9575-82bb1cf1af6a":{"timestamp":1354916950489}}}},{"xtype":"dashboardsplitter"},{"xtype":"tabbedpane","cls":"bottom","flex":1,"htmlText":"50%","items":[],"paneType":"tabbedpane","widgets":[{"universalName":null,"widgetGuid":"9b5ebb40-8540-466c-8ccd-66092ec55636","uniqueId":"de8e1489-1cfc-7a26-e807-6167d91f1539","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"1e5dc42c-89c2-6fd4-b887-efaafdceb260","intentConfig":null,"name":"Stack Editor","active":true,"x":679,"y":556,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":1,"singleton":false,"floatingWidget":false,"height":463,"width":676,"background":false,"columnOrder":""}],"defaultSettings":{"widgetStates":{"9b5ebb40-8540-466c-8ccd-66092ec55636":{"timestamp":1354917012829},"6cf4f84a-cc89-45ba-9577-15c34f66ee9c":{"timestamp":1354917003399},"a540f672-a34c-4989-962c-dcbd559c3792":{"timestamp":1354917012827}}}}],"flex":1}],"flex":3}""")
     //         where("id=322")
     //     }
     // }
-    
+
     // changeSet(author: "owf", id: "7.0.0-72", dbms: "oracle", context: "sampleData, 7.0.0-sampleData") {
     //     comment(text="Update Administration Dashboards")
     //     sql( text = """
     //         UPDATE dashboard SET layout_config = to_clob('{"xtype":"container","cls":"hbox ","layout":{"type":"hbox","align":"stretch"},"items":[{"xtype":"accordionpane","cls":"left","flex":1,"htmlText":"50%","items":[],"widgets":[{"universalName":null,"widgetGuid":"9d804b74-b2a6-448a-bd04-fe286905ab8f","uniqueId":"327a1df4-a879-f361-db47-03635a0f5730","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Group Dashboards","active":false,"x":0,"y":34,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":4,"singleton":false,"floatingWidget":false,"height":329,"width":675,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"412ec70d-a178-41ae-a8d9-6713a430c87c","uniqueId":"ca5b5bb3-14de-3a77-e689-1a752adca824","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Widgets","active":false,"x":0,"y":363,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":5,"singleton":false,"floatingWidget":false,"height":328,"width":675,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"fe97f656-862e-4c54-928d-3cdd776daf5b","uniqueId":"58f2f00b-a785-c61c-497f-7a99a59e350d","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"73cf2212-9c0a-5d75-987c-4820faf3cf30","intentConfig":null,"name":"Stacks","active":true,"x":0,"y":691,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":3,"singleton":false,"floatingWidget":false,"height":328,"width":675,"background":false,"columnOrder":""}],"paneType":"accordionpane","defaultSettings":{"widgetStates":{"9d804b74-b2a6-448a-bd04-fe286905ab8f":{"timestamp":1354917003344},"412ec70d-a178-41ae-a8d9-6713a430c87c":{"timestamp":1354917003349},"fe97f656-862e-4c54-928d-3cdd776daf5b":{"timestamp":1354917003354},"9b5ebb40-8540-466c-8ccd-66092ec55636":{"timestamp":1354916964296},"6cf4f84a-cc89-45ba-9577-15c34f66ee9c":{"timestamp":1354916988848},"a540f672-a34c-4989-962c-dcbd559c3792":{"timestamp":1354916998451}}}},{"xtype":"dashboardsplitter"},{"xtype":"container","cls":"vbox right","layout":{"type":"vbox","align":"stretch"},"items":[{"xtype":"tabbedpane","cls":"top","flex":1,"htmlText":"50%","items":[],"widgets":[{"universalName":null,"widgetGuid":"b87c4a3e-aa1e-499e-ba10-510f35388bb6","uniqueId":"49404ec0-c77c-f6b8-b3f9-d5c77fe465a1","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"da405d45-8f04-c2d6-f45c-5ba780aa97fc","intentConfig":null,"name":"Groups","active":false,"x":679,"y":62,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":3,') || to_clob('"singleton":false,"floatingWidget":false,"height":462,"width":676,"background":false,"columnOrder":""},{"universalName":null,"widgetGuid":"b3b1d04f-97c2-4726-9575-82bb1cf1af6a","uniqueId":"7437065e-fb6c-3253-866c-d05bf45d180a","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"da405d45-8f04-c2d6-f45c-5ba780aa97fc","intentConfig":null,"name":"Users","active":false,"x":679,"y":62,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":2,"singleton":false,"floatingWidget":false,"height":462,"width":676,"background":false,"columnOrder":""}],"paneType":"tabbedpane","defaultSettings":{"widgetStates":{"b87c4a3e-aa1e-499e-ba10-510f35388bb6":{"timestamp":1354916950506},"b3b1d04f-97c2-4726-9575-82bb1cf1af6a":{"timestamp":1354916950489}}}},{"xtype":"dashboardsplitter"},{"xtype":"tabbedpane","cls":"bottom","flex":1,"htmlText":"50%","items":[],"paneType":"tabbedpane","widgets":[{"universalName":null,"widgetGuid":"9b5ebb40-8540-466c-8ccd-66092ec55636","uniqueId":"de8e1489-1cfc-7a26-e807-6167d91f1539","dashboardGuid":"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f","paneGuid":"1e5dc42c-89c2-6fd4-b887-efaafdceb260","intentConfig":null,"name":"Stack Editor","active":true,"x":679,"y":556,"zIndex":0,"minimized":false,"maximized":false,"pinned":false,"collapsed":false,"columnPos":0,"buttonId":null,"buttonOpened":false,"region":"none","statePosition":1,"singleton":false,"floatingWidget":false,"height":463,"width":676,"background":false,"columnOrder":""}],"defaultSettings":{"widgetStates":{"9b5ebb40-8540-466c-8ccd-66092ec55636":{"timestamp":1354917012829},"6cf4f84a-cc89-45ba-9577-15c34f66ee9c":{"timestamp":1354917003399},"a540f672-a34c-4989-962c-dcbd559c3792":{"timestamp":1354917012827}}}}],"flex":1}],"flex":3}') WHERE id=322;
     //     """)
     // }
-    
+
     changeSet(author: "owf", id: "7.0.0-73", context: "sampleData, 7.0.0-sampleData") {
         comment(text="Clean out some old domain mapping entries for widgets that have been removed from our sample database.")
 
@@ -1059,15 +1059,15 @@ databaseChangeLog = {
             where("dest_id = 171 AND dest_type = 'widget_definition'")
         }
     }
-    
-    changeSet(author: "owf", id: "7.0.0-74", context: "sampleData, 7.0.0-sampleData", dbms: "mysql, postgresql, oracle, hsqldb") {
+
+    changeSet(author: "owf", id: "7.0.0-74", context: "sampleData, 7.0.0-sampleData", dbms: "h2, mysql, postgresql, oracle, hsqldb") {
         comment(text="Remove Contacts dashboard from OWF Users group and add it to the default stack.")
 
         sql (text = """
             update domain_mapping set src_id = (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58f') where dest_id = 323;
         """)
     }
-    
+
     changeSet(author: "owf", id: "7.0.0-74", context: "sampleData, 7.0.0-sampleData", dbms: "mssql") {
         comment(text="Remove Contacts dashboard from OWF Users group and add it to the default stack.")
 
