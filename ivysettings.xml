@@ -7,9 +7,7 @@
                 <artifact pattern="${m2-pattern}"/>
                 <ivy pattern="${m2-pattern}"/>
             </filesystem>
-            <url name="nexus" m2compatible="true">
-                <artifact pattern="https://www.owfgoss.org/nexus/content/groups/public/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"/>
-            </url>
+            <ibiblio name="nexus" m2compatible="true" root="https://www.owfgoss.org/nexus/content/groups/public"/>
         </chain>
     </resolvers>
 </ivysettings>
