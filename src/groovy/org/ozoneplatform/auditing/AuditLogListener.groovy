@@ -46,6 +46,11 @@ class AuditLogListener extends AbstractAuditLogListener {
     }
 
     @Override
+    protected String getDeviceVendor() {
+        owfApplicationConfigurationService.valueOf(DEVICE_VENDOR)
+    }
+
+    @Override
     protected HttpServletRequest getRequest(){
         return RequestContextHolder?.getRequestAttributes()?.getRequest()
     }
