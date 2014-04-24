@@ -62,6 +62,19 @@ class OwfAuditingFilters extends AbstractAuditingFilters {
         hostCls
     }
 
+    @Override
+    public String getDeviceVendor() {
+    	String dvName
+    	try {
+    		ApplicationConfiguration deviceVendor = owfApplicationConfigurationService.getApplicationConfiguration(DEVICE_VENDOR)
+    		dvName = deviceVendor?.value ?: Extension.UNKOWN_VALUE
+    	} catch(NoSuchBeanDefinitionException nbe) {
+    		dvName = Extension.UNKOWN_VALUE
+    	}
+
+    	dvName
+    } 
+
 	@Override
 	public HttpServletRequest getRequest(){
 		return RequestContextHolder?.getRequestAttributes()?.getRequest()

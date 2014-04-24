@@ -27,7 +27,7 @@ class AuditLogListener extends AbstractAuditLogListener {
     }
 	
 	protected boolean doCefObjectAccessLogging(){
-         owfApplicationConfigurationService.is(CEF_OBJECT_ACCESS_LOGGING_ENABLED)
+        owfApplicationConfigurationService.is(CEF_OBJECT_ACCESS_LOGGING_ENABLED)
 	}
 
     @Override
