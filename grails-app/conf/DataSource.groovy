@@ -17,19 +17,19 @@ hibernate {
 environments {
 	development {
 		dataSource {
-            pooled = true
+            pooled = false
             url = "jdbc:hsqldb:file:prodDb;shutdown=true"
             //TO-DO Address the issue with bootstrap vs. prodDb.script...
             dbCreate = "none" // one of 'create', 'create-drop','update
-            properties {
-                minEvictableIdleTimeMillis = 180000
-                timeBetweenEvictionRunsMillis = 180000
-                numTestsPerEvictionRun = 3
-                testOnBorrow = true
-                testWhileIdle = true
-                testOnReturn = true
-                validationQuery = "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS"
-            }
+            //properties {
+                //minEvictableIdleTimeMillis = 180000
+                //timeBetweenEvictionRunsMillis = 180000
+                //numTestsPerEvictionRun = 3
+                //testOnBorrow = true
+                //testWhileIdle = true
+                //testOnReturn = true
+                //validationQuery = "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS"
+            //}
         }
         /*
         dataSource {
