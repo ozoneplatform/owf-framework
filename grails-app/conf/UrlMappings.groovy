@@ -114,7 +114,9 @@ class UrlMappings {
             action = "index"
         }
         // Mapping for generic preference objects
-        "/prefs/preference/$namespace?/$path?" {
+        //NOTE: 'namespace' has special meaning as a url parameter in grails 2.  Therefore we
+        //changed it to prefsNamespace
+        "/prefs/preference/$prefNamespace?/$path?" {
             controller = "preference"
             action = {
                 GrailsWebRequest webRequest = (GrailsWebRequest) RequestContextHolder.getRequestAttributes();
@@ -133,10 +135,10 @@ class UrlMappings {
 
                 }
 
-                if (params.namespace || params.path) {
+                if (params.prefNamespace || params.path) {
                     // scan through methods to assign action
                     if (method == 'GET') {
-                        return (params.path)? "show" : "list"
+                        return (params.path ? "show" : "list")
                     } else if (method == 'POST') {
                         return "create"
                     } else if (method == 'PUT') {
@@ -144,14 +146,14 @@ class UrlMappings {
                     } else if (method == 'DELETE') {
                         return "delete"
                     } else {
-                        return (params.path)? "show" : "list"
+                        return (params.path ? "show" : "list")
                     }
                 }
                 return "list"
             }
         }
 
-        "/prefs/hasPreference/$namespace/$path" (controller:"preference", action:"doesPreferenceExist")
+        "/prefs/hasPreference/$prefNamespace/$path" (controller:"preference", action:"doesPreferenceExist")
 
         "/prefs/server/resources" (controller:"preference", action:"serverResources")
 

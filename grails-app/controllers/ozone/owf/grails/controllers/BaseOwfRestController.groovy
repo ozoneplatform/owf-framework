@@ -7,7 +7,7 @@ import grails.validation.ValidationException
 import java.lang.reflect.UndeclaredThrowableException
 
 class BaseOwfRestController {
-	
+
     def serviceModelService
 
     protected getJsonResult(result, targetProperty, params) {
@@ -20,15 +20,15 @@ class BaseOwfRestController {
         }
     }
 
-    protected def handleError(grails.validation.ValidationException ve)
+    def handleError(grails.validation.ValidationException ve)
     {
         return [msg: getFieldErrorsAsJSON(ve.errors), status: 500]
     }
-    protected def handleError(UndeclaredThrowableException e)
+    def handleError(UndeclaredThrowableException e)
     {
         return handleError(e.cause)
     }
-    protected def handleError(Exception e)
+    def handleError(Exception e)
     {
         log.error(e,e)
 		def message = [:]
@@ -36,7 +36,7 @@ class BaseOwfRestController {
 		message['errorMsg'] = e.message
         return [msg: message as JSON, status: 500]
     }
-    protected def handleError(OwfException owe) {
+    def handleError(OwfException owe) {
         if ('INFO' == owe.logLevel) {
             log.info(owe)
         }
@@ -46,9 +46,9 @@ class BaseOwfRestController {
         else {
             log.error(owe,owe)
         }
-        
+
         owe.setMessage(owe.message?.encodeAsHTML());
-        
+
         def message = [:]
 		message['success'] = false
 		message['errorMsg'] =  "${owe.exceptionType.generalMessage} ${owe.message}"
@@ -78,7 +78,7 @@ class BaseOwfRestController {
             render result
         }
     }
-	
+
     // test if the window name transport is being used
     protected isWindowname() {
         return (params['windowname'] == 'true')
@@ -87,7 +87,7 @@ class BaseOwfRestController {
     {
         if (!errs) return ''
         def sw = new StringWriter()
- 
+
         def jb = new JSONBuilder()
         jb.build {
             success(false)
@@ -100,6 +100,6 @@ class BaseOwfRestController {
                 }
             }
         }
-        jb.toString() 
+        jb.toString()
     }
 }
