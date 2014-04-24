@@ -342,6 +342,8 @@
             <fileset dir="${basedir}" includes="themes/**" />
             <fileset dir="${basedir}" includes="help/**" />
         </copy>
+        <!-- Copy hsql jar into tomcat lib -->
+        <ivy:retrieve pattern="${tomcat.dir}/lib/[artifact]-[revision].[ext]" conf="hsqldb" />
         <copy todir="${tomcat.dir}">
             <fileset dir="${basedir}">
                 <include name="prodDb.log" />

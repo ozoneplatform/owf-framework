@@ -9,6 +9,7 @@
         <conf name="bundle" />
         <!--conf name="jetty" /-->
         <conf name="tomcat" />
+        <conf name="hsqldb" />
         <conf name="release" />
     </configurations>
     <publications>
@@ -16,7 +17,7 @@
                   ext="zip" />
     </publications>
     <dependencies>
-        <dependency org="${tomcat.custom.org}" name="${tomcat.custom.module}" rev="${tomcat.custom.rev}" transitive="false" >
+        <dependency org="${tomcat.custom.org}" name="${tomcat.custom.module}" rev="${tomcat.custom.rev}" transitive="false" conf="tomcat->*">
             <artifact name="${tomcat.custom.module}" type="zip" />
         </dependency>
         <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}" rev="${owf.security.rev}" transitive="false" />
@@ -26,17 +27,21 @@
         <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}-extras" rev="${owf.security.rev}" transitive="false">
             <artifact name="${owf.security.module}-extras" type="zip" />
         </dependency>
-        <dependency org="ozone-widgeting-framework-legacy" name="OWFAntTasks" rev="1.0.0"  />
-        <dependency org="net.alchim31.3rd.com.yahoo.platform.yui" name="yuicompressor" rev="2.4.2"  />
+        <dependency org="ozone-widgeting-framework-legacy" name="OWFAntTasks" rev="1.0.0"
+            conf="build->*" />
+        <dependency org="net.alchim31.3rd.com.yahoo.platform.yui" name="yuicompressor"
+            conf="compressjs->*" rev="2.4.2"  />
 
-        <dependency org="org.jsdoctoolkit" name="jsdoc-dist" rev="2.3.2" >
+        <dependency org="org.jsdoctoolkit" name="jsdoc-dist" rev="2.3.2" conf="compressjs->*">
             <artifact type="zip" name="jsdoc-dist"/>
         </dependency>
 
-        <dependency org="org.jsdoctoolkit" name="jsdoctoolkit-ant-task" rev="1.0"  >
+        <dependency org="org.jsdoctoolkit" name="jsdoctoolkit-ant-task" rev="1.0"
+                conf="compressjs->*">
             <exclude module="ant-contrib"/>
             <exclude module="jsdoc" />
         </dependency>
 
+        <dependency org="hsqldb" name="hsqldb" rev="1.8.0.10" conf="hsqldb->*" />
     </dependencies>
 </ivy-module>
