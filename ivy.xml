@@ -28,16 +28,16 @@
             <artifact name="${owf.security.module}-extras" type="zip" />
         </dependency>
         <dependency org="ozone-widgeting-framework-legacy" name="OWFAntTasks" rev="1.0.0"
-            conf="build->*" />
+            conf="jsdoc->*;compressjs->*;build->*" />
         <dependency org="net.alchim31.3rd.com.yahoo.platform.yui" name="yuicompressor"
             conf="compressjs->*" rev="2.4.2"  />
 
-        <dependency org="org.jsdoctoolkit" name="jsdoc-dist" rev="2.3.2" conf="compressjs->*">
+        <dependency org="org.jsdoctoolkit" name="jsdoc-dist" rev="2.3.2" conf="jsdoc->*">
             <artifact type="zip" name="jsdoc-dist"/>
         </dependency>
 
         <dependency org="org.jsdoctoolkit" name="jsdoctoolkit-ant-task" rev="1.0"
-                conf="compressjs->*">
+            conf="jsdoc->*;build->*">
             <exclude module="ant-contrib"/>
             <exclude module="jsdoc" />
         </dependency>
