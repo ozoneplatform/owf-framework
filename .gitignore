@@ -30,7 +30,7 @@ js-min
 /bin
 /target-eclipse
 /prodDb.properties
-/prodDb.script
+/prodDb.log
 /prodDb.bak
 *.sass-cache
 *.css
