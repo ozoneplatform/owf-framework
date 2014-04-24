@@ -346,7 +346,7 @@
         <ivy:retrieve pattern="${tomcat.dir}/lib/[artifact]-[revision].[ext]" conf="hsqldb" />
         <copy todir="${tomcat.dir}">
             <fileset dir="${basedir}">
-                <include name="prodDb.log" />
+                <include name="prodDb.script" />
             </fileset>
         </copy>
     </target>
