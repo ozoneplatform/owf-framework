@@ -40,6 +40,7 @@
                 conf="compressjs->*">
             <exclude module="ant-contrib"/>
             <exclude module="jsdoc" />
+            <exclude module="ant" />
         </dependency>
 
         <dependency org="hsqldb" name="hsqldb" rev="1.8.0.10" conf="hsqldb->*" />
