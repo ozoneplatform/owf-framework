@@ -23,7 +23,7 @@ public class UrlMappingsTests {
 		sendHttpRequestMethod("get")
 		assertForwardUrlMapping('/prefs/preference/namespace1/path1', controller:'preference', action:'show')
 		{
-			namespace = 'namespace1'
+			prefNamespace = 'namespace1'
 			path = 'path1'
 		}
 	}
@@ -32,7 +32,7 @@ public class UrlMappingsTests {
 		sendHttpRequestMethod("get")
 		assertForwardUrlMapping('/prefs/preference/namespace1', controller:'preference', action:'list')
 		{
-			namespace = 'namespace1'
+			prefNamespace = 'namespace1'
 		}
 	}
 
@@ -45,7 +45,7 @@ public class UrlMappingsTests {
 		sendHttpRequestMethod("post")
 		assertForwardUrlMapping('/prefs/preference/namespace1/path1', controller:'preference', action:'create')
 		{
-			namespace = 'namespace1'
+			prefNamespace = 'namespace1'
 			path = 'path1'
 		}
 	}
@@ -54,7 +54,7 @@ public class UrlMappingsTests {
 		sendHttpRequestMethod("post")
 		assertForwardUrlMapping('/prefs/preference/namespace1', controller:'preference', action:'create')
 		{
-			namespace = 'namespace1'
+			prefNamespace = 'namespace1'
 		}
 	}
 
@@ -67,7 +67,7 @@ public class UrlMappingsTests {
 		sendHttpRequestMethod("put")
 		assertForwardUrlMapping('/prefs/preference/namespace1/path1', controller:'preference', action:'update')
 		{
-			namespace = 'namespace1'
+			prefNamespace = 'namespace1'
 			path = 'path1'
 		}
 	}
@@ -76,7 +76,7 @@ public class UrlMappingsTests {
 		sendHttpRequestMethod("put")
 		assertForwardUrlMapping('/prefs/preference/namespace1', controller:'preference', action:'update')
 		{
-			namespace = 'namespace1'
+			prefNamespace = 'namespace1'
 		}
 	}
 
@@ -89,7 +89,7 @@ public class UrlMappingsTests {
 		sendHttpRequestMethod("delete")
 		assertForwardUrlMapping('/prefs/preference/namespace1/path1', controller:'preference', action:'delete')
 		{
-			namespace = 'namespace1'
+			prefNamespace = 'namespace1'
 			path = 'path1'
 		}
 	}
@@ -98,7 +98,7 @@ public class UrlMappingsTests {
 		sendHttpRequestMethod("delete")
 		assertForwardUrlMapping('/prefs/preference/namespace1', controller:'preference', action:'delete')
 		{
-			namespace = 'namespace1'
+			prefNamespace = 'namespace1'
 		}
 	}
 
@@ -111,7 +111,7 @@ public class UrlMappingsTests {
 //		sendHttpRequestMethod("delete", "preferencesToDelete")
 //		assertForwardUrlMapping('/prefs/preference/namespace1/path1', controller:'preference', action:'bulkDelete')
 //		{
-//			namespace = 'namespace1'
+//			prefNamespace = 'namespace1'
 //			path = 'path1'
 //		}
 //	}
@@ -120,7 +120,7 @@ public class UrlMappingsTests {
 //		sendHttpRequestMethod("delete", "preferencesToDelete")
 //		assertForwardUrlMapping('/prefs/preference/namespace1', controller:'preference', action:'bulkDelete')
 //		{
-//			namespace = 'namespace1'
+//			prefNamespace = 'namespace1'
 //		}
 //	}
 
