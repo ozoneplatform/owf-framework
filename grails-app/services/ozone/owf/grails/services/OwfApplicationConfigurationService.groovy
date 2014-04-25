@@ -68,14 +68,6 @@ class OwfApplicationConfigurationService extends ApplicationConfigurationService
             }
         }
 
-        if(applicationConfiguration.code == DEVICE_VENDOR.code) {
-            def value = applicationConfiguration.value
-            if(!value){
-                applicationConfiguration.errors.rejectValue('value', "application.configuration.owf.security.device.vendor.invalid")
-                return
-            }
-        }
-
         super.validate(applicationConfiguration)
     }
 	

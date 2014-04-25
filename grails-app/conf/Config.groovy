@@ -1138,6 +1138,16 @@ quartz {
     }
 }
 
+cef {
+    device {
+        vendor = "OZONE"
+        product = "OWF"
+        version = "500-27_L2::1.3"
+    }
+
+    version = 0
+}
+
 // log4j configuration : see log4j.xml
 
 //ssl stuff
