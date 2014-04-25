@@ -27,7 +27,7 @@ class PreferenceControllerTests extends OWFGroovyTestCase {
 		controller.preferenceService = preferenceService
 		controller.request.contentType = "text/json"
 
-		controller.params.namespace = 'com.dev.foo'
+		controller.params.prefNamespace = 'com.dev.foo'
 		controller.params.path = 'test path'
 		controller.show()
 
@@ -45,7 +45,7 @@ class PreferenceControllerTests extends OWFGroovyTestCase {
 		controller.preferenceService = preferenceService
 		controller.request.contentType = "text/json"
 
-		controller.params.namespace = 'com.dev.foo1'
+		controller.params.prefNamespace = 'com.dev.foo1'
 		controller.params.path = 'test path1'
 		controller.show()
 
@@ -62,7 +62,7 @@ class PreferenceControllerTests extends OWFGroovyTestCase {
 		controller.preferenceService = preferenceService
 		controller.request.contentType = "text/json"
 
-		controller.params.namespace = 'com.dev.foo'
+		controller.params.prefNamespace = 'com.dev.foo'
 		controller.params.path = 'test path'
 		controller.doesPreferenceExist()
 
@@ -80,7 +80,7 @@ class PreferenceControllerTests extends OWFGroovyTestCase {
 		controller.preferenceService = preferenceService
 		controller.request.contentType = "text/json"
 
-		controller.params.namespace = 'com.dev.foo1'
+		controller.params.prefNamespace = 'com.dev.foo1'
 		controller.params.path = 'test path1'
 		controller.doesPreferenceExist()
 
@@ -136,7 +136,7 @@ class PreferenceControllerTests extends OWFGroovyTestCase {
 		controller.preferenceService = preferenceService
 		controller.request.contentType = "text/json"
 
-		controller.params.namespace = 'com.dev.foo'
+		controller.params.prefNamespace = 'com.dev.foo'
 		controller.params.path = 'test path'
 		controller.params.value = '123'
 		controller.params.userid = person.id
@@ -158,7 +158,7 @@ class PreferenceControllerTests extends OWFGroovyTestCase {
 		controller.preferenceService = preferenceService
 		controller.request.contentType = "text/json"
 
-		controller.params.namespace = 'com.dev.foo1'
+		controller.params.prefNamespace = 'com.dev.foo1'
 		controller.params.path = 'test path1'
 		controller.params.value = '1234'
 		controller.params.userid = person.id
@@ -181,7 +181,7 @@ class PreferenceControllerTests extends OWFGroovyTestCase {
 		controller.preferenceService = preferenceService
 		controller.request.contentType = "text/json"
 
-		controller.params.namespace = 'com.dev.foo1'
+		controller.params.prefNamespace = 'com.dev.foo1'
 		controller.params.path = 'test path1'
 		controller.params.value = '1234'
 		controller.params.userid = person2.id
@@ -204,7 +204,7 @@ class PreferenceControllerTests extends OWFGroovyTestCase {
 		controller.preferenceService = preferenceService
 		controller.request.contentType = "text/json"
 
-		controller.params.namespace = 'com.dev.foo'
+		controller.params.prefNamespace = 'com.dev.foo'
 		controller.params.path = 'test path'
 		controller.params.username = 'testAdmin3'
 
@@ -225,7 +225,7 @@ class PreferenceControllerTests extends OWFGroovyTestCase {
 		controller.preferenceService = preferenceService
 		controller.request.contentType = "text/json"
 
-		controller.params.namespace = 'com.dev.foo'
+		controller.params.prefNamespace = 'com.dev.foo'
 		controller.params.path = 'test path'
 		controller.params.userid = person.id
 
@@ -244,7 +244,7 @@ class PreferenceControllerTests extends OWFGroovyTestCase {
 		controller.preferenceService = preferenceService
 		controller.request.contentType = "text/json"
 
-		controller.params.namespace = 'com.dev.foo'
+		controller.params.prefNamespace = 'com.dev.foo'
 		controller.params.path = 'test path'
 		controller.params.userid = person.id
 
@@ -267,7 +267,7 @@ class PreferenceControllerTests extends OWFGroovyTestCase {
 		controller.preferenceService = preferenceService
 		controller.request.contentType = "text/json"
 
-		controller.params.namespace = 'com.dev.foo1'
+		controller.params.prefNamespace = 'com.dev.foo1'
 		controller.params.path = 'test path1'
 
 		controller.delete()

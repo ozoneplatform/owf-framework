@@ -52,6 +52,7 @@ class PreferenceController extends BaseOwfRestController{
 		def statusCode
 
 		try {
+            params.namespace = params.prefNamespace
 			def result = preferenceService.show(params)
 			if(result.preference) {
 				statusCode = 200
@@ -109,6 +110,7 @@ class PreferenceController extends BaseOwfRestController{
           log.info("Executing preferenceService: list");
         }
 		try {
+            params.namespace = params.prefNamespace
 			def result = preferenceService.list(params)
 			statusCode = 200
 			def preferenceList = new JSONArray()
@@ -146,6 +148,7 @@ class PreferenceController extends BaseOwfRestController{
           log.info("Executing preferenceService: create");
         }
 		try {
+            params.namespace = params.prefNamespace
 			def result = preferenceService.create(params)
 			statusCode = 200
 			jsonResult = getJsonResult(result, modelName, params)
@@ -174,6 +177,7 @@ class PreferenceController extends BaseOwfRestController{
           log.info("Executing preferenceService: update");
         }
 		try {
+            params.namespace = params.prefNamespace
 			def result = preferenceService.update(params)
 			statusCode = 200
 			jsonResult = getJsonResult(result, modelName, params)
@@ -202,6 +206,7 @@ class PreferenceController extends BaseOwfRestController{
           log.info("Executing preferenceService: delete");
         }
 		try {
+            params.namespace = params.prefNamespace
 			def result = preferenceService.delete(params)
 			statusCode = 200
 			jsonResult = getJsonResult(result, modelName, params)
