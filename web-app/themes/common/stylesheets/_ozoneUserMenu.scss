@@ -23,6 +23,12 @@
     }
   }
 
+  button {
+    .icon-chevron-sign-down {
+      padding-left: 5px;
+    }
+  }
+
   .btn {
     background-color: $owf-usermenu-btn-background-color;
     color: $owf-usermenu-btn-color;
@@ -75,12 +81,8 @@
   &.collapsed {
     .collapse-toggle {
       &:before {
-        @extend .icon-chevron-down:before;
+        @extend .icon-angle-down:before;
       }
-    }
-
-    .collapse-toggle-cutout {
-      top: -3px;
     }
 
     .user-menu-item {
@@ -103,15 +105,8 @@
     float: right;
 
     &:before {
-      @extend .icon-chevron-up:before;
+      @extend .icon-angle-up:before;
     }
-  }
-
-  .collapse-toggle-cutout {
-    @extend .collapse-toggle;
-    left: 14px;
-    top: 3px;
-    color: $owf-usermenu-background-color;
   }
 
   &:hover {
