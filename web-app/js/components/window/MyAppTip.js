@@ -454,39 +454,48 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 onSuccess: function(result) {
                     var id = result.data && result.data.id;
 
-
-                    //send only to this mp widget
-                    Ozone.eventing.Container.publish('ozone.marketplace.show', id,
-                        Ozone.eventing.Container.getIframeId(instance.data.uniqueId));
-
-                    //hide loading mask once the widget has refreshed
-                    Ozone.eventing.Container.subscribe('ozone.marketplace.pageLoaded',
-                            function() {
-                        me.dashboardContainer.loadMask.hide();
-                        Ozone.eventing.Container.unsubscribe('ozone.marketplace.pageLoaded');
-
-                        Ext.Ajax.request({
-                            url: Ozone.util.contextPath() + '/stack/' + stack.id,
-                            method: 'POST'
-                        });
-
-                        // mark dashboards as published to store
-                        _.forEach(stack.dashboards, function(dashboard) {
-                            var store = me.dashboardContainer.dashboardStore;
-                            var dashboardFromStore = store.getAt(store.find('guid', dashboard.guid));
-                            dashboardFromStore.set('publishedToStore', true);
-                        });
-
+                    function displayCompletion() {
                         // Display completion message
                         Ext.Msg.show({
                             title: 'Push to Store Complete',
-                            msg: result.data.msg,
+                            msg: typeof result.data === 'string' ? result.data : result.data.msg,
                             buttons: Ext.Msg.OK,
                             closable: false,
                             modal: true
                         });
 
-                    });
+                        me.dashboardContainer.loadMask.hide();
+                    }
+
+
+                    if (id != null) {
+                        //send only to this mp widget
+                        Ozone.eventing.Container.publish('ozone.marketplace.show', id,
+                            Ozone.eventing.Container.getIframeId(instance.data.uniqueId));
+
+                        //hide loading mask once the widget has refreshed
+                        Ozone.eventing.Container.subscribe('ozone.marketplace.pageLoaded',
+                                function() {
+                            Ozone.eventing.Container.unsubscribe('ozone.marketplace.pageLoaded');
+
+                            Ext.Ajax.request({
+                                url: Ozone.util.contextPath() + '/stack/' + stack.id,
+                                method: 'POST'
+                            });
+
+                            // mark dashboards as published to store
+                            _.forEach(stack.dashboards, function(dashboard) {
+                                var store = me.dashboardContainer.dashboardStore;
+                                var dashboardFromStore = store.getAt(store.find('guid', dashboard.guid));
+                                dashboardFromStore.set('publishedToStore', true);
+                            });
+
+                            displayCompletion();
+                        });
+                    }
+                    else {
+                        displayCompletion();
+                    }
                 },
 
                 onFailure: function (errorMsg){
