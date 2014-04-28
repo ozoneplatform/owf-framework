@@ -11,7 +11,9 @@
         className: 'user-menu dropdown',
 
         events: {
-            'click .btn': 'resetCollapse'
+            'click .btn': 'resetCollapse',
+            'mouseleave': 'beginHideTimer',
+            'mouseenter': 'cancelHideTimer'
         },
 
         menu: null,
@@ -39,6 +41,22 @@
 
         resetCollapse: function () {
             this.menu.resetCollapse();
+        },
+
+        cancelHideTimer: function() {
+            if (this.hideTimeout) {
+                clearTimeout(this.hideTimeout);
+            }
+        },
+
+        beginHideTimer: function() {
+            var me = this;
+
+            this.hideTimeout = setTimeout(function() {
+                if (me.$el.hasClass('open')) {
+                    me.$('> button').dropdown('toggle');
+                }
+            }, 500);
         }
     });
 
