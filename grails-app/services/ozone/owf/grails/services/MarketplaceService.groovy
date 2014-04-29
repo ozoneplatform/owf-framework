@@ -240,6 +240,10 @@ class MarketplaceService extends BaseService {
                 stackService.addToUser(listings.get(0), accountService.getLoggedInUser())
             }
         }
+        else {
+            throw new OwfException(message:'No data received from Marketplace',
+                exceptionType: OwfExceptionTypes.GeneralServerError)
+        }
     }
 
     /**
