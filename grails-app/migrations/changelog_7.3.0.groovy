@@ -151,11 +151,9 @@ databaseChangeLog = {
     changeSet(author: "owf", id: "7.3.0-7", context: "create, upgrade, 7.3.0", dbms: "mssql") {
         comment("Create widget_def_intent table")
 
-        // Must be sql because owner_id needs to be numeric(19,0) exactly in mssql to match Person.id type.
-        sql (text = """
-            ALTER TABLE [dbo].[stack] ADD [owner_id] numeric(19,0)
-            GO
-        """)
+        addColumn(tableName: "stack") {
+          column(name: "owner_id", type: "numeric(19,0)")
+        }
 
         createIndex(indexName: "FK68AC2888656347D", tableName: "stack") {
             column(name: "owner_id")
