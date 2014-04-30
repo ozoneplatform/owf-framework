@@ -20,6 +20,16 @@ environments {
         //enable uiperformance plugin which bundles and compresses javascript
         uiperformance.enabled = true
 
+        notifications {
+            xmpp {
+                username = ''
+                password = ''
+                host = ''
+                room = ''
+                port = 5222
+                enabled = false
+            }
+        }
     }
 }
 

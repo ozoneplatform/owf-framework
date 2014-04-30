@@ -1,6 +1,8 @@
 package ozone.owf.grails.services
 
 import org.apache.log4j.Logger
+import org.codehaus.groovy.grails.commons.GrailsApplication
+
 import static org.ozoneplatform.appconfig.NotificationsSetting.*
 import org.ozoneplatform.messaging.payload.AmlMessage
 import org.ozoneplatform.messaging.service.api.MessageService
@@ -10,8 +12,6 @@ import ozone.owf.grails.domain.Person
 
 class OwfMessagingService {
 
-    OwfApplicationConfigurationService owfApplicationConfigurationService
-
     MessageService messageService
 
     OwfMessageCache owfMessageCache
@@ -20,10 +20,11 @@ class OwfMessagingService {
 
     PersonService personService
 
+    GrailsApplication grailsApplication
+
     static transactional = false
 
     private static final Logger log = Logger.getLogger(OwfMessagingService)
-
 
     public void startListening(){
         try {
@@ -44,8 +45,7 @@ class OwfMessagingService {
 
     public List pollMessages(){
 
-
-        if(!owfApplicationConfigurationService.is(NOTIFICATIONS_ENABLED)){
+        if(grailsApplication.config.notifications.enabled == false) {
             return []
         }
 

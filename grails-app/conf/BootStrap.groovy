@@ -142,7 +142,7 @@ class BootStrap {
         }
         
         
-        if(owfApplicationConfigurationService.is(NOTIFICATIONS_ENABLED)){
+        if(grailsApplication.config.notifications.enabled == true){
             owfMessagingService.startListening()
             owfMessageCache.setExpiration(owfApplicationConfigurationService.valueOf(NOTIFICATIONS_QUERY_INTERVAL).toInteger())
         }
