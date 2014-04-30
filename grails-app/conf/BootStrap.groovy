@@ -33,13 +33,13 @@ class BootStrap {
     def dashboardService
     def quartzScheduler
     def appMigrationService
-	
+
     OwfApplicationConfigurationService owfApplicationConfigurationService
-	
+
     OwfMessagingService owfMessagingService
-    
+
     OwfMessageCache owfMessageCache
-    
+
     def init = { servletContext ->
 
         println 'BootStrap running!'
@@ -49,8 +49,8 @@ class BootStrap {
         grailsApplication.mainContext.registerAlias('owfApplicationConfigurationService', 'ozoneConfiguration')
 
         //configure custom marshallers
-        JSON.registerObjectMarshaller(new ServiceModelObjectMarshaller()) 
-        JSOND.registerObjectMarshaller(new ServiceModelObjectMarshaller()) 
+        JSON.registerObjectMarshaller(new ServiceModelObjectMarshaller())
+        JSOND.registerObjectMarshaller(new ServiceModelObjectMarshaller())
 
         XML.registerObjectMarshaller(new ServiceModelObjectMarshallerXML())
         XMLD.registerObjectMarshaller(new ServiceModelObjectMarshallerXML())
@@ -88,7 +88,7 @@ class BootStrap {
             else {
                 url = null
             }
-          
+
             if (!url) {
                 url = Loader.getResource('owf-log4j.xml')
                 log4jConfigure = {
@@ -139,13 +139,13 @@ class BootStrap {
             owfApplicationConfigurationService.checkThatConfigsExist()
             owfApplicationConfigurationService.createRequired()
         }
-        
-        
+
+
         if(grailsApplication.config.notifications.enabled == true){
             owfMessagingService.startListening()
-            owfMessageCache.setExpiration(owfApplicationConfigurationService.valueOf(NOTIFICATIONS_QUERY_INTERVAL).toInteger())
+            owfMessageCache.setExpiration(owfApplicationConfigurationService.valueOf(grailsApplication.config.notifications.query.interval).toInteger())
         }
-        
+
         println 'BootStrap finished!'
     }
     def destroy = {
@@ -157,7 +157,7 @@ class BootStrap {
 
         log.info('Performance Test Data Generation Enabled: ' + enabled)
         log.info('Generate test data for OWF Users Group: ' + assignToOWFUsersGroup)
-      
+
         if(enabled) {
             def numWidgets = ((grailsApplication.config?.perfTest?.numWidgets) ? grailsApplication.config.perfTest?.numWidgets : 0);
             log.info 'numWidgets: ' + numWidgets
@@ -167,7 +167,7 @@ class BootStrap {
 
             def numAdmins = ((grailsApplication.config?.perfTest?.numAdmins) ? grailsApplication.config.perfTest?.numAdmins: 1);
             log.info 'numAdmins: ' + numAdmins
-        
+
             def numUsers = ((grailsApplication.config?.perfTest?.numUsers) ? grailsApplication.config.perfTest?.numUsers : 2);
             log.info 'numUsers: ' + numUsers
 
@@ -188,7 +188,7 @@ class BootStrap {
 
             def numStacksPerUser = ((grailsApplication.config?.perfTest?.numStacksPerUser) ? grailsApplication.config.perfTest?.numStacksPerUser : 0);
             log.info 'numStacksPerUser: ' + numStacksPerUser
-        
+
             def numStackDashboards = ((grailsApplication.config?.perfTest?.numStackDashboards) ? grailsApplication.config.perfTest?.numStackDashboards : 0);
             log.info 'numStackDashboards: ' + numStackDashboards
 
@@ -200,10 +200,10 @@ class BootStrap {
 
             def sampleWidgetBaseUrl = ((grailsApplication.config?.perfTest?.sampleWidgetBaseUrl) ? grailsApplication.config.perfTest?.sampleWidgetBaseUrl : 'https://127.0.0.1:8443/');
             log.info 'sampleWidgetBaseUrl: ' + sampleWidgetBaseUrl
-            
+
             loadWidgetTypes()
             loadWidgetDefinitions(numWidgets, assignToOWFUsersGroup)
-            
+
             loadGroups(numGroups)
             loadStacks(numStacks, assignToOWFUsersGroup)
             loadStackDashboards(numStackDashboards, numDashboardsWidgets)
@@ -239,7 +239,7 @@ class BootStrap {
         sessionFactory.currentSession.flush()
         sessionFactory.currentSession.clear()
     }
-  
+
     private loadWidgetTypes() {
         println "---- loadWidgetTypes() ----"
         WidgetType.withTransaction {
@@ -274,7 +274,7 @@ class BootStrap {
             ))
             assignToOWFUsersGroup && domainMappingService.createMapping(owfUsersGroup, RelationshipType.owns, widgetDefinition)
         }
-        
+
         flushAndClearCache()
     }
 
@@ -292,7 +292,7 @@ class BootStrap {
                 displayName: 'TestGroup' + i
             ))
         }
-        
+
         flushAndClearCache()
     }
 
@@ -304,7 +304,7 @@ class BootStrap {
         if(assignToOWFUsersGroup) {
             allUsersGroup = loadOWFUsersGroup();
         }
-        
+
         println('stacks already in system: ' + existingStacksCount)
         for (int i = existingStacksCount + 1; i <= numStacks; i++) {
             //create stack
@@ -329,16 +329,16 @@ class BootStrap {
             stack.addToGroups(stackDefaultGroup)
 
             if(allUsersGroup) {
-                stack.addToGroups(allUsersGroup)    
+                stack.addToGroups(allUsersGroup)
             }
-            
+
             domainMappingService.createMapping(stack, RelationshipType.owns, stackDefaultGroup)
             saveInstance(stack)
         }
-        
+
         flushAndClearCache()
     }
-    
+
     private loadStackDashboards(int numStackDashboards, int numDashboardsWidgets) {
         println "---- loadStackDashboards() ----"
         def stacks = Stack.findAllByNameLike('TestStack%')
@@ -346,10 +346,10 @@ class BootStrap {
             log.debug 'generating stack dashboards for stack:' + stack
             assignDashboardsToGroup(stack.findStackDefaultGroup(), 'Stack', numStackDashboards, numDashboardsWidgets)
         }
-        
+
         flushAndClearCache()
     }
-  
+
     private loadAdmins(int numAdmins) {
         println "---- loadAdmins() ----"
         def date = new Date(),
@@ -367,7 +367,7 @@ class BootStrap {
                 lastLogin: date
             ))
         }
-        
+
         flushAndClearCache()
     }
 
@@ -388,7 +388,7 @@ class BootStrap {
                 lastLogin: date
             ))
         }
-        
+
         flushAndClearCache()
     }
 
@@ -410,7 +410,7 @@ class BootStrap {
             assignWidgetsToGroup(group, numWidgetsInGroups)
         }
     }
-    
+
     private assignGroupsToPersons(int numGroups, int numGroupsPerUser) {
         println "---- assignGroupsToPersons() ----"
         def random = new Random(),
@@ -436,10 +436,10 @@ class BootStrap {
                 saveInstance(groups[i])
             }
         }
-        
+
         flushAndClearCache()
     }
-    
+
     private assignStacksToPersons(int numStacks, int numStacksPerUser) {
         println "---- assignStacksToPersons() ----"
         def random = new Random(),
@@ -464,7 +464,7 @@ class BootStrap {
                 saveInstance(stackGroups[i])
             }
         }
-        
+
         flushAndClearCache()
     }
 
@@ -495,7 +495,7 @@ class BootStrap {
                 ))
             }
         }
-        
+
         flushAndClearCache()
     }
 
@@ -515,7 +515,7 @@ class BootStrap {
                 ))
             }
         }
-        
+
         flushAndClearCache()
     }
 
@@ -760,7 +760,7 @@ class BootStrap {
             }
 
         }
-        
+
         flushAndClearCache()
     }
 
@@ -808,7 +808,7 @@ class BootStrap {
 
     private assignDashboardsToGroup(Group group, String groupType, int numDashboards, int numDashboardsWidgets) {
         def allWidgets = WidgetDefinition.list()
-        
+
         for (int i = 1; i <= numDashboards; i++) {
             def dashboardGuid = generateId()
             def paneGuid = generateId()
