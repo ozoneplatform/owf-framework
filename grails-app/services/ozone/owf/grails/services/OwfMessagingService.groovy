@@ -3,7 +3,6 @@ package ozone.owf.grails.services
 import org.apache.log4j.Logger
 import org.codehaus.groovy.grails.commons.GrailsApplication
 
-import static org.ozoneplatform.appconfig.NotificationsSetting.*
 import org.ozoneplatform.messaging.payload.AmlMessage
 import org.ozoneplatform.messaging.service.api.MessageService
 import org.ozoneplatform.messaging.exception.MessagingException
