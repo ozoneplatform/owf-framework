@@ -377,7 +377,7 @@
           target: test
          ================================= -->
     <target name="test" depends="-init" unless="no-test" description="--> Run a Grails applications unit tests">
-        <grails script="test-app unit: integration:" preargs="${offline.arg}" args="-coverage -xml"/>
+        <grails script="test-app unit: integration:" preargs="${offline.arg}" args="-xml"/>
     </target>
 
     <target name="test-selenium-firefox" description="--> Run Grails applications Selenium tests in FF">
