@@ -43,14 +43,14 @@ eventRunAppHttpsStart = {
     println "compiling stylesheets in external themes dir"
     compileStyleSheets(basedir)
   }
-  
+
   if(!System.properties.skipCopyAppConfig) {
 	  def applicationConfigUiDir = "${baseWebDir}/js/components/admin/applicationConfiguration"
 	  println "Use -DskipCopyAppConfig=true to omit this step"
 	  copyAppConfigFiles applicationConfigUiDir
 	  println "Finished copying app configuration files"
   }
-  
+
 }
 
 eventRunAppStart = {
@@ -71,7 +71,7 @@ eventRunAppStart = {
 		copyAppConfigFiles applicationConfigUiDir
 		println "Finished copying app configuration files"
 	}
-	
+
 }
 
 eventCreateWarStart = { name, stagingDir ->
@@ -79,24 +79,6 @@ eventCreateWarStart = { name, stagingDir ->
   def applicationConfigUiDir = "${stagingDir}/js/components/admin/applicationConfiguration"
   copyAppConfigFiles applicationConfigUiDir
 
-
-  println "copying help for help into war"
-
-    def baseWebDir = "${basedir}/web-app"
-    ant.copy(todir: "${baseWebDir}/help") {
-      fileset(dir: "${basedir}/docs-internal") {
-        include(name: "Instructions_for_configuring_Help_content.pdf")
-        include(name: "Keyboard Navigation.pdf")
-      }
-    }
-    ant.copy(todir: "${stagingDir}/help") {
-      fileset(dir: "${basedir}/docs-internal") {
-        include(name: "Instructions_for_configuring_Help_content.pdf")
-        include(name: "Keyboard Navigation.pdf")
-      }
-    }
-
-  println "finished help for help into war"
 
   println "making owf-all.jar"
 
