@@ -143,7 +143,7 @@ class BootStrap {
 
         if(grailsApplication.config.notifications.enabled == true){
             owfMessagingService.startListening()
-            owfMessageCache.setExpiration(owfApplicationConfigurationService.valueOf(grailsApplication.config.notifications.query.interval).toInteger())
+            owfMessageCache.setExpiration(grailsApplication.config.notifications.query.interval as Integer)
         }
 
         println 'BootStrap finished!'

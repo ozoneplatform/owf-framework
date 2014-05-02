@@ -21,13 +21,15 @@ environments {
         uiperformance.enabled = true
 
         notifications {
+            enabled = false
+            query.interval = 30
+
             xmpp {
                 username = ''
                 password = ''
                 host = ''
                 room = ''
                 port = 5222
-                enabled = false
             }
         }
     }

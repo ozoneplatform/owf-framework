@@ -1156,5 +1156,16 @@ keystore = 'certs/keystore.jks'
 casSettings.useCas=true
 casSettings.FullServiceURL='https://localhost:8443/cas'
 
-notifications.enabled = false
-notifications.query.interval = 30
+notifications {
+    enabled = false
+    query.interval = 30
+
+    xmpp {
+        username = ''
+        password = ''
+        host = ''
+        room = ''
+        port = 5222
+    }
+}
+
