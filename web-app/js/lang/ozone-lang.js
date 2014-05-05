@@ -4,11 +4,11 @@ Ozone.ux = Ozone.ux || {};
 Ozone.util = Ozone.util || {};
 
 /*
- * General Algorithm 
- * 
+ * General Algorithm
+ *
  * if queryString contains lang parameter swith to that locale
  * else check browser language setting
- * 
+ *
  * Language switching is accomplished by incliuding a locale
  * specific javascript file
  */
@@ -17,16 +17,16 @@ Ozone.util = Ozone.util || {};
  * @description Provides utility methods for localization
  */
 Ozone.lang = {
-	languageSetting : 'en-US', 
-	
+	languageSetting : 'en-US',
+
 	regexLeadingTailingSpaceChars: /^\s+|\s+$/g,
-	
+
 	regexTrailingSpaceChars: /\s+$/,
-	
+
 	regexLeadingSpaceChars: /^\s+/,
-	
+
 	version : Ozone.version.owfversion + Ozone.version.language,
-	
+
 	urlDecode: function(string, overwrite){
         if (!string || !string.length) {
             return {};
@@ -42,7 +42,7 @@ Ozone.lang = {
                 if (typeof obj[name] == "undefined") {
                     obj[name] = value;
                 }
-                else 
+                else
                     if (typeof obj[name] == "string") {
                         obj[name] = [obj[name]];
                         obj[name].push(value);
@@ -57,15 +57,15 @@ Ozone.lang = {
         }
         return obj;
     },
-	
+
     /**
      * @description Gets the language that is currently being used by OWF
      * @return Returns the ISO 639-1 language code for the language that is currently being used by OWF
      * @example
      * if (Ozone.lang.getLanguage() == 'es') {
      *   AnnouncingClockStrings.timeLabel = 'El tiempo es';
-     * } 
-     * 
+     * }
+     *
      */
 	getLanguage : function() {
 	    var params = Ozone.lang.urlDecode(window.location.search.substring(1));
@@ -85,8 +85,8 @@ Ozone.lang = {
         }
 
         //just use default
-        return Ozone.lang.languageSetting;  
-    } 
+        return Ozone.lang.languageSetting;
+    }
 };
 
 Ozone.layout.Menu = {
@@ -94,26 +94,26 @@ Ozone.layout.Menu = {
 };
 
 Ozone.layout.ConfigurationWindowString = {
-	setAsNew : "Save as new", 
+	setAsNew : "Save as new",
     setAsDefault : "Set as default",
     showCarousel : "Show Launch Menu",
     showShortcuts : "Show Shortcuts",
     showToolbar : "Show toolbar options",
     documentTitle : "Document Title",
-	
-	topSelector : 'Top', 
+
+	topSelector : 'Top',
     centerSelector : 'Center',
-    accordionSelector : 'Accordion', 
-    toolbarButtons : 'Toolbar Buttons', 
+    accordionSelector : 'Accordion',
+    toolbarButtons : 'Toolbar Buttons',
     clear : 'Clear',
     save : 'OK',
     cancel : 'Cancel',
     clearAll: 'Clear All',
-	
-    column : 'Column', 
+
+    column : 'Column',
     columns : 'Columns',
-	
-    tab : 'Tab', 
+
+    tab : 'Tab',
     tabs : 'Tabs'
 };
 
@@ -234,34 +234,34 @@ Ozone.ux.DashboardMgmtString = {
     importaDashboard : 'Import a Page',
     exportDashboard : 'Export Current Page',
     exportDashboardConfig : 'Export Page Configuration',
-    uploadConfig : 'Upload...', 
-    setAsDefault : 'Set as default', 
+    uploadConfig : 'Upload...',
+    setAsDefault : 'Set as default',
     dashboards : 'Pages',
-    title : 'Title', 
-    layout : 'Layout', 
+    title : 'Title',
+    layout : 'Layout',
     description : 'Description',
-    top : 'Top', 
-    bottom : 'Bottom', 
-    columns : 'Columns', 
-    arrangement : 'Arrangement', 
+    top : 'Top',
+    bottom : 'Bottom',
+    columns : 'Columns',
+    arrangement : 'Arrangement',
     selectDashboard : 'Select Page',
-    accordion : 'Accordion', 
-    portal : 'Portal', 
-    tabbed : 'Tabbed', 
-    desktop : 'Desktop', 
-    fit : 'Fit', 
+    accordion : 'Accordion',
+    portal : 'Portal',
+    tabbed : 'Tabbed',
+    desktop : 'Desktop',
+    fit : 'Fit',
 	tooltipManageDashboards: 'Page Settings',
 	tooltipCreateDashboard: 'New App',
-	
-    ok : 'OK', 
+
+    ok : 'OK',
     reset : 'Reset',
-    about: 'About', 
-    logout: 'Logout', 
+    about: 'About',
+    logout: 'Logout',
     importDashboard : 'Import Page',
     dashboardTitle : 'Page Title',
     enterDashboardTitle : 'Enter Page Title...',
-    browse : 'Browse...', 
-	
+    browse : 'Browse...',
+
 	loadDefaultMsg : 'Load Default Configuration?',
 	noDashboardSelectedMsg : 'No configuration was selected.  Do you want to load the default configuration?',
 	changeLanguage : 'Change Language',
@@ -281,23 +281,23 @@ if (Ozone.config &&
 }
 
 Ozone.layout.AccordionWindowManagerString = {
-    configureAccordion : 'Configure Accordion' 
+    configureAccordion : 'Configure Accordion'
 };
 
 Ozone.layout.PortalWindowManagerString = {
-    configurePortlets : 'Configure Portlets'    
+    configurePortlets : 'Configure Portlets'
 };
 
 Ozone.layout.TabbedWindowManagerString = {
-    configureTabs : '<span class="configureTabButton">Configure Tabs</span>'   
+    configureTabs : '<span class="configureTabButton">Configure Tabs</span>'
 };
 
 Ozone.util.ErrorMessageString = {
 	errorTitle : 'Error',
 	dashboardConfig : 'Page Configuration',
-	widgetConfiguration : 'App Component Configuration', 
-	noWidgets : 'There are no App Components to which you have access.', 
-	configurationMsg : 'Failed to retrieve configuration data', 
+	widgetConfiguration : 'App Component Configuration',
+	noWidgets : 'There are no App Components to which you have access.',
+	configurationMsg : 'Failed to retrieve configuration data',
 	dashboardBlankMsg: 'Invalid Page Name, it cannot be blank. <br />Please provide a valid Page Name.',
 	dashboardInvalidEntryMsg: "Unable to update page name(s) due <br/>to invalid characters.",
 	invalidForm : 'Invalid Form',
@@ -385,7 +385,7 @@ Ozone.layout.DialogMessages = {
     user_status: 'User Status',
     user_usernameField_label: 'User ID',
     user_usernameField_blankText: 'Please supply a User ID',
-    user_userRealNameField_label: 'Name', 
+    user_userRealNameField_label: 'Name',
     user_userRealNameField_blankText: 'Please supply a name for the user',
     formError_saveUser: 'An error occurred while attempting to save a user.',
     preference: 'Preference',
@@ -422,14 +422,14 @@ Ozone.layout.DialogMessages = {
     personWidgetDef_Widget: 'App Component',
     personWidgetDef_WidgetAccessApplied: 'App Component Access Applied',
     personWidgetDef_ApplyStatus: 'Apply Status',
-    personWidgetDef_NoChangesNecessary: 'No changes were necessary', 
+    personWidgetDef_NoChangesNecessary: 'No changes were necessary',
     formError_savePersonDefWidgets: 'An error occurred while attempting to save user App Component(s).',
     formError_saveWidgetDefinition: 'An error occurred while attempting to save the App Component.',
     personWidgetDef_WidgetContainerPanelTitle: 'Widgets',
     marketplaceWindow_AddWidget: 'An error occurred while attempting to add the App Component from the Store.',
     marketplaceWindow_currentUser: 'Could not retrieve current user name and id.',
     marketplaceWindow_AddSuccessful: 'The App Component was added successfully from the Store.',
-    marketplaceWindow_WebappLaunchSuccessful: 'The web app was added successfully from the Store.',
+    marketplaceWindow_WebappLaunchSuccessful: 'Web App has been started. To open it later, click My Apps, then click the Web App’s name.',
     marketplaceWindow_LaunchSuccessful: 'The App Component was added successfully from the Store. Choose the App where the component will open.',
     marketplaceWindow_StackLaunchSelectPage: 'The App has multiple pages. Please select one to open.',
     widgetAdded: 'Selected App Component is already added for this user',
