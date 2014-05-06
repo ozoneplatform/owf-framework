@@ -39,11 +39,35 @@ class MarketplaceService extends BaseService {
     // Performs some of the function of addExternalWidgetsToUser, found in the
     // WidgetDefinitionService.
     def addListingsToDatabase(Collection stMarketplaceJson) {
-        return stMarketplaceJson.collect { Map obj ->
+
+        def listings = stMarketplaceJson.collect { Map obj ->
             if (obj?.widgetGuid) {
                 return addWidgetToDatabase(obj)
             } else if (obj?.stackContext) {
                 return addStackToDatabase(obj)
+            }
+        }
+
+        createRelationships(stMarketplaceJson)
+
+        return listings
+    }
+
+    def createRelationships(widgets) {
+        widgets?.each { requiringWidget ->
+            if(requiringWidget.directRequired) {
+                String requiringWidgetGuid = requiringWidget.widgetGuid
+                def requiringWidgetDefinition = WidgetDefinition.findByWidgetGuid(requiringWidgetGuid, [cache: true])
+                if(requiringWidgetDefinition) {
+                    domainMappingService.deleteAllMappings(requiringWidgetDefinition, RelationshipType.requires, 'src')
+                }
+
+                requiringWidget.directRequired.each { String requiredWidgetGuid ->
+                    def requiredWidgetDefinition = WidgetDefinition.findByWidgetGuid(requiredWidgetGuid, [cache: true])
+                    if(requiredWidgetDefinition) {
+                        domainMappingService.createMapping(requiringWidgetDefinition, RelationshipType.requires, requiredWidgetDefinition)
+                    }
+                }
             }
         }
     }
@@ -350,22 +374,6 @@ class MarketplaceService extends BaseService {
                         tags.each {
                             mapping.addTag(it.name, it.visible, it.position, it.editable)
                         }
-                    }
-                }
-            }
-        }
-
-        // Yes, re-reading the set.  We need to add requirements after all widgets have been added
-        params.widgets.each { JSONObject obj ->
-            if (obj.directRequired != null) {
-                // delete and the recreate requirements
-                widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache: true])
-                domainMappingService.deleteAllMappings(widgetDefinition, RelationshipType.requires, 'src')
-
-                obj.directRequired.each {
-                    def requiredWidget = WidgetDefinition.findByWidgetGuid(it, [cache: true])
-                    if (requiredWidget != null) {
-                        domainMappingService.createMapping(widgetDefinition, RelationshipType.requires, requiredWidget)
                     }
                 }
             }
