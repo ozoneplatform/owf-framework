@@ -1,6 +1,6 @@
 databaseChangeLog = {
 
-    changeSet(author: "owf", id: "7.10.0-1", dbms: "mysql,postgresql,oracle", context: "create, upgrade, 7.10.0") {
+    changeSet(author: "owf", id: "7.10.0-1", dbms: "mysql,postgresql,oracle,mssql", context: "create, upgrade, 7.10.0") {
         addColumn(tableName: "person") {
             column(name: "last_notification", type: "java.sql.Types.TIMESTAMP"){
                 constraints(nullable: "true")

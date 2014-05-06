@@ -334,7 +334,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
                                 var widgetDef = widgetDefs.get(0);
 
                                 notifyText = self.launchWidget(widgetDef, doLaunchCallback);
-                                notifyTitle = 'Choose an App to Start App Component'
+                                notifyTitle = 'Success';
                             } else {
                                 notifyText = "The App Component was successfully added.";
                                 addWidgetCallback && addWidgetCallback(widgetDefs.get(0).get('name') + ' has been added successfully from AppsMall.');

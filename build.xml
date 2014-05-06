@@ -285,40 +285,11 @@
                 </fileset>
             </copy>
 
-        <mkdir dir="${staging.dir}/etc/docs" />
-            <copy todir="${staging.dir}/etc/docs">
-                <!-- <fileset dir="test/jmeter/performance">
-                    <include name="OWF Performance Metrics.${owf.doc.extension}" />
-                </fileset> -->
-                <fileset dir="${basedir}/docs-internal">
-                    <include name="OWF Release Notes.${owf.doc.extension}" />
-                </fileset>
-            </copy>
         <mkdir dir="${staging.dir}/dbscripts" />
         <copy todir="${staging.dir}/dbscripts">
             <fileset dir="src/assemble/dbscripts">
             </fileset>
         </copy>
-        <mkdir dir="${staging.dir}/help" />
-
-        <if>
-            <istrue value="${owf.release}"/>
-            <then>
-                <copy todir="${staging.dir}/help">
-                    <fileset dir="${basedir}/docs-internal">
-                        <exclude name="libraries/**" />
-                        <exclude name="*.doc" />
-                    </fileset>
-                </copy>
-            </then>
-            <else>
-                <copy todir="${staging.dir}/help">
-                    <fileset dir="${basedir}/docs-internal">
-                        <exclude name="libraries/**" />
-                    </fileset>
-                </copy>
-            </else>
-        </if>
 
         <mkdir dir="${staging.dir}/etc/docs/jsdoc" />
         <copy todir="${staging.dir}/etc/docs/jsdoc" failonerror="false">
@@ -379,7 +350,7 @@
           target: test
          ================================= -->
     <target name="test" depends="-init" unless="no-test" description="--> Run a Grails applications unit tests">
-        <grails script="test-app unit: integration:" preargs="${offline.arg}" args="-coverage -xml"/>
+        <grails script="test-app unit: integration:" preargs="${offline.arg}" args="-xml"/>
     </target>
 
     <target name="test-selenium-firefox" description="--> Run Grails applications Selenium tests in FF">
@@ -425,16 +396,11 @@
 
         <!-- create owf bundle -->
         <zip destfile="${staging.dir}/${app.name}-bundle.zip" >
-        	<zipfileset dir="${staging.dir}" excludes="**/*.sh, help/**" />
+        	<zipfileset dir="${staging.dir}" excludes="**/*.sh" />
         	<zipfileset dir="${staging.dir}" includes="**/*.sh" filemode="744" />
         </zip>
         <!-- copy owf bundle to the released name-->
         <copy file="${staging.dir}/${app.name}-bundle.zip" tofile="${staging.dir}/${app.base.prefix}-bundle-${app.base.version}.zip" />
-
-        <!-- create owf help bundle -->
-        <zip destfile="${staging.dir}/${app.base.prefix}-help-${app.base.version}.zip" >
-            <zipfileset dir="${staging.dir}" includes="help/**" />
-        </zip>
 
         <!-- create test widget bundle -->
         <antcall target="bundle-test-widgets" />

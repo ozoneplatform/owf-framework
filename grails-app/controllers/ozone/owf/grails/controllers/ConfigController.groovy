@@ -1,8 +1,8 @@
 package ozone.owf.grails.controllers
 
-import grails.converters.JSON
+import grails.util.Environment
+
 import static ozone.owf.enums.OwfApplicationSetting.*
-import static org.ozoneplatform.appconfig.NotificationsSetting.*
 import ozone.owf.grails.OwfException
 
 import ozone.security.SecurityUtils
@@ -87,11 +87,9 @@ class ConfigController {
             freeTextEntryWarningMessage =
                 this.owfApplicationConfigurationService.getApplicationConfiguration(FREE_WARNING_CONTENT)?.value ?: ""
             notificationsPollingInterval =
-                this.owfApplicationConfigurationService.valueOf(NOTIFICATIONS_QUERY_INTERVAL) as Integer ?:
-                30
+                this.grailsApplication.config.notifications.xmpp.query.interval ?: 30
             notificationsEnabled =
-                Boolean.valueOf(this.owfApplicationConfigurationService.valueOf(NOTIFICATIONS_ENABLED)) ?:
-                false
+                this.grailsApplication.config.notifications.enabled ?: false
         }
 
         // whether the show animations user preference exists

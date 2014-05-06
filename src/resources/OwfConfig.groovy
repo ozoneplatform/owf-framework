@@ -20,6 +20,18 @@ environments {
         //enable uiperformance plugin which bundles and compresses javascript
         uiperformance.enabled = true
 
+        notifications {
+            enabled = false
+            query.interval = 30
+
+            xmpp {
+                username = ''
+                password = ''
+                host = ''
+                room = ''
+                port = 5222
+            }
+        }
     }
 }
 
@@ -106,6 +118,21 @@ owf {
         // in OWF if it does not already exist
         autoCreateWidget = false
     }
+}
+
+// Variables used for CEF logging. These fields are combined to form the CEF prefix.
+// For more information about CEF logging, check ArcSight documentation
+cef {
+    device {
+        // The device vendor or organization
+        vendor = "OZONE"
+        // The device product name
+        product = "OWF"
+        // The device version
+        version = "500-27_L2::1.3"
+    }
+    // The CEF version
+    version = 0
 }
 
 

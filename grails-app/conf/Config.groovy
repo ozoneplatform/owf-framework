@@ -1138,6 +1138,16 @@ quartz {
     }
 }
 
+cef {
+    device {
+        vendor = "OZONE"
+        product = "OWF"
+        version = "500-27_L2::1.3"
+    }
+
+    version = 0
+}
+
 // log4j configuration : see log4j.xml
 
 //ssl stuff
@@ -1146,9 +1156,16 @@ keystore = 'certs/keystore.jks'
 casSettings.useCas=true
 casSettings.FullServiceURL='https://localhost:8443/cas'
 
-xmpp.username="amlnotify_owfuser"
-xmpp.password="()IOJKNM78yughvb"
-xmpp.serviceName="owfchat1.goss.owfgoss.org"
-xmpp.roomName="amlnotify@conference.goss.owfgoss.org"
-xmpp.port=5222
-xmpp.notifications.enabled = false
+notifications {
+    enabled = false
+    query.interval = 30
+
+    xmpp {
+        username = ''
+        password = ''
+        host = ''
+        room = ''
+        port = 5222
+    }
+}
+

@@ -62,6 +62,26 @@ class OwfAuditingFilters extends AbstractAuditingFilters {
         hostCls
     }
 
+    @Override
+    public String getDeviceVendor() {
+    	grailsApplication.config.cef.device.vendor
+    }
+
+    @Override
+    public String getDeviceProduct() {
+    	grailsApplication.config.cef.device.product
+    } 
+
+	@Override
+    public String getDeviceVersion() {
+    	grailsApplication.config.cef.device.version
+    }
+
+    @Override
+    public int getCEFVersion() {
+    	grailsApplication.config.cef.version
+    }
+
 	@Override
 	public HttpServletRequest getRequest(){
 		return RequestContextHolder?.getRequestAttributes()?.getRequest()

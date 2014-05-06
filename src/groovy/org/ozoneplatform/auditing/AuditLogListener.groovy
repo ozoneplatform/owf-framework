@@ -20,14 +20,13 @@ class AuditLogListener extends AbstractAuditLogListener {
 	
 	OwfApplicationConfigurationService owfApplicationConfigurationService
 	
-	
 	@Override
     protected boolean doCefLogging() {
         owfApplicationConfigurationService.is(CEF_LOGGING_ENABLED)
     }
 	
 	protected boolean doCefObjectAccessLogging(){
-         owfApplicationConfigurationService.is(CEF_OBJECT_ACCESS_LOGGING_ENABLED)
+        owfApplicationConfigurationService.is(CEF_OBJECT_ACCESS_LOGGING_ENABLED)
 	}
 
     @Override
@@ -43,6 +42,26 @@ class AuditLogListener extends AbstractAuditLogListener {
     @Override
     protected String getHostClassification() {
         owfApplicationConfigurationService.valueOf(SECURITY_LEVEL)
+    }
+
+    @Override
+    protected String getDeviceVendor() {
+        grailsApplication.config.cef.device.vendor
+    }
+
+    @Override
+    protected String getDeviceProduct() {
+        grailsApplication.config.cef.device.product
+    }
+
+    @Override
+    protected String getDeviceVersion() {
+        grailsApplication.config.cef.device.version
+    }
+
+    @Override
+    protected int getCEFVersion() {
+        grailsApplication.config.cef.version
     }
 
     @Override

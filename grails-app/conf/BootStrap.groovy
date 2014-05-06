@@ -1,7 +1,6 @@
 import grails.util.GrailsUtil
 import org.apache.log4j.xml.*
 import org.apache.log4j.helpers.*
-import static org.ozoneplatform.appconfig.NotificationsSetting.*
 import org.springframework.context.ApplicationContext
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
 import grails.converters.deep.JSON as JSOND
@@ -142,9 +141,9 @@ class BootStrap {
         }
 
 
-        if(owfApplicationConfigurationService.is(NOTIFICATIONS_ENABLED)){
+        if(grailsApplication.config.notifications.enabled == true) {
             owfMessagingService.startListening()
-            owfMessageCache.setExpiration(owfApplicationConfigurationService.valueOf(NOTIFICATIONS_QUERY_INTERVAL).toInteger())
+            owfMessageCache.setExpiration(grailsApplication.config.notifications.query.interval as Integer)
         }
 
         println 'BootStrap finished!'
