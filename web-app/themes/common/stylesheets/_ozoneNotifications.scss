@@ -83,6 +83,8 @@
 
         padding: 0;
 
+        padding-left: 10px;
+
         &:before {
             font-family: FontAwesome;
             @extend .icon-bell:before;
@@ -305,6 +307,7 @@ h3.notification-list-header {
 .notifications .popover > .arrow {
     //move it down 1 to cover up the border of the popover
     top: -10px;
+    margin-left: -2px !important;
 }
 
 .notification {
