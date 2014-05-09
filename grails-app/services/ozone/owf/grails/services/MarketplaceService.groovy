@@ -55,13 +55,13 @@ class MarketplaceService extends BaseService {
 
     def createRelationships(widgets) {
         widgets?.each { requiringWidget ->
-            if(requiringWidget.directRequired) {
-                String requiringWidgetGuid = requiringWidget.widgetGuid
-                def requiringWidgetDefinition = WidgetDefinition.findByWidgetGuid(requiringWidgetGuid, [cache: true])
-                if(requiringWidgetDefinition) {
-                    domainMappingService.deleteAllMappings(requiringWidgetDefinition, RelationshipType.requires, 'src')
-                }
+            String requiringWidgetGuid = requiringWidget.widgetGuid
+            def requiringWidgetDefinition = WidgetDefinition.findByWidgetGuid(requiringWidgetGuid, [cache: true])
+            if(requiringWidgetDefinition) {
+                domainMappingService.deleteAllMappings(requiringWidgetDefinition, RelationshipType.requires, 'src')
+            }
 
+            if(requiringWidget.directRequired) {
                 requiringWidget.directRequired.each { String requiredWidgetGuid ->
                     def requiredWidgetDefinition = WidgetDefinition.findByWidgetGuid(requiredWidgetGuid, [cache: true])
                     if(requiredWidgetDefinition) {
