@@ -226,7 +226,7 @@
 }
 
 #banner-right-container {
-    @include owf-background-gradient($banner-button-background);
+    background-color: $banner-button-background;
     border-left: 1px solid $user-menu-button-border-color;
     margin: 0px;
     top: 0px !important; //ext tries to override this at runtime
