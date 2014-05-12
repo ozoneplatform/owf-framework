@@ -1,5 +1,5 @@
 .widget {
-    $default-thumb-size: 50px;
+    $default-thumb-size: 64px;
 
     background: $selectable-item-background-color;
     border: 1px solid $selectable-item-border-color;
@@ -17,9 +17,10 @@
         position: relative; //to make the singleton icons position be relative to this
         width: $default-thumb-size;
         height: $default-thumb-size;
-        
+
         .thumb {
             width: 100%;
+            height: 100%;
         }
         .singleton-thumb {
             position: absolute;
@@ -40,13 +41,14 @@
 
 //IE7 requires manual width management
 .x-ie7 .widget {
-    $default-thumb-size: 50px;
+    $default-thumb-size: 64px;
 
-    //allows width to be easily computed 
+    //allows width to be easily computed
     //based on contents, not surroundings
     box-layout: content-box;
 
 
-    width: $default-thumb-size; 
+    width: $default-thumb-size;
+    height: $default-thumb-size;
     min-width: 6em;
 }
