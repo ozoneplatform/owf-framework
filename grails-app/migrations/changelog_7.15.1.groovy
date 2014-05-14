@@ -9,7 +9,6 @@ databaseChangeLog = {
          'notifications.query.interval',
          'url.public'
         ].each { code ->
-            println code
             delete(tableName: 'application_configuration') {
                 where("code = '$code'")
             }
