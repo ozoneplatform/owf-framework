@@ -19,32 +19,32 @@ class AdministrationService {
 	def dashboardService
     def serviceModelService
 
-	def getPreferenceEditEntities(params) 
+	def getPreferenceEditEntities(params)
 	{
 		if (params.personId == null)
 		{
 			throw new OwfException(	message:'A fatal validation error occurred during the fetch of a personID from a preference. personId is required. Params: ' + params.toString() ,
 									exceptionType: OwfExceptionTypes.Validation)
 		}
-		
+
 		def user = Person.findByUsername(params.personId)
-		
+
 		if (user == null)
 		{
-			throw new OwfException(message:'User ' + params.personId + ' not found.', exceptionType: OwfExceptionTypes.NotFound)	
+			throw new OwfException(message:'User ' + params.personId + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
 		}
-		
+
 		def preference = preferenceService.findByUserAndNamespaceAndPath(user, params.namespace, params.path,null)
 		if (preference == null)
 		{
-			throw new OwfException(message:'Preference not found. Params: ' + params.toString(), exceptionType: OwfExceptionTypes.NotFound)	
+			throw new OwfException(message:'Preference not found. Params: ' + params.toString(), exceptionType: OwfExceptionTypes.NotFound)
 		}
-		
+
 		def actionType = "edit"
 		return [success:true, preference:preference, actionType:actionType]
 	}
-	
-	
+
+
     def getPreferenceAddCopyEntities(params){
 		def allUsers = accountService.getAllUsers().collect{serviceModelService.createServiceModel(it)}
 		def actionType
@@ -68,7 +68,7 @@ class AdministrationService {
 		}
 		return [preference:preference, allUsers: allUsers, actionType:actionType]
     }
-	
+
 	def updatePreference(params)
 	{
 		ensureAdmin()
@@ -93,12 +93,12 @@ class AdministrationService {
 		}
 		preferenceService.update(params)
 	}
-	
+
 	def clonePreference(params) {
 		ensureAdmin()
 		def resultOfClone = null
 		def assignedTo
-		
+
 		if (params.checkedTargets){
 			def checkedTargets = []
 			if (params.checkedTargets.class.name != "java.lang.String"){
@@ -106,7 +106,7 @@ class AdministrationService {
 			}else{
 				checkedTargets << params.checkedTargets
 			}
-			
+
 			checkedTargets.each{
 				resultOfClone = preferenceService.deepClone(params, it)
 			}
@@ -118,10 +118,10 @@ class AdministrationService {
 			resultOfClone = preferenceService.deepClone(data, userId)
 			assignedTo = [data['username']]
 		}
-		
+
 		return [success:true, resultOfClone: resultOfClone, assignedTo: assignedTo]
 	}
-	
+
 	def getPersonWidgetDefinitionApplyEntities(params){
 		def allUsers = accountService.getAllUsers().collect{serviceModelService.createServiceModel(it)}
 		def personWidgetDefinitions = []
@@ -131,8 +131,8 @@ class AdministrationService {
 		def allWidgets = WidgetDefinition.list().collect{serit.toServiceModel()}
 		return [success:true, allUsers: allUsers, allWidgets: allWidgets]
 	}
-	
-    def getWidgetDefinitionEditEntities(params) 
+
+    def getWidgetDefinitionEditEntities(params)
 	{
 		def allUsers = accountService.getAllUsers().collect{serviceModelService.createServiceModel(it)}
 		def widgetDefinition
@@ -153,7 +153,7 @@ class AdministrationService {
 			widgetDefinition.height = 200
 			widgetDefinition.width = 200
 			widgetDefinition.displayName = 'New Empty Widget'
-			widgetDefinition.imageUrlLarge = './themes/common/images/blue/icons/widgetIcons/nearlyEmpty.gif'
+			widgetDefinition.imageUrlMedium = './themes/common/images/blue/icons/widgetIcons/nearlyEmpty.gif'
 			widgetDefinition.imageUrlSmall = './themes/common/images/blue/icons/widgetContainer/nearlyEmptysm.gif'
 			widgetDefinition.widgetUrl = './examples/walkthrough/widgets/NearlyEmptyWidget.html'
 			personWidgetDefinitions = []
@@ -179,35 +179,35 @@ class AdministrationService {
         }
 
 		def readOnly = params.readOnly ?: 'false'
-		
+
 		return [widgetDefinition:widgetDefinition, allUsers: allUsers, readOnly: readOnly, actionType:actionType]
 	}
-    
+
     def getDashboardEditEntities(params){
 		def user = Person.findByUsername(params.personId)
 		def actionType = "edit"
-		
+
 		if (user == null)
 		{
-			throw new OwfException(message:'User ' + params.personId + ' not found.', exceptionType: OwfExceptionTypes.NotFound)	
+			throw new OwfException(message:'User ' + params.personId + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
 		}
-    	
+
 		def dashboard = Dashboard.findByUserAndGuid(user,params.guid)
-		
+
 		if (dashboard == null)
 		{
-			throw new OwfException(message:'Dashboard ' + params.guid + ' not found.', exceptionType: OwfExceptionTypes.NotFound)	
+			throw new OwfException(message:'Dashboard ' + params.guid + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
 		}
 		return [dashboard:dashboard, actionType:actionType]
     }
-	
-    
+
+
     def getDashboardAddCopyEntities(params){
 		def allUsers = accountService.getAllUsers().collect{serviceModelService.createServiceModel(it)}
 		def actionType
-		
+
 		def dashboard = null
-		
+
 		if (params.guid != null && params.guid.length() > 0)
 		{//Copy
 			dashboard = Dashboard.findByGuid(params.guid)
@@ -227,19 +227,19 @@ class AdministrationService {
 		}
 		return [dashboard:dashboard, allUsers: allUsers, actionType:actionType]
     }
-	
+
     def getPersonEditEntities(params){
     	def user
     	def actionType
-    	
+
     	if (params.username != null && params.username.length() > 0)
 		{
     		user = Person.findByUsername("" + params.username)
 	    	if (user == null)
 			{
-				throw new OwfException(message:'User ' + params.username + ' not found.', exceptionType: OwfExceptionTypes.NotFound)	
+				throw new OwfException(message:'User ' + params.username + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
 			}
-	    	
+
 	    	if((!(accountService.getLoggedInUser().username.equals(params.username))) && (!accountService.getLoggedInUserIsAdmin()))
 			{
 				throw new OwfException(message:'You are not authorized to edit another user.', exceptionType: OwfExceptionTypes.Authorization)
@@ -255,14 +255,14 @@ class AdministrationService {
 			user.emailShow = true
 			actionType = "add"
 		}
-    	
+
     	return [person:user, actionType:actionType, roleCount: Role.count()]
     }
-    
+
     def listPersonRoles(params){
     	ensureAdmin()
     	def personRoleList = Role.list()
-    	
+
     	if (personRoleList) {
 	      return [success: true, personRoleList: personRoleList, count: Role.count()]
 	    }
@@ -270,19 +270,19 @@ class AdministrationService {
 	      return [success: true, personRoleList: [], count: 0]
 	    }
     }
-    
+
     def createOrUpdatePerson(params){
     	def resultOfCreate = accountService.createOrUpdate(params)
-    	
+
     }
-    
+
 	def createOrUpdateWidgetDefinition(params)
 	{
 		def resultOfCreate = widgetDefinitionService.createOrUpdate(params)
-		
+
 		def checkedTargets = []
 		def uncheckedTargets = []
-		
+
         if (params.checkedTargets){
             JSON.parse(params.checkedTargets).each{checkedTargets << it}
         }
@@ -296,7 +296,7 @@ class AdministrationService {
 		}
 		def resultOfBulkAssignment = personWidgetDefinitionService.bulkAssignForSingleWidgetDefinitionMultipleUsers(resultOfCreate.widgetDefinition.widgetGuid, checkedTargets, uncheckedTargets, params.adminEnabled)
 		resultOfBulkAssignment.widgetDefinition = resultOfCreate.widgetDefinition
-		
+
 		return resultOfBulkAssignment
 	}
 
@@ -307,14 +307,14 @@ class AdministrationService {
 
 	def cloneDashboards(params) {
 		ensureAdmin()
-	
+
 		if ((params.checkedTargets == null) || (params.checkedTargets == "")){
-			throw new OwfException(	message:'A fatal validation error occurred. There is no checkedTargets (did you forget to select a user?). Params: ' + params.toString(), 
+			throw new OwfException(	message:'A fatal validation error occurred. There is no checkedTargets (did you forget to select a user?). Params: ' + params.toString(),
 				exceptionType: OwfExceptionTypes.Validation)
 		}
-		
+
 		def checkedTargets = []
-		
+
 		if (params.checkedTargets){
 			if (params.checkedTargets.class.name != "java.lang.String"){
 				params.checkedTargets.each{checkedTargets << it}
@@ -322,20 +322,20 @@ class AdministrationService {
 				checkedTargets << params.checkedTargets
 			}
 		}
-		
+
 		def clonedDashboardResult = null
-		
+
 		checkedTargets.each{
 			clonedDashboardResult = dashboardService.deepClone(params, it)
 		}
-		
+
 		return [success:true, name:clonedDashboardResult.dashboard.name, assignedTo:checkedTargets]
 	}
-    
+
     private def ensureAdmin() {
         if (!accountService.getLoggedInUserIsAdmin()) {
             throw new OwfException(message: "You must be an admin", exceptionType: OwfExceptionTypes.Authorization)
         }
     }
-	
+
 }

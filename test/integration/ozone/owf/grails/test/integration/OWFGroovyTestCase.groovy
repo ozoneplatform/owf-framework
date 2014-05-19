@@ -11,14 +11,14 @@ import ozone.owf.grails.domain.Person
 import ozone.owf.grails.services.ServiceModelService
 
 class OWFGroovyTestCase extends GroovyTestCase {
-	
+
 	int testAdmin1ID
 	int testUser1ID
 	int testUser2ID
 	def accountService
-	
+
 	protected void setUp() {
-		super.setUp() 
+		super.setUp()
         accountService.serviceModelService = new ServiceModelService()
 
         //needed for the following 3 createOrUpdate calls
@@ -75,44 +75,44 @@ class OWFGroovyTestCase extends GroovyTestCase {
 	protected createWidgetDefinition() {
 		def json =
 		[
-		 	imageUrlSmall: "../images/blue/icons/widgetContainer/widgetEmptysm.gif", 
-		 	imageUrlLarge: "../images/blue/icons/widgetIcons/nearlyEmpty.gif", 
+		 	imageUrlSmall: "../images/blue/icons/widgetContainer/widgetEmptysm.gif",
+		 	imageUrlMedium: "../images/blue/icons/widgetIcons/nearlyEmpty.gif",
 		 	checkedTargets:  new JSON([['id':testAdmin1ID], ['id':testUser1ID], ['id':testUser2ID] ]).toString(),
-		 	width:200, 
-		 	uncheckedTargets:4, 
-		 	height:200, 
-		 	widgetUrl: "../examples/walkthrough/widgets/NearlyEmptyWidget.html", 
-		 	isExtAjaxFormat:true, 
-		 	action: "createOrUpdateWidgetDefinition", 
-		 	widgetGuid: "6859f52e-2196-4880-8871-ba7b0ab057b7", 
+		 	width:200,
+		 	uncheckedTargets:4,
+		 	height:200,
+		 	widgetUrl: "../examples/walkthrough/widgets/NearlyEmptyWidget.html",
+		 	isExtAjaxFormat:true,
+		 	action: "createOrUpdateWidgetDefinition",
+		 	widgetGuid: "6859f52e-2196-4880-8871-ba7b0ab057b7",
             universalName: "6859f52e-2196-4880-8871-ba7b0ab057b7",
             widgetVersion: "1.0",
 		 	controller: "administration",
-		 	displayName:"New Empty Widget 1", 
+		 	displayName:"New Empty Widget 1",
 		 	adminEnabled:true
 		]
 		return json
 	}
-	
+
 	protected void tearDown() {
 		SCH.clearContext();
 		super.tearDown();
 	}
-	
+
 	protected void loginAsAdmin() {
 		loginAsUsernameAndRole("testAdmin1","ROLE_ADMIN")
 	}
-	
+
 	protected void loginAsUsernameAndRole(def username, def role_string) {
 		SCH.clearContext()
-		
+
 		GrantedAuthority[] authorities = [new GrantedAuthorityImpl(role_string)]
 		SCH.context.authentication = new UsernamePasswordAuthenticationToken(
 		new User(username, "password1", true, true, true, true, authorities),
 		"password1"
 		)
 	}
-	
+
 	protected queryDashboardByUser(username, dashboardname) {
 		def person = Person.createCriteria().list {
 			and {
@@ -122,7 +122,7 @@ class OWFGroovyTestCase extends GroovyTestCase {
 				}
 			}
 		}
-		
+
 		return person.dashboards
 	}
 

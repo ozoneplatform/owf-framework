@@ -34,7 +34,7 @@ class SecurityFilters {
                         response.sendError(401)
                         return false
                     } else {
-    
+
                         log.debug("Username is " + username);
 
                         if (log.isInfoEnabled()) {
@@ -78,14 +78,14 @@ class SecurityFilters {
                             session["savedLastLogin"] = true
                         }
                         session.personID = personInDB.id
-						
+
                         def sezzion = session
                         // Last login value should exist if user has logged in before
-                        if(personInDB.lastLogin == null) 
+                        if(personInDB.lastLogin == null)
                         {
                             log.debug("Setting default lastlogin");
                             personInDB.lastLogin = new Date()
-                        } 
+                        }
 
                         //update last logged in if we haven't already done so and update name in case it changed (marriage, divorce etc)
                         // The real name is the display name provided by the custom security module.
@@ -232,9 +232,9 @@ class SecurityFilters {
                     response.sendError(401);
                     return false;
                 }
-            }			
+            }
         }
-		
+
 //        securityDashboardAdmin(controller:'dashboardAdmin', action:'*'){
 //            before = {
 //                if (! accountService.getLoggedInUserIsAdmin() ) {
@@ -382,7 +382,7 @@ class SecurityFilters {
                     userAdmin = new WidgetDefinition(
                         displayName: 'Users',
                         height: 440,
-                        imageUrlLarge: 'themes/common/images/adm-tools/Users64.png',
+                        imageUrlMedium: 'themes/common/images/adm-tools/Users64.png',
                         imageUrlSmall: 'themes/common/images/adm-tools/Users24.png',
                         widgetGuid: id,
                         widgetUrl: 'admin/UserManagement.gsp',
@@ -401,7 +401,7 @@ class SecurityFilters {
                         displayName: 'User Editor',
                         visible: false,
                         height: 440,
-                        imageUrlLarge: 'themes/common/images/adm-tools/Users64.png',
+                        imageUrlMedium: 'themes/common/images/adm-tools/Users64.png',
                         imageUrlSmall: 'themes/common/images/adm-tools/Users24.png',
                         widgetGuid: id,
                         widgetUrl: 'admin/UserEdit.gsp',
@@ -419,7 +419,7 @@ class SecurityFilters {
                     widgetAdmin = new WidgetDefinition(
                         displayName: 'App Components',
                         height: 440,
-                        imageUrlLarge: 'themes/common/images/adm-tools/Widgets64.png',
+                        imageUrlMedium: 'themes/common/images/adm-tools/Widgets64.png',
                         imageUrlSmall: 'themes/common/images/adm-tools/Widgets24.png',
                         widgetGuid: id,
                         widgetUrl: 'admin/WidgetManagement.gsp',
@@ -438,7 +438,7 @@ class SecurityFilters {
                         displayName: 'App Component Editor',
                         visible: false,
                         height: 493,
-                        imageUrlLarge: 'themes/common/images/adm-tools/Widgets64.png',
+                        imageUrlMedium: 'themes/common/images/adm-tools/Widgets64.png',
                         imageUrlSmall: 'themes/common/images/adm-tools/Widgets24.png',
                         widgetGuid: id,
                         widgetUrl: 'admin/WidgetEdit.gsp',
@@ -456,7 +456,7 @@ class SecurityFilters {
                     groupAdmin = new WidgetDefinition(
                         displayName: 'Groups',
                         height: 440,
-                        imageUrlLarge: 'themes/common/images/adm-tools/Groups64.png',
+                        imageUrlMedium: 'themes/common/images/adm-tools/Groups64.png',
                         imageUrlSmall: 'themes/common/images/adm-tools/Groups24.png',
                         widgetGuid: id,
                         widgetUrl: 'admin/GroupManagement.gsp',
@@ -475,7 +475,7 @@ class SecurityFilters {
                         displayName: 'Group Editor',
                         visible: false,
                         height: 440,
-                        imageUrlLarge: 'themes/common/images/adm-tools/Groups64.png',
+                        imageUrlMedium: 'themes/common/images/adm-tools/Groups64.png',
                         imageUrlSmall: 'themes/common/images/adm-tools/Groups24.png',
                         widgetGuid: id,
                         widgetUrl: 'admin/GroupEdit.gsp',
@@ -494,7 +494,7 @@ class SecurityFilters {
                         displayName: 'Page Editor',
                         visible: false,
                         height: 440,
-                        imageUrlLarge: 'themes/common/images/adm-tools/Dashboards64.png',
+                        imageUrlMedium: 'themes/common/images/adm-tools/Dashboards64.png',
                         imageUrlSmall: 'themes/common/images/adm-tools/Dashboards24.png',
                         widgetGuid: id,
                         widgetUrl: 'admin/DashboardEdit.gsp',
@@ -512,7 +512,7 @@ class SecurityFilters {
                     stackAdmin = new WidgetDefinition(
                         displayName: 'Apps',
                         height: 440,
-                        imageUrlLarge: 'themes/common/images/adm-tools/Stacks64.png',
+                        imageUrlMedium: 'themes/common/images/adm-tools/Stacks64.png',
                         imageUrlSmall: 'themes/common/images/adm-tools/Stacks24.png',
                         widgetGuid: id,
                         widgetUrl: 'admin/StackManagement.gsp',
@@ -531,7 +531,7 @@ class SecurityFilters {
                         displayName: 'App Editor',
                         visible: false,
                         height: 440,
-                        imageUrlLarge: 'themes/common/images/adm-tools/Stacks64.png',
+                        imageUrlMedium: 'themes/common/images/adm-tools/Stacks64.png',
                         imageUrlSmall: 'themes/common/images/adm-tools/Stacks24.png',
                         widgetGuid: id,
                         widgetUrl: 'admin/StackEdit.gsp',
@@ -549,7 +549,7 @@ class SecurityFilters {
                     configurationWidget = new WidgetDefinition(
                         displayName: 'Configuration',
                         height: 440,
-                        imageUrlLarge: 'themes/common/images/adm-tools/Configuration64.png',
+                        imageUrlMedium: 'themes/common/images/adm-tools/Configuration64.png',
                         imageUrlSmall: 'themes/common/images/adm-tools/Configuration24.png',
                         widgetGuid: id,
                         widgetUrl: 'admin/Configuration.gsp',

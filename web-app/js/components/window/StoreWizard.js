@@ -1,7 +1,7 @@
 Ext.define('Ozone.components.window.StoreWizard', {
     extend: 'Ozone.components.window.ModalWindow',
     alias: 'widget.storewizard',
-    
+
     modal: true,
     preventHeader: true,
     modalAutoClose: true,
@@ -41,9 +41,9 @@ Ext.define('Ozone.components.window.StoreWizard', {
         this.loadMask = Ext.create('Ozone.components.mask.LoadMask', Ext.getBody(), {
             zIndexManager: Ext.WindowManager
         });
-    	
+
     	this.widgetStore = Ext.StoreManager.lookup('widgetStore');
-    	
+
         this.adminStore = Ext.create('Ozone.data.stores.AdminWidgetStore', {
             pageSize: -1,
             callback: this.saveCallback
@@ -186,6 +186,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
             Ozone.util.Transport.getDescriptor({
                 url: storeDescriptor,
                 onSuccess: function(data) {
+                    data.imageUrlMedium = data.imageUrlMedium || data.imageUrlLarge;
                     me.record = new Ozone.data.WidgetDefinition(data);
                     me.loadMask.hide();
 
@@ -239,11 +240,11 @@ Ext.define('Ozone.components.window.StoreWizard', {
             }
 
             me.record.set('imageUrlSmall', $('.iconUrl').val());
-            me.record.set('imageUrlLarge', me.record.get('imageUrlSmall'));
+            me.record.set('imageUrlMedium', me.record.get('imageUrlSmall'));
             me.record.set('displayName', Ext.htmlEncode($('.storeName').val()));
             me.record.set('name', me.record.get('displayName'));
             me.record.set('title', me.record.get('displayName'));
-            me.record.set('image', me.record.get('imageUrlLarge'));
+            me.record.set('image', me.record.get('imageUrlMedium'));
             me.record.set('headerIcon', me.record.get('imageUrlSmall'));
             me.record.phantom = true;
 
@@ -278,9 +279,9 @@ Ext.define('Ozone.components.window.StoreWizard', {
                         if (success) {
                             if(me.widgetStore)
                             	me.widgetStore.load();
-                            
+
                             me.close();
-                        } 
+                        }
                     }
                 });
             });
@@ -298,7 +299,7 @@ Ext.define('Ozone.components.window.StoreWizard', {
         $('.closeButton').on('click', function() {
             me.close()
         });
-        
+
         $('.cancel').on('click', function() {
             me.close()
         });

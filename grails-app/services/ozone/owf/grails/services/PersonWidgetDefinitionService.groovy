@@ -313,7 +313,7 @@ class PersonWidgetDefinitionService {
         if (params?.max != null) opts.max =(params.max instanceof String ? Integer.parseInt(params.max) : params.max)
 
         def person = accountService.getLoggedInUser()
-  
+
         // Get stack default groups associated to the user.
         def stackDefaultGroups = []
         def stacks = Stack.withCriteria {
@@ -326,7 +326,7 @@ class PersonWidgetDefinitionService {
             cacheMode(CacheMode.GET)
         }
         stackDefaultGroups = stacks.collect { it.findStackDefaultGroup() }
-        
+
         // Get non stack default groups that contain this user.
         def groups = Group.withCriteria {
             people {
@@ -340,7 +340,7 @@ class PersonWidgetDefinitionService {
             //seems to be a bug where the people collection is cached with only one person due to the people association filter above
             cacheMode(CacheMode.GET)
         }
-        
+
         // Get the OWF Users Group and add it to the list
         def allUsersGroup = Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
         if (allUsersGroup) {
@@ -371,7 +371,7 @@ class PersonWidgetDefinitionService {
 
         // Generate a combined group list.
         groups = (groups << stackDefaultGroups).flatten()
-        
+
         def queryReturn = PersonWidgetDefinition.executeQuery("SELECT MAX(pwd.pwdPosition) AS retVal FROM PersonWidgetDefinition pwd WHERE pwd.person = ?", [person])
         def maxPosition = (queryReturn[0] != null)? queryReturn[0] : -1
 
@@ -389,7 +389,7 @@ class PersonWidgetDefinitionService {
                 //            groupWidgetsToTagsMap[widgetDef.widgetGuid] << ['name': group.name, 'visible': true, 'position': -1]
                 groupWidgetsToTagsMap[widgetDef.widgetGuid] << group
             }
-            
+
         }
 
         def allGroupWidgetsToTagsMap = groupWidgetsToTagsMap.clone();
@@ -410,7 +410,7 @@ class PersonWidgetDefinitionService {
                 groupWidgetsToTagsMap.remove(pwd.widgetDefinition.widgetGuid)
             }
             else {
-                // delete pwd if a group widget is no longer in a group and user is not 
+                // delete pwd if a group widget is no longer in a group and user is not
                 // directly associated to it.
                 if (!pwd.userWidget) {
                     Map newParams = new HashMap()
@@ -1097,9 +1097,9 @@ class PersonWidgetDefinitionService {
             case 'value.smallIconUrl':
                 def restrictValue = "select pwd from ${PersonWidgetDefinition.name} pwd, ${WidgetDefinition.name} wd where pwd.widgetDefinition.id = wd.id order by wd.imageUrlSmall " + (jsonOrderDirParam?.toLowerCase() ?: 'asc') + ""
                 return ['restrict': true,  'domainField': 'widgetDefinition.imageUrlSmall', 'restrictValue': restrictValue]
-            case 'value.largeIconUrl':
-                def restrictValue = "select pwd from ${PersonWidgetDefinition.name} pwd, ${WidgetDefinition.name} wd where pwd.widgetDefinition.id = wd.id order by wd.imageUrlLarge " + (jsonOrderDirParam?.toLowerCase() ?: 'asc') + ""
-                return ['restrict': true, 'domainField': 'widgetDefinition.imageUrlLarge', 'restrictValue': restrictValue]
+            case 'value.mediumIconUrl':
+                def restrictValue = "select pwd from ${PersonWidgetDefinition.name} pwd, ${WidgetDefinition.name} wd where pwd.widgetDefinition.id = wd.id order by wd.imageUrlMedium " + (jsonOrderDirParam?.toLowerCase() ?: 'asc') + ""
+                return ['restrict': true, 'domainField': 'widgetDefinition.imageUrlMedium', 'restrictValue': restrictValue]
             case 'value.visible':
                 return ['restrict': false, 'domainField': 'visible']
             case 'value.position':

@@ -27,7 +27,7 @@ class AccessServiceTests extends GroovyTestCase {
     private buildWidgetDefinition (def id, def url) {
 
         return new WidgetDefinition( widgetGuid:  id, widgetUrl:  url, displayName: 'Generic', height: 200, width: 200,
-            imageUrlLarge: 'http://foo.jpg', imageUrlSmall: 'http://bar.jpg')
+            imageUrlMedium: 'http://foo.jpg', imageUrlSmall: 'http://bar.jpg')
     }
     protected void setUp() {
     super.setUp()

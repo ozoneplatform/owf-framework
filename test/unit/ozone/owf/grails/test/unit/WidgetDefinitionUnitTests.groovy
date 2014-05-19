@@ -10,7 +10,7 @@ import ozone.owf.grails.services.DomainMappingService
 class WidgetDefinitionUnitTests extends GrailsUnitTestCase {
 
     def widgetDefinition
-    
+
     protected void setUp() {
         super.setUp()
         mockDomain(WidgetDefinition)
@@ -27,7 +27,7 @@ class WidgetDefinitionUnitTests extends GrailsUnitTestCase {
     }
 
     void assertGuidInvalid() {
-        TestUtil.assertEqualsConstraintCode(ConstrainedProperty.MATCHES_CONSTRAINT + ConstrainedProperty.INVALID_SUFFIX, 
+        TestUtil.assertEqualsConstraintCode(ConstrainedProperty.MATCHES_CONSTRAINT + ConstrainedProperty.INVALID_SUFFIX,
                      'widgetGuid',
                      widgetDefinition)
     }
@@ -55,7 +55,7 @@ class WidgetDefinitionUnitTests extends GrailsUnitTestCase {
     }
 
     void testWidgetGuidValid() {
-        widgetDefinition.widgetGuid = "3F2504E0-4F89-11D3-9A0C-0305E82C3301" 
+        widgetDefinition.widgetGuid = "3F2504E0-4F89-11D3-9A0C-0305E82C3301"
 
         TestUtil.assertNoErrorOnProperty('widgetGuid',widgetDefinition, "WidgetGuid should be valid")
     }
@@ -63,7 +63,7 @@ class WidgetDefinitionUnitTests extends GrailsUnitTestCase {
     void testDisplayNameRequired() {
         TestUtil.assertPropertyRequired('displayName',widgetDefinition)
     }
-/*	
+/*
 	void testDisplayNameCharactersWrong()
 	{
 		widgetDefinition.displayName = "\""
@@ -91,7 +91,7 @@ class WidgetDefinitionUnitTests extends GrailsUnitTestCase {
 		widgetDefinition.displayName = """]"""
 		TestUtil.assertEqualsConstraintCode(ConstrainedProperty.MATCHES_CONSTRAINT + ConstrainedProperty.INVALID_SUFFIX, 'displayName', widgetDefinition)
 	}
-*/    
+*/
     void testDisplayNameIsValid()
 	{
 		widgetDefinition.displayName = "\""
@@ -121,7 +121,7 @@ class WidgetDefinitionUnitTests extends GrailsUnitTestCase {
 		widgetDefinition.displayName = "Hello World 1234567890!@\$%^&*()_+-|?><`~."
 		TestUtil.assertNoErrorOnProperty('displayName', widgetDefinition)
 	}
-	
+
 	void testDisplayNameEscapedIsValid()
 	{
 		widgetDefinition.displayName = "\\u5317\\u7F8E\\u4E2D\\u6587\\u5831\\u7D19"
@@ -136,12 +136,12 @@ class WidgetDefinitionUnitTests extends GrailsUnitTestCase {
         TestUtil.checkSizeConstraintProperty('widgetUrl',widgetDefinition, 2083)
     }
 
-    void testImageUrlLargeRequired() {
-        TestUtil.assertPropertyRequired('imageUrlLarge',widgetDefinition)
+    void testimageUrlMediumRequired() {
+        TestUtil.assertPropertyRequired('imageUrlMedium',widgetDefinition)
     }
 
-    void testImageUrlLargeSizeConstraints() {
-        TestUtil.checkSizeConstraintProperty('imageUrlLarge',widgetDefinition, 2083)
+    void testimageUrlMediumSizeConstraints() {
+        TestUtil.checkSizeConstraintProperty('imageUrlMedium',widgetDefinition, 2083)
     }
 
     void testImageUrlSmallRequired() {
@@ -159,7 +159,7 @@ class WidgetDefinitionUnitTests extends GrailsUnitTestCase {
 	void testHeightSizeConstraints() {
 		TestUtil.checkNumberSizeConstraintProperty('height', widgetDefinition, null, 0)
 	}
-    
+
     void testWidthRequired() {
     	TestUtil.assertPropertyRequired('width',widgetDefinition)
     }
@@ -167,5 +167,5 @@ class WidgetDefinitionUnitTests extends GrailsUnitTestCase {
 	void testWidthSizeConstraints() {
 		TestUtil.checkNumberSizeConstraintProperty('width', widgetDefinition, null, 0)
 	}
-	
+
 }

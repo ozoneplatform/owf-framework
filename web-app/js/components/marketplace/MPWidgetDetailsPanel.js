@@ -1,4 +1,4 @@
-/* TEST FUNCTION TO LOAD A BUNCH OF RECORDS 
+/* TEST FUNCTION TO LOAD A BUNCH OF RECORDS
 function createFakeData(count, testData) {
 	var data = [];
 	var index = 0;
@@ -21,7 +21,7 @@ function createFakeData(count, testData) {
 Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
     extend: 'Ext.panel.Panel',
     alias: ['widget.marketplace.widgetdetails', 'widget.Ozone.components.marketplace.MPWidgetDetailsPanel'],
-    
+
     itemId: 'mpWidgetDetailPage',
     cls: 'mpWidgetDetailPage',
     preventHeader: true,
@@ -30,11 +30,11 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
     recordId: null,
     parentWidget: {},
     requiredListings: [],
-    
+
     mpWidgetSummary: null,
     mpWidgetSpecifications: null,
     mpWidgetAssociations: null,
-    
+
     // This should be overridden when component is initialized.
     returnToSearchResults: function() {
         var mpMainPanel = this.up('#mpMainPanel'),
@@ -43,11 +43,11 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
 
         mpWindow.focus();
     },
-    
+
     refreshPage: function(parentWidget, requiredListings) {
     	this.parentWidget = parentWidget ? parentWidget : this.parentWidget;
     	this.requiredListings = requiredListings ? requiredListings : this.requiredListings;
-    	
+
         // Update widget detail page
         this.mpWidgetSummary.store = new Ext.data.Store({
             model: 'Ozone.marketplace.model.ServiceItem',
@@ -55,11 +55,11 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
         });
         this.mpWidgetSummary.tpl.overwrite(this.mpWidgetSummary.el, this.parentWidget);
         this.mpWidgetSummary.doComponentLayout();
-        
+
         // Relink search results link
         var elemReturn = Ext.get('mpSearchResultsLink');
         if (elemReturn) {
-            Ozone.components.focusable.Focusable.setupFocus(elemReturn);   
+            Ozone.components.focusable.Focusable.setupFocus(elemReturn);
 
             elemReturn.addListener({
                 click: {
@@ -69,7 +69,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
                 keydown: {
                     fn: function(evt, dom) {
                         switch (evt.getKey()) {
-                            case evt.ENTER: 
+                            case evt.ENTER:
                             case evt.SPACE:
                                 this.returnToSearchResults();
                         }
@@ -78,7 +78,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
                 }
             });
         }
-        
+
         // Add the "Add Widget" Button
         var elemAdd = Ext.get('mpAddButton');
         if (elemAdd) {
@@ -92,18 +92,18 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
                 scope: this
             });
         }
-        
+
         this.mpWidgetSpecifications.tpl.overwrite(this.mpWidgetSpecifications.body, this.parentWidget);
         this.mpWidgetSpecifications.doComponentLayout();
-        
+
         // Update widget associations
 //        this.requiredListings = createFakeData(25, this.requiredListings);  // test loading a bunch of records
     	var records = [];
         for (var i = 0; i < this.requiredListings.length; i++) {
             records.push(Ext.create('Ozone.marketplace.model.ServiceItem', this.requiredListings[i]));
         }
-        this.mpWidgetAssociations.setTitle(this.parentWidget.title + ' Requires:');        
-        
+        this.mpWidgetAssociations.setTitle(this.parentWidget.title + ' Requires:');
+
         this.mpWidgetAssociations.store = Ext.data.StoreManager.lookup('requiredWidgetsStore');
         this.mpWidgetAssociations.store.loadRecords(records, {addRecords: false});
         if (this.requiredListings && this.requiredListings.length > 0) {
@@ -114,17 +114,17 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
 
         this.mpWidgetSummary.fireEvent('refresh', this.mpWidgetSummary);
     },
-    
+
     updateDetails: function(recordId) {
     	this.recordId = recordId ? recordId : this.recordId;
-    	
+
     	if (this.recordId) {
 	    	var scope = this;
 	    	this.setLoading(true);
 	    	Ozone.marketplace.util.getOWFRequiredListings({
-			
+
 	            id: this.recordId,
-				
+
 	            success: function onSuccess(json) {
 	            	if (json.data instanceof Array) {
 	            	scope.refreshPage(json.data[0], json.data.slice(1));
@@ -133,7 +133,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
 	            	}
 	    	    	scope.setLoading(false);
 	            },
-	            
+
 	            failure: function onGetFailure(error, status) {
 	            	// Display error?
 	    	    	scope.setLoading(false);
@@ -141,7 +141,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
 	        });
     	}
     },
-    
+
     addWidget: function() {
         var approvalTag = [];
         var widgetsJSON = [];
@@ -171,7 +171,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
         var json = {
             displayName: parentWidget.title,
             height: 200,
-            imageUrlLarge: parentWidget.imageLargeUrl ? parentWidget.imageLargeUrl : Ozone.util.contextPath(),
+            imageUrlMedium: parentWidget.imageLargeUrl ? parentWidget.imageLargeUrl : Ozone.util.contextPath(),
             imageUrlSmall: parentWidget.imageSmallUrl ? parentWidget.imageSmallUrl : Ozone.util.contextPath(),
             isExtAjaxFormat: true,
             widgetGuid: parentWidget.uuid,
@@ -194,15 +194,15 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
         	// Add required widgets
             for (var i = 0; i < requiredListings.length; i++) {
             	directRequired = [];
-            	
+
                 for (var j = 0; j < requiredListings[i].requires.length; j++) {
                 	directRequired.push(requiredListings[i].requires[j].uuid);
                 }
-                
+
             	json = {
                     displayName: requiredListings[i].title,
                     height: 200,
-                    imageUrlLarge: requiredListings[i].imageLargeUrl ? requiredListings[i].imageLargeUrl : Ozone.util.contextPath(),
+                    imageUrlMedium: requiredListings[i].imageLargeUrl ? requiredListings[i].imageLargeUrl : Ozone.util.contextPath(),
                     imageUrlSmall: requiredListings[i].imageSmallUrl ? requiredListings[i].imageSmallUrl : Ozone.util.contextPath(),
                     isExtAjaxFormat: true,
                     widgetGuid: requiredListings[i].uuid,
@@ -219,14 +219,14 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
             	}
             	widgetsJSON.push(Ext.JSON.encode(json));
             }
-        	
+
         	var alertView = Ext.create('Ext.panel.Panel', {
                 autoScroll: true,
                 preventHeader: true,
                 cls: 'mpWindow',
                 bodyCls: 'mpMsgWindow',
                 data: requiredListings,
-                tpl: Ext.create('Ext.XTemplate', 
+                tpl: Ext.create('Ext.XTemplate',
             		'<div class="mpParentListing">',
 	                	'<table>',
 	                		'<tr>',
@@ -289,7 +289,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
 			                		'</tr>',
 		                		'</table>',
 		                	'</div>',
-		                '</tpl>', 
+		                '</tpl>',
                 	'</div>', {
                     compiled: true,
                     htmlEncode: function(str) {
@@ -313,7 +313,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
                     }
                 })
         	});
-        	
+
         	var alertWin = Ext.create('Ext.window.Window', {
         	    title: 'Adding Widget',
         	    width: 650,
@@ -326,7 +326,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
         	        dock: 'bottom',
         	        ui: 'footer',
         	        items: [
-        	            { 
+        	            {
                             xtype: 'tbfill'
                         },{
         	            	xtype: 'button',
@@ -338,13 +338,13 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
      	            			   autoShow: true,
      	            			   renderTo: 'mpMsgWindowProgress'
         	            		});
-        	            		
+
         	            		progressBar.wait({
       	            			   text: 'Adding Widget...',
     	            			   interval: 1000, //bar will move fast!
     	            			   increment: 100
     	            			});
-        	            		        	                    
+
         	                    owfdojo.xhrPost({
         	                        url: Ozone.util.contextPath() + '/widget/',
         	                        sync: true,
@@ -363,10 +363,10 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
         	                                cls:'confirmationDialog'
         	                            });
         	                        }
-        	                    });        	                    
+        	                    });
         	            	}
-        	            }, { 
-        	            	xtype: 'button', 
+        	            }, {
+        	            	xtype: 'button',
                             itemId: 'cancelBtn',
         	            	text: Ozone.layout.MessageBoxButtonText.cancel,
         	            	handler: function() {
@@ -379,17 +379,17 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
         	    }],
                 listeners: {
                     afterrender: function (cmp) {
-                        Ext.applyIf(cmp, 
+                        Ext.applyIf(cmp,
                             new Ozone.components.focusable.EscCloseHelper());
 
                         cmp.setupFocusOnEsc(Ext.getCmp('mpWindow').getFocusEl());
 
-                        Ext.applyIf(cmp, 
+                        Ext.applyIf(cmp,
                             new Ozone.components.focusable.CircularFocus());
 
                         //circular focus
                         cmp.setupFocus(
-                            cmp.down('#okBtn').getFocusEl(), 
+                            cmp.down('#okBtn').getFocusEl(),
                             cmp.down('#cancelBtn').getFocusEl()
                         );
 
@@ -417,26 +417,26 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
             });
     	}
     },
-    
+
     // private
     onBeforeShow: function(cmp){
-        this.callParent(arguments);        
+        this.callParent(arguments);
     },
-    
+
     onShow: function(cmp){
-        this.callParent(arguments);        
+        this.callParent(arguments);
         this.updateDetails();
     },
-    
+
     onRender: function(cmp){
-        this.callParent(arguments);        
+        this.callParent(arguments);
         this.updateDetails();
     },
-    
+
     initComponent: function(){
         Ozone.components.MPListingsAPI = new Ozone.marketplace.MPListingsAPI();
         Ozone.components.MPCategoryAPI = new Ozone.marketplace.MPCategoryAPI();
-        
+
         var items = [];
 
         this.mpWidgetSummary = Ext.widget('templateeventdataview', {
@@ -478,7 +478,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
                                 }
                             }, this);
                         };
-                        
+
                         var elemAdd = Ext.get('mpAddButton');
                         if (elemAdd) {
                         	Ext.create('Ext.Button', {
@@ -521,62 +521,62 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
             })
         });
         items.push(this.mpWidgetSummary);
-        
+
         this.mpWidgetSpecifications = Ext.create('Ext.panel.Panel', {
 	        title: 'Specifications',
             data: this.parentWidget,
     	    componentCls: 'mp-specifications-panel',
-	        tpl: Ext.create('Ext.XTemplate', 
-        		'<tpl for=".">', 
-        			'<table>', 
-        				'<tr class="detail-specifications">', 
-        					'<td valign="top" width="125" class="detail-specifications-row">', 
-        						'<div>State:</div>', 
-        					'</td>', 
-        					'<td valign="top" class="detail-specifications-row">', '<tpl for="state">', '<div>{title:this.htmlEncode}</div>', '</tpl>', '</td>', 
-        				'</tr>', 
-        				'<tr class="detail-specifications">', 
-        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Launch URL:</div>', '</td>', 
-        					'<td valign="top" class="detail-specifications-row">', '<div>{launchUrl}</div>', '</td>', 
-        				'</tr>', 
-        				'<tr class="detail-specifications">', 
-        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Organization:</div>', '</td>', 
-        					'<td valign="top" class="detail-specifications-row">', '<div>{organization:this.htmlEncode}</div>', '</td>', 
-        				'</tr>', 
-        				'<tr class="detail-specifications">', 
-        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Technical POC:</div>', '</td>', 
-        					'<td valign="top" class="detail-specifications-row">', '<div>{techPoc:this.htmlEncode}</div>', '</td>', 
-        				'</tr>', 
-        				'<tr class="detail-specifications">', 
-        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Recommended Layouts:</div>', '</td>', 
-        					'<td valign="top" class="detail-specifications-row">', '<div>{recommendedLayouts:this.convertArrayToString}</div>', '</td>', 
-        				'</tr>', 
-        				'<tr class="detail-specifications">', 
-        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Singleton:</div>', '</td>', 
-        					'<td valign="top" class="detail-specifications-row">', '<div>{owfProperties:this.isSingleton}</div>', '</td>', 
-        				'</tr>', 
-        				'<tr class="detail-specifications">', 
-        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Visible in Launch Menu:</div>', '</td>', 
-        					'<td valign="top" class="detail-specifications-row">', '<div>{owfProperties:this.isVisible}</div>', '</td>', 
-        				'</tr>', 
-        				'<tr class="detail-specifications">', 
-        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Screenshot:</div>', '</td>', 
-        					'<td valign="top" class="detail-specifications-row">{screenshot1Url:this.createScreenshot}', '</td>', 
-        				'</tr>', 
+	        tpl: Ext.create('Ext.XTemplate',
+        		'<tpl for=".">',
+        			'<table>',
+        				'<tr class="detail-specifications">',
+        					'<td valign="top" width="125" class="detail-specifications-row">',
+        						'<div>State:</div>',
+        					'</td>',
+        					'<td valign="top" class="detail-specifications-row">', '<tpl for="state">', '<div>{title:this.htmlEncode}</div>', '</tpl>', '</td>',
+        				'</tr>',
+        				'<tr class="detail-specifications">',
+        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Launch URL:</div>', '</td>',
+        					'<td valign="top" class="detail-specifications-row">', '<div>{launchUrl}</div>', '</td>',
+        				'</tr>',
+        				'<tr class="detail-specifications">',
+        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Organization:</div>', '</td>',
+        					'<td valign="top" class="detail-specifications-row">', '<div>{organization:this.htmlEncode}</div>', '</td>',
+        				'</tr>',
+        				'<tr class="detail-specifications">',
+        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Technical POC:</div>', '</td>',
+        					'<td valign="top" class="detail-specifications-row">', '<div>{techPoc:this.htmlEncode}</div>', '</td>',
+        				'</tr>',
+        				'<tr class="detail-specifications">',
+        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Recommended Layouts:</div>', '</td>',
+        					'<td valign="top" class="detail-specifications-row">', '<div>{recommendedLayouts:this.convertArrayToString}</div>', '</td>',
+        				'</tr>',
+        				'<tr class="detail-specifications">',
+        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Singleton:</div>', '</td>',
+        					'<td valign="top" class="detail-specifications-row">', '<div>{owfProperties:this.isSingleton}</div>', '</td>',
+        				'</tr>',
+        				'<tr class="detail-specifications">',
+        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Visible in Launch Menu:</div>', '</td>',
+        					'<td valign="top" class="detail-specifications-row">', '<div>{owfProperties:this.isVisible}</div>', '</td>',
+        				'</tr>',
+        				'<tr class="detail-specifications">',
+        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Screenshot:</div>', '</td>',
+        					'<td valign="top" class="detail-specifications-row">{screenshot1Url:this.createScreenshot}', '</td>',
+        				'</tr>',
         				'<tpl if="this.getCreatedBy(createdBy)">',
-        				'<tr class="detail-specifications">', 
-        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Created By:</div>', '</td>', 
-        					'<td valign="top" class="detail-specifications-row">', '<div>{createdBy:this.getCreatedBy}</div>', '</td>', 
-        				'</tr>', 
+        				'<tr class="detail-specifications">',
+        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Created By:</div>', '</td>',
+        					'<td valign="top" class="detail-specifications-row">', '<div>{createdBy:this.getCreatedBy}</div>', '</td>',
+        				'</tr>',
         				'</tpl>',
                         '<tpl if="createdDate != &quot;&quot;">',
-        				'<tr class="detail-specifications">', 
-        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Created Date:</div>', '</td>', 
-        					'<td valign="top" class="detail-specifications-row">', '<div>{createdDate:this.displayDate}</div>', '</td>', 
-        				'</tr>', 
+        				'<tr class="detail-specifications">',
+        					'<td valign="top" width="125" class="detail-specifications-row">', '<div>Created Date:</div>', '</td>',
+        					'<td valign="top" class="detail-specifications-row">', '<div>{createdDate:this.displayDate}</div>', '</td>',
+        				'</tr>',
                         '</tpl>',
-        			'</table>', 
-        		'</div>', 
+        			'</table>',
+        		'</div>',
         	'</tpl>', {
                 compiled: true,
                 htmlEncode: function(str) {
@@ -611,14 +611,14 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
 					return (obj && obj.singleton) ? obj.singleton : false;
 				}
 	        })
-	    }); 
+	    });
         items.push(this.mpWidgetSpecifications);
 
         var requiredWidgetsStore = Ext.create('Ext.data.Store', {
     	    storeId:'requiredWidgetsStore',
     	    model: 'Ozone.marketplace.model.ServiceItem'
     	});
-        
+
         // create the Data Store
         this.mpWidgetAssociations = Ext.create('Ext.grid.Panel', {
             title: this.parentWidget.title + ' Requires:',
@@ -635,7 +635,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
     	    columns: [
     	        {
 		        	xtype: 'gridcolumn',
-		        	dataIndex: 'imageSmallUrl', 
+		        	dataIndex: 'imageSmallUrl',
 		        	width: 36,
 		        	sortable: false,
 		        	resizable: false,
@@ -645,14 +645,14 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
 	                    return  val ? retVal : "";
 	                }
 		        }, {
-		        	dataIndex: 'title', 
+		        	dataIndex: 'title',
 		        	flex:1,
 		        	renderer: function (val, metaData, record, rowIndex, colIndex, store){
 	                    return  val ? Ext.util.Format.htmlEncode(val) : "";
 	                }
 		        }, {
 		        	xtype: 'gridcolumn',
-		        	dataIndex: 'versionName', 
+		        	dataIndex: 'versionName',
 		        	width: 75,
 		        	sortable: false,
 		        	menuDisabled: true,
@@ -674,11 +674,11 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
 
         items.push(this.mpWidgetAssociations);
 
-        
+
         Ext.applyIf(this, {
             items: [items]
         });
-        
+
         //call super init
         this.callParent();
     }

@@ -52,7 +52,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
     {
         "displayName":"name",
         "description":"description",
-        "imageUrlLarge":"largeImage",
+        "imageUrlMedium":"largeImage",
         "imageUrlSmall":"smallImage",
         "widgetGuid":"086ca7a6-5c53-438c-99f2-f7820638fc6f",
         "widgetUrl":"http://wikipedia.com",
@@ -73,7 +73,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
     {
         "displayName":"name",
         "description":"description",
-        "imageUrlLarge":"largeImage",
+        "imageUrlMedium":"largeImage",
         "imageUrlSmall":"smallImage",
         "widgetGuid":"086ca7a6-5c53-438c-99f2-f7820638fc6f",
         "widgetUrl":"http://wikipedia.com",
@@ -95,7 +95,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
     {
         "displayName":"name",
         "description":"description",
-        "imageUrlLarge":"largeImage",
+        "imageUrlMedium":"largeImage",
         "imageUrlSmall":"smallImage",
         "widgetGuid":"086ca7a6-5c53-438c-99f2-f7820638fc6f",
         "widgetUrl":"http://wikipedia.com",
@@ -117,7 +117,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
     {
         "displayName":"nameIntents",
         "description":"descriptionIntents",
-        "imageUrlLarge":"largeImageIntents",
+        "imageUrlMedium":"largeImageIntents",
         "imageUrlSmall":"smallImageIntents",
         "widgetGuid":"086ca7a6-5c53-438c-99f2-f7820638fc6e",
         "widgetUrl":"http://Intents.com",
@@ -143,7 +143,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
     {
         "displayName":"testWidgetTypes",
         "description":"descriptionIntents",
-        "imageUrlLarge":"largeImageIntents",
+        "imageUrlMedium":"largeImageIntents",
         "imageUrlSmall":"smallImageIntents",
         "widgetGuid":"086ca7a6-5c53-438c-99f2-f7820638fc6e",
         "widgetUrl":"http://Intents.com",
@@ -208,7 +208,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         assert 1 == widgets.size()
         assert "name" == resultWidget.displayName
         assert "description" == resultWidget.description
-        assert "largeImage" == resultWidget.imageUrlLarge
+        assert "largeImage" == resultWidget.imageUrlMedium
         assert "smallImage" == resultWidget.imageUrlSmall
         assert "086ca7a6-5c53-438c-99f2-f7820638fc6f" == resultWidget.widgetGuid
         assert "http://wikipedia.com" == resultWidget.widgetUrl
@@ -234,7 +234,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         assert 1 == widgets.size()
         assert "name" == resultWidget.displayName
         assert "description" == resultWidget.description
-        assert "largeImage" == resultWidget.imageUrlLarge
+        assert "largeImage" == resultWidget.imageUrlMedium
         assert "smallImage" == resultWidget.imageUrlSmall
         assert "086ca7a6-5c53-438c-99f2-f7820638fc6f" == resultWidget.widgetGuid
         assert "http://wikipedia.com" == resultWidget.widgetUrl

@@ -158,11 +158,11 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
                         }],
                         "defaultSettings": {}
                     }],
-                    "xtype":"container", 
+                    "xtype":"container",
                     "layout":[{
-                        "align":"stretch", 
+                        "align":"stretch",
                         "type":"hbox"
-                    }], 
+                    }],
                     "flex":3
                 }""", description: 'This is a stack dashboard.')
 
@@ -214,7 +214,7 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
                 displayName: 'Widget C',
                 description: 'Widget C description',
                 height: 740,
-                imageUrlLarge: '../images/blue/icons/widgetIcons/widgetC.gif',
+                imageUrlMedium: '../images/blue/icons/widgetIcons/widgetC.gif',
                 imageUrlSmall: '../images/blue/icons/widgetContainer/widgetCsm.gif',
                 widgetGuid: '0c5435cf-4021-4f2a-ba69-dde451d12551',
                 universalName: 'com.company.widget.universalname',
@@ -243,7 +243,7 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
         assertTrue widgetDescriptor.contains('"displayName": "' + widget.displayName + '"')
         assertTrue widgetDescriptor.contains('"universalName": "' + widget.universalName + '"')
         assertTrue widgetDescriptor.contains('"widgetUrl": "' + widget.widgetUrl + '"')
-        assertTrue widgetDescriptor.contains('"imageUrlLarge": "' + widget.imageUrlLarge + '"')
+        assertTrue widgetDescriptor.contains('"imageUrlMedium": "' + widget.imageUrlMedium + '"')
         assertTrue widgetDescriptor.contains('"imageUrlSmall": "' + widget.imageUrlSmall + '"')
         assertTrue widgetDescriptor.contains('"description": "' + widget.description + '"')
         assertTrue widgetDescriptor.contains('"widgetVersion": "' + widget.widgetVersion + '"')
@@ -267,7 +267,7 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
                 description: 'Widget C description',
                 displayName: 'Widget C',
                 height: 740,
-                imageUrlLarge: '../images/blue/icons/widgetIcons/widgetC.gif',
+                imageUrlMedium: '../images/blue/icons/widgetIcons/widgetC.gif',
                 imageUrlSmall: '../images/blue/icons/widgetContainer/widgetCsm.gif',
                 widgetGuid: '0c5435cf-4021-4f2a-ba69-dde451d12551',
                 universalName: 'com.company.widget.universalname',
@@ -308,7 +308,7 @@ class WidgetDefinitionServiceTests extends GroovyTestCase {
         assertEquals widget.displayName, widgetDescriptor.displayName
         assertEquals widget.universalName, widgetDescriptor.universalName
         assertEquals widget.widgetUrl, widgetDescriptor.widgetUrl
-        assertEquals widget.imageUrlLarge, widgetDescriptor.imageUrlLarge
+        assertEquals widget.imageUrlMedium, widgetDescriptor.imageUrlMedium
         assertEquals widget.imageUrlSmall, widgetDescriptor.imageUrlSmall
         assertEquals widget.description, widgetDescriptor.description
         assertEquals widget.widgetVersion, widgetDescriptor.widgetVersion

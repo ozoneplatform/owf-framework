@@ -149,7 +149,7 @@ class ServiceModelService {
                         description: domain.description,
                         widgetUrl: domain.widgetUrl,
                         imageUrlSmall: domain.imageUrlSmall,
-                        imageUrlLarge: domain.imageUrlLarge,
+                        imageUrlMedium: domain.imageUrlMedium,
                         width: domain.width,
                         height: domain.height,
                         totalUsers: params.totalUsers ? params.totalUsers : 0,
@@ -190,7 +190,7 @@ class ServiceModelService {
                 // add groups to stack so we can decide client side whether to allow
                 // users to delete this stack
                 def groups = []
-                domain.groups?.each { 
+                domain.groups?.each {
                     groups << createServiceModel(it)
                 }
 

@@ -10,56 +10,56 @@ databaseChangeLog = {
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"User Manager")
-//      column(name:"image_url_large", value:"themes/common/images/admin/64x64_blue_user.png")
+//      column(name:"image_url_medium", value:"themes/common/images/admin/64x64_blue_user.png")
 //      column(name:"image_url_small", value:"themes/common/images/admin/64x64_blue_user.png")
 //      where(text="widget_url='admin/UserManagement.gsp'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"User Editor")
-//      column(name:"image_url_large", value:"themes/common/images/admin/64x64_blue_user.png")
+//      column(name:"image_url_medium", value:"themes/common/images/admin/64x64_blue_user.png")
 //      column(name:"image_url_small", value:"themes/common/images/admin/64x64_blue_user.png")
 //      where(text="widget_url='admin/UserEdit.gsp'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Widget Manager")
-//      column(name:"image_url_large", value:"themes/common/images/admin/64x64_blue_widget.png")
+//      column(name:"image_url_medium", value:"themes/common/images/admin/64x64_blue_widget.png")
 //      column(name:"image_url_small", value:"themes/common/images/admin/64x64_blue_widget.png")
 //      where(text="widget_url='admin/WidgetManagement.gsp'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Widget Editor")
-//      column(name:"image_url_large", value:"themes/common/images/admin/64x64_blue_widget.png")
+//      column(name:"image_url_medium", value:"themes/common/images/admin/64x64_blue_widget.png")
 //      column(name:"image_url_small", value:"themes/common/images/admin/64x64_blue_widget.png")
 //      where(text="widget_url='admin/WidgetEdit.gsp'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Group Manager")
-//      column(name:"image_url_large", value:"themes/common/images/admin/64x64_blue_group.png")
+//      column(name:"image_url_medium", value:"themes/common/images/admin/64x64_blue_group.png")
 //      column(name:"image_url_small", value:"themes/common/images/admin/64x64_blue_group.png")
 //      where(text="widget_url='admin/GroupManagement.gsp'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Group Editor")
-//      column(name:"image_url_large", value:"themes/common/images/admin/64x64_blue_group.png")
+//      column(name:"image_url_medium", value:"themes/common/images/admin/64x64_blue_group.png")
 //      column(name:"image_url_small", value:"themes/common/images/admin/64x64_blue_group.png")
 //      where(text="widget_url='admin/GroupEdit.gsp'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Group Dashboard Manager")
-//      column(name:"image_url_large", value:"themes/common/images/admin/64x64_blue_dashboard.png")
+//      column(name:"image_url_medium", value:"themes/common/images/admin/64x64_blue_dashboard.png")
 //      column(name:"image_url_small", value:"themes/common/images/admin/64x64_blue_dashboard.png")
 //      where(text="widget_url='admin/GroupDashboardManagement.gsp'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Dashboard Editor")
-//      column(name:"image_url_large", value:"themes/common/images/admin/64x64_blue_dashboard.png")
+//      column(name:"image_url_medium", value:"themes/common/images/admin/64x64_blue_dashboard.png")
 //      column(name:"image_url_small", value:"themes/common/images/admin/64x64_blue_dashboard.png")
 //      where(text="widget_url='admin/DashboardEdit.gsp'")
 //    }
@@ -70,117 +70,117 @@ databaseChangeLog = {
 //  changeSet(author: "owf", id: "4.0.0-2", context: "sampleData, 4.0.0-sampleData") {
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Widget A")
-//      column(name:"image_url_large", value:"themes/common/images/blue/icons/widgetIcons/widgetA.gif")
+//      column(name:"image_url_medium", value:"themes/common/images/blue/icons/widgetIcons/widgetA.gif")
 //      column(name:"image_url_small", value:"themes/common/images/blue/icons/widgetContainer/widgetAsm.gif")
 //      where(text="widget_url='examples/fake-widgets/widget-a.html'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Widget B")
-//      column(name:"image_url_large", value:"themes/common/images/blue/icons/widgetIcons/widgetB.gif")
+//      column(name:"image_url_medium", value:"themes/common/images/blue/icons/widgetIcons/widgetB.gif")
 //      column(name:"image_url_small", value:"themes/common/images/blue/icons/widgetContainer/widgetBsm.gif")
 //      where(text="widget_url='examples/fake-widgets/widget-b.html'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Widget C")
-//      column(name:"image_url_large", value:"themes/common/images/blue/icons/widgetIcons/widgetC.gif")
+//      column(name:"image_url_medium", value:"themes/common/images/blue/icons/widgetIcons/widgetC.gif")
 //      column(name:"image_url_small", value:"themes/common/images/blue/icons/widgetContainer/widgetCsm.gif")
 //      where(text="widget_url='examples/fake-widgets/widget-c.html'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Widget D")
-//      column(name:"image_url_large", value:"themes/common/images/blue/icons/widgetIcons/widgetD.gif")
+//      column(name:"image_url_medium", value:"themes/common/images/blue/icons/widgetIcons/widgetD.gif")
 //      column(name:"image_url_small", value:"themes/common/images/blue/icons/widgetContainer/widgetDsm.gif")
 //      where(text="widget_url='examples/fake-widgets/widget-d.html'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Widget One")
-//      column(name:"image_url_large", value:"themes/common/images/blue/icons/widgetIcons/widget1.gif")
+//      column(name:"image_url_medium", value:"themes/common/images/blue/icons/widgetIcons/widget1.gif")
 //      column(name:"image_url_small", value:"themes/common/images/blue/icons/widgetContainer/widget1sm.gif")
 //      where(text="widget_url='examples/fake-widgets/widget-one.html'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Widget Two")
-//      column(name:"image_url_large", value:"themes/common/images/blue/icons/widgetIcons/widget2.gif")
+//      column(name:"image_url_medium", value:"themes/common/images/blue/icons/widgetIcons/widget2.gif")
 //      column(name:"image_url_small", value:"themes/common/images/blue/icons/widgetContainer/widget2sm.gif")
 //      where(text="widget_url='examples/fake-widgets/widget-two.html'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Widget Three")
-//      column(name:"image_url_large", value:"themes/common/images/blue/icons/widgetIcons/widget3.gif")
+//      column(name:"image_url_medium", value:"themes/common/images/blue/icons/widgetIcons/widget3.gif")
 //      column(name:"image_url_small", value:"themes/common/images/blue/icons/widgetContainer/widget3sm.gif")
 //      where(text="widget_url='examples/fake-widgets/widget-three.html'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Widget Four")
-//      column(name:"image_url_large", value:"themes/common/images/blue/icons/widgetIcons/widget4.gif")
+//      column(name:"image_url_medium", value:"themes/common/images/blue/icons/widgetIcons/widget4.gif")
 //      column(name:"image_url_small", value:"themes/common/images/blue/icons/widgetContainer/widget4sm.gif")
 //      where(text="widget_url='examples/fake-widgets/widget-four.html'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Widget Five")
-//      column(name:"image_url_large", value:"themes/common/images/blue/icons/widgetIcons/widget5.gif")
+//      column(name:"image_url_medium", value:"themes/common/images/blue/icons/widgetIcons/widget5.gif")
 //      column(name:"image_url_small", value:"themes/common/images/blue/icons/widgetContainer/widget5sm.gif")
 //      where(text="widget_url='examples/fake-widgets/widget-five.html'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Nearly Empty")
-//      column(name:"image_url_large", value:"themes/common/images/blue/icons/widgetIcons/nearlyEmpty.gif")
+//      column(name:"image_url_medium", value:"themes/common/images/blue/icons/widgetIcons/nearlyEmpty.gif")
 //      column(name:"image_url_small", value:"themes/common/images/blue/icons/widgetContainer/nearlyEmptysm.gif")
 //      where(text="widget_url='examples/walkthrough/widgets/NearlyEmptyWidget.html'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Channel Shouter")
-//      column(name:"image_url_large", value:"themes/common/images/blue/icons/widgetIcons/channelShouter.gif")
+//      column(name:"image_url_medium", value:"themes/common/images/blue/icons/widgetIcons/channelShouter.gif")
 //      column(name:"image_url_small", value:"themes/common/images/blue/icons/widgetContainer/channelShoutersm.gif")
 //      where(text="widget_url='examples/walkthrough/widgets/ChannelShouter.html'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Channel Listener")
-//      column(name:"image_url_large", value:"themes/common/images/blue/icons/widgetIcons/channelListener.gif")
+//      column(name:"image_url_medium", value:"themes/common/images/blue/icons/widgetIcons/channelListener.gif")
 //      column(name:"image_url_small", value:"themes/common/images/blue/icons/widgetContainer/channelListenersm.gif")
 //      where(text="widget_url='examples/walkthrough/widgets/ChannelListener.html'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Widget Chrome")
-//      column(name:"image_url_large", value:"examples/walkthrough/images/chromeWiget_black_icon.png")
+//      column(name:"image_url_medium", value:"examples/walkthrough/images/chromeWiget_black_icon.png")
 //      column(name:"image_url_small", value:"examples/walkthrough/images/chromeWiget_blue_icon.png")
 //      where(text="widget_url='examples/walkthrough/widgets/WidgetChrome.html'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Event Monitor Widget")
-//      column(name:"image_url_large", value:"examples/walkthrough/images/event_monitor_black_icon.png")
+//      column(name:"image_url_medium", value:"examples/walkthrough/images/event_monitor_black_icon.png")
 //      column(name:"image_url_small", value:"examples/walkthrough/images/event_monitor_blue_icon.png")
 //      where(text="widget_url='examples/walkthrough/widgets/EventMonitor.html'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Widget Log")
-//      column(name:"image_url_large", value:"examples/walkthrough/images/log_icon.png")
+//      column(name:"image_url_medium", value:"examples/walkthrough/images/log_icon.png")
 //      column(name:"image_url_small", value:"examples/walkthrough/images/log_icon_blue.png")
 //      where(text="widget_url='examples/walkthrough/widgets/WidgetLog.html'")
 //    }
 //
 //    update(tableName:"widget_definition") {
 //      column(name:"display_name", value:"Preferences Widget")
-//      column(name:"image_url_large", value:"examples/walkthrough/images/testpref_black_icon.png")
+//      column(name:"image_url_medium", value:"examples/walkthrough/images/testpref_black_icon.png")
 //      column(name:"image_url_small", value:"examples/walkthrough/images/testpref_blue_icon.png")
 //      where(text="widget_url='examples/walkthrough/widgets/Preferences.html'")
 //    }
 //  }
-  
+
   //Added defaultSettings column into Dashboard Table
   changeSet(author: "owf", id: "4.0.0-3", context: "create, upgrade, 4.0.0") {
       comment(text="Added defaultSettings column into Dashboard Table")
@@ -216,7 +216,7 @@ databaseChangeLog = {
       //delete(tableName: "widget_definition")
       delete(tableName: "person")
   }
-  
+
     changeSet(author: "owf", id: "4.0.0-5", dbms: "mysql,mssql,oracle", context: "sampleData, 4.0.0-sampleData") {
       comment(text="deleting old sample data")
 
@@ -330,7 +330,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/widgetA.gif")
+			column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/widgetA.gif")
 
 			column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/widgetAsm.gif")
 
@@ -358,7 +358,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/widgetB.gif")
+			column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/widgetB.gif")
 
 			column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/widgetBsm.gif")
 
@@ -386,7 +386,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/widgetC.gif")
+			column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/widgetC.gif")
 
 			column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/widgetCsm.gif")
 
@@ -414,7 +414,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/widgetD.gif")
+			column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/widgetD.gif")
 
 			column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/widgetDsm.gif")
 
@@ -442,7 +442,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/widget1.gif")
+			column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/widget1.gif")
 
 			column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/widget1sm.gif")
 
@@ -470,7 +470,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/widget2.gif")
+			column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/widget2.gif")
 
 			column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/widget2sm.gif")
 
@@ -498,7 +498,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/widget3.gif")
+			column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/widget3.gif")
 
 			column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/widget3sm.gif")
 
@@ -526,7 +526,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/widget4.gif")
+			column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/widget4.gif")
 
 			column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/widget4sm.gif")
 
@@ -554,7 +554,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/widget5.gif")
+			column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/widget5.gif")
 
 			column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/widget5sm.gif")
 
@@ -582,7 +582,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/nearlyEmpty.gif")
+			column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/nearlyEmpty.gif")
 
 			column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/nearlyEmptysm.gif")
 
@@ -610,7 +610,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/channelShouter.gif")
+			column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/channelShouter.gif")
 
 			column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/channelShoutersm.gif")
 
@@ -638,7 +638,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/channelListener.gif")
+			column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/channelListener.gif")
 
 			column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/channelListenersm.gif")
 
@@ -666,7 +666,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "examples/walkthrough/images/chromeWiget_black_icon.png")
+			column(name: "image_url_medium", value: "examples/walkthrough/images/chromeWiget_black_icon.png")
 
 			column(name: "image_url_small", value: "examples/walkthrough/images/chromeWiget_blue_icon.png")
 
@@ -694,7 +694,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "examples/walkthrough/images/event_monitor_black_icon.png")
+			column(name: "image_url_medium", value: "examples/walkthrough/images/event_monitor_black_icon.png")
 
 			column(name: "image_url_small", value: "examples/walkthrough/images/event_monitor_blue_icon.png")
 
@@ -722,7 +722,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "examples/walkthrough/images/log_icon.png")
+			column(name: "image_url_medium", value: "examples/walkthrough/images/log_icon.png")
 
 			column(name: "image_url_small", value: "examples/walkthrough/images/log_icon_blue.png")
 
@@ -750,7 +750,7 @@ databaseChangeLog = {
 
 			column(name: "visible", valueBoolean: "true")
 
-			column(name: "image_url_large", value: "examples/walkthrough/images/testpref_black_icon.png")
+			column(name: "image_url_medium", value: "examples/walkthrough/images/testpref_black_icon.png")
 
 			column(name: "image_url_small", value: "examples/walkthrough/images/testpref_blue_icon.png")
 
@@ -781,7 +781,7 @@ databaseChangeLog = {
 
     //     column(name: "visible", valueBoolean: "true")
 
-    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_user.png")
+    //     column(name: "image_url_medium", value: "themes/common/images/admin/64x64_blue_user.png")
 
     //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_user.png")
 
@@ -809,7 +809,7 @@ databaseChangeLog = {
 
     //     column(name: "visible", valueBoolean: "false")
 
-    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_user.png")
+    //     column(name: "image_url_medium", value: "themes/common/images/admin/64x64_blue_user.png")
 
     //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_user.png")
 
@@ -837,7 +837,7 @@ databaseChangeLog = {
 
     //     column(name: "visible", valueBoolean: "true")
 
-    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_widget.png")
+    //     column(name: "image_url_medium", value: "themes/common/images/admin/64x64_blue_widget.png")
 
     //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_widget.png")
 
@@ -865,7 +865,7 @@ databaseChangeLog = {
 
     //     column(name: "visible", valueBoolean: "false")
 
-    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_widget.png")
+    //     column(name: "image_url_medium", value: "themes/common/images/admin/64x64_blue_widget.png")
 
     //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_widget.png")
 
@@ -893,7 +893,7 @@ databaseChangeLog = {
 
     //     column(name: "visible", valueBoolean: "true")
 
-    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_group.png")
+    //     column(name: "image_url_medium", value: "themes/common/images/admin/64x64_blue_group.png")
 
     //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_group.png")
 
@@ -921,7 +921,7 @@ databaseChangeLog = {
 
     //     column(name: "visible", valueBoolean: "false")
 
-    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_group.png")
+    //     column(name: "image_url_medium", value: "themes/common/images/admin/64x64_blue_group.png")
 
     //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_group.png")
 
@@ -949,7 +949,7 @@ databaseChangeLog = {
 
     //     column(name: "visible", valueBoolean: "true")
 
-    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_dashboard.png")
+    //     column(name: "image_url_medium", value: "themes/common/images/admin/64x64_blue_dashboard.png")
 
     //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_dashboard.png")
 
@@ -977,7 +977,7 @@ databaseChangeLog = {
 
     //     column(name: "visible", valueBoolean: "false")
 
-    //     column(name: "image_url_large", value: "themes/common/images/admin/64x64_blue_dashboard.png")
+    //     column(name: "image_url_medium", value: "themes/common/images/admin/64x64_blue_dashboard.png")
 
     //     column(name: "image_url_small", value: "themes/common/images/admin/64x64_blue_dashboard.png")
 
@@ -2039,7 +2039,7 @@ databaseChangeLog = {
       SET IDENTITY_INSERT [dbo].[dashboard] ON
     """)
   }
-  
+
 // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
 //  changeSet(author: "owf", id: "4.0.0-16", context: "sampleData, 4.0.0-sampleData") {
 //      comment(text="insert new sample data")
@@ -2253,7 +2253,7 @@ databaseChangeLog = {
 //    }
 //
 //  }
-  
+
   changeSet(author: "owf", id: "4.0.0-17", dbms:"mssql", context: "sampleData, 4.0.0-sampleData") {
       comment(text="allow identity inserts")
     sql ( text = """
@@ -3752,7 +3752,7 @@ databaseChangeLog = {
     }
 
   }
-  
+
   changeSet(author: "owf", id: "4.0.0-47", context: "create, upgrade, 4.0.0") {
       comment(text="Added showLaunchMenu column into Dashboard Table")
 	  addColumn(tableName: "dashboard"){
@@ -3849,7 +3849,7 @@ databaseChangeLog = {
     """)
   }
 
-  
+
   changeSet(author: "owf", id: "4.0.0-53", context: "upgrade, 4.0.0, sampleData, 4.0.0-sampleData") {
     comment(text="Insert widget type mapping links")
     // Altered for 7.4 to include stack managers and configuration page.
@@ -3894,22 +3894,22 @@ databaseChangeLog = {
 //  changeSet(author: "owf", id: "4.0.0-54", context: "upgrade, sampleData, 4.0.0-sampleData") {
 //    comment(text="Add change admin widget icons")
 //    update(tableName:"widget_definition") {
-//      column(name:"image_url_large", value:"themes/common/images/adm-tools/DashboardAdmin.png")
+//      column(name:"image_url_medium", value:"themes/common/images/adm-tools/DashboardAdmin.png")
 //      column(name:"image_url_small", value:"themes/common/images/adm-tools/DashboardAdmin.png")
 //      where(text="widget_url='admin/GroupDashboardManagement.gsp'")
 //    }
 //    update(tableName:"widget_definition") {
-//      column(name:"image_url_large", value:"themes/common/images/adm-tools/GroupsAdmin.png")
+//      column(name:"image_url_medium", value:"themes/common/images/adm-tools/GroupsAdmin.png")
 //      column(name:"image_url_small", value:"themes/common/images/adm-tools/GroupsAdmin.png")
 //      where(text="widget_url='admin/GroupManagement.gsp'")
 //    }
 //    update(tableName:"widget_definition") {
-//      column(name:"image_url_large", value:"themes/common/images/adm-tools/UsersAdmin.png")
+//      column(name:"image_url_medium", value:"themes/common/images/adm-tools/UsersAdmin.png")
 //      column(name:"image_url_small", value:"themes/common/images/adm-tools/UsersAdmin.png")
 //      where(text="widget_url='admin/UserManagement.gsp'")
 //    }
 //    update(tableName:"widget_definition") {
-//      column(name:"image_url_large", value:"themes/common/images/adm-tools/WidgetsAdmin.png")
+//      column(name:"image_url_medium", value:"themes/common/images/adm-tools/WidgetsAdmin.png")
 //      column(name:"image_url_small", value:"themes/common/images/adm-tools/WidgetsAdmin.png")
 //      where(text="widget_url='admin/WidgetManagement.gsp'")
 //    }
@@ -3921,51 +3921,51 @@ databaseChangeLog = {
   //   comment(text="Updating Admin Widget Icons and Names")
 
   //   update(tableName:"widget_definition") {
-  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Users64.png")
+  //     column(name:"image_url_medium", value:"themes/common/images/adm-tools/Users64.png")
   //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Users24.png")
   //     column(name: "display_name", value: "Users")
   //     where(text="widget_url='admin/UserManagement.gsp'")
   //   }
   //   update(tableName:"widget_definition") {
-  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Users64.png")
+  //     column(name:"image_url_medium", value:"themes/common/images/adm-tools/Users64.png")
   //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Users24.png")
   //     where(text="widget_url='admin/UserEdit.gsp'")
   //   }
   //   update(tableName:"widget_definition") {
-  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Widgets64.png")
+  //     column(name:"image_url_medium", value:"themes/common/images/adm-tools/Widgets64.png")
   //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Widgets24.png")
   //     column(name: "display_name", value: "Widgets")
   //     where(text="widget_url='admin/WidgetManagement.gsp'")
   //   }
   //   update(tableName:"widget_definition") {
-  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Widgets64.png")
+  //     column(name:"image_url_medium", value:"themes/common/images/adm-tools/Widgets64.png")
   //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Widgets24.png")
   //     where(text="widget_url='admin/WidgetEdit.gsp'")
   //   }
   //   update(tableName:"widget_definition") {
-  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Groups64.png")
+  //     column(name:"image_url_medium", value:"themes/common/images/adm-tools/Groups64.png")
   //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Groups24.png")
   //     column(name: "display_name", value: "Groups")
   //     where(text="widget_url='admin/GroupManagement.gsp'")
   //   }
   //   update(tableName:"widget_definition") {
-  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Groups64.png")
+  //     column(name:"image_url_medium", value:"themes/common/images/adm-tools/Groups64.png")
   //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Groups24.png")
   //     where(text="widget_url='admin/GroupEdit.gsp'")
   //   }
   //   update(tableName:"widget_definition") {
-  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Dashboards64.png")
+  //     column(name:"image_url_medium", value:"themes/common/images/adm-tools/Dashboards64.png")
   //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Dashboards24.png")
   //     column(name: "display_name", value: "Group Dashboards")
   //     where(text="widget_url='admin/GroupDashboardManagement.gsp'")
   //   }
   //   update(tableName:"widget_definition") {
-  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Dashboards64.png")
+  //     column(name:"image_url_medium", value:"themes/common/images/adm-tools/Dashboards64.png")
   //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Dashboards24.png")
   //     where(text="widget_url='admin/DashboardEdit.gsp'")
   //   }
   //   update(tableName:"widget_definition") {
-  //     column(name:"image_url_large", value:"themes/common/images/adm-tools/Approvals64.png")
+  //     column(name:"image_url_medium", value:"themes/common/images/adm-tools/Approvals64.png")
   //     column(name:"image_url_small", value:"themes/common/images/adm-tools/Approvals24.png")
   //     column(name:"visible", valueBoolean: "true")
   //     column(name: "display_name", value: "Approvals")
