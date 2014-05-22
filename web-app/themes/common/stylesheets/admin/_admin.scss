@@ -38,27 +38,6 @@
     color: #AAAAAA;
 }
 
-.add-icon {
-    background-image: theme-image($theme-name, 'admin/add.png') !important;
-}
-.remove-icon {
-    background-image: theme-image($theme-name, 'admin/delete.png') !important;
-}
-.user-icon {
-    background-image: theme-image($theme-name, 'admin/user_suit.png') !important;
-}
-.widget-icon {
-    background-image: theme-image($theme-name, 'admin/layout_content.png') !important;
-}
-.group-icon {
-    background-image: theme-image($theme-name, 'admin/layout_content.png') !important;
-}
-.disable-icon {
-    background-image: theme-image($theme-name, 'admin/stop.png') !important;
-}
-.copy-icon {
-    background-image: theme-image($theme-name, 'admin/page_white_stack.png') !important;
-}
 .detail-category-link {
     font-size: 14px;
     font-family: Arial;
