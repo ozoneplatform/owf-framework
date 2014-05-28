@@ -730,6 +730,7 @@ class StackService {
                     "widgetUrl": widgetDefinition.url,
                     "imageUrlSmall": widgetDefinition.smallIconUrl,
                     "imageUrlMedium": widgetDefinition.mediumIconUrl,
+                    "imageUrlLarge": widgetDefinition.mediumIconUrl,
                     "width": widgetDefinition.width,
                     "height": widgetDefinition.height,
                     "visible": widgetDefinition.visible,

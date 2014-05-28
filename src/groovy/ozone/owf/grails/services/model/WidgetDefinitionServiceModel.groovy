@@ -37,7 +37,7 @@ class WidgetDefinitionServiceModel extends AbstractServiceModel {
                 headerIcon: imageUrlSmall,
                 image: imageUrlMedium,
                 smallIconUrl: imageUrlSmall,
-                largeIconUrl: imageUrlMedium,
+                mediumIconUrl: imageUrlMedium,
                 width: width,
                 height: height,
                 x: 0,
