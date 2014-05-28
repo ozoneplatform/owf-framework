@@ -37,7 +37,7 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         return widgetDefinition
     }
 
-    def createWidgetDefinitionForTest(widgetName, imageUrlLarge, imageUrlSml, guid, widgetUrl, descriptorUrl, universalName) {
+    def createWidgetDefinitionForTest(widgetName, imageUrlMedium, imageUrlSml, guid, widgetUrl, descriptorUrl, universalName) {
         def widgetDefinition = WidgetDefinition.build(
             descriptorUrl : '../examples/fake-widgets/' + descriptorUrl,
             displayName : widgetName,

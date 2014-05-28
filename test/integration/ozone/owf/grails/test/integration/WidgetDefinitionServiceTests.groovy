@@ -253,7 +253,7 @@ class WidgetDefinitionServiceTests {
         assert widgetDescriptor.contains('"displayName": "' + widget.displayName + '"')
         assert widgetDescriptor.contains('"universalName": "' + widget.universalName + '"')
         assert widgetDescriptor.contains('"widgetUrl": "' + widget.widgetUrl + '"')
-        assert widgetDescriptor.contains('"imageUrlLarge": "' + widget.imageUrlLarge + '"')
+        assert widgetDescriptor.contains('"imageUrlMedium": "' + widget.imageUrlMedium + '"')
         assert widgetDescriptor.contains('"imageUrlSmall": "' + widget.imageUrlSmall + '"')
         assert widgetDescriptor.contains('"description": "' + widget.description + '"')
         assert widgetDescriptor.contains('"widgetVersion": "' + widget.widgetVersion + '"')
@@ -310,7 +310,7 @@ class WidgetDefinitionServiceTests {
         assert widget.displayName == widgetDescriptor.displayName
         assert widget.universalName == widgetDescriptor.universalName
         assert widget.widgetUrl == widgetDescriptor.widgetUrl
-        assert widget.imageUrlLarge == widgetDescriptor.imageUrlLarge
+        assert widget.imageUrlMedium == widgetDescriptor.imageUrlMedium
         assert widget.imageUrlSmall == widgetDescriptor.imageUrlSmall
         assert widget.description == widgetDescriptor.description
         assert widget.widgetVersion == widgetDescriptor.widgetVersion

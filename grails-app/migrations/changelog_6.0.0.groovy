@@ -42,11 +42,7 @@ databaseChangeLog = {
         }
     }
 
-<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-6", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
-=======
-    changeSet(author: "owf", id: "6.0.0-6", context: "create, upgrade, 6.0.0") {
->>>>>>> master
         comment("Create intent_data_type table")
 
         createTable(tableName: "intent_data_type") {
@@ -62,11 +58,7 @@ databaseChangeLog = {
         }
     }
 
-<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-7", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
-=======
-    changeSet(author: "owf", id: "6.0.0-7", context: "create, upgrade, 6.0.0") {
->>>>>>> master
         comment("Create intent_data_types table")
 
         createTable(tableName: "intent_data_types") {
@@ -79,11 +71,7 @@ databaseChangeLog = {
         }
     }
 
-<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-8", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
-=======
-    changeSet(author: "owf", id: "6.0.0-8", context: "create, upgrade, 6.0.0") {
->>>>>>> master
         comment("Add foreign constraint for intent_data_type_id and intent_id in intent_data_types table")
 
         addForeignKeyConstraint(constraintName: "FK8A59132FD46C6FAA", baseTableName: "intent_data_types",
@@ -128,33 +116,21 @@ databaseChangeLog = {
         """)
     }
 
-<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-10", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
-=======
-    changeSet(author: "owf", id: "6.0.0-10", context: "create, upgrade, 6.0.0") {
->>>>>>> master
         comment("Add foreign constraint for widget_definition_id in widget_def_intent table")
 
         addForeignKeyConstraint(constraintName: "FK8A59D92FD46C6FAB", baseTableName: "widget_def_intent",
             baseColumnNames: "widget_definition_id", referencedTableName: "widget_definition", referencedColumnNames: "id")
     }
 
-<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-11", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
-=======
-    changeSet(author: "owf", id: "6.0.0-11", context: "create, upgrade, 6.0.0") {
->>>>>>> master
         comment("Add foreign constraint for intent_id in widget_definition_intent table")
 
         addForeignKeyConstraint(constraintName: "FK8A59D92FD46C6FAC", baseTableName: "widget_def_intent",
             baseColumnNames: "intent_id", referencedTableName: "intent", referencedColumnNames: "id")
     }
 
-<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-12", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
-=======
-    changeSet(author: "owf", id: "6.0.0-12", context: "create, upgrade, 6.0.0") {
->>>>>>> master
         comment("Create widget_def_intent_data_types table")
 
         createTable(tableName: "widget_def_intent_data_types") {
@@ -167,11 +143,7 @@ databaseChangeLog = {
         }
     }
 
-<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-13", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
-=======
-    changeSet(author: "owf", id: "6.0.0-13", context: "create, upgrade, 6.0.0") {
->>>>>>> master
         comment("Add foreign constraint for intent_data_type_id and widget_definition_intent_id in widget_def_intent_data_types table")
 
         addForeignKeyConstraint(constraintName: "FK8A59D92FD41A6FAD",
@@ -845,11 +817,7 @@ databaseChangeLog = {
 		""")
 	}
 
-<<<<<<< HEAD
 	changeSet(author: "owf", id: "6.0.0-53", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
-=======
-	changeSet(author: "owf", id: "6.0.0-53", context: "create, upgrade, 6.0.0") {
->>>>>>> master
 		comment("Add locked property to dashboard")
 		addColumn(tableName: "dashboard") {
 			column(name: "locked", type: "boolean", defaultValueBoolean: "false", valueBoolean: "false")
@@ -871,22 +839,14 @@ databaseChangeLog = {
 		}
 	}
 
-<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-55", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
-=======
-    changeSet(author: "owf", id: "6.0.0-55", context: "create, upgrade, 6.0.0") {
->>>>>>> master
         comment("Add display name field to pwd")
         addColumn(tableName: "person_widget_definition") {
             column(name: "display_name", type: "varchar(256)")
         }
     }
 
-<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-56", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
-=======
-    changeSet(author: "owf", id: "6.0.0-56", context: "create, upgrade, 6.0.0") {
->>>>>>> master
         comment("Add disabled field to pwd")
         addColumn(tableName: "person_widget_definition") {
           column(name: "disabled", type: "boolean", defaultValueBoolean: "false", valueBoolean: "false")

@@ -970,7 +970,7 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
                                  pwdPosition: 1)
 	}
 
-	def createWidgetDefinitionForTest(widgetName, imageUrlLarge, imageUrlSml, guid, widgetUrl, pwdPosition) {
+	def createWidgetDefinitionForTest(widgetName, imageUrlMedium, imageUrlSml, guid, widgetUrl, pwdPosition) {
 
 		def person = Person.findByUsername('testAdmin1')
 		def widgetDefinition = WidgetDefinition.build(displayName : widgetName,

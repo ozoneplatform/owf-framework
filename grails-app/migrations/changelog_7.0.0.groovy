@@ -893,11 +893,7 @@ databaseChangeLog = {
 
     //         column(name: "visible", valueBoolean: "false")
 
-<<<<<<< HEAD
     //         column(name: "image_url_large", value: "themes/common/images/adm-tools/Stacks64.png")
-=======
-    //         column(name: "image_url_medium", value: "themes/common/images/adm-tools/Stacks64.png")
->>>>>>> master
 
     //         column(name: "image_url_small", value: "themes/common/images/adm-tools/Stacks24.png")
 
@@ -925,11 +921,7 @@ databaseChangeLog = {
 
     //         column(name: "visible", valueBoolean: "true")
 
-<<<<<<< HEAD
     //         column(name: "image_url_large", value: "themes/common/images/adm-tools/Stacks64.png")
-=======
-    //         column(name: "image_url_medium", value: "themes/common/images/adm-tools/Stacks64.png")
->>>>>>> master
 
     //         column(name: "image_url_small", value: "themes/common/images/adm-tools/Stacks24.png")
 
@@ -1069,11 +1061,7 @@ databaseChangeLog = {
         }
     }
 
-<<<<<<< HEAD
     changeSet(author: "owf", id: "7.0.0-74", context: "sampleData, 7.0.0-sampleData", dbms: "h2, mysql, postgresql, oracle, hsqldb") {
-=======
-    changeSet(author: "owf", id: "7.0.0-74", context: "sampleData, 7.0.0-sampleData", dbms: "mysql, postgresql, oracle, hsqldb") {
->>>>>>> master
         comment(text="Remove Contacts dashboard from OWF Users group and add it to the default stack.")
 
         sql (text = """
