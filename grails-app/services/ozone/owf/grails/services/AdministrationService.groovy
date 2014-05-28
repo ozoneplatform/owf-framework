@@ -153,7 +153,7 @@ class AdministrationService {
 			widgetDefinition.height = 200
 			widgetDefinition.width = 200
 			widgetDefinition.displayName = 'New Empty Widget'
-			widgetDefinition.imageUrlLarge = './themes/common/images/blue/icons/widgetIcons/nearlyEmpty.gif'
+			widgetDefinition.imageUrlMedium = './themes/common/images/blue/icons/widgetIcons/nearlyEmpty.gif'
 			widgetDefinition.imageUrlSmall = './themes/common/images/blue/icons/widgetContainer/nearlyEmptysm.gif'
 			widgetDefinition.widgetUrl = './examples/walkthrough/widgets/NearlyEmptyWidget.html'
 			personWidgetDefinitions = []

@@ -146,7 +146,7 @@ class ServiceModelService {
                         description: domain.description,
                         widgetUrl: domain.widgetUrl,
                         imageUrlSmall: domain.imageUrlSmall,
-                        imageUrlLarge: domain.imageUrlLarge,
+                        imageUrlMedium: domain.imageUrlMedium,
                         width: domain.width,
                         height: domain.height,
                         totalUsers: params.totalUsers ? params.totalUsers : 0,

@@ -142,7 +142,7 @@ class ServiceModelServiceTests extends GrailsUnitTestCase {
 	    widgetDefinition.displayName = "Hello World 1234567890!@\$'%^&*()_+-|?><`~."
 	    widgetDefinition.widgetUrl = "https://localhost/"
     	widgetDefinition.imageUrlSmall = "https://localhost/"
-    	widgetDefinition.imageUrlLarge = "https://localhost/"
+    	widgetDefinition.imageUrlMedium = "https://localhost/"
     	widgetDefinition.width = 200
     	widgetDefinition.height = 200
     	widgetDefinition.personWidgetDefinitions = []
@@ -153,7 +153,7 @@ class ServiceModelServiceTests extends GrailsUnitTestCase {
 	    assertEquals serviceModel.widgetGuid, widgetDefinition.widgetGuid
 	    assertEquals serviceModel.widgetUrl, widgetDefinition.widgetUrl
 	    assertEquals serviceModel.imageUrlSmall, widgetDefinition.imageUrlSmall
-	    assertEquals serviceModel.imageUrlLarge, widgetDefinition.imageUrlLarge
+	    assertEquals serviceModel.imageUrlMedium, widgetDefinition.imageUrlMedium
 	    assertEquals serviceModel.width, widgetDefinition.width
 	    assertEquals serviceModel.height, widgetDefinition.height
 	    assertEquals serviceModel.widgetVersion, widgetDefinition.widgetVersion

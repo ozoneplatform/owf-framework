@@ -250,7 +250,7 @@ Ozone.marketplace.AddWidgetContainer.prototype = {
         var widgetJson = {
             displayName: serviceItem.title,
             description: serviceItem.description ? serviceItem.description : '',
-            imageUrlLarge: serviceItem.imageLargeUrl,
+            imageUrlMedium: serviceItem.imageMediumUrl || serviceItem.imageLargeUrl,
             imageUrlSmall: serviceItem.imageSmallUrl,
             widgetGuid: serviceItem.uuid,
             widgetUrl: serviceItem.launchUrl,

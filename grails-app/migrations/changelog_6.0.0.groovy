@@ -42,7 +42,11 @@ databaseChangeLog = {
         }
     }
 
+<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-6", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
+=======
+    changeSet(author: "owf", id: "6.0.0-6", context: "create, upgrade, 6.0.0") {
+>>>>>>> master
         comment("Create intent_data_type table")
 
         createTable(tableName: "intent_data_type") {
@@ -58,7 +62,11 @@ databaseChangeLog = {
         }
     }
 
+<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-7", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
+=======
+    changeSet(author: "owf", id: "6.0.0-7", context: "create, upgrade, 6.0.0") {
+>>>>>>> master
         comment("Create intent_data_types table")
 
         createTable(tableName: "intent_data_types") {
@@ -71,7 +79,11 @@ databaseChangeLog = {
         }
     }
 
+<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-8", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
+=======
+    changeSet(author: "owf", id: "6.0.0-8", context: "create, upgrade, 6.0.0") {
+>>>>>>> master
         comment("Add foreign constraint for intent_data_type_id and intent_id in intent_data_types table")
 
         addForeignKeyConstraint(constraintName: "FK8A59132FD46C6FAA", baseTableName: "intent_data_types",
@@ -116,21 +128,33 @@ databaseChangeLog = {
         """)
     }
 
+<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-10", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
+=======
+    changeSet(author: "owf", id: "6.0.0-10", context: "create, upgrade, 6.0.0") {
+>>>>>>> master
         comment("Add foreign constraint for widget_definition_id in widget_def_intent table")
 
         addForeignKeyConstraint(constraintName: "FK8A59D92FD46C6FAB", baseTableName: "widget_def_intent",
             baseColumnNames: "widget_definition_id", referencedTableName: "widget_definition", referencedColumnNames: "id")
     }
 
+<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-11", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
+=======
+    changeSet(author: "owf", id: "6.0.0-11", context: "create, upgrade, 6.0.0") {
+>>>>>>> master
         comment("Add foreign constraint for intent_id in widget_definition_intent table")
 
         addForeignKeyConstraint(constraintName: "FK8A59D92FD46C6FAC", baseTableName: "widget_def_intent",
             baseColumnNames: "intent_id", referencedTableName: "intent", referencedColumnNames: "id")
     }
 
+<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-12", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
+=======
+    changeSet(author: "owf", id: "6.0.0-12", context: "create, upgrade, 6.0.0") {
+>>>>>>> master
         comment("Create widget_def_intent_data_types table")
 
         createTable(tableName: "widget_def_intent_data_types") {
@@ -143,7 +167,11 @@ databaseChangeLog = {
         }
     }
 
+<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-13", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
+=======
+    changeSet(author: "owf", id: "6.0.0-13", context: "create, upgrade, 6.0.0") {
+>>>>>>> master
         comment("Add foreign constraint for intent_data_type_id and widget_definition_intent_id in widget_def_intent_data_types table")
 
         addForeignKeyConstraint(constraintName: "FK8A59D92FD41A6FAD",
@@ -196,7 +224,7 @@ databaseChangeLog = {
             column(name: "id", valueNumeric: "178")
             column(name: "version", valueNumeric: "0")
             column(name: "visible", valueBoolean: "true")
-            column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/widgetC.gif")
+            column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/widgetC.gif")
             column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/widgetCsm.gif")
             column(name: "singleton", valueBoolean: "false")
             column(name: "width", valueNumeric: "825")
@@ -214,7 +242,7 @@ databaseChangeLog = {
             column(name: "id", valueNumeric: "179")
             column(name: "version", valueNumeric: "0")
             column(name: "visible", valueBoolean: "true")
-            column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/widgetC.gif")
+            column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/widgetC.gif")
             column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/widgetCsm.gif")
             column(name: "singleton", valueBoolean: "false")
             column(name: "width", valueNumeric: "400")
@@ -232,7 +260,7 @@ databaseChangeLog = {
             column(name: "id", valueNumeric: "180")
             column(name: "version", valueNumeric: "0")
             column(name: "visible", valueBoolean: "true")
-            column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/widgetC.gif")
+            column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/widgetC.gif")
             column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/widgetCsm.gif")
             column(name: "singleton", valueBoolean: "false")
             column(name: "width", valueNumeric: "800")
@@ -817,7 +845,11 @@ databaseChangeLog = {
 		""")
 	}
 
+<<<<<<< HEAD
 	changeSet(author: "owf", id: "6.0.0-53", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
+=======
+	changeSet(author: "owf", id: "6.0.0-53", context: "create, upgrade, 6.0.0") {
+>>>>>>> master
 		comment("Add locked property to dashboard")
 		addColumn(tableName: "dashboard") {
 			column(name: "locked", type: "boolean", defaultValueBoolean: "false", valueBoolean: "false")
@@ -839,14 +871,22 @@ databaseChangeLog = {
 		}
 	}
 
+<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-55", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
+=======
+    changeSet(author: "owf", id: "6.0.0-55", context: "create, upgrade, 6.0.0") {
+>>>>>>> master
         comment("Add display name field to pwd")
         addColumn(tableName: "person_widget_definition") {
             column(name: "display_name", type: "varchar(256)")
         }
     }
 
+<<<<<<< HEAD
     changeSet(author: "owf", id: "6.0.0-56", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
+=======
+    changeSet(author: "owf", id: "6.0.0-56", context: "create, upgrade, 6.0.0") {
+>>>>>>> master
         comment("Add disabled field to pwd")
         addColumn(tableName: "person_widget_definition") {
           column(name: "disabled", type: "boolean", defaultValueBoolean: "false", valueBoolean: "false")
@@ -975,73 +1015,73 @@ databaseChangeLog = {
         comment(text="Updating Sample Widget images")
 
         update(tableName:"widget_definition") {
-            column(name:"image_url_large", value:"themes/common/images/widget-icons/ChannelListener.png")
+            column(name:"image_url_medium", value:"themes/common/images/widget-icons/ChannelListener.png")
             column(name:"image_url_small", value:"themes/common/images/widget-icons/ChannelListener.png")
             where(text="widget_url='examples/walkthrough/widgets/ChannelListener.gsp'")
         }
 
         update(tableName:"widget_definition") {
-            column(name:"image_url_large", value:"themes/common/images/widget-icons/ChannelShouter.png")
+            column(name:"image_url_medium", value:"themes/common/images/widget-icons/ChannelShouter.png")
             column(name:"image_url_small", value:"themes/common/images/widget-icons/ChannelShouter.png")
             where(text="widget_url='examples/walkthrough/widgets/ChannelShouter.gsp'")
         }
 
         update(tableName:"widget_definition") {
-            column(name:"image_url_large", value:"themes/common/images/widget-icons/ColorClient.png")
+            column(name:"image_url_medium", value:"themes/common/images/widget-icons/ColorClient.png")
             column(name:"image_url_small", value:"themes/common/images/widget-icons/ColorClient.png")
             where(text="widget_url='examples/walkthrough/widgets/ColorClient.gsp'")
         }
 
         update(tableName:"widget_definition") {
-            column(name:"image_url_large", value:"themes/common/images/widget-icons/ColorServer.png")
+            column(name:"image_url_medium", value:"themes/common/images/widget-icons/ColorServer.png")
             column(name:"image_url_small", value:"themes/common/images/widget-icons/ColorServer.png")
             where(text="widget_url='examples/walkthrough/widgets/ColorServer.gsp'")
         }
 
         update(tableName:"widget_definition") {
-            column(name:"image_url_large", value:"themes/common/images/widget-icons/EventMonitor.png")
+            column(name:"image_url_medium", value:"themes/common/images/widget-icons/EventMonitor.png")
             column(name:"image_url_small", value:"themes/common/images/widget-icons/EventMonitor.png")
             where(text="widget_url='examples/walkthrough/widgets/EventMonitor.html'")
         }
 
         update(tableName:"widget_definition") {
-            column(name:"image_url_large", value:"themes/common/images/widget-icons/HTMLViewer.png")
+            column(name:"image_url_medium", value:"themes/common/images/widget-icons/HTMLViewer.png")
             column(name:"image_url_small", value:"themes/common/images/widget-icons/HTMLViewer.png")
             where(text="widget_url='examples/walkthrough/widgets/HTMLViewer.gsp'")
         }
 
         update(tableName:"widget_definition") {
-            column(name:"image_url_large", value:"themes/common/images/widget-icons/NearlyEmpty.png")
+            column(name:"image_url_medium", value:"themes/common/images/widget-icons/NearlyEmpty.png")
             column(name:"image_url_small", value:"themes/common/images/widget-icons/NearlyEmpty.png")
             where(text="widget_url='examples/walkthrough/widgets/NearlyEmptyWidget.html'")
         }
 
         update(tableName:"widget_definition") {
-            column(name:"image_url_large", value:"themes/common/images/widget-icons/NYSEStock.png")
+            column(name:"image_url_medium", value:"themes/common/images/widget-icons/NYSEStock.png")
             column(name:"image_url_small", value:"themes/common/images/widget-icons/NYSEStock.png")
             where(text="widget_url='examples/walkthrough/widgets/NYSE.gsp'")
         }
 
         update(tableName:"widget_definition") {
-            column(name:"image_url_large", value:"themes/common/images/widget-icons/Preferences.png")
+            column(name:"image_url_medium", value:"themes/common/images/widget-icons/Preferences.png")
             column(name:"image_url_small", value:"themes/common/images/widget-icons/Preferences.png")
             where(text="widget_url='examples/walkthrough/widgets/Preferences.gsp'")
         }
 
         update(tableName:"widget_definition") {
-            column(name:"image_url_large", value:"themes/common/images/widget-icons/PriceChart.png")
+            column(name:"image_url_medium", value:"themes/common/images/widget-icons/PriceChart.png")
             column(name:"image_url_small", value:"themes/common/images/widget-icons/PriceChart.png")
             where(text="widget_url='examples/walkthrough/widgets/StockChart.gsp'")
         }
 
         update(tableName:"widget_definition") {
-            column(name:"image_url_large", value:"themes/common/images/widget-icons/WidgetChrome.png")
+            column(name:"image_url_medium", value:"themes/common/images/widget-icons/WidgetChrome.png")
             column(name:"image_url_small", value:"themes/common/images/widget-icons/WidgetChrome.png")
             where(text="widget_url='examples/walkthrough/widgets/WidgetChrome.gsp'")
         }
 
         update(tableName:"widget_definition") {
-            column(name:"image_url_large", value:"themes/common/images/widget-icons/WidgetLog.png")
+            column(name:"image_url_medium", value:"themes/common/images/widget-icons/WidgetLog.png")
             column(name:"image_url_small", value:"themes/common/images/widget-icons/WidgetLog.png")
             where(text="widget_url='examples/walkthrough/widgets/WidgetLog.gsp'")
         }

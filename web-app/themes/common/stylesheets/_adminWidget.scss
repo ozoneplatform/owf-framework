@@ -50,7 +50,7 @@
     .descriptorUrlToolbar {
         background: transparent;
         border: none;
-    
+
         .x-toolbar-footer {
             margin: 0px;
             padding: 0px;
@@ -60,20 +60,20 @@
                 margin: 0px !important;
             }
         }
-        
+
         .manualEntryLinkBtn {
             background: transparent;
             border: none;
             filter: none;
-            
+
             .x-btn-center {
                 background: none;
             }
-            
+
             .x-btn-inner {
                 padding: 0px;
             }
-            
+
             .x-btn,
             button,
             .x-btn-tc,
@@ -88,16 +88,16 @@
                 filter: 0% !important;
                 background: transparent !important;
                 border-width: 0 !important;
-            }    
+            }
         }
     }
-        
+
     .descriptorUrlField {
         label {
             width: 20em;
         }
     }
-    
+
     .descriptorUrlTitle, .manualEntryTitle {
         color: $admin-widget-detail-title-color;
         font-size: 1.3 * $owf-font-size;
@@ -133,20 +133,20 @@
     .descriptorUrlHeader {
         overflow: hidden;
     }
-    
+
     .descriptorUrlErrorMsg {
         color: $warning-color;
         margin-top: 0px !important;
         margin-bottom: 10px !important;
     }
-    
+
     .descriptorUrlLoading {
         margin-top: 30px !important;;
         font-weight: bold;
         font-size: 1.3 * $owf-font-size;
         text-align: center;
     }
-    
+
     .x-item-readOnly, .x-item-readOnly * {
         input, textarea {
             background-color: transparent;
@@ -154,12 +154,12 @@
             padding-left: 0px;
         }
     }
-    
+
     .x-item-readOnly.x-item-hidden-field {
         textarea {
             height: 0px;
         }
-    }       
+    }
 }
 
 .widgeteditintentstab,
@@ -198,15 +198,15 @@
 .widgeteditintentstab {
     .tbIntentsGridHdr {
         background: none;
-        
-        .lblIntentsGrid {           
+
+        .lblIntentsGrid {
             .intents-heading {
                 padding-left: 5px;
                 vertical-align: middle;
             }
         }
     }
-    
+
     .x-grid-group-hd {
         .x-grid-cell-inner {
             padding: 10px 4px 4px 4px;
@@ -216,7 +216,7 @@
             border-color: #BABFC3;
             cursor: pointer;
         }
-                
+
         .x-focus {
             background-color: $owf-grid-row-cell-focus-background-color;
             border-color: #BABFC3;
@@ -226,12 +226,12 @@
             }
         }
     }
-    
+
     .x-grid-cell-inner {
         .intent-text {
             padding-left: 25px;
         }
-                
+
         .x-focus {
             background-color: $owf-grid-row-cell-focus-background-color !important;
         }
@@ -240,7 +240,7 @@
     .x-grid-group-hd-collapsed .x-grid-group-title {
         background-image: url('../../common/images/icons/arrow_right.png');
     }
-    
+
     .x-grid-group-title {
         background: transparent no-repeat 0 2px;
         background-image: url('../../common/images/icons/arrow_down.png');
@@ -248,7 +248,7 @@
         font: bold $owf-font-size helvetica, arial, sans-serif;
         padding: 0 0 0 14px;
     }
-    
+
     .x-grid-body .x-grid-row .x-grid-cell {
         border: none;
     }
@@ -266,7 +266,7 @@ span.heading-message {
     .grid-text {
         margin-top:4px;
     }
-   
+
   .grid-icon-and-text-title-box {
         width:400px;
         white-space: nowrap;
@@ -275,8 +275,9 @@ span.heading-message {
             height: 24px;
             width: 24px;
             .grid-icon-and-text-icon-image {
-                height: 24px;
-                width: 24px;
+                margin-top: 2px;
+                height: 16px;
+                width: 16px;
             }
         }
         .grid-icon-and-text-title {
@@ -342,7 +343,7 @@ div.detail-info {
     .detail-label {
         font-weight: bold;
     }
-    
+
     .dashboard-detail-icon-block {
         position: absolute;
         height: 48px;
@@ -350,22 +351,22 @@ div.detail-info {
         left: 4px;
         right: 0px;
     }
-    
+
     .dashboard-detail-info-block {
         position: absolute;
         left: 60px;
         right: 0px;
     }
-    
+
     .detail-header-block {
       //width:400px;
     }
-     
+
      .dashboard-created-by-label{
        font-weight:normal;
        margin-left: 4px;
      }
-  
+
     .dashboard-default-icon-layout {
        background-image: $owf_dashboard_default_background_image_large;
     }
@@ -412,7 +413,7 @@ div.detail-info {
                 display: inline-block;
                 height: 100%;
             }
-        }   
+        }
     }
 
     .x-horizontal-box-overflow-body {
@@ -496,7 +497,7 @@ div.detail-info {
     .x-btn-disabled .stacks-tab {
         background-image: theme-image($theme-name, 'admin/stack_disabled.png');
     }
-    
+
     .gridHeader {
         .x-toolbar-text {
             font-weight: bold;

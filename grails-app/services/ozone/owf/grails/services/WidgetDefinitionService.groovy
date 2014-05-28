@@ -366,7 +366,7 @@ class WidgetDefinitionService {
                 description: !isNull(params.description) ? params.description : widgetDefinition.description,
                 widgetUrl: params.widgetUrl ?: params.url ?: widgetDefinition.widgetUrl,
                 imageUrlSmall: params.imageUrlSmall ?: params.headerIcon ?: widgetDefinition.imageUrlSmall,
-                imageUrlLarge: params.imageUrlLarge ?: params.image ?: widgetDefinition.imageUrlLarge,
+                imageUrlMedium: params.imageUrlMedium ?: params.image ?: widgetDefinition.imageUrlMedium,
                 width: (params.width != null)? params.width as Integer : widgetDefinition.width,
                 height: (params.height != null)? params.height as Integer : widgetDefinition.height,
                 widgetVersion: params.containsKey('widgetVersion') ? (!isNull(params.widgetVersion) ? params.widgetVersion : widgetDefinition.widgetVersion) : params.version.toString(),
@@ -549,8 +549,6 @@ class WidgetDefinitionService {
                 returnValue = updatedPeople.collect{ serviceModelService.createServiceModel(it) }
             }
         }
-
-
 
         if (params.update_action != null && params.update_action != '' && 'groups'==params.tab) {
             def updatedGroups = []
@@ -854,7 +852,7 @@ class WidgetDefinitionService {
         widgetData.put("displayName", widgetDefinition.displayName)
         widgetData.put("widgetUrl", widgetDefinition.widgetUrl)
         widgetData.put("imageUrlSmall", widgetDefinition.imageUrlSmall)
-        widgetData.put("imageUrlLarge", widgetDefinition.imageUrlLarge)
+        widgetData.put("imageUrlMedium", widgetDefinition.imageUrlMedium)
         widgetData.put("width", widgetDefinition.width)
         widgetData.put("height", widgetDefinition.height)
         widgetData.put("visible", widgetDefinition.visible)
@@ -908,8 +906,8 @@ class WidgetDefinitionService {
             return 'height'
             case ['headerIcon','imageUrlSmall','value.smallIconUrl','value.headerIcon']:
             return 'imageUrlSmall'
-            case ['image','imageUrlLarge','value.largeIconUrl','value.image']:
-            return 'imageUrlLarge'
+            case ['image','imageUrlMedium','value.mediumIconUrl','value.image']:
+            return 'imageUrlMedium'
             case ['singleton','value.singleton']:
             return 'singleton'
             case ['visible','value.visible']:

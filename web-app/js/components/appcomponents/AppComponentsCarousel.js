@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Next Century Corporation 
+ * Copyright 2013 Next Century Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
  ;(function () {
-    
+
     Ozone.components.appcomponents = Ozone.components.appcomponents || {};
 
     var SuperClass = Ozone.components.appcomponents.AppComponentsList;
@@ -52,7 +52,7 @@
                 height = this.size.height * $(window).height();
 
                 // don't set height if less than min required
-                if(height > (125 + this.GRIPPER_HEIGHT)) {
+                if(height > (139 + this.GRIPPER_HEIGHT)) {
                     this.$container.height(height);
 
                     // substract gripper height for carousel pager to show
@@ -94,8 +94,8 @@
 
         initResizable: function () {
             var me = this,
-                minHeight = 125 + this.GRIPPER_HEIGHT,
-                rowHeight = 121,
+                minHeight = 139 + this.GRIPPER_HEIGHT,
+                rowHeight = 135,
                 // leave bottom 64px visible
                 maxHeight = $(window).height() - this.$container.offset().top - 64,
                 $bx;
@@ -168,7 +168,7 @@
 
         getSlides: function () {
             if(this._carousel) {
-                return this.$el.getSlides();    
+                return this.$el.getSlides();
             }
         },
 

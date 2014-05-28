@@ -14,6 +14,7 @@ databaseChangeLog = {
 	  """)
 	}
 
+
 	changeSet(author: "owf", id: "5.0.0-3", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 5.0.0") {
 	  comment(text="Add metric widget types to table")
 	  insert(tableName: "widget_type") {
@@ -191,7 +192,7 @@ databaseChangeLog = {
             column(name: "id", valueNumeric: "172")
             column(name: "version", valueNumeric: "0")
             column(name: "visible", valueBoolean: "true")
-            column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/channelShouter.gif")
+            column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/channelShouter.gif")
             column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/channelShoutersm.gif")
             column(name: "singleton", valueBoolean: "false")
             column(name: "width", valueNumeric: "300")
@@ -206,7 +207,7 @@ databaseChangeLog = {
             column(name: "id", valueNumeric: "173")
             column(name: "version", valueNumeric: "0")
             column(name: "visible", valueBoolean: "true")
-            column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/channelListener.gif")
+            column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/channelListener.gif")
             column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/channelListenersm.gif")
             column(name: "singleton", valueBoolean: "false")
             column(name: "width", valueNumeric: "300")

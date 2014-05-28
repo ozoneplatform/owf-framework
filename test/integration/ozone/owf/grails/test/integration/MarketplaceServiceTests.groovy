@@ -90,7 +90,7 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
       //todo someday fix this crazy json string embedded structure
       def widget1 = [
               displayName: 'Widget1',
-              imageUrlLarge: 'http://widget1.com',
+              imageUrlMedium: 'http://widget1.com',
               imageUrlSmall: 'http://widget1.com',
               widgetGuid: '9bd3e9ad-366d-4fda-8ae3-2b269f72e059',
               widgetUrl: 'http://widget1.com',
@@ -106,7 +106,7 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
       ]
       def widget2 = [
               displayName: 'Widget2',
-              imageUrlLarge: 'http://widget2.com',
+              imageUrlMedium: 'http://widget2.com',
               imageUrlSmall: 'http://widget2.com',
               widgetGuid: '79ae9905-ce38-4de6-ad89-fe598d497703',
               widgetUrl: 'http://widget2.com',
@@ -122,7 +122,7 @@ class MarketplaceServiceTests extends OWFGroovyTestCase {
       ]
       def widget3 = [
               displayName: 'Widget3',
-              imageUrlLarge: 'http://widget3.com',
+              imageUrlMedium: 'http://widget3.com',
               imageUrlSmall: 'http://widget3.com',
               widgetGuid: '6aca40aa-1b9e-4044-8bbe-d628e6d4518f',
               widgetUrl: 'http://widget3.com',

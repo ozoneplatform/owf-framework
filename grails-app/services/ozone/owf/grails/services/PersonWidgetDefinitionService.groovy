@@ -872,9 +872,9 @@ class PersonWidgetDefinitionService {
             case 'value.smallIconUrl':
                 def restrictValue = "select pwd from ${PersonWidgetDefinition.name} pwd, ${WidgetDefinition.name} wd where pwd.widgetDefinition.id = wd.id order by wd.imageUrlSmall " + (jsonOrderDirParam?.toLowerCase() ?: 'asc') + ""
                 return ['restrict': true,  'domainField': 'widgetDefinition.imageUrlSmall', 'restrictValue': restrictValue]
-            case 'value.largeIconUrl':
-                def restrictValue = "select pwd from ${PersonWidgetDefinition.name} pwd, ${WidgetDefinition.name} wd where pwd.widgetDefinition.id = wd.id order by wd.imageUrlLarge " + (jsonOrderDirParam?.toLowerCase() ?: 'asc') + ""
-                return ['restrict': true, 'domainField': 'widgetDefinition.imageUrlLarge', 'restrictValue': restrictValue]
+            case 'value.mediumIconUrl':
+                def restrictValue = "select pwd from ${PersonWidgetDefinition.name} pwd, ${WidgetDefinition.name} wd where pwd.widgetDefinition.id = wd.id order by wd.imageUrlMedium " + (jsonOrderDirParam?.toLowerCase() ?: 'asc') + ""
+                return ['restrict': true, 'domainField': 'widgetDefinition.imageUrlMedium', 'restrictValue': restrictValue]
             case 'value.visible':
                 return ['restrict': false, 'domainField': 'visible']
             case 'value.position':

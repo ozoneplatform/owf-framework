@@ -13,7 +13,7 @@ class WidgetDefinition implements Serializable {
     String description = ''
     String widgetUrl
     String imageUrlSmall
-    String imageUrlLarge
+    String imageUrlMedium
     Integer width
     Integer height
     String widgetVersion
@@ -35,7 +35,7 @@ class WidgetDefinition implements Serializable {
         widgetVersion(nullable: true, blank: true, maxSize: 2083)
         widgetUrl(maxSize: 2083) // see http://support.microsoft.com/kb/208427
         // and http://www.boutell.com/newfaq/misc/urllength.html
-        imageUrlLarge(maxSize:2083)
+        imageUrlMedium(maxSize:2083)
         imageUrlSmall(maxSize:2083)
         height(min:200)
         width(min:200)

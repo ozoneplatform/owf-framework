@@ -32,6 +32,7 @@ databaseChangeLog = {
         dropColumn(tableName: "dashboard", columnName: "layout")
     }
 
+
     changeSet(author: "owf", id: "7.0.0-6", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Remove intent_config since it is no longer used.")
         dropColumn(tableName: "dashboard", columnName: "intent_config")
@@ -281,7 +282,7 @@ databaseChangeLog = {
             column(name: "id", valueNumeric: "181")
             column(name: "version", valueNumeric: "0")
             column(name: "visible", valueBoolean: "true")
-            column(name: "image_url_large", value: "examples/walkthrough/widgets/directions/img/logo.png")
+            column(name: "image_url_medium", value: "examples/walkthrough/widgets/directions/img/logo.png")
             column(name: "image_url_small", value: "examples/walkthrough/widgets/directions/img/logo.png")
             column(name: "singleton", valueBoolean: "false")
             column(name: "width", valueNumeric: "400")
@@ -299,7 +300,7 @@ databaseChangeLog = {
             column(name: "id", valueNumeric: "182")
             column(name: "version", valueNumeric: "0")
             column(name: "visible", valueBoolean: "true")
-            column(name: "image_url_large", value: "examples/walkthrough/widgets/googlemaps/img/logo.png")
+            column(name: "image_url_medium", value: "examples/walkthrough/widgets/googlemaps/img/logo.png")
             column(name: "image_url_small", value: "examples/walkthrough/widgets/googlemaps/img/logo.png")
             column(name: "singleton", valueBoolean: "false")
             column(name: "width", valueNumeric: "800")
@@ -317,7 +318,7 @@ databaseChangeLog = {
             column(name: "id", valueNumeric: "183")
             column(name: "version", valueNumeric: "0")
             column(name: "visible", valueBoolean: "true")
-            column(name: "image_url_large", value: "examples/walkthrough/widgets/contacts/img/logo.png")
+            column(name: "image_url_medium", value: "examples/walkthrough/widgets/contacts/img/logo.png")
             column(name: "image_url_small", value: "examples/walkthrough/widgets/contacts/img/logo.png")
             column(name: "singleton", valueBoolean: "false")
             column(name: "width", valueNumeric: "400")
@@ -892,7 +893,11 @@ databaseChangeLog = {
 
     //         column(name: "visible", valueBoolean: "false")
 
+<<<<<<< HEAD
     //         column(name: "image_url_large", value: "themes/common/images/adm-tools/Stacks64.png")
+=======
+    //         column(name: "image_url_medium", value: "themes/common/images/adm-tools/Stacks64.png")
+>>>>>>> master
 
     //         column(name: "image_url_small", value: "themes/common/images/adm-tools/Stacks24.png")
 
@@ -920,7 +925,11 @@ databaseChangeLog = {
 
     //         column(name: "visible", valueBoolean: "true")
 
+<<<<<<< HEAD
     //         column(name: "image_url_large", value: "themes/common/images/adm-tools/Stacks64.png")
+=======
+    //         column(name: "image_url_medium", value: "themes/common/images/adm-tools/Stacks64.png")
+>>>>>>> master
 
     //         column(name: "image_url_small", value: "themes/common/images/adm-tools/Stacks24.png")
 
@@ -1060,7 +1069,11 @@ databaseChangeLog = {
         }
     }
 
+<<<<<<< HEAD
     changeSet(author: "owf", id: "7.0.0-74", context: "sampleData, 7.0.0-sampleData", dbms: "h2, mysql, postgresql, oracle, hsqldb") {
+=======
+    changeSet(author: "owf", id: "7.0.0-74", context: "sampleData, 7.0.0-sampleData", dbms: "mysql, postgresql, oracle, hsqldb") {
+>>>>>>> master
         comment(text="Remove Contacts dashboard from OWF Users group and add it to the default stack.")
 
         sql (text = """

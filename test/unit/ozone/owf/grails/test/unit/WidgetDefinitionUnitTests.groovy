@@ -135,12 +135,12 @@ class WidgetDefinitionUnitTests extends GrailsUnitTestCase {
         TestUtil.checkSizeConstraintProperty('widgetUrl',widgetDefinition, 2083)
     }
 
-    void testImageUrlLargeRequired() {
-        TestUtil.assertPropertyRequired('imageUrlLarge',widgetDefinition)
+    void testimageUrlMediumRequired() {
+        TestUtil.assertPropertyRequired('imageUrlMedium',widgetDefinition)
     }
 
-    void testImageUrlLargeSizeConstraints() {
-        TestUtil.checkSizeConstraintProperty('imageUrlLarge',widgetDefinition, 2083)
+    void testimageUrlMediumSizeConstraints() {
+        TestUtil.checkSizeConstraintProperty('imageUrlMedium',widgetDefinition, 2083)
     }
 
     void testImageUrlSmallRequired() {

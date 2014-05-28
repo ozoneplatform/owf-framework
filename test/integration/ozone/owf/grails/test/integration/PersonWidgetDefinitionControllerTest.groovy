@@ -640,7 +640,7 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
 
 	   def widgetDefinition = WidgetDefinition.build(displayName : 'Widget C',
  		                                    height : 740,
- 		                                    imageUrlLarge : '../images/blue/icons/widgetIcons/widgetC.gif',
+ 		                                    imageUrlMedium : '../images/blue/icons/widgetIcons/widgetC.gif',
  		                                    imageUrlSmall : '../images/blue/icons/widgetContainer/widgetCsm.gif',
  		                                    widgetGuid : '0c5435cf-4021-4f2a-ba69-dde451d12551',
                                             universalName : '0c5435cf-4021-4f2a-ba69-dde451d12551',
@@ -676,7 +676,7 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
         def person = Person.findByUsername('testAdmin1')
 	    def widgetDefinition = WidgetDefinition.build(displayName : 'Widget C',
 	    											  height : 740,
-		                                              imageUrlLarge : '../images/blue/icons/widgetIcons/widgetC.gif',
+		                                              imageUrlMedium : '../images/blue/icons/widgetIcons/widgetC.gif',
 		                                              imageUrlSmall : '../images/blue/icons/widgetContainer/widgetCsm.gif',
 		                                              widgetGuid : '0c5435cf-4021-4f2a-ba69-dde451d12551',
                                                       universalName : '0c5435cf-4021-4f2a-ba69-dde451d12551',
@@ -702,7 +702,7 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
 		def person = Person.findByUsername('testAdmin1')
 		def widgetDefinition = WidgetDefinition.build(displayName : 'Widget C',
 				height : 740,
-				imageUrlLarge : '../images/blue/icons/widgetIcons/widgetC.gif',
+				imageUrlMedium : '../images/blue/icons/widgetIcons/widgetC.gif',
 				imageUrlSmall : '../images/blue/icons/widgetContainer/widgetCsm.gif',
 				widgetGuid : '0c5435cf-4021-4f2a-ba69-dde451d12551',
                 universalName : '0c5435cf-4021-4f2a-ba69-dde451d12551',
@@ -728,7 +728,7 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
 		def person = Person.findByUsername('testUser2')
 		def widgetDefinition = WidgetDefinition.build(displayName : 'Widget C',
 				height : 740,
-				imageUrlLarge : '../images/blue/icons/widgetIcons/widgetC.gif',
+				imageUrlMedium : '../images/blue/icons/widgetIcons/widgetC.gif',
 				imageUrlSmall : '../images/blue/icons/widgetContainer/widgetCsm.gif',
 				widgetGuid : '0c5435cf-4021-4f2a-ba69-dde451d12551',
                 universalName : '0c5435cf-4021-4f2a-ba69-dde451d12551',
@@ -769,7 +769,7 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
 		def person = Person.findByUsername('testUser1')
 		def widgetDefinition = WidgetDefinition.build(displayName : 'Widget C',
 													  height : 740,
-													  imageUrlLarge : '../images/blue/icons/widgetIcons/widgetC.gif',
+													  imageUrlMedium : '../images/blue/icons/widgetIcons/widgetC.gif',
 													  imageUrlSmall : '../images/blue/icons/widgetContainer/widgetCsm.gif',
 													  widgetGuid : '0c5435cf-4021-4f2a-ba69-dde451d12551',
                                                       universalName : '0c5435cf-4021-4f2a-ba69-dde451d12551',
@@ -957,7 +957,7 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
 		def person = Person.findByUsername('testAdmin1')
 		def widgetDefinition = WidgetDefinition.build(displayName : 'Widget C',
 		                                    height : 740,
-		                                    imageUrlLarge : '../images/blue/icons/widgetIcons/widgetC.gif',
+		                                    imageUrlMedium : '../images/blue/icons/widgetIcons/widgetC.gif',
 		                                    imageUrlSmall : '../images/blue/icons/widgetContainer/widgetCsm.gif',
 		                                    widgetGuid : '0c5435cf-4021-4f2a-ba69-dde451d12551',
                                             universalName : 'com.company.widget.uuid',
@@ -971,10 +971,11 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
 	}
 
 	def createWidgetDefinitionForTest(widgetName, imageUrlLarge, imageUrlSml, guid, widgetUrl, pwdPosition) {
+
 		def person = Person.findByUsername('testAdmin1')
 		def widgetDefinition = WidgetDefinition.build(displayName : widgetName,
 				height : 740,
-				imageUrlLarge : '../images/blue/icons/widgetIcons/' + imageUrlLarge,
+				imageUrlMedium : '../images/blue/icons/widgetIcons/' + imageUrlMedium,
 				imageUrlSmall : '../images/blue/icons/widgetContainer/' + imageUrlSml,
 				widgetGuid : guid,
                 universalName : guid,
@@ -996,7 +997,7 @@ class PersonWidgetDefinitionControllerTest extends OWFGroovyTestCase {
       for (int i = 0 ; i < numWidgetDefinitions ; i++) {
         def widgetDefinition = WidgetDefinition.build(displayName : 'Widget '+i,
                                               height : 740,
-                                              imageUrlLarge : '../images/blue/icons/widgetIcons/widgetC.gif',
+                                              imageUrlMedium : '../images/blue/icons/widgetIcons/widgetC.gif',
                                               imageUrlSmall : '../images/blue/icons/widgetContainer/widgetCsm.gif',
                                               widgetGuid : java.util.UUID.randomUUID().toString(),
                                               universalName : java.util.UUID.randomUUID().toString(),

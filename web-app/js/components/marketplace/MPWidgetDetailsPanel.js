@@ -158,7 +158,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
         var json = {
             displayName: parentWidget.title,
             height: 200,
-            imageUrlLarge: parentWidget.imageLargeUrl ? parentWidget.imageLargeUrl : Ozone.util.contextPath(),
+            imageUrlMedium: parentWidget.imageLargeUrl ? parentWidget.imageLargeUrl : Ozone.util.contextPath(),
             imageUrlSmall: parentWidget.imageSmallUrl ? parentWidget.imageSmallUrl : Ozone.util.contextPath(),
             isExtAjaxFormat: true,
             widgetGuid: parentWidget.uuid,
@@ -188,7 +188,7 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
             	json = {
                     displayName: requiredListings[i].title,
                     height: 200,
-                    imageUrlLarge: requiredListings[i].imageLargeUrl ? requiredListings[i].imageLargeUrl : Ozone.util.contextPath(),
+                    imageUrlMedium: requiredListings[i].imageLargeUrl ? requiredListings[i].imageLargeUrl : Ozone.util.contextPath(),
                     imageUrlSmall: requiredListings[i].imageSmallUrl ? requiredListings[i].imageSmallUrl : Ozone.util.contextPath(),
                     isExtAjaxFormat: true,
                     widgetGuid: requiredListings[i].uuid,

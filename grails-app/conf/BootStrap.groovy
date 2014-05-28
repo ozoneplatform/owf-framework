@@ -264,7 +264,7 @@ class BootStrap {
             def widgetDefinition = saveInstance(new WidgetDefinition(
                 displayName: 'Test Widget '+i,
                 height: 440,
-                imageUrlLarge: 'themes/common/images/widget-icons/HTMLViewer.png',
+                imageUrlMedium: 'themes/common/images/widget-icons/HTMLViewer.png',
                 imageUrlSmall: 'themes/common/images/widget-icons/HTMLViewer.png',
                 widgetGuid: generateId(),
                 widgetUrl: 'examples/walkthrough/widgets/HTMLViewer.gsp',
@@ -562,7 +562,7 @@ class BootStrap {
         widgetDefs << saveInstance(new WidgetDefinition(
                 displayName: 'AnnouncingClock',
                 height: 300,
-                imageUrlLarge: baseUrl + 'owf-sample-html/images/clock.gif',
+                imageUrlMedium: baseUrl + 'owf-sample-html/images/clock.gif',
                 imageUrlSmall: baseUrl + 'owf-sample-html/images/clocksm.gif',
                 widgetGuid: id,
                 widgetUrl: baseUrl + 'owf-sample-html/clock/AnnouncingClock.html',
@@ -575,7 +575,7 @@ class BootStrap {
         widgetDefs << saveInstance(new WidgetDefinition(
                 displayName: 'AnnouncingClock_DynamicLauncher',
                 height: 300,
-                imageUrlLarge: baseUrl + 'owf-sample-html/images/clock.gif',
+                imageUrlMedium: baseUrl + 'owf-sample-html/images/clock.gif',
                 imageUrlSmall: baseUrl + 'owf-sample-html/images/clocksm.gif',
                 widgetGuid: id,
                 widgetUrl: baseUrl + 'owf-sample-html/clock/AnnouncingClock_DynamicLauncher.html',
@@ -588,7 +588,7 @@ class BootStrap {
         widgetDefs << saveInstance(new WidgetDefinition(
                 displayName: 'AnnouncingClock_Eventing',
                 height: 300,
-                imageUrlLarge: baseUrl + 'owf-sample-html/images/clock.gif',
+                imageUrlMedium: baseUrl + 'owf-sample-html/images/clock.gif',
                 imageUrlSmall: baseUrl + 'owf-sample-html/images/clocksm.gif',
                 widgetGuid: id,
                 widgetUrl: baseUrl + 'owf-sample-html/clock/AnnouncingClock_Eventing.html',
@@ -601,7 +601,7 @@ class BootStrap {
         widgetDefs << saveInstance(new WidgetDefinition(
                 displayName: 'AnnouncingClock_Launcher',
                 height: 300,
-                imageUrlLarge: baseUrl + 'owf-sample-html/images/clock.gif',
+                imageUrlMedium: baseUrl + 'owf-sample-html/images/clock.gif',
                 imageUrlSmall: baseUrl + 'owf-sample-html/images/clocksm.gif',
                 widgetGuid: id,
                 widgetUrl: baseUrl + 'owf-sample-html/clock/AnnouncingClock_Launcher.html',
@@ -614,7 +614,7 @@ class BootStrap {
         widgetDefs << saveInstance(new WidgetDefinition(
                 displayName: 'AnnouncingClock_Localization',
                 height: 300,
-                imageUrlLarge: baseUrl + 'owf-sample-html/images/clock.gif',
+                imageUrlMedium: baseUrl + 'owf-sample-html/images/clock.gif',
                 imageUrlSmall: baseUrl + 'owf-sample-html/images/clocksm.gif',
                 widgetGuid: id,
                 widgetUrl: baseUrl + 'owf-sample-html/clock/AnnouncingClock_Localization.html',
@@ -627,7 +627,7 @@ class BootStrap {
         widgetDefs << saveInstance(new WidgetDefinition(
                 displayName: 'AnnouncingClock_Logging',
                 height: 300,
-                imageUrlLarge: baseUrl + 'owf-sample-html/images/clock.gif',
+                imageUrlMedium: baseUrl + 'owf-sample-html/images/clock.gif',
                 imageUrlSmall: baseUrl + 'owf-sample-html/images/clocksm.gif',
                 widgetGuid: id,
                 widgetUrl: baseUrl + 'owf-sample-html/clock/AnnouncingClock_Logging.html',
@@ -640,7 +640,7 @@ class BootStrap {
         widgetDefs << saveInstance(new WidgetDefinition(
                 displayName: 'AnnouncingClock_Preference',
                 height: 300,
-                imageUrlLarge: baseUrl + 'owf-sample-html/images/clock.gif',
+                imageUrlMedium: baseUrl + 'owf-sample-html/images/clock.gif',
                 imageUrlSmall: baseUrl + 'owf-sample-html/images/clocksm.gif',
                 widgetGuid: id,
                 widgetUrl: baseUrl + 'owf-sample-html/clock/AnnouncingClock_Preference.html',
@@ -653,7 +653,7 @@ class BootStrap {
         widgetDefs << saveInstance(new WidgetDefinition(
                 displayName: 'Second Tracker',
                 height: 300,
-                imageUrlLarge: baseUrl + 'owf-sample-html/images/tracker.gif',
+                imageUrlMedium: baseUrl + 'owf-sample-html/images/tracker.gif',
                 imageUrlSmall: baseUrl + 'owf-sample-html/images/trackersm.gif',
                 widgetGuid: id,
                 widgetUrl: baseUrl + 'owf-sample-html/clock/SecondTracker.html',
@@ -665,7 +665,7 @@ class BootStrap {
         widgetDefs << saveInstance(new WidgetDefinition(
                 displayName: 'SecondTracker_Launched',
                 height: 300,
-                imageUrlLarge: baseUrl + 'owf-sample-html/images/tracker.gif',
+                imageUrlMedium: baseUrl + 'owf-sample-html/images/tracker.gif',
                 imageUrlSmall: baseUrl + 'owf-sample-html/images/trackersm.gif',
                 widgetGuid: 'b93e73a4-4819-475f-82fd-9c31954e09bf',
                 widgetUrl: baseUrl + 'owf-sample-html/clock/SecondTracker_Launched.html',
@@ -681,7 +681,7 @@ class BootStrap {
         widgetDefs << saveInstance(new WidgetDefinition(
                 displayName: 'Pan',
                 height: 500,
-                imageUrlLarge: baseUrl + 'owf-sample-flex/images/pansm.gif',
+                imageUrlMedium: baseUrl + 'owf-sample-flex/images/pansm.gif',
                 imageUrlSmall: baseUrl + 'owf-sample-flex/images/pan.gif',
                 widgetGuid: id,
                 widgetUrl: baseUrl + 'owf-sample-flex/pan.html',
@@ -695,7 +695,7 @@ class BootStrap {
         widgetDefs << saveInstance(new WidgetDefinition(
                 displayName: 'Direct',
                 height: 300,
-                imageUrlLarge: baseUrl + 'owf-sample-flex/images/direct.gif',
+                imageUrlMedium: baseUrl + 'owf-sample-flex/images/direct.gif',
                 imageUrlSmall: baseUrl + 'owf-sample-flex/images/directsm.gif',
                 widgetGuid: id,
                 widgetUrl: baseUrl + 'owf-sample-flex/direct.html',
@@ -711,7 +711,7 @@ class BootStrap {
         widgetDefs << saveInstance(new WidgetDefinition(
                 displayName: 'MyChess Viewer',
                 height: 654,
-                imageUrlLarge: baseUrl + 'owf-sample-applet/images/chess.gif',
+                imageUrlMedium: baseUrl + 'owf-sample-applet/images/chess.gif',
                 imageUrlSmall: baseUrl + 'owf-sample-applet/images/white-queen.gif',
                 widgetGuid: id,
                 widgetUrl: baseUrl + 'owf-sample-applet/widget.jsp',

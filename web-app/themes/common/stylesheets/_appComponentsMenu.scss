@@ -82,7 +82,7 @@
             background-image: theme-image($theme-name, 'appcomponents/pin_over.png');
         }
     }
-    
+
     .pinned .x-tool-pin {
         background-image: theme-image($theme-name, 'appcomponents/pinned.png');
     }
@@ -90,9 +90,9 @@
     .body {
         overflow: hidden;
         clear: both;
-        // OP-2531: In CSS land, the carousel should be 171 pixels so that
+        // OP-2531: In CSS land, the carousel should be 185 pixels so that
         // it matches the minimum resizable size in JavaScript land.
-        height: 171px;
+        height: 185px;
     }
 
     .app-components {
@@ -101,7 +101,7 @@
 
     .app-components-body {
         overflow: hidden;
-        height: 125px;
+        height: 139px;
     }
 
     .bx-wrapper {
@@ -136,19 +136,19 @@
 
     .bx-prev {
         background: theme-image($theme-name, 'appcomponents/left_light.png') 0 0 no-repeat;
-        
+
         &:hover {
             background: theme-image($theme-name, 'appcomponents/left_dark.png') 0 0 no-repeat;
-            
+
         }
     }
 
     .bx-next {
         background: theme-image($theme-name, 'appcomponents/right_light.png') 0 0 no-repeat;
-        
+
         &:hover {
             background: theme-image($theme-name, 'appcomponents/right_dark.png') 0 0 no-repeat;
-            
+
         }
     }
 
@@ -198,7 +198,7 @@
     border-color: $widget-launcher-background-color;
     float: left;
     cursor: pointer;
-    
+
 
     .thumb-text {
         color: $widget-launcher-widget-text-color;
@@ -254,16 +254,16 @@
     float: right;
     color: $widget-launcher-widget-text-color;
 
-    background-image: theme-image($theme-name, 'myappswindow/Delete-out.png'); 
+    background-image: theme-image($theme-name, 'myappswindow/Delete-out.png');
     background-repeat: no-repeat;
 
 
     span {
         margin-left: 25px;
     }
-     
+
     &:hover, &.hover {
-        background-image: theme-image($theme-name, 'myappswindow/Delete-over.png'); 
+        background-image: theme-image($theme-name, 'myappswindow/Delete-over.png');
     }
 }
 

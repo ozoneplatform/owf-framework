@@ -284,7 +284,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     maxLength: 2083,
                     emptyText: 'https://mycompany.com/appcomponent/images/launchMenuIcon.png',
                     usePlaceholderIfAvailable: false,
-                    fieldLabel: Ozone.util.createRequiredLabel('Large Icon URL')
+                    fieldLabel: Ozone.util.createRequiredLabel('Medium Icon URL')
                 },
                 {
                     xtype: 'numberfield',
@@ -531,7 +531,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             universalName.setValue(Ext.htmlEncode(data.universalName) || "");
             url.setValue(Ext.String.trim(data.widgetUrl));
             headerIcon.setValue(Ext.String.trim(data.imageUrlSmall));
-            image.setValue(Ext.String.trim(data.imageUrlLarge));
+            image.setValue(Ext.String.trim(data.imageUrlMedium || data.imageUrlLarge));
             width.setValue(data.width);
             height.setValue(data.height);
             singleton.setValue(data.singleton);

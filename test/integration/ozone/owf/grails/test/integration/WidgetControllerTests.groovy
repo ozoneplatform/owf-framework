@@ -25,7 +25,7 @@ class WidgetControllerTests extends OWFGroovyTestCase {
             descriptorUrl : '../examples/fake-widgets/widget-c.json',
             displayName : 'Widget C',
             height : 740,
-            imageUrlLarge : '../images/blue/icons/widgetIcons/widgetC.gif',
+            imageUrlMedium : '../images/blue/icons/widgetIcons/widgetC.gif',
             imageUrlSmall : '../images/blue/icons/widgetContainer/widgetCsm.gif',
             widgetGuid : '0c5435cf-4021-4f2a-ba69-dde451d12551',
             universalName : '0c5435cf-4021-4f2a-ba69-dde451d12551',
@@ -42,7 +42,7 @@ class WidgetControllerTests extends OWFGroovyTestCase {
             descriptorUrl : '../examples/fake-widgets/' + descriptorUrl,
             displayName : widgetName,
             height : 740,
-            imageUrlLarge : '../images/blue/icons/widgetIcons/' + imageUrlLarge,
+            imageUrlMedium : '../images/blue/icons/widgetIcons/' + imageUrlMedium,
             imageUrlSmall : '../images/blue/icons/widgetContainer/' + imageUrlSml,
             widgetVersion : '1.0',
             widgetGuid : guid,
@@ -116,7 +116,7 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         controller.params.displayName = 'Widget C'
         controller.params.widgetUrl = '../examples/fake-widgets/widget-c.html'
         controller.params.imageUrlSmall = '../images/blue/icons/widgetContainer/widgetCsm.gif'
-        controller.params.imageUrlLarge = '../images/blue/icons/widgetIcons/widgetC.gif'
+        controller.params.imageUrlMedium = '../images/blue/icons/widgetIcons/widgetC.gif'
         controller.params.width = 980
         controller.params.height = 740
         controller.params.widgetGuid = '0c5435cf-4021-4f2a-ba69-dde451d12551'
@@ -140,7 +140,7 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         controller.params.displayName = 'Widget C'
         controller.params.widgetUrl = '../examples/fake-widgets/widget-c.html'
         controller.params.imageUrlSmall = '../images/blue/icons/widgetContainer/widgetCsm.gif'
-        controller.params.imageUrlLarge = '../images/blue/icons/widgetIcons/widgetC.gif'
+        controller.params.imageUrlMedium = '../images/blue/icons/widgetIcons/widgetC.gif'
         controller.params.width = 980
         controller.params.height = 740
         controller.params.widgetGuid = '0c5435cf-4021-4f2a-ba69-dde451d12551'
@@ -164,7 +164,7 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         controller.params.displayName = 'Widget C'
         controller.params.widgetUrl = '../examples/fake-widgets/widget-c.html'
         controller.params.imageUrlSmall = '../images/blue/icons/widgetContainer/widgetCsm.gif'
-        controller.params.imageUrlLarge = '../images/blue/icons/widgetIcons/widgetC.gif'
+        controller.params.imageUrlMedium = '../images/blue/icons/widgetIcons/widgetC.gif'
         controller.params.width = 980
         controller.params.height = 740
         controller.params.universalName = ''
@@ -205,7 +205,7 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         controller.params.displayName = 'Widget D'
         controller.params.widgetUrl = '../examples/fake-widgets/widget-d.html'
         controller.params.imageUrlSmall = '../images/blue/icons/widgetContainer/widgetDsm.gif'
-        controller.params.imageUrlLarge	= '../images/blue/icons/widgetIcons/widgetD.gif'
+        controller.params.imageUrlMedium	= '../images/blue/icons/widgetIcons/widgetD.gif'
         controller.params.descriptorUrl = '../examples/fake-widgets/widget-d.json'
         controller.params.intents = JSON.parse('{"send":[{"action":"Graph","dataTypes":["application/html"]}],"receive":[{"action":"View","dataTypes":["text/html"]}]}')
 
@@ -295,21 +295,6 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         def resp = JSON.parse(controller.response.contentAsString.decodeHTML())
         assert false == resp.success
     }
-
-    /*void testDeleteWidgetDefinitionForUnauthorizedUser() {
-        loginAsUsernameAndRole('testUser1', ERoleAuthority.ROLE_USER.strVal)
-        createWidgetDefinitionForTest('Widget C','widgetC.gif','widgetCsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12551','widget-c.html')
-
-        controller = new WidgetDefinitionController()
-        controller.widgetDefinitionService = widgetDefinitionService
-        controller.request.contentType = "text/json"
-
-        controller.params.widgetGuid = '0c5435cf-4021-4f2a-ba69-dde451d12551'
-        controller.delete()
-
-        assert '"Error during delete: You are not authorized to access this entity. You are not authorized to delete widget definitions."' == controller.response.contentAsString
-        assert null != WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
-    }*/
 
     private def createWidgetDefinitionIntentForTest(widgetDefinition, intent, dataTypes, send, receive) {
         def widgetDefinitionIntent = WidgetDefinitionIntent.build(

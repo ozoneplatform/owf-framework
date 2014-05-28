@@ -257,7 +257,7 @@ class StackControllerTests extends OWFGroovyTestCase {
 	         "universalName": null,
 	         "visible": true,
 	         "imageUrlSmall": "http://www.image.com/theimage.png",
-	         "imageUrlLarge": "http://www.image.com/theimage.png",
+	         "imageUrlMedium": "http://www.image.com/theimage.png",
 	         "singleton": false,
 	         "width": 540,
 	         "widgetVersion": "1.0",

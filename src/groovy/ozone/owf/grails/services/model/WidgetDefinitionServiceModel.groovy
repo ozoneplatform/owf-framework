@@ -9,7 +9,7 @@ class WidgetDefinitionServiceModel extends AbstractServiceModel {
     String description
     String widgetUrl
     String imageUrlSmall
-    String imageUrlLarge
+    String imageUrlMedium
     Integer width
     Integer height
     Integer totalUsers = 0
@@ -34,9 +34,9 @@ class WidgetDefinitionServiceModel extends AbstractServiceModel {
                 description: description,
                 url: widgetUrl,
                 headerIcon: imageUrlSmall,
-                image: imageUrlLarge,
+                image: imageUrlMedium,
                 smallIconUrl: imageUrlSmall,
-                largeIconUrl: imageUrlLarge,
+                largeIconUrl: imageUrlMedium,
                 width: width,
                 height: height,
                 x: 0,
