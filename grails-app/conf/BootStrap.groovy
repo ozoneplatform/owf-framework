@@ -141,7 +141,7 @@ class BootStrap {
         }
 
 
-        if(grailsApplication.config.notifications.enabled == true){
+        if(grailsApplication.config.notifications.enabled == true) {
             owfMessagingService.startListening()
             owfMessageCache.setExpiration(grailsApplication.config.notifications.query.interval as Integer)
         }
@@ -570,7 +570,6 @@ class BootStrap {
                 widgetTypes: [standard],
                 width: 300
             ))
-        widgetDefs.last().addTag('clock')
 
         id = generateId()
         widgetDefs << saveInstance(new WidgetDefinition(
@@ -584,7 +583,6 @@ class BootStrap {
                 widgetTypes: [standard],
                 width: 300
             ))
-        widgetDefs.last().addTag('clock')
 
         id = generateId()
         widgetDefs << saveInstance(new WidgetDefinition(
@@ -598,7 +596,6 @@ class BootStrap {
                 widgetTypes: [standard],
                 width: 300
             ))
-        widgetDefs.last().addTag('clock')
 
         id = generateId()
         widgetDefs << saveInstance(new WidgetDefinition(
@@ -612,7 +609,6 @@ class BootStrap {
                 widgetTypes: [standard],
                 width: 300
             ))
-        widgetDefs.last().addTag('clock')
 
         id = generateId()
         widgetDefs << saveInstance(new WidgetDefinition(
@@ -626,7 +622,6 @@ class BootStrap {
                 widgetTypes: [standard],
                 width: 300
             ))
-        widgetDefs.last().addTag('clock')
 
         id = generateId()
         widgetDefs << saveInstance(new WidgetDefinition(
@@ -640,7 +635,6 @@ class BootStrap {
                 widgetTypes: [standard],
                 width: 300
             ))
-        widgetDefs.last().addTag('clock')
 
         id = generateId()
         widgetDefs << saveInstance(new WidgetDefinition(
@@ -654,7 +648,6 @@ class BootStrap {
                 widgetTypes: [standard],
                 width: 300
             ))
-        widgetDefs.last().addTag('clock')
 
         id = generateId()
         widgetDefs << saveInstance(new WidgetDefinition(
@@ -668,7 +661,6 @@ class BootStrap {
                 widgetTypes: [standard],
                 width: 300
             ))
-        widgetDefs.last().addTag('clock')
 
         widgetDefs << saveInstance(new WidgetDefinition(
                 displayName: 'SecondTracker_Launched',
@@ -682,7 +674,6 @@ class BootStrap {
                 widgetTypes: [standard],
                 width: 300
             ))
-        widgetDefs.last().addTag('clock')
         //owf-sample-html
 
         //owf-sample-flex
@@ -699,7 +690,6 @@ class BootStrap {
                 widgetTypes: [standard],
                 width: 600
             ))
-        widgetDefs.last().addTag('flex')
 
         id = generateId()
         widgetDefs << saveInstance(new WidgetDefinition(
@@ -714,7 +704,6 @@ class BootStrap {
                 widgetTypes: [standard],
                 width: 300
             ))
-        widgetDefs.last().addTag('flex')
         //owf-sample-flex
 
         //owf-sample-applet
@@ -731,7 +720,6 @@ class BootStrap {
                 widgetTypes: [standard],
                 width: 660
             ))
-        widgetDefs.last().addTag('applet')
 
         def people = Person.findAll()
         def widgetDefinitions = widgetDefs
@@ -739,23 +727,10 @@ class BootStrap {
             def wdSize = widgetDefinitions.size()
             for (int idx in 0..<wdSize) {
                 def widgetDefinition = widgetDefinitions[idx]
-                def tagLinks = widgetDefinition.getTags()
                 def pwd = new PersonWidgetDefinition(person: person,
                     widgetDefinition: widgetDefinition,
                     visible: true,
                     pwdPosition: idx)
-                saveInstance(pwd)
-                def tags = tagLinks?.collect {
-                    [
-                        name: it.tag.name,
-                        visible: true,
-                        position: -1,
-                        editable: true
-                    ]
-                }
-                if (tags) {
-                    pwd.setTags(tags)
-                }
                 saveInstance(pwd)
             }
 

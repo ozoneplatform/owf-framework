@@ -45,7 +45,7 @@ owf-widget-debug.js
 owf-widget-min.js
 owf-widget-min.gz.js
 /*.jks
-
+*.orig
 # OS generated files #
 .DS_Store
 .DS_Store?
@@ -54,6 +54,7 @@ owf-widget-min.gz.js
 .Trashes
 ehthumbs.db
 Thumbs.db
+plugins/
 
 # IDE support files
 /.classpath

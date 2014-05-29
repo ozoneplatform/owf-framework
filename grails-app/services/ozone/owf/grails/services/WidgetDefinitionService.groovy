@@ -36,14 +36,6 @@ class WidgetDefinitionService {
         if (params?.max) opts.max =(params.max instanceof String ? Integer.parseInt(params.max) : params.max)
         if (params?.stack_id) params.stack_id = (params.stack_id instanceof String ? Integer.parseInt(params.stack_id) : params.stack_id)
 
-        if(params?.filters) {
-            JSON.parse(params.filters).each {
-                if (it.filterField == 'tags') {
-                    params.tags = it.filterValue
-                }
-            }
-        }
-
         def stackFilteredIds = []
         if(params?.stack_id > -1) {
             def widgetGuids = []
@@ -80,27 +72,6 @@ class WidgetDefinitionService {
             //If stackFilteredIds empty now, return no results
             if(stackFilteredIds.isEmpty()) {
                 return [success: true, results: 0, data: []]
-            }
-        }
-
-        def tagFilteredIds = []
-        if(params?.tags) {
-            for(tag in JSON.parse(params?.tags)) {
-                def tempTagFilteredIds = []
-                WidgetDefinition.findAllByTag(tag).each {
-                    tempTagFilteredIds << it.id
-                }
-
-                if(tagFilteredIds.isEmpty()) {
-                    tagFilteredIds = tempTagFilteredIds
-                } else {
-                    tagFilteredIds = tagFilteredIds.intersect(tempTagFilteredIds)
-                }
-
-                //If tagFilteredIds empty now, return no results
-                if(tagFilteredIds.isEmpty()) {
-                    return [success: true, results: 0, data: []]
-                }
             }
         }
 
@@ -179,7 +150,7 @@ class WidgetDefinitionService {
                                     }
                                 }
                             } else {
-                                if (it.filterField != 'tags') ilike(it.filterField, '%' + it.filterValue + '%')
+                                ilike(it.filterField, '%' + it.filterValue + '%')
                             }
                         }
                     }
@@ -204,7 +175,7 @@ class WidgetDefinitionService {
                                 }
                             }
                         } else {
-                            if (it.filterField != 'tags') ilike(it.filterField, '%' + it.filterValue + '%')
+                            ilike(it.filterField, '%' + it.filterValue + '%')
                         }
                     }
                 }
@@ -248,9 +219,6 @@ class WidgetDefinitionService {
             }
             if (!groupFilteredIds.isEmpty()) {
                 inList('id',groupFilteredIds)
-            }
-            if (!tagFilteredIds.isEmpty()) {
-                inList('id',tagFilteredIds)
             }
             if (!stackFilteredIds.isEmpty()) {
                 inList('id',stackFilteredIds)
@@ -551,10 +519,6 @@ class WidgetDefinitionService {
 
                             person.addToPersonWidgetDefinitions(personWidgetDefinition)
                             widgetDefinition.addToPersonWidgetDefinitions(personWidgetDefinition)
-
-                            personWidgetDefinition.setTags(personWidgetDefinition.widgetDefinition.getTags()?.collect {
-                                ['name':it.tag.name,'visible':it.visible,'position':it.position]
-                            });
                         }
                         else {
                             results.each { result ->
@@ -584,12 +548,6 @@ class WidgetDefinitionService {
             if (!updatedPeople.isEmpty()) {
                 returnValue = updatedPeople.collect{ serviceModelService.createServiceModel(it) }
             }
-        }
-
-
-
-        if (params.containsKey('tags')) {
-            widgetDefinition.setTags(params.tags)
         }
 
         if (params.update_action != null && params.update_action != '' && 'groups'==params.tab) {
@@ -640,10 +598,6 @@ class WidgetDefinitionService {
 
                             person.addToPersonWidgetDefinitions(personWidgetDefinition)
                             widgetDefinition.addToPersonWidgetDefinitions(personWidgetDefinition)
-
-                            personWidgetDefinition.setTags(personWidgetDefinition.widgetDefinition.getTags()?.collect { pwd ->
-                                ['name':pwd.tag.name,'visible':pwd.visible,'position':pwd.position]
-                            });
                         }
                         else {
                             results.each { result ->
@@ -911,10 +865,6 @@ class WidgetDefinitionService {
         widgetDefinition.universalName && widgetData.put("universalName", widgetDefinition.universalName)
         widgetDefinition.description && widgetData.put("description", widgetDefinition.description)
         widgetDefinition.widgetVersion && widgetData.put("widgetVersion", widgetDefinition.widgetVersion)
-
-        def tags = []
-        widgetDefinition.getTags().each { tags.push(it.tag.name) }
-        tags && widgetData.put("defaultTags", tags)
 
         def intents = [:], sendIntents = [], receiveIntents = []
         widgetDefinition.widgetDefinitionIntents.each {

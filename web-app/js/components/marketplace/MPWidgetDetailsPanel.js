@@ -143,23 +143,10 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
     },
 
     addWidget: function() {
-        var approvalTag = [];
         var widgetsJSON = [];
         var directRequired = [];
         var requiredListings = this.requiredListings;
         var parentWidget = this.parentWidget;
-
-        // OZP-476: MP Synchronization
-        var indivCategoryTag;
-        for ( var tgs = 0; tgs < parentWidget.categories.length; tgs++) {
-            indivCategoryTag = {
-                name : parentWidget.categories[tgs].title,
-                visible : true,
-                position : -1,
-                editable : true
-            }
-            approvalTag.push(indivCategoryTag)
-        }
 
         if (parentWidget.requires) {
             for (var i = 0; i < parentWidget.requires.length; i++) {
@@ -178,7 +165,6 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
             widgetUrl: parentWidget.launchUrl,
             width: 200,
             widgetVersion: parentWidget.versionName,
-            tags: Ext.JSON.encode(approvalTag),
             singleton: parentWidget.owfProperties && parentWidget.owfProperties != "" ? parentWidget.owfProperties.singleton : false,
             visible: parentWidget.owfProperties && parentWidget.owfProperties != "" ? parentWidget.owfProperties.visibleInLaunch : true,
             isSelected: true,
@@ -209,7 +195,6 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
                     widgetUrl: requiredListings[i].launchUrl,
                     width: 200,
                     widgetVersion: requiredListings[i].versionName,
-                    tags: Ext.JSON.encode(approvalTag),
                     singleton: requiredListings[i].owfProperties ? requiredListings[i].owfProperties.singleton : false,
                     visible: requiredListings[i].owfProperties ? requiredListings[i].owfProperties.visibleInLaunch : true,
                     background: false

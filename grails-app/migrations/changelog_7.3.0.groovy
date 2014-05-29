@@ -37,7 +37,7 @@ databaseChangeLog = {
         setupPgIdGenerators()
     }
 
-    changeSet(author: "owf", id: "7.3.0-1", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-1", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
         comment("Add type to dashboard")
         addColumn(tableName: "dashboard") {
             column(name: "type", type: "varchar(255)")
@@ -53,7 +53,7 @@ databaseChangeLog = {
     }
 
 
-	changeSet(author: "owf", id: "7.3.0-3", context: "create, upgrade, 7.3.0") {
+	changeSet(author: "owf", id: "7.3.0-3", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
 		createTable(tableName: "application_configuration") {
 
 			column(autoIncrement: "true", name: "id", type: "java.sql.Types.BIGINT") {
@@ -111,7 +111,7 @@ databaseChangeLog = {
 		}
 	}
 
-	changeSet(author: "owf", id: "7.3.0-4", context: "create, upgrade, 7.3.0") {
+	changeSet(author: "owf", id: "7.3.0-4", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
 		createIndex(indexName: "FKFC9C0477666C6D2", tableName: "application_configuration") {
 			column(name: "created_by_id")
 		}
@@ -129,14 +129,14 @@ databaseChangeLog = {
 		addForeignKeyConstraint(baseColumnNames: "edited_by_id", baseTableName: "application_configuration", constraintName: "FKFC9C047E31CB353", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
 	}
 
-    changeSet(author: "owf", id: "7.3.0-5", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-5", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
         comment("Add icon image url to dashboard")
         addColumn(tableName: "dashboard") {
             column(name: "icon_image_url", type: "varchar(2083)")
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-6", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-6", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
         comment("Add published_to_store and marked_for_deletion columns to dashboard table")
         addColumn(tableName: "dashboard") {
             column(name: "published_to_store", type: "java.sql.Types.BOOLEAN") {
@@ -527,7 +527,7 @@ databaseChangeLog = {
     }
 
     //OP-2330: Type of App Component still listed as Marketplace
-    changeSet(author: "owf", id: "7.3.0-16", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-16", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
 
         comment("Adding a column named display_name to the table widget_type so that the UI name is decoupled from the actual back-end name; The display_name will be the same as the name, except for marketplace, which will be displayed as store")
 
@@ -555,13 +555,13 @@ databaseChangeLog = {
 
     }
 
-    changeSet(author: "owf", id: "7.3.0-17", context: "create, 7.3.0, upgrade") {
+    changeSet(author: "owf", id: "7.3.0-17", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, 7.3.0, upgrade") {
         addDefaultValue(tableName: "application_configuration", columnName: "version", defaultValueNumeric: 0)
     }
 
     include file: "app_config_7.3.0.groovy"
 
-    changeSet(author: "owf", id: "7.3.0-18", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-18", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
         comment("Add isApproved to stack")
         addColumn(tableName: "stack") {
             column(name: "approved", type: "java.sql.Types.BOOLEAN") {
@@ -579,7 +579,7 @@ databaseChangeLog = {
     }
 
     // Create an admin group at creation time.  Upgrades are expected to have this group already.
-    changeSet(author: "owf", id: "7.3.0-20", context: "create") {
+    changeSet(author: "owf", id: "7.3.0-20", dbms:"hsqldb,mysql,oracle,postgresql", context: "create") {
         comment(text="Create an OWF Admin group.")
         //insert admin group
         insert(tableName: "owf_group") {
@@ -594,7 +594,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-21", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-21", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
         comment(text="Create Administrator's App and its default group.")
 
         insert(tableName: "stack") {
@@ -624,7 +624,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-22", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-22", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
         comment(text="Add Administration App to the OWF Administrators group.")
 
         insert(tableName: "stack_groups") {
@@ -641,7 +641,7 @@ databaseChangeLog = {
       """)
     }
 
-    changeSet(author: "owf", id: "7.3.0-24", context: "create") {
+    changeSet(author: "owf", id: "7.3.0-24", dbms:"hsqldb,mysql,oracle,postgresql", context: "create") {
         comment(text="Add new admin components that include universal names.  These will be the primary admin components moving forward.")
 
         // Insert the app component admin components.
@@ -846,7 +846,7 @@ databaseChangeLog = {
     }
 
     // On upgrades, allow the
-    changeSet(author: "owf", id: "7.3.0-26", context: "upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-26", dbms:"hsqldb,mysql,oracle,postgresql", context: "upgrade, 7.3.0") {
         comment(text="Add new admin components that include universal names.  These will be the primary admin components moving forward.")
 
         // Insert the app component admin components.
@@ -1033,7 +1033,7 @@ databaseChangeLog = {
             """ )
     }
 
-    changeSet(author: "owf", id: "7.3.0-27", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-27", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
         comment(text="Add the pages for the administrator's app.")
         insert(tableName: "dashboard") {
             // column(name: "id", valueNumeric: "322")
@@ -1121,7 +1121,7 @@ databaseChangeLog = {
 
     }
 
-    changeSet(author: "owf", id: "7.3.0-28", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-28", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
         comment(text="Add the associations for the stack's default group to the app pages..")
 
         insert(tableName: "domain_mapping") {
@@ -1158,7 +1158,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.3.0-29", context: "create, upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-29", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
         comment(text="Add the associations for the stack's default group to the admin components.")
         insert(tableName: "domain_mapping") {
             column(name: "version", valueNumeric: "0")
@@ -1246,7 +1246,7 @@ databaseChangeLog = {
 
     String adminWidgetUrlList = "'admin/UserManagement.gsp', 'admin/UserEdit.gsp', 'admin/WidgetManagement.gsp', 'admin/WidgetEdit.gsp', 'admin/GroupManagement.gsp', 'admin/GroupEdit.gsp', 'admin/DashboardEdit.gsp', 'admin/StackManagement.gsp', 'admin/StackEdit.gsp', 'admin/Configuration.gsp'"
 
-    changeSet(author: "owf", id: "7.3.0-31", context: "upgrade, 7.3.0") {
+    changeSet(author: "owf", id: "7.3.0-31", dbms:"hsqldb,mysql,oracle,postgresql", context: "upgrade, 7.3.0") {
 
         comment("Remove the old admin widgets.")
 

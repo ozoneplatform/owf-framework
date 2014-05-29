@@ -13,8 +13,4 @@ class GroupServiceModel extends AbstractServiceModel {
   Integer totalWidgets = 0
   Integer totalUsers = 0
   Integer totalStacks = 0
-
-  List tagLinks = []
-  
-
 }

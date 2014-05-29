@@ -600,23 +600,6 @@ class StackService {
         widgets.each {
             def widget = WidgetDefinition.findByWidgetGuid(it.widgetGuid)
 
-            def tags = []
-            if (it.defaultTags && it.defaultTags.length() > 0) {
-                for (def i = 0 ; i < it.defaultTags.length() ; i++) {
-                    def name = it.defaultTags.get(i)
-                    if (name != '') {
-                        def tag = [:]
-                        tag.put('name', name)
-                        tag.put('visible', true)
-                        tag.put('position', -1)
-                        tag.put('editable', true)
-                        tags.push(new JSONObject(tag))
-                    }
-                }
-            }
-            if(!tags.isEmpty()){
-                it.tags = tags
-            }
             def types = []
             if(it.widgetTypes){
                 def type = WidgetType.findByName(it.widgetTypes[0])
@@ -739,10 +722,6 @@ class StackService {
                     "widgetTypes": [widgetDefinition.widgetTypes[0].name],
                     "intents": widgetDefinition.intents
             ]
-            def tags = []
-            widgetDefinition.tags.each { tags.push(it.name) }
-            widgetData.put("defaultTags", tags)
-
             widgets.push(widgetData)
 
             //add the widget to the stack's group
@@ -809,7 +788,7 @@ class StackService {
         def dashboardParams = JSON.parse(params.dashboardData)
 
         // Extract stack id
-        int stackId = stackParams?.id as int
+        Integer stackId = stackParams?.id as Integer
 
         Stack stack
 

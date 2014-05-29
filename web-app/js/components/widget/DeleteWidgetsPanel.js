@@ -1,7 +1,7 @@
 Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
     extend: 'Ext.panel.Panel',
     alias: ['widget.deletewidgetspanel', 'widget.Ozone.components.widget.DeleteWidgetsPanel'],
-    
+
     delWidgets: null,
     dashboardContainer: null,
     delTitlePanel: null,
@@ -12,7 +12,7 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
     mixins: {
         circularFocus: 'Ozone.components.focusable.CircularFocus'
     },
-    
+
     id: 'topdeletepanel',
     width: 600,
     height: 300,
@@ -20,16 +20,16 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
         type: 'vbox',
         align: 'stretch'
     },
-    
+
     // private
     initComponent: function() {
-        
+
         this.delTitlePanel = Ext.create('Ext.panel.Panel', {
             layout: 'fit',
             border: false,
             html: 'You have selected to delete 0 App Components:'
         });
-        
+
         this.delView = Ext.create('Ext.grid.Panel', {
             cls: 'delView',
             columns: [{
@@ -38,7 +38,7 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
                 hideable: false,
                 tpl: '<img src="{headerIcon}" />',
                 width: 36
-            }, 
+            },
             {
                 header: 'Name',
                 dataIndex: 'name',
@@ -62,7 +62,7 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
             })
         });
 
-        
+
         this.reqTitlePanel = Ext.create('Ext.panel.Panel', {
             itemId: 'reqTitlePanel',
             layout: 'fit',
@@ -70,7 +70,7 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
             border: false,
             html: 'This App Component is required by other App Component(s) in OWF. Deleting this App Component will additionally delete the App Components listed below.'
         });
-        
+
         this.reqGrid = Ext.create('Ext.grid.Panel', {
             itemId: 'reqGrid',
             hidden: true,
@@ -97,7 +97,6 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
                     {name: 'x'},
                     {name: 'y'},
                     {name: 'visible'},
-                    {name: 'tags'},
                     {name: 'totalUsers'},
                     {name: 'totalGroups'},
                     {name: 'singleton'}
@@ -129,7 +128,7 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
                     }
                 },
                 {
-                    header: 'Name', 
+                    header: 'Name',
                     dataIndex: 'name',
                     flex: 1,
                     sortable: false,
@@ -137,7 +136,7 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
                     menuDisabled: true
                 },
                 {
-                    header: 'Version', 
+                    header: 'Version',
                     dataIndex: 'version',
                     width: 121,
                     sortable: false,
@@ -154,14 +153,14 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
             border: false,
             iconCls: 'icon-grid'
         });
-        
+
         this.items  = [
             this.delTitlePanel,
             this.delView,
             this.reqTitlePanel,
             this.reqGrid
         ];
-        
+
         this.okBtn = Ext.create('Ext.button.Button', {
             text: Ozone.layout.DialogMessages.ok,
             //iconCls: 'okSaveBtnIcon',
@@ -179,11 +178,11 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
             },
             scope: this
         });
-        
+
         this.buttons = [this.okBtn, this.cancelBtn];
-    
+
         var scope = this;
-        
+
         var ids = [];
         var r = [];
         var w = this.delWidgets;
@@ -196,23 +195,23 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
                 w[i].image
             ]);
         }
-        
+
         var delStore = this.delView.getStore();
         if (delStore) {
             delStore.removeAll();
             delStore.loadData(r, true);
         }
-        
+
         this.delTitlePanel.update('You have selected to delete ' + delStore.getCount() + ' App Component:');
-        
+
         Ozone.pref.PrefServer.getDependentPersonWidgets({
             content: {'ids': ids},
             onSuccess: function(ret) {
                 var d = [];
                 var data = ret.data;
-                
+
                 var delStore = scope.delView.getStore();
-                
+
                 if (data) {
                     for (var i = 0; i < data.length; i++) {
                         if (-1 == delStore.find('guid', data[i].path)) {
@@ -231,7 +230,6 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
                                 x: data[i].value.x,
                                 y: data[i].value.y,
                                 visible: data[i].value.visible,
-                                tags: data[i].value.tags,
                                 totalUsers: data[i].value.totalUsers,
                                 totalGroups: data[i].value.totalGroups,
                                 singleton: data[i].value.singleton
@@ -262,18 +260,18 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
                 alert('Error');
             }
         });
-        
+
 //        this.on('show', function() {
 //            this.focus();
 //        }, okBtn);
-        
+
         this.callParent();
 
         this.on('afterrender', function(cmp) {
             cmp.setupFocus(cmp.okBtn.getFocusEl(), cmp.cancelBtn.getFocusEl());
         });
     },
-    
+
     del: function() {
         var delStore = this.delView.getStore();
         var delRecs = delStore.getRange();
@@ -286,12 +284,12 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
         for (var i = 0; i < reqRecs.length; i++) {
             allRecs.push(reqRecs[i].data.widgetGuid);
         }
-        
+
         var scope = this;
-        
+
         Ozone.pref.PrefServer.updateAndDeleteWidgets({
             widgetsToUpdate: [],
-            widgetGuidsToDelete: allRecs, 
+            widgetGuidsToDelete: allRecs,
             updateOrder: false,
             onSuccess: function(ret) {
                 //Call method to refresh the 'widget launch menu' widgets.
@@ -302,12 +300,12 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
                     null, null, null, scope.dashboardContainer.modalWindowManager);
             }
         });
-        
+
         this.cancel();
     },
-    
+
     cancel: function() {
         this.ownerCt.close();
     }
-    
+
 });

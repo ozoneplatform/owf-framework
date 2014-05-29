@@ -61,7 +61,7 @@ databaseChangeLog = {
         """)
     }
 
-    changeSet(author: 'owf', id: '7.10.0-2', dbms: 'hsqldb, mssql, mysql, postgresql', context: 'create, upgrade, 7.10.0') {
+    changeSet(author: 'owf', id: '7.10.0-2', dbms: 'h2, hsqldb, mssql, mysql, postgresql', context: 'create, upgrade, 7.10.0') {
         [[code: 'notifications.enabled', type: 'Boolean', mutable: true, value: 'false'],
                 [code: 'notifications.query.interval', type: 'Integer', mutable: true, value: '30'],
                 [code: 'url.public', type: 'String', mutable: true]

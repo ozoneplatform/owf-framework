@@ -177,9 +177,6 @@ class DomainMappingService {
 
         if (mappedClazz) {
 
-            //check for tags
-            def tag = params?.filters?.find { it.name == 'tags' }
-
             def criteria = {
 
                 //filter by ids from mapping table
@@ -189,17 +186,6 @@ class DomainMappingService {
                             eq('id', ids[i])
                     }
                     //inList('id', ids)
-                }
-
-                //filter by specified fields
-                params?.filters?.each {
-
-                    //exclude tags
-                    if (!it.name.equals('tag')) {
-                        //assumes string and auto wild card
-                        ilike(it.name,"%${it.value}%")
-                    }
-
                 }
 
                 if (subCriteria != null) {
@@ -219,16 +205,10 @@ class DomainMappingService {
                 Collections.EMPTY_LIST
             }
             else {
-                if (tag) {
-                    //use taggable criteria
-                    mappedClazz.findAllByTagWithCriteria(tag.name, criteria)
-                }
-                else {
-                    //regular criteria
-                    //mappedClazz.withCriteria(params.opts ?: [:],criteria)
-                    def c = mappedClazz.createCriteria()
-                    c.list(params.opts ?: [:],criteria)
-                }
+                //regular criteria
+                //mappedClazz.withCriteria(params.opts ?: [:],criteria)
+                def c = mappedClazz.createCriteria()
+                c.list(params.opts ?: [:],criteria)
             }
 
         }
@@ -250,9 +230,6 @@ class DomainMappingService {
 
         if (mappedClazz) {
 
-            //check for tags
-            def tag = params?.filters?.find { it.name == 'tags' }
-
             def criteria = {
 
                 //filter by ids from mapping table
@@ -262,17 +239,6 @@ class DomainMappingService {
                             eq('id', ids[i])
                     }
                     //inList('id', ids)
-
-                //filter by specified fields
-                params?.filters?.each {
-
-                    //exclude tags
-                    if (!it.name.equals('tag')) {
-                        //assumes string and auto wild card
-                        ilike(it.name,"%${it.value}%")
-                    }
-
-                }
 
                 //sorting -- only single sort
                 if (params?.sort) {
@@ -288,14 +254,8 @@ class DomainMappingService {
                 Collections.EMPTY_LIST
             }
             else {
-                if (tag) {
-                    //use taggable criteria
-                    mappedClazz.findAllByTagWithCriteria(tag.name, criteria)
-                }
-                else {
-                    //regular criteria
-                    mappedClazz.withCriteria(criteria)
-                }
+                //regular criteria
+                mappedClazz.withCriteria(criteria)
             }
         }
         else {

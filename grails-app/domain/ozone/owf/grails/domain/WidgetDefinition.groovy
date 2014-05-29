@@ -1,8 +1,6 @@
 package ozone.owf.grails.domain
 
-import org.grails.taggable.Taggable
-
-class WidgetDefinition implements Taggable, Serializable {
+class WidgetDefinition implements Serializable {
 
     //	def domainMappingService
 

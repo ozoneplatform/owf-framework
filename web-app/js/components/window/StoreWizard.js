@@ -257,7 +257,6 @@ Ext.define('Ozone.components.window.StoreWizard', {
             }];
 
             me.record.beginEdit();
-            me.record.set('tags', []);
             me.record.set('widgetTypes', types);
             me.record.endEdit();
 

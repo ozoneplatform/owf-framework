@@ -3,7 +3,6 @@ package ozone.owf.grails.services
 import grails.converters.deep.JSON
 import grails.test.GrailsUnitTestCase
 import org.codehaus.groovy.grails.web.json.JSONArray
-import org.json.JSONString
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.domain.*
 
@@ -12,7 +11,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
     def stackServiceMockClass
     def widgetDefinitionServiceMockClass
 
-    protected void setUp() {
+    void setUp() {
         super.setUp()
         marketplaceService = new MarketplaceService()
         def domainMappingServiceMockClass = mockFor(DomainMappingService)
@@ -21,14 +20,6 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
 
         widgetDefinitionServiceMockClass = mockFor(WidgetDefinitionService)
         marketplaceService.widgetDefinitionService = widgetDefinitionServiceMockClass.createMock()
-
-        // Stub out taggable.  Kinda annoying
-        WidgetDefinition.metaClass.mockTags = []
-        WidgetDefinition.metaClass.getTags = {
-            return delegate.mockTags.collect { [tag: [name: it]] }
-        }
-        WidgetDefinition.metaClass.removeTag = { name -> delegate.mockTags.remove(name) }
-        WidgetDefinition.metaClass.addTag = { name, visible, position, editable -> delegate.mockTags << name }
 
         // Mock out the various widget types available
         mockDomain(WidgetType, [
@@ -44,7 +35,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         mockDomain(WidgetDefinition)
     }
 
-    protected void tearDown() {
+    void tearDown() {
         super.tearDown()
     }
     // copied from what Marketplace sends for a simple, no intents, no dependencies, widget
@@ -63,7 +54,6 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         "height":200,
         "width":300,
         "directRequired" :[],
-        "defaultTags" : ["tag"],
         "intents":{"send":[],"receive":[]},
         "widgetTypes":["standard"]
     }
@@ -84,7 +74,6 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         "height":200,
         "width":300,
         "directRequired" :[],
-        "defaultTags" : ["tag"],
         "intents":{"send":[],"receive":[]},
         "widgetTypes":["standard"],
         "universalName":"universalName"
@@ -106,7 +95,6 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         "height":200,
         "width":300,
         "directRequired" :[],
-        "defaultTags" : ["tag"],
         "intents":{"send":[],"receive":[]},
         "widgetTypes":["standard"],
         "universalName":null
@@ -128,7 +116,6 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         "height":200,
         "width":300,
         "directRequired" :[],
-        "defaultTags" : ["tag"],
         "intents":
             {"send":[
                 {"action":"send","dataTypes":["text/plain","text/html"]}
@@ -154,7 +141,6 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         "height":200,
         "width":300,
         "directRequired" :[],
-        "defaultTags" : ["tag"],
         "intents":
             {"send":[
                 {"action":"send","dataTypes":["text/plain","text/html"]}

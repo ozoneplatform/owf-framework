@@ -1,12 +1,12 @@
 databaseChangeLog = {
 
-    changeSet(author: "owf", id: "7.0.0-1", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-1", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Expand a widget definition's description field to 4000 to match Marketplace")
 
         modifyDataType(tableName: "widget_definition", columnName: "description", newDataType: "varchar(4000)")
     }
 
-    changeSet(author: "owf", id: "7.0.0-2", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-2", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Remove DashboardWidgetState since it is no longer used.")
         dropTable(tableName: "dashboard_widget_state")
     }
@@ -22,32 +22,33 @@ databaseChangeLog = {
         sql("ALTER TABLE [dbo].[dashboard] DROP CONSTRAINT DF_dashboard_show_launch_menu")
     }
 
-    changeSet(author: "owf", id: "7.0.0-4", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-4", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Remove show_launch_menu since it is no longer used.")
         dropColumn(tableName: "dashboard", columnName: "show_launch_menu")
     }
 
-    changeSet(author: "owf", id: "7.0.0-5", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-5", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Remove layout since it is no longer used.")
         dropColumn(tableName: "dashboard", columnName: "layout")
     }
 
-    changeSet(author: "owf", id: "7.0.0-6", context: "create, upgrade, 7.0.0") {
+
+    changeSet(author: "owf", id: "7.0.0-6", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Remove intent_config since it is no longer used.")
         dropColumn(tableName: "dashboard", columnName: "intent_config")
     }
 
-    changeSet(author: "owf", id: "7.0.0-7", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-7", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Remove default_settings since it is no longer used.")
         dropColumn(tableName: "dashboard", columnName: "default_settings")
     }
 
-    changeSet(author: "owf", id: "7.0.0-8", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-8", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Remove column_count since it is no longer used.")
         dropColumn(tableName: "dashboard", columnName: "column_count")
     }
 
-    changeSet(author: "owf", id: "7.0.0-9", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-9", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Create stack table")
 
         createTable(tableName: "stack") {
@@ -94,12 +95,12 @@ databaseChangeLog = {
       """)
     }
 
-    changeSet(author: "owf", id: "7.0.0-12", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-12", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Add primary key constraint for group_id and stack_id in stack_groups table")
         addPrimaryKey(constraintName: "pk_stack_groups", tableName: "stack_groups", columnNames: "group_id,stack_id")
     }
 
-    changeSet(author: "owf", id: "7.0.0-13", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-13", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Add foreign key constraints for group_id and stack_id in stack_groups table")
 
         addForeignKeyConstraint(constraintName: "FK9584AB6B6B3A1281",
@@ -111,7 +112,7 @@ databaseChangeLog = {
             referencedTableName: "owf_group", referencedColumnNames: "id")
     }
 
-    changeSet(author: "owf", id: "7.0.0-14", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-14", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Add stack_default field to group")
         addColumn(tableName: "owf_group") {
             column(name: "stack_default", type: "boolean", defaultValueBoolean: "false", valueBoolean: "false")
@@ -168,40 +169,40 @@ databaseChangeLog = {
         """)
     }
 
-    changeSet(author: "owf", id: "7.0.0-21", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-21", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         sql (text = """
             insert into stack_groups (stack_id, group_id) values ((select id from stack where name = 'OWF'), (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58e'));
         """)
     }
 
-    changeSet(author: "owf", id: "7.0.0-22", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-22", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Add a reference to a host stack to dashboard records to track where user instances should appear")
         addColumn(tableName: "dashboard") {
             column(name: "stack_id", type: "bigint")
         }
     }
 
-    changeSet(author: "owf", id: "7.0.0-23", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-23", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Add foreign key constraint for stack_id in the dashboard table")
         addForeignKeyConstraint(constraintName: "FKC18AEA946B3A1281",
             baseColumnNames: "stack_id", baseTableName: "dashboard",
             referencedColumnNames: "id", referencedTableName: "stack")
     }
 
-    changeSet(author: "owf", id: "7.0.0-24", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-24", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Add a property to track the count of unique widgets present on the dashboards of a stack")
         addColumn(tableName: "stack") {
             column(name: "unique_widget_count", type: "bigint", defaultValue: 0)
         }
     }
 
-    changeSet(author: "owf", id: "7.0.0-25", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-25", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         sql (text = """
             delete from stack_groups where stack_id = (select id from stack where name = 'OWF') and group_id = (select id from owf_group where name = 'ce86a612-c355-486e-9c9e-5252553cc58e');
         """)
     }
 
-    changeSet(author: "owf", id: "7.0.0-26", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-26", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Delete OWF Stack Group")
 
         delete(tableName: "owf_group") {
@@ -209,7 +210,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.0.0-27", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-27", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Delete OWF Stack")
 
         delete(tableName: "stack") {
@@ -217,7 +218,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.0.0-28", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-28", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Add user_widget field to person_widget_definition table")
         addColumn(tableName: "person_widget_definition") {
             column(name: "user_widget", type: "boolean", defaultValueBoolean: "false", valueBoolean: "false")
@@ -232,7 +233,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.0.0-29", dbms: "postgresql,hsqldb", context: "upgrade, 7.0.0, sampleData, 7.0.0-sampleData") {
+    changeSet(author: "owf", id: "7.0.0-29", dbms: "h2,postgresql,hsqldb", context: "upgrade, 7.0.0, sampleData, 7.0.0-sampleData") {
         comment("Update existing PWD records to set whether they were added to a user directly or just via a group")
         update(tableName: "person_widget_definition") {
             column(name: "user_widget", valueBoolean: true)
@@ -579,13 +580,13 @@ databaseChangeLog = {
         """)
     }
 
-    changeSet(author: "owf", id: "7.0.0-53", context: "create, upgrade, 7.0.0") {
+    changeSet(author: "owf", id: "7.0.0-53", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.0.0") {
         comment("Expand a dashboard's description field to 4000 to match Marketplace")
 
         modifyDataType(tableName: "dashboard", columnName: "description", newDataType: "varchar(4000)")
     }
 
-    changeSet(author: "owf", id: "7.0.0-54", context: "sampleData, 7.0.0-sampleData", dbms:"hsqldb, mysql, mssql") {
+    changeSet(author: "owf", id: "7.0.0-54", context: "sampleData, 7.0.0-sampleData", dbms:"h2,hsqldb, mysql, mssql") {
         comment(text="Create Investments stack and its default group.")
 
         insert(tableName: "stack") {
@@ -701,7 +702,7 @@ databaseChangeLog = {
         """)
     }
 
-    changeSet(author: "owf", id: "7.0.0-61", context: "sampleData, 7.0.0-sampleData", dbms:"hsqldb, mysql, mssql") {
+    changeSet(author: "owf", id: "7.0.0-61", context: "sampleData, 7.0.0-sampleData", dbms:"h2, hsqldb, mysql, mssql") {
         comment(text="Add Widget Intents and Contacts dashboards' widgets to Investments stack.")
 
         // Add the widgets in Watch List dashboard to the Investments stack
@@ -892,7 +893,7 @@ databaseChangeLog = {
 
     //         column(name: "visible", valueBoolean: "false")
 
-    //         column(name: "image_url_medium", value: "themes/common/images/adm-tools/Stacks64.png")
+    //         column(name: "image_url_large", value: "themes/common/images/adm-tools/Stacks64.png")
 
     //         column(name: "image_url_small", value: "themes/common/images/adm-tools/Stacks24.png")
 
@@ -920,7 +921,7 @@ databaseChangeLog = {
 
     //         column(name: "visible", valueBoolean: "true")
 
-    //         column(name: "image_url_medium", value: "themes/common/images/adm-tools/Stacks64.png")
+    //         column(name: "image_url_large", value: "themes/common/images/adm-tools/Stacks64.png")
 
     //         column(name: "image_url_small", value: "themes/common/images/adm-tools/Stacks24.png")
 
@@ -987,7 +988,7 @@ databaseChangeLog = {
 
     // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
     // As of 7.4, the owf admin group and admin widgets are created/assigned in the database create scripts.
-    // changeSet(author: "owf", id: "7.0.0-69", context: "sampleData, 7.0.0-sampleData", dbms:"hsqldb, mysql, mssql") {
+    // changeSet(author: "owf", id: "7.0.0-69", context: "sampleData, 7.0.0-sampleData", dbms:"h2, hsqldb, mysql, mssql") {
     //     comment(text="Add the group ownership mappings for the stacks admin widgets.")
     //     insert(tableName: "domain_mapping") {
     //         column(name: "id", valueNumeric: "349")
@@ -1060,7 +1061,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "7.0.0-74", context: "sampleData, 7.0.0-sampleData", dbms: "mysql, postgresql, oracle, hsqldb") {
+    changeSet(author: "owf", id: "7.0.0-74", context: "sampleData, 7.0.0-sampleData", dbms: "h2, mysql, postgresql, oracle, hsqldb") {
         comment(text="Remove Contacts dashboard from OWF Users group and add it to the default stack.")
 
         sql (text = """

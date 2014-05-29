@@ -168,10 +168,6 @@ class AdministrationService {
           if (pwd != null) {
             it.hasPWD = true
 
-            //add a list of tags for each user for the specified widget
-            it.tagLinks = pwd.getTags().collect { tag ->
-              serviceModelService.createServiceModel(tag)
-            }
           }
           else {
             it.hasPWD = false
@@ -337,5 +333,4 @@ class AdministrationService {
             throw new OwfException(message: "You must be an admin", exceptionType: OwfExceptionTypes.Authorization)
         }
     }
-
 }

@@ -620,15 +620,6 @@ Ext.define('Ozone.components.launchMenu.LaunchMenu', {
         }
 
         var widgetDisabled = record.get('disabled');
-//        var tags = record.get('tags');
-//        if (tags != null && tags.length > 0) {
-//          for (var i = 0; i < tags.length; i++) {
-//              if (tags[i].editable === false) {
-//                  widgetDisabled = true;
-//                  break;
-//              }
-//          }
-//        }
         if (widgetDisabled || !record) {
             startRemovePanel.addCls('widget-disabled');
         }

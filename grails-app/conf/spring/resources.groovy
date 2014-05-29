@@ -1,4 +1,7 @@
 import grails.util.GrailsUtil
+
+import org.springframework.security.web.FilterChainProxy
+
 import ozone.owf.grails.OwfExceptionResolver
 import ozone.owf.grails.services.AutoLoginAccountService
 import ozone.owf.grails.domain.ERoleAuthority
@@ -20,6 +23,9 @@ beans = {
 
     // wire up a different account service if -Duser=something and environment is development
     if (GrailsUtil.environment == "development") {
+        //empty sprint security bean
+        springSecurityFilterChain(FilterChainProxy, [])
+
         switch (System.properties.user) {
             case "testUser1":
                 println("Using AutoLoginAccountService - you will be logged in as testUser1")
@@ -81,6 +87,6 @@ beans = {
 	{
 		exceptionMappings = [
 				'java.lang.Exception': '/error'
-				]		
+				]
 	}
 }

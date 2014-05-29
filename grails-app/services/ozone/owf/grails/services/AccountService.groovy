@@ -43,7 +43,6 @@ class AccountService {
         c.with {
             switch(name) {
                 case 'lastLogin':
-                    System.out.println("Name: " + name + " Value: " + value)
                     break;
                 default:
                     ilike(name, '%' + value + '%')
@@ -288,9 +287,10 @@ class AccountService {
 
     @Transactional(readOnly=false)
     def createOrUpdate(params) {
-        if (!getLoggedInUserIsAdmin())
+        if (!getLoggedInUserIsAdmin()) {
             throw new OwfException(message:'You are not authorized to see a list of users in the system.',
             exceptionType: OwfExceptionTypes.Authorization)
+        }
 
         def returnValue = null
         def isNewUser = false
@@ -306,8 +306,9 @@ class AccountService {
                         params[it.key] = it.value
                 }
                 def user = Person.findByUsername(params.username)
-                if (user && !params.id)
+                if (user && !params.id) {
                     throw new OwfException(message: 'A user with this name already exists.',exceptionType: OwfExceptionTypes.GeneralServerError)
+                }
                 if (!user)
                 {
                     //Create
@@ -320,7 +321,13 @@ class AccountService {
                 }
                 params.lastLogin = params.lastLogin ? new Date(params.lastLogin) : null
                 params.prevLogin = params.prevLogin ? new Date(params.prevLogin) : null
-                user.properties = params
+                params.entrySet().grep {
+                    it.key in ['username', 'userRealName', 'enabled', 'email', 'emailShow',
+                        'description', 'lastLogin', 'prevLogin']
+                }.each { entry ->
+                    user[entry.key] = entry.value
+                }
+
 
                 // Add to OWF Users group
                 if (isNewUser) {
@@ -373,12 +380,8 @@ class AccountService {
 
                                     user.addToPersonWidgetDefinitions(personWidgetDefinition)
                                     widget.addToPersonWidgetDefinitions(personWidgetDefinition)
-                                    personWidgetDefinition.setTags(personWidgetDefinition.widgetDefinition.getTags()?.collect { pwd ->
-                                        ['name':pwd.tag.name,'visible':pwd.visible,'position':pwd.position]
-                                    });
-
-                                } 
-                                // If the user already had this PWD, then set the direct user 
+                                }
+                                // If the user already had this PWD, then set the direct user
                                 // assocation flag.
                                 else if (results[0] != null){
                                     results[0].userWidget = true
@@ -603,24 +606,24 @@ class AccountService {
                 exceptionType: OwfExceptionTypes.JsonToDomainColumnMapping)
         }
     }
-	
-	
+
+
 	//There are times that OWF might pick up a request when a user is not logged in, for example during sync
 	//This will create a security context with the incoming userName.  The user name could be SYSTEM or it could be a user name from an audit field (editedBy
 	public void createSecurityContext(String userName = "SYSTEM"){
 		//If there is no security context then a user is not logged in so this is a system process or we can use the passed in userName to create the details
 		if(!SCH.context.authentication){
 			log.debug "Creating a PreAuthenticatedAuthenticationToken for ${userName}"
-			
+
 			def auths = [new GrantedAuthorityImpl(ERoleAuthority.ROLE_USER.strVal)]
-					
+
 			def userDetails = new OWFUserDetailsImpl(userName, null, auths, [])
 			userDetails.username = userName
-			
+
 			def token = new PreAuthenticatedAuthenticationToken(userDetails, null, auths)
-			
+
 			SCH.getContext().setAuthentication(token)
 		}
 	}
-	
+
 }

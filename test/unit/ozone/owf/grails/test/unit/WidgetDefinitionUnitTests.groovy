@@ -17,7 +17,6 @@ class WidgetDefinitionUnitTests extends GrailsUnitTestCase {
         mockForConstraintsTests(WidgetDefinition)
 		//mockDomain(DomainMapping)
 		//mockForConstraintsTests(DomainMapping)
-        WidgetDefinition.metaClass.getTags = { -> [] }
         widgetDefinition = new WidgetDefinition()
 //		widgetDefinition.domainMappingService = new DomainMappingService()
     }

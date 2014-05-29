@@ -23,7 +23,6 @@ Ext.define('Ozone.data.WidgetDefinition', {
         {name:'background', mapping:'value.background'},
         {name:'disabled', mapping:'value.disabled'},
         {name:'editable', mapping:'value.editable'},
-        {name:'tags', mapping:'value.tags'},
         {name:'singleton', mapping:'value.singleton'},
         {name:'allRequired', mapping:'value.allRequired'},
         {name:'directRequired', mapping:'value.directRequired'},

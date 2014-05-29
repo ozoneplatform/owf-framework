@@ -1,6 +1,9 @@
 package ozone.owf.grails.test.integration
 
 import grails.converters.JSON
+import grails.test.mixin.TestMixin
+import grails.test.mixin.integration.IntegrationTestMixin
+
 import org.codehaus.groovy.grails.web.json.JSONArray
 import org.codehaus.groovy.grails.web.json.JSONObject
 import ozone.owf.grails.controllers.AdministrationController
@@ -13,6 +16,7 @@ import ozone.owf.grails.domain.Preference
 import ozone.owf.grails.domain.PersonWidgetDefinition
 import ozone.owf.grails.services.ServiceModelService
 
+@TestMixin(IntegrationTestMixin)
 class AdministrationControllerTests extends OWFGroovyTestCase {
 
     //def accountService
@@ -69,11 +73,11 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
             width : 980
         )
 
-        assertNotNull WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
+        assert null != WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
 
         controller.params.data = '[{"id":"0c5435cf-4021-4f2a-ba69-dde451d12551"}]'
         controller.deleteWidgetDefinitions()
-        assertNull WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
+        assert null ==  WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
     }
 
     void testDeletePersons() {
@@ -83,11 +87,11 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.serviceModelService = serviceModelService
         Person.build(username: 'testAdmin2')
 
-        assertNotNull Person.findByUsername('testAdmin2')
+        assert null != Person.findByUsername('testAdmin2')
 
         controller.params.username = 'testAdmin2'
         controller.deletePersons()
-        assertNull Person.findByUsername('testAdmin2')
+        assert null ==  Person.findByUsername('testAdmin2')
     }
 
     void testCreateOrUpdatePerson() {
@@ -113,9 +117,9 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.administrationService = administrationService
         controller.listPersonRoles()
 
-        assertEquals true, JSON.parse(controller.response.contentAsString).success
-        assertEquals 1, JSON.parse(controller.response.contentAsString).results
-        assertEquals ERoleAuthority.ROLE_ADMIN.strVal, JSON.parse(controller.response.contentAsString).rows[0]
+        assert true == JSON.parse(controller.response.contentAsString).success
+        assert 1 == JSON.parse(controller.response.contentAsString).results
+        assert ERoleAuthority.ROLE_ADMIN.strVal == JSON.parse(controller.response.contentAsString).rows[0]
     }
 
     /**
@@ -139,14 +143,14 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.params.guid = '12345678-1234-1234-1234-1234567890a2'
 
         controller.addCopyDashboardSubmit()
-        assertEquals 'dashboard1', JSON.parse(controller.response.contentAsString).name
+        assert 'dashboard1' == JSON.parse(controller.response.contentAsString).name
 
         // Request to add another dashboard with the same name as above.
         controller.addCopyDashboardSubmit()
 
         def dashboards = queryDashboardByUser('testAdmin1', 'dashboard1')
 
-        assertEquals 2, dashboards.size()
+        assert 2 == dashboards.size()
     }
 
     void testCopyDashboardNameDuplicatesForCurrentUser() {
@@ -169,7 +173,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
 
         def dashboards = queryDashboardByUser('testAdmin1', 'dashboard1')
 
-        assertEquals 2, dashboards.size()
+        assert 2 == dashboards.size()
     }
 
     void testAddSameDashboardNameForDifferentUser() {
@@ -191,7 +195,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.addCopyDashboardSubmit()
 
         def dashboards = queryDashboardByUser('testAdmin1', 'dashboard1')
-        assertEquals 2, dashboards.size()
+        assert 2 == dashboards.size()
 
         // login testAdmin2 user
         loginAsUsernameAndRole('testUser1', ERoleAuthority.ROLE_ADMIN.strVal)
@@ -204,7 +208,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.addCopyDashboardSubmit()
 
         dashboards = queryDashboardByUser('testUser1', 'dashboard1')
-        assertEquals 1, dashboards.size()
+        assert 1 == dashboards.size()
     }
 
     void testCopySameDashboardNameForDifferentUser() {
@@ -226,7 +230,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.addCopyDashboardSubmit()
 
         def dashboards = queryDashboardByUser('testAdmin1', 'dashboard1')
-        assertEquals 2, dashboards.size()
+        assert 2 == dashboards.size()
 
         // login testAdmin2 user
         loginAsUsernameAndRole('testAdmin2', ERoleAuthority.ROLE_ADMIN.strVal)
@@ -240,7 +244,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.addCopyDashboardSubmit()
 
         dashboards = queryDashboardByUser('testAdmin2', 'dashboard1')
-        assertEquals 1, dashboards.size()
+        assert 1 == dashboards.size()
     }
 
     void testListDashboards() {
@@ -257,10 +261,10 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
 
         controller.listDashboards()
 
-        assertEquals 3, JSON.parse(controller.response.contentAsString).rows.size()
-        assertEquals 'dashboard1', JSON.parse(controller.response.contentAsString).rows[0].name
-        assertEquals 'dashboard2', JSON.parse(controller.response.contentAsString).rows[1].name
-        assertEquals 'dashboard3', JSON.parse(controller.response.contentAsString).rows[2].name
+        assert 3 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert 'dashboard1' == JSON.parse(controller.response.contentAsString).rows[0].name
+        assert 'dashboard2' == JSON.parse(controller.response.contentAsString).rows[1].name
+        assert 'dashboard3' == JSON.parse(controller.response.contentAsString).rows[2].name
     }
 
     void testListDashboardsByGuidParams() {
@@ -278,9 +282,9 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.params.guid = "12345678-1234-1234-1234-1234567890a2"
         controller.listDashboards()
 
-        assertEquals 1, JSON.parse(controller.response.contentAsString).rows.size()
-        assertEquals 'dashboard2', JSON.parse(controller.response.contentAsString).rows[0].name
-        assertEquals '12345678-1234-1234-1234-1234567890a2', JSON.parse(controller.response.contentAsString).rows[0].guid
+        assert 1 == JSON.parse(controller.response.contentAsString).rows.size()
+        assert 'dashboard2' == JSON.parse(controller.response.contentAsString).rows[0].name
+        assert '12345678-1234-1234-1234-1234567890a2' == JSON.parse(controller.response.contentAsString).rows[0].guid
     }
 
     void testListDashboardsByIsDefaultParams() {
@@ -299,10 +303,10 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.params.sort = 'name'
         controller.listDashboards()
 
-        assertEquals 3, JSON.parse(controller.response.contentAsString).results
-        assertEquals 'dashboard1', JSON.parse(controller.response.contentAsString).rows[0].name
-        assertEquals 'dashboard2', JSON.parse(controller.response.contentAsString).rows[1].name
-        assertEquals 'dashboard3', JSON.parse(controller.response.contentAsString).rows[2].name
+        assert 3 == JSON.parse(controller.response.contentAsString).results
+        assert 'dashboard1' == JSON.parse(controller.response.contentAsString).rows[0].name
+        assert 'dashboard2' == JSON.parse(controller.response.contentAsString).rows[1].name
+        assert 'dashboard3' == JSON.parse(controller.response.contentAsString).rows[2].name
     }
 
     void testUpdateDashboards() {
@@ -320,8 +324,8 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.params.name = 'dashboard2'
         controller.updateDashboard()
 
-        assertEquals 'dashboard2', JSON.parse(controller.response.contentAsString).name
-        assertNotSame 'dashboard1', JSON.parse(controller.response.contentAsString).name
+        assert 'dashboard2' == JSON.parse(controller.response.contentAsString).name
+        assert 'dashboard1' != JSON.parse(controller.response.contentAsString).name
     }
 
     void testDeleteDashboardByPersonIdParams() {
@@ -332,7 +336,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         Dashboard.build(name:'dashboard2', guid:'12345678-1234-1234-1234-1234567890a2', user:person1)
         Dashboard.build(name:'dashboard3', guid:'12345678-1234-1234-1234-1234567890a3', user:person1)
 
-        assertEquals 3, Dashboard.list().size()
+        assert 3 == Dashboard.list().size()
 
         controller = new AdministrationController()
         controller.dashboardService = dashboardService
@@ -342,9 +346,9 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.params.personId = person1.id
         controller.deleteDashboards()
 
-        assertEquals 2, Dashboard.list().size()
-        assertEquals 'dashboard3', JSON.parse(controller.response.contentAsString).name
-        assertEquals '12345678-1234-1234-1234-1234567890a3', JSON.parse(controller.response.contentAsString).guid
+        assert 2 == Dashboard.list().size()
+        assert 'dashboard3' == JSON.parse(controller.response.contentAsString).name
+        assert '12345678-1234-1234-1234-1234567890a3' == JSON.parse(controller.response.contentAsString).guid
     }
 
     void testDeleteDashboardByPersonUsernameParams() {
@@ -355,7 +359,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         Dashboard.build(name:'dashboard2', guid:'12345678-1234-1234-1234-1234567890a2', user:person1)
         Dashboard.build(name:'dashboard3', guid:'12345678-1234-1234-1234-1234567890a3', user:person1)
 
-        assertEquals 3, Dashboard.list().size()
+        assert 3 == Dashboard.list().size()
 
         controller = new AdministrationController()
         controller.dashboardService = dashboardService
@@ -365,9 +369,9 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.params.username = person1.username
         controller.deleteDashboards()
 
-        assertEquals 2, Dashboard.list().size()
-        assertEquals 'dashboard3', JSON.parse(controller.response.contentAsString).name
-        assertEquals '12345678-1234-1234-1234-1234567890a3', JSON.parse(controller.response.contentAsString).guid
+        assert 2 == Dashboard.list().size()
+        assert 'dashboard3' == JSON.parse(controller.response.contentAsString).name
+        assert '12345678-1234-1234-1234-1234567890a3' == JSON.parse(controller.response.contentAsString).guid
     }
 
     void testDeleteNonexistentDashboard() {
@@ -378,7 +382,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         Dashboard.build(name:'dashboard2', guid:'12345678-1234-1234-1234-1234567890a2', user:person1)
         Dashboard.build(name:'dashboard3', guid:'12345678-1234-1234-1234-1234567890a3', user:person1)
 
-        assertEquals 3, Dashboard.list().size()
+        assert 3 == Dashboard.list().size()
 
         controller = new AdministrationController()
         controller.dashboardService = dashboardService
@@ -388,9 +392,9 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.params.username = person1.username
         controller.deleteDashboards()
 
-        assertEquals 3, Dashboard.list().size()
-        assertNull JSON.parse(controller.response.contentAsString).name
-        assertNull JSON.parse(controller.response.contentAsString).guid
+        assert 3 == Dashboard.list().size()
+        assert null ==  JSON.parse(controller.response.contentAsString).name
+        assert null ==  JSON.parse(controller.response.contentAsString).guid
     }
 
     void testBulkDeleteDashboardsForAdmin() {
@@ -401,7 +405,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         Dashboard.build(name:'dashboard2', guid:'12345678-1234-1234-1234-1234567890a2', user:person1)
         Dashboard.build(name:'dashboard3', guid:'12345678-1234-1234-1234-1234567890a3', user:person1)
 
-        assertEquals 3, Dashboard.list().size()
+        assert 3 == Dashboard.list().size()
 
         controller = new AdministrationController()
         controller.dashboardService = dashboardService
@@ -418,7 +422,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.params.viewGuidsToDelete = dashboardGuidList.toString()
         controller.deleteDashboards()
 
-        assertEquals 0, Dashboard.list().size()
+        assert 0 == Dashboard.list().size()
     }
 
     /**
@@ -443,10 +447,10 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
 
         def preference = Preference.findByUser(person)
 
-        assertEquals 'test path entry 5', JSON.parse(controller.response.contentAsString).path
-        assertEquals 'com.foo.bar', JSON.parse(controller.response.contentAsString).namespace
-        assertEquals 'test path entry 5', preference.path
-        assertEquals 'com.foo.bar', preference.namespace
+        assert 'test path entry 5' == JSON.parse(controller.response.contentAsString).path
+        assert 'com.foo.bar' == JSON.parse(controller.response.contentAsString).namespace
+        assert 'test path entry 5' == preference.path
+        assert 'com.foo.bar' == preference.namespace
     }
 
     void testCopyPreferencesSubmit() {
@@ -469,10 +473,10 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
 
         preference = Preference.findByUser(personUser)
 
-        assertEquals 'test path entry 5', JSON.parse(controller.response.contentAsString).path
-        assertEquals 'com.foo.bar', JSON.parse(controller.response.contentAsString).namespace
-        assertEquals 'test path entry 5', preference.path
-        assertEquals 'com.foo.bar', preference.namespace
+        assert 'test path entry 5' == JSON.parse(controller.response.contentAsString).path
+        assert 'com.foo.bar' == JSON.parse(controller.response.contentAsString).namespace
+        assert 'test path entry 5' == preference.path
+        assert 'com.foo.bar' == preference.namespace
     }
 
     void testUpdatePreference() {
@@ -494,14 +498,14 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
 
         preference = Preference.findByUser(person)
 
-        assertEquals 'test path entry 6', JSON.parse(controller.response.contentAsString).path
-        assertEquals 'com.foo.bar.dev', JSON.parse(controller.response.contentAsString).namespace
-        assertNotSame 'test path entry 5', JSON.parse(controller.response.contentAsString).path
-        assertNotSame 'com.foo.bar', JSON.parse(controller.response.contentAsString).namespace
-        assertEquals 'test path entry 6', preference.path
-        assertEquals 'com.foo.bar.dev', preference.namespace
-        assertNotSame 'test path entry 5', preference.path
-        assertNotSame 'com.foo.bar', preference.namespace
+        assert 'test path entry 6' == JSON.parse(controller.response.contentAsString).path
+        assert 'com.foo.bar.dev' == JSON.parse(controller.response.contentAsString).namespace
+        assert 'test path entry 5' != JSON.parse(controller.response.contentAsString).path
+        assert 'com.foo.bar' != JSON.parse(controller.response.contentAsString).namespace
+        assert 'test path entry 6' == preference.path
+        assert 'com.foo.bar.dev' == preference.namespace
+        assert 'test path entry 5' != preference.path
+        assert 'com.foo.bar' != preference.namespace
     }
 
     void testListPreferences() {
@@ -518,13 +522,13 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
 
         controller.listPreferences()
 
-        assertEquals 3, JSON.parse(controller.response.contentAsString).results
-        assertEquals 'test path entry 1', JSON.parse(controller.response.contentAsString).rows[0].path
-        assertEquals 'test path entry 2', JSON.parse(controller.response.contentAsString).rows[1].path
-        assertEquals 'test path entry 3', JSON.parse(controller.response.contentAsString).rows[2].path
-        assertEquals 'com.foo.bar1', JSON.parse(controller.response.contentAsString).rows[0].namespace
-        assertEquals 'com.foo.bar2', JSON.parse(controller.response.contentAsString).rows[1].namespace
-        assertEquals 'com.foo.bar3', JSON.parse(controller.response.contentAsString).rows[2].namespace
+        assert 3 == JSON.parse(controller.response.contentAsString).results
+        assert 'test path entry 1' == JSON.parse(controller.response.contentAsString).rows[0].path
+        assert 'test path entry 2' == JSON.parse(controller.response.contentAsString).rows[1].path
+        assert 'test path entry 3' == JSON.parse(controller.response.contentAsString).rows[2].path
+        assert 'com.foo.bar1' == JSON.parse(controller.response.contentAsString).rows[0].namespace
+        assert 'com.foo.bar2' == JSON.parse(controller.response.contentAsString).rows[1].namespace
+        assert 'com.foo.bar3' == JSON.parse(controller.response.contentAsString).rows[2].namespace
     }
 
     void testListPreferencesWithNamespaceParam() {
@@ -542,13 +546,13 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.params.namespace = 'com.foo.bar'
         controller.listPreferences()
 
-        assertEquals 3, JSON.parse(controller.response.contentAsString).results
-        assertEquals 'test path entry 1', JSON.parse(controller.response.contentAsString).rows[0].path
-        assertEquals 'test path entry 2', JSON.parse(controller.response.contentAsString).rows[1].path
-        assertEquals 'test path entry 3', JSON.parse(controller.response.contentAsString).rows[2].path
-        assertEquals 'com.foo.bar', JSON.parse(controller.response.contentAsString).rows[0].namespace
-        assertEquals 'com.foo.bar', JSON.parse(controller.response.contentAsString).rows[1].namespace
-        assertEquals 'com.foo.bar', JSON.parse(controller.response.contentAsString).rows[2].namespace
+        assert 3 == JSON.parse(controller.response.contentAsString).results
+        assert 'test path entry 1' == JSON.parse(controller.response.contentAsString).rows[0].path
+        assert 'test path entry 2' == JSON.parse(controller.response.contentAsString).rows[1].path
+        assert 'test path entry 3' == JSON.parse(controller.response.contentAsString).rows[2].path
+        assert 'com.foo.bar' == JSON.parse(controller.response.contentAsString).rows[0].namespace
+        assert 'com.foo.bar' == JSON.parse(controller.response.contentAsString).rows[1].namespace
+        assert 'com.foo.bar' == JSON.parse(controller.response.contentAsString).rows[2].namespace
     }
 
     void testDeletePreferencesByPersonId() {
@@ -559,7 +563,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         Preference.build(path:'test path entry 2', namespace:'com.foo.bar2', value:'value', user:person)
         Preference.build(path:'test path entry 3', namespace:'com.foo.bar3', value:'value', user:person)
 
-        assertEquals 3, Preference.list().size()
+        assert 3 == Preference.list().size()
 
         controller = new AdministrationController()
         controller.preferenceService = preferenceService
@@ -570,9 +574,9 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.params.userid = person.id
         controller.deletePreferences()
 
-        assertEquals 2, Preference.list().size()
-        assertEquals 'test path entry 2', JSON.parse(controller.response.contentAsString).path
-        assertEquals 'com.foo.bar2', JSON.parse(controller.response.contentAsString).namespace
+        assert 2 == Preference.list().size()
+        assert 'test path entry 2' == JSON.parse(controller.response.contentAsString).path
+        assert 'com.foo.bar2' == JSON.parse(controller.response.contentAsString).namespace
     }
 
     void testDeletePreferencesByPersonUsername() {
@@ -583,7 +587,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         Preference.build(path:'test path entry 2', namespace:'com.foo.bar2', value:'value', user:person)
         Preference.build(path:'test path entry 3', namespace:'com.foo.bar3', value:'value', user:person)
 
-        assertEquals 3, Preference.list().size()
+        assert 3 == Preference.list().size()
 
         controller = new AdministrationController()
         controller.preferenceService = preferenceService
@@ -594,9 +598,9 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.params.username = person.username
         controller.deletePreferences()
 
-        assertEquals 2, Preference.list().size()
-        assertEquals 'test path entry 1', JSON.parse(controller.response.contentAsString).path
-        assertEquals 'com.foo.bar1', JSON.parse(controller.response.contentAsString).namespace
+        assert 2 == Preference.list().size()
+        assert 'test path entry 1' == JSON.parse(controller.response.contentAsString).path
+        assert 'com.foo.bar1' == JSON.parse(controller.response.contentAsString).namespace
     }
 
     void testDeleteNonexistentPreference() {
@@ -607,7 +611,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         Preference.build(path:'test path entry 2', namespace:'com.foo.bar2', value:'value', user:person)
         Preference.build(path:'test path entry 3', namespace:'com.foo.bar3', value:'value', user:person)
 
-        assertEquals 3, Preference.list().size()
+        assert 3 == Preference.list().size()
 
         controller = new AdministrationController()
         controller.preferenceService = preferenceService
@@ -618,9 +622,9 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.params.username = person.username
         controller.deletePreferences()
 
-        assertEquals 3, Preference.list().size()
-        assertNull JSON.parse(controller.response.contentAsString).path
-        assertNull JSON.parse(controller.response.contentAsString).namespace
+        assert 3 == Preference.list().size()
+        assert null ==  JSON.parse(controller.response.contentAsString).path
+        assert null ==  JSON.parse(controller.response.contentAsString).namespace
     }
 
     void testBulkDeletePreferences() {
@@ -631,7 +635,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         Preference.build(path:'test path entry 2', namespace:'com.foo.bar2', value:'value', user:person)
         Preference.build(path:'test path entry 3', namespace:'com.foo.bar3', value:'value', user:person)
 
-        assertEquals 3, Preference.list().size()
+        assert 3 == Preference.list().size()
 
         def preferenceJsonList = new JSONArray()
         Preference.list().each{
@@ -649,7 +653,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         controller.params._method = 'DELETE'
         controller.deletePreferences()
 
-        assertEquals 0, Preference.list().size()
+        assert 0 == Preference.list().size()
     }
 
     void createWidgetDefinitionForTest() {
@@ -672,7 +676,7 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
             pwdPosition: 1)
     }
 
-    void createWidgetDefinitionForTest(widgetName, imageUrlMedium, imageUrlSml, guid, widgetUrl, pwdPosition, descriptorUrl) {
+    void createWidgetDefinitionForTest(widgetName, imageUrlLarge, imageUrlSml, guid, widgetUrl, pwdPosition, descriptorUrl) {
         def person = Person.findByUsername('testAdmin1')
 
         def widgetDefinition = WidgetDefinition.build(
@@ -689,5 +693,4 @@ class AdministrationControllerTests extends OWFGroovyTestCase {
         )
         PersonWidgetDefinition.build(person: person, widgetDefinition: widgetDefinition, visible : true, pwdPosition: pwdPosition)
     }
-
 }

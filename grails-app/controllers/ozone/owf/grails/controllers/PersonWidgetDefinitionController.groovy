@@ -2,12 +2,13 @@ package ozone.owf.grails.controllers
 
 import grails.converters.JSON
 import org.apache.commons.lang.time.StopWatch
+import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.json.JSONArray
 import ozone.owf.grails.OwfException
 
 class PersonWidgetDefinitionController extends BaseOwfRestController {
 
-    def grailsApplication
+    GrailsApplication grailsApplication
   	def personWidgetDefinitionService
   	def widgetDefinitionService
 	def modelName = 'personWidgetDefinition'
@@ -32,14 +33,14 @@ class PersonWidgetDefinitionController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during show: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed personWidgetDefinitionService: show in "+stopWatch);
 		}
 	}
-	
+
 	def widgetList = {
 		def jsonResult
 		def statusCode
@@ -60,7 +61,7 @@ class PersonWidgetDefinitionController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during widgetList: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
 
         if (log.isInfoEnabled()) {
@@ -88,9 +89,9 @@ class PersonWidgetDefinitionController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during list: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed personWidgetDefinitionService: list in "+stopWatch);
 		}
@@ -120,9 +121,9 @@ class PersonWidgetDefinitionController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during list: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-		
+
         renderResult(jsonResult, statusCode)
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed preferenceService: list in "+stopWatch);
         }
@@ -148,9 +149,9 @@ class PersonWidgetDefinitionController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during create: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed personWidgetDefinitionService: create in "+stopWatch);
 		}
@@ -176,9 +177,9 @@ class PersonWidgetDefinitionController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during update: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed personWidgetDefinitionService: update in "+stopWatch);
 		}
@@ -204,14 +205,14 @@ class PersonWidgetDefinitionController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during delete: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed personWidgetDefinitionService: delete in "+stopWatch);
 		}
 	}
-	
+
  	def bulkDeleteAndUpdate = {
 		def statusCode
 		def jsonResult
@@ -232,14 +233,14 @@ class PersonWidgetDefinitionController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during bulkDeleteAndUpdate: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed personWidgetDefinitionService: bulkDeleteAndUpdate in "+stopWatch);
 		}
   	}
-  
+
   	def bulkUpdate = {
 		def statusCode
 		def jsonResult
@@ -260,15 +261,15 @@ class PersonWidgetDefinitionController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during bulkUpdate: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed personWidgetDefinitionService: bulkUpdate in "+stopWatch);
 		}
   	}
-  
-  	def bulkDelete = {	
+
+  	def bulkDelete = {
 		def statusCode
 		def jsonResult
         StopWatch stopWatch = null;
@@ -288,19 +289,19 @@ class PersonWidgetDefinitionController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during bulkDelete: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed personWidgetDefinitionService: bulkDelete in "+stopWatch);
 		}
   	}
-        
+
     def dependents = {
-        
+
         def jsonResult
         StopWatch stopWatch = null;
-        
+
         if (log.isInfoEnabled()) {
             stopWatch = new StopWatch();
             stopWatch.start();
@@ -309,16 +310,16 @@ class PersonWidgetDefinitionController extends BaseOwfRestController {
         try
         {
             def result = personWidgetDefinitionService.getDependents(params)
-            
+
             jsonResult = [msg: result as JSON, status: 200]
         }
         catch (Exception e) {
             jsonResult = handleError(e)
-            
+
         }
-        
+
         renderResult(jsonResult)
-        
+
         if (log.isInfoEnabled()) {
             log.info("Executed widgetDefinitionService: dependents in "+stopWatch);
         }
@@ -343,41 +344,13 @@ class PersonWidgetDefinitionController extends BaseOwfRestController {
       catch (OwfException owe) {
           handleError(owe)
           statusCode = owe.exceptionType.normalReturnCode
-          jsonResult = "Error during listPersonWidgetDefinitionsByTags: " + owe.exceptionType.generalMessage + " " + owe.message
+          jsonResult = "Error during listPersonWidgetDefinitions: " + owe.exceptionType.generalMessage + " " + owe.message
       }
 
       renderResult(jsonResult, statusCode)
 
       if (log.isInfoEnabled()) {
-          log.info("Executed personWidgetDefinitionService: listPersonWidgetDefinitionsByTags in "+stopWatch);
-      }
-    }
-
-    def approvePersonWidgetDefinitions = {
-      def statusCode
-      def jsonResult
-      StopWatch stopWatch = null;
-
-      if (log.isInfoEnabled()) {
-        stopWatch = new StopWatch();
-        stopWatch.start();
-        log.info("Executing personWidgetDefinitionService: approvePersonWidgetDefinitionsByTags");
-      }
-      try {
-          def result = personWidgetDefinitionService.approveForAdminByTags(params)
-          statusCode = 200
-          jsonResult = result as JSON
-      }
-      catch (OwfException owe) {
-          handleError(owe)
-          statusCode = owe.exceptionType.normalReturnCode
-          jsonResult = "Error during approvePersonWidgetDefinitionsByTags: " + owe.exceptionType.generalMessage + " " + owe.message
-      }
-
-      renderResult(jsonResult, statusCode)
-
-      if (log.isInfoEnabled()) {
-          log.info("Executed personWidgetDefinitionService: approvePersonWidgetDefinitionsByTags in "+stopWatch);
+          log.info("Executed personWidgetDefinitionService: listPersonWidgetDefinitions in "+stopWatch);
       }
     }
 }

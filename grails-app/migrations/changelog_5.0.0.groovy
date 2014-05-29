@@ -1,6 +1,6 @@
 databaseChangeLog = {
 
-	changeSet(author: "owf", id: "5.0.0-1", context: "create, upgrade, 5.0.0") {
+	changeSet(author: "owf", id: "5.0.0-1", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 5.0.0") {
 		comment("Add display name to group")
 		addColumn(tableName: "owf_group") {
 			column(name: "display_name", type: "varchar(200)")
@@ -14,7 +14,8 @@ databaseChangeLog = {
 	  """)
 	}
 
-	changeSet(author: "owf", id: "5.0.0-3", context: "create, upgrade, 5.0.0") {
+
+	changeSet(author: "owf", id: "5.0.0-3", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 5.0.0") {
 	  comment(text="Add metric widget types to table")
 	  insert(tableName: "widget_type") {
 		column(name: "id", valueNumeric:"4")
@@ -29,7 +30,7 @@ databaseChangeLog = {
 	  """)
 	}
 
-	changeSet(author: "owf", id: "5.0.0-5", dbms: "mysql,mssql,oracle", context: "upgrade, 5.0.0, sampleData, 5.0.0-sampleData") {
+	changeSet(author: "owf", id: "5.0.0-5", dbms: "h2,mysql,mssql,oracle", context: "upgrade, 5.0.0, sampleData, 5.0.0-sampleData") {
 
 		comment("Rename All Users and OWF Admins groups to OWF Users and OWF Administrators, then set them to automatic.")
 

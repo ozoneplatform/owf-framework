@@ -7,17 +7,10 @@ System.setProperty "ivy.checksums", ""
 grails.project.plugins.dir="${basedir}/plugins"
 //grails.work.dir='work'
 
-grails.config.base.webXml="file:///${basedir}/src/resources/web_no_cas.xml"
+grails.config.base.webXml="file:${basedir}/src/resources/web_no_cas.xml"
 // cas stuff added via the ozone-deploy plugin
 
-coverage {
-	exclusions = [
-            "**/org/apache/log4j/**",
-            "changelog*/**"
-    ]
-    xml = true
-    enabledByDefault = false
-}
+grails.project.dependency.resolver = "maven"
 
 codenarc.reports = {
     AmlXmlReport('xml') {
@@ -33,58 +26,14 @@ codenarc.reports = {
 
 codenarc.ruleSetFiles="file:grails-app/conf/CodeNarcRules.groovy"
 
-private org.apache.ivy.plugins.resolver.DependencyResolver createLocalResolver()
-{
-    def localResolver = new FileSystemResolver()
-    localResolver.local = true
-    localResolver.name = "localResolver"
-    localResolver.m2compatible = false
-    localResolver.addIvyPattern("${userHome}/.ivy2/local/[organisation]/[module]/ivy-[revision].xml")
-    localResolver.addArtifactPattern("${userHome}/.ivy2/local/[organisation]/[module]/[type]s/[artifact]-[revision].[ext]")
-    def ivySettings = new IvySettings()
-    ivySettings.defaultInit()
-    localResolver.settings = ivySettings
-    return localResolver
-}
-private org.apache.ivy.plugins.resolver.DependencyResolver createOfflineResolver()
-{
-    def localResolver = new FileSystemResolver()
-    def repo_loc = System.getProperty('OFFLINE_REPO')
-    localResolver.local = true
-    localResolver.name = "offlineResolver"
-    localResolver.m2compatible = false
-    localResolver.addIvyPattern("${repo_loc}/[organisation]/[module]/ivys/ivy-[revision].xml")
-    localResolver.addIvyPattern("${repo_loc}/[organisation]/[module]/ivy-[revision].xml")
-    localResolver.addArtifactPattern("${repo_loc}/[organisation]/[module]/[type]s/[artifact]-[revision].[ext]")
-    def ivySettings = new IvySettings()
-    ivySettings.defaultInit()
-    localResolver.settings = ivySettings
-    return localResolver
-}
-private def createIvySvnResolver()
-{
-    def url = 'https://www.owfgoss.org/svn/repos/ozone/ivy-repo/no-namespace'
-    def urlResolver = new URLResolver()
-    urlResolver.setName('ivysvnresolver')
-    urlResolver.addIvyPattern("${url}/[organisation]/[module]/ivys/ivy-[revision].xml")
-    urlResolver.addIvyPattern("${url}/[organisation]/[module]/ivy-[revision].xml")
-    urlResolver.addArtifactPattern("${url}/[organisation]/[module]/[type]s/[artifact]-[revision].[ext]")
-    def ivySettings = new IvySettings()
-    ivySettings.defaultInit()
-    urlResolver.settings = ivySettings
-    CredentialsStore.INSTANCE.addCredentials("Password Required by Subversion", 'www.owfgoss.org', "owf-build", '0wf-bu1!d')
-
-    //println "OWF USING ivy svn resolver:${urlResolver}"
-    return urlResolver
-}
         // Load some of our dependency info from ivy.properties.
     // This way we can keep our ant build and groovy build in sync
 
-    def props = new Properties()
-    new File("application.properties").withInputStream {
-        stream -> props.load(stream)
-    }
-    def config = new ConfigSlurper().parse(props)
+def props = new Properties()
+new File("application.properties").withInputStream {
+    stream -> props.load(stream)
+}
+def config = new ConfigSlurper().parse(props)
 
 // This closure is passed the command line arguments used to start the
 // war process.
@@ -131,6 +80,7 @@ def warExcludes = [
                     'WEB-INF/lib/core-3.1.1.jar',
                     'WEB-INF/lib/log4j-1.2.9.jar',
                     'WEB-INF/lib/spring-expression-3.0.1.RELEASE.jar',
+                    'WEB-INF/lib/tomcat-*.jar',
                     'plugins/**',
 
                     '**/.gitignore'
@@ -162,20 +112,11 @@ grails.project.dependency.resolution = {
         mavenRepo "https://www.owfgoss.org/nexus/content/groups/public"
         grailsCentral()
         mavenCentral()
-        resolver createLocalResolver()
-        def offline = System.getProperty('OFFLINE_REPO')
-        if (offline) {
-            println "OWF USING OFFLINE_REPO ${offline}"
-            resolver createOfflineResolver()
-        }
-        else{
-            //println "OWF USING LOCAL REPO"
-            //resolver createIvySvnResolver()
-        }
+
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
-
+/*
         runtime ('log4j:apache-log4j-extras:1.1', 'net.sf.ehcache:ehcache-jgroupsreplication:1.4')
 
         //only include these jdbc drivers for non production
@@ -186,19 +127,50 @@ grails.project.dependency.resolution = {
             runtime 'postgresql:postgresql:8.4-701.jdbc3'
         }
 
-        // HTTP Client
-        compile('org.apache.httpcomponents:httpcore:4.1.1', 'org.apache.httpcomponents:httpclient:4.1.1')
-        runtime('org.apache.httpcomponents:httpcore:4.1.1', 'org.apache.httpcomponents:httpclient:4.1.1')
-
         //need ant for createWebBundles.jar
-        runtime 'org.apache.ant:ant:1.7.0'
+        //runtime 'org.apache.ant:ant:1.7.0'
 
-        runtime 'com.thetransactioncompany:cors-filter:1.8'
+        compile('opensymphony:oscache:2.4') {
+
+            excludes 'commons-logging', 'servlet-api', 'spring-security-core'
+        }
+
+        compile('org.springframework.security:spring-security-core:3.0.5.RELEASE',
+                'org.springframework.security:spring-security-web:3.0.5.RELEASE') {
+
+            excludes 'commons-logging', 'commons-lang'
+        }
+*/
+
+        runtime 'hsqldb:hsqldb:1.8.0.10',
+                'log4j:apache-log4j-extras:1.1',
+                'net.sf.ehcache:ehcache-jgroupsreplication:1.4',
+                'com.oracle:ojdbc14:10.2.0.1.0',
+                'mysql:mysql-connector-java:5.1.6',
+                'net.sourceforge.jtds:jtds:1.2.4',
+                'postgresql:postgresql:8.4-701.jdbc3'
+
+        compile 'org.igniterealtime.smack:smack:3.3.1',
+                'org.igniterealtime.smack:smackx:3.3.1',
+                'org.apache.httpcomponents:httpcore:4.1.1',
+                'org.apache.httpcomponents:httpclient:4.1.1'
+
+        compile('ozone-widgeting-framework-legacy:owf-security:3.25-SNAPSHOT') {
+            excludes([group: 'org.springframework'])
+        }
     }
     plugins {
-        compile "org.ozoneplatform:aml-commons-security:$config.owf.security.rev"
+        compile ':database-migration:1.4.0'
+        compile ':hibernate:3.6.10.12'
         compile 'org.ozoneplatform:aml-commons-appconfig:0.7'
         compile 'org.ozoneplatform:aml-commons-auditing:1.2.1'
         compile 'org.ozoneplatform:aml-commons-messaging:1.17'
+        compile ':codenarc:0.20'
+        compile ':pretty-time:2.1.3.Final-1.0.1'
+        build   ':tomcat:7.0.52.1'
+        compile ':ui-performance:1.2.2'
+        compile ':build-test-data:2.1.2'
+        compile ':quartz:1.0.1'
+        runtime ':cors:1.1.4' // OP-3931
     }
 }

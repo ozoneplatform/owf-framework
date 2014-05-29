@@ -1,5 +1,8 @@
 package ozone.owf.grails.test.integration
 
+import grails.test.mixin.TestMixin
+import grails.test.mixin.integration.IntegrationTestMixin
+
 import ozone.owf.grails.domain.DomainMapping
 import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.Person
@@ -7,6 +10,7 @@ import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.grails.services.DomainMappingService
 import ozone.owf.grails.domain.RelationshipType
 
+@TestMixin(IntegrationTestMixin)
 class DomainMappingServiceTests extends OWFGroovyTestCase {
 
   DomainMappingService service
@@ -40,7 +44,7 @@ class DomainMappingServiceTests extends OWFGroovyTestCase {
   void testCreateDomainMapping() {
     service.createMapping(testAdmin1, RelationshipType.owns, testWidget1)
 
-    assertEquals DomainMapping.count(), 1
+    assert DomainMapping.count() == 1
 
   }
 
@@ -52,7 +56,7 @@ class DomainMappingServiceTests extends OWFGroovyTestCase {
 
     println(mapping)
 
-    assertNotNull mapping
+    assert null != mapping
   }
 
   void testGetMappedObjects() {
@@ -65,11 +69,11 @@ class DomainMappingServiceTests extends OWFGroovyTestCase {
     println("results.class: ${results.class}")
     println("results.size(): ${results.size()}")
 
-    assertNotNull results
-    assertEquals results.size(), 2
+    assert null != results
+    assert results.size() == 2
 
     results.each { widget ->
-      assertEquals widget.class, WidgetDefinition.class
+      assert widget.class == WidgetDefinition.class
     }
   }
 
@@ -83,11 +87,11 @@ class DomainMappingServiceTests extends OWFGroovyTestCase {
     println("results.class: ${results.class}")
     println("results.size(): ${results.size()}")
 
-    assertNotNull results
-    assertEquals results.size(), 1
+    assert null != results
+    assert results.size() == 1
 
     results.each { widget ->
-      assertEquals widget.class, WidgetDefinition.class
+      assert widget.class == WidgetDefinition.class
     }
   }
 
@@ -101,14 +105,14 @@ class DomainMappingServiceTests extends OWFGroovyTestCase {
     println("results.class: ${results.class}")
     println("results.size(): ${results.size()}")
 
-    assertNotNull results
-    assertEquals results.size(), 2
+    assert null != results
+    assert results.size() == 2
 
-    assertEquals results[0].displayName, 'testWidget1'
-    assertEquals results[0].class, WidgetDefinition.class
+    assert results[0].displayName == 'testWidget1'
+    assert results[0].class == WidgetDefinition.class
 
-    assertEquals results[1].displayName, 'testWidget2'
-    assertEquals results[1].class, WidgetDefinition.class
+    assert results[1].displayName == 'testWidget2'
+    assert results[1].class == WidgetDefinition.class
   }
 
   void testGetMappedObjectsWithSortingDesc() {
@@ -121,13 +125,13 @@ class DomainMappingServiceTests extends OWFGroovyTestCase {
     println("results.class: ${results.class}")
     println("results.size(): ${results.size()}")
 
-    assertNotNull results
-    assertEquals results.size(), 2
+    assert null != results
+    assert results.size() == 2
 
-    assertEquals results[0].displayName, 'testWidget2'
-    assertEquals results[0].class, WidgetDefinition.class
+    assert results[0].displayName == 'testWidget2'
+    assert results[0].class == WidgetDefinition.class
 
-    assertEquals results[1].displayName, 'testWidget1'
-    assertEquals results[1].class, WidgetDefinition.class
+    assert results[1].displayName == 'testWidget1'
+    assert results[1].class == WidgetDefinition.class
   }
 }

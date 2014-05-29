@@ -1,5 +1,8 @@
 package ozone.owf.grails.test.integration
 
+import grails.test.mixin.TestMixin
+import grails.test.mixin.integration.IntegrationTestMixin
+
 import grails.converters.JSON;
 
 import ozone.owf.grails.OwfException
@@ -11,6 +14,7 @@ import ozone.owf.grails.domain.WidgetDefinitionIntent
 import ozone.owf.grails.domain.ERoleAuthority
 import ozone.owf.grails.controllers.WidgetController
 
+@TestMixin(IntegrationTestMixin)
 class WidgetControllerTests extends OWFGroovyTestCase {
 
     def widgetDefinitionService
@@ -61,9 +65,9 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         controller.params.widgetGuid = '0c5435cf-4021-4f2a-ba69-dde451d12551'
         controller.show()
 
-        assertNotNull WidgetDefinition.findByDisplayNameAndWidgetGuid('Widget C', '0c5435cf-4021-4f2a-ba69-dde451d12551')
-        assertEquals 'Widget C', JSON.parse(controller.response.contentAsString).data[0].value.namespace
-        assertEquals '0c5435cf-4021-4f2a-ba69-dde451d12551', JSON.parse(controller.response.contentAsString).data[0].path
+        assert null != WidgetDefinition.findByDisplayNameAndWidgetGuid('Widget C', '0c5435cf-4021-4f2a-ba69-dde451d12551')
+        assert 'Widget C' == JSON.parse(controller.response.contentAsString).data[0].value.namespace
+        assert '0c5435cf-4021-4f2a-ba69-dde451d12551' == JSON.parse(controller.response.contentAsString).data[0].path
     }
 
     void testShowForNonexistentWidgetDefinition() {
@@ -77,7 +81,7 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         controller.params.widgetGuid = '0c5435cf-4021-4f2a-ba69-dde451d12559'
         controller.show()
 
-        assertNull WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12559')
+        assert null ==  WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12559')
     }
 
     void testListForWidgetDefinition() {
@@ -93,13 +97,13 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         controller.params.widgetName = '%Widget%'
         controller.list()
 
-        assertEquals 2, JSON.parse(controller.response.contentAsString).data.size()
-        assertEquals 'Widget C', JSON.parse(controller.response.contentAsString).data[0].value.namespace
-        assertEquals 'Widget D', JSON.parse(controller.response.contentAsString).data[1].value.namespace
-        assertEquals '0c5435cf-4021-4f2a-ba69-dde451d12551', JSON.parse(controller.response.contentAsString).data[0].path
-        assertEquals '0c5435cf-4021-4f2a-ba69-dde451d12552', JSON.parse(controller.response.contentAsString).data[1].path
-        assertEquals '../examples/fake-widgets/widget-c.json', JSON.parse(controller.response.contentAsString).data[0].value.descriptorUrl
-        assertEquals '../examples/fake-widgets/widget-d.json', JSON.parse(controller.response.contentAsString).data[1].value.descriptorUrl
+        assert 2 == JSON.parse(controller.response.contentAsString).data.size()
+        assert 'Widget C' == JSON.parse(controller.response.contentAsString).data[0].value.namespace
+        assert 'Widget D' == JSON.parse(controller.response.contentAsString).data[1].value.namespace
+        assert '0c5435cf-4021-4f2a-ba69-dde451d12551' == JSON.parse(controller.response.contentAsString).data[0].path
+        assert '0c5435cf-4021-4f2a-ba69-dde451d12552' == JSON.parse(controller.response.contentAsString).data[1].path
+        assert '../examples/fake-widgets/widget-c.json' == JSON.parse(controller.response.contentAsString).data[0].value.descriptorUrl
+        assert '../examples/fake-widgets/widget-d.json' == JSON.parse(controller.response.contentAsString).data[1].value.descriptorUrl
     }
 
     void testCreateWidgetDefinition() {
@@ -121,9 +125,9 @@ class WidgetControllerTests extends OWFGroovyTestCase {
 
         controller.createOrUpdate()
 
-        assertEquals 'Widget C', JSON.parse(controller.response.contentAsString).data[0].value.namespace
-        assertEquals '0c5435cf-4021-4f2a-ba69-dde451d12551', JSON.parse(controller.response.contentAsString).data[0].path
-        assertEquals '../examples/fake-widgets/widget-c.json', JSON.parse(controller.response.contentAsString).data[0].value.descriptorUrl
+        assert 'Widget C' == JSON.parse(controller.response.contentAsString).data[0].value.namespace
+        assert '0c5435cf-4021-4f2a-ba69-dde451d12551' == JSON.parse(controller.response.contentAsString).data[0].path
+        assert '../examples/fake-widgets/widget-c.json' == JSON.parse(controller.response.contentAsString).data[0].value.descriptorUrl
     }
 
     void testCreateWidgetDefinitionWithDescriptorFilenameAndNoUniversalName() {
@@ -144,10 +148,10 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         controller.params.descriptorUrl = '../examples/fake-widgets/widget-c.json'
 
         controller.createOrUpdate()
-        assertEquals 'Widget C', JSON.parse(controller.response.contentAsString).data[0].value.namespace
-        assertEquals '0c5435cf-4021-4f2a-ba69-dde451d12551', JSON.parse(controller.response.contentAsString).data[0].path
-        assertEquals '../examples/fake-widgets/widget-c.json', JSON.parse(controller.response.contentAsString).data[0].value.descriptorUrl
-        assertTrue JSON.parse(controller.response.contentAsString).data[0].value.universalName.equals(null)
+        assert 'Widget C' == JSON.parse(controller.response.contentAsString).data[0].value.namespace
+        assert '0c5435cf-4021-4f2a-ba69-dde451d12551' == JSON.parse(controller.response.contentAsString).data[0].path
+        assert '../examples/fake-widgets/widget-c.json' == JSON.parse(controller.response.contentAsString).data[0].value.descriptorUrl
+        assert JSON.parse(controller.response.contentAsString).data[0].value.universalName.equals(null)
     }
 
     void testCreateWidgetDefinitionWithDescriptorFilenameAndEmptyUniveralName() {
@@ -169,10 +173,10 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         controller.params.descriptorUrl = '../examples/fake-widgets/widget-c.json'
 
         controller.createOrUpdate()
-        assertEquals 'Widget C', JSON.parse(controller.response.contentAsString).data[0].value.namespace
-        assertEquals '0c5435cf-4021-4f2a-ba69-dde451d12551', JSON.parse(controller.response.contentAsString).data[0].path
-        assertEquals '../examples/fake-widgets/widget-c.json', JSON.parse(controller.response.contentAsString).data[0].value.descriptorUrl
-        assertTrue JSON.parse(controller.response.contentAsString).data[0].value.universalName.equals(null)
+        assert 'Widget C' == JSON.parse(controller.response.contentAsString).data[0].value.namespace
+        assert '0c5435cf-4021-4f2a-ba69-dde451d12551' == JSON.parse(controller.response.contentAsString).data[0].path
+        assert '../examples/fake-widgets/widget-c.json' == JSON.parse(controller.response.contentAsString).data[0].value.descriptorUrl
+        assert JSON.parse(controller.response.contentAsString).data[0].value.universalName.equals(null)
     }
 
     void testUpdateWidgetDefinition() {
@@ -207,25 +211,25 @@ class WidgetControllerTests extends OWFGroovyTestCase {
 
         controller.createOrUpdate()
 
-        assertEquals 'Widget D', JSON.parse(controller.response.contentAsString).data[0].value.namespace
-        assertEquals 'com.example.fakewidgetd', JSON.parse(controller.response.contentAsString).data[0].value.universalName
-        assertEquals '../examples/fake-widgets/widget-d.html', JSON.parse(controller.response.contentAsString).data[0].value.url
-        assertEquals '../images/blue/icons/widgetContainer/widgetDsm.gif', JSON.parse(controller.response.contentAsString).data[0].value.headerIcon
-        assertEquals '../images/blue/icons/widgetIcons/widgetD.gif', JSON.parse(controller.response.contentAsString).data[0].value.image
-        assertEquals '../examples/fake-widgets/widget-d.json', JSON.parse(controller.response.contentAsString).data[0].value.descriptorUrl
-        assertEquals '{"send":[{"action":"Graph","dataTypes":["application/html"]}],"receive":[{"action":"View","dataTypes":["text/html"]}]}', JSON.parse(controller.response.contentAsString).data[0].value.intents.toString()
-        assertNotSame 'Widget C', JSON.parse(controller.response.contentAsString).data[0].value.namespace
-        assertNotSame '../examples/fake-widgets/widget-c.html', JSON.parse(controller.response.contentAsString).data[0].value.url
-        assertNotSame '../images/blue/icons/widgetContainer/widgetCsm.gif', JSON.parse(controller.response.contentAsString).data[0].value.headerIcon
-        assertNotSame '../images/blue/icons/widgetIcons/widgetC.gif', JSON.parse(controller.response.contentAsString).data[0].value.image
-        assertNotSame '../examples/fake-widgets/widget-c.json', JSON.parse(controller.response.contentAsString).data[0].value.descriptorUrl
+        assert 'Widget D' == JSON.parse(controller.response.contentAsString).data[0].value.namespace
+        assert 'com.example.fakewidgetd' == JSON.parse(controller.response.contentAsString).data[0].value.universalName
+        assert '../examples/fake-widgets/widget-d.html' == JSON.parse(controller.response.contentAsString).data[0].value.url
+        assert '../images/blue/icons/widgetContainer/widgetDsm.gif' == JSON.parse(controller.response.contentAsString).data[0].value.headerIcon
+        assert '../images/blue/icons/widgetIcons/widgetD.gif' == JSON.parse(controller.response.contentAsString).data[0].value.image
+        assert '../examples/fake-widgets/widget-d.json' == JSON.parse(controller.response.contentAsString).data[0].value.descriptorUrl
+        assert '{"send":[{"action":"Graph" =="dataTypes":["application/html"]}],"receive":[{"action":"View","dataTypes":["text/html"]}]}', JSON.parse(controller.response.contentAsString).data[0].value.intents.toString()
+        assert 'Widget C' != JSON.parse(controller.response.contentAsString).data[0].value.namespace
+        assert '../examples/fake-widgets/widget-c.html' != JSON.parse(controller.response.contentAsString).data[0].value.url
+        assert '../images/blue/icons/widgetContainer/widgetCsm.gif' != JSON.parse(controller.response.contentAsString).data[0].value.headerIcon
+        assert '../images/blue/icons/widgetIcons/widgetC.gif' != JSON.parse(controller.response.contentAsString).data[0].value.image
+        assert '../examples/fake-widgets/widget-c.json' != JSON.parse(controller.response.contentAsString).data[0].value.descriptorUrl
     }
 
     void testDeleteExistentWidgetDefinition() {
         loginAsUsernameAndRole('testAdmin1', ERoleAuthority.ROLE_ADMIN.strVal)
         createWidgetDefinitionForTest('Widget C','widgetC.gif','widgetCsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12551','widget-c.html','widget-c.json', 'com.example.widgetc')
 
-        assertNotNull WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
+        assert null != WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
 
         controller = new WidgetController()
         controller.widgetDefinitionService = widgetDefinitionService
@@ -234,8 +238,8 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         controller.params.id = '0c5435cf-4021-4f2a-ba69-dde451d12551'
         controller.delete()
 
-        assertEquals '0c5435cf-4021-4f2a-ba69-dde451d12551', JSON.parse(controller.response.contentAsString).data[0].id
-        assertNull WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
+        assert '0c5435cf-4021-4f2a-ba69-dde451d12551' == JSON.parse(controller.response.contentAsString).data[0].id
+        assert null ==  WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
     }
 
     void testDeleteNonexistentWidgetDefinition() {
@@ -249,8 +253,8 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         controller.params.id = '0c5435cf-4021-4f2a-ba69-dde451d12558'
         controller.delete()
 
-        //assertEquals '"Error during delete: The requested entity was not found Widget Definition 0c5435cf-4021-4f2a-ba69-dde451d12558 not found."', controller.response.contentAsString
-        assertNotNull WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
+        //assert '"Error during delete: The requested entity was not found Widget Definition 0c5435cf-4021-4f2a-ba69-dde451d12558 not found."' == controller.response.contentAsString
+        assert null != WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
     }
 
     void testExport() {
@@ -270,8 +274,8 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         controller.export()
 
         def resp = controller.response
-        assertEquals "attachment; filename=" + filename + ".html", resp.getHeader("Content-disposition")
-        assertNotNull resp.getContentAsString()
+        assert "attachment; filename=" + filename + ".html" == resp.getHeader("Content-disposition")
+        assert null != resp.getContentAsString()
     }
 
     void testFailedExport() {
@@ -289,23 +293,8 @@ class WidgetControllerTests extends OWFGroovyTestCase {
         controller.export()
 
         def resp = JSON.parse(controller.response.contentAsString.decodeHTML())
-        assertEquals false, resp.success
+        assert false == resp.success
     }
-
-    /*void testDeleteWidgetDefinitionForUnauthorizedUser() {
-        loginAsUsernameAndRole('testUser1', ERoleAuthority.ROLE_USER.strVal)
-        createWidgetDefinitionForTest('Widget C','widgetC.gif','widgetCsm.gif','0c5435cf-4021-4f2a-ba69-dde451d12551','widget-c.html')
-
-        controller = new WidgetDefinitionController()
-        controller.widgetDefinitionService = widgetDefinitionService
-        controller.request.contentType = "text/json"
-
-        controller.params.widgetGuid = '0c5435cf-4021-4f2a-ba69-dde451d12551'
-        controller.delete()
-
-        assertEquals '"Error during delete: You are not authorized to access this entity. You are not authorized to delete widget definitions."', controller.response.contentAsString
-        assertNotNull WidgetDefinition.findByWidgetGuid('0c5435cf-4021-4f2a-ba69-dde451d12551')
-    }*/
 
     private def createWidgetDefinitionIntentForTest(widgetDefinition, intent, dataTypes, send, receive) {
         def widgetDefinitionIntent = WidgetDefinitionIntent.build(

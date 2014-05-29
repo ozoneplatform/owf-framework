@@ -1,32 +1,32 @@
 databaseChangeLog = {
 
-    changeSet(author: "owf", id: "6.0.0-1", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-1", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
         comment("Add universal_name to widgetdefinition")
         addColumn(tableName: "widget_definition") {
             column(name: "universal_name", type: "varchar(255)")
         }
     }
 
-    changeSet(author: "owf", id: "6.0.0-2", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-2", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
         comment("Add layoutConfig to dashboard")
         addColumn(tableName: "dashboard") {
             column(name: "layout_config", type: "clob")
         }
     }
 
-    changeSet(author: "owf", id: "6.0.0-3", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-3", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
         comment("Add descriptor_url to widgetdefinition")
         addColumn(tableName: "widget_definition") {
             column(name: "descriptor_url", type: "varchar(2083)")
         }
     }
 
-    changeSet(author: "owf", id: "6.0.0-4", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-4", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
         comment("Remove EventingConnections table and association with DashboardWidgetState")
         dropTable(tableName: "eventing_connections")
     }
 
-    changeSet(author: "owf", id: "6.0.0-5", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-5", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
         comment("Create intent table")
 
         createTable(tableName: "intent") {
@@ -42,7 +42,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "6.0.0-6", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-6", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
         comment("Create intent_data_type table")
 
         createTable(tableName: "intent_data_type") {
@@ -58,7 +58,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "6.0.0-7", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-7", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
         comment("Create intent_data_types table")
 
         createTable(tableName: "intent_data_types") {
@@ -71,7 +71,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "6.0.0-8", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-8", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
         comment("Add foreign constraint for intent_data_type_id and intent_id in intent_data_types table")
 
         addForeignKeyConstraint(constraintName: "FK8A59132FD46C6FAA", baseTableName: "intent_data_types",
@@ -116,21 +116,21 @@ databaseChangeLog = {
         """)
     }
 
-    changeSet(author: "owf", id: "6.0.0-10", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-10", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
         comment("Add foreign constraint for widget_definition_id in widget_def_intent table")
 
         addForeignKeyConstraint(constraintName: "FK8A59D92FD46C6FAB", baseTableName: "widget_def_intent",
             baseColumnNames: "widget_definition_id", referencedTableName: "widget_definition", referencedColumnNames: "id")
     }
 
-    changeSet(author: "owf", id: "6.0.0-11", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-11", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
         comment("Add foreign constraint for intent_id in widget_definition_intent table")
 
         addForeignKeyConstraint(constraintName: "FK8A59D92FD46C6FAC", baseTableName: "widget_def_intent",
             baseColumnNames: "intent_id", referencedTableName: "intent", referencedColumnNames: "id")
     }
 
-    changeSet(author: "owf", id: "6.0.0-12", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-12", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
         comment("Create widget_def_intent_data_types table")
 
         createTable(tableName: "widget_def_intent_data_types") {
@@ -143,7 +143,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "6.0.0-13", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-13", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
         comment("Add foreign constraint for intent_data_type_id and widget_definition_intent_id in widget_def_intent_data_types table")
 
         addForeignKeyConstraint(constraintName: "FK8A59D92FD41A6FAD",
@@ -155,7 +155,7 @@ databaseChangeLog = {
             referencedTableName: "widget_def_intent", referencedColumnNames: "id")
     }
 
-    changeSet(author: "owf", id: "6.0.0-14", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-14", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
         comment("Add intentConfig column to dashboard table")
 
         addColumn(tableName: "dashboard") {
@@ -163,21 +163,21 @@ databaseChangeLog = {
         }
     }
 
-	changeSet(author: "owf", id: "6.0.0-15", context: "create, upgrade, 6.0.0") {
+	changeSet(author: "owf", id: "6.0.0-15", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
 		comment(text="Added description column into Widget Definition table")
 
     	addColumn(tableName: "widget_definition") {
     		column(name: "description", type: "varchar(255)", defaultValue: "")
     	}
 	}
-  changeSet(author: "owf", id: "6.0.0-16", context: "create, upgrade, 6.0.0") {
+  changeSet(author: "owf", id: "6.0.0-16", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
     comment("Add groupWidget property to personwidgetdefinition")
     addColumn(tableName: "person_widget_definition") {
       column(name: "group_widget", type: "boolean", defaultValueBoolean: "false")
     }
   }
 
-  changeSet(author: "owf", id: "6.0.0-17", context: "create, upgrade, 6.0.0") {
+  changeSet(author: "owf", id: "6.0.0-17", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
     comment("Add favorite property to personwidgetdefinition")
     addColumn(tableName: "person_widget_definition") {
       column(name: "favorite", type: "boolean", defaultValueBoolean: "false")
@@ -679,7 +679,7 @@ databaseChangeLog = {
 
     //fix for oracle's issue with empty strings being counted as null inserts, so we'll just remove the notnull for all dbs
     //todo remove this once dashboard designer changes have removed obsolete tables from the backend
-    changeSet(author: "owf", id: "6.0.0-44", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-44", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
       dropNotNullConstraint(tableName: "dashboard", columnName: "layout", columnDataType: "varchar(9)")
     }
 
@@ -817,7 +817,7 @@ databaseChangeLog = {
 		""")
 	}
 
-	changeSet(author: "owf", id: "6.0.0-53", context: "create, upgrade, 6.0.0") {
+	changeSet(author: "owf", id: "6.0.0-53", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
 		comment("Add locked property to dashboard")
 		addColumn(tableName: "dashboard") {
 			column(name: "locked", type: "boolean", defaultValueBoolean: "false", valueBoolean: "false")
@@ -839,14 +839,14 @@ databaseChangeLog = {
 		}
 	}
 
-    changeSet(author: "owf", id: "6.0.0-55", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-55", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
         comment("Add display name field to pwd")
         addColumn(tableName: "person_widget_definition") {
             column(name: "display_name", type: "varchar(256)")
         }
     }
 
-    changeSet(author: "owf", id: "6.0.0-56", context: "create, upgrade, 6.0.0") {
+    changeSet(author: "owf", id: "6.0.0-56", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 6.0.0") {
         comment("Add disabled field to pwd")
         addColumn(tableName: "person_widget_definition") {
           column(name: "disabled", type: "boolean", defaultValueBoolean: "false", valueBoolean: "false")
@@ -942,7 +942,7 @@ databaseChangeLog = {
           """)
     }
 
-    changeSet(author: "owf", id: "6.0.0-63", dbms: "hsqldb", context: "upgrade, 6.0.0, sampleData, 6.0.0-sampleData") {
+    changeSet(author: "owf", id: "6.0.0-63", dbms: "h2, hsqldb", context: "upgrade, 6.0.0, sampleData, 6.0.0-sampleData") {
       comment(text = "upgrade any pwds that were pending approval to use the disabled column")
       sql(text = """
             update person_widget_definition pwd
@@ -963,7 +963,7 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: "owf", id: "6.0.0-64", dbms: "hsqldb, postgresql, mysql", context: "upgrade, sampleData, 6.0.0-sampleData") {
+    changeSet(author: "owf", id: "6.0.0-64", dbms: "h2, hsqldb, postgresql, mysql", context: "upgrade, sampleData, 6.0.0-sampleData") {
         comment("delete any taglinks which were 'pending approval' (have editable false)")
 
         delete(tableName: "tag_links") {

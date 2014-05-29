@@ -311,15 +311,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                     maxValue: 2000
                 },
                 {
-                    xtype: 'textfield',
-                    name: '_tags',
-                    itemId: '_tags',
-                    hidden: true,
-                    emptyText: 'geo, map, tracking',
-                    usePlaceholderIfAvailable: false,
-                    fieldLabel: 'Default Tags'
-                },
-                {
                     xtype: 'combobox',
                     name: '_types',
                     itemId: '_types',
@@ -406,7 +397,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
         var data = record ? record.data : record;
         this.record = data;
         if (data) {
-            var strTags = "";
             var newGuid = (data && data.widgetGuid) ? data.widgetGuid : guid.util.guid();
             var widgetGuid = component.getComponent('widgetGuid'),
                 name = component.getComponent('name'),
@@ -419,7 +409,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                 image = component.getComponent('image'),
                 width = component.getComponent('width'),
                 height = component.getComponent('height'),
-                tags = component.getComponent('_tags'),
                 singleton = component.getComponent('singleton'),
                 visible = component.getComponent('visible'),
                 background = component.getComponent('background'),
@@ -427,13 +416,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                 descriptorUrl = component.getComponent('descriptorUrl'),
                 intents = component.getComponent('intents');
 
-            for (var i = 0; data && data.tags && i < data.tags.length; i++) {
-                strTags += data.tags[i].name;
-                if (i < data.tags.length - 1) {
-                    strTags += ", ";
-                }
-            }
-            strTags = Ext.util.Format.htmlDecode(strTags);
 
             widgetGuid.setValue(newGuid).originalValue = newGuid;
             name.setValue(data.name).originalValue = data.name;
@@ -446,7 +428,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             image.setValue(data.image).originalValue = data.image;
             width.setValue(data.width).originalValue = data.width;
             height.setValue(data.height).originalValue = data.height;
-            tags.setValue(strTags).originalValue = strTags;
             singleton.setValue(data.singleton).originalValue = data.singleton;
             visible.setValue(data.visible).originalValue = data.visible;
             background.setValue(data.background).originalValue = data.background;
@@ -519,7 +500,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
         this.loadedDecriptorUrl = descriptorUrl.getValue();
         this.record = data;
         if (data) {
-            var strTags = "";
             var newGuid = (data && data.widgetGuid) ? data.widgetGuid : this.generateNewGuid();
             var widgetGuid = component.getComponent('widgetGuid'),
                 name = component.getComponent('name'),
@@ -532,20 +512,11 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                 image = component.getComponent('image'),
                 width = component.getComponent('width'),
                 height = component.getComponent('height'),
-                tags = component.getComponent('_tags'),
                 singleton = component.getComponent('singleton'),
                 visible = component.getComponent('visible'),
                 background = component.getComponent('background'),
                 widgetType = component.getComponent('_types'),
                 intents = component.getComponent('intents');
-
-            for (var i = 0; data && data.defaultTags && i < data.defaultTags.length; i++) {
-                strTags += data.defaultTags[i];
-                if (i < data.defaultTags.length - 1) {
-                    strTags += ", ";
-                }
-            }
-            strTags = Ext.util.Format.htmlDecode(strTags);
 
             // Only change guid and universalId if this is a new record
             if (!this.ownerCt.recordId) {
@@ -563,7 +534,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             image.setValue(Ext.String.trim(data.imageUrlMedium || data.imageUrlLarge));
             width.setValue(data.width);
             height.setValue(data.height);
-            tags.setValue(Ext.String.trim(strTags));
             singleton.setValue(data.singleton);
             visible.setValue(data.visible);
             background.setValue(data.background);
@@ -613,7 +583,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             image = component.getComponent('image'),
             width = component.getComponent('width'),
             height = component.getComponent('height'),
-            tags = component.getComponent('_tags'),
             singleton = component.getComponent('singleton'),
             visible = component.getComponent('visible'),
             background = component.getComponent('background'),
@@ -637,7 +606,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             image.show();
             width.show();
             height.show();
-            tags.show();
             singleton.show();
             visible.show();
             background.show();
@@ -655,7 +623,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             image.hide();
             width.hide();
             height.hide();
-            tags.hide();
             singleton.hide();
             visible.hide();
             background.hide();
@@ -686,7 +653,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             // fields may be disabled.
             var formFields = ['widgetGuid', 'name', 'description', 'version', 'universalName',
                 'guid', 'url', 'headerIcon', 'image', 'width',
-                'height', '_tags', 'singleton', 'visible',
+                'height', 'singleton', 'visible',
                 'background', '_types', 'intents'];
 
             var formValues = {};
@@ -727,25 +694,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                 record.phantom = true;
             }
 
-            //the _tags text field it needs to be turned into json
-            var tags = [];
-            var tagString = formValues['_tags'];
-            if (tagString && tagString.length > 0 && tagString != '') {
-                var splits = tagString.split(',');
-                for (var j = 0; j < splits.length; j++) {
-                    var name = Ext.String.trim(splits[j]);
-                    if (name != '') {
-                        tags.push({
-                            name: name,
-                            visible: true,
-
-                            //todo use position to order groups for now just set to -1
-                            position: -1,
-                            editable: true
-                        });
-                    }
-                }
-            }
             var types = [];
             var typeId = formValues['_types'];
             if (!Ext.isNumeric(typeId)) {
@@ -759,8 +707,6 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             // Set title because incoming json won't have this value
             record.set('title', formValues['name']);
 
-            //set the tags record with the json
-            record.set('tags', tags);
             record.set('widgetTypes', types);
             record.endEdit();
 

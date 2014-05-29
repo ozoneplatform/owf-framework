@@ -182,14 +182,14 @@ databaseChangeLog = {
 //  }
 
   //Added defaultSettings column into Dashboard Table
-  changeSet(author: "owf", id: "4.0.0-3", context: "create, upgrade, 4.0.0") {
+  changeSet(author: "owf", id: "4.0.0-3", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 4.0.0") {
       comment(text="Added defaultSettings column into Dashboard Table")
 	  addColumn(tableName: "dashboard"){
 		  column(name: "default_settings", type: "clob")
 	  }
   }
 
-  changeSet(author: "owf", id: "4.0.0-4", context: "create, upgrade, 4.0.0") {
+  changeSet(author: "owf", id: "4.0.0-4", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 4.0.0") {
       comment(text="Added background column for WidgetDefinition")
 	  addColumn(tableName: "widget_definition"){
 		  column(name: "background", type: "boolean", valueBoolean: "false")
@@ -217,7 +217,7 @@ databaseChangeLog = {
       delete(tableName: "person")
   }
 
-    changeSet(author: "owf", id: "4.0.0-5", dbms: "mysql,mssql,oracle", context: "sampleData, 4.0.0-sampleData") {
+    changeSet(author: "owf", id: "4.0.0-5", dbms: "h2,mysql,mssql,oracle", context: "sampleData, 4.0.0-sampleData") {
       comment(text="deleting old sample data")
 
       delete(tableName: "role_people")
@@ -2885,7 +2885,7 @@ databaseChangeLog = {
       SET IDENTITY_INSERT [dbo].[owf_group] ON
     """)
   }
-  changeSet(author: "owf", id: "4.0.0-22", dbms: "hsqldb,mysql,mssql,oracle", context: "sampleData, 4.0.0-sampleData") {
+  changeSet(author: "owf", id: "4.0.0-22", dbms: "h2,hsqldb,mysql,mssql,oracle", context: "sampleData, 4.0.0-sampleData") {
       comment(text="insert new sample data")
     insert(tableName: "owf_group") {
         column(name: "id", valueNumeric: "4")
@@ -3001,7 +3001,7 @@ databaseChangeLog = {
       SET IDENTITY_INSERT [dbo].[role] ON
     """)
   }
-  changeSet(author: "owf", id: "4.0.0-28", dbms: "mysql,mssql,oracle,postgresql", context: "sampleData, 4.0.0-sampleData") {
+  changeSet(author: "owf", id: "4.0.0-28", dbms: "h2,mysql,mssql,oracle,postgresql", context: "sampleData, 4.0.0-sampleData") {
       comment(text="insert new sample data")
     insert(tableName: "role") {
         column(name: "id", valueNumeric: "26")
@@ -3099,7 +3099,7 @@ databaseChangeLog = {
         SET IDENTITY_INSERT [dbo].[preference] ON
       """)
     }
-  changeSet(author: "owf", id: "4.0.0-34", dbms: "mysql,mssql,oracle,postgresql", context: "sampleData, 4.0.0-sampleData") {
+  changeSet(author: "owf", id: "4.0.0-34", dbms: "h2,mysql,mssql,oracle,postgresql", context: "sampleData, 4.0.0-sampleData") {
         comment(text="insert new sample data")
       insert(tableName: "preference") {
           column(name: "id", valueNumeric: "144")
@@ -3753,7 +3753,7 @@ databaseChangeLog = {
 
   }
 
-  changeSet(author: "owf", id: "4.0.0-47", context: "create, upgrade, 4.0.0") {
+  changeSet(author: "owf", id: "4.0.0-47", dbms:"hsqldb,mysql,oracle,postgresql",  context: "create, upgrade, 4.0.0") {
       comment(text="Added showLaunchMenu column into Dashboard Table")
 	  addColumn(tableName: "dashboard"){
 		  column(name: "show_launch_menu", type: "boolean", valueBoolean: "false", defaultValueBoolean: "false")
@@ -3824,7 +3824,7 @@ databaseChangeLog = {
     """)
   }
 
-  changeSet(author: "owf", id: "4.0.0-51", context: "create, upgrade, 4.0.0") {
+  changeSet(author: "owf", id: "4.0.0-51", dbms:"h2,hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 4.0.0") {
     comment(text="Add widget types to table")
     insert(tableName: "widget_type") {
       column(name: "id", valueNumeric:"1")
@@ -3973,10 +3973,9 @@ databaseChangeLog = {
   //   }
   // }
 
-  changeSet(author: "owf", id: "4.0.0-56", context: "create, upgrade, 4.0.0") {
+  changeSet(author: "owf", id: "4.0.0-56", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 4.0.0") {
     comment(text="Updating display_name column to 256 chars")
 
     modifyDataType(tableName:"widget_definition", columnName:"display_name", newDataType:"varchar(256)")
   }
 }
-

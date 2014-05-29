@@ -2,12 +2,12 @@ package ozone.owf.grails.controllers
 
 import grails.converters.JSON
 import ozone.owf.grails.OwfException
-import grails.util.JSonBuilder
+import grails.web.JSONBuilder
 import grails.validation.ValidationException
 import java.lang.reflect.UndeclaredThrowableException
 
 class BaseOwfRestController {
-	
+
     def serviceModelService
 
     protected getJsonResult(result, targetProperty, params) {
@@ -20,26 +20,23 @@ class BaseOwfRestController {
         }
     }
 
-    protected def handleError(grails.validation.ValidationException ve)
+    def handleError(grails.validation.ValidationException ve)
     {
         return [msg: getFieldErrorsAsJSON(ve.errors), status: 500]
     }
-    protected def handleError(UndeclaredThrowableException e)
+    def handleError(UndeclaredThrowableException e)
     {
         return handleError(e.cause)
     }
-    protected def handleError(Exception e)
+    def handleError(Exception e)
     {
         log.error(e,e)
-        def sw = new StringWriter()
-        def jb = new JSonBuilder(sw)
-        jb.json {
-            success(false)
-            errorMsg(e.message)
-        }
-        return [msg: sw.toString()?.encodeAsHTML(), status: 500]
+		def message = [:]
+		message['success'] = false
+		message['errorMsg'] = e.message
+        return [msg: message as JSON, status: 500]
     }
-    protected def handleError(OwfException owe) {
+    def handleError(OwfException owe) {
         if ('INFO' == owe.logLevel) {
             log.info(owe)
         }
@@ -49,16 +46,13 @@ class BaseOwfRestController {
         else {
             log.error(owe,owe)
         }
-        
+
         owe.setMessage(owe.message?.encodeAsHTML());
-        
-        def sw = new StringWriter()
-        def jb = new JSonBuilder(sw)
-        jb.json {
-            success(false)
-            errorMsg( "${owe.exceptionType.generalMessage} ${owe.message}")
-        }
-        return [msg:sw.toString(), status: owe.exceptionType.normalReturnCode]
+
+        def message = [:]
+		message['success'] = false
+		message['errorMsg'] =  "${owe.exceptionType.generalMessage} ${owe.message}"
+        return [msg:message as JSON , status: owe.exceptionType.normalReturnCode]
     }
 
     protected renderResult(Map res)
@@ -84,7 +78,7 @@ class BaseOwfRestController {
             render result
         }
     }
-	
+
     // test if the window name transport is being used
     protected isWindowname() {
         return (params['windowname'] == 'true')
@@ -93,9 +87,9 @@ class BaseOwfRestController {
     {
         if (!errs) return ''
         def sw = new StringWriter()
- 
-        def jb = new JSonBuilder(sw)
-        jb.json {
+
+        def jb = new JSONBuilder()
+        jb.build {
             success(false)
             errorMsg('Field  Validation error!')
             errors {
@@ -106,6 +100,6 @@ class BaseOwfRestController {
                 }
             }
         }
-        sw.toString() 
+        jb.toString()
     }
 }

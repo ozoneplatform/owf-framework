@@ -3,6 +3,9 @@ package ozone.owf.grails.test.integration
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 
 import grails.converters.JSON
+import grails.test.mixin.TestMixin
+import grails.test.mixin.integration.IntegrationTestMixin
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.GrantedAuthorityImpl
@@ -10,15 +13,15 @@ import org.springframework.security.core.userdetails.User
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.services.ServiceModelService
 
-class OWFGroovyTestCase extends GroovyTestCase {
+@TestMixin(IntegrationTestMixin)
+class OWFGroovyTestCase {
 
 	int testAdmin1ID
 	int testUser1ID
 	int testUser2ID
 	def accountService
 
-	protected void setUp() {
-		super.setUp()
+	void setUp() {
         accountService.serviceModelService = new ServiceModelService()
 
         //needed for the following 3 createOrUpdate calls
@@ -76,7 +79,7 @@ class OWFGroovyTestCase extends GroovyTestCase {
 		def json =
 		[
 		 	imageUrlSmall: "../images/blue/icons/widgetContainer/widgetEmptysm.gif",
-		 	imageUrlMedium: "../images/blue/icons/widgetIcons/nearlyEmpty.gif",
+		 	imageUrlLarge: "../images/blue/icons/widgetIcons/nearlyEmpty.gif",
 		 	checkedTargets:  new JSON([['id':testAdmin1ID], ['id':testUser1ID], ['id':testUser2ID] ]).toString(),
 		 	width:200,
 		 	uncheckedTargets:4,
@@ -94,9 +97,8 @@ class OWFGroovyTestCase extends GroovyTestCase {
 		return json
 	}
 
-	protected void tearDown() {
+	void tearDown() {
 		SCH.clearContext();
-		super.tearDown();
 	}
 
 	protected void loginAsAdmin() {
@@ -106,10 +108,10 @@ class OWFGroovyTestCase extends GroovyTestCase {
 	protected void loginAsUsernameAndRole(def username, def role_string) {
 		SCH.clearContext()
 
-		GrantedAuthority[] authorities = [new GrantedAuthorityImpl(role_string)]
+		Collection<GrantedAuthority> authorities = [new GrantedAuthorityImpl(role_string)]
 		SCH.context.authentication = new UsernamePasswordAuthenticationToken(
-		new User(username, "password1", true, true, true, true, authorities),
-		"password1"
+            new User(username, "password1", true, true, true, true, authorities),
+            "password1"
 		)
 	}
 

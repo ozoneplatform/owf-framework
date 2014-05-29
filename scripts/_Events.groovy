@@ -1,4 +1,4 @@
-private compileStyleSheets = { dir ->
+compileStyleSheets = { dir ->
   def ant = new AntBuilder()   // create an antbuilder
   if (System.properties['os.name'].toLowerCase().contains('windows')) {
     ant.exec(

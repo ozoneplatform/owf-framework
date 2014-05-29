@@ -6,7 +6,6 @@ class PersonServiceModel extends AbstractServiceModel {
   String userRealName
   String email
   Boolean hasPWD
-  List tagLinks = []
   Integer totalGroups = 0
   Integer totalWidgets = 0
   Integer totalDashboards = 0

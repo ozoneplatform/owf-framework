@@ -15,7 +15,7 @@ class PreferenceService extends BaseService {
     	def preference = findPagedPreferences(params)
     	return [success: true, preference: preference, count: preference.totalCount]
     }
-	
+
 	private findPagedPreferences(params) {
 		def listParams = [:]
 		if (params?.max != null) listParams.max = Integer.parseInt(params.max)
@@ -38,7 +38,7 @@ class PreferenceService extends BaseService {
 			}
 		}
 	}
-	
+
 	private findPreference(params) {
 		return Preference.createCriteria().get() {
 			if (params?.id != null && params?.id != "") eq("id", Long.parseLong(params.id))
@@ -53,60 +53,60 @@ class PreferenceService extends BaseService {
 		}
 	}
 
-    def showForUser(params) 
+    def showForUser(params)
     {
 		params.user = accountService.getLoggedInUser()
     	def preference = findPreference(params)
-    	
-    	if (preference) 
+
+    	if (preference)
     	{
             return [success: true, preference: preference]
-    	} 
-    	else 
+    	}
+    	else
     	{
             return [success: true, preference: null]
     	}
     }
-	
+
 	def create(params) {
 
       	def preference = new Preference()
 		preference.namespace = params.namespace
 		preference.path = params.path
-		if (params.value != null) 
-		{ 
+		if (params.value != null)
+		{
 			preference.value = params.value.replaceAll("\n","\\\n")
-		} else {  
+		} else {
 			// not expecting a null preference value - log as a warn
 			log.warn("Creating a null preference value: (namespace: " + preference.namespace + ", path: " + preference.path +")")
 
 		}
-		
+
 		Person user = accountService.getLoggedInUser()
-		
+
 		if (params.userid != null)
 		{
 			user = Person.get(params.userid)
 		}
-		
+
 		preference.user = user
-      
+
 		preference.validate()
 
-      	if (preference.hasErrors()) 
+      	if (preference.hasErrors())
 		{
-	      	throw new OwfException(	message:'A fatal validation error occurred during the updating of a preference. Params: ' + params.toString() + ' Validation Errors: ' + preference.errors.toString(), 
+	      	throw new OwfException(	message:'A fatal validation error occurred during the updating of a preference. Params: ' + params.toString() + ' Validation Errors: ' + preference.errors.toString(),
 									exceptionType: OwfExceptionTypes.Validation)
       	}
-		if (!preference.save()) 
+		if (!preference.save())
 		{
           	throw new OwfException (message: 'A fatal error occurred while trying to save a preference. Params: ' + params.toString(),
 									exceptionType: OwfExceptionTypes.Database)
         }
 		return [success: true, preference: preference]
 	}
-	
-	
+
+
 	def deepClone(params){
 		deepClone(params,accountService.getLoggedInUser().id)
 	}
@@ -114,18 +114,18 @@ class PreferenceService extends BaseService {
 	def deepClone(params, userid){
 		if (userid != accountService.getLoggedInUser().id && !accountService.getLoggedInUserIsAdmin())
 		{
-			throw new OwfException(message:'You are not authorized to clone preferences for other users.', 
+			throw new OwfException(message:'You are not authorized to clone preferences for other users.',
    	 									exceptionType: OwfExceptionTypes.Authorization)
 		}
-		
+
 		params.userid = userid
 		params.cloned = true
 		//Update will call create if need be.
 		//We should allow this to overwrite existing preferences... right?
 		update(params)
 	}
-	
-	def deleteForAdmin(params) 
+
+	def deleteForAdmin(params)
 	{
 		if (!accountService.getLoggedInUserIsAdmin())
 		{
@@ -140,7 +140,7 @@ class PreferenceService extends BaseService {
         }
 		params.user = user
 		def preference = findPreference(params)
-		
+
         try
 		{
 			preference?.each{ it?.delete() }
@@ -151,19 +151,19 @@ class PreferenceService extends BaseService {
 			log.error(e)
 			throw new OwfException (message: 'A fatal error occurred while trying to delete a preference. Params: ' + params.toString(),exceptionType: OwfExceptionTypes.Database)
 		}
-	}	
-	
-	def deleteForUser(params) 
+	}
+
+	def deleteForUser(params)
 	{
     	def preference
 
 		Person user = accountService.getLoggedInUser()
-		
+
 		if (params.userid || params.username)
 		{
 			if (!accountService.getLoggedInUserIsAdmin())
 			{
-				throw new OwfException(message:'You are not authorized to delete preferences for other users.', 
+				throw new OwfException(message:'You are not authorized to delete preferences for other users.',
 	   	 									exceptionType: OwfExceptionTypes.Authorization)
 			}
 			user = (params.username)? Person.findByUsername(params.username) : Person.get(params.userid)
@@ -175,7 +175,7 @@ class PreferenceService extends BaseService {
 			params.user = user
     		preference = findPreference(params)
     	}
-    	
+
 		//We don't need to check authorization since they can only get their own based on the query to begin with.
 		//However we might need to change and check auth if this paradigm changes.
 		try
@@ -189,22 +189,22 @@ class PreferenceService extends BaseService {
 			throw new OwfException (message: 'A fatal error occurred while trying to delete a preference. Params: ' + params.toString(),exceptionType: OwfExceptionTypes.Database)
 		}
   	}
-	
+
 	def bulkDeleteForAdmin(params){
 		if (!accountService.getLoggedInUserIsAdmin())
 		{
 			throw new OwfException(message:'You are not authorized to bulkDelete Admin preferences.', exceptionType: OwfExceptionTypes.Authorization)
 		}
 		if (params.preferencesToDelete == null){
-			throw new OwfException(	message:'A fatal validation error occurred. PreferencesToDelete param required. Params: ' + params.toString(), 
+			throw new OwfException(	message:'A fatal validation error occurred. PreferencesToDelete param required. Params: ' + params.toString(),
 				exceptionType: OwfExceptionTypes.Validation)
 		}
-		
+
 		JSON.parse(params.preferencesToDelete).each
 		{
 			Person user = Person.findByUsername(it['username'])
             def preference = findPreference([user: user, namespace: it['namespace'], path: it['path']])
-			
+
 			Map newParams = new HashMap()
 			newParams.namespace = it['namespace']
 	  		newParams.path = it['path']
@@ -214,18 +214,18 @@ class PreferenceService extends BaseService {
 		}
 		return [success: true]
 	}
-	
+
 	def bulkDeleteForUser(params){
-		
+
 		if (params.preferencesToDelete == null){
-			throw new OwfException(	message:'A fatal validation error occurred. PreferencesToDelete param required. Params: ' + params.toString(), 
+			throw new OwfException(	message:'A fatal validation error occurred. PreferencesToDelete param required. Params: ' + params.toString(),
 				exceptionType: OwfExceptionTypes.Validation)
 		}
-		
+
 		JSON.parse(params.preferencesToDelete).each
 		{
 			def preference = findPreference([user: accountService.getLoggedInUser(), namespace: it['namespace'], path: it['path']])
-			
+
 			Map newParams = new HashMap()
 			newParams.namespace = it['namespace']
 	  		newParams.path = it['path']
@@ -236,19 +236,19 @@ class PreferenceService extends BaseService {
 	}
 
     def updateForUser(params) {
-		
+
 		Person user = accountService.getLoggedInUser()
-		
+
 		if (params.userid)
 		{
 			if (params.userid != accountService.getLoggedInUser().id && !accountService.getLoggedInUserIsAdmin())
 			{
-				throw new OwfException(message:'You are not authorized to edit preferences for other users.', 
+				throw new OwfException(message:'You are not authorized to edit preferences for other users.',
 	   	 									exceptionType: OwfExceptionTypes.Authorization)
 			}
 			user = Person.get(params.userid)
 		}
-		
+
 		params.user = user
 		def preference = findPreference(params)
 
@@ -261,25 +261,25 @@ class PreferenceService extends BaseService {
 			preference.namespace = params.namespace
 			preference.path = params.path
 			preference.value = params.value
-			
+
 			preference.validate()
-			
+
 			if (preference.hasErrors()) {
-			  	throw new OwfException(	message:'A fatal validation error occurred during the updating of a preference. Params: ' + params.toString() + ' Validation Errors: ' + preference.errors.toString(), 
+			  	throw new OwfException(	message:'A fatal validation error occurred during the updating of a preference. Params: ' + params.toString() + ' Validation Errors: ' + preference.errors.toString(),
 										exceptionType: OwfExceptionTypes.Validation)
-			} 
-			if (!preference.save()) 
+			}
+			if (!preference.save())
 			{
 			  	throw new OwfException (message: 'A fatal error occurred while trying to save a preference. Params: ' + params.toString(),
 										exceptionType: OwfExceptionTypes.Database)
-			} 
+			}
 			return [success: true, preference: preference]
 		} else {
-		  	throw new OwfException(	message:'A fatal validation error occurred during the updating of a preference. Params: ' + params.toString(), 
+		  	throw new OwfException(	message:'A fatal validation error occurred during the updating of a preference. Params: ' + params.toString(),
 									exceptionType: OwfExceptionTypes.Validation)
 		}
 	}
-    
+
     //  TODO: refactor this out when we have time.  I don't like this logic here
     //      potentially a createListCriteriaFromJSONParams or something in the Service
     //      or a static translation of json param to database fields in the domain

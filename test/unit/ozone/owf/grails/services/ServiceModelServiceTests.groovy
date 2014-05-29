@@ -146,7 +146,6 @@ class ServiceModelServiceTests extends GrailsUnitTestCase {
     	widgetDefinition.width = 200
     	widgetDefinition.height = 200
     	widgetDefinition.personWidgetDefinitions = []
-        widgetDefinition.metaClass.getTags = { [] }
 
 	    def serviceModel = serviceModelService.createServiceModel(widgetDefinition)
 

@@ -13,7 +13,6 @@ class PersonWidgetDefinitionServiceModel extends AbstractServiceModel implements
     Boolean editable = true
     Boolean disabled = false
     List groups = []
-    List tagLinks = []
 
     Map toDataMap() {
         return [
@@ -45,7 +44,6 @@ class PersonWidgetDefinitionServiceModel extends AbstractServiceModel implements
                 maximized: false,
                 widgetVersion: this.widgetDefinition.widgetVersion,
                 groups: groups*.toDataMap(),
-                tags: tagLinks*.toDataMap(),
                 definitionVisible: this.widgetDefinition?.visible,
                 singleton: this.widgetDefinition?.singleton,
                 background: this.widgetDefinition?.background,

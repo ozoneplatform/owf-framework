@@ -17,15 +17,15 @@ databaseChangeLog = {
   changeSet(author: "owf", id: "3.8.0-1", dbms: "mssql", context: "create, upgrade, 3.8.0") {
     dropNotNullConstraint(columnName: "user_id", columnDataType:"numeric(19,0)", tableName: "dashboard")
   }
-  
+
   //Added description column into Dashboard Table
-  changeSet(author: "owf", id: "3.8.0-2", context: "create, upgrade, 3.8.0") {
+  changeSet(author: "owf", id: "3.8.0-2", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 3.8.0") {
       comment(text="Added description column into Dashboard Table")
 	  addColumn(tableName: "dashboard"){
 		  column(name: "description", type: "varchar(255)")
 	  }
   }
-  
+
   changeSet(author: "owf", id: "3.8.0-3", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 3.8.0") {
 	  addColumn(tableName: "dashboard"){
 		  column(name: "created_by_id", type: "bigint")
@@ -45,11 +45,11 @@ databaseChangeLog = {
 	  }
   }
 
-  changeSet(author: "owf", id: "3.8.0-4", context: "create, upgrade, 3.8.0") {
+  changeSet(author: "owf", id: "3.8.0-4", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 3.8.0") {
       addForeignKeyConstraint(baseColumnNames: "created_by_id", baseTableName: "dashboard", constraintName: "FKC18AEA94372CC5A", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
   }
 
-  changeSet(author: "owf", id: "3.8.0-5", context: "create, upgrade, 3.8.0") {
+  changeSet(author: "owf", id: "3.8.0-5", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 3.8.0") {
       addForeignKeyConstraint(baseColumnNames: "edited_by_id", baseTableName: "dashboard", constraintName: "FKC18AEA947028B8DB", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
   }
 
