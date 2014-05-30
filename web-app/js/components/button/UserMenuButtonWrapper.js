@@ -279,11 +279,6 @@ Ext.define('Ozone.components.button.UserMenuButtonWrapper', {
                         me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceUserProfile');
                     }
                 },{
-                    itemText: 'Themes',
-                    handler: function () {
-                        me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceThemes');
-                    }
-                },{
                     itemText: 'Create Listing',
                     handler: function () {
                         me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceCreateListing');
