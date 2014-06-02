@@ -142,29 +142,6 @@ div.app_config_map_row{
     width: 340px;
 }
 
-
-.app_config_item_value_yes {
-    background-image: theme-image($theme-name, 'icons/toggle_icons/on-active_off-up.png');
-    background-repeat:  no-repeat;
-    width: 8%;
-    height:25px;
-    cursor: hand;
-    cursor: pointer;
-    min-width: 50%;
-    max-width: 50%;
-}
-
-.app_config_item_value_no {
-    background-image: theme-image($theme-name, 'icons/toggle_icons/on-up_off-active.png');
-    background-repeat:  no-repeat;
-    width: 8%;
-    height:25px;
-    cursor: hand;
-    cursor: pointer;
-    min-width: 50%;
-    max-width: 50%;
-}
-
 .app_config_text_area{
     min-width: 300px;
     width: 300px;
