@@ -1,12 +1,13 @@
 ;(function () {
     require.config({
-        //urlArgs : "bust=" + Marketplace.getBuildNumber(),   
+        //urlArgs : "bust=" + Marketplace.getBuildNumber(),
         paths: {
             "jquery"                : "../../../../js-lib/jquery/jquery-1.8.0",
             "underscore"            : "../../../../js-lib/underscore/underscore-1.4.4",
             "backbone"              : "../../../../js-lib/backbone/backbone-1.0.0",
-            "pnotify"               : '../../../../js-lib/pnotify-1.2.0/jquery.pnotify'
-        },  
+            "pnotify"               : '../../../../js-lib/pnotify-1.2.0/jquery.pnotify',
+            "bootstrap"             : '../../../../js-lib/bootstrap/bootstrap-2.3.2'
+        },
         shim: {
             underscore: {
                 exports: '_'
@@ -20,13 +21,18 @@
                 exports: 'jqueryui'
             },
             pnotify: {
-                deps: ["jquery"]
+                deps: ["jquery"],
+                exports: "$"
+            },
+            bootstrap: {
+                deps: ["jquery"],
+                exports: "$"
             }
         }
     });
 
     function init () {
-        jQuery(function(){ 
+        jQuery(function(){
             var $ = jQuery;
             var $menuItems = $('.app_config_menu .item');
 
@@ -47,7 +53,7 @@
     ], function(Router, Collection, Errors, $, _, Backbone){
 
         init();
-        
+
         $.ajaxSetup({
             cache: false
         });
@@ -60,7 +66,7 @@
         var app_router = new Router();
         //Start Backbone history a necessary step for bookmarkable URL's
         Backbone.history.start();
-         
+
     });
 
 })();
