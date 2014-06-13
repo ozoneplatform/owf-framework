@@ -7,15 +7,25 @@ Ext.define('Ozone.components.marketplace.MarketplaceLauncher', {
     marketplaceWidget: null,
     keyboard: null,
     multipleMarketplaces: null,
-    mpDashboardName: "Apps Mall",
+    mpDashboardName: 'Store',
 
     gotoMarketplace: function(marketplaceWidget, keyboard) {
         var me = this;
         var dashboardStore = me.dashboardContainer.dashboardStore;
-        var dashboardInd = dashboardStore.findExact('name', this.mpDashboardName);
+
+        var dashboardInd = dashboardStore.findBy(function(model) {
+                var d = model.data || {};
+
+                // Check both properties to avoid collision with an
+                // arbitrary dashboard
+                return d.name === me.mpDashboardName &&
+                       d.type === 'marketplace';
+            });
+
         me.dashboard = (dashboardInd >=0 ) && dashboardStore.getAt(dashboardInd);
+
         if (marketplaceWidget) {
-            // If we know which marketplace to go to, just go there
+            // If we know which Marketplace to go to, just go there
             me.multipleMarketplaces = false;
             me.launch(marketplaceWidget, keyboard);
         } else {
@@ -108,10 +118,17 @@ Ext.define('Ozone.components.marketplace.MarketplaceLauncher', {
 
     createMarketplaceDashboardAndLaunch: function() {
         var me = this;
+
+        // Create a single App page for this user to display the visited
+        // Marketplace(s). When said page is saved below it will be
+        // persisted to a new "hidden" App/Stack for this user. Code in the
+        // StackService enforces the hiding (by not returning Stacks that
+        // only have 'marketplace' dashboards). The user will only have
+        // access to this dashboard via the DashboardService as it will
+        // effectively be a personal dashboard.
         me.dashboard = Ext.create('Ozone.data.Dashboard', {
-            name: this.mpDashboardName,
+            name: me.mpDashboardName,
             type: 'marketplace',
-            stackContext: 'store.ozone.org',
             layoutConfig : {
                 xtype: 'container',
                 flex: 1,
@@ -121,6 +138,7 @@ Ext.define('Ozone.components.marketplace.MarketplaceLauncher', {
                 widgets: []
             }
         });
+
         me.dashboardContainer.saveDashboard(me.dashboard.data, 'create', function(json) {
             if (json.guid) {
                 me.dashboard.set('guid', json.guid);

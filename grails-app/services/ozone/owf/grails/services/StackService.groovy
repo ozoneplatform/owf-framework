@@ -794,19 +794,10 @@ class StackService {
 
         Person currentUser = accountService.getLoggedInUser()
 
-        // check if the stack is the apps mall stack
-        boolean isMarketplaceApp = false
-        if (stackParams?.stackContext == 'store.ozone.org') {
-            stack = Stack.findByStackContext('store.ozone.org')
-            stackId = stack?.id
-            isMarketplaceApp = true
-        }
-
         // If adding page to an existing stack, assure the user has permission to do so.
         if (stackId) {
             // only ensure it is admin or owner if not adding a marketplace page
-            if (!isMarketplaceApp)
-                ensureAdminOrOwner(stackId)
+            ensureAdminOrOwner(stackId)
 
             stack = Stack.get(stackId)
         } else {

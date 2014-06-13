@@ -825,7 +825,7 @@ Ozone.pref = Ozone.pref || {};
            */
           createOrUpdateDashboard : function (cfg){
               // New dashboard is added to its stack, existing dashboard is updated
-              if (cfg.saveAsNew /*&& cfg.json.type != 'marketplace'*/) {
+              if (cfg.saveAsNew) {
                   this.createDashboardWithStack(cfg);
               } else {
                   this.createOrUpdateDashboardInternal(cfg);
