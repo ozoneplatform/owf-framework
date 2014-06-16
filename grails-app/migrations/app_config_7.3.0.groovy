@@ -32,9 +32,9 @@ databaseChangeLog = {
         [
             [code: "owf.enable.cef.logging", type: "Boolean", mutable: true, value: "true"],
             [code: "owf.enable.cef.object.access.logging", type: "Boolean", mutable: true, value: "false"],
-            [code: "owf.cef.sweep.log.location", type: "Boolean", mutable: true, value: "true"],
+            [code: "owf.enable.cef.log.sweep", type: "Boolean", mutable: true, value: "true"],
             [code: "owf.cef.log.location", type: "String", mutable: true, value: "/usr/share/tomcat6"],
-            [code: "owf.enable.cef.log.sweep", type: "String", mutable: true, value: "/var/log/cef"],
+            [code: "owf.cef.sweep.log.location", type: "String", mutable: true, value: "/var/log/cef"],
             [code: "owf.security.level", type: "String", mutable: true]
         ].eachWithIndex{ appConfig, index -> doConfigInsert(appConfig, "AUDITING", null, index+1) }
 
