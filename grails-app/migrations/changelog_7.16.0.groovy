@@ -1,5 +1,5 @@
 databaseChangeLog = {
-    fixCefSweepConfigs = {
+    def fixCefSweepConfigs = {
         update(tableName: "application_configuration") {
             column(name: "type", value: "String")
             column(name: '${appconfig.valColumn}', value: "/var/log/cef")
