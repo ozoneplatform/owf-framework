@@ -483,13 +483,15 @@ class StackService {
     }
 
     boolean userAssignedToStackThroughGroup(Stack stack, Person user) {
-        Set<Group> groups = []
-        groups.addAll(stack.groups)
+        Set<Group> groups = [stack.defaultGroup]
+        if(stack.groups) {
+            groups.addAll(stack.groups)
+        }
         groups.add(groupService.allUsersGroup)
         if (accountService.isUserAdmin(user)) groups.add(groupService.allAdminsGroup)
 
         groups.find { Group group ->
-            group.people?.contains(user)
+            group?.people?.contains(user)
         } as boolean
     }
 
@@ -556,7 +558,7 @@ class StackService {
         // Remove the default stack group
         Group defaultStackGroup = stack?.defaultGroup
         if (defaultStackGroup) {
-            stack.removeFromGroups(defaultStackGroup);
+            stack.defaultGroup = null
             stack.save()
             groupService.delete(["data": "{id: ${defaultStackGroup.id}}"])
         }

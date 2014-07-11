@@ -19,9 +19,9 @@ class Person implements Serializable {
 
     String username
     String userRealName
-    Boolean enabled
+    Boolean enabled = true
     String email
-    Boolean emailShow
+    Boolean emailShow = false
     String description = ''
     Date lastLogin
     Date prevLogin
@@ -109,11 +109,10 @@ class Person implements Serializable {
     @Timed
     public Set<Group> getGroupsToSync() {
         Set<Group> groups = this.groups as Set
-        groups.addAll(this.groups*.stacks*.defaultGroup.flatten())
+        groups.addAll(this.groups*.stacks*.defaultGroup?.flatten())
         groups.addAll(Group.findSystemGroups())
         groups.addAll(Group.findSystemStackDefaultGroups())
 
-        // TODO: figure out why a null group exists
         groups = groups - null
 
         return groups ?: new HashSet<Group>()

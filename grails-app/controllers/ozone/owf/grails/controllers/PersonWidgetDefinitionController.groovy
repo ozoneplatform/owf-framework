@@ -14,7 +14,6 @@ class PersonWidgetDefinitionController extends BaseOwfRestController {
     def personWidgetDefinitionService
     def widgetDefinitionService
     def accountService
-    def serviceModelService
 
     def modelName = 'personWidgetDefinition'
 

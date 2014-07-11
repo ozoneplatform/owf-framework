@@ -109,6 +109,7 @@ class DashboardService extends BaseService {
 
     private def processGroupDashboards(groups, Person person) {
         def privateGroupDashboardToGroupsMap = [:]
+        groups = groups - null
 
         def maxPosition = 0
         if (person != null) {
@@ -246,7 +247,7 @@ class DashboardService extends BaseService {
         // Or stack default groups for stacks associated with the all users group.
         def stackDefaultGroups = []
         if (params.user != null) {
-            stackDefaultGroups = params.user.stackDefaultGroups
+            stackDefaultGroups = (params.user as Person).groups*.stacks*.defaultGroup?.flatten()
         }
 
         //get groups
@@ -339,10 +340,10 @@ class DashboardService extends BaseService {
 
         //process any groupDashboards for this user
         def privateGroupDashboardToGroupsMap = [:]
-        if (!stackDefaultGroups.isEmpty()) {
+        if (stackDefaultGroups && !stackDefaultGroups.isEmpty()) {
             privateGroupDashboardToGroupsMap = processGroupDashboards((groups << stackDefaultGroups).flatten(),params.user)
         } else {
-            privateGroupDashboardToGroupsMap = processGroupDashboards(groups,params.user)
+            privateGroupDashboardToGroupsMap = processGroupDashboards(groups, params.user)
         }
 
         //get group dashboards
@@ -1336,7 +1337,7 @@ class DashboardService extends BaseService {
      */
     def purgePersonalDashboards(Stack stack, Group group) {
 
-        Group stackDefaultGroup = stack.defaultGroup()
+        Group stackDefaultGroup = stack.defaultGroup
 
         // List of user who will be affected by the change (all group users who do not have direct access to the stack)
         Set<Person> users = (group.name == "OWF Users" || group.name == "OWF Administrators" ? new HashSet(Person.findAll()) : (group.people ? new HashSet(group.people) : new HashSet())) - stackDefaultGroup.people

@@ -30,10 +30,13 @@ class StackControllerTests extends OWFGroovyTestCase {
         assert owner != null
         assert owner.id != null
 
-        def stack1 = ozone.owf.grails.domain.Stack.build(name: 'Stack One', description: 'Stack One description', stackContext: 'one', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor', owner: owner)
-        stack1.addToGroups(Group.build(name: 'Group1', automatic: false, status: 'active', stackDefault: true))
-        def stack2 = ozone.owf.grails.domain.Stack.build(name: 'Stack Two', description: 'Stack Two description', stackContext: 'two', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor', owner: owner)
-        stack2.addToGroups(Group.build(name: 'Group2', automatic: false, status: 'active', stackDefault: true))
+        Stack stack1 = Stack.build(name: 'Stack One', description: 'Stack One description', stackContext: 'one', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor', owner: owner)
+        Group group1 = Group.build(name: 'Group1', automatic: false, status: 'active', stackDefault: true)
+        stack1.defaultGroup = group1
+
+        Stack stack2 = Stack.build(name: 'Stack Two', description: 'Stack Two description', stackContext: 'two', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor', owner: owner)
+        Group group2 = Group.build(name: 'Group2', automatic: false, status: 'active', stackDefault: true)
+        stack2.defaultGroup = group2
         stackIds = [stack1.id, stack2.id]
     }
 

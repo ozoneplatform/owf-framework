@@ -39,9 +39,17 @@ class StackServiceTests {
 
         def stack1 = Stack.build(name: 'Stack One', description: 'Stack One description', stackContext: 'one',
             imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
-        stack1.addToGroups(Group.build(name: 'Group1', automatic: false, status: 'active', stackDefault: true))
+        stack1.defaultGroup = Group.build(name: 'Group1', automatic: false, status: 'active', stackDefault: true)
+        stack1.save()
+
         def stack2 = Stack.build(name: 'Stack Two', description: 'Stack Two description', stackContext: 'two', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
+        stack2.defaultGroup = Group.build(name: 'Group2', automatic: false, status: 'active', stackDefault: true)
+        stack2.save()
+
         def stack3 = Stack.build(name: 'Stack Three', description: 'Stack Three description', stackContext: 'three', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
+        stack3.defaultGroup = Group.build(name: 'Group3', automatic: false, status: 'active', stackDefault: true)
+        stack3.save()
+
         stackIds = [stack1.id, stack2.id, stack3.id]
 
         group = Group.build(name: 'Test Group', automatic: false, status: 'active', stackDefault: false)

@@ -262,10 +262,6 @@ public class UrlMappingsTests {
 		}
 	}
 
-	void testWidgetListMapping()  {
-		assertForwardUrlMapping('/prefs/widgetList', controller:'personWidgetDefinition', action:'widgetList')
-	}
-
 	/**
 	 *
 	 * Integration Tests For Url Mappings To Dashboard

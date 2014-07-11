@@ -139,7 +139,8 @@ class WidgetDefinitionServiceTests {
 
         def stack1 = Stack.build(name: 'Stack One', description: 'Stack One description', stackContext: 'one',
                 imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
-        stack1.addToGroups(Group.build(name: 'Group1', automatic: false, status: 'active', stackDefault: true))
+        stack1.defaultGroup = Group.build(name: 'Group1', automatic: false, status: 'active', stackDefault: true)
+        stack1.save()
 
         def stackDashboard1 = Dashboard.build(alteredByAdmin: false, guid: '12345678-1234-1234-1234-123456789000',
                 locked: false, isdefault: false, name: 'Stack Dashboard1', layoutConfig: """{
