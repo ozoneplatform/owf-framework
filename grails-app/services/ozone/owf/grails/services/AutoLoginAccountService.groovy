@@ -23,7 +23,7 @@ public class AutoLoginAccountService extends AccountService {
     def getLoggedInUsername() {
         autoAccountName
     }
-	
+
 	def getLoggedInUserDisplayName(){
 		return autoAccountDisplayName
 	}
@@ -36,7 +36,8 @@ public class AutoLoginAccountService extends AccountService {
     }
 
     def getLoggedInUserIsUser() {
-        getLoggedInUserRoles().contains ERoleAuthority.ROLE_USER.strVal
+        def roles = getLoggedInUserRoles()
+        roles.contains(ERoleAuthority.ROLE_USER.strVal) || roles.contains(ERoleAuthority.ROLE_ADMIN.strVal)
     }
 
     def getLoggedInUserRoles() {

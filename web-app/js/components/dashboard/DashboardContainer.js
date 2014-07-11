@@ -916,7 +916,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             }
 
             // update Ext Store
-            me.widgetStore.loadRecords(me.widgetStore.proxy.reader.read(resp.rows).records);
+            me.widgetStore.loadRecords(me.widgetStore.proxy.reader.read(resp.data).records);
 
             dfd.resolve();
         });
@@ -2209,33 +2209,6 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     setupDashboardChangeListeners: function() {
         var me = this;
 
-        //retrieve all groups associated with dashboards and stacks to which this
-        //user has access
-        //@param getIds set to true to get a list of ids instead of names
-
-        function getAllDashboardGroups(getIds) {
-            //flatten the array and remove duplicates
-            return Ext.Array.unique(Ext.Array.flatten(
-
-            //get an array of arrays of names of groups associated with dashboards
-            //and stacks
-            Ext.Array.map(me.dashboardStore.data.getRange(), function(dash) {
-                var stack = dash.get('stack'),
-                    stackGroups = stack && stack.groups || [],
-                    groups = dash.get('groups') || [];
-
-                //get the name from a group
-
-                function getGroupValue(group) {
-                    return group[getIds ? 'id' : 'name'];
-                }
-
-                //get names of dashboard groups and stack groups
-                return Ext.Array.map(groups, getGroupValue)
-                    .concat(Ext.Array.map(stackGroups, getGroupValue));
-            })));
-        }
-
         //WARNING: If, at some point in the future, there is a need in
         //some other place to receive AdminChannel info, care will need to be taken
         //not to override this listener
@@ -2244,50 +2217,19 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             //stack or group dashboard editor used to assign to a user or group
             if (Ext.Array.contains(['Stack', 'Dashboard'], msg.domain)) {
                 var records = msg.action.resultSet.records,
-                    userGroups = getAllDashboardGroups(),
                     type = msg.action.params.tab,
 
                     //see if affected records include the current user
-                    affectsUser =
-                        type === 'users' &&
-                        Ext.Array.some(records, function(record) {
-                        return record.get('username') === Ozone.config.user.displayName;
-                    }),
-
-                    //see if the affected records include any groups that the current user is
-                    //a member of
-                    affectsUserGroups =
-                        type === 'groups' &&
-                        Ext.Array.some(records, function(record) {
-                        //it appears that these group records are not constructed correctly,
-                        //but the necessary data is still available 'raw'
-                        var name = record.raw.name || record.raw.data[0].name || null;
-
-                        //return Ext.Array.contains(userGroups, record.get('name'));
-                        return Ext.Array.contains(userGroups, name);
-                    });
+                    affectsUser = type === 'users' && Ext.Array.some(records, function(record) {
+                                    return record.get('username') === Ozone.config.user.displayName;
+                                });
 
                 //if it is detected that a dashboard or stack may have been added removed from
                 //the current user, refresh the dashboards.
-                if (affectsUser || affectsUserGroups) {
+                if (affectsUser) {
                     me.dashboardsNeedRefresh = true;
                 }
             }
-
-            ////User editor used to assign a dashboard or stack
-            //else if (msg.domain === 'User') {
-            //if (msg.action.params.user_id === Ozone.config.user.id && //is it the current user
-            //(msg.action.request.url.indexOf('dashboard') === 1 || //is it a dashboard? ('tab' is not available in the case)
-            //msg.action.params.tab === 'stacks')) { //is it a stack
-            //me.dashboardsNeedRefresh = true;
-            //}
-            //}
-            //else if (msg.domain === 'Group') {
-            //if (Ext.Array.contains(getAllDashboardGroups(true), msg.action.params.group_id) && //a group that we care about was modified
-            //Ext.Array.contains(['dashboards', 'stacks'], msg.action.params.tab)) {   //a dashboard or stack was added or removed from the group
-            //me.dashboardsNeedRefresh = true;
-            //}
-            //}
         });
     },
 

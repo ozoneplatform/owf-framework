@@ -1,7 +1,7 @@
 package ozone.owf.grails.services
 
 import grails.converters.*;
-
+import org.grails.plugins.metrics.groovy.Timed
 import org.hibernate.transform.DistinctRootEntityResultTransformer;
 
 import ozone.owf.grails.OwfException
@@ -10,8 +10,6 @@ import ozone.owf.grails.domain.PersonWidgetDefinition
 import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.Group
-import ozone.owf.grails.domain.Stack
-
 import org.hibernate.CacheMode
 import ozone.owf.grails.domain.RelationshipType
 
@@ -132,26 +130,14 @@ class PersonWidgetDefinitionService {
         return [success: true, personWidgetDefinitionList: personWidgetDefinitionList, count: PersonWidgetDefinition.count()]
     }
 
-    def list (params) {
+    def list (params = [:]) {
         def opts = [:]
 
         if (params?.offset != null) opts.offset = (params.offset instanceof String ? Integer.parseInt(params.offset) : params.offset)
         if (params?.max != null) opts.max =(params.max instanceof String ? Integer.parseInt(params.max) : params.max)
 
         def person = accountService.getLoggedInUser()
-
-        // Get stack default groups associated to the user.
-        def stackDefaultGroups = []
-        def stacks = Stack.withCriteria {
-            groups {
-                people {
-                    eq('id',person.id)
-                }
-            }
-            cache(true)
-            cacheMode(CacheMode.GET)
-        }
-        stackDefaultGroups = stacks.collect { it.findStackDefaultGroup() }
+        Set<Group> stackDefaultGroups = person.stackDefaultGroups
 
         // Get non stack default groups that contain this user.
         def groups = Group.withCriteria {
@@ -173,7 +159,7 @@ class PersonWidgetDefinitionService {
             groups = groups << allUsersGroup
 
             // If the users group contained stacks, add their default groups.
-            def allUsersStackGroups = allUsersGroup?.stacks?.collect{ it.findStackDefaultGroup() }
+            def allUsersStackGroups = allUsersGroup?.stacks?.collect{ it.defaultGroup }
             if (allUsersStackGroups) {
                 groups = (groups << allUsersStackGroups).flatten()
             }
@@ -188,7 +174,7 @@ class PersonWidgetDefinitionService {
                 groups = groups << allAdminsGroup
 
                 // If the admin group contained stacks, add their default groups
-                def allAdminStackGroups = allAdminsGroup?.stacks?.collect{ it.findStackDefaultGroup() }
+                def allAdminStackGroups = allAdminsGroup?.stacks?.collect{ it.defaultGroup }
                 if (allAdminStackGroups) {
                     groups = (groups << allAdminStackGroups).flatten()
                 }
@@ -198,11 +184,12 @@ class PersonWidgetDefinitionService {
         // Generate a combined group list.
         groups = (groups << stackDefaultGroups).flatten()
 
-        def queryReturn = PersonWidgetDefinition.executeQuery("SELECT MAX(pwd.pwdPosition) AS retVal FROM PersonWidgetDefinition pwd WHERE pwd.person = ?", [person])
-        def maxPosition = (queryReturn[0] != null)? queryReturn[0] : -1
+        Integer maxPosition = getMaxPosition(person)
 
         //loop through groups and save group widgets for this user
         def groupWidgetsToTagsMap = [:]
+
+        groups = groups - null
 
         groups.each { group ->
             def groupWidgets = domainMappingService.getMappedObjects(group, RelationshipType.owns, WidgetDefinition.TYPE)
@@ -276,17 +263,17 @@ class PersonWidgetDefinitionService {
                         userWidget: false,
                         //only this method will ever set this groupWidget flag to true
                         groupWidget: true
-                        )
+                )
 
                 personWidgetDefinition.validate()
 
                 if (personWidgetDefinition.hasErrors()) {
                     throw new OwfException(message: 'A fatal validation error occurred during the creation of a widget.' + personWidgetDefinition.errors.toString(),
-                    exceptionType: OwfExceptionTypes.Validation)
+                            exceptionType: OwfExceptionTypes.Validation)
                 }
                 else if (!personWidgetDefinition.save()) {
                     throw new OwfException(message: 'A fatal error occurred while trying to save a widget. Params: ' + params.toString(),
-                    exceptionType: OwfExceptionTypes.Database)
+                            exceptionType: OwfExceptionTypes.Database)
                 }
             }
         }
@@ -371,16 +358,16 @@ class PersonWidgetDefinitionService {
             if(params.disabled) {
                 eq("disabled", params.disabled.toBoolean())
             }
-			if(params.widgetTypes){
-				def widgetTypeList = params.list('widgetTypes');
-				widgetDefinition {
-					widgetTypes {
-						widgetTypeList.each { widgetType ->
-							eq("name", widgetType)
-						}
-					}
-				}
-			}
+            if(params.widgetTypes){
+                def widgetTypeList = params.list('widgetTypes');
+                widgetDefinition {
+                    widgetTypes {
+                        widgetTypeList.each { widgetType ->
+                            eq("name", widgetType)
+                        }
+                    }
+                }
+            }
             if(params.intent) {
                 widgetDefinition {
                     if(JSON.parse(params.intent).action) {
@@ -479,8 +466,7 @@ class PersonWidgetDefinitionService {
             //else you are allowed if you are creating a pwd for yourself
         }
 
-        def queryReturn = PersonWidgetDefinition.executeQuery("SELECT MAX(pwd.pwdPosition) AS retVal FROM PersonWidgetDefinition pwd WHERE pwd.person = ?", [person])
-        def maxPosition = (queryReturn[0] != null)? queryReturn[0] : -1
+        Integer maxPosition = getMaxPosition(person)
         maxPosition++
 
         def wd =  WidgetDefinition.findByWidgetGuid(params.guid);
@@ -707,6 +693,46 @@ class PersonWidgetDefinitionService {
             def result = delete(newParams)
         }
         return [success: true]
+    }
+
+    def bulkAssignMultipleWidgetsForSingleUser(user, shouldHave = [], shouldNotHave = []) {
+        if (!user) { return }
+
+        def toCreate = []
+        def toDelete = []
+
+        if (shouldHave) {
+            def hasAlready = PersonWidgetDefinition.withCriteria {
+                eq('person', user)
+                'in'('widgetDefinition', shouldHave)
+                projections {
+                    property('widgetDefinition')
+                }
+            }
+            toCreate.addAll(shouldHave)
+            toCreate.removeAll(hasAlready)
+        }
+
+        if (shouldNotHave) {
+            toDelete.addAll(PersonWidgetDefinition.withCriteria {
+                eq('person', user)
+                'in'('widgetDefinition', shouldNotHave)
+                projections {
+                    property('widgetDefinition')
+                }
+            })
+        }
+
+        def newParams = [personId: user.id, adminEnabled: false]
+        toCreate.each {
+            newParams.guid = it.widgetGuid
+            create(newParams)
+        }
+
+        toDelete.each {
+            newParams.guid = it.widgetGuid
+            delete(newParams)
+        }
     }
 
     //use this !!
@@ -945,5 +971,99 @@ class PersonWidgetDefinitionService {
         }
 
         return [success: true, data: processedWidgets]
+    }
+
+    List<PersonWidgetDefinition> myWidgets (Person person) {
+        PersonWidgetDefinition.findAllByPerson(person)
+    }
+
+    Integer getMaxPosition (Person person) {
+        List queryReturn = PersonWidgetDefinition.executeQuery("SELECT MAX(pwd.pwdPosition) AS retVal FROM PersonWidgetDefinition pwd WHERE pwd.person = ?", [person])
+        !queryReturn.isEmpty() ? queryReturn.get(0)?: -1 : -1
+    }
+
+    @Timed
+    void sync (Person person) {
+        Set<Group> groups = person.groupsToSync
+
+        List<WidgetDefinition> groupWidgets = domainMappingService.getBulkMappedObjects(groups, RelationshipType.owns, WidgetDefinition.TYPE)
+
+        List<PersonWidgetDefinition> personWidgetDefinitions = myWidgets(person)
+
+        List<PersonWidgetDefinition> groupPersonWidgetDefinitions = personWidgetDefinitions.findAll { PersonWidgetDefinition pw ->
+            pw.groupWidget == true
+        }
+
+        List<PersonWidgetDefinition> directAssignedPersonWidgetDefinitions = personWidgetDefinitions.findAll { PersonWidgetDefinition pw ->
+            pw.groupWidget == false
+        }
+
+        // diff group widgets and group person widgets
+        groupPersonWidgetDefinitions.each { PersonWidgetDefinition pwd ->
+            // copy is already created, remove so it isn't processed later.
+            if (groupWidgets.indexOf(pwd.widgetDefinition) > -1) {
+                groupWidgets.remove(pwd.widgetDefinition)
+            }
+            // user has a copy of a group widget but it is not in that group any more.
+            else {
+                // delete pwd if a group widget is no longer in a group and user is not directly associated to it.
+                if (!pwd.userWidget) {
+                    delete([
+                        personWidgetDefinition: pwd,
+                        guid: pwd.widgetDefinition.widgetGuid
+                    ])
+                    personWidgetDefinitions.remove(pwd)
+                }
+                else {
+                    // Just remove the group association from the pwd
+                    pwd.groupWidget = false
+                    pwd.save(flush:true)
+                }
+            }
+        }
+
+        // create person widget definitions for new group widgets that person doesn't have access to
+        if(groupWidgets.size() > 0) {
+            Integer maxPosition
+
+            //loop through the group widgets that are to be processed, new group widgets
+            groupWidgets.each { WidgetDefinition widgetDefinition ->
+
+                //lookup pwd this may have been previously created
+                boolean copyNotFound = directAssignedPersonWidgetDefinitions.findAll { it.widgetDefinition == widgetDefinition }.isEmpty()
+                PersonWidgetDefinition personWidgetDefinition
+
+                //if the pwd does not exist create it
+                if (copyNotFound == true) {
+                    if (maxPosition == null) {
+                        maxPosition = getMaxPosition(person)
+                    }
+                    personWidgetDefinition = new PersonWidgetDefinition(
+                        person: person,
+                        widgetDefinition: widgetDefinition,
+                        pwdPosition: maxPosition++,
+                        visible: true,
+                        favorite: false,
+                        userWidget: false,
+                        //only this method will ever set this groupWidget flag to true
+                        groupWidget: true
+                    )
+
+                    personWidgetDefinition.validate()
+
+                    if (personWidgetDefinition.hasErrors()) {
+                        throw new OwfException(message: 'A fatal validation error occurred during the creation of a widget.' + personWidgetDefinition.errors.toString(),
+                                exceptionType: OwfExceptionTypes.Validation)
+                    }
+                    else if (!personWidgetDefinition.save()) {
+                        throw new OwfException(message: 'A fatal error occurred while trying to save a widget. Params: ' + params.toString(),
+                                exceptionType: OwfExceptionTypes.Database)
+                    }
+
+                    // add to our internal list so we don't have to fetch all person widget definitions again
+                    personWidgetDefinitions.add(personWidgetDefinition)
+                }
+            }
+        }
     }
 }

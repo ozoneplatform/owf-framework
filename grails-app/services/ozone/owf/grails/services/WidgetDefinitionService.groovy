@@ -40,14 +40,14 @@ class WidgetDefinitionService {
         if(params?.stack_id > -1) {
             def widgetGuids = []
             def stack = Stack.findById(params?.stack_id)
-            def stackDefaultGroup = stack.findStackDefaultGroup()
+            def stackDefaultGroup = stack.defaultGroup
             //If no stackDefaultGroup return no results, no widgets can belong to the stack
             if(!stackDefaultGroup) {
                 return [success: true, results: 0, data: []]
             }
 
             // List the dashboards of the stack's default group
-            def dashboards = domainMappingService.getMappings(stack.findStackDefaultGroup(),RelationshipType.owns,Dashboard.TYPE)?.collect{
+            def dashboards = domainMappingService.getMappings(stack.defaultGroup,RelationshipType.owns,Dashboard.TYPE)?.collect{
                 Dashboard.get(it.destId)
             }
 
@@ -564,6 +564,8 @@ class WidgetDefinitionService {
                     else if (params.update_action == 'remove') {
                         domainMappingService.deleteMapping(group, RelationshipType.owns, widgetDefinition)
                     }
+
+                    group.syncPeople()
                     updatedGroups << group
                 }
             }

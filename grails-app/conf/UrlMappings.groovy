@@ -251,8 +251,6 @@ class UrlMappings {
 
         "/prefs/widget/listUserAndGroupWidgets" ( controller:'personWidgetDefinition', action:'listUserAndGroupWidgets' )
 
-        "/prefs/widgetList" ( controller:'personWidgetDefinition', action:'widgetList' )
-
         "/widget/hasMarketplace" ( controller: 'widgetDefinition', action: 'hasMarketplace')
 
         // Mapping for dashboard objects
@@ -498,6 +496,21 @@ class UrlMappings {
         "/messages" {
             controller = "messages"
             action=[GET:"list"]
+        }
+
+        '/person/me' {
+            controller = 'person'
+            action = [GET: 'myData']
+        }
+
+        '/person/me/widget' {
+            controller = 'personWidgetDefinition'
+            action = [GET: 'myWidgets']
+        }
+
+        '/person/me/dashboard' {
+            controller = 'dashboard'
+            action = [GET: 'myDashboards']
         }
 
     }

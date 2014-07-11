@@ -1,5 +1,6 @@
 package ozone.owf.grails.domain
 
+import org.hibernate.FetchMode
 import org.hibernate.proxy.HibernateProxy
 
 class Group implements Serializable{
@@ -7,22 +8,29 @@ class Group implements Serializable{
     static String TYPE = 'group'
     static final long serialVersionUID = 700L
 
+    static final String USERS = 'OWF Users'
+    static final String ADMINS = 'OWF Administrators'
+
     String name
     String displayName
     String description = ''
     String email
     Boolean automatic = false
-    Boolean stackDefault = false
     String status = 'active'
+    Boolean stackDefault = false
 
-    static belongsTo = [Stack]
-    static hasMany = [people: Person, stacks: Stack]
+    static hasMany = [
+        people: Person,
+        stacks: Stack
+    ]
+
+    static belongsTo = Stack
 
     static mapping = {
         table 'owf_group'
         cache true
-        people(lazy: true, cache: true)
-        stacks(lazy: true, cache: true)
+        people lazy: true, cache: true
+        batchSize: 25
     }
 
     static constraints = {
@@ -41,6 +49,45 @@ class Group implements Serializable{
         }
         else {
             false
+        }
+    }
+
+    public static List<String> systemGroups () {
+        def accountService = new Group().domainClass.grailsApplication.mainContext.accountService
+        accountService.getLoggedInUserIsAdmin() ? [USERS, ADMINS]: [USERS]
+    }
+
+
+    public static Set<Group> findSystemGroups() {
+        Group.withCriteria {
+            and {
+                'in' ('name', systemGroups())
+                'eq' ('automatic', true)
+            }
+            cache(true)
+        } as Set
+    }
+
+    public static Set<Group> findSystemStackDefaultGroups() {
+        Stack.withCriteria {
+            groups {
+                'in' ('name', systemGroups())
+                'eq' ('automatic', true)
+            }
+
+            fetchMode('defaultGroup', FetchMode.JOIN)
+        }*.defaultGroup as Set
+    }
+
+    /**
+    *
+    * Update people that belong to the group for requiring sync when they login next time.
+    *
+    **/
+    public void syncPeople () {
+        this.people.each { Person p ->
+            p.requiresSync = true
+            p.save()
         }
     }
 

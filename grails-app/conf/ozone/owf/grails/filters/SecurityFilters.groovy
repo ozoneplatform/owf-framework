@@ -1,6 +1,9 @@
 package ozone.owf.grails.filters
 
-import org.apache.commons.lang.time.StopWatch
+import grails.util.Environment
+import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
+import org.codehaus.groovy.grails.web.util.WebUtils
+import org.grails.plugins.metrics.groovy.Timed
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import ozone.owf.grails.domain.*
@@ -9,324 +12,257 @@ import ozone.security.authentication.OWFUserDetailsImpl
 class SecurityFilters {
     def accountService
     def personWidgetDefinitionService
-    def widgetDefinitionService
+    def dashboardService
     def administrationService
-    def groupService
     def preferenceService
     def domainMappingService
-    def serviceModelService
     def grailsApplication
 
     def filters = {
         securityAll(controller:'index', action:'index') {
             before = {
-
-                log.debug("Entering SecurityFilter filters: before");
-
+                if (!accountService.getLoggedInUserIsUser()) {
+                    log.debug(accountService.getLoggedInUsername() + " does not have ROLE_USER role, erroring out with 401");
+                    response.sendError(401)
+                    return false
+                }
                 try {
-                    def username = accountService.getLoggedInUsername()
-                    def userDisplayName = accountService.getLoggedInUserDisplayName()
-                    StopWatch stopWatch
-
-                    //find the user (if possible) and stuff them into the session
-                    if (username == null) {
-                        log.debug("username is null, erroring out with 401");
-                        response.sendError(401)
-                        return false
-                    } else {
-
-                        log.debug("Username is " + username);
-
-                        if (log.isInfoEnabled()) {
-                            stopWatch = new StopWatch();
-                            stopWatch.start();
-                            log.info("SecurityFilter finding person");
-                        }
-                        def personInDB = Person.findByUsername(username, [cache:true])
-                        if (log.isInfoEnabled()) {
-                            stopWatch.stop();
-                            log.info("SecurityFilter found person in "+stopWatch);
-                        }
-
-                        if (!personInDB)
-                        {
-                            Person.withTransaction {
-                                log.info 'Adding New User to Database'
-                                //add user to DB since they don't exist
-                                personInDB = new Person(
-                                        username     : username,
-                                        userRealName : userDisplayName,
-                                        //passwd       : 'password',
-                                        lastLogin    : new Date(),
-                                        email        : accountService.getLoggedInUserEmail(),
-                                        emailShow    : false,
-                                        description  : '',
-                                        enabled      : true)
-
-                                if (log.isInfoEnabled()) {
-                                    stopWatch = new StopWatch();
-                                    stopWatch.start();
-                                    log.info("securityfilters.save new person");
-                                }
-                                personInDB.save(flush:true)
-                                setUserDefaults(username)
-                                if (log.isInfoEnabled()) {
-                                    stopWatch.stop();
-                                    log.info("securityfilters.saved new person"+stopWatch);
-                                }
-                            }
-                            session["savedLastLogin"] = true
-                        }
-                        session.personID = personInDB.id
-
-                        def sezzion = session
-                        // Last login value should exist if user has logged in before
-                        if(personInDB.lastLogin == null)
-                        {
-                            log.debug("Setting default lastlogin");
-                            personInDB.lastLogin = new Date()
-                        }
-
-                        //update last logged in if we haven't already done so and update name in case it changed (marriage, divorce etc)
-                        // The real name is the display name provided by the custom security module.
-                        if (!session["savedLastLogin"])
-                        {
-                            Person.withTransaction {
-                                personInDB.prevLogin = personInDB.lastLogin
-                                personInDB.lastLogin = new Date()
-
-                                if (userDisplayName != username)
-                                {
-                                    personInDB.userRealName = userDisplayName
-                                }
-                                if (log.isInfoEnabled())
-                                {
-                                    stopWatch = new StopWatch();
-                                    stopWatch.start();
-                                    log.info("securityfilters.save existing person");
-                                }
-                                personInDB.save(flush:true)
-                                if (log.isInfoEnabled())
-                                {
-                                    stopWatch.stop();
-                                    log.info("securityfilters.saved existing person"+stopWatch);
-                                }
-                            }
-                            session["savedLastLogin"] = true
-                        }
-
-                        // Add Admin Widgets if user is an admin
-                        loadAdminData(personInDB)
-
-                        // Check Automatic Groups and add/remove them as necessary
-                        if (!session["savedUserGroups"])
-                        {
-                            def newAutomaticUserGroups = accountService.getLoggedInAutomaticUserGroups()
-
-                            log.info("Analyzing New Automatic User Groups for " + username + " from Security Plugin--list size is " + newAutomaticUserGroups.size())
-
-                            // reset all the person's groups.  We'll update them in the end.
-                            Group.withTransaction {
-                                for ( newGroup in newAutomaticUserGroups )
-                                {
-                                    // check if the group already exists
-                                    def matches = Group.findAllByNameAndAutomatic(newGroup.getOwfGroupName(), true, [cache:true])
-                                    def myGroup
-                                    if (matches == null || matches?.size() == 0)
-                                    {
-                                        // add it
-                                        myGroup = new Group()
-                                        myGroup.people =[personInDB]
-                                        myGroup.properties = [
-                                                name: newGroup.getOwfGroupName(),
-                                                displayName: newGroup.getOwfGroupName(),
-                                                description: newGroup.getOwfGroupDescription(),
-                                                email: newGroup.getOwfGroupEmail(),
-                                                automatic: true,
-                                                status: newGroup.isActive() ? 'active' : 'inactive'
-                                        ]
-                                    }
-                                    else
-                                    {
-                                        // it already exists--update it rather than creating a new one
-                                        myGroup = matches[0]
-                                        myGroup.people << personInDB
-                                    }
-
-                                    myGroup.save(flush: true)
-                                }
-
-                                // retrieve all  groups assigned to the user--if an
-                                // automatic group has been removed from the security
-                                // plugin, the relationship must be removed from the OWF database
-                                def c = Group.createCriteria()
-                                def existingGroupAssignments = c.list{
-                                    eq('automatic',true)
-                                    people {
-                                        eq('username', username)
-                                    }
-
-                                    //Don't include the OWF group for administrators or users
-                                    ne('name', 'OWF Administrators')
-                                    ne('name', 'OWF Users')
-                                }
-
-                                // we must turn newAutomaticUserGroups into a map
-                                def newAutomaticUserGroupsMap = new HashMap()
-                                for(group in newAutomaticUserGroups) {
-                                    newAutomaticUserGroupsMap.put(group.getOwfGroupName(), group)
-                                }
-
-                                // search to see if any groups assigned to the user are
-                                // not in the list from the security plugin, now a map
-                                // called newAutomaticUserGroupsMap
-                                for(group in existingGroupAssignments)
-                                {
-                                    if(! newAutomaticUserGroupsMap.get(group.name))
-                                    {
-
-                                        // we must delete the user/group association in the database--remove the user and save the group.
-
-                                        def personToRemove
-                                        for(person in group.people)
-                                        {
-                                            if (person.username == username)
-                                            {
-                                                personToRemove = person
-                                                break
-                                            }
-                                        }
-                                        if( personToRemove != null )
-                                        {
-                                            def criteria = Person.createCriteria()
-                                            group.people = criteria.list{
-                                                groups {
-                                                    eq('id', group.id)
-                                                }
-                                            }
-
-                                            group.people = group.people - personToRemove
-                                            group.save()
-                                        }
-                                    }
-                                }
-                            }
-
-                            // now
-                            session["savedUserGroups"] = true
-                        }
-
-                        //verify they have and admin OR user role
-                        if(accountService.getLoggedInUserIsAdmin() || accountService.getLoggedInUserIsUser()){
-                            return true;
-                        }
-                        else{
-                            //println("401: NO ROLES!!")
-                            response.sendError(401)
-                            return false;
-                        }
-
-                    }
-                } catch (Exception e) {
-                    log.error e.getMessage();
-                    response.sendError(401);
-                    return false;
+                    setupPerson()
+                    createAutomaticGroupRecords()
+                    updateUserGroups()
+                    return true
+                }
+                catch (Exception e) {
+                    log.error e.getMessage()
+                    response.sendError(500)
+                    return false
                 }
             }
         }
-
-//        securityDashboardAdmin(controller:'dashboardAdmin', action:'*'){
-//            before = {
-//                if (! accountService.getLoggedInUserIsAdmin() ) {
-//                    redirect(controller: "dashboard")
-//                }
-//                return true;
-//            }
-//        }
-//        securityPersonAdmin(controller:'person', action:'*'){
-//            before = {
-//                def illegalActions = ["create", "delete", "save"]
-//
-//                if(actionName.equals("whoami")) {
-//                    // allow everyone to access this
-//                    return true
-//                } else if (! accountService.getLoggedInUserIsAdmin() && illegalActions.contains(actionName) ) {
-//                    //unauthorized if user is not admin or the action is illegal
-//                    //redirect(uri:"/")
-//                    response.sendError(401)
-//                    return false;
-//                }
-//                return true;
-//            }
-//
-//        }
-//        securityWidgetAdmin(controller:'widgetAdmin', action:'*'){
-//            before = {
-//                if (! accountService.getLoggedInUserIsAdmin() ) {
-//                    redirect(controller:"widget")
-//                }
-//                return true;
-//            }
-//
-//        }
     }
-    private void setUserDefaults(String username)
-    {
+
+    @Timed
+    private void setupPerson () {
+        def session = WebUtils.retrieveGrailsWebRequest().session
+        def username = accountService.getLoggedInUsername()
+        def userDisplayName = accountService.getLoggedInUserDisplayName()
+
+        def person = Person.findByUsername(username, [cache:true])
+        if (!person) {
+            Person.withTransaction {
+                person = new Person(
+                    username     : username,
+                    userRealName : userDisplayName,
+                    lastLogin    : new Date(),
+                    email        : accountService.getLoggedInUserEmail(),
+                    emailShow    : false,
+                    description  : '',
+                    enabled      : true,
+                    requiresSync : true
+                )
+
+                person.save(flush:true)
+                setUserDefaults(username)
+            }
+
+            session["savedLastLogin"] = true
+        }
+
+        // Last login value should exist if user has logged in before
+        if(person.lastLogin == null) {
+            person.lastLogin = new Date()
+        }
+
+        // update last logged in if we haven't already done so and update name in case it changed (marriage, divorce etc)
+        // The real name is the display name provided by the custom security module.
+        if (!session["savedLastLogin"]) {
+            Person.withTransaction {
+                person.prevLogin = person.lastLogin
+                person.lastLogin = new Date()
+
+                if (userDisplayName != username) {
+                    person.userRealName = userDisplayName
+                }
+                person.save(flush:true)
+            }
+            session["savedLastLogin"] = true
+        }
+
+        loadAdminData(person)
+        person
+    }
+
+    @Timed
+    private def createAutomaticGroupRecords() {
+        def userGroupNames = accountService.getLoggedInAutomaticUserGroups()*.owfGroupName
+
+        // Don't assume the user has any groups.  Monitoring agents might not
+        // have any and if the list is empty, the criteria query below will
+        // bomb.  Bail early....
+        if (!userGroupNames || userGroupNames.isEmpty()) {
+            return
+        }
+
+        def userGroupAttribs = [:]
+        accountService.getLoggedInAutomaticUserGroups().each {
+            userGroupAttribs.put(it.owfGroupName, [email: it.owfGroupEmail, desc: it.owfGroupDescription])
+        }
+
+        def existingGroupNames = Group.withCriteria {
+            'in'('name', userGroupNames)
+            projections {
+                property('name')
+            }
+        }
+        userGroupNames.removeAll(existingGroupNames)
+
+        // Now that we have the list of existing group names among those
+        // that belong to the user, remove that list and focus on the ones
+        // that don't yet exist.
+        //
+        // NOTE: make sure to keep people initialized as an empty list or you'll
+        // be hating life later when you go to add the current user to the group
+        // -- you'll get NPE.
+        userGroupNames.each {
+            try {
+                def group = new Group(
+                    name: it,
+                    displayName: it,
+                    description: userGroupAttribs.get(it).desc,
+                    email: userGroupAttribs.get(it).email,
+                    automatic: true,
+                    status: 'active',
+                    people: []
+                )
+                group.save(flush: true)
+            } catch (Exception e) {
+                // Chew.  We don't want the exception bubbling back.
+            }
+        }
+    }
+
+    @Timed
+    private void updateUserGroups () {
+        def session = WebUtils.retrieveGrailsWebRequest().session
+        if (session["savedUserGroups"]) {
+            return
+        }
+
+        def userGroupNames = accountService.getLoggedInAutomaticUserGroups()*.owfGroupName
+        def username = accountService.getLoggedInUsername()
+
+        try {
+            def personInDB = accountService.getLoggedInUser()
+
+            def groupsToRemove = Group.withCriteria {
+                eq('automatic', true)
+                people {
+                    eq('username', username)
+                }
+                not {
+                    'in'('name', userGroupNames)
+                }
+                projections {
+                    property('id')
+                }
+                cache false
+            }
+
+            // Adds are two-step:  find all the groups we have already and subtract
+            // them out of the list of group names, then find the groups
+            // corresponding to the remaining names and add those to the person.
+            def existingUserGroupNames = Group.withCriteria {
+                eq('automatic', true)
+                people {
+                    eq('username', username)
+                }
+                projections {
+                    property('name')
+                }
+                cache false
+            }
+            userGroupNames.removeAll(existingUserGroupNames)
+
+
+            // Find groups to assign to user
+            def groupsToCreate = []
+            if (!userGroupNames.isEmpty()) {
+                groupsToCreate = Group.withCriteria {
+                    eq('automatic', true)
+                    'in'('name', userGroupNames)
+                    projections {
+                        property('id')
+                    }
+                    cache false
+                }
+            }
+
+            // Now, we have a list of ids for groups we should remove and groups
+            // we should add. Since the owf_group_people table is not managed
+            // we're actually dropping to native SQL for the changes.
+            def hSession = AH.application.mainContext.sessionFactory.getCurrentSession()
+            def delQuery = "DELETE FROM owf_group_people WHERE person_id = ? AND group_id = ?"
+            def addQuery = "INSERT INTO owf_group_people (person_id, group_id) VALUES (?, ?)"
+            groupsToRemove.each {
+                hSession.createSQLQuery(delQuery)
+                        .setLong(0, personInDB.id)
+                        .setLong(1, it)
+                        .executeUpdate()
+            }
+            groupsToCreate.each {
+                hSession.createSQLQuery(addQuery)
+                        .setLong(0, personInDB.id)
+                        .setLong(1, it)
+                        .executeUpdate()
+            }
+            session["savedUserGroups"] = true
+        }
+        catch (Exception e) {
+            // Chew.  We don't want the exception bubbling back.
+            log.warn "failed to update groups for user ${username} in database, message: ${e.toString()}"
+        }
+    }
+
+    @Timed
+    private void setUserDefaults (String username) {
         Person.withTransaction {
             def newUser = Person.findByUsername(Person.NEW_USER, [cache:true])
             def oldAuthentication
-            try
-            {
+            try {
                 // temporarily give user admin privileges if they don't already have them so that
                 // we can safely call our services for setting the user defaults
-                oldAuthentication = SCH.context.authentication
-                def oldPrincipal = oldAuthentication.principal
-
-                def temporaryPrincipal = new OWFUserDetailsImpl(oldPrincipal.username, oldPrincipal.password, [ new org.springframework.security.core.authority.GrantedAuthorityImpl('ROLE_ADMIN') ], [])
-                SCH.context.authentication = new PreAuthenticatedAuthenticationToken(temporaryPrincipal, temporaryPrincipal.getPassword());
+                if(Environment.current == Environment.PRODUCTION) {
+                    oldAuthentication = SCH.context.authentication
+                    def oldPrincipal = oldAuthentication.principal
+                    def temporaryPrincipal = new OWFUserDetailsImpl(oldPrincipal.username, oldPrincipal.password, [ new org.springframework.security.core.authority.GrantedAuthorityImpl('ROLE_ADMIN') ], [])
+                    SCH.context.authentication = new PreAuthenticatedAuthenticationToken(temporaryPrincipal, temporaryPrincipal.getPassword());
+                }
 
                 def personInDB = Person.findByUsername(username, [cache:true])
 
-                log.info 'newUser:'+newUser
-                log.info 'personInDB:'+personInDB
-                if (newUser && personInDB)
-                {
-                    def maxPosition = 0
-                    newUser.personWidgetDefinitions.each{ pwd ->
-                        def users = [[id:personInDB.id]]
-                        log.info 'Adding DEFAULT_USER widgets to new user'
+                if (newUser && personInDB) {
+                    def widgets = newUser.personWidgetDefinitions*.widgetDefinition
+                    personWidgetDefinitionService.bulkAssignMultipleWidgetsForSingleUser(personInDB, widgets)
 
-                        personWidgetDefinitionService.bulkAssignForSingleWidgetDefinitionMultipleUsers(pwd.widgetDefinition.widgetGuid,users,[])
-                    }
-
-                    def dashBoards = Dashboard.findAllByUser(newUser, [cache:true])
-                    def args = [checkedTargets: personInDB.id]
-                    dashBoards.each{ db ->
-                        log.info 'Adding DEFAULT_USER dashboards to new user'
-
-                        //Skip if dashboard belongs to a stack, it will be added as a result
-                        //of adding the user to the stack next
-                        if(!db.stack) {
-                            args.guid = db.guid
-                            args.isdefault = db.isdefault
-                            args.name = db.name
-                            args.description = db.description
-                            args.locked = db.locked
-                            args.layoutConfig = db.layoutConfig
-
-                            administrationService.cloneDashboards(args)
-                        }
+                    // Skip if dashboard belongs to a stack, it will be added as a
+                    // result of adding the user to the stack next
+                    def dashboards = Dashboard.findAllByUserAndStackIsNull(newUser)
+                    dashboards.each { db ->
+                        administrationService.cloneDashboards([
+                            checkedTargets: personInDB.id,
+                            guid: db.guid,
+                            isdefault: db.isdefault,
+                            name: db.name,
+                            description: db.description,
+                            locked: db.locked,
+                            layoutConfig: db.layoutConfig
+                        ])
                     }
 
                     //Get all stack default groups DEFAULT_USER is in
-                    def stackDefaultGroups = Group.withCriteria(uniqueResult: true){
-                        eq('stackDefault', true)
-                        people {
-                            eq('id', newUser.id)
-                        }
-                    }
-                    args = [checkedTargets: personInDB.id]
-                    stackDefaultGroups.each{ stackDefaultGroup ->
+                    def stackDefaultGroups = newUser.getStackDefaultGroups()
+
+                    stackDefaultGroups.each { stackDefaultGroup ->
                         log.info 'Adding DEFAULT_USER stacks to new user'
 
                         //Add the new user to the stack's default group
@@ -335,30 +271,29 @@ class SecurityFilters {
                     }
 
                     def preferences = Preference.findAllByUser(newUser, [cache:true])
-                    args = [checkedTargets: personInDB.id]
                     preferences.each{ pref ->
                         log.info 'Adding DEFAULT_USER preferences to new user'
-
-                        args.namespace = pref.namespace
-                        args.path = pref.path
-                        args.value = pref.value
-                        administrationService.clonePreference(args)
+                        administrationService.clonePreference([
+                            checkedTargets: personInDB.id,
+                            namespace: pref.namespace,
+                            path: pref.path,
+                            value: pref.value
+                        ])
                     }
                 }
                 else {
                     log.info 'No need to copy default dashboards, stacks, prefs and widgets, newUser or personInDb is null'
                 }
-            } catch(Exception e)
-            {
+            }
+            catch(Exception e) {
                 e.printStackTrace()
-            } finally
-            {
+            }
+            finally {
                 if (oldAuthentication) {
-                    try
-                    {
+                    try {
                         SCH.context.authentication = oldAuthentication
-                    } catch(Exception e)
-                    {
+                    }
+                    catch (Exception e) {
                         e.printStackTrace()
                     }
                 }
@@ -366,6 +301,7 @@ class SecurityFilters {
         }
     }
 
+    @Timed
     private loadAdminData(admin) {
 
         def id = null
@@ -654,11 +590,11 @@ class SecurityFilters {
         }
     }
 
-    private generateId() {
+    private generateId( ) {
         return java.util.UUID.randomUUID().toString()
     }
 
-    private def saveInstance(instance) {
+    private def saveInstance (instance) {
         if (instance.save(flush:true) == null) {
             log.info "ERROR: ${instance} not saved - ${instance.errors}"
         } else {

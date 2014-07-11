@@ -1,7 +1,7 @@
 package ozone.owf.grails.controllers
 
 import grails.converters.JSON
-
+import org.grails.plugins.metrics.groovy.Timed
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.Role;
 import org.codehaus.groovy.grails.web.json.JSONArray
@@ -11,14 +11,12 @@ import org.apache.commons.lang.time.StopWatch
 /**
  * User controller.
  */
-class PersonController extends BaseOwfRestController
-{
+class PersonController extends BaseOwfRestController {
 
     def accountService
     def authenticateService
-
-    // the delete, save and update actions only accept POST requests
-    //   static Map allowedMethods = [delete: 'POST', save: 'POST', update: 'POST']
+    def dashboardService
+    def personWidgetDefinitionService
 
     def index = {
         redirect action: list, params: params
@@ -36,16 +34,6 @@ class PersonController extends BaseOwfRestController
             def result = accountService.getAllUsersByParams(params)
             statusCode = 200
 			jsonResult = result as JSON
-            /*def personList = new JSONArray()
-            result.personList.collect { personList.add(it.toServiceModel()) }
-            if (result.count != null)
-            {
-                jsonResult = [success:result.success, results: result.count, data : personList] as JSON
-            }
-            else
-            {
-                jsonResult = personList as JSON
-            }*/
         }
         catch (OwfException owe) {
             handleError(owe)
@@ -115,47 +103,13 @@ class PersonController extends BaseOwfRestController
         }
     }
 
-//  private def bulkDeleteUsersForAdmin(params){
-//      if (!accountService.getLoggedInUserIsAdmin())
-//      {
-//          throw new OwfException(message:'You are not authorized to bulkDelete Admin users.', exceptionType: OwfExceptionTypes.Authorization)
-//      }
-//      if (params.personUserIDsToDelete == null){
-//          throw new OwfException(	message:'A fatal validation error occurred. personUserIDsToDelete param required. Params: ' + params.toString(),
-//              exceptionType: OwfExceptionTypes.Validation)
-//      }
-//
-//      def persons = []
-//      params.personUserIDsToDelete.each {
-//          def person = Person.get(it.id)
-//          if (person == null)
-//          {
-//              throw new OwfException(message:'User ' + it + ' not found during bulk delete.', exceptionType: OwfExceptionTypes.NotFound)
-//          }
-//          else if (person.username.equals(Person.NEW_USER)) {
-//              throw new OwfException(message:'The default template user may not be deleted', exceptionType: OwfExceptionTypes.Authorization)
-//          }
-//
-//          Map newParams = new HashMap()
-//          newParams.person = person
-//          newParams.adminEnabled = true
-//          persons.add(person);
-//
-//          accountService.unAssignUserFromAllGroups(newParams)
-//          def result = accountService.deleteUser(newParams)
-//      }
-//      return [success: true, data: params.personUserIDsToDelete]
-//  }
-
     /**
      * Person save action.
      */
     def createOrUpdate = {
-
         def result
 
-        try
-        {
+        try {
             def results = accountService.createOrUpdate(params)
             result = [msg: results as JSON, status: 200]
         }
@@ -184,30 +138,25 @@ class PersonController extends BaseOwfRestController
         renderResult(jsonResult, 200)
     }
 
-//    private void addRoles(person) {
-//        for (String key in params.keySet()) {
-//            if (key.contains('ROLE') && 'on' == params.get(key)) {
-//                Role.findByAuthority(key).addToPeople(person)
-//            }
-//        }
-//    }
+    @Timed()
+    def myData () {
+        def user = accountService.getLoggedInUser()
+        def json
+        try {
+            accountService.sync(user)
+            json = [
+                dashboards: dashboardService.myDashboards(user)*.asJSON(),
+                widgets: personWidgetDefinitionService.myWidgets(user)*.asJSON()
+            ] as JSON
 
-//    private Map buildPersonModel(person) {
-//
-//        List roles = Role.list()
-//        roles.sort { r1, r2 ->
-//            r1.authority <=> r2.authority
-//        }
-//        Set userRoleNames = []
-//        for (role in person.authorities) {
-//            userRoleNames << role.authority
-//        }
-//        LinkedHashMap<Role, Boolean> roleMap = [:]
-//        for (role in roles) {
-//            roleMap[(role)] = userRoleNames.contains(role.authority)
-//        }
-//
-//        return [person: person, roleMap: roleMap]
-//    }
+            renderResult(json, 200)
+        }
+        catch (Exception e) {
+            log.error(e);
+            renderResult([
+                error: 'Error syncing user'
+            ], 500)
+        }
+    }
 
 }

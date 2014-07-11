@@ -53,81 +53,81 @@ databaseChangeLog = {
     }
 
 
-	changeSet(author: "owf", id: "7.3.0-3", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
-		createTable(tableName: "application_configuration") {
+    changeSet(author: "owf", id: "7.3.0-3", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
+        createTable(tableName: "application_configuration") {
 
-			column(autoIncrement: "true", name: "id", type: "java.sql.Types.BIGINT") {
-				constraints(nullable: "false", primaryKey: "true", primaryKeyName: "application_configurationPK")
-			}
+            column(autoIncrement: "true", name: "id", type: "java.sql.Types.BIGINT") {
+                constraints(nullable: "false", primaryKey: "true", primaryKeyName: "application_configurationPK")
+            }
 
-			column(name: "version", type: "java.sql.Types.BIGINT") {
-				constraints(nullable: "false")
-			}
+            column(name: "version", type: "java.sql.Types.BIGINT") {
+                constraints(nullable: "false")
+            }
 
-			column(name: "created_by_id", type: '${owf.personIdType}')
+            column(name: "created_by_id", type: '${owf.personIdType}')
 
-			column(name: "created_date", type: "java.sql.Types.DATE")
+            column(name: "created_date", type: "java.sql.Types.DATE")
 
-			column(name: "edited_by_id", type: '${owf.personIdType}')
+            column(name: "edited_by_id", type: '${owf.personIdType}')
 
-			column(name: "edited_date", type: "java.sql.Types.DATE")
+            column(name: "edited_date", type: "java.sql.Types.DATE")
 
-			column(name: "code", type: "java.sql.Types.VARCHAR(250)") {
-				constraints(nullable: "false", unique: "true")
-			}
+            column(name: "code", type: "java.sql.Types.VARCHAR(250)") {
+                constraints(nullable: "false", unique: "true")
+            }
 
-			column(name: "VALUE", type: "java.sql.Types.VARCHAR(2000)") {
-				constraints(nullable: "true")
-			}
+            column(name: "VALUE", type: "java.sql.Types.VARCHAR(2000)") {
+                constraints(nullable: "true")
+            }
 
-			column(name: "title", type: "java.sql.Types.VARCHAR(250)") {
-				constraints(nullable: "false")
-			}
+            column(name: "title", type: "java.sql.Types.VARCHAR(250)") {
+                constraints(nullable: "false")
+            }
 
-			column(name: "description", type: "java.sql.Types.VARCHAR(2000)") {
-				constraints(nullable: "true")
-			}
+            column(name: "description", type: "java.sql.Types.VARCHAR(2000)") {
+                constraints(nullable: "true")
+            }
 
-			column(name: "type", type: "java.sql.Types.VARCHAR(250)") {
-				constraints(nullable: "false")
-			}
+            column(name: "type", type: "java.sql.Types.VARCHAR(250)") {
+                constraints(nullable: "false")
+            }
 
-			column(name: "group_name", type: "java.sql.Types.VARCHAR(250)") {
-				constraints(nullable: "false")
-			}
+            column(name: "group_name", type: "java.sql.Types.VARCHAR(250)") {
+                constraints(nullable: "false")
+            }
 
-			column(name: "sub_group_name", type: "java.sql.Types.VARCHAR(250)") {
-				constraints(nullable: "true")
-			}
+            column(name: "sub_group_name", type: "java.sql.Types.VARCHAR(250)") {
+                constraints(nullable: "true")
+            }
 
-			column(name: "mutable", type: "java.sql.Types.BOOLEAN") {
-				constraints(nullable: "false")
-			}
+            column(name: "mutable", type: "java.sql.Types.BOOLEAN") {
+                constraints(nullable: "false")
+            }
 
-			column(name: "sub_group_order", type: "java.sql.Types.BIGINT")
+            column(name: "sub_group_order", type: "java.sql.Types.BIGINT")
 
             column(name: "help", type: "java.sql.Types.VARCHAR(2000)")
 
-		}
-	}
+        }
+    }
 
-	changeSet(author: "owf", id: "7.3.0-4", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
-		createIndex(indexName: "FKFC9C0477666C6D2", tableName: "application_configuration") {
-			column(name: "created_by_id")
-		}
+    changeSet(author: "owf", id: "7.3.0-4", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
+        createIndex(indexName: "FKFC9C0477666C6D2", tableName: "application_configuration") {
+            column(name: "created_by_id")
+        }
 
-		createIndex(indexName: "FKFC9C047E31CB353", tableName: "application_configuration") {
-			column(name: "edited_by_id")
-		}
+        createIndex(indexName: "FKFC9C047E31CB353", tableName: "application_configuration") {
+            column(name: "edited_by_id")
+        }
 
-		createIndex(tableName: "application_configuration", indexName: "app_config_group_name_idx") {
-			comment("Create index for application_configuration.group_name")
-			column(name: "group_name")
-		}
+        createIndex(tableName: "application_configuration", indexName: "app_config_group_name_idx") {
+            comment("Create index for application_configuration.group_name")
+            column(name: "group_name")
+        }
 
-		addForeignKeyConstraint(baseColumnNames: "created_by_id", baseTableName: "application_configuration", constraintName: "FKFC9C0477666C6D2", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
-		addForeignKeyConstraint(baseColumnNames: "edited_by_id", baseTableName: "application_configuration", constraintName: "FKFC9C047E31CB353", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
-	}
+        addForeignKeyConstraint(baseColumnNames: "created_by_id", baseTableName: "application_configuration", constraintName: "FKFC9C0477666C6D2", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
+        addForeignKeyConstraint(baseColumnNames: "edited_by_id", baseTableName: "application_configuration", constraintName: "FKFC9C047E31CB353", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
+    }
 
     changeSet(author: "owf", id: "7.3.0-5", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 7.3.0") {
         comment("Add icon image url to dashboard")
@@ -163,16 +163,16 @@ databaseChangeLog = {
     }
 
     changeSet(author: "owf", id: "7.3.0-7", context: "create, upgrade, 7.3.0", dbms: "mysql,oracle,postgresql,hsqldb") {
-		addColumn(tableName: "stack") {
-			column(name: "owner_id", type: "bigint")
-		}
+        addColumn(tableName: "stack") {
+            column(name: "owner_id", type: "bigint")
+        }
 
-		createIndex(indexName: "FK68AC2888656347D", tableName: "stack") {
-			column(name: "owner_id")
-		}
+        createIndex(indexName: "FK68AC2888656347D", tableName: "stack") {
+            column(name: "owner_id")
+        }
 
-		addForeignKeyConstraint(baseColumnNames: "owner_id", baseTableName: "stack", constraintName: "FK68AC2888656347D", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
-	}
+        addForeignKeyConstraint(baseColumnNames: "owner_id", baseTableName: "stack", constraintName: "FK68AC2888656347D", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "id", referencedTableName: "person", referencesUniqueColumn: "false")
+    }
 
     changeSet(author: "owf", id: "7.3.0-8", context: "upgrade, 7.3.0, sampleData, 7.3.0-sampleData") {
 
@@ -634,7 +634,7 @@ databaseChangeLog = {
 
     }
 
-   changeSet(author: "owf", id: "7.3.0-23", context: "create", dbms:"mssql") {
+    changeSet(author: "owf", id: "7.3.0-23", context: "create", dbms:"mssql") {
         comment(text="allow identity inserts")
       sql ( text = """
         SET IDENTITY_INSERT [dbo].[widget_definition] ON

@@ -1,7 +1,6 @@
 package ozone.owf.grails.services
 
 import org.springframework.security.core.authority.GrantedAuthorityImpl
-import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import grails.converters.JSON
@@ -28,14 +27,13 @@ import ozone.security.authentication.OWFUserDetailsImpl
 @Transactional(readOnly=true)
 class AccountService {
 
-    //def authenticateService
     def loggingService = new AuditOWFWebRequestsLogger()
-    //    def domainMappingService
 
     def serviceModelService
     def stackService
     def dashboardService
     def groupService
+    def personWidgetDefinitionService
 
     static final ThreadLocal<Boolean> hasTemporaryAdminPrivileges = new ThreadLocal<Boolean>()
 
@@ -180,13 +178,11 @@ class AccountService {
                 groups{
                     eq("id", Long.parseLong(params.group_id))
                 }
-            if (params.stack_id)
+            if (params.stack_id) {
                 groups {
-                    eq("stackDefault", true)
-                    stacks {
-                        eq("id", Long.parseLong(params.stack_id))
-                    }
+                    idEq(Stack.findById(Long.parseLong(params.stack_id)).defaultGroup.id)
                 }
+            }
             if (params.widget_id)
                 personWidgetDefinitions{
                     widgetDefinition {
@@ -413,11 +409,6 @@ class AccountService {
                         returnValue = updatedWidgets.collect{ serviceModelService.createServiceModel(it) }
                 }
 
-
-                //handle associations
-                //persons
-
-                //if (params.group_ids) {
                 if('groups' == params.tab) {
                     def updatedGroups = []
                     //def group_ids = [params.group_ids].flatten()
@@ -425,19 +416,19 @@ class AccountService {
                     def groups = JSON.parse(params.data)
                     groups.each {
                         Group group = Group.findById(it.id.toLong(),[cache:true])
-                        if (group)
-                        {
+                        if (group) {
                             if (params.update_action == 'add')
                                 group.addToPeople(user)
                             else if (params.update_action == 'remove') {
                                 group.removeFromPeople(user)
                                 dashboardService.purgePersonalDashboards(user, group)
                             }
-
                             group.save(flush: true,failOnError: true)
+
                             updatedGroups << group
                         }
                     }
+                    user.sync()
                     if (!updatedGroups.isEmpty()) {
                         returnValue = updatedGroups.collect{ serviceModelService.createServiceModel(it) }
                     }
@@ -451,17 +442,17 @@ class AccountService {
                         def stack = Stack.findById(it.id.toLong(),[cache:true])
                         if(stack) {
                             if(params.update_action == 'add')
-                                stack.findStackDefaultGroup().addToPeople(user)
+                                stack.defaultGroup.addToPeople(user)
                             else if(params.update_action == 'remove') {
                                 stackService.deleteUserFromStack(stack, user)
-                                stack.findStackDefaultGroup().removeFromPeople(user)
                             }
 
-
                             stack.save(flush: true,failOnError: true)
+
                             updatedStacks << stack
                         }
                     }
+                    user.sync()
                     if(!updatedStacks.isEmpty()) {
                         returnValue = updatedStacks.collect{ serviceModelService.createServiceModel(it) }
                     }
@@ -608,22 +599,33 @@ class AccountService {
     }
 
 
-	//There are times that OWF might pick up a request when a user is not logged in, for example during sync
-	//This will create a security context with the incoming userName.  The user name could be SYSTEM or it could be a user name from an audit field (editedBy
-	public void createSecurityContext(String userName = "SYSTEM"){
-		//If there is no security context then a user is not logged in so this is a system process or we can use the passed in userName to create the details
-		if(!SCH.context.authentication){
-			log.debug "Creating a PreAuthenticatedAuthenticationToken for ${userName}"
+    //There are times that OWF might pick up a request when a user is not logged in, for example during sync
+    //This will create a security context with the incoming userName.  The user name could be SYSTEM or it could be a user name from an audit field (editedBy
+    public void createSecurityContext(String userName = "SYSTEM"){
+        //If there is no security context then a user is not logged in so this is a system process or we can use the passed in userName to create the details
+        if(!SCH.context.authentication){
+            log.debug "Creating a PreAuthenticatedAuthenticationToken for ${userName}"
 
-			def auths = [new GrantedAuthorityImpl(ERoleAuthority.ROLE_USER.strVal)]
+            def auths = [new GrantedAuthorityImpl(ERoleAuthority.ROLE_USER.strVal)]
 
-			def userDetails = new OWFUserDetailsImpl(userName, null, auths, [])
-			userDetails.username = userName
+            def userDetails = new OWFUserDetailsImpl(userName, null, auths, [])
+            userDetails.username = userName
 
-			def token = new PreAuthenticatedAuthenticationToken(userDetails, null, auths)
+            def token = new PreAuthenticatedAuthenticationToken(userDetails, null, auths)
 
-			SCH.getContext().setAuthentication(token)
-		}
-	}
+            SCH.getContext().setAuthentication(token)
+        }
+    }
 
+    @Transactional(readOnly=false)
+    def sync (Person person, Boolean forceSync = false) {
+        if(person.requiresSync || forceSync) {
+            dashboardService.sync(person)
+            personWidgetDefinitionService.sync(person)
+
+            if (person.requiresSync) {
+                person.sync(false)
+            }
+        }
+    }
 }

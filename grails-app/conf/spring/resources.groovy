@@ -37,6 +37,7 @@ beans = {
                     stackService = ref('stackService')
                     dashboardService = ref('dashboardService')
                     groupService = ref('groupService')
+                    personWidgetDefinitionService = ref('personWidgetDefinitionService')
                 }
                 break
             case "testAdmin1":
@@ -49,6 +50,7 @@ beans = {
                     stackService = ref('stackService')
                     dashboardService = ref('dashboardService')
                     groupService = ref('groupService')
+                    personWidgetDefinitionService = ref('personWidgetDefinitionService')
                 }
                 break
             case "testAdmin2":
@@ -61,7 +63,7 @@ beans = {
                     stackService = ref('stackService')
                     dashboardService = ref('dashboardService')
                     groupService = ref('groupService')
-
+                    personWidgetDefinitionService = ref('personWidgetDefinitionService')
                 }
                 break
             default :
@@ -71,6 +73,7 @@ beans = {
                     stackService = ref('stackService')
                     dashboardService = ref('dashboardService')
                     groupService = ref('groupService')
+                    personWidgetDefinitionService = ref('personWidgetDefinitionService')
                 }
                break
         }
@@ -80,6 +83,7 @@ beans = {
             stackService = ref('stackService')
             dashboardService = ref('dashboardService')
             groupService = ref('groupService')
+            personWidgetDefinitionService = ref('personWidgetDefinitionService')
         }
     }
 

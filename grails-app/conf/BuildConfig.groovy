@@ -87,11 +87,11 @@ def warExcludes = [
 
 ]
 grails.war.resources = { stagingDir ->
-  delete(dir: "${stagingDir}") {
-    warExcludes.each {exclude ->
-      include(name: "${exclude}")
+    delete(dir: "${stagingDir}") {
+        warExcludes.each {exclude ->
+            include(name: "${exclude}")
+        }
     }
-  }
 }
 
 grails.project.dependency.resolution = {
@@ -100,8 +100,8 @@ grails.project.dependency.resolution = {
     inherits( "global" ) {
         // uncomment to disable ehcache
         // excludes 'ehcache'
-	excludes 'slf4j'
-    excludes 'commons-logging'
+	       excludes 'slf4j'
+         excludes 'commons-logging'
     }
     log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
 
@@ -142,6 +142,14 @@ grails.project.dependency.resolution = {
         }
 */
 
+        //only include these jdbc drivers for non production
+        if (Environment.current != Environment.PRODUCTION) {
+            runtime 'com.oracle:ojdbc14:10.2.0.1.0'
+            runtime 'mysql:mysql-connector-java:5.1.6'
+            runtime 'net.sourceforge.jtds:jtds:1.2.4'
+            runtime 'postgresql:postgresql:8.4-701.jdbc3'
+        }
+
         runtime 'hsqldb:hsqldb:1.8.0.10',
                 'log4j:apache-log4j-extras:1.1',
                 'net.sf.ehcache:ehcache-jgroupsreplication:1.4',
@@ -172,5 +180,6 @@ grails.project.dependency.resolution = {
         compile ':build-test-data:2.1.2'
         compile ':quartz:1.0.1'
         runtime ':cors:1.1.4' // OP-3931
+        compile ':yammer-metrics:3.0.1-2'
     }
 }

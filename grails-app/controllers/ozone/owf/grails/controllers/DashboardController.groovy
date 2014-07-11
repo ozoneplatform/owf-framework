@@ -2,12 +2,16 @@ package ozone.owf.grails.controllers
 
 import grails.converters.JSON
 import org.apache.commons.lang.time.StopWatch
+import org.hibernate.FetchMode
 import ozone.owf.grails.OwfException
 import org.codehaus.groovy.grails.web.json.JSONObject
+import ozone.owf.grails.domain.Dashboard
 
 class DashboardController extends BaseOwfRestController {
 
     def dashboardService
+    def accountService
+
     def modelName = 'dashboard'
 
     def show = {
@@ -30,14 +34,14 @@ class DashboardController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during show: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed dashboardService: show in "+stopWatch);
         }
-		
+
         renderResult(jsonResult, statusCode)
     }
-	
+
     def list = {
         def statusCode
         def jsonResult
@@ -58,14 +62,14 @@ class DashboardController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during list: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed dashboardService: list in "+stopWatch);
         }
-		
+
         renderResult(jsonResult, statusCode)
     }
-        
+
     def create = {
         def statusCode
         def jsonResult
@@ -90,15 +94,15 @@ class DashboardController extends BaseOwfRestController {
         if (log.isInfoEnabled()) {
             log.info("Executed dashboardService: create in "+stopWatch);
         }
-				
+
         renderResult(jsonResult, statusCode)
     }
-    
+
     def update = {
         def statusCode
         def jsonResult
         StopWatch stopWatch = null;
-        
+
         if (log.isInfoEnabled()) {
             stopWatch = new StopWatch();
             stopWatch.start();
@@ -114,11 +118,11 @@ class DashboardController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during update: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-        
+
         if (log.isInfoEnabled()) {
             log.info("Executed dashboardService: update in "+stopWatch);
         }
-        
+
         renderResult(jsonResult, statusCode)
     }
 
@@ -151,12 +155,12 @@ class DashboardController extends BaseOwfRestController {
                         args['guid'] = it.guid
                         args['isdefault'] = it.isdefault
                         args['locked'] = it.locked
-                        
+
                         if (params.user_id != null && params.user_id != '') {
                             args['personId'] = params.user_id
                         }
                         args['description'] = it.description
-						
+
                         args['layoutConfig'] = it.layoutConfig?.toString();
 
                         args['isGroupDashboard'] = params.isGroupDashboard ? params.isGroupDashboard?.toString()?.toBoolean() : false
@@ -236,14 +240,14 @@ class DashboardController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during delete: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed dashboardService: delete in "+stopWatch);
         }
-		
+
         renderResult(jsonResult, statusCode)
     }
-	
+
     def restore = {
         def statusCode
         def jsonResult
@@ -264,7 +268,7 @@ class DashboardController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during restore: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-	  
+
         if (log.isInfoEnabled()) {
             log.info("Executed dashboardService: restore in "+stopWatch);
         }
@@ -292,11 +296,11 @@ class DashboardController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during bulkDeleteAndUpdate: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed dashboardService: bulkDeleteAndUpdate in "+stopWatch);
         }
-		
+
         renderResult(jsonResult, statusCode)
     }
 
@@ -320,15 +324,15 @@ class DashboardController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during bulkUpdate: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed dashboardService: bulkUpdate in "+stopWatch);
         }
-		
+
         renderResult(jsonResult, statusCode)
     }
 
-    def bulkDelete = {	
+    def bulkDelete = {
         def statusCode
         def jsonResult
         StopWatch stopWatch = null;
@@ -348,14 +352,14 @@ class DashboardController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during bulkDelete: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed dashboardService: bulkDelete in "+stopWatch);
         }
-		
-        renderResult(jsonResult, statusCode)	
+
+        renderResult(jsonResult, statusCode)
     }
-  
+
 
     def getdefault = {
         def statusCode
@@ -377,12 +381,18 @@ class DashboardController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during getDefault: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed dashboardService: getDefault in "+stopWatch);
         }
-		
+
         renderResult(jsonResult, statusCode)
+    }
+
+    def myDashboards() {
+        def user = accountService.getLoggedInUser()
+        def models = dashboardService.myDashboards(user)
+        render ([success: true, results: models.size(), data : models*.asJSON()] as JSON)
     }
 
 }

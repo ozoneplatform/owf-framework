@@ -18,7 +18,7 @@ class GroupService {
     def domainMappingService
     def serviceModelService
     def widgetDefinitionService
-    
+
     private static def addFilter(name, value, c) {
         c.with {
             switch (name) {
@@ -74,7 +74,7 @@ class GroupService {
         else {
 
             def results = criteria.list(opts) {
-                
+
                 eq("stackDefault", false)
 
                 if (params.id)
@@ -131,7 +131,7 @@ class GroupService {
                 if (params.user_id) {
                     addFilter('user_id',params.user_id,criteria)
                 }
-                
+
                 if (params.stack_id) {
                     addFilter('stack_id', params.stack_id, criteria)
                 }
@@ -161,7 +161,7 @@ class GroupService {
                     }
                     projections { rowCount() }
                 }
-                
+
                 def stackCount = Stack.withCriteria {
                     cacheMode(CacheMode.GET)
                     groups {
@@ -255,7 +255,7 @@ class GroupService {
                         'cloned': true,
                         'isGroupDashboard': params.isGroupDashboard  ?: false
                     ]
-                    
+
                     newGroupDashboards << dashboardService.create(dashConfig).dashboard
                 }
             }
@@ -344,6 +344,7 @@ class GroupService {
                         group.removeFromPeople(person)
                         dashboardService.purgePersonalDashboards(person, group)
                     }
+                    person.sync()
 
                     updatedPeople << person
                 }
@@ -374,6 +375,8 @@ class GroupService {
                     updatedWidgets << widget
                 }
             }
+            group.syncPeople();
+
             if (!updatedWidgets.isEmpty()) {
                 returnValue = updatedWidgets.collect{ serviceModelService.createServiceModel(it) }
             }
@@ -393,6 +396,7 @@ class GroupService {
                         group.removeFromPeople(person)
                         dashboardService.purgePersonalDashboards(person, group)
                     }
+                    person.sync()
 
                     updatedUsers << person
                 }
@@ -419,11 +423,12 @@ class GroupService {
                     updatedDashboards << dashboard
                 }
             }
-            
+            group.syncPeople()
+
             if (!updatedDashboards.isEmpty()) {
                 // Reconcile any widgets missing from the group that have been added by a dashboard.
                 widgetDefinitionService.reconcileGroupWidgetsFromDashboards(group)
-                
+
                 returnValue = updatedDashboards.collect{ serviceModelService.createServiceModel(it) }
             }
         }
@@ -433,7 +438,7 @@ class GroupService {
             def stacks = JSON.parse(params.data)
 
             stacks?.each { it ->
-                Stack stack = ozone.owf.grails.domain.Stack.findById(it.id.toLong(), [cache: true])
+                Stack stack = Stack.findById(it.id.toLong(), [cache: true])
                 if (stack) {
                     if (params.update_action == 'add') {
                         group.addToStacks(stack)
@@ -446,6 +451,9 @@ class GroupService {
                     updatedStacks << stack
                 }
             }
+
+            group.syncPeople()
+
             if (!updatedStacks.isEmpty()) {
                 returnValue = updatedStacks.collect{ serviceModelService.createServiceModel(it) }
             }

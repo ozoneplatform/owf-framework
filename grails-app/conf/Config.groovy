@@ -761,8 +761,8 @@ uiperformance.bundles = [
                         '../js/data/stores/WidgetTypeStore',
                         '../js/data/models/Group',
                         '../js/data/stores/GroupStore',
-            //this patch file should be at the end
-                        '../js-lib/patches/RemoveListenerCaptureBugOverrides'
+                        '../js-lib/patches/RemoveListenerCaptureBugOverrides',
+                        'app'
 
         ]
     ],
@@ -912,8 +912,8 @@ environments {
         perfTest.numWidgetsInGroups = 5         // The number of widgets assigned to each group
         perfTest.numWidgetsPerUser = 5          // The number of widgets assigned to each user
         perfTest.numPreferences = 2             // The number of preferences per user
-        perfTest.numWidgets = 500               // The number of unique widget definitions
-        perfTest.numStacks = 25                 // The number of stacks
+        perfTest.numWidgets = 20               // The number of unique widget definitions
+        perfTest.numStacks = 10                 // The number of stacks
         perfTest.numStacksPerUser = 3           // The number of stacks per user
         perfTest.numStackDashboards = 2         // The number of dashboards each stack will get assigned to them
         // TODO: perfTest.numPersonalStacks variable to assign stacks that haven't been published to each user only
@@ -924,16 +924,19 @@ environments {
         owf.alternateHostName = System.properties.alternateHostName ?: '127.0.0.1'
 
         log4j = {
-            error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
-             'org.codehaus.groovy.grails.web.pages' //  GSP
-            warn 'org.mortbay.log'
-            debug 'grails.app'
-            info 'grails.plugin.databasemigration'
-            //trace 'org.hibernate'
-            //debug 'org.hibernate.SQL'
-            //trace 'org.hibernate.type'
-            //trace 'org.hibernate.cache'
+            error   'org.codehaus.groovy.grails.web.servlet',  //  controllers
+                    'org.codehaus.groovy.grails.web.pages' //  GSP
+
+            warn    'org.mortbay.log'
+            debug   'grails.app'
+
+            info    'grails.plugin.databasemigration'
+
+            trace   'org.hibernate.type.descriptor.sql.BasicBinder'
+            debug   'org.hibernate.SQL'
+
             trace  'org.jivesoftware'
+
             appenders {
                 appender new RollingFileAppender(name:"owfStackTraceLog", maxFileSize:8192,
                     file:"logs/owf-stacktrace.log",
@@ -946,6 +949,7 @@ environments {
                         file:"logs/owf-cef-audit.log",
                         layout: pattern(conversionPattern: '%d{yyyy-MM-dd HH:mm:ss,SSS z} [%t] %-5p[%c]: %m%n'))
             }
+
             info owfCefAudit: 'org.ozoneplatform'
 
             root {
@@ -953,7 +957,6 @@ environments {
                 error()
                 additivity = true
             }
-
         }
     }
 
@@ -980,19 +983,6 @@ owf {
       version = server.version
       serverVersion = server.version
 
-//      def server = System.properties['server.host'] ?: 'localhost'
-//      def port = System.properties['server.port'] ?: '8443'
-//      def protocol = port.endsWith('443') ? 'https' : 'http'
-//      def context = grails.app.context
-//
-////        println "server = ${server}"
-////        println "port = ${port}"
-////        println "context = ${context}"
-//
-//      prefsLocation =  "${protocol}://${server}:${port}${context}/prefs"
-
-//        println "prefsLocation = ${prefsLocation}"
-
       // log4j file watch interval in milliseconds
       log4jWatchTime = 180000; // 3 minutes
 
@@ -1004,15 +994,6 @@ owf {
       pendingApprovalTagGroupName='pending approval'
       approvedTagGroupName='approved'
 
-      /*
-          Leave blank for development, unless working on code with officeName
-      */
-//      officeName = "Sample Office"
-//
-//      bannerIcon = "images/blue/header/wfLogo48.gif"
-//      bannerIconHeight = 48       /* DO NOT CHANGE until entire banner is componentized */
-//      bannerIconWidth = 250       /* DO NOT CHANGE until entire banner is componentized */
-
       adminBannerIcon = "images/adminLogo52.png"
       adminBannerIconHeight = 52
       adminBannerIconWidth = 346
@@ -1022,7 +1003,6 @@ owf {
       publishWidgetLoadTimes = true
 
       defaultTheme = "a_default"
-
 
       showAccessAlert = "false"
       // accessAlertMsg = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla interdum eleifend sapien dignissim malesuada. Sed imperdiet augue vitae justo feugiat eget porta est blandit. Proin ipsum ipsum, rutrum ac gravida in, ullamcorper a augue. Sed at scelerisque augue. Morbi scelerisque gravida sapien ut feugiat. Donec dictum, nisl commodo dapibus pellentesque, enim quam consectetur quam, at dictum dui augue at risus. Ut id nunc in justo molestie semper. Curabitur magna velit, varius eu porttitor et, tempor pulvinar nulla. Nam at tellus nec felis tincidunt fringilla. Nunc nisi sem, egestas ut consequat eget, luctus et nisi. Nulla et lorem odio, vitae pretium ipsum. Integer tellus libero, molestie a feugiat a, imperdiet sit amet metus. Aenean auctor fringilla eros, sit amet suscipit felis eleifend a."
@@ -1169,3 +1149,4 @@ notifications {
     }
 }
 
+metrics.servletEnabled = true

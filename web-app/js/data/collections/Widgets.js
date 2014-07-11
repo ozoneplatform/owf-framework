@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Next Century Corporation 
+ * Copyright 2013 Next Century Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
  ;(function () {
-    
+
     Ozone.data.collections = Ozone.data.collections || {};
 
     Ozone.data.collections.Widgets = Ozone.data.collections.Collection.extend({
 
-        url: Ozone.util.contextPath() + '/prefs/widgetList',
+        url: Ozone.util.contextPath() + '/person/me/widget',
 
         parse: function (resp, options) {
-            return _.map(resp.rows, function (widget) {
+            return _.map(resp.data, function (widget) {
                 var val = _.omit(widget.value, 'namespace', 'path', 'widgetVersion');
                 val.id = widget.path;
                 val.widgetGuid = widget.path;

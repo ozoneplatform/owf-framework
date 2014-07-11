@@ -13,13 +13,11 @@ import ozone.owf.grails.services.model.WidgetTypeServiceModel
 import ozone.owf.grails.services.model.StackServiceModel
 
 import ozone.owf.grails.domain.Dashboard
-import ozone.owf.grails.domain.Intent
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.PersonWidgetDefinition
 import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.Preference
 import ozone.owf.grails.domain.WidgetDefinition
-import ozone.owf.grails.domain.WidgetDefinitionIntent
 import ozone.owf.grails.domain.WidgetType
 import ozone.owf.grails.domain.Stack
 
@@ -194,6 +192,7 @@ class ServiceModelService {
                         totalGroups: params.totalGroups ?: 0,
                         totalWidgets: domain.uniqueWidgetCount ?: 0,
                         owner: createServiceModel(domain.owner),
+                        defaultGroup: createServiceModel(domain.defaultGroup),
                         approved: domain.approved
                         )
                 break

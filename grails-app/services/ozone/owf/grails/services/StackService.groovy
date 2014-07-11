@@ -87,8 +87,7 @@ class StackService {
             }
 
             if (params.user_id) {
-                groups {
-                    eq('stackDefault', true)
+                defaultGroup {
                     people {
                         eq('id', Long.parseLong(params.user_id))
                     }
@@ -123,15 +122,12 @@ class StackService {
             def totalUsers = Person.withCriteria {
                 cacheMode(CacheMode.GET)
                 groups {
-                    eq('stackDefault', true)
-                    stacks {
-                        eq('id', tempStack.id)
-                    }
+                    idEq(tempStack.defaultGroup.id)
                     projections { rowCount() }
                 }
             }
 
-            def stackDefaultGroup = tempStack.findStackDefaultGroup()
+            def stackDefaultGroup = tempStack.defaultGroup
             def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
 
             // OP-2297: this is used to find out if dashboards associated with this stack are of type marketplace,
@@ -211,7 +207,8 @@ class StackService {
     }
 
     private def updateStack(params) {
-        def stack, returnValue = null
+        Stack stack
+        def returnValue = null
 
         if (params?.stack_id){
             params.stack_id = (params.stack_id instanceof String ? Integer.parseInt(params.stack_id) : params.stack_id)
@@ -262,7 +259,7 @@ class StackService {
             }
             stack = stack.save(flush: true, failOnError: true)
 
-            def stackDefaultGroup = stack.findStackDefaultGroup()
+            def stackDefaultGroup = stack.defaultGroup
 
             //OP-70 adding owner to users by default
             if(stackDefaultGroup && loggedInUser) {
@@ -273,8 +270,8 @@ class StackService {
 
             returnValue = serviceModelService.createServiceModel(stack,[
                 totalDashboards: totalDashboards,
-                totalUsers: stack.findStackDefaultGroup()?.people ? stack.findStackDefaultGroup().people.size() : 0,
-                totalGroups: stack.groups ? stack.groups.size() - 1 : 0, // Don't include the default stack group
+                totalUsers: stack.defaultGroup?.people?.size() ?: 0,
+                totalGroups: stack.groups?.size() ?: 0,
                 totalWidgets: stack.uniqueWidgetCount
             ])
         } else {
@@ -296,6 +293,7 @@ class StackService {
                             stack.removeFromGroups(group)
                             dashboardService.purgePersonalDashboards(stack, group)
                         }
+                        group.syncPeople()
 
                         updatedGroups << group
                     }
@@ -305,7 +303,7 @@ class StackService {
                 }
             } else if ('users' == params.tab) {
 
-                def stackDefaultGroup = stack.findStackDefaultGroup()
+                def stackDefaultGroup = stack.defaultGroup
 
                 def updatedUsers = []
                 def users = JSON.parse(params.data)
@@ -319,6 +317,7 @@ class StackService {
                             deleteUserFromStack(stack, user)
                             stackDefaultGroup.removeFromPeople(user)
                         }
+                        user.sync()
 
                         updatedUsers << user
                     }
@@ -334,7 +333,7 @@ class StackService {
                 def dashboardsToCopy = []
                 def dashboards = JSON.parse(params.data)
 
-                def stackDefaultGroup = stack.findStackDefaultGroup()
+                def stackDefaultGroup = stack.defaultGroup
 
                 dashboards?.each { it ->
                     def dashboard = Dashboard.findByGuid(it.guid)
@@ -403,11 +402,14 @@ class StackService {
      * @param stackParams
      * @return
      */
-    def Stack createStack(def stackParams) {
-        Stack stack = stackParams ? new Stack(stackParams) : new Stack()
+    Stack createStack(Map stackParams) {
         Group defaultGroup = new Group(name: UUID.randomUUID().toString(), stackDefault: true)
-        stack.addToGroups(defaultGroup)
-        stack
+        defaultGroup.save(failOnError: true)
+
+        Stack stack = stackParams ? new Stack(stackParams) : new Stack()
+        stack.defaultGroup = defaultGroup
+
+        return stack
     }
 
     def restore(params) {
@@ -428,7 +430,7 @@ class StackService {
 
                 reorderUserDashboards(params)
 
-        def stackDefaultGroup = stack.findStackDefaultGroup()
+        def stackDefaultGroup = stack.defaultGroup
         def totalDashboards = (stackDefaultGroup != null) ? domainMappingService.countMappings(stackDefaultGroup, RelationshipType.owns, Dashboard.TYPE) : 0
 
         return [success:true, updatedDashboards: updatedDashboards]
@@ -468,7 +470,7 @@ class StackService {
         boolean userAssignedToStackThroughGroup = userAssignedToStackThroughGroup(stack, user)
 
         if (!userAssignedToStackThroughGroup) {
-            def stackDefaultGroup = stack.findStackDefaultGroup()
+            def stackDefaultGroup = stack.defaultGroup
             stackDefaultGroup.removeFromPeople(user)
 
             // Remove all user dashboards that are in the stack
@@ -481,29 +483,18 @@ class StackService {
     }
 
     boolean userAssignedToStackThroughGroup(Stack stack, Person user) {
-        def stackDefaultGroup = stack.findStackDefaultGroup()
         Set<Group> groups = []
         groups.addAll(stack.groups)
-        groups.remove(stackDefaultGroup)
         groups.add(groupService.allUsersGroup)
         if (accountService.isUserAdmin(user)) groups.add(groupService.allAdminsGroup)
 
         groups.find { Group group ->
-            group != stackDefaultGroup && group && group.people && group.people.contains(user)
+            group.people?.contains(user)
         } as boolean
     }
 
     def isStackOwner(Stack stack) {
         stack?.owner?.id == accountService.getLoggedInUser()?.id
-    }
-
-    /**
-     * Disassociates the given stack and group. Deletes all personal dashboards of the group's user that belong to that stack.
-     * @param stack
-     * @param group
-     */
-    def void removeStackFromGroup(Stack stack, Group group) {
-
     }
 
     /**
@@ -563,7 +554,7 @@ class StackService {
             }
         }
         // Remove the default stack group
-        Group defaultStackGroup = stack?.groups?.find { it.stackDefault }
+        Group defaultStackGroup = stack?.defaultGroup
         if (defaultStackGroup) {
             stack.removeFromGroups(defaultStackGroup);
             stack.save()
@@ -592,7 +583,7 @@ class StackService {
 
         def s = createOrUpdate(stackParams)
         def stack = Stack.findById(s.data[0].id)
-        def stackDefaultGroup = stack.findStackDefaultGroup()
+        def stackDefaultGroup = stack.defaultGroup
 
         // create widgets from stack descriptor json
         def widgets = params.data.widgets
@@ -673,7 +664,7 @@ class StackService {
 
         //Construct the list of dashboards for the descriptor
         def dashboards = []
-        def stackGroup = stack.findStackDefaultGroup()
+        def stackGroup = stack.defaultGroup
         if(stackGroup != null) {
             domainMappingService.getMappings(stackGroup, RelationshipType.owns, Dashboard.TYPE).eachWithIndex { it, i ->
 
@@ -816,7 +807,7 @@ class StackService {
             stack = stack.save(flush: true, failOnError: true)
         }
 
-        def stackDefaultGroup = stack.findStackDefaultGroup()
+        def stackDefaultGroup = stack.defaultGroup
 
         // Adding owner to users by default
         if(stackDefaultGroup) {
@@ -907,14 +898,14 @@ class StackService {
         }
         def result = dashboardService.create(dashboardParams)
         def groupDashboard = result.dashboard
-        domainMappingService.createMapping(newApp.findStackDefaultGroup(), RelationshipType.owns, groupDashboard)
+        domainMappingService.createMapping(newApp.defaultGroup, RelationshipType.owns, groupDashboard)
 
         // Link the group dashboard with the personal one
         domainMappingService.createMapping(personalDashboard, RelationshipType.cloneOf, [id: groupDashboard.id, TYPE: 'dashboard'])
     }
 
     def addToUser(Stack stack, Person user) {
-        def stackDefaultGroup = stack.findStackDefaultGroup()
+        def stackDefaultGroup = stack.defaultGroup
         stackDefaultGroup.addToPeople(user)
     }
 
@@ -977,6 +968,28 @@ class StackService {
                     exceptionType: OwfExceptionTypes.Authorization)
         }
 
+    }
+
+    // upgrade for 7.16.0
+    def createStackDefaultGroups () {
+        List<Stack> stacksToUpgrade = Stack.findAllByDefaultGroup(null)
+        if(stacksToUpgrade.isEmpty()) {
+            return
+        }
+        println "Creating stack default groups for ${stacksToUpgrade.size()}..."
+
+        stacksToUpgrade.each { Stack stack ->
+            def defaultGroup = Group.withCriteria(uniqueResult: true) {
+                eq('stackDefault', true)
+                stacks {
+                    eq('id', stack.id)
+                }
+            }
+            stack.defaultGroup = defaultGroup
+            stack.removeFromGroups(defaultGroup)
+
+            stack.save(flush: true, failOnError: true)
+        }
 
     }
 }

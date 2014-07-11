@@ -190,8 +190,8 @@ class StackControllerTests extends OWFGroovyTestCase {
 
         def stack1 = Stack.findById(stackIds[0])
 
-        domainMappingService.createMapping(stack1.findStackDefaultGroup(), RelationshipType.owns, stackDashboard1)
-        domainMappingService.createMapping(stack1.findStackDefaultGroup(), RelationshipType.owns, stackDashboard2)
+        domainMappingService.createMapping(stack1.defaultGroup, RelationshipType.owns, stackDashboard1)
+        domainMappingService.createMapping(stack1.defaultGroup, RelationshipType.owns, stackDashboard2)
 
         def filename = 'test'
 

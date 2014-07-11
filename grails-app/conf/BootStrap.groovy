@@ -31,8 +31,10 @@ class BootStrap {
     def sessionFactory
     def domainMappingService
     def dashboardService
+    def personWidgetDefinitionService
     def quartzScheduler
     def appMigrationService
+    def stackService
 
     OwfApplicationConfigurationService owfApplicationConfigurationService
 
@@ -131,6 +133,7 @@ class BootStrap {
             break
         }
         println 'Creating or updating required database configurations'
+        stackService.createStackDefaultGroups()
 
         //TODO: all createRequired does now is initialize config dependent services - we probably should move/rename the method
         // don't want this to run in test mode since the needed configs won't be there
@@ -201,14 +204,16 @@ class BootStrap {
             def sampleWidgetBaseUrl = ((grailsApplication.config?.perfTest?.sampleWidgetBaseUrl) ? grailsApplication.config.perfTest?.sampleWidgetBaseUrl : 'https://127.0.0.1:8443/');
             log.info 'sampleWidgetBaseUrl: ' + sampleWidgetBaseUrl
 
+            def people = []
+
             loadWidgetTypes()
             loadWidgetDefinitions(numWidgets, assignToOWFUsersGroup)
 
             loadGroups(numGroups)
             loadStacks(numStacks, assignToOWFUsersGroup)
             loadStackDashboards(numStackDashboards, numDashboardsWidgets)
-            loadAdmins(numAdmins)
-            loadPersons(numUsers)
+            people << loadAdmins(numAdmins, assignToOWFUsersGroup)
+            people << loadPersons(numUsers, assignToOWFUsersGroup)
 
             !assignToOWFUsersGroup && assignWidgetsToGroups(numGroups, numWidgetsInGroups)
             flushAndClearCache()
@@ -217,11 +222,23 @@ class BootStrap {
             assignStacksToPersons(numStacks, numStacksPerUser)
 
             loadPersonWidgetDefinitions(numWidgetsPerUser, assignToOWFUsersGroup)
-            loadPreferences(numPreferences)
+            // loadPreferences(numPreferences)
 
             //create sample widgetdefs
             if (grailsApplication.config?.perfTest?.createSampleWidgets) {
                 loadAndAssignSampleWidgetDefinitions(sampleWidgetBaseUrl, 10)
+            }
+
+            if(!assignToOWFUsersGroup) {
+                def counter = 0
+                people.flatten().each {
+                    dashboardService.sync(it)
+                    personWidgetDefinitionService.sync(it)
+                    counter++;
+                    if(counter % 10 == 0) {
+                        flushAndClearCache();
+                    }
+                }
             }
         }
     }
@@ -298,8 +315,9 @@ class BootStrap {
 
     private loadStacks(int numStacks, boolean assignToOWFUsersGroup = false) {
         println "---- loadStacks() ----"
-        def allUsersGroup,
-            existingStacksCount = Stack.findAllByNameLike('TestStack%').size()
+        Group allUsersGroup
+
+        def existingStacksCount = Stack.findAllByNameLike('TestStack%').size()
 
         if(assignToOWFUsersGroup) {
             allUsersGroup = loadOWFUsersGroup();
@@ -307,33 +325,31 @@ class BootStrap {
 
         println('stacks already in system: ' + existingStacksCount)
         for (int i = existingStacksCount + 1; i <= numStacks; i++) {
-            //create stack
-            def stack = new Stack(
-                name: 'TestStack' + i,
-                description: 'TestStack' + i,
-                stackContext: 'TestStack' + i
-            );
 
-            saveInstance(stack)
-
-            //create its default group
+            //create the stack default group
             def stackDefaultGroup = new Group(
                 name: 'TestStack' + i + '-DefaultGroup',
                 displayName: 'TestStack' + i + '-DefaultGroup',
                 stackDefault: true
             );
 
-            saveInstance(stackDefaultGroup)
+            saveInstance(stackDefaultGroup, true)
 
-            //associate stack with its default group
-            stack.addToGroups(stackDefaultGroup)
+            //create stack
+            def stack = new Stack(
+                name: 'TestStack' + i,
+                description: 'TestStack' + i,
+                stackContext: 'TestStack' + i,
+                defaultGroup: stackDefaultGroup
+            );
+
+            saveInstance(stack, true)
 
             if(allUsersGroup) {
                 stack.addToGroups(allUsersGroup)
             }
 
-            domainMappingService.createMapping(stack, RelationshipType.owns, stackDefaultGroup)
-            saveInstance(stack)
+            saveInstance(stack, true)
         }
 
         flushAndClearCache()
@@ -344,52 +360,62 @@ class BootStrap {
         def stacks = Stack.findAllByNameLike('TestStack%')
         stacks.each { stack ->
             log.debug 'generating stack dashboards for stack:' + stack
-            assignDashboardsToGroup(stack.findStackDefaultGroup(), 'Stack', numStackDashboards, numDashboardsWidgets)
+            assignDashboardsToStackGroup(stack, numStackDashboards, numDashboardsWidgets)
         }
 
         flushAndClearCache()
     }
 
-    private loadAdmins(int numAdmins) {
+    private loadAdmins(int numAdmins, boolean assignToOWFUsersGroup = false) {
         println "---- loadAdmins() ----"
         def date = new Date(),
-            admin,
+            admins = [],
             existingAdminsCount = Person.findAllByUsernameLike('testAdmin%').size()
         println('Admins already in system: ' + existingAdminsCount)
         for (int i = existingAdminsCount + 1; i <= numAdmins; i++) {
-            saveInstance(new Person(
+            def admin = new Person(
                 description: 'Test Administrator '+i,
                 email: 'testAdmin'+i+'@ozone3.test',
                 emailShow: false,
                 enabled: true,
                 userRealName: 'Test Admin '+i,
                 username: "testAdmin"+i,
-                lastLogin: date
-            ))
+                lastLogin: date,
+                requiresSync: assignToOWFUsersGroup
+            )
+            saveInstance(admin)
+            admins << admin
         }
 
         flushAndClearCache()
+
+        admins
     }
 
-    private loadPersons(int numPersons) {
+    private loadPersons(int numPersons, boolean assignToOWFUsersGroup = false) {
         println "---- loadPersons() ----"
         def date = new Date(),
-            person,
+            people = [],
             existingUsersCount = Person.findAllByUsernameLike('testUser%').size()
         println('Users already in system: ' + existingUsersCount)
         for (int i = existingUsersCount + 1; i <= numPersons; i++) {
-            saveInstance(new Person(
+            def person = new Person(
                 description: 'Test User '+i,
                 email: 'testUser'+i+'@ozone3.test',
                 emailShow: false,
                 enabled: true,
                 userRealName: 'Test User '+i,
                 username: 'testUser'+i,
-                lastLogin: date
-            ))
+                lastLogin: date,
+                requiresSync: assignToOWFUsersGroup
+            )
+            saveInstance(person)
+            people << person
         }
 
         flushAndClearCache()
+
+        people
     }
 
     private assignWidgetsToGroup(group, numWidgetsInGroups) {
@@ -522,18 +548,17 @@ class BootStrap {
     private createNewUser() {
         Person.withTransaction {
             def user = Person.findByUsername(Person.NEW_USER)
-            if (user == null)
-            {
+            if (user == null) {
                 //Create
                 user =  new Person(
-                        username     : Person.NEW_USER,
-                        userRealName : Person.NEW_USER,
-                        //                                passwd       : 'password',
-                        lastLogin    : new Date(),
-                        email        : '',
-                        emailShow    : false,
-                        description  : '',
-                        enabled      : true)
+                    username     : Person.NEW_USER,
+                    userRealName : Person.NEW_USER,
+                    lastLogin    : new Date(),
+                    email        : '',
+                    emailShow    : false,
+                    description  : '',
+                    enabled      : true
+                )
                 saveInstance(user)
                 def userRole = Role.findByAuthority(ERoleAuthority.ROLE_USER.strVal)
                 def users = Person.findAllByUsername(Person.NEW_USER)
@@ -781,25 +806,25 @@ class BootStrap {
         }
     }
 
-    private assignDashboardsToGroup(Group group, String groupType, int numDashboards, int numDashboardsWidgets) {
+    private assignDashboardsToStackGroup(Stack stack, int numDashboards, int numDashboardsWidgets) {
         def allWidgets = WidgetDefinition.list()
+
+        Group group =  stack.defaultGroup
 
         for (int i = 1; i <= numDashboards; i++) {
             def dashboardGuid = generateId()
             def paneGuid = generateId()
 
             def dashboard = new Dashboard(
-                name: groupType + ' Dashboard ' + i + ' (' + group.name + ')',
+                name: 'Stack Dashboard ' + i + ' (' + group.name + ')',
                 isdefault: true,
+                stack: stack,
                 guid: dashboardGuid,
                 dashboardPosition: 0,
                 alteredByAdmin: false,
                 publishedToStore: true,
                 layoutConfig: '{"xtype":"desktoppane","flex":1,"height":"100%","items":[],"paneType":"desktoppane","widgets":[],"defaultSettings":{"widgetStates":{"ec5435cf-4021-4f2a-ba69-dde451d12551":{"x":4,"y":5,"height":383,"width":540,"timestamp":1348064185725},"eb5435cf-4021-4f2a-ba69-dde451d12551":{"x":549,"y":7,"height":250,"width":295,"timestamp":1348064183912}}}}'
             )
-
-            groupType == 'Stack' && (dashboard.stack = group.stacks?.toArray()[0])
-
             def rand = new Random()
             def randomWidget
 

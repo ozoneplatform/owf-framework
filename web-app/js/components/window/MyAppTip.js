@@ -387,8 +387,7 @@ Ext.define('Ozone.components.window.MyAppTip', {
                 id: stack.id
             },
             callback: function(options, success, response) {
-                // If request is not successful, fall back in the client-side list of groups
-                stackGroups = success ? Ext.decode(response.responseText) : stack.groups;
+                stackGroups = success ? Ext.decode(response.responseText) : [];
 
                 var groupAssignment
                 // Find out whether stack belongs to one of the user's groups (including OWF Users and OFW Administrators)
@@ -516,42 +515,6 @@ Ext.define('Ozone.components.window.MyAppTip', {
 
         }, this, {single: true});
         mpLauncher.gotoMarketplace(widget);
-    },
-
-    /**
-     * Returns true if the stack and the current user belong to the same group.
-     * @param stack
-     * @returns {*}
-     */
-    isStackAGroupAssignment: function(stack) {
-        var stackGroups
-        var userGroups = Ozone.config.user.groups
-
-        Ext.Ajax.request({
-            url: Ozone.util.contextPath() + '/stack/listGroups',
-            method: 'GET',
-            params: {
-                id: stack.id
-            },
-            success: function(response, opts) {
-                stackGroups = Ext.decode(response.msg);
-            },
-            failure: function(response, opts) {
-                // Fallback
-                stackGroups = stack.groups;
-            }
-        });
-
-
-        var stackAndUserGroupsIntersect = function(stackGroups, userGroups) {
-            if (_.find(stackGroups, function(stackGroup) { return _.find(userGroups, {'id' : stackGroup.id})})) {
-                return true;
-            } else {
-                // A hack to verify whether the stack is in one of the user's implicit groups
-                return Boolean(_.find(stackGroups, { 'displayName': 'OWF Users' }) ||
-                    (Ozone.config.user.isAdmin && _.find(stackGroups, { 'displayName': 'OWF Administrators' })));
-            }
-        }
     },
 
     /**

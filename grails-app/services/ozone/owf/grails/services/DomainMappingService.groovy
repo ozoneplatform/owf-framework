@@ -331,9 +331,9 @@ class DomainMappingService {
         def results = null;
         if (ids) {
             results = DomainMapping.withCriteria({
+                eq('srcType', WidgetDefinition.TYPE)
                 inList('destId', ids)
                 eq('destType', WidgetDefinition.TYPE)
-                eq('srcType', WidgetDefinition.TYPE)
                 eq('relationshipType', RelationshipType.requires.toString())
             });
         }
@@ -345,11 +345,38 @@ class DomainMappingService {
         if (ids) {
             results = DomainMapping.withCriteria({
                 inList('srcId', ids)
-                eq('destType', WidgetDefinition.TYPE)
                 eq('srcType', WidgetDefinition.TYPE)
                 eq('relationshipType', RelationshipType.requires.toString())
+                eq('destType', WidgetDefinition.TYPE)
             });
         }
         return results;
+    }
+
+    List getClonedDashboardMappings (Person person) {
+        DomainMapping.findAll("\
+            FROM DomainMapping dm, Dashboard d \
+            WHERE \
+                dm.relationshipType = ? AND \
+                dm.srcId = d.id AND \
+                d.user = ?", [RelationshipType.cloneOf.strVal, person])
+    }
+
+    List getGroupDashboardMappings (Collection<Group> groups) {
+        DomainMapping.executeQuery("\
+            FROM DomainMapping dm, Dashboard d \
+            WHERE \
+                dm.srcId in (:groups) AND \
+                dm.srcType = :srcType AND \
+                dm.relationshipType = :relationshipType AND \
+                dm.destId = d.id AND \
+                dm.destType = :destType",
+            [
+                groups: groups.collect { Group g -> g.id },
+                srcType: 'group',
+                relationshipType: RelationshipType.owns.strVal,
+                destType: 'dashboard'
+            ]
+        )
     }
 }

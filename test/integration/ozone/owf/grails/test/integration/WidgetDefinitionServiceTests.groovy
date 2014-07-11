@@ -192,8 +192,8 @@ class WidgetDefinitionServiceTests {
                     "defaultSettings": {}
                 }""", description: 'This is a stack dashboard.')
 
-        domainMappingService.createMapping(stack1.findStackDefaultGroup(), RelationshipType.owns, stackDashboard1)
-        domainMappingService.createMapping(stack1.findStackDefaultGroup(), RelationshipType.owns, stackDashboard2)
+        domainMappingService.createMapping(stack1.defaultGroup, RelationshipType.owns, stackDashboard1)
+        domainMappingService.createMapping(stack1.defaultGroup, RelationshipType.owns, stackDashboard2)
 
         def result = widgetDefinitionService.list([stack_id: stack1.id])
         assert result.success

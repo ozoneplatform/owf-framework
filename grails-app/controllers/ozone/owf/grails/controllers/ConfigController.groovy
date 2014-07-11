@@ -1,6 +1,10 @@
 package ozone.owf.grails.controllers
 
 import grails.util.Environment
+import org.hibernate.FetchMode
+import ozone.owf.grails.domain.Dashboard
+import ozone.owf.grails.domain.Person
+import ozone.owf.grails.domain.PersonWidgetDefinition
 
 import static ozone.owf.enums.OwfApplicationSetting.*
 import ozone.owf.grails.OwfException
@@ -19,9 +23,8 @@ class ConfigController {
     def serviceModelService
     def customHeaderFooterService
     def owfApplicationConfigurationService
-    def DashboardService
+    def dashboardService
     def personWidgetDefinitionService
-
 
     def config = {
         def curUser = accountService.getLoggedInUser()
@@ -120,7 +123,7 @@ class ConfigController {
         conf.showAnimations = showAnimations
         conf.showHints = showHints
 
-        def initialData = getInitialData()
+        def initialData = getInitialData(curUser)
 
         render(view: 'config_js',
                 model: [
@@ -130,29 +133,22 @@ class ConfigController {
                 contentType: 'text/javascript')
     }
 
-    private getInitialData(){
+    private getInitialData(Person user){
 
-        def dashboards,
-            widgets,
-            appComponentsViewState
+        def appComponentsViewState
 
         try {
-            dashboards =  dashboardService.list(params).dashboardList
-            widgets = personWidgetDefinitionService.list(params).personWidgetDefinitionList
-
             appComponentsViewState = preferenceService.showForUser([
                 namespace: "owf",
                 path: "appcomponent-view"
-            ]);
-            appComponentsViewState?.preference = appComponentsViewState?.preference?.value;
+            ])
+            appComponentsViewState?.preference = appComponentsViewState?.preference?.value
         }
         catch (OwfException owe) {
             handleError(owe)
         }
 
         return [
-            dashboards: dashboards,
-            widgets: widgets,
             appComponentsViewState: appComponentsViewState
         ]
     }

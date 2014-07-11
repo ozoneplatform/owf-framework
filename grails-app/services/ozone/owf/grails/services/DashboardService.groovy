@@ -1,6 +1,7 @@
 package ozone.owf.grails.services
 
 import grails.converters.JSON
+import org.grails.plugins.metrics.groovy.Timed
 import org.codehaus.groovy.grails.web.json.JSONObject
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
@@ -21,9 +22,8 @@ class DashboardService extends BaseService {
     def domainMappingService
     def serviceModelService
     def widgetDefinitionService
-//    def groupService
-    
-    def addOrRemove(params) {
+
+    def addOrRemove (params) {
         def returnValue = [:]
 
         if (!accountService.getLoggedInUserIsAdmin()) {
@@ -61,15 +61,15 @@ class DashboardService extends BaseService {
         return [success:true, data:returnValue]
     }
 
-    def addGroupDashboardToGroup(Dashboard groupDashboard, Group group) {
+    def addGroupDashboardToGroup (Dashboard groupDashboard, Group group) {
         domainMappingService.createMapping(group, RelationshipType.owns, groupDashboard)
     }
 
-    def removeGroupDashboardFromGroup(Dashboard groupDashboard, Group group) {
+    def removeGroupDashboardFromGroup (Dashboard groupDashboard, Group group) {
         domainMappingService.deleteMapping(group, RelationshipType.owns, groupDashboard)
     }
 
-    private def getUserPrivateDashboards(user, dmParentId) {
+    private def getUserPrivateDashboards (user, dmParentId) {
 
         // This problem is somewhat cumbersome because there's no direct
         // linkage between dashboard and domain mapping, from either
@@ -107,12 +107,12 @@ class DashboardService extends BaseService {
         return col
     }
 
-    private def processGroupDashboards(groups,user) {
+    private def processGroupDashboards(groups, Person person) {
         def privateGroupDashboardToGroupsMap = [:]
-        
+
         def maxPosition = 0
-        if (user != null) {
-            maxPosition = getMaxDashboardPosition(user)
+        if (person != null) {
+            maxPosition = getMaxDashboardPosition(person)
         }
         if (maxPosition < 0) maxPosition = 0;
 
@@ -120,17 +120,17 @@ class DashboardService extends BaseService {
         def bulkMappings = domainMappingService.getBulkMappings(groups, RelationshipType.owns, Dashboard.TYPE)
         bulkMappings.each { DomainMapping dm ->
 
-            //if there is no user then there is no need to create private user copies
-            if (user != null) {
-                //check if this group dashboard already has a private copy for this user
-                def privateGroupDashboards = getUserPrivateDashboards(user, dm.destId)
+            //if there is no person then there is no need to create private person copies
+            if (person != null) {
+                //check if this group dashboard already has a private copy for this person
+                def privateGroupDashboards = getUserPrivateDashboards(person, dm.destId)
 
-                //create private copy of the group dashboard for the user if they don't have one
+                //create private copy of the group dashboard for the person if they don't have one
                 if (privateGroupDashboards.isEmpty()) {
                     Dashboard groupDash = Dashboard.get(dm.destId)
-                    if (shouldCloneGroupDashboard(groupDash, user)) {
+                    if (shouldCloneGroupDashboard(groupDash, person)) {
 
-                        def privateDash = cloneGroupDashboardAndCreateMapping(groupDash, user.id, maxPosition)
+                        def privateDash = cloneGroupDashboardAndCreateMapping(groupDash, person.id, maxPosition)
 
                         //save privateGroupDashboardInfo
                         addGroupToDashboardToGroupsMap(dm.srcId, privateGroupDashboardToGroupsMap, privateDash.dashboard.id)
@@ -206,7 +206,7 @@ class DashboardService extends BaseService {
         }
     }
 
-    private def listDashboards(params) {
+    private def listDashboards(params = [:]) {
         def dashboardServiceModelList = []
         def opts = [:]
 
@@ -246,21 +246,9 @@ class DashboardService extends BaseService {
         // Or stack default groups for stacks associated with the all users group.
         def stackDefaultGroups = []
         if (params.user != null) {
-            
-            def stacks = Stack.withCriteria {
-                groups {
-                    people {
-                        eq('id',params.user.id)
-                    }
-                }
-
-                cache(true)
-                cacheMode(CacheMode.GET)
-            }
-            
-            stackDefaultGroups = stacks.collect { it.findStackDefaultGroup() }
+            stackDefaultGroups = params.user.stackDefaultGroups
         }
-        
+
         //get groups
         def groups = Group.withCriteria {
 
@@ -287,7 +275,7 @@ class DashboardService extends BaseService {
             groups = groups << allUsersGroup
 
             // If the users group contained stacks, add their default groups.
-            def allUsersStackGroups = allUsersGroup?.stacks?.collect{ it.findStackDefaultGroup() }
+            def allUsersStackGroups = allUsersGroup?.stacks?.collect{ it.defaultGroup }
             if (allUsersStackGroups) {
                 groups = (groups << allUsersStackGroups).flatten()
             }
@@ -304,7 +292,7 @@ class DashboardService extends BaseService {
                 groups = groups << allAdminsGroup
 
                 // If the admin group contained stacks, add their default groups
-                def allAdminStackGroups = allAdminsGroup?.stacks?.collect{ it.findStackDefaultGroup() }
+                def allAdminStackGroups = allAdminsGroup?.stacks?.collect{ it.defaultGroup }
                 if (allAdminStackGroups) {
                     groups = (groups << allAdminStackGroups).flatten()
                 }
@@ -322,7 +310,7 @@ class DashboardService extends BaseService {
             //      domainMappingService.getBulkMappings(groups,RelationshipType.owns,Dashboard.TYPE).each {
             //        groupDashboardIds << it.destId
             //      }
-            groupDashboardIds = Dashboard.withCriteria { 
+            groupDashboardIds = Dashboard.withCriteria {
                 isNull('user')
                 if (params.isStackDashboard == false || params.isStackDashboard == 'false') {
                     isNull('stack')
@@ -339,7 +327,7 @@ class DashboardService extends BaseService {
         if (params.stack_id != null) {
             Stack stack = Stack.get(params.stack_id)
             if (stack != null){
-                def defaultGroup = stack.findStackDefaultGroup()
+                def defaultGroup = stack.defaultGroup
                 domainMappingService.getMappings(defaultGroup,RelationshipType.owns,Dashboard.TYPE).each { stackDashboardIds << it.destId }
             }
         }
@@ -356,7 +344,7 @@ class DashboardService extends BaseService {
         } else {
             privateGroupDashboardToGroupsMap = processGroupDashboards(groups,params.user)
         }
-        
+
         //get group dashboards
         def criteria = Dashboard.createCriteria()
         def userDashboardList = criteria.list(opts) {
@@ -548,7 +536,7 @@ class DashboardService extends BaseService {
                 person = Person.get(personId);
             }
         }
-        
+
         def maxPosition = getMaxDashboardPosition(person)
         maxPosition++
 
@@ -707,7 +695,7 @@ class DashboardService extends BaseService {
         if (accountService.getLoggedInUsername().equals(groupDashboard?.stack?.owner?.username)) {
 
             if (groupDashboard.stack) {
-                def stackDefaultGroup = groupDashboard.stack.findStackDefaultGroup()
+                def stackDefaultGroup = groupDashboard.stack.defaultGroup
                 domainMappingService.deleteMapping(stackDefaultGroup, RelationshipType.owns, groupDashboard)
             }
             groupDashboard.delete()
@@ -888,7 +876,7 @@ class DashboardService extends BaseService {
                 if (dashboard.user == null) {
                     // Get all the groups that own this dashboard
                     def mappings = domainMappingService.getMappings(dashboard, RelationshipType.owns, Group.TYPE, 'dest');
-                    mappings?.each { 
+                    mappings?.each {
                         // Get the actual group object.
                         def group = Group.get(it.srcId)
                         if (group != null) {
@@ -1199,7 +1187,7 @@ class DashboardService extends BaseService {
             getUniversalNameToGuidMap(universalNameToGuidMap, items[i])
         }
     }
-    
+
     def getMaxDashboardPosition(person) {
         def queryReturn
         if(!person) {
@@ -1229,9 +1217,9 @@ class DashboardService extends BaseService {
      */
     void syncDashboardForPublish(Dashboard dashboard, Person owner) {
         def clonedDashboards = domainMappingService.getMappings(
-            dashboard, 
-            RelationshipType.cloneOf, 
-            Dashboard.TYPE, 
+            dashboard,
+            RelationshipType.cloneOf,
+            Dashboard.TYPE,
             'dest'
         )
 
@@ -1243,8 +1231,8 @@ class DashboardService extends BaseService {
         }
 
         if (ownerDashboard?.markedForDeletion) {
-            clonedDashboards.collect { Dashboard.get(it.srcId) }.each { 
-                it.delete() 
+            clonedDashboards.collect { Dashboard.get(it.srcId) }.each {
+                it.delete()
             }
             domainMappingService.purgeAllMappings(dashboard)
             dashboard.delete(flush:true)
@@ -1270,11 +1258,11 @@ class DashboardService extends BaseService {
             dashboard.publishedToStore = true
 
             if (!dashboard.save()) {
-                def message = "Dashboard ${dashboard.name} failed validation" 
+                def message = "Dashboard ${dashboard.name} failed validation"
                 dashboard.errors.each { log.error it }
 
-                throw new OwfException(exceptionType: OwfExceptionTypes.Validation, 
-                    message: message) 
+                throw new OwfException(exceptionType: OwfExceptionTypes.Validation,
+                    message: message)
             }
         }
     }
@@ -1312,7 +1300,7 @@ class DashboardService extends BaseService {
         // Get the list of default groups of stacks belonging to user's groups
         List<Group> stackDefaultGroups = userGroups.collect { Group userGroup ->
             userGroup.stacks?.collect { Stack stack ->
-                stack.findStackDefaultGroup()
+                stack.defaultGroup
             }?.flatten()
         }
         // Add the stack default groups to the user group list since user has access to these stacks
@@ -1348,7 +1336,7 @@ class DashboardService extends BaseService {
      */
     def purgePersonalDashboards(Stack stack, Group group) {
 
-        Group stackDefaultGroup = stack.findStackDefaultGroup()
+        Group stackDefaultGroup = stack.defaultGroup()
 
         // List of user who will be affected by the change (all group users who do not have direct access to the stack)
         Set<Person> users = (group.name == "OWF Users" || group.name == "OWF Administrators" ? new HashSet(Person.findAll()) : (group.people ? new HashSet(group.people) : new HashSet())) - stackDefaultGroup.people
@@ -1362,6 +1350,49 @@ class DashboardService extends BaseService {
 
             // Remove these personal dashboards
             personalDashboards.each {deletePersonalDashboard(it)}
+        }
+    }
+
+    List<Dashboard> myDashboards (Person person) {
+        Dashboard.findAllByUser(person)
+    }
+
+    @Timed
+    void sync (Person person) {
+        Set<Group> groups = person.getGroupsToSync()
+
+        // find max dashboard position
+        def maxPosition = 0
+        if (person != null) {
+            maxPosition = getMaxDashboardPosition(person)
+        }
+        if (maxPosition < 0) maxPosition = 0;
+
+        // get all group dashboard mappings
+        List groupDashboardMappings = domainMappingService.getGroupDashboardMappings(groups)
+
+        // get all group dashboards
+        List groupDashboards = groupDashboardMappings.collect { it[1] }
+
+        // get all dashboards for user that are clones
+        List clonedDashboardMappings = domainMappingService.getClonedDashboardMappings(person)
+
+        // create a map, group dashboard id => user's clone dashboard
+        Map cloneDashboards = [:]
+        clonedDashboardMappings.each {
+            DomainMapping dm = it[0]
+            Dashboard d = it[1]
+            cloneDashboards[dm.destId] = d
+        }
+
+        groupDashboards.each { Dashboard groupDash ->
+            //check if this group dashboard already has a private copy for this person
+            def cloneDashboard = cloneDashboards[groupDash.id]
+
+            //create private copy of the group dashboard for the person if they don't have one
+            if (!cloneDashboard && shouldCloneGroupDashboard(groupDash, person)) {
+                cloneGroupDashboardAndCreateMapping(groupDash, person.id, maxPosition)
+             }
         }
     }
 }
