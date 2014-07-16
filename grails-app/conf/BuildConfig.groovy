@@ -69,7 +69,6 @@ def warExcludes = [
                     'WEB-INF/lib/jetty-naming-6.1.21.jar',
                     'WEB-INF/lib/jetty-plus-6.1.21.jar',
                     'WEB-INF/lib/jetty-util-6.1.21.jar',
-                    "WEB-INF/lib/owf-security-extras-${config.owf.security.rev}.zip",
                     "WEB-INF/lib/owf-security-project-${config.owf.security.rev}.zip",
                     'WEB-INF/lib/servlet-api-2.5-20081211.jar',
                     'WEB-INF/lib/jasper-compiler-5.5.15.jar',
@@ -163,7 +162,7 @@ grails.project.dependency.resolution = {
                 'org.apache.httpcomponents:httpcore:4.1.1',
                 'org.apache.httpcomponents:httpclient:4.1.1'
 
-        compile('ozone-widgeting-framework-legacy:owf-security:3.25-SNAPSHOT') {
+        compile("org.ozoneplatform:ozone-security:${config.owf.security.rev}") {
             excludes([group: 'org.springframework'])
         }
     }

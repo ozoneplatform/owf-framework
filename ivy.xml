@@ -7,7 +7,6 @@
         <conf name="jsdoc" />
         <conf name="zip" />
         <conf name="bundle" />
-        <!--conf name="jetty" /-->
         <conf name="tomcat" />
         <conf name="hsqldb" />
         <conf name="release" />
@@ -21,18 +20,13 @@
                 rev="${tomcat.custom.rev}" transitive="false" conf="tomcat->*">
             <artifact name="${tomcat.custom.module}" type="zip" />
         </dependency>
-        <dependency org="${owf.security.org}" conf="bundle->*" name="${owf.security.module}"
-                rev="${owf.security.rev}" transitive="false" changing="true"/>
+
         <dependency org="${owf.security.org}" conf="bundle->*"
                 name="${owf.security.module}-project" rev="${owf.security.rev}"
                 transitive="false" changing="true">
             <artifact name="${owf.security.module}-project" type="zip" />
         </dependency>
-        <dependency org="${owf.security.org}" conf="bundle->*"
-                name="${owf.security.module}-extras" rev="${owf.security.rev}"
-                transitive="false" changing="true" >
-            <artifact name="${owf.security.module}-extras" type="zip" />
-        </dependency>
+
         <dependency org="ozone-widgeting-framework-legacy" name="OWFAntTasks" rev="1.0.0"
             conf="jsdoc->*;compressjs->*;build->*" />
         <dependency org="net.alchim31.3rd.com.yahoo.platform.yui" name="yuicompressor"

@@ -221,7 +221,7 @@
 
     <target name="stage-extras" depends="compile-themes">
         <mkdir dir="${tomcat.dir}" />
-        <mkdir dir="${staging.dir}/owf-security" />
+        <mkdir dir="${staging.dir}/${owf.security.module}" />
         <mkdir dir="${staging.dir}/etc/tools" />
 
         <ant antfile="build.xml" dir="${basedir}/tools/TestDbConversion"/>
@@ -430,20 +430,40 @@
     </target>
 
     <target name="stage-owf">
-	<!-- <ivy:retrieve pattern="${staging.dir}/[artifact]-[revision].[ext]" type="zip" conf="bundle" />  -->
-
         <copy file="${basedir}/target/owf.war" tofile="${tomcat.dir}/webapps/owf.war" />
-        <copy file="${staging.dir}/owf-security-project-${owf.security.rev}.zip" tofile="${staging.dir}/owf-security/owf-security-project.zip" />
-        <unzip src="${staging.dir}/owf-security-extras-${owf.security.rev}.zip" dest="${staging.dir}" />
+        <antcall target='stage-security' />
         <antcall target='stage-extras' />
-        <copy file="LICENSE.txt"  tofile="${staging.dir}/LICENSE.txt"/>
+        <copy file="LICENSE.txt" tofile="${staging.dir}/LICENSE.txt" />
         <copy file="COPYRIGHT.txt" tofile="${staging.dir}/COPYRIGHT.txt" />
     </target>
 
-    <target  name="post-bundle-cleanup" >
-        <delete file="${staging.dir}/owf-security-extras-${owf.security.rev}.zip" />
+    <target name="stage-security">
+        <!-- Rename security project to remove version number for simplicity -->
+        <copy file="${staging.dir}/${owf.security.module}-project-${owf.security.rev}.zip"
+            tofile="${staging.dir}/${owf.security.module}/${owf.security.module}-project.zip" />
+
+        <!-- Unzip sample Spring configuration files -->
+        <unzip src="${staging.dir}/${owf.security.module}/${owf.security.module}-project.zip"
+            dest="${staging.dir}/${owf.security.module}">
+            <patternset>
+                <include name="src/main/resources/spring/**" />
+            </patternset>
+            <filtermapper>
+                <replacestring from="src/main/resources/spring/" to="" />
+            </filtermapper>
+        </unzip>
+
+        <delete dir="${staging.dir}/${owf.security.module}/src" />
+
+        <!-- Add default sample Spring configuration to Tomcat CLASSPATH -->
+        <copy todir="${tomcat.dir}/lib">
+            <fileset dir="${staging.dir}/${owf.security.module}"
+                includes="OWFsecurityContext.xml,MPsecurityContext.xml,MetricSecurityContext.xml,users.properties,ozone-security-beans/**" />
+        </copy>
+    </target>
+
+    <target name="post-bundle-cleanup">
         <delete file="${staging.dir}/owf-security-project-${owf.security.rev}.zip" />
-    	<delete file="${staging.dir}/owf-security-${owf.security.rev}.jar" />
     	<delete>
     	    <fileset dir="${staging.dir}" includes="*.zip"/>
     	</delete>
