@@ -85,9 +85,20 @@ class Group implements Serializable{
     *
     **/
     public void syncPeople () {
-        this.people.each { Person p ->
-            p.requiresSync = true
-            p.save()
+        if (this.name == USERS) {
+            Person.executeUpdate('update Person p set p.requiresSync=:value', [value: true])
+        }
+        else if(this.name == ADMINS) {
+            Role.findByAuthority(Role.ADMIN).people.each { Person p ->
+                p.requiresSync = true
+                p.save()
+            }
+        }
+        else {
+            this.people.each { Person p ->
+                p.requiresSync = true
+                p.save()
+            }
         }
     }
 
