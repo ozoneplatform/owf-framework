@@ -1,6 +1,7 @@
 package ozone.owf.grails.services
 
 import grails.converters.JSON
+import org.grails.plugins.metrics.groovy.Metrics
 import org.grails.plugins.metrics.groovy.Timed
 import org.codehaus.groovy.grails.web.json.JSONObject
 import ozone.owf.grails.OwfException
@@ -14,6 +15,8 @@ import org.hibernate.CacheMode
 import ozone.owf.grails.domain.DomainMapping
 import ozone.owf.grails.domain.RelationshipType
 
+import java.util.concurrent.TimeUnit
+
 class DashboardService extends BaseService {
 
     final def uniqueIdRegex = /"uniqueId"\s*:\s*"[A-Fa-f\d]{8}-[A-Fa-f\d]{4}-[A-Fa-f\d]{4}-[A-Fa-f\d]{4}-[A-Fa-f\d]{12}"/ // /"uniqueId"\s*\:\s*"[A-Fa-f\d]{8}-[A-Fa-f\d]{4}-[A-Fa-f\d]{4}-[A-Fa-f\d]{4}-[A-Fa-f\d]{12}"/
@@ -22,6 +25,9 @@ class DashboardService extends BaseService {
     def domainMappingService
     def serviceModelService
     def widgetDefinitionService
+
+    private final com.codahale.metrics.Timer groupsToCompare = Metrics.newTimer("groupsToCompare");
+    private final com.codahale.metrics.Timer createDashboards = Metrics.newTimer("createDashboards");
 
     def addOrRemove (params) {
         def returnValue = [:]
@@ -1359,8 +1365,10 @@ class DashboardService extends BaseService {
     }
 
     @Timed
-    void sync (Person person) {
-        Set<Group> groups = person.getGroupsToSync()
+    void sync (Person person, Set<Group> groupsToSync = null) {
+        Set<Group> groups = groupsToSync ?: person.getGroupsToSync()
+
+        final com.codahale.metrics.Timer.Context groupsToCompareContext = groupsToCompare.time()
 
         // find max dashboard position
         def maxPosition = 0
@@ -1385,7 +1393,9 @@ class DashboardService extends BaseService {
             Dashboard d = it[1]
             cloneDashboards[dm.destId] = d
         }
+        groupsToCompareContext.stop();
 
+        final com.codahale.metrics.Timer.Context createDashboardsContext = createDashboards.time()
         groupDashboards.each { Dashboard groupDash ->
             //check if this group dashboard already has a private copy for this person
             def cloneDashboard = cloneDashboards[groupDash.id]
@@ -1395,5 +1405,6 @@ class DashboardService extends BaseService {
                 cloneGroupDashboardAndCreateMapping(groupDash, person.id, maxPosition)
              }
         }
+        createDashboardsContext.stop()
     }
 }

@@ -483,7 +483,7 @@ class StackService {
     }
 
     boolean userAssignedToStackThroughGroup(Stack stack, Person user) {
-        Set<Group> groups = [stack.defaultGroup]
+        Set<Group> groups = []
         if(stack.groups) {
             groups.addAll(stack.groups)
         }
@@ -909,6 +909,7 @@ class StackService {
     def addToUser(Stack stack, Person user) {
         def stackDefaultGroup = stack.defaultGroup
         stackDefaultGroup.addToPeople(user)
+        user.sync()
     }
 
     //If a user is no longer assigned to a stack directly or through a group, this method

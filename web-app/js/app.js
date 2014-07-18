@@ -170,7 +170,7 @@ window.opener = null;
                 Ozone.config.customHeaderFooter,
                 floatingWidgetManager, bannerManager, dashboardDesignerManager, modalWindowManager, tooltipManager
             );
-        })
+        });
 
         return initLayoutPromise;
     }

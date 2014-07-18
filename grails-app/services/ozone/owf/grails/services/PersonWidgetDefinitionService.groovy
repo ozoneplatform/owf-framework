@@ -983,8 +983,8 @@ class PersonWidgetDefinitionService {
     }
 
     @Timed
-    void sync (Person person) {
-        Set<Group> groups = person.groupsToSync
+    void sync (Person person, Set<Group> groupsToSync = null) {
+        Set<Group> groups = groupsToSync ?: person.groupsToSync
 
         List<WidgetDefinition> groupWidgets = domainMappingService.getBulkMappedObjects(groups, RelationshipType.owns, WidgetDefinition.TYPE)
 

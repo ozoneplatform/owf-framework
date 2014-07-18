@@ -620,8 +620,9 @@ class AccountService {
     @Transactional(readOnly=false)
     def sync (Person person, Boolean forceSync = false) {
         if(person.requiresSync || forceSync) {
-            dashboardService.sync(person)
-            personWidgetDefinitionService.sync(person)
+            Set<Group> groupsToSync = person.groupsToSync
+            dashboardService.sync(person, groupsToSync)
+            personWidgetDefinitionService.sync(person, groupsToSync)
 
             if (person.requiresSync) {
                 person.sync(false)

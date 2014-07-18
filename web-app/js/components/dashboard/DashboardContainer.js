@@ -891,8 +891,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
     },
 
     refreshAppComponentsView: function () {
-        var me = this,
-            dfd = $.Deferred();
+        var me = this;
 
         var search_params = {
             limitParam: undefined,
@@ -900,7 +899,7 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             startParam: undefined
         };
 
-        OWF.Collections.AppComponents.fetch({fetch: true, data: $.param(search_params), cache: false}).done(function (resp) {
+        return $.ajax('person/me').then(function (person) {
             if(me.appComponentsView) {
                 var isVisible = me.appComponentsView.$el.is(':visible');
 
@@ -916,12 +915,10 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
             }
 
             // update Ext Store
-            me.widgetStore.loadRecords(me.widgetStore.proxy.reader.read(resp.data).records);
+            me.widgetStore.loadRecords(me.widgetStore.proxy.reader.read(person.widgets).records);
 
-            dfd.resolve();
+            return person;
         });
-
-        return dfd.promise();
     },
 
     showAppComponentsView: function () {
