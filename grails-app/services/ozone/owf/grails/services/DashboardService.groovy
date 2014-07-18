@@ -171,7 +171,7 @@ class DashboardService extends BaseService {
         args.with {
             //use a new guid
             guid = java.util.UUID.randomUUID().toString()
-            isdefault = groupDashboard.isdefault
+            isdefault = false
             dashboardPosition = maxPosition + (groupDashboard.dashboardPosition ?: 0)
             name = groupDashboard.name
             description = groupDashboard.description
@@ -501,21 +501,16 @@ class DashboardService extends BaseService {
 
     private def updateOldDefault(params){
         def isDefault = (params.isdefault == true || params.isdefault == "true" || params.isdefault== "on")
-        if ( !isDefault || !isDefaultDashboardExists(params))
-        {
+        if(!isDefault)
             return
-        }
-        def oldDefault = null;
-        try
-        {
-            oldDefault = getDefault(params).dashboard
+
+        try {
+            Dashboard oldDefault = getDefault(params).dashboard
+            oldDefault.isdefault = false
+            oldDefault.save(flush:true)
         }
         catch (e){
-            //Swallow, it's ok
-        }
-        if (oldDefault != null)
-        {
-            update([name: oldDefault.name, guid: oldDefault.guid, locked: oldDefault.locked, stack: oldDefault.stack, personId: params.personId, isdefault: false, doNotEnsureDefault: true])
+            //Swallow
         }
     }
 
@@ -546,9 +541,6 @@ class DashboardService extends BaseService {
             }
         }
 
-        def maxPosition = getMaxDashboardPosition(person)
-        maxPosition++
-
         def universalNameToOldGuidMap = [:]
         //Get a map between each widget's universalName and widgetGuid in the layoutConfig
         params.layoutConfig && params.layoutConfig instanceof String && getUniversalNameToGuidMap(universalNameToOldGuidMap, JSON.parse(params.layoutConfig))
@@ -569,19 +561,25 @@ class DashboardService extends BaseService {
             }
         }
 
+        Stack stack = null;
+        if(params.stack) {
+            stack = params.stack instanceof Stack ? params.stack : Stack.get(params.stack.id.toLong())
+        }
+
         def dashboard = new Dashboard(
-                name: params.name,
-                guid: (params.cloned)? ((Dashboard.findByGuid(params.guid) != null)? java.util.UUID.randomUUID().toString() : params.guid) : params.guid,
-                isdefault: convertStringToBool(params.isdefault),
-                dashboardPosition: params.dashboardPosition != null ? params.dashboardPosition : maxPosition,
-                description: JSONObject.NULL.equals(params.description) ? null : params.description,
-                iconImageUrl: JSONObject.NULL.equals(params.iconImageUrl) ? null : params.iconImageUrl,
-                type: JSONObject.NULL.equals(params.type) ? null : params.type,
-                layoutConfig: params.layoutConfig.toString() ?: "",
-                stack: params.stack != null ? Stack.get(params.stack.id.toLong()) : null,
-                locked: params.locked != null ? params.locked : false,
-                publishedToStore: params.publishedToStore ? convertStringToBool(params.publishedToStore) : false,
-                markedForDeletion: params.markedForDeletion ? convertStringToBool(params.markedForDeletion) : false)
+            name: params.name,
+            guid: (params.cloned)? ((Dashboard.findByGuid(params.guid) != null)? java.util.UUID.randomUUID().toString() : params.guid) : params.guid,
+            isdefault: convertStringToBool(params.isdefault),
+            dashboardPosition: params.dashboardPosition != null ? params.dashboardPosition : (getMaxDashboardPosition(person)++),
+            description: JSONObject.NULL.equals(params.description) ? null : params.description,
+            iconImageUrl: JSONObject.NULL.equals(params.iconImageUrl) ? null : params.iconImageUrl,
+            type: JSONObject.NULL.equals(params.type) ? null : params.type,
+            layoutConfig: params.layoutConfig.toString() ?: "",
+            stack: stack,
+            locked: params.locked != null ? params.locked : false,
+            publishedToStore: params.publishedToStore ? convertStringToBool(params.publishedToStore) : false,
+            markedForDeletion: params.markedForDeletion ? convertStringToBool(params.markedForDeletion) : false
+        )
 
         //if this is not a group dashboard then assign it to the specified user
         //otherwise group dashboards are not associated with any user
