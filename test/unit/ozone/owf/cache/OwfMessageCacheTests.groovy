@@ -3,16 +3,15 @@ package ozone.owf.cache;
 
 import org.junit.Before
 import org.junit.Test
-import org.ozoneplatform.messaging.payload.AmlMessage
+import org.ozoneplatform.messaging.payload.OzoneMessage
 import org.springframework.aop.aspectj.RuntimeTestWalker.ThisInstanceOfResidueTestVisitor;
 
 class OwfMessageCacheTests {
 
-    
     OwfMessageCache cache
-    
+
     def keys = []
-    
+
     @Before
     public void setup(){
         this.cache = new OwfMessageCache()
@@ -21,12 +20,12 @@ class OwfMessageCacheTests {
             calendar.add(GregorianCalendar.DAY_OF_WEEK, idx)
             def date = calendar.getTime()
             Thread.sleep(200)
-            this.cache.add(new AmlMessage(timestamp : date , body: "Message ${idx}"))
+            this.cache.add(new OzoneMessage(timestamp : date , body: "Message ${idx}"))
             keys << date
         }
     }
-       
-    
+
+
     @Test
     public void testGetMessages(){
         assert this.cache.getMessages(keys[6]).size() == 1  //item 6 returned
@@ -34,7 +33,7 @@ class OwfMessageCacheTests {
         assert this.cache.getMessages(keys[0]).size() == 7  //items 1-6 returned
     }
 
-    
+
     @Test
     public void testPurge(){
         //Get the initial size of the map so we can compare later
@@ -43,12 +42,11 @@ class OwfMessageCacheTests {
             Calendar calendar = new GregorianCalendar()
             calendar.add(GregorianCalendar.DAY_OF_WEEK, -idx)
             Thread.sleep(1000)
-            this.cache.add(new AmlMessage(timestamp : calendar.getTime() , body: "LOWER MESSAGE ${idx}"))
+            this.cache.add(new OzoneMessage(timestamp : calendar.getTime() , body: "LOWER MESSAGE ${idx}"))
         }
         this.cache.purge()
-        
+
         assert this.cache.items.size() == initSize
     }
-   
 
 }

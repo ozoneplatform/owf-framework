@@ -3,7 +3,7 @@ package ozone.owf.grails.services
 import org.apache.log4j.Logger
 import org.codehaus.groovy.grails.commons.GrailsApplication
 
-import org.ozoneplatform.messaging.payload.AmlMessage
+import org.ozoneplatform.messaging.payload.OzoneMessage
 import org.ozoneplatform.messaging.service.api.MessageService
 import org.ozoneplatform.messaging.exception.MessagingException
 import ozone.owf.cache.OwfMessageCache
@@ -66,7 +66,7 @@ class OwfMessagingService {
         }
 
         //Remove messages that are earlier than the since date and where the recipient list does not include the current user
-        messages.removeAll{ AmlMessage message ->
+        messages.removeAll{ OzoneMessage message ->
             message.timestamp <= since && message.recipients?.contains(loggedInUserName)
         }
 

@@ -10,7 +10,7 @@
 # /plugins
 /web-app/plugins
 /web-app/WEB-INF/classes
-/plugins/aml-commons-*
+/plugins/ozone-*
 
 # DB scripts that must be rebuilt for every release
 #/src/assemble/dbscripts/*InitialCreate.sql

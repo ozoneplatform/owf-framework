@@ -1,6 +1,6 @@
 package ozone.owf.cache
 
-import org.ozoneplatform.messaging.payload.AmlMessage
+import org.ozoneplatform.messaging.payload.OzoneMessage
 
 class OwfMessageCache {
 
@@ -17,7 +17,7 @@ class OwfMessageCache {
     }
 
 
-    public synchronized void add(AmlMessage message){
+    public synchronized void add(OzoneMessage message){
         if(!message.timestamp)
             return
         items.put(message.timestamp, message)
