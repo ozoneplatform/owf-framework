@@ -165,6 +165,7 @@ class DashboardService extends BaseService {
      * @param maxPosition
      * @return
      */
+    @Timed
     def cloneGroupDashboardAndCreateMapping(Dashboard groupDashboard, long userId, int maxPosition) {
         def args = [:]
         args.with {
@@ -197,6 +198,7 @@ class DashboardService extends BaseService {
      * @param user
      * @return
      */
+    @Timed
     private boolean shouldCloneGroupDashboard(Dashboard groupDashboard, Person user) {
         boolean userIsTheOwner = groupDashboard?.stack?.owner == user
         boolean noMarketplaces = !widgetDefinitionService.hasMarketplace().data
