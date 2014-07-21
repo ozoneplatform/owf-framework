@@ -199,7 +199,7 @@ class DashboardService extends BaseService {
      * @return
      */
     @Timed
-    private boolean shouldCloneGroupDashboard(Dashboard groupDashboard, Person user) {
+    boolean shouldCloneGroupDashboard(Dashboard groupDashboard, Person user) {
         boolean userIsTheOwner = groupDashboard?.stack?.owner == user
         boolean noMarketplaces = !widgetDefinitionService.hasMarketplace().data
         groupDashboard?.publishedToStore || userIsTheOwner || noMarketplaces
@@ -570,7 +570,7 @@ class DashboardService extends BaseService {
             name: params.name,
             guid: (params.cloned)? ((Dashboard.findByGuid(params.guid) != null)? java.util.UUID.randomUUID().toString() : params.guid) : params.guid,
             isdefault: convertStringToBool(params.isdefault),
-            dashboardPosition: params.dashboardPosition != null ? params.dashboardPosition : (getMaxDashboardPosition(person)++),
+            dashboardPosition: params.dashboardPosition != null ? params.dashboardPosition : (getMaxDashboardPosition(person) + 1),
             description: JSONObject.NULL.equals(params.description) ? null : params.description,
             iconImageUrl: JSONObject.NULL.equals(params.iconImageUrl) ? null : params.iconImageUrl,
             type: JSONObject.NULL.equals(params.type) ? null : params.type,
