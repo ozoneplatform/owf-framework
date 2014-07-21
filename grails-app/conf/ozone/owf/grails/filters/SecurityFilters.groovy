@@ -154,7 +154,7 @@ class SecurityFilters {
         try {
             def personInDB = accountService.getLoggedInUser()
 
-            def groupsToRemove = Group.withCriteria {
+            def groupsToRemove = userGroupNames.size() == 0 ? [] : Group.withCriteria {
                 eq('automatic', true)
                 people {
                     eq('username', username)
