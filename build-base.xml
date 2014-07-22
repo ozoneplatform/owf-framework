@@ -146,25 +146,25 @@
             <checkout url="${svnant.this.url}/${org}" destPath="${release.dir}/no-namespace/${org}" recurse="true"/>
         </svn>
         <condition property="ivys.not.available" >
-        	<or>
-	        	<not>
-	                <available file="${release.dir}/no-namespace/${org}/${module}/ivys/ivy-${version}.xml" type="file"/>
-	            </not>
-        		<not>
-        			<available file="${release.dir}/no-namespace/${org}/${module}/ivys/.svn" type="dir"/>
-        		</not>	
-        	</or>
+            <or>
+                <not>
+                    <available file="${release.dir}/no-namespace/${org}/${module}/ivys/ivy-${version}.xml" type="file"/>
+                </not>
+                <not>
+                    <available file="${release.dir}/no-namespace/${org}/${module}/ivys/.svn" type="dir"/>
+                </not>  
+            </or>
         </condition>
         <antcall target="delete_ivys" />
         <condition property="extensions.not.available" >
-        	<or>
-	            <not>
-	                <available file="${release.dir}/no-namespace/${org}/${module}/${ext}s/${module}-${version}.{ext}" type="file"/>
-	            </not>
-        		<not>
-        			<available file="${release.dir}/no-namespace/${org}/${module}/${ext}s/.svn" type="dir"/>
-        		</not>
-        	</or>
+            <or>
+                <not>
+                    <available file="${release.dir}/no-namespace/${org}/${module}/${ext}s/${module}-${version}.{ext}" type="file"/>
+                </not>
+                <not>
+                    <available file="${release.dir}/no-namespace/${org}/${module}/${ext}s/.svn" type="dir"/>
+                </not>
+            </or>
         </condition>
         <antcall target="delete_extension_files" />
     </target>
@@ -261,11 +261,11 @@
 
 
     <target name='branch' depends='init-ivy, init-svn, check-if-modified' >
-    	<branchOrTag type='branche' />
+        <branchOrTag type='branche' />
     </target>
 
     <target name="tag" depends="init-ivy, init-svn,check-if-modified" >
-    	<branchOrTag type='tag' />
+        <branchOrTag type='tag' />
     </target>
 
     <target name="build-offline-repo" >
@@ -316,8 +316,8 @@
                 <input message='Enter revison/version:' addproperty='rev' />
             </then>
         </if>
-    	
-    	<sequential>
+        
+        <sequential>
             <antcall >
                 <param name="org" value="${org}" />
                 <param name="module" value="${module}" />
@@ -325,31 +325,31 @@
                 <target name="create-release-repo" />
                 <target name="_prepare_release" />
                 <target name="_retrieve-from-remote-to-local-repo-release" />
-            	<target name="_check_to_commit_release_dependencies" />
+                <target name="_check_to_commit_release_dependencies" />
             </antcall>
         </sequential>
     </target-->
-	
-	<!--target name="_check_to_commit_release_dependencies" depends="init-ivy" 
-		description="-> checks to see if any release depencies need committed as well">
-		<input message='Do you want to commit "${org}:${module}:${version}" to "${ivy.repo}"? (Y or N)' addproperty='perform.commit' />
-		<if>
-	        <equals arg1='${perform.commit}' arg2='Y' casesensitive='false' />
-	        <then>
-				<echo message="Committing '${org}:${module}:${version}'..." />
-	        	<antcall target="_commit_release" />
-	        	<echo message='You might have uncommitted DEPENDENCIES for "${org}:${module}:${version}", verify that you need to add them to "${ivy.repo}".' />
-	        	<echo message='Go to "${release.dir}/no-namespace/" to verify.' />
-	        </then>
-	    </if>
-	</target-->
-	
-	<target name="_retrieve-from-remote-to-local-repo-release" depends="init-ivy"
-		description="--> install module locally from maven 2 repository with dependencies">
-		<ivy:install settingsRef="ivy.settings" overwrite='true'
-		                     organisation="${org}" module="${module}" revision="${version}"
-		                     from="maven2-library-repo" to="pre-release"  transitive="true"/>
-	</target>
+    
+    <!--target name="_check_to_commit_release_dependencies" depends="init-ivy" 
+        description="-> checks to see if any release depencies need committed as well">
+        <input message='Do you want to commit "${org}:${module}:${version}" to "${ivy.repo}"? (Y or N)' addproperty='perform.commit' />
+        <if>
+            <equals arg1='${perform.commit}' arg2='Y' casesensitive='false' />
+            <then>
+                <echo message="Committing '${org}:${module}:${version}'..." />
+                <antcall target="_commit_release" />
+                <echo message='You might have uncommitted DEPENDENCIES for "${org}:${module}:${version}", verify that you need to add them to "${ivy.repo}".' />
+                <echo message='Go to "${release.dir}/no-namespace/" to verify.' />
+            </then>
+        </if>
+    </target-->
+
+    <target name="_retrieve-from-remote-to-local-repo-release" depends="init-ivy"
+        description="--> install module locally from maven 2 repository with dependencies">
+        <ivy:install settingsRef="ivy.settings" overwrite='true'
+                     organisation="${org}" module="${module}" revision="${version}"
+                     from="maven2-library-repo" to="pre-release"  transitive="true"/>
+    </target>
 
     <target name="build-repo" depends="init-ivy">
         <antcall target="get-new-dependencies" >
@@ -360,7 +360,7 @@
     </target>
 
     <target name="stage-cas">
-	   <echo message="${ant.file.build-base}" />
+        <echo message="${ant.file.build-base}" />
         <ivy:retrieve pattern="${tomcat.dir}/webapps/cas.[ext]" type="war" conf="cas.server" />
         <ivy:retrieve pattern="${staging.dir}/[artifact]-[revision].[ext]" type="zip" conf="cas.server" />
         <unzip src="${staging.dir}/cas-server-extras-${cas.server.rev}.zip" dest="${bundle.dir}" />
@@ -368,8 +368,8 @@
 
     <target name="stage-tomcat">
         <ivy:retrieve pattern="${bundle.dir}/[artifact]-[revision].[ext]" conf="tomcat" />
-        <unzip src="${bundle.dir}/tomcat-owf-custom-${tomcat.custom.rev}.zip" dest="${bundle.dir}" />
-        <delete file="${bundle.dir}/tomcat-owf-custom-${tomcat.custom.rev}.zip" />
+        <unzip src="${bundle.dir}/${tomcat.custom.module}-${tomcat.custom.rev}.zip" dest="${bundle.dir}" />
+        <delete file="${bundle.dir}/${tomcat.custom.module}-${tomcat.custom.rev}.zip" />
     </target>
 
 </project>
