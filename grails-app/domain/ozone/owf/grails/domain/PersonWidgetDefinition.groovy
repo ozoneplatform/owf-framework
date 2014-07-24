@@ -78,6 +78,7 @@ class PersonWidgetDefinition implements Serializable, Comparable {
                         definitionVisible: widgetDefinition?.visible,
                         singleton: widgetDefinition?.singleton,
                         background: widgetDefinition?.background,
+                        mobileReady: widgetDefinition?.mobileReady,
                         descriptorUrl: widgetDefinition?.descriptorUrl,
                         //TODO: Do we need this?
                         //allRequired: widgetDefinition?.allRequired,

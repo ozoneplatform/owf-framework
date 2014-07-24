@@ -49,4 +49,11 @@ databaseChangeLog = {
         }
     }
 
+    changeSet(author: "owf", dbms: 'mssql, mysql, postgresql, hsqldb, oracle, h2', id: "7.16.0-6", context: 'create, upgrade, 7.16.0') {
+        addColumn(tableName: "widget_definition") {
+            column(name: "mobile_ready", type: "boolean", defaultValueBoolean: "false") {
+                constraints(nullable: "false")
+            }
+        }
+    }
 }

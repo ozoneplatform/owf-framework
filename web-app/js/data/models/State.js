@@ -1,7 +1,7 @@
 Ext.define('Ozone.data.State', {
     extend: 'Ext.data.Model',
     idProperty: 'uniqueId',
-    
+
     fields: [
         'uniqueId',
         'dashboardGuid',
@@ -28,7 +28,8 @@ Ext.define('Ozone.data.State', {
         { name: 'floatingWidget', type: 'boolean' },
         'intentConfig',
         'launchData',
-        { name: 'background', type: 'boolean' }
+        { name: 'background', type: 'boolean' },
+        { name: 'mobileReady', type: 'boolean' }
     ],
 
     get: function(field) {

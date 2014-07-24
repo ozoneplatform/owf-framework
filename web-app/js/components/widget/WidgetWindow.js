@@ -1,7 +1,7 @@
 Ext.define('Ozone.components.widget.WidgetWindow', {
     extend: 'Ext.window.Window',
     alias: ['widget.widgetwindow', 'widget.Ozone.components.widget.WidgetWindow'],
-    
+
     mixins: {
         widget: 'Ozone.components.widget.WidgetBase'
     },
@@ -9,11 +9,11 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
         new Ozone.components.keys.KeyMoveable(),
         new Ozone.plugins.WidgetWindow()
     ],
-    
+
     floating: {
         shadow: false
     },
-    
+
     hideMode: 'offsets',
     inactiveCls: 'inactive',
 
@@ -21,7 +21,7 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
     minimizable: true,
     constrain: !!Ext.isIE,
     constrainHeader: !Ext.isIE,
-    
+
     enableDeactivateShim: false,
     debugDeactivateShim: false,
     deactivateShim: null,
@@ -36,7 +36,7 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
     liveDrag: true,
 
     onEsc: Ext.emptyFn, //no close on ESC, we have alt+shift+W for that
-    
+
     initComponent: function(){
 
         if(!this.manager) {
@@ -57,7 +57,7 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
                 scope: this
             }
         });
-        
+
         //override functions
         Ext.apply(this,this.mixins.widget.overrides);
         this.afterInitComponent();
@@ -77,11 +77,11 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
             this.addMouseOverActivate();
         }
     },
-    
+
     bringToFront: function(){
         this.manager.bringToFront(this);
     },
-    
+
     addMouseOverActivate: function(){
         if (!this.isMouseOverActivateFlag) {
             this.el.on('mouseover', this.mouseOver, this);
@@ -89,7 +89,7 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
         }
         this.isMouseOverActivateFlag = true;
     },
-    
+
     removeMouseOverActivate: function(){
         if (this.isMouseOverActivateFlag) {
             this.el.un('mouseover', this.mouseOver, this);
@@ -103,7 +103,7 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
     },
 
     mouseOver: function(e, t, options) {
-        if (this.isMouseOverActivateFlag 
+        if (this.isMouseOverActivateFlag
             && OWF.Container.DragAndDrop.isDragging()
                 && this.mouseOverDeferredId == null) {
 
@@ -114,7 +114,7 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
                 this.mouseOverDeferredId = null;
 
             }, this.mouseOverActivateDelay, this);
-        
+
         }
     },
 
@@ -124,11 +124,11 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
             this.mouseOverDeferredId = null;
         }
     },
-    
+
     onMaximize: function(cmp) {
         cmp.resizer.disable();
     },
-    
+
     onRestore: function(cmp) {
         cmp.resizer.enable();
         if (cmp.focusOnRestore)
@@ -143,7 +143,7 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
             }
         }
     },
-    
+
     onDeActivate: function(cmp){
         if (this.enableDeactivateShim) {
             var box = this.body;
@@ -159,7 +159,7 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
                     useDisplay: true,
                     constrain: false
                 }, shimDiv);
-                
+
                 //set opacity
                 if (this.debugDeactivateShim) {
                     this.deactivateShim.setOpacity(0.5);
@@ -184,7 +184,7 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
             this.deactivateShim.show();
         }
     },
-    
+
     stateEvents: ['bodyresize', 'show', 'minimize', 'maximize', 'activate', 'deactivate', 'titlechange'],
 
     getState: function(){
@@ -212,7 +212,8 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
             launchData: this.launchData,
             singleton: this.singleton ? this.singleton : false,
             floatingWidget: this.floatingWidget ? this.floatingWidget : false,
-            background: this.background ? this.background : false
+            background: this.background ? this.background : false,
+            mobileReady: this.mobileReady ? this.mobileReady : false
         };
         if (this.rendered) {
             var zIndex = null;
@@ -248,18 +249,18 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
     },
 
     applyState: function(state){
-    
+
         this.setSize(state.width, state.height);
         this.setPosition(state.x, state.y);
 
         this.title = state.name;
-        
+
         // This is a problem:  In firefox you have to assign the
         // variable min or the first if statement will fail.
         // you cant do if(state.minimized). Not sure why yet
         this.minimized = state.minimized;
         this.maximized = state.maximized;
-        
+
     },
 
     toggleMaximize: function(event) {
@@ -270,7 +271,7 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
 
     // The following two functions are overridden here to comment out
     // specific lines that make the desktop more Flex friendly.
-    
+
     // private
 //    animShow: function(){
 //        this.proxy.show();
@@ -286,7 +287,7 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
 //            opacity: 0.5
 //        }));
 //    },
-    
+
     /**
      * Fits the window within its current container and automatically replaces
      * the {@link #maximizable 'maximize' tool button} with the 'restore' tool button.
@@ -306,9 +307,9 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
                 var maxTool = this.header.tools.maximize;
                 me.tools.restore.show();
 
-                if (maxTool.isFocused()) 
+                if (maxTool.isFocused())
                     this.tools.restore.focus();
-            
+
                 //focusOnRestore should be the tool that
                 //keyboard focus goes to when the window is
                 //restored
@@ -368,13 +369,13 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
     },
 
     restore: function () {
-        
+
         //check to see if the restore button has focus
         //this cannot be done in a restore
         //listener because the focus may have
         //already changed at that point
         if (!this.tools.restore.isFocused()) this.focusOnRestore = null;
-            
+
         this.callParent(arguments);
     },
 
@@ -384,10 +385,10 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
                 if (this.minimizable) {
                     this.tools.minimize.show();
                 }
-                
+
             //me.setSize(me.restoreSize);
             //me.setPosition(me.restorePos);
-            
+
                 this.minimized = false;
                 this.fireEvent('restore', this);
             }
@@ -410,14 +411,14 @@ Ext.define('Ozone.components.widget.WidgetWindow', {
             return me;
         }
     }()),
-    
+
     purgeListener: function(eventName) {
         var event = this.events[eventName];
         if(typeof event == 'object'){
             event.clearListeners();
         }
     },
-    
+
     restoreListener: function(eventName) {
         var event = this.originalStateEvents[eventName];
         if(typeof event == 'object'){

@@ -23,6 +23,7 @@ class WidgetDefinition implements Serializable {
     Boolean visible = true
     Boolean singleton = false
     Boolean background = false
+    Boolean mobileReady = false
     String descriptorUrl
 
     static hasMany = [
@@ -48,6 +49,7 @@ class WidgetDefinition implements Serializable {
         visible nullable: false, blank: false
         singleton nullable: false, blank: false
         descriptorUrl nullable: true, blank: true, maxSize: 2083
+        mobileReady(nullable:false)
     }
 
     static mapping = {

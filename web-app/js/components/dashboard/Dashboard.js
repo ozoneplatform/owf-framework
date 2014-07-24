@@ -362,7 +362,8 @@ Ext.define('Ozone.components.dashboard.Dashboard', {
                 'buttonOpened': false,
                 'region': "",
                 'singleton': widgetModel.get('singleton'),
-                'background': widgetModel.get('background')
+                'background': widgetModel.get('background'),
+                'mobileReady': widgetModel.get('mobileReady')
             };
 
             // workaround for now

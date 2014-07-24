@@ -18,6 +18,7 @@ class WidgetDefinitionServiceModel extends AbstractServiceModel {
     Boolean singleton
     Boolean visible
     Boolean background
+    Boolean mobileReady
     String descriptorUrl
     List directRequired = []
     List allRequired = []
@@ -49,6 +50,7 @@ class WidgetDefinitionServiceModel extends AbstractServiceModel {
                 singleton: singleton,
                 visible: visible,
                 background: background,
+                mobileReady: mobileReady,
                 descriptorUrl: descriptorUrl,
                 definitionVisible: visible,
                 directRequired: directRequired,

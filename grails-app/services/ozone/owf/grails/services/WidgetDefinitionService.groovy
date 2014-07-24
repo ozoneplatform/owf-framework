@@ -373,6 +373,7 @@ class WidgetDefinitionService {
                 singleton: (params.singleton != null)? params.singleton as Boolean : widgetDefinition.singleton,
                 visible: (params.visible != null)? params.visible as Boolean : widgetDefinition.visible,
                 background: (params.background != null)? params.background as Boolean : widgetDefinition.background,
+                mobileReady: (params.mobileReady != null)? params.mobileReady as Boolean : widgetDefinition.mobileReady,
                 descriptorUrl: !isNull(params.descriptorUrl) ? params.descriptorUrl : widgetDefinition.descriptorUrl,
                 widgetTypes: newWidgetTypes
             ]
@@ -861,6 +862,13 @@ class WidgetDefinitionService {
         widgetData.put("singleton", widgetDefinition.singleton)
         widgetData.put("background", widgetDefinition.background)
         widgetData.put("widgetTypes", widgetDefinition.widgetTypes?.name)
+        if(widgetDefinition.mobileReady)
+        {
+            widgetData.put("mobileReady",widgetDefinition.mobileReady)
+        }else {
+
+            widgetData.put("mobileReady",false)
+        }
 
         //Add non-required fields
         widgetDefinition.descriptorUrl && widgetData.put("descriptorUrl", widgetDefinition.descriptorUrl)
@@ -916,6 +924,8 @@ class WidgetDefinitionService {
             return 'visible'
             case ['background','value.background']:
             return 'background'
+            case ['mobileReady','value.mobileReady']:
+            return 'mobileReady'
             case ['descriptorUrl']:
             return 'descriptorUrl'
             case ['widgetTypes', 'value.widgetTypes']:

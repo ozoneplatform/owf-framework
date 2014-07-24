@@ -712,6 +712,7 @@ class StackService {
                     "visible": widgetDefinition.visible,
                     "singleton": widgetDefinition.singleton,
                     "background": widgetDefinition.background,
+                    "mobileReady": widgetDefinition.mobileReady,
                     "widgetTypes": [widgetDefinition.widgetTypes[0].name],
                     "intents": widgetDefinition.intents
             ]

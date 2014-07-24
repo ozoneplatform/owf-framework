@@ -337,6 +337,15 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                 },
                 {
                     xtype: 'checkbox',
+                    name: 'mobileReady',
+                    itemId: 'mobileReady',
+                    hidden: true,
+                    submitValue: true,
+                    fieldLabel: 'Mobile Ready',
+                    preventMark: true
+                },
+                {
+                    xtype: 'checkbox',
                     name: 'visible',
                     itemId: 'visible',
                     hidden: true,
@@ -412,6 +421,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                 singleton = component.getComponent('singleton'),
                 visible = component.getComponent('visible'),
                 background = component.getComponent('background'),
+                mobileReady = component.getComponent('mobileReady'),
                 widgetType = component.getComponent('_types'),
                 descriptorUrl = component.getComponent('descriptorUrl'),
                 intents = component.getComponent('intents');
@@ -431,6 +441,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             singleton.setValue(data.singleton).originalValue = data.singleton;
             visible.setValue(data.visible).originalValue = data.visible;
             background.setValue(data.background).originalValue = data.background;
+            mobileReady.setValue(data.mobileReady).originalValue = data.mobileReady;
             if (!descriptorUrl.getValue()) {
                 descriptorUrl.setValue(data.descriptorUrl).originalValue = data.descriptorUrl;
             }
@@ -515,6 +526,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                 singleton = component.getComponent('singleton'),
                 visible = component.getComponent('visible'),
                 background = component.getComponent('background'),
+                mobileReady = component.getComponent('mobileReady'),
                 widgetType = component.getComponent('_types'),
                 intents = component.getComponent('intents');
 
@@ -537,6 +549,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             singleton.setValue(data.singleton);
             visible.setValue(data.visible);
             background.setValue(data.background);
+            mobileReady.setValue(data.mobileReady);
             intents.setValue(Ext.JSON.encode(data.intents || ""));
 
             this.record.intents = data.intents || {};
@@ -586,6 +599,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             singleton = component.getComponent('singleton'),
             visible = component.getComponent('visible'),
             background = component.getComponent('background'),
+            mobileReady = component.getComponent('mobileReady'),
             widgetType = component.getComponent('_types');
 
         if (show) {
@@ -609,6 +623,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             singleton.show();
             visible.show();
             background.show();
+            mobileReady.show();
             widgetType.show();
         } else {
             horizontalRule.hide();
@@ -626,6 +641,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             singleton.hide();
             visible.hide();
             background.hide();
+            mobileReady.hide();
             widgetType.hide();
         }
     },
@@ -654,7 +670,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
             var formFields = ['widgetGuid', 'name', 'description', 'version', 'universalName',
                 'guid', 'url', 'headerIcon', 'image', 'width',
                 'height', 'singleton', 'visible',
-                'background', '_types', 'intents'];
+                'background', '_types', 'intents', 'mobileReady'];
 
             var formValues = {};
             for (var i = 0; i < formFields.length; i++) {
@@ -662,7 +678,7 @@ Ext.define('Ozone.components.admin.widget.WidgetEditPropertiesTab', {
                 var cmp = this.getComponent(field);
                 var value = cmp.getValue();
                 if (Ext.isEmpty(value) || (cmp.inputEl && cmp.inputEl.hasCls(cmp.emptyCls))) {
-                    if (field in ['singleton', 'visible', 'background']) {
+                    if (field in ['singleton', 'visible', 'background', 'mobileReady']) {
                         formValues[field] = false;
                     } else {
                         formValues[field] = "";

@@ -121,6 +121,7 @@ class MarketplaceService extends BaseService {
             singleton = obj.singleton
             visible = obj.widgetUrl.isAllWhitespace() ? false : obj.visible
             background = obj.background
+            mobileReady = obj.mobileReady
             descriptorUrl = descriptorUrlIsNull ? null : obj.descriptorUrl
             save(flush: true, failOnError: true)
         }

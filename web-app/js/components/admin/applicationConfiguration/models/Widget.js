@@ -10,6 +10,7 @@ define([
             visible: true,
             singleton: false,
             background: false,
+            mobileReady: false,
             height: 200,
             width: 200,
             widgetTypes: ['standard']

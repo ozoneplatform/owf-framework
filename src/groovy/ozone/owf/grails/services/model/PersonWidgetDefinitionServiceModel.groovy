@@ -47,6 +47,7 @@ class PersonWidgetDefinitionServiceModel extends AbstractServiceModel implements
                 definitionVisible: this.widgetDefinition?.visible,
                 singleton: this.widgetDefinition?.singleton,
                 background: this.widgetDefinition?.background,
+                mobileReady: this.widgetDefinition?.mobileReady,
                 descriptorUrl: this.widgetDefinition?.descriptorUrl,
                 allRequired: this.widgetDefinition?.allRequired,
                 directRequired: this.widgetDefinition?.directRequired,

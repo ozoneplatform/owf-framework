@@ -153,6 +153,7 @@ class ServiceModelService {
                         singleton: domain.singleton?true:false,
                         visible: domain.visible,
                         background: domain.background,
+                        mobileReady: domain.mobileReady?true:false,
                         descriptorUrl: domain.descriptorUrl,
                         directRequired: params.directRequired ? params.directRequired : widgetDefinitionServiceBean.getDirectRequiredIds(domain),
                         allRequired:  params.allRequired ? params.allRequired : widgetDefinitionServiceBean.getAllRequiredIds(domain),

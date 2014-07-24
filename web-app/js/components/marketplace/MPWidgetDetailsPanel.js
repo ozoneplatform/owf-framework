@@ -168,7 +168,8 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
             singleton: parentWidget.owfProperties && parentWidget.owfProperties != "" ? parentWidget.owfProperties.singleton : false,
             visible: parentWidget.owfProperties && parentWidget.owfProperties != "" ? parentWidget.owfProperties.visibleInLaunch : true,
             isSelected: true,
-            background: false
+            background: false,
+            mobileReady: false
         };
     	if (directRequired.length > 0) {
     		json.directRequired = Ext.JSON.encode(directRequired);
@@ -197,7 +198,8 @@ Ext.define('Ozone.components.marketplace.MPWidgetDetailsPanel', {
                     widgetVersion: requiredListings[i].versionName,
                     singleton: requiredListings[i].owfProperties ? requiredListings[i].owfProperties.singleton : false,
                     visible: requiredListings[i].owfProperties ? requiredListings[i].owfProperties.visibleInLaunch : true,
-                    background: false
+                    background: false,
+                    mobileReady: false
             	};
             	if (directRequired.length > 0) {
             		json.directRequired = Ext.JSON.encode(directRequired);
