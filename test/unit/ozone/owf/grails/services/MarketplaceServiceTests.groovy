@@ -51,6 +51,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         "singleton":false,
         "visible":true,
         "background":false,
+        "mobileReady":false,
         "height":200,
         "width":300,
         "directRequired" :[],
@@ -71,6 +72,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         "singleton":false,
         "visible":true,
         "background":false,
+        "mobileReady":false,
         "height":200,
         "width":300,
         "directRequired" :[],
@@ -92,6 +94,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         "singleton":false,
         "visible":true,
         "background":false,
+        "mobileReady":false,
         "height":200,
         "width":300,
         "directRequired" :[],
@@ -113,6 +116,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         "singleton":false,
         "visible":true,
         "background":false,
+        "mobileReady":false,
         "height":200,
         "width":300,
         "directRequired" :[],
@@ -138,6 +142,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         "singleton":false,
         "visible":true,
         "background":false,
+        "mobileReady":false,
         "height":200,
         "width":300,
         "directRequired" :[],
@@ -202,6 +207,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         assert !resultWidget.singleton
         assert resultWidget.visible
         assert !resultWidget.background
+        assert !resultWidget.mobileReady
         assert 200 == resultWidget.height
         assert 300 == resultWidget.width
 
@@ -228,6 +234,7 @@ class MarketplaceServiceTests extends GrailsUnitTestCase {
         assert !resultWidget.singleton
         assert resultWidget.visible
         assert !resultWidget.background
+        assert !resultWidget.mobileReady
         assert 200 == resultWidget.height
         assert 300 == resultWidget.width
         assert resultWidget.universalName == null

@@ -263,6 +263,7 @@ class WidgetDefinitionServiceTests {
         assert widgetDescriptor.contains('"width": ' + widget.width)
         assert widgetDescriptor.contains('"visible": ' + widget.visible)
         assert widgetDescriptor.contains('"background": ' + widget.background)
+        assert widgetDescriptor.contains('"mobileReady": ' + widget.mobileReady)
         assert widgetDescriptor.contains('"singleton": ' + widget.singleton)
         assert widgetDescriptor.contains('"intents":')
         assert widgetDescriptor.contains('"send":')
@@ -319,6 +320,7 @@ class WidgetDefinitionServiceTests {
         assert widget.width == widgetDescriptor.width
         assert widget.visible == widgetDescriptor.visible
         assert widget.background == widgetDescriptor.background
+        assert widget.mobileReady == widgetDescriptor.mobileReady
         assert widget.singleton == widgetDescriptor.singleton
         assert '["' + widget.widgetTypes.toArray()[0].name + '"]' == widgetDescriptor.widgetTypes.toString()
         assert widgetDefinitionIntent1.intent.action == widgetDescriptor.intents.send[0].action

@@ -272,6 +272,7 @@ class StackControllerTests extends OWFGroovyTestCase {
 	         "widgetUrl": "http://www.widget.com/widget1.html",
 	         "description": "This is my widget description",
 	         "background": false,
+	         "mobileReady": false,
 	         "widgetTypes": ["standard"],
 	         "widgetGuid": "$widgetGuid",
 	         "displayName": "widget1",

@@ -90,6 +90,7 @@ class DashboardServiceTests {
                         "singleton": false,
                         "floatingWidget": false,
                         "background": false,
+                        "mobileReady": false,
                         "zIndex": 19090,
                         "height": 250,
                         "width": 295
@@ -116,6 +117,7 @@ class DashboardServiceTests {
                         "singleton": false,
                         "floatingWidget": false,
                         "background": false,
+                        "mobileReady": false,
                         "zIndex": 19100,
                         "height": 440,
                         "width": 540
@@ -142,6 +144,7 @@ class DashboardServiceTests {
                         "singleton": false,
                         "floatingWidget": false,
                         "background": false,
+                        "mobileReady": false,
                         "zIndex": 19110,
                         "height": 440,
                         "width": 540
