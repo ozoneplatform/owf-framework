@@ -18,10 +18,11 @@ import org.apache.http.conn.ssl.SSLSocketFactory
 import org.apache.http.conn.ssl.TrustStrategy
 import org.apache.http.impl.client.BasicResponseHandler
 import org.apache.http.impl.client.DefaultHttpClient
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.codehaus.groovy.grails.web.json.JSONObject
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
+import grails.util.Holders as ConfigurationHolder
+
 import ozone.owf.grails.domain.*
 import java.security.cert.CertificateException
 import java.security.KeyStore

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.4"
-         xmlns="http://java.sun.com/xml/ns/j2ee"
+<web-app version="2.5"
+         metadata-complete="true"
+         xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-    <display-name>/@grails.project.key@</display-name>
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
+    <display-name>/@grails.project.key@</display-name>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -123,6 +124,10 @@
     <servlet>
         <servlet-name>grails</servlet-name>
         <servlet-class>org.codehaus.groovy.grails.web.servlet.GrailsDispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>dispatchOptionsRequest</param-name>
+            <param-value>true</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -137,9 +142,19 @@
         <url-pattern>*.gsp</url-pattern>
     </servlet-mapping>
 
+    <session-config>
+        <!-- 30 minutes -->
+        <session-timeout>30</session-timeout>
+    </session-config>
+
     <welcome-file-list>
+        <!--
+        The order of the welcome pages is important.  JBoss deployment will
+        break if index.gsp is first in the list.
+        -->
         <welcome-file>index.html</welcome-file>
         <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.gsp</welcome-file>
     </welcome-file-list>
 
     <jsp-config>
