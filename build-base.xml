@@ -9,8 +9,6 @@
     <property name="ivy.install.version" value="2.1.0" />
     <property name="ant.lib.dir" value="${user.home}/.ant/lib" />
     <property name="ivy.jar.file" value="${ant.lib.dir}/ivy-${ivy.install.version}.jar" />
-    <!--<property name="jetty.ver" value="6.1.11" />-->
-    <property name="tomcat.ver" value="7.0.21" />
     <property name="ivy.repo" value="https://www.owfgoss.org/nexus/content/groups/public/" />
     <property name='svnant.this.url' value='${ivy.repo}/no-namespace' />
     <property name='svn.ozone.baseline' value="https://www.owfgoss.org/svn/repos/ozone/baseline" />
