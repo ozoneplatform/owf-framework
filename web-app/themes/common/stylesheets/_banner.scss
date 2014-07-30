@@ -29,7 +29,7 @@
   html {
   .banner {
     .x-box-inner {
-      background-image: theme-background-image($theme-name, 'banner/logo.png');
+      background-image: theme-background-image($theme-name, 'aml/logo.png');
     }
 
   }  }
@@ -40,7 +40,7 @@
   html {
   .banner {
     .x-box-inner {
-      background-image: theme-background-image($theme-name, 'banner/logo-mini.png');
+      background-image: theme-background-image($theme-name, 'aml/logo-mini.png');
     }
 
   }
@@ -72,7 +72,7 @@
     .x-box-inner {
 
         height: $banner-button-icon-size;
-        background-image: theme-background-image($theme-name, 'banner/logo.png');
+        background-image: theme-background-image($theme-name, 'aml/logo.png');
         background-position: center;
         background-repeat: no-repeat;
 

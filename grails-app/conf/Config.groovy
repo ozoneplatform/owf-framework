@@ -1120,9 +1120,9 @@ quartz {
 
 cef {
     device {
-        vendor = "OZONE"
-        product = "OWF"
-        version = "500-27_L2::1.3"
+        vendor = "NSA"
+        product = "APPSMALL"
+        version = "500-27_L2::IC::1.3"
     }
 
     version = 0

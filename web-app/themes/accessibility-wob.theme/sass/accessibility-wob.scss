@@ -62,8 +62,6 @@ $owfgrey2: #424242;
 $owfgrey1: #565656;
 $owfgrey0: #efefef;
 
-$banner-button-background: #2a2a2a;
-
 $widget-launcher-special-color: #adf7ff;
 $widget-launcher-search-border-color: #000000;
 $widget-launcher-search-background-color: #1a1a1a;
@@ -83,36 +81,18 @@ $my-apps-hover-color: #141414;
 $my-apps-tooltip-color: #141414;
 $my-apps-tooltip-bar-color: #090909;
 
+/*
+ * These styles will only be applied to the OWf container, not the admin widgets
+ */
 #owf-body {
     height: 100%;
     outline: 0 none;
     cursor: default; // for IE8
-    background-color: #050b13;
+    background-color: #00050D;
     background-attachment:fixed;
     background-position: center center;
     background-repeat: no-repeat;
-    /*background-image: theme-image($theme-name, 'wallpapers/owf-bg.png');*/
-}
-
-#owf-body.x-gecko { /* > ensures IE doesn't see this block */
-    background-image: $watermark-img-path, $stripe-img-path,
-        -moz-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
-}
-
-#owf-body.x-webkit {
-    background-image: $watermark-img-path, $stripe-img-path,
-        -webkit-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
-}
-
-/*
- * linear background gradient for IE
- */
-#owf-body.x-ie {
-    background: $body-background-gradient-end $stripe-img-path repeat repeat center center;
-    background-attachment:fixed;
-    #mainPanel {
-        background: $watermark-img-path no-repeat center;
-    }
+    background-image: theme-image($theme-name, 'aml/ic-bg.jpg');
 }
 
 //admin widget
