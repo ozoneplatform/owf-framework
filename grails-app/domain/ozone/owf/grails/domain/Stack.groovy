@@ -15,7 +15,7 @@ class Stack implements Serializable {
     Integer uniqueWidgetCount = 0
     Boolean approved = false
 
-    static mappedBy = [groups: 'stacks']
+    static mappedBy = [groups: 'stacks', defaultGroup: 'stack']
 
     static belongsTo = [owner: Person]
     static hasOne = [defaultGroup: Group]
@@ -36,7 +36,7 @@ class Stack implements Serializable {
         uniqueWidgetCount(nullable: false, blank: false)
         approved(nullable: true)
         owner(nullable:true)
-        defaultGroup nullable: true
+        defaultGroup(nullable: true)
     }
 
     JSONObject asJSON() {

@@ -18,6 +18,7 @@ class Group implements Serializable{
     Boolean automatic = false
     String status = 'active'
     Boolean stackDefault = false
+    Stack stack
 
     static hasMany = [
         people: Person,
@@ -40,6 +41,7 @@ class Group implements Serializable{
         email(nullable: true, blank: true)
         automatic(nullable: false, blank: false)
         stackDefault(nullable: false, blank: false)
+        stack(nullable: true)
         status(nullable: false, blank: false, inList:['active','inactive'])
     }
 
