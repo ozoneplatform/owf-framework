@@ -172,6 +172,7 @@ grails.project.dependency.resolution = {
         compile 'org.ozoneplatform:ozone-appconfig:0.9'
         compile 'org.ozoneplatform:ozone-auditing:1.2.1'
         compile 'org.ozoneplatform:ozone-messaging:1.19'
+        compile 'org.ozoneplatform:jblocks-banner:2.0'
         compile ':codenarc:0.20'
         compile ':pretty-time:2.1.3.Final-1.0.1'
         build   ':tomcat:7.0.52.1'
