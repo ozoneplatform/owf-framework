@@ -124,14 +124,10 @@ owf {
 // For more information about CEF logging, check ArcSight documentation
 cef {
     device {
-        // The device vendor or organization
-        vendor = "OZONE"
-        // The device product name
-        product = "OWF"
-        // The device version
-        version = "500-27_L2::1.3"
+        vendor = "NSA"
+        product = "APPSMALL"
+        version = "500-27_L2::IC::1.3"
     }
-    // The CEF version
     version = 0
 }
 
