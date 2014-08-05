@@ -10,6 +10,7 @@
 # /plugins
 /web-app/plugins
 /web-app/WEB-INF/classes
+/web-app/WEB-INF/tld/jblocks.tld
 /plugins/ozone-*
 
 # DB scripts that must be rebuilt for every release
