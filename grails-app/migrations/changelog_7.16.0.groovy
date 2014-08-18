@@ -1,6 +1,6 @@
 databaseChangeLog = {
 
-    changeSet(author: 'owf', id: '7.15.1-1', dbms: 'mysql, hsqldb, oracle, mssql, postgresql', context: 'create, upgrade, 7.15.1') {
+    changeSet(author: 'owf', id: '7.15.1-1', dbms: 'mysql, hsqldb, oracle, mssql, postgresql', context: 'create, upgrade, 7.16.0') {
         ['notifications.xmpp.server.hostname',
          'notifications.xmpp.server.port',
          'notifications.xmpp.room',
@@ -16,10 +16,10 @@ databaseChangeLog = {
         }
     }
 
-    changeSet(author: 'owf', dbms: 'mssql, mysql, postgresql, hsqldb, oracle', id: '7.15.1-2', context: 'create, upgrade, 7.15.1') {
+    changeSet(author: 'owf', dbms: 'mssql, mysql, postgresql, hsqldb, oracle', id: '7.15.1-2', context: 'create, upgrade, 7.16.0') {
         renameColumn(tableName: 'widget_definition', oldColumnName: 'image_url_large', newColumnName: 'image_url_medium', columnDataType: 'VARCHAR(2083)')
     }
-    
+
     def fixCefSweepConfigs = {
         update(tableName: "application_configuration") {
             column(name: "type", value: "String")
