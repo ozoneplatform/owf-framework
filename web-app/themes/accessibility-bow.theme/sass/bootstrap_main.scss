@@ -1,0 +1,12 @@
+//bootstrap override variables can go here
+
+$owf-usermenu-background-color: white;
+$owf-usermenu-color: #1c3035;
+$owf-usermenu-item-background-color-hover: #f2f2f2;
+$owf-usermenu-item-color-hover: #3989c9;
+$owf-usermenu-btn-color: #1c3035;
+$owf-usermenu-btn-background-color-hover: #f2f2f2;
+$owf-usermenu-btn-background-color: $owf-usermenu-background-color;
+$owf-usermenu-group-header-hover-color: #3989c9;
+
+@import 'bootstrap_all';

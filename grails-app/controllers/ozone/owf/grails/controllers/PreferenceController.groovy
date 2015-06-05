@@ -23,10 +23,12 @@ class PreferenceController extends BaseOwfRestController{
           log.info("Executing preferenceService: show");
         }
 		try {
+            params.namespace = params.prefNamespace
+
 			def result = preferenceService.show(params)
             if (result?.success == true) {
 			   jsonResult = getJsonResult(result, modelName, params)
-            } 
+            }
             else {
                // Currently success always = true to the users
                jsonResult = [success:true, data: null] as JSON
@@ -37,19 +39,20 @@ class PreferenceController extends BaseOwfRestController{
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during show " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed preferenceService: show in "+stopWatch);
 		}
 	}
-	
+
 	def doesPreferenceExist = {
 		def preferenceExist
 		def statusCode
-		
+
 		try {
+            params.namespace = params.prefNamespace
 			def result = preferenceService.show(params)
 			if(result.preference) {
 				statusCode = 200
@@ -65,18 +68,18 @@ class PreferenceController extends BaseOwfRestController{
 			statusCode = owe.exceptionType.normalReturnCode
 			preferenceExist = false
 		}
-		
+
 		def jsonResult = [preferenceExist:preferenceExist, statusCode:statusCode] as JSON
-		
-		renderResult(jsonResult, statusCode)		
+
+		renderResult(jsonResult, statusCode)
 	}
-	
+
 	def serverResources = {
 		def statusCode
-		
+
 		ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext())
 		def resource = context.getResource('WEB-INF/classes/about.properties')
-		
+
 		def properties = new Properties()
 		try {
 			if(resource) {
@@ -89,10 +92,10 @@ class PreferenceController extends BaseOwfRestController{
 			handleError(owe)
 			statusCode = owe.exceptionType.normalReturnCode
 		}
-		
+
 		def version = properties.getProperty("projectVersion")
 		def jsonResult = [serverVersion:version] as JSON
-		
+
 		renderResult(jsonResult, statusCode)
 	}
 
@@ -107,6 +110,7 @@ class PreferenceController extends BaseOwfRestController{
           log.info("Executing preferenceService: list");
         }
 		try {
+            params.namespace = params.prefNamespace
 			def result = preferenceService.list(params)
 			statusCode = 200
 			def preferenceList = new JSONArray()
@@ -117,7 +121,7 @@ class PreferenceController extends BaseOwfRestController{
 			}
 			else
 			{
-				jsonResult = preferenceList as JSON	
+				jsonResult = preferenceList as JSON
 			}
 		}
 		catch (OwfException owe) {
@@ -125,9 +129,9 @@ class PreferenceController extends BaseOwfRestController{
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during list: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed preferenceService: list in "+stopWatch);
 		}
@@ -144,6 +148,7 @@ class PreferenceController extends BaseOwfRestController{
           log.info("Executing preferenceService: create");
         }
 		try {
+            params.namespace = params.prefNamespace
 			def result = preferenceService.create(params)
 			statusCode = 200
 			jsonResult = getJsonResult(result, modelName, params)
@@ -153,9 +158,9 @@ class PreferenceController extends BaseOwfRestController{
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during create: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed preferenceService: create in "+stopWatch);
 		}
@@ -172,6 +177,7 @@ class PreferenceController extends BaseOwfRestController{
           log.info("Executing preferenceService: update");
         }
 		try {
+            params.namespace = params.prefNamespace
 			def result = preferenceService.update(params)
 			statusCode = 200
 			jsonResult = getJsonResult(result, modelName, params)
@@ -181,9 +187,9 @@ class PreferenceController extends BaseOwfRestController{
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during update: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed preferenceService: update in "+stopWatch);
 		}
@@ -200,6 +206,7 @@ class PreferenceController extends BaseOwfRestController{
           log.info("Executing preferenceService: delete");
         }
 		try {
+            params.namespace = params.prefNamespace
 			def result = preferenceService.delete(params)
 			statusCode = 200
 			jsonResult = getJsonResult(result, modelName, params)
@@ -209,15 +216,15 @@ class PreferenceController extends BaseOwfRestController{
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during delete: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed preferenceService: delete in "+stopWatch);
 		}
 	}
-  	
-//  	def bulkDelete = {	
+
+//  	def bulkDelete = {
 //		def statusCode
 //		def jsonResult
 //        StopWatch stopWatch = null;
@@ -237,9 +244,9 @@ class PreferenceController extends BaseOwfRestController{
 //			statusCode = owe.exceptionType.normalReturnCode
 //			jsonResult = "Error during bulkDelete: " + owe.exceptionType.generalMessage + " " + owe.message
 //		}
-//		
+//
 //		renderResult(jsonResult, statusCode)
-//		
+//
 //		if (log.isInfoEnabled()) {
 //        	log.info("Executed preferenceService: bulkDelete in "+stopWatch);
 //		}

@@ -55,11 +55,11 @@ Ext.define('Ozone.components.view.DDView', {
                         var index = v.indexOf(sourceEl);
                         //d = sourceEl.cloneNode(true);
                         var d = v.dragImgSelector === '.' ?
-                            Ext.fly(sourceEl).dom.cloneNode(true) : 
+                            Ext.fly(sourceEl).dom.cloneNode(true) :
                             Ext.fly(sourceEl).down(v.dragImgSelector).dom.cloneNode(true);
 
                         Ext.fly(d).addCls('widget-drag-proxy');
-                        
+
                         return {
                             ddel: d,
                             sourceEl: sourceEl,
@@ -289,11 +289,6 @@ Ext.define('Ozone.components.view.DDView', {
             item.widgetSelect(item.lastSelected);
             return this.filterFunction;
         }
-        else if (searchTag) {
-            this.filterFunction = Ext.bind(function(rec, id) {
-                return this.searchByTagFilter(newText, rec, id);
-            }, this);
-        }
         else {
             this.filterFunction = Ext.bind(function(rec, id) {
                 return this.searchByTextFilter(newText, rec, id, searchDescr);
@@ -311,24 +306,6 @@ Ext.define('Ozone.components.view.DDView', {
         var regex = new RegExp(newText, 'i');
 
         if ((rec.get('name').match(regex)) && rec.get('visible') && rec.get('definitionVisible')) {
-            return rec;
-        }
-    },
-
-    //private
-    searchByTagFilter: function(newText, rec, id) {
-        //var regex = new RegExp(newText, 'i');
-
-        var tags = rec.get('tags');
-        var matchedTag = false;
-        for (var i = 0; i < tags.length; i++) {
-            newText = newText.replace("_", " ");
-            if (tags[i].name == newText) {
-                matchedTag = true;
-            }
-        }
-
-        if (matchedTag && rec.get('visible') && rec.get('definitionVisible')) {
             return rec;
         }
     },

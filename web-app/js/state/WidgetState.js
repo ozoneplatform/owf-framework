@@ -88,7 +88,7 @@ Ozone.state.WidgetState.prototype = {
 	/**
 	 * @description Gets current widget state.
      * @param {Object} [cfg] Config object. See below for properties.
-     * @param {String} [cfg.guid]  Id of the widget whose state should be retrieved. Defaults to current widget guid.
+     * @param {String} [cfg.guid]  Instance id of the widget whose state should be retrieved. Defaults to current widget's instance guid.
      * @param {Function} [cfg.callback] Function to be called once after the state is retrieved.
      * This method will be passed the state object which has following properties. <br>
      * <br>
@@ -103,7 +103,7 @@ Ozone.state.WidgetState.prototype = {
      *     {Boolean} collapsed: true if the widget is collapsed, or else false <br>
      *     {Boolean} singleton: true if the widget is singleton, or else false <br>
      *     {Boolean} pinned: true if the widget is pinned, or else false <br>
-     *     {String} uniqueId: unique id of the widget <br>
+     *     {String} uniqueId: instance id of the widget <br>
      *     {String} widgetGuid: guid of the widget <br>
      *     {String} paneGuid: guid of the pane <br>
      *     {String} dashboardGuid: guid of the dashboard the widget is opened on <br>
@@ -226,7 +226,7 @@ Ozone.state.WidgetState.prototype = {
 	/**
 	 * @description Adds custom state event handlers to listen to widget events.
      * @param {Object} [cfg] Config object. See below for properties.
-     * @param {String} [cfg.guid]  Id of the widget whose events should be monitored. Defaults to current widget guid.
+     * @param {String} [cfg.guid]  Instance id of the widget whose events should be monitored. Defaults to current widget's instance guid.
      * @param {Array} [cfg.events] Array of events. If no event is provided this method will add listeners to all registered events.
      * @param {Function} [cfg.callback] Function to be called once after the listener is added.
 	 *

@@ -1,0 +1,28 @@
+.loading-mask {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.loading-mask-image {
+    background-image: theme-image($theme-name, 'OWF-Spinner.gif');
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    width: 125px;
+    height: 125px;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.loading-mask-message {
+    color: adjustColorForBackground(getHighContrastColor($owf-loadmask-background), 
+        $owf-loadmask-background, true);
+
+    font-weight: bold;
+    font-size: 1.5em;
+
+    margin-top: 3px;
+
+    text-align: center;
+}

@@ -4,7 +4,7 @@
 @import 'functions/owf_functions';
 @import 'compass'; //pull in base functions and mixins provided by the compass framework
 
-$theme-name: 'accessibility-wob';
+@import 'theme_base';
 
 $body-background-gradient-start: #151515;
 $body-background-gradient-end: #024255;
@@ -14,11 +14,11 @@ $owf-loadmask-background: #000;
 
 /*****************************************************************
  * Put yor theme customizations here.  If you hava many customizations,
- * you may want to put them in a separate file which you import here. 
+ * you may want to put them in a separate file which you import here.
  * The import statements in this file reference stylesheets from ext-js
- * and from the themes/common folder. You can look at 
+ * and from the themes/common folder. You can look at
  * themes/common/stylesheets/variables/-defaults in order to see what variables
- * may be changed. 
+ * may be changed.
  */
 
 
@@ -62,6 +62,8 @@ $owfgrey2: #424242;
 $owfgrey1: #565656;
 $owfgrey0: #efefef;
 
+$banner-button-background: #2a2a2a;
+
 $widget-launcher-special-color: #adf7ff;
 $widget-launcher-search-border-color: #000000;
 $widget-launcher-search-background-color: #1a1a1a;
@@ -69,33 +71,36 @@ $widget-launcher-grid-row-cell-over-background-color: #1c6972 !default;
 $widget-launcher-widget-title-color: #DDF891;
 $search-panel-header-text-color: #80B4Ba;
 
-$carousel-background-color: #202428; 
-$widget-launcher-background-color: $owfgrey5;
+$carousel-background-color: #202428;
 
 $carousel-widget-over-background-color: #202428;
 $carousel-widget-over-border-color: $owfgrey6;
 
 $carousel-widget-selected-background-color: #202428;
 $carousel-widget-selected-border-color: $owfblue3;
-/*
- * These styles will only be applied to the OWf container, not the admin widgets
- */
+
+$my-apps-hover-color: #141414;
+$my-apps-tooltip-color: #141414;
+$my-apps-tooltip-bar-color: #090909;
+
 #owf-body {
     height: 100%;
     outline: 0 none;
     cursor: default; // for IE8
+    background-color: #050b13;
     background-attachment:fixed;
     background-position: center center;
-    background-repeat: repeat, no-repeat, no-repeat;
+    background-repeat: no-repeat;
+    /*background-image: theme-image($theme-name, 'wallpapers/owf-bg.png');*/
 }
 
 #owf-body.x-gecko { /* > ensures IE doesn't see this block */
-    background-image: $stripe-img-path, $watermark-img-path,
+    background-image: $watermark-img-path, $stripe-img-path,
         -moz-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
 }
 
 #owf-body.x-webkit {
-    background-image: $stripe-img-path, $watermark-img-path,
+    background-image: $watermark-img-path, $stripe-img-path,
         -webkit-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
 }
 
@@ -103,11 +108,10 @@ $carousel-widget-selected-border-color: $owfblue3;
  * linear background gradient for IE
  */
 #owf-body.x-ie {
-    
-    background: $body-background-gradient-end $watermark-img-path no-repeat center center;
+    background: $body-background-gradient-end $stripe-img-path repeat repeat center center;
     background-attachment:fixed;
     #mainPanel {
-        background: $stripe-img-path repeat center center;
+        background: $watermark-img-path no-repeat center;
     }
 }
 
@@ -117,7 +121,7 @@ $admin-widget-detail-title-color: $owfgreen2;
 $admin-widget-x-item-disabled-background-color: #3A3A3A;
 
 // ===============================
-// =============== Theme Variables 
+// =============== Theme Variables
 // ===============================
 
 
@@ -127,7 +131,7 @@ $owf-loadmask-background: #ccc;
 $owf-window-background-color: $owfgrey5;
 
 $owf-base-color: $owfblue4;
-$owf-contrast-base: #ffffff; 
+$owf-contrast-base: #ffffff;
 $owf-alt-base-color: #7b007c;  //PINK
 $owf-focus-color: $owfgreen2;
 
@@ -136,10 +140,9 @@ $required-widgets-color: #ffffff;
 
 $owf-tool-width: 17px;
 
-$dashboard-switcher-background-color: $owfgrey6;
-$dashboard-switcher-dashboard-text-color: #fff;
-$dashboard-switcher-opacity: 0.80 !default;
-$dashboard-switcher-dashboard-over-background-color: #000; 
+$my-apps-window-background-color: #414141;
+$my-apps-window-dashboard-text-color: #eee;
+$my-apps-window-opacity: 0.80 !default;
 
 $active-widget-theme: (
     ($owfgrey6),    //base color
@@ -237,9 +240,36 @@ $owf-form-field-background-color: $owfgrey6;
 $owf-form-field-invalid-background-color: $owfgrey6 !default;
 $owf-form-field-invalid-border-color: $warning-color !default;
 
+// -- store wizard-------------------------------------------------
+$store-wizard-modal-color: #212121;
+$store-wizard-background-color: #363636;
+
+$store-wizard-title-color: #FABA1A;
+$store-wizard-step-color: #7D5D0D;
+
+$store-wizard-input-color: #212121;
+$store-wizard-input-border-color: #4D4D4D;
+
+$store-wizard-button-color: #212121;
+$store-wizard-button-hover-color: #FCD676;
+$store-wizard-button-press-color: #BC8C14;
+
+$store-wizard-button-text-press-color: #212121;
+$store-wizard-button-next-color: #FABA1A;
+$store-wizard-unreached-step-color: #4D4D4D;
+
+$store-wizard-input-text-color: #E5E5E5;
+
+$store-wizard-progress-bar-back-color: #363636;
+$store-wizard-progress-bar-front-color: #FABA1A;
+
+$store-wizard-title-divide-color: #111111;
+$store-wizard-current-progress-color:#363636;
+$store-wizard-current-progress-text-color: #FABA1A;
+
 // -- theme switcher ------------------------------------------------
 $owf-boundlist-item-selected-color: $owf-contrast-base; //contrast to make the text readable
-$theme-switcher-window-image-border-color: $owf-contrast-base;  //catchall 
+$theme-switcher-window-image-border-color: $owf-contrast-base;  //catchall
 $selectable-item-over-border-color: $owfgrey6;  //border
 $selectable-item-over-background-color: #000;  // background
 $selectable-item-over-text-color: $owf-focus-color;  //text
@@ -283,14 +313,15 @@ $dashboard-designer-tabbed-pane-background-color: #0068b1;
 $dashboard-designer-tabbed-pane-opacity: 0.1;
 $dashboard-designer-tabbed-pane-ie78-background-color: #e5f0f7;
 
-$dashboard-designer-drop-shim-background-color: #fff;
-
 $dashboard-designer-border: 1px solid #888;
 
 $active-pane-border-color: #b9e573;
 
 // -- toolbar---------------------------------------------------------
 $toolbar-separator-color: #a0a9ad;
+
+$user-menu-separator-color: #565656;
+$user-menu-border-color: #090909;
 
 //OWF-EXT VARIABLES
 @import 'variables/constants';
@@ -311,7 +342,7 @@ $toolbar-separator-color: #a0a9ad;
 @import 'mixins/owf_mixins';
 
 /*
- * These imports create the owf-specific stylesheets, based on the values of the 
+ * These imports create the owf-specific stylesheets, based on the values of the
  * variables that are defined in variables/defaults (which can be overridden in this
  * file).If extensive changes are required, you can delete some of these imports and
  * reimplement them as necessary
@@ -320,10 +351,10 @@ $toolbar-separator-color: #a0a9ad;
 @import 'owf_all';
 
 // ===============================
-// ======================== Banner 
+// ======================== Banner
 // ===============================
 
-.x-gecko .banner, { 
+.x-gecko .banner, {
     //custom background to include stripe image in addition
     //to gradient. This has to be after the imports so it doesn't
     //get overridden
@@ -337,21 +368,21 @@ $toolbar-separator-color: #a0a9ad;
 }
 
 // ===============================
-// ======================== Button 
+// ======================== Button
 // ===============================
 
 // box shadows
 .owfButton {
-    @include box-shadow(inset 0px 1px 1px #fe06fb, inset 0px -1px 1px #A0A3A7); 
+    @include box-shadow(inset 0px 1px 1px #fe06fb, inset 0px -1px 1px #A0A3A7);
 
     &.x-btn-over {
-        @include box-shadow(inset 0px 1px 1px #868C91, inset 0px -1px 1px #DDDEE0); 
+        @include box-shadow(inset 0px 1px 1px #868C91, inset 0px -1px 1px #DDDEE0);
     }
     &.x-btn-pressed {
-        @include box-shadow(inset 0px 1px 1px #858B90, inset 0px -1px 1px #F6F7F7); 
+        @include box-shadow(inset 0px 1px 1px #858B90, inset 0px -1px 1px #F6F7F7);
     }
     &.x-btn-disabled {
-        @include box-shadow(inset 0px 1px 1px #ADB6BC, inset 0px -1px 1px #F9F9F9); 
+        @include box-shadow(inset 0px 1px 1px #ADB6BC, inset 0px -1px 1px #F9F9F9);
     }
 }
 
@@ -435,7 +466,7 @@ textarea.x-form-focus {
 .x-btn-split-bottom,
 .x-btn-over .x-btn-split-bottom {
   background: transparent no-repeat center bottom;
-  background-image: theme-background-image($theme-name, 'button/s-arrow-b.gif'); 
+  background-image: theme-background-image($theme-name, 'button/s-arrow-b.gif');
   padding-bottom: 14px;
 }
 
@@ -445,7 +476,7 @@ textarea.x-form-focus {
 }
 
 .x-toolbar .x-btn-split-bottom {
-  background-image: theme-background-image($theme-name, 'button/s-arrow-b-noline.gif'); 
+  background-image: theme-background-image($theme-name, 'button/s-arrow-b-noline.gif');
 }
 
 // ===================================
@@ -465,7 +496,7 @@ textarea.x-form-focus {
     .x-grid-group-hd-collapsed .x-grid-group-title {
         background-image: url('../images/icons/arrow_right.png');
     }
-    
+
     .x-grid-group-title {
         background-image: url('../images/icons/arrow_down.png');
     }
@@ -477,4 +508,16 @@ div.detail-info {
             color: $owfgreen2;
         }
     }
+}
+
+div.importFileupload.x-item-disabled {
+	div.x-form-file-btn {
+		border-color: #323232;
+	}
+}
+
+.x-ie7 div.importFileupload.x-item-disabled {
+	div.x-form-file-btn {
+		border-color: #404040;
+	}
 }

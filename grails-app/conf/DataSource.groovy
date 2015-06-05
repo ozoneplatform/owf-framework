@@ -11,45 +11,22 @@ hibernate {
     cache.use_second_level_cache=true
     cache.use_query_cache=true
     cache.provider_class='net.sf.ehcache.hibernate.EhCacheProvider'
+    // format_sql = true
 }
 
 // environment specific settings
 environments {
 	development {
 		dataSource {
-            pooled = true
-            url = "jdbc:hsqldb:file:${basedir}/prodDb;shutdown=true"
-		    //TO-DO Address the issue with bootstrap vs. prodDb.script...
+            pooled = false
+            url = "jdbc:hsqldb:file:prodDb;shutdown=true"
             dbCreate = "none" // one of 'create', 'create-drop','update
-            properties {
-                minEvictableIdleTimeMillis = 180000
-                timeBetweenEvictionRunsMillis = 180000
-                numTestsPerEvictionRun = 3
-                testOnBorrow = true
-                testWhileIdle = true
-                testOnReturn = true
-                validationQuery = "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS"
-		    }
-	    }
-        /*
-        dataSource {
-            pooled = true
-            dbCreate = "none"
-            driverClassName = "com.mysql.jdbc.Driver"
-            url="jdbc:mysql://owfdb01:3306/owf_build"
-            username = "owfbuild"
-            password = "0wf-bu1!d"
-            dialect = "org.hibernate.dialect.MySQL5InnoDBDialect"
-            properties {
-                minEvictableIdleTimeMillis = 180000
-                timeBetweenEvictionRunsMillis = 180000
-                numTestsPerEvictionRun = 3
-                testOnBorrow = true
-                testWhileIdle = true
-                testOnReturn = true
-                validationQuery = "SELECT 1"
-            }
-        }*/
+        }
+
+        hibernate {
+            cache.use_second_level_cache = false
+            cache.use_query_cache = false
+        }
     }
 	test {
 		dataSource {
@@ -77,7 +54,7 @@ environments {
         dataSource {
             pooled = true
             dbCreate="none"
-            url = "jdbc:hsqldb:file:${basedir}/prodDb;shutdown=true"
+            url = "jdbc:hsqldb:file:prodDb;shutdown=true"
             properties {
                 minEvictableIdleTimeMillis = 180000
                 timeBetweenEvictionRunsMillis = 180000

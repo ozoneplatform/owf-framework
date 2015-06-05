@@ -15,7 +15,7 @@ Ext.define('Ozone.components.admin.group.GroupEditDashboardsTab', {
         Ext.applyIf(this, {
             layout: 'fit',
             itemId: 'tabDashboards',
-            title: 'Dashboards',
+            title: 'Pages',
             iconCls: 'dashboard-tab',
             editor: 'Group',
             componentId: 'group_id',

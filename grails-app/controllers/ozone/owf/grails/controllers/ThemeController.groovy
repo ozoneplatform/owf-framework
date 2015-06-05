@@ -1,12 +1,13 @@
 package ozone.owf.grails.controllers
 
 import grails.converters.JSON
+import org.codehaus.groovy.grails.commons.GrailsApplication
 
 
 class ThemeController extends BaseOwfRestController {
     
     def themeService
-    def grailsApplication
+    GrailsApplication grailsApplication
 
     def getImageURL = {
         def appContext = grailsApplication.mainContext

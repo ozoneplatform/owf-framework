@@ -1,0 +1,286 @@
+.bx-viewport {
+    width: auto !important;
+    margin: 0 60px;
+
+    box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    -ms-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+}
+
+#appcomponents-view, #intents-window {
+    color: #fff;
+
+    .search-input {
+        float: right;
+    }
+
+    .bx-viewport {
+        background: $widget-launcher-background-color;
+        border: 0px;
+        @include box-shadow(none);
+    }
+
+    .bx-loading {
+        background-color: $widget-launcher-background-color;
+        background-image: theme-image($theme-name, 'OWF-Spinner.gif');
+    }
+}
+
+#appcomponents-view, #intents-window, #widget-details-tip {
+    z-index: 10000000;
+
+    .header, .footer {
+        padding: 0.5em 0;
+        margin: 0 1em 0 1em;
+        line-height: 2em;
+    }
+
+    .footer {
+        clear: both;
+    }
+
+    .x-tool {
+        float: right;
+        margin: 0 0 0 1em;
+
+        &:hover .x-tool-close {
+             background-image: theme-image($theme-name, 'tools/close-over.png') !important;
+             background-position: 0 !important;
+        }
+    }
+
+    .x-tool-close {
+        vertical-align: middle;
+        background-image: theme-image($theme-name, 'tools/close-out.png') !important;
+    }
+}
+
+#appcomponents-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    .header {
+        height: 3em;
+        margin: 0;
+        background: $widget-launcher-background-color;
+    }
+
+    .x-tool-close {
+        margin: 0 0.5em 0 0;
+    }
+
+    .x-tool-pin {
+        margin: 0 0.5em 0 0;
+        background-image: theme-image($theme-name, 'appcomponents/pin.png');
+        background-position: 0;
+        vertical-align: middle;
+
+        &:hover {
+            background-image: theme-image($theme-name, 'appcomponents/pin_over.png');
+        }
+    }
+
+    .pinned .x-tool-pin {
+        background-image: theme-image($theme-name, 'appcomponents/pinned.png');
+    }
+
+    .body {
+        overflow: hidden;
+        clear: both;
+        // OP-2531: In CSS land, the carousel should be 185 pixels so that
+        // it matches the minimum resizable size in JavaScript land.
+        height: 185px;
+    }
+
+    .app-components {
+        background: $widget-launcher-background-color;
+    }
+
+    .app-components-body {
+        overflow: hidden;
+        height: 139px;
+    }
+
+    .bx-wrapper {
+        margin: 0 auto 25px;
+        background: $widget-launcher-background-color;
+
+        &.hide-pager {
+            .bx-pager {
+                display: block;
+            }
+
+            .bx-pager-item {
+                visibility: hidden;
+            }
+        }
+
+        .bx-controls-direction a {
+            margin-top: -30px;
+        }
+    }
+
+    .bx-pager {
+        padding: 5px 0;
+        font-size: 0px;
+        position: static;
+        background: $widget-launcher-background-color;
+    }
+
+    .bx-slide {
+        height: 100%;
+    }
+
+    .bx-prev {
+        background: theme-image($theme-name, 'appcomponents/left_light.png') 0 0 no-repeat;
+
+        &:hover {
+            background: theme-image($theme-name, 'appcomponents/left_dark.png') 0 0 no-repeat;
+
+        }
+    }
+
+    .bx-next {
+        background: theme-image($theme-name, 'appcomponents/right_light.png') 0 0 no-repeat;
+
+        &:hover {
+            background: theme-image($theme-name, 'appcomponents/right_dark.png') 0 0 no-repeat;
+
+        }
+    }
+
+    .ui-resizable-resizing .ui-resizable-s {
+        @extend .grabbing;
+    }
+    .ui-resizable-s {
+        height: 25px;
+        bottom: 0;
+        border-top: 1px solid $widget-launcher-border-color;
+        background-image: theme-image($theme-name, 'appcomponents/gripper.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        @extend .grab;
+    }
+}
+
+.x-ie .ui-resizable-s {
+    cursor: s-resize !important;
+}
+
+.intent-modal-mask {
+    z-index: 100000;
+}
+
+#intents-window {
+    z-index: 100002;
+    width: 48em;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    margin-left: -24em;
+    @include border-radius(0.5em);
+    background: $widget-launcher-background-color;
+
+    .body {
+        margin: 0 1em 0 1em;
+    }
+
+    .remember {
+        margin-left: 5px;
+    }
+}
+
+.widget {
+    background-color: $widget-launcher-background-color;
+    border-color: $widget-launcher-background-color;
+    float: left;
+    cursor: pointer;
+
+
+    .thumb-text {
+        color: $widget-launcher-widget-text-color;
+        overflow: hidden;
+    }
+
+    &:hover {
+        background-color: $widget-launcher-widget-over-background-color;
+        // OP-2312: no border on hover
+        // border-color: $widget-launcher-widget-over-border-color;
+
+        .thumb-text {
+            color: $widget-launcher-widget-over-text-color;
+        }
+    }
+}
+
+.widget.selected {
+    background-color: $widget-launcher-widget-selected-background-color;
+    border-color: $widget-launcher-widget-selected-border-color;
+    .thumb-text {
+        color: $widget-launcher-widget-selected-text-color;
+    }
+}
+
+.widget-disabled {
+    /*-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";*/
+    /*filter: alpha(opacity=40);*/
+    /*opacity: 0.4;  */
+    @include opacity(.4);
+}
+
+#widget-details-tip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 400px;
+    background-color: $widget-launcher-widget-over-background-color;
+    color: $widget-launcher-widget-text-color;
+    @include border-radius(4px);
+    overflow-y: auto;
+
+    .widget-description {
+        margin: 0 1em 0 1em;
+    }
+
+    .widget-name {
+        font-size: 1.25em;
+    }
+}
+
+.widget-remove {
+    float: right;
+    color: $widget-launcher-widget-text-color;
+
+    background-image: theme-image($theme-name, 'myappswindow/Delete-out.png');
+    background-repeat: no-repeat;
+
+
+    span {
+        margin-left: 25px;
+    }
+
+    &:hover, &.hover {
+        background-image: theme-image($theme-name, 'myappswindow/Delete-over.png');
+    }
+}
+
+.widget-details {
+    float: right;
+    background-image: theme-image($theme-name, 'myappswindow/info_icon.png');
+    background-repeat: no-repeat;
+    background-position: 4px 4px;
+    width: 18px;
+    height: 18px;
+
+    &:hover, &.hover {
+        background-image: theme-image($theme-name, 'myappswindow/info_icon_hover.png');
+    }
+}
+
+.show-new-component {
+    text-decoration: underline;
+    color: $owf-focus-color;
+}

@@ -33,31 +33,52 @@ Ozone.launcher = Ozone.launcher ? Ozone.launcher : {};
     Ozone.launcher.WidgetLauncher.prototype = {
 
       /**
-       * @description launches a Widget based on the config
-       * @param {Object} config object see example for structure
-       * @param {Function} callback a function to be called once after the launchWidget is executed
-       *
-       * @example
-       *
-       * //Example for launching a widget
-       * var widgetEventingController = Ozone.eventing.Widget.getInstance();
-       * var widgetLauncher = Ozone.launcher.WidgetLauncher.getInstance(this.widgetEventingController);
-       * var data = {
-       *   channel: channel,
-       *   message: message
-       * };
-       * var dataString = Ozone.util.toString(data);
-       * widgetLauncher.launchWidget({
-       *     universalName: 'universal name of widget to launch',  //universalName or guid maybe identify the widget to be launched
-       *     guid: 'guid of widget to launch',
-       *     title: 'title to replace the widgets title' the title will only be changed if the widget is opened.
-       *     titleRegex: optional regex used to replace the previous title with the new value of title
-       *     launchOnlyIfClosed: true, //if true will only launch the widget if it is not already opened.
-       *                               //if it is opened then the widget will be restored
-       *     data: dataString  //initial launch config data to be passed to a widget only if the widget is opened.  this must be a string
-       * });
-       *
-       */
+        @description Launches a Widget based on the config.
+        @param {Object} config object see example for structure
+        @param {String} config.pane optional, valid values are 'sibling' or a pane guid. Value of 'sibling' launches the widget into the sibling pane if it exists. If a pane is not found, widget is launched in the same pane. See <a href="OWF.html#.getPanes">OWF.getPanes</a> to find out how to get panes.
+        @param {String} config.universalName universalName or guid maybe identify the widget to be launched
+        @param {String} config.guid widget definition guid of the widget to launch
+        @param {String} config.title title to use for the widget
+        @param {String} config.titleRegex optional regex used to replace the previous title with the new value of title
+        @param {Boolean} config.launchOnlyIfClosed If true, Widget will only be launched if it is not already opened. If it is opened, then the widget will be restored.
+        @param {String} config.data initial launch config data to be passed to a widget only if the widget is opened.
+        @param {Function} callback a function to be called once after the launchWidget is executed
+        @see <a href="#WidgetState.getState">widget state</a> for more info
+
+        @example
+
+        // launch widget in following preference: empty pane, sibling, or same pane.
+        // this is done by sorting panes by no of widgets, and picking the pane with the lowest no of widgets.
+        OWF.getPanes(function (panes) {
+            var pane;
+
+            if(panes.length <= 2) {
+                pane = 'sibling';
+            }
+            else {
+                panes = Ext.Array.sort(panes, function (a, b) {
+                    if(a.widgets.length === b.widgets.length)
+                        return 0;
+                    else if(a.widgets.length < b.widgets.length)
+                        return -1;
+                    else if(a.widgets.length > b.widgets.length)
+                        return 1;
+                });
+                pane = panes[0].widgets.length === 0 ? panes[0].id : 'sibling'
+            }
+
+            widgetLauncher.launchWidget({
+                pane: pane,
+                universalName: 'universal name of widget to launch',
+                guid: 'guid of widget to launch',
+                title: 'title to replace the widgets title',
+                titleRegex: 'regex',
+                launchOnlyIfClosed: true,
+                data: 'dataString'
+            });
+        });
+
+      */
         launchWidget: function(config,callback) {
             //send message to launch a widget
 
@@ -78,7 +99,7 @@ Ozone.launcher = Ozone.launcher ? Ozone.launcher : {};
     Ozone.launcher.WidgetLauncherUtils = {
       /**
        * @description gets initial launch config data for this widget if it was just launched
-       * @returns {Object} data object which contains initial information for the widget 
+       * @returns {Object} data object which contains initial information for the widget
        * @example
        *
        * var launchConfig = Ozone.launcher.WidgetLauncherUtils.getLaunchConfigData();

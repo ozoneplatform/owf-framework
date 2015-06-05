@@ -20,7 +20,7 @@ Ext.define('Ozone.data.StackStore', {
                 update: '/stack',
                 destroy: '/stack'
             },
-            fields: ['id', 'name', 'description', 'stackContext', /*'imageUrl',*/ 'descriptorUrl', 'totalDashboards', 'totalUsers', 'totalGroups', 'totalWidgets'],
+            fields: ['id', 'name', 'description', 'stackContext', 'approved', 'descriptorUrl', 'totalDashboards', 'totalUsers', 'totalGroups', 'totalWidgets'],
             autoDestroy: true
         });
     	

@@ -23,17 +23,21 @@ public class AutoLoginAccountService extends AccountService {
     def getLoggedInUsername() {
         autoAccountName
     }
-	
+
 	def getLoggedInUserDisplayName(){
 		return autoAccountDisplayName
 	}
 
     def getLoggedInUserIsAdmin() {
+        if (isTemporaryAdmin()) {
+            return true
+        }
         getLoggedInUserRoles().contains ERoleAuthority.ROLE_ADMIN.strVal
     }
 
     def getLoggedInUserIsUser() {
-        getLoggedInUserRoles().contains ERoleAuthority.ROLE_USER.strVal
+        def roles = getLoggedInUserRoles()
+        roles.contains(ERoleAuthority.ROLE_USER.strVal) || roles.contains(ERoleAuthority.ROLE_ADMIN.strVal)
     }
 
     def getLoggedInUserRoles() {

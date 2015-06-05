@@ -13,7 +13,7 @@ Ext.define('Ozone.components.view.ToolDataView', {
     initComponent: function() {
         this.tpl = Ext.create('Ext.XTemplate',
             '<tpl for=".">',
-                '<div class="tool" tabindex="0" data-qtip="{[Ext.htmlEncode(Ext.htmlEncode(values.name))]}">',
+                '<div class="tool" tabindex="0">',
                     '<div class="thumb-wrap">',
                         '<img src="{image}" class="thumb">',
                     '</div>',
@@ -29,7 +29,7 @@ Ext.define('Ozone.components.view.ToolDataView', {
                             Ext.Array.erase (/^([\S]+)\s*(.*)?/.exec(Ext.String.trim(str)), 0, 1),
                             function(it) {
                                 //for each elem in the array, truncate it with an ellipsis if it is longer than 11 characters
-                                return Ext.util.Format.ellipsis(it, 11);
+                                return Ext.util.Format.ellipsis(it, 13);
                             }
                         //join the array back together with spaces
                         ).join(' ')
@@ -51,16 +51,17 @@ Ext.define('Ozone.components.view.ToolDataView', {
         this.callParent(arguments);
     },
 
-    
-    onClick: function(dataView, record, item) {
-        this.up().callBtnHandler(record.data.name, item);
+
+    onClick: function(dataView, record, item, index, evt) {
+        this.up().callBtnHandler(evt, record.data.name, item);
         return true;
     },
-    
+
     onKeyDown: function(view, record, item, index, event, eOpts) {
         switch (event.getKey()) {
             case event.ENTER:
             case event.SPACE:
+                event.stopPropagation();
                 this.up().callBtnHandler(record.data.name, item, true);
                 return true;
         }

@@ -1,0 +1,18 @@
+//bootstrap override variables can go here
+
+$owf-notifications-border-color: #070C16;
+$owf-notifications-header-background-color: #3B5C8E;
+$owf-notifications-header-color: #D7E7FD;
+$owf-notifications-group-header-color: #B7D313;
+$owf-notifications-group-background-color: #1F3256;
+$owf-notification-text-color: #D7E7FD;
+$owf-notification-timestamp-color: #7D8AA2;
+$owf-notifications-dismiss-all-color: #80B2FF;
+
+$owf-notifications-more-text-hover-color: #AECDFB;
+$owf-notifications-more-icon-color: #070C16;
+$owf-notifications-growl-background-hover-color: #0D182C;
+$owf-notifications-button-inactive-color: #7D8AA2;
+$owf-notifications-button-active-color: #FFFFFF;
+
+@import 'bootstrap_all';

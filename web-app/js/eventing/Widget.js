@@ -57,7 +57,9 @@ Ozone.eventing.Widget = function(widgetRelay, afterInit) {
     }
       else {
         //already initialized just execute the supplied callback
-        setTimeout(afterInit,50);
+        setTimeout(function() { 
+            afterInit.call(Ozone.eventing.Widget.instance, Ozone.eventing.Widget.instance);
+        },50);
   }
     }
   }
@@ -414,7 +416,7 @@ Ozone.eventing.Widget.getInstance = function(afterInit, widgetRelay) {
       else {
         //already initialized just execute the supplied callback
       setTimeout(function() {
-        afterInit(Ozone.eventing.Widget.instance)
+        afterInit.call(Ozone.eventing.Widget.instance, Ozone.eventing.Widget.instance);
       },50);
     }
   }

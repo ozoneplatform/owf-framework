@@ -1,0 +1,190 @@
+
+#storeWizard {
+	 padding: 0 !important;
+	 background-color: $store-wizard-modal-color !important;
+	 border-radius: 0 0 0 0;
+	 
+	 .wizardTitle {
+		background-color: $store-wizard-modal-color !important;
+	    color: $store-wizard-title-color;
+	    font-size: 24px;
+	    line-height:36px;
+	    position: relative;
+	    border-bottom: 1px solid $store-wizard-title-divide-color !important;
+	    padding: 10px 10px 10px 25px;
+	    z-index: 1;
+	 }
+	 
+	 .closeButton {
+	    height: 20px;
+	    width: 20px;
+	 	bottom: 35%;
+	    left: 95%;
+	    position: absolute;
+	    
+	    background: no-repeat theme-image($theme-name, 'tools/close-out.png');
+	 }
+	 
+	 .closeButton:hover {
+	 	 background: no-repeat theme-image($theme-name, 'tools/close-over.png');
+	 }
+	 
+	 .closeButton:active {
+	 	 background: no-repeat theme-image($theme-name, 'tools/close-down.png');
+	 }
+	 
+	 .wizardButtons {
+	 	width: 33%;
+	 	height: 90%;
+	 	background-color: $store-wizard-modal-color !important;
+	 	
+	 	.wizardProcessList {
+	 		color:$store-wizard-unreached-step-color;
+	 		font-size: 16px;
+	 		
+	 		li {
+	 			padding: 15px;
+	 			background-image: theme-image($theme-name, 'storewizard/WizardArrow_disabled.png');
+	 			background-position: 95% 50%;
+    			background-repeat: no-repeat;
+	 			
+	 			.stepNumber {
+					padding-right:15px;	 	
+					padding-left: 15px;		
+	 			}
+	 		}
+	 		
+	 		.active {
+	 			background-image: theme-image($theme-name, 'storewizard/WizardArrow_active.png');
+	 			color: $store-wizard-current-progress-text-color;
+	 			background-color: $store-wizard-current-progress-color;
+	 		}
+	 		
+	 		.complete {
+	 			background-image: theme-image($theme-name, 'storewizard/WizardArrow_inactive.png');
+	 			color: $store-wizard-step-color;
+	 		}
+	 	}
+	 	
+	 	.progressBar {
+	 		background-color: $store-wizard-progress-bar-back-color;
+	 		border-radius: 3px;
+	 		width: 225px;
+	 		height: 30px;
+	 		margin-left: 6%;
+	 		top: 71%;
+	 		position: relative;
+	 		
+	 		.progressBarProgress {
+	 			background-color: $store-wizard-progress-bar-front-color;
+	 			border-radius: 3px;
+	 			height: 30px;
+	 			width: 112px;
+	 		}
+	 	}
+	 }
+	 
+	 .wizardContentBox {
+	 	width: 67%;
+	 	height: 90%;
+	 	bottom: 90%;
+	 	float: right;
+	 	position:relative;
+	 	background-color: $store-wizard-current-progress-color; 
+	 	
+	 	.contentTitle {
+	 		color: $store-wizard-title-color;
+	 		margin: 15px;
+	 		font-size: 18px;
+	 	}
+	 	
+	 	.contentText {
+	 		color:$store-wizard-step-color;
+	 		margin-left: 15px;
+	 		font-size: 12px;
+	 	}
+	 	
+	 	.userInput {
+	 		margin-left: 20px;
+   			margin-top: 25px;
+   			
+   			.loadedImg {
+				height: 64px;
+			    position: relative;
+			    right: 41%;
+			    top: 9px;
+			    width: 64px;
+   			}
+   			
+   			input {
+   				border: 1px solid $store-wizard-input-border-color;
+   				height: 28px;
+    			width: 220px;
+   				margin-left: 35px;
+   				border-radius: 3px;
+   				padding-left: 10px;
+   				background-color: $store-wizard-input-color;
+   				color:$store-wizard-input-text-color;
+   				width: 345px;
+   			}
+   			
+   			.iconUrl {
+   				width: 246px;
+   				left : 140px;
+   				position: relative;
+   			}
+	 	}
+	 	
+	 	.button {
+	 		background-color: $store-wizard-button-color;
+	 		border: 1px solid $store-wizard-title-divide-color !important;
+	 		border-radius: 3px;
+	 		color: $store-wizard-current-progress-text-color;
+	 		height: 26px;
+  		  	width: 75px;
+  		  	padding-top: 5px;
+    		text-align: center;
+    		font-weight:bold;
+    		cursor: pointer;
+	 	}
+	 	
+	 	.button:hover {
+	 		background-color: $store-wizard-button-hover-color;
+	 		color:$store-wizard-button-text-press-color !important;
+	 	}
+	 	
+	 	.button:active {
+	 		background-color: $store-wizard-button-press-color;
+	 		color:$store-wizard-button-text-press-color !important;
+	 	}
+	 	
+	 	.back {
+	 		position:absolute;
+	 		left: 5%;
+		    top: 91%;
+	 	}
+	 	
+	 	.cancel {
+		    position: absolute;
+		    left: 77%;
+		    top: 91%;
+	 	}
+	 	
+	 	.next {
+	 		background-color:$store-wizard-button-next-color;
+	 		color:$store-wizard-button-text-press-color !important;
+	 		position:absolute;
+	 		left: 60%;
+ 			top: 91%;
+	 	}
+	 	
+	 	.save {
+	 		background-color:$store-wizard-button-next-color;
+	 		color:$store-wizard-button-text-press-color !important;
+	 		position:absolute;
+	 		left: 60%;
+ 			top: 91%;
+	 	}
+	 }
+	 
+}

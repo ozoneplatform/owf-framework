@@ -1,0 +1,24 @@
+<plugin name='pretty-time' version='2.1.3.Final-1.0.1' grailsVersion='2.0 &gt; *'>
+  <author>Cazacu Mihai</author>
+  <authorEmail>cazacugmihai@gmail.com</authorEmail>
+  <title>Pretty-time plugin</title>
+  <description>A plugin that allows you to display human readable, relative timestamps.</description>
+  <documentation>https://github.com/cazacugmihai/grails-pretty-time/blob/master/README.md</documentation>
+  <type>PrettyTimeGrailsPlugin</type>
+  <resources>
+    <resource>org.grails.prettytime.PrettyTimeTagLib</resource>
+  </resources>
+  <repositories>
+    <repository name='grailsCentral' url='http://grails.org/plugins' />
+    <repository name='mavenCentral' url='http://repo1.maven.org/maven2/' />
+  </repositories>
+  <dependencies>
+    <compile>
+      <dependency group='joda-time' name='joda-time' version='2.1' />
+      <dependency group='org.ocpsoft.prettytime' name='prettytime' version='2.1.3.Final' />
+    </compile>
+  </dependencies>
+  <plugins />
+  <runtimePluginRequirements />
+  <behavior />
+</plugin>

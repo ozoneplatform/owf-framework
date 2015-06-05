@@ -3,6 +3,25 @@
 This CSS is for specific style for the OWF UI.  This does not include the Admin UI.  This CSS is also for
 specifically overriding any default ExtJS css rules for OWF specific elements.
 */
+strong {
+    font-weight: bold;
+}
+
+a {
+    text-decoration: none;
+}
+
+.grab {
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    cursor: grab;
+}
+
+.grabbing {
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+    cursor: grabbing;
+}
 
 .hide {
     display: none !important;
@@ -35,9 +54,25 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
     margin-right: auto;
 }
 
+.search-input {
+    background-color: $widget-launcher-search-background-color;
+    border: $owf-form-field-border-width solid $widget-launcher-search-border-color;
+    background-image: theme-image($theme-name, 'magnifier.png');
+    background-repeat: no-repeat;
+    background-position: 5px 5px;
+    @include border-radius(4px);
+    color: $widget-launcher-widget-text-color;
+    padding: 5px 0 5px 25px;
+}
+
 .owf-manage-window {
     @include owf-manage-window();
 }
+
+#delete-widgets-window {
+    z-index: 10000004 !important;
+}
+
 
 .x-css-shadow {
     //change border radius to match our custom windows
@@ -121,12 +156,16 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
     }
 }
 
+.x-ie7 .accessAlert .x-window-body {
+    margin-right: 2px;
+}
+
 /**
  * Ghost proxy for portal layout
  */
 .x-panel-ghost {
     @include owf-panel($ghost-widget-theme);
-} 
+}
 
 .x-window {
     @include owf-window;
@@ -154,8 +193,8 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
         }
     }
 }
-.x-window-header-text, .x-panel-header-text {
-    cursor: pointer !important;
+.widgetheader .x-window-header-text, .widgetheader .x-panel-header-text {
+    cursor: pointer; // widget headers get a pointer because you can double-click to edit the title
 }
 
 
@@ -216,49 +255,55 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
         height: 16px;
     }
 }
-    
-#mainPanel { 
+
+#mainPanel {
     //PORTAL DASHBOARD
     .x-panel.x-portlet {
-        @include owf-panel($active-widget-theme, 
-                            $owf_css_important, 
+        @include owf-panel($active-widget-theme,
+                            $owf_css_important,
                             $owf_frame_is_not_IE,
                             //BORDER PROPERTIES
                             $owf_incl_non_header_border,
                             $owf_incl_header_border,
                             $owf_no_full_header_border,
-                            $applyGradient: false); 
+                            $applyGradient: false);
     }
     //TABBED DASHBOARD
     .x-panel.tab-dashboard-panel {
         .widget-tab-bar {
             overflow: hidden !important;
-            padding-top: 2px;
+            padding: 0px;
             //height: 29px!important;
             .widget-tab {
                 @include owf-panel($inactive-widget-theme,
                                     $owf_css_important,
                                     $owf_frame_is_not_IE,
-                                    //BORDER PROPERTIES 
+                                    //BORDER PROPERTIES
                                     $owf_no_incl_non_header_border,
                                     $owf_incl_header_border,
-                                    $owf_no_full_header_border); 
+                                    $owf_no_full_header_border);
+                .x-panel-body {
+                    border-top: 0px;
+                }
             }
             .widget-tab.x-panel-active {
-                @include owf-panel($active-widget-theme, 
+                @include owf-panel($active-widget-theme,
                                     $owf_css_important,
                                     $owf_frame_is_not_IE,
-                                    //BORDER PROPERTIES 
+                                    //BORDER PROPERTIES
                                     $owf_no_incl_non_header_border,
                                     $owf_incl_header_border,
-                                    $owf_no_full_header_border); 
+                                    $owf_no_full_header_border);
+                .x-panel-body {
+                    border-top: 0px;
+                }
             }
-            .x-box-scroller-right { 
+            .x-box-scroller-right {
                 .x-toolbar-scroll-right {
                     top: 0;
                 }
             }
-            .x-box-scroller-left { 
+            .x-box-scroller-left {
                 .x-toolbar-scroll-left {
                     top: 0;
                 }
@@ -270,19 +315,19 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
 		font-weight: bold;
 	}
     // .x-panel.accordion_right_side_region {
-    //     @include owf-panel($active-widget-theme, 
-    //                         $owf_css_important, 
+    //     @include owf-panel($active-widget-theme,
+    //                         $owf_css_important,
     //                         $owf_frame_is_not_IE,
-    //                         //BORDER PROPERTIES 
+    //                         //BORDER PROPERTIES
     //                         $owf_no_incl_non_header_border,
     //                         $owf_incl_header_border,
-    //                         $owf_no_full_header_border); 
+    //                         $owf_no_full_header_border);
     // }
     .x-accordion-item {
-        @include owf-panel($active-widget-theme, 
+        @include owf-panel($active-widget-theme,
                             $owf_css_important,
                             $owf_frame_is_not_IE,
-                            //BORDER PROPERTIES 
+                            //BORDER PROPERTIES
                             $owf_no_incl_non_header_border,
                             $owf_no_incl_non_header_border,
                             $owf_no_full_header_border);
@@ -296,7 +341,7 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
             border-top-width: 1px !important;
             //background-color: nth(getWidgetGradientColors($active-widget-theme),2) !important;
         }
-        .x-panel-header-body { 
+        .x-panel-header-body {
             .x-tool-collapse-top {
                 background-position: 0 -210px;
             }
@@ -305,10 +350,10 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
             }
         }
     }
-    .x-panel-body { 
+    .x-panel-body {
         background-color: transparent!important;
         background-image: none!important;
-        border: none;
+        border: 0px;
     }
 
     //BOTTOM DOCKED
@@ -316,10 +361,10 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
         @include owf-panel($active-widget-theme,
                             $owf_css_not_important,
                             $owf_frame_is_not_IE,
-                            //BORDER PROPERTIES 
+                            //BORDER PROPERTIES
                             $owf_no_incl_non_header_border,
                             $owf_incl_header_border,
-                            $owf_full_header_border); 
+                            $owf_full_header_border);
 //        .x-panel-header {
 //            -moz-border-radius: 5px 5px 0 0;
 //            border-radius: 5px 5px 0 0;
@@ -327,20 +372,20 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
 
         //active item in the taskbar
         .x-tab-top-inactive {
-            @include owf-panel-header($inactive-widget-theme, 
+            @include owf-panel-header($inactive-widget-theme,
                                         $owf_css_not_important,
                                         $owf_frame_is_not_IE,
-                                        //BORDER PROPERTIES 
+                                        //BORDER PROPERTIES
                                         $owf_incl_header_border,
-                                        $owf_full_header_border); 
-                                        
+                                        $owf_full_header_border);
+
             .x-btn-default-small {
 			    -moz-border-radius: 2px 2px 2px 2px;
 			    filter: none;
 			    background-color: #C9CBCE;
 			    background-image: -moz-linear-gradient(#BABFC3 0%, #F1F2F2 45%, #C9CBCE 50%);
 			    border-color: #7A868C;
-			    
+
 				.x-btn-inner {
 				    color: #454F55;
 				    font-weight: bold;
@@ -348,7 +393,7 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
 			}
         }
     }
-    
+
     .widgetheader, .x-panel-header {
         .x-box-menu-right .x-btn {
             border-width: 1px !important;
@@ -356,8 +401,38 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
     }
 }
 
+.marketplace_animate_listing {
+    position: absolute;
+    z-index: 1000000000;
+    // Using css here because there is a bug in compass.
+    // Using transition-property mixin also outputs vendor prefix for values
+    -webkit-transition-property: top, left, width, height;
+    -moz-transition-property: top, left, width, height;
+    -o-transition-property: top, left, width, height;
+    transition-property: top, left, width, height;
+    @include transition-duration(1s);
+    -webkit-transition-timing-function: $linear, $easeInQuad, $linear, $linear;
+    -moz-transition-timing-function: $linear, $easeInQuad, $linear, $linear;
+    -o-transition-timing-function: $linear, $easeInQuad, $linear, $linear;
+    transition-timing-function: $linear, $easeInQuad, $linear, $linear;
+}
+
+
+.focusTooltip {
+    background-color: $owf-focus-color !important;
+
+    .x-tip-body {
+        font-size: $owf-font-size;
+        color: getHighContrastColor($owf-focus-color) !important;
+    }
+
+    .x-tip-anchor-top {
+        border-bottom-color: $owf-focus-color !important;
+    }
+}
+
 .x-ie {
-    #mainPanel { 
+    #mainPanel {
         .accordion_region {
             .x-panel-collapsed {
                 border: none;
@@ -366,7 +441,7 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
     }
 }
 .x-ie78 {
-    #mainPanel { 
+    #mainPanel {
         .x-panel.x-portlet .x-panel-header,
         .widgetheader,
         .x-panel.tab-dashboard-panel .widget-tab-bar .widget-tab .x-panel-header {
@@ -385,7 +460,7 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
 }
 
 // Cancel button icon
-.cancelBtnIcon { 
+.cancelBtnIcon {
     background-image: theme-image($theme-name, 'icons/fam/cross.gif');
 }
 
@@ -397,6 +472,10 @@ specifically overriding any default ExtJS css rules for OWF specific elements.
 //OWF-4265: Flex Widgets are refreshed when switching dashboards
 .dashboard, .tab-dashboard-panel .x-tabpanel-child {
   position: absolute;
+}
+
+.dashboard.hidden {
+    z-index: -1;
 }
 
 .x-focus, .x-nbr .x-focus {
@@ -415,15 +494,19 @@ iframe {
 .focus-catch {
     position: absolute;
     width: 1px !important; //ext will try to resize to full width in IE
-    height: 1px;
-    font-size: 1px; //height cannot be less than font-size in IE
+    height: 0px; // height must be set explicitly
+    font-size: 0px; //height cannot be less than font-size in IE
     border-style: none;
     background: transparent;
 }
 
+.x-btn-default-toolbar-large-focus {
+    background: none;
+}
+
 @include owf-tool;
 
-// EXT overrides 
+// EXT overrides
 
 .x-form-text,
 textarea.x-form-field {
@@ -465,7 +548,7 @@ textarea.x-form-invalid-field {
 .x-item-disabled .x-tbar-page-first {
   background-image: theme-image($theme-name, 'grid/page-first-disabled.png') !important;
 }
- 
+
 .x-item-disabled .x-tbar-page-last {
   background-image: theme-image($theme-name, 'grid/page-last-disabled.png') !important;
 }
@@ -550,4 +633,80 @@ img.widget-drag-proxy {
     background-image: theme-image($theme-name, 'launch-menu/drop-indicator-right.PNG');
     background-repeat: no-repeat;
     background-position: right center;
+}
+
+.aboutImage {
+    background-image: theme-image($theme-name, 'brand-logo.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 31px;
+}
+
+
+.alert-window.warning {
+    z-index: 10000003 !important; // set higher than App Components z-index
+}
+
+
+/* Change carousel/slider graphics */
+/* for both My Apps and App Components */
+.bx-wrapper {
+
+    .bx-pager, .bx-controls-auto {
+        .bx-pager-item {
+            .bx-pager-link {
+                background: theme-image($theme-name, 'myappswindow/carousel_dot_empty_out.png');
+
+                &:hover, &.hover {
+                    background: theme-image($theme-name, 'myappswindow/carousel_dot_empty_over.png');
+                }
+
+                &.active {
+                    background: theme-image($theme-name, 'myappswindow/carousel_dot_filled_out.png');
+                    &:hover, &.hover {
+                        background: theme-image($theme-name, 'myappswindow/carousel_dot_filled_over.png');
+                    }
+                }
+            }
+        }
+    }
+    .bx-pager.bx-default-pager a {
+        width: 12px;
+        height: 11px;
+    }
+
+    .bx-prev, .bx-next {
+        height: 42px !important;
+    }
+
+    .bx-prev {
+        background: theme-image($theme-name, 'myappswindow/carousel_arrows_left_out.png') 0 0 no-repeat;
+
+        &:hover {
+            background: theme-image($theme-name, 'myappswindow/carousel_arrows_left_over.png') 0 0 no-repeat;
+        }
+    }
+
+    .bx-next {
+        background: theme-image($theme-name, 'myappswindow/carousel_arrows_right_out.png') 0 0 no-repeat;
+
+        &:hover {
+            background: theme-image($theme-name, 'myappswindow/carousel_arrows_right_over.png') 0 0 no-repeat;
+        }
+    }
+
+    &.hide-pager {
+        .bx-pager {
+            display: none;
+        }
+    }
+}
+
+.ui-sortable-helper {
+    z-index: 10000002 !important;
+}
+
+body > .x-mask {
+    // OP-3362: Ext doesn't use viewport width
+    width: 100% !important;
 }

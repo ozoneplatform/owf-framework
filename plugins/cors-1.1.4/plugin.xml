@@ -1,0 +1,29 @@
+<plugin name='cors' version='1.1.4' grailsVersion='2.0 &gt; *'>
+  <author>David Tinker</author>
+  <authorEmail>david.tinker@gmail.com</authorEmail>
+  <title>CORS Plugin</title>
+  <description>Installs a servlet filter to set Access-Control-Allow-Origin and other CORS related headers to enable cross site AJAX requests to your Grails application</description>
+  <documentation>https://github.com/davidtinker/grails-cors</documentation>
+  <type>CorsGrailsPlugin</type>
+  <resources />
+  <repositories>
+    <repository name='grailsCentral' url='http://grails.org/plugins' />
+    <repository name='mavenCentral' url='http://repo1.maven.org/maven2/' />
+  </repositories>
+  <dependencies>
+    <test>
+      <dependency group='' name='grails-test-suite-base' version='2.2.1' />
+    </test>
+    <compile>
+      <dependency group='org.springframework.security' name='spring-security-core' version='3.0.7.RELEASE' />
+      <dependency group='org.springframework.security' name='spring-security-web' version='3.0.7.RELEASE' />
+    </compile>
+  </dependencies>
+  <plugins>
+    <compile>
+      <plugin group='org.grails.plugins' name='webxml' version='1.4.1' />
+    </compile>
+  </plugins>
+  <runtimePluginRequirements />
+  <behavior />
+</plugin>

@@ -1,7 +1,7 @@
 Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
     extend: 'Ext.panel.Panel',
     alias: ['widget.deletewidgetspanel', 'widget.Ozone.components.widget.DeleteWidgetsPanel'],
-    
+
     delWidgets: null,
     dashboardContainer: null,
     delTitlePanel: null,
@@ -12,7 +12,7 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
     mixins: {
         circularFocus: 'Ozone.components.focusable.CircularFocus'
     },
-    
+
     id: 'topdeletepanel',
     width: 600,
     height: 300,
@@ -20,16 +20,16 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
         type: 'vbox',
         align: 'stretch'
     },
-    
+
     // private
     initComponent: function() {
-        
+
         this.delTitlePanel = Ext.create('Ext.panel.Panel', {
             layout: 'fit',
             border: false,
-            html: 'You have selected to delete 0 widgets:'
+            html: 'You have selected to delete 0 App Components:'
         });
-        
+
         this.delView = Ext.create('Ext.grid.Panel', {
             cls: 'delView',
             columns: [{
@@ -38,7 +38,7 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
                 hideable: false,
                 tpl: '<img src="{headerIcon}" />',
                 width: 36
-            }, 
+            },
             {
                 header: 'Name',
                 dataIndex: 'name',
@@ -62,15 +62,15 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
             })
         });
 
-        
+
         this.reqTitlePanel = Ext.create('Ext.panel.Panel', {
             itemId: 'reqTitlePanel',
             layout: 'fit',
             hidden: true,
             border: false,
-            html: 'These widgets are required by other widgets in OWF. Deleting these widgets will additionally delete the widgets listed below.'
+            html: 'This App Component is required by other App Component(s) in OWF. Deleting this App Component will additionally delete the App Components listed below.'
         });
-        
+
         this.reqGrid = Ext.create('Ext.grid.Panel', {
             itemId: 'reqGrid',
             hidden: true,
@@ -97,77 +97,55 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
                     {name: 'x'},
                     {name: 'y'},
                     {name: 'visible'},
-                    {name: 'tags'},
                     {name: 'totalUsers'},
                     {name: 'totalGroups'},
                     {name: 'singleton'}
                 ]
             }),
             columns: [
-            {
-                dataIndex: 'headerIcon',
-                width: 36,
-                sortable: false,
-                hideable: false,
-                menuDisabled: true,
-                renderer: function(value, metaData, record, rowIndex, colIndex, store) {
-                    var url = null;
-                    var contextPath = Ozone.util.contextPath();
-                    if (!value.match(new RegExp('^/?' + contextPath + '/.*$','i')) && !value.match(new RegExp('^https?://.*','i'))) {
-                        //url is not relative to the contextPath
-                        if (value.indexOf('/') == 0) {
-                            url = contextPath + value;
-                        } else {
-                            url = contextPath + '/' + value;
-                        }
-                    }
-                    else {
-                      //value is a full url
-                      url = value;
-                    }
-                    return '<img src="' + url + '" title="' + record.data.name + '">';
-                }
-            },
-            {
-                header: 'Name', 
-                dataIndex: 'name',
-                flex: 1,
-                sortable: false,
-                hideable: false,
-                menuDisabled: true
-            },
-            {
-                header: 'Version', 
-                dataIndex: 'version',
-                width: 121,
-                sortable: false,
-                hideable: false,
-                menuDisabled: true
-            },
-            {
-                header: 'Tags', 
-                dataIndex: 'tags',
-                //width: 150,
-                flex: 1, //fill the rest of the space
-                sortable: false,
-                hideable: false,
-                menuDisabled: true,
-                renderer: function(value, metaData, record, rowIndex, colIndex, store) {
-                    var strTags = "";
-                    if (value != null) {
-                        for (var i = 0; i < value.length; i++) {
-                            strTags += value[i].name;
-                            if (i < value.length - 1) {
-                                strTags += ", ";
+                {
+                    dataIndex: 'headerIcon',
+                    width: 36,
+                    sortable: false,
+                    hideable: false,
+                    menuDisabled: true,
+                    renderer: function(value, metaData, record, rowIndex, colIndex, store) {
+                        var url = null;
+                        var contextPath = Ozone.util.contextPath();
+                        if (!value.match(new RegExp('^/?' + contextPath + '/.*$','i')) && !value.match(new RegExp('^https?://.*','i'))) {
+                            //url is not relative to the contextPath
+                            if (value.indexOf('/') == 0) {
+                                url = contextPath + value;
+                            } else {
+                                url = contextPath + '/' + value;
                             }
                         }
+                        else {
+                          //value is a full url
+                          url = value;
+                        }
+                        return '<img src="' + url + '" title="' + record.data.name + '">';
                     }
-                    return strTags;
+                },
+                {
+                    header: 'Name',
+                    dataIndex: 'name',
+                    flex: 1,
+                    sortable: false,
+                    hideable: false,
+                    menuDisabled: true
+                },
+                {
+                    header: 'Version',
+                    dataIndex: 'version',
+                    width: 121,
+                    sortable: false,
+                    hideable: false,
+                    menuDisabled: true
                 }
-            }
             ],
             viewConfig: {
-                emptyText: 'No additional widgets to delete'
+                emptyText: 'No additional App Components to delete'
             },
             autoScroll: true,
             foreceFilt: true,
@@ -175,14 +153,14 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
             border: false,
             iconCls: 'icon-grid'
         });
-        
+
         this.items  = [
             this.delTitlePanel,
             this.delView,
             this.reqTitlePanel,
             this.reqGrid
         ];
-        
+
         this.okBtn = Ext.create('Ext.button.Button', {
             text: Ozone.layout.DialogMessages.ok,
             //iconCls: 'okSaveBtnIcon',
@@ -200,11 +178,11 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
             },
             scope: this
         });
-        
+
         this.buttons = [this.okBtn, this.cancelBtn];
-    
+
         var scope = this;
-        
+
         var ids = [];
         var r = [];
         var w = this.delWidgets;
@@ -217,23 +195,23 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
                 w[i].image
             ]);
         }
-        
+
         var delStore = this.delView.getStore();
         if (delStore) {
             delStore.removeAll();
             delStore.loadData(r, true);
         }
-        
-        this.delTitlePanel.update('You have selected to delete ' + delStore.getCount() + ' widgets:');
-        
+
+        this.delTitlePanel.update('You have selected to delete ' + delStore.getCount() + ' App Component:');
+
         Ozone.pref.PrefServer.getDependentPersonWidgets({
             content: {'ids': ids},
             onSuccess: function(ret) {
                 var d = [];
                 var data = ret.data;
-                
+
                 var delStore = scope.delView.getStore();
-                
+
                 if (data) {
                     for (var i = 0; i < data.length; i++) {
                         if (-1 == delStore.find('guid', data[i].path)) {
@@ -252,7 +230,6 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
                                 x: data[i].value.x,
                                 y: data[i].value.y,
                                 visible: data[i].value.visible,
-                                tags: data[i].value.tags,
                                 totalUsers: data[i].value.totalUsers,
                                 totalGroups: data[i].value.totalGroups,
                                 singleton: data[i].value.singleton
@@ -283,18 +260,18 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
                 alert('Error');
             }
         });
-        
+
 //        this.on('show', function() {
 //            this.focus();
 //        }, okBtn);
-        
+
         this.callParent();
 
         this.on('afterrender', function(cmp) {
             cmp.setupFocus(cmp.okBtn.getFocusEl(), cmp.cancelBtn.getFocusEl());
         });
     },
-    
+
     del: function() {
         var delStore = this.delView.getStore();
         var delRecs = delStore.getRange();
@@ -307,28 +284,28 @@ Ext.define('Ozone.components.widget.DeleteWidgetsPanel', {
         for (var i = 0; i < reqRecs.length; i++) {
             allRecs.push(reqRecs[i].data.widgetGuid);
         }
-        
+
         var scope = this;
-        
+
         Ozone.pref.PrefServer.updateAndDeleteWidgets({
             widgetsToUpdate: [],
-            widgetGuidsToDelete: allRecs, 
+            widgetGuidsToDelete: allRecs,
             updateOrder: false,
             onSuccess: function(ret) {
                 //Call method to refresh the 'widget launch menu' widgets.
-                scope.dashboardContainer.retrieveUpdatedWidgets();
+                scope.dashboardContainer.refreshAppComponentsView();
             },
             onFailure: function() {
                 Ozone.Msg.alert(Ozone.util.ErrorMessageString.saveUpdatedWidgets, Ozone.util.ErrorMessageString.saveUpdatedWidgetsMsg,
                     null, null, null, scope.dashboardContainer.modalWindowManager);
             }
         });
-        
+
         this.cancel();
     },
-    
+
     cancel: function() {
         this.ownerCt.close();
     }
-    
+
 });

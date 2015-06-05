@@ -1,0 +1,29 @@
+OZONE Widget Framework
+Copyright (c) 2015 Next Century Corporation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
+Some dependencies in this software were licensed under the AOP Alliance (Java/J2EE AOP standards) software
+license (see references in the NOTICE.txt file); full text of the license
+provided below:
+----------------------------------------------------------------------------
+The AOP Alliance project is a joint open-source project between several software engineering people who are interested in AOP and Java.
+
+LICENCE: all the source code provided by AOP Alliance is Public Domain.
+
+view the members' list....
+
+We believe that Aspect-Oriented Programming (AOP) offers a better solution to many problems than do existing technologies such as EJB. 
+AOP Alliance intends to facilitate and standardize the use of AOP to enhance existing middleware environments (such as J2EE), or development environements (e.g. JBuilder, Eclipse). 
+The AOP Alliance also aims to ensure interoperability between Java/J2EE AOP implementations to build a larger AOP community.

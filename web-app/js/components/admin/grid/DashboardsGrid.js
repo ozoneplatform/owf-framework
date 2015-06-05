@@ -3,7 +3,7 @@ Ext.define('Ozone.components.admin.grid.DashboardsGrid', {
   alias: ['widget.dashboardsgrid'],
   quickSearchFields: ['name'],
   plugins: new Ozone.components.focusable.FocusableGridPanel(),
-  mixins: ['Ozone.components.WidgetAlerts'],
+  mixins: ['Ozone.components.WidgetAlerts', 'Ozone.components.admin.grid.FilterMixin'],
 
   cls: 'grid-dashboard',
 
@@ -41,7 +41,7 @@ Ext.define('Ozone.components.admin.grid.DashboardsGrid', {
         },
         {
           itemId: 'name',
-          header: 'Dashboard Title',
+          header: 'Page Title',
           dataIndex: 'name',
           flex: 1,
           minWidth: 200,
@@ -124,44 +124,6 @@ Ext.define('Ozone.components.admin.grid.DashboardsGrid', {
     return this.getDockedItems('toolbar[dock="bottom"]')[0];
   },
 
-  applyFilter: function(filterText, fields) {
-    this.store.proxy.extraParams = undefined;
-
-    if (filterText) {
-      var filters = [];
-      for (var i = 0; i < fields.length; i++) {
-        filters.push({
-          filterField: fields[i],
-          filterValue: filterText
-        });
-      }
-      this.store.proxy.extraParams = {
-        filters: Ext.JSON.encode(filters),
-        filterOperator: 'OR'
-      };
-    }
-    
-    if (this.baseParams) { this.setBaseParams(this.baseParams); }
-
-    this.store.loadPage(1,{
-      params: {
-        offset: 0,
-        max: this.store.pageSize
-      }
-    });
-  },
-
-  clearFilters: function() {
-    this.store.proxy.extraParams = undefined;
-    if (this.baseParams) { this.setBaseParams(this.baseParams); }
-    this.store.load({
-      params: {
-        start: 0,
-        max: this.store.pageSize
-      }
-    });
-  },
-  
   setBaseParams: function(params) {
       this.baseParams = params;
       if (this.store.proxy.extraParams) {
@@ -251,7 +213,7 @@ Ext.define('Ozone.components.admin.grid.DashboardsGrid', {
             }
         }
         else {
-            this.showAlert('Error', 'You must select at least one dashboard to move.');
+            this.showAlert('Error', 'You must select at least one page to move.');
         }
     }
 

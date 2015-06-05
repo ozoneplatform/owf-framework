@@ -1,0 +1,377 @@
+@charset "UTF-8";
+
+// OWF UTILITY FUNCTIONS
+@import 'functions/owf_functions';
+@import 'compass'; //pull in base functions and mixins provided by the compass framework
+
+$theme-name: 'owf';
+
+@import 'variables/defaults';
+// @import 'variables/applicationConfiguration';
+
+.editable_cell{
+    cursor: hand;
+    cursor: pointer;
+    min-width: 300px;
+    width: 300px;
+    min-height: 35px;
+    font-size: 12px;
+    color: $appConfig-cell-color;
+    padding-top: 1px;
+    padding-left: 4px;
+
+    border: 1px solid transparent;
+
+
+    &:hover {
+        border-color: $appConfig-cell-border-hover;
+        //background-image: theme-image($theme-name, 'applicationConfiguration/edit_out.png');
+        //background-image:
+        //background-repeat: no-repeat;
+        //background-position: 99% 4%;
+    }
+}
+
+.editable_cell_image{
+    cursor: hand;
+    cursor: pointer;
+    min-width:  25px;
+    max-width:  200px;
+    min-height: 25px;
+    max-height: 50px;
+    padding-right: 5px;
+}
+
+.non_editable_cell{
+    min-width: 250px;
+    min-height: 30px;
+    font-size: 12px;
+    color: $appConfig-noedit-cell-color;
+}
+
+.spinner {
+    background: theme-image($theme-name, 'spinner.gif') no-repeat transparent;
+    height: 25px;
+    width: 25px;
+    padding: 0.5em;
+    display: none;
+}
+
+.app_config_list_view_panel {
+    padding-left: 30px;
+    border-left: 1px solid $appConfig-divider;
+    float: right;
+    width: 80%;
+    background-color: transparent;
+    position: relative;
+    box-shadow: 0 0 0 15px transparent;
+    height: auto !important;
+    min-height: 424px;
+
+    #app-config-add-store-container {
+        float: right;
+        width: 54%;
+        padding-top: 10px;
+
+        #app-config-add-store {
+
+            @include border-radius(3px);
+            border: 1px solid $appConfig-store-btn-border-color;
+
+            color: $appConfig-store-btn-color;
+            background-color: $appConfig-store-btn-bg-color;
+
+            padding: 5px 20px;
+
+            &:hover, &.hover {
+                color: $appConfig-store-btn-color-hover;
+                background-color: $appConfig-store-btn-bg-color-hover;
+            }
+        }
+    }
+}
+
+div.app_config_column_container{
+    width: 100%;
+    float: left;
+    padding-bottom: 20px;
+}
+
+div.app_config_section{
+    font-size: 14px;
+    padding-bottom: 4px;
+    padding-top:    9px;
+    color: $appConfig-section-header-color;
+}
+
+
+div.app_config_column_left{
+    float: left;
+    width: 46%;
+}
+
+div.app_config_column_right{
+    float: left;
+    min-width: 50%;
+    max-width: 50%;
+    padding-left: 20px;
+}
+
+
+div.app_config_map_row{
+    padding-bottom: 6px;
+    min-width: inherit;
+}
+
+
+.app_config_item_title{
+    color: $appConfig-title-color;
+    font-family: Verdana,Helvetica,Arial,sans-serif;
+    font-size: 12px;
+}
+
+.app_config_item_description{
+    color: $appConfig-description-color;
+    font-family: Verdana,Helvetica,Arial,sans-serif;
+    font-size: 11px;
+    display: inline-block;
+    margin-right: 10px;
+    padding-botto: 3px;
+    padding-top: 5px;
+    vertical-align: top;
+    width: 340px;
+}
+
+.app_config_text_area{
+    min-width: 300px;
+    width: 300px;
+    min-height: 125px;
+    max-height: 200px;
+    border: 1px solid $appConfig-cell-border-hover;
+    background-color: $appConfig-cell-background-active;
+    padding-left: 3px;
+    display: none;
+    color: $appConfig-cell-color;
+}
+
+.app_config_text_hover {
+    width: 300px;
+    height: 35px;
+    border: 1px solid $appConfig-cell-border-hover;
+}
+
+
+.app_config_field_error{
+    font-size: 10px;
+    color: $appConfig-error-color;
+}
+
+.app_config_free_text_warning {
+    font-size: 10px;
+    color: $warning-color;
+}
+
+ // radio button styles
+ .app_config_radio_button_area {
+ }
+
+ .app_config_radio_button_label {
+     font-size: 12px;
+     display: inline-block;
+     line-height: 24px;
+ }
+
+ .app_config_radio_button {
+     margin-right: 4px;
+ }
+
+.app_config_help_text {
+    font-style: italic;
+    color: $appConfig-help-color;
+}
+
+// Used for the link view
+.app_config_pageLink {
+    padding-top: 14px;
+}
+
+.app-config-store-view {
+    color: $appConfig-cell-color;
+    min-height: 32px;
+    padding-bottom: 10px;
+    float: right;
+    width: 54%;
+
+    .icon {
+        float: left;
+        width: 64px;
+        height: 64px;
+    }
+
+    .name {
+        margin-top: 1.5em;
+        display: inline-block;
+        width: 12em;
+        padding-left: 10px;
+        padding-right: 10px;
+
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        font: {
+            size: 1.2em;
+            weight: bold;
+        }
+    }
+
+    .edit, .delete {
+        display: inline-block;
+        visibility: hidden;
+        width: 16px;
+        height: 16px;
+
+        position: relative;
+        top: 0.3em;
+
+        background-repeat: no-repeat;
+        background-position: center center;
+        cursor: pointer;
+    }
+
+    // display edit and delete buttons only when hovering on parent element
+    &:hover, &.hover {
+        & .edit, & .delete {
+            visibility: visible;
+        }
+    }
+
+    .edit {
+        margin-left: 4em;
+        background-image: theme-image($theme-name, 'applicationConfiguration/stores/Edit-out.png');
+
+        &:hover, &.hover {
+            background-image: theme-image($theme-name, 'applicationConfiguration/stores/Edit-over.png');
+        }
+    }
+
+    .delete {
+        margin-left: 1em;
+        background-image: theme-image($theme-name, 'applicationConfiguration/stores/Delete-out.png');
+
+        &:hover, &.hover {
+            background-image: theme-image($theme-name, 'applicationConfiguration/stores/Delete-over.png');
+        }
+    }
+}
+
+
+// MENU STUFF -->
+.app_config_menu{
+    float: left;
+    width: 16%;
+    padding-top: 2px;
+
+    .item {
+        background-repeat:  no-repeat;
+        font-size: 16px;
+        color: $appConfig-menu-item-color;
+        cursor: hand;
+        cursor: pointer;
+        padding-left: 45px;
+        padding-top: 13px;
+        padding-bottom: 13px;
+        background-position: left;
+
+        > a {
+            padding-bottom: 15px;
+        }
+    }
+}
+
+body.configuration_widget {
+    width: 1000px;
+    margin: auto auto auto 2%;
+    background-color: #0f1a2e;
+
+    $link-color: #77a7ef;
+    $link-over-color: #ADCFFF;
+
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: $owf-font-size;
+
+    a {
+        text-decoration: none;
+        //outline: none;
+        color: $link-color;
+        cursor: pointer;
+    }
+
+    a:hover {
+        color: $link-over-color;
+    }
+
+    .auditing {
+        background-image: theme-image($theme-name, 'applicationConfiguration/Auditing_Inactive.png');
+        &:hover {
+            background-image: theme-image($theme-name, 'applicationConfiguration/Auditing_Hover.png');
+        }
+
+        &.active {
+            background-image: theme-image($theme-name, 'applicationConfiguration/Auditing_Active.png');
+        }
+    }
+
+    .user_account_settings {
+        background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Inactive.png');
+        &:hover {
+            background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Hover.png');
+        }
+
+        &.active {
+            background-image: theme-image($theme-name, 'applicationConfiguration/UserAccountSettings_Active.png');
+        }
+    }
+
+    .branding {
+        background-image: theme-image($theme-name, 'applicationConfiguration/Branding_Inactive.png');
+        &:hover {
+            background-image: theme-image($theme-name, 'applicationConfiguration/Branding_Hover.png');
+        }
+
+        &.active {
+            background-image: theme-image($theme-name, 'applicationConfiguration/Branding_Active.png');
+        }
+    }
+
+    .store {
+        background-image: theme-image($theme-name, 'applicationConfiguration/Store_Inactive.png');
+        &:hover {
+            background-image: theme-image($theme-name, 'applicationConfiguration/Store_Hover.png');
+        }
+
+        &.active {
+            background-image: theme-image($theme-name, 'applicationConfiguration/Store_Active.png');
+        }
+    }
+
+    .notifications {
+        margin-left: 0;
+        position: relative;
+
+        .icon-bell {
+            position: absolute;
+            left: 0px;
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            top: 9px;
+            color: $link-color;
+        }
+
+        &:hover .icon-bell,
+        &.active .icon-bell {
+            color: $link-over-color;
+        }
+    }
+}

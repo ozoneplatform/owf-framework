@@ -2,6 +2,7 @@
 # Generally this will be in a lib/extjs folder in your applications root
 # <root>/lib/extjs
 $ext_sdk_path = "../../../js-lib/ext-4.0.7/"
+$bootstrap_scss_path = "../../../js-lib/bootstrap/lib"
 $common_theme_path = "../../common" #location of owf's stylesheets and images that are common to mutiple themes
 $image_path = "../images"  #path to the images directory in this theme
 
@@ -19,6 +20,9 @@ output_style = :expanded
 
 # We need to load in the Ext4 themes folder, which includes all it's default styling, images, variables and mixins
 load File.join(File.dirname(__FILE__), $ext_sdk_path, 'resources', 'themes')
+
+# load bootstrap styles
+add_import_path File.join(File.dirname(__FILE__), $bootstrap_scss_path)
 
 #We need to load the OWF Common Stylesheets
 load File.join(File.dirname(__FILE__), $common_theme_path)

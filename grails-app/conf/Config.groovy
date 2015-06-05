@@ -4,10 +4,11 @@ import grails.util.BuildSettingsHolder
 
 // locations to search for config files that get merged into the main config
 // config files can either be Java properties files or ConfigSlurper scripts
-
+def userConfig = System.properties.userConfig ?: "${userHome}/.ozone/DevFlagConfig.groovy"
 grails.config.locations = [
         "classpath:OzoneConfig.properties",
-        "classpath:OwfConfig.groovy"
+        "classpath:OwfConfig.groovy",
+        "file:${userConfig}"
 ]
 println "grails.config.locations = ${grails.config.locations}"
 
@@ -99,7 +100,8 @@ uiperformance.exclusions = [
         "**/js-test/**",
         "**/js-doh/**",
         "**/js-lib/**",
-        "**/js-min/**"
+        "**/js-min/**",
+        "**/rest/**"
 
 ]
 
@@ -171,7 +173,7 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-admin-widget',
-    
+
         files: [
             '../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed',
             '../js-lib/ext-4.0.7/ext-all-debug',
@@ -224,11 +226,12 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-marketplace-approval-widget',
-                
+
         files: [
             '../js/data/models/WidgetDefinition',
             '../js/data/stores/AdminWidgetStore',
             '../js/data/stores/WidgetApprovalStore',
+            '../js/components/admin/grid/FilterMixin',
             '../js/components/admin/grid/WidgetApprovalsGrid',
             '../js/components/admin/widget/WidgetDetailPanel',
             '../js/components/admin/widget/ApprovePanel',
@@ -245,6 +248,7 @@ uiperformance.bundles = [
             '../js/data/stores/AdminDashboardStore',
             '../js/data/models/Group',
             '../js/data/stores/GroupStore',
+            '../js/components/admin/grid/FilterMixin',
             '../js/components/admin/grid/GroupsGrid',
             '../js/components/admin/EditWidgetPanel',
             '../js/components/admin/GroupsTabPanel',
@@ -261,6 +265,7 @@ uiperformance.bundles = [
         files: [
             'data/models/Dashboard',
             'data/stores/AdminDashboardStore',
+            'components/admin/grid/FilterMixin',
             'components/admin/grid/DashboardGroupsGrid',
             'components/admin/dashboard/DashboardDetailPanel',
             'components/admin/dashboard/GroupDashboardManagementPanel'
@@ -273,6 +278,7 @@ uiperformance.bundles = [
         files: [
             'data/models/Group',
             'data/stores/GroupStore',
+            'components/admin/grid/FilterMixin',
             'components/admin/grid/GroupsGrid',
             'components/admin/group/GroupDetailPanel',
             'components/admin/group/GroupManagementPanel'
@@ -281,7 +287,7 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-group-edit-widget',
-    
+
         files: [
             '../js/data/models/Dashboard',
             '../js/data/stores/AdminDashboardStore',
@@ -293,6 +299,7 @@ uiperformance.bundles = [
             '../js/data/stores/StackStore',
             '../js/data/models/WidgetDefinition',
             '../js/data/stores/AdminWidgetStore',
+            '../js/components/admin/grid/FilterMixin',
             '../js/components/admin/grid/DashboardsGrid',
             '../js/components/admin/grid/StacksGrid',
             '../js/components/admin/grid/UsersGrid',
@@ -308,6 +315,7 @@ uiperformance.bundles = [
             '../js/components/admin/group/GroupEditPropertiesTab',
             '../js/components/admin/group/GroupEditStacksTab',
             '../js/components/admin/group/GroupEditUsersTab',
+            '../js/components/admin/group/GroupEditWidgetPanel',
             '../js/components/admin/group/GroupEditWidgetsTab',
             '../js/components/admin/group/GroupEditPanel'
         ]
@@ -320,6 +328,7 @@ uiperformance.bundles = [
             'data/models/Stack',
             'data/stores/StackStore',
             'components/admin/ExportWindow',
+            'components/admin/grid/FilterMixin',
             'components/admin/grid/StacksGrid',
             'components/admin/stack/StackDetailPanel',
             'components/admin/stack/StackManagementPanel'
@@ -328,7 +337,7 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-stack-edit-widget',
-    
+
         files: [
             '../js/data/models/User',
             '../js/data/stores/UserStore',
@@ -342,6 +351,7 @@ uiperformance.bundles = [
             '../js/data/stores/AdminWidgetStore',
             '../js/components/admin/UrlField',
             '../js/components/admin/EditDashboardWindow',
+            '../js/components/admin/grid/FilterMixin',
             '../js/components/admin/grid/DashboardsGrid',
             '../js/components/admin/grid/GroupsGrid',
             '../js/components/admin/grid/UsersGrid',
@@ -366,10 +376,11 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-user-management-widget',
-    
+
         files: [
             'data/models/User',
             'data/stores/UserStore',
+            'components/admin/grid/FilterMixin',
             'components/admin/grid/UsersGrid',
             'components/admin/user/UserDetailPanel',
             'components/admin/user/UserManagementPanel'
@@ -378,7 +389,7 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-user-edit-widget',
-    
+
         files: [
             'util/guid',
             '../js/data/models/Dashboard',
@@ -395,6 +406,7 @@ uiperformance.bundles = [
             '../js/data/stores/AdminWidgetStore',
             '../js/components/admin/EditPreferenceWindow',
             '../js/components/admin/EditDashboardWindow',
+            '../js/components/admin/grid/FilterMixin',
             '../js/components/admin/grid/DashboardsGrid',
             '../js/components/admin/grid/GroupsGrid',
             '../js/components/admin/grid/PreferencesGrid',
@@ -424,6 +436,7 @@ uiperformance.bundles = [
             '../js/data/models/WidgetDefinition',
             '../js/data/stores/AdminWidgetStore',
             '../js/components/admin/ExportWindow',
+            '../js/components/admin/grid/FilterMixin',
             '../js/components/admin/grid/WidgetsGrid',
             '../js/components/admin/widget/DeleteWidgetsPanel',
             '../js/components/admin/widget/WidgetDetailPanel',
@@ -433,7 +446,7 @@ uiperformance.bundles = [
     [
         type: 'js',
         name: 'owf-widget-edit-widget',
-    
+
         files: [
             'util/guid',
             '../js/data/ModelIdGenerator',
@@ -449,6 +462,7 @@ uiperformance.bundles = [
             '../js/data/models/WidgetType',
             '../js/data/stores/WidgetTypeStore',
             '../js/components/admin/EditIntentWindow',
+            '../js/components/admin/grid/FilterMixin',
             '../js/components/admin/grid/IntentsGrid',
             '../js/components/admin/grid/GroupsGrid',
             '../js/components/admin/grid/UsersGrid',
@@ -465,6 +479,38 @@ uiperformance.bundles = [
     ],
     [
         type: 'js',
+        name: 'owf-widget-configuration-widget',
+
+        files: [
+            "../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed",
+            "../js/util/util",
+            "../js/util/guid",
+            "../js/util/version",
+            "../js/util/transport",
+            "../js-lib/ext-4.0.7/ext-all-debug",
+            "../js/data/models/WidgetDefinition",
+            "../js/data/models/WidgetType",
+            "../js/components/mask/LoadMask",
+            "../js/components/focusable/CircularFocus",
+            "../js/components/window/ModalWindow",
+            "../js/data/OWFTransportProxy",
+            "../js/data/OWFStore",
+            "../js/data/stores/AdminWidgetStore",
+            "../js/data/stores/WidgetTypeStore",
+            "../js/components/window/StoreWizard",
+            '../js/data/models/Group',
+            '../js/data/stores/GroupStore'
+        ]
+    ],
+    [
+        type: "js",
+        name: "require-js",
+        files: [
+            "../js-lib/requirejs/require-2.1.6"
+        ]
+    ],
+    [
+        type: 'js',
         name: 'owf-server',
         //custom fields for createBundles grails script
         minifiedName: 'owf-server-min',
@@ -472,10 +518,25 @@ uiperformance.bundles = [
         //custom fields for createBundles grails script
         files: [
                         '../js-lib/dojo-1.5.0-windowname-only/dojo/owfdojo.js.uncompressed',
+                        '../js-lib/lodash/lodash-1.3.1',
                         '../js-lib/ext-4.0.7/ext-all-debug',
-                        '../js-lib/jquery/jquery-1.8.0',
+                        '../js-lib/jquery/jquery-1.10.2',
+                        //'../js-lib/jquery/jquery-migrate-1.2.1',
+                        '../js-lib/jquery/jquery.dotdotdot',
+                        '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.core',
+                        '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.widget',
+                        '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.mouse',
+                        '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.position',
+                        '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.sortable',
+                        '../js-lib/jquery-ui-1.10.3/ui/jquery.ui.resizable',
+                        '../js-lib/backbone/backbone-1.0.0',
+                        '../js-lib/bootstrap/bootstrap-2.3.2',
+                        '../js-lib/jquery.bxslider/jquery.bxslider',
                         '../js-lib/pnotify-1.2.0/jquery.pnotify',
                         '../js-lib/stubconsole',
+                        '../js-lib/moment',
+                        '../js-lib/handlebars/handlebars-1.0.0',
+                        '../js/util/css_events',
                         '../js-plugins/Banner',
                         '../js-plugins/Dashboard',
                         '../js-plugins/DashboardContainer',
@@ -510,6 +571,7 @@ uiperformance.bundles = [
                         'events/Events',
                         'components/util/History',
                         'components/util/InstanceVariablizer',
+                        'components/mask/LoadMask',
                         'components/keys/HotKeys',
                         'components/keys/KeyMap',
                         'components/keys/MoveKeyMap',
@@ -529,7 +591,7 @@ uiperformance.bundles = [
                         'ux/MessageBoxPlus',
                         'ux/OWFVtypes',
                         '../js-lib/log4javascript/log4javascript',
-            			'audit/Audit',
+                        'audit/Audit',
                         'util/version',
                         'util/util',
                         'util/widget_utils',
@@ -574,6 +636,7 @@ uiperformance.bundles = [
                         'components/tip/QuickTip',
                         'components/tip/ToolTip',
                         'components/widget/WidgetIframeComponent',
+                        'components/widget/BackgroundWidget',
                         'components/focusable/FocusCatch',
                         'components/widget/WidgetBase',
                         'components/widget/WidgetPanel',
@@ -587,6 +650,8 @@ uiperformance.bundles = [
                         'data/ModelIdGenerator',
                         'data/models/WidgetDefinition',
                         'data/stores/WidgetStore',
+                        'data/collections/Collection',
+                        'data/collections/Widgets',
                         'data/models/Group',
                         'data/stores/GroupStore',
                         'layout/create_view_container',
@@ -597,7 +662,7 @@ uiperformance.bundles = [
                         'components/grid/column/TextColumn',
                         'components/layout/container/boxOverflow/Menu',
                         'components/layout/container/HBox',
-                        'components/layout/BufferedCardLayout',
+                        'components/layout/DashboardBufferedCardLayout',
                         'components/layout/PinnableAccordion',
                         'components/panel/WidgetHeader',
                         'components/panel/WidgetTool',
@@ -629,8 +694,36 @@ uiperformance.bundles = [
                         'components/theming/ThemeSwitcherWindow',
                         'components/dashboard/DashboardContainer',
                         'components/dashboard/Dashboard',
-                        'components/window/DashboardSwitcher',
+                        'components/window/MyAppsWindow',
+                        'components/window/MyAppTip',
+                        'components/window/StoreWizard',
+                        'components/window/TipWarning',
+                        'components/window/MyPageTip',
                         'components/window/HelpWindow',
+                        'views/BaseView',
+                        'views/CollectionView',
+                        'views/PopoverViewMixin',
+                        'notifications/NotificationModel',
+                        'notifications/XMPPNotificationsCollection',
+                        'views/notifications/NotificationsBadge',
+                        'views/notifications/NotificationView',
+                        'views/notifications/NotificationDetailsView',
+                        'views/notifications/NotificationsGrowl',
+                        'views/notifications/NotificationsButton',
+                        'views/notifications/NotificationsGroupView',
+                        'views/notifications/NotificationsGroupedListView',
+                        'views/notifications/NotificationsHeader',
+                        'views/notifications/NotificationsSectionHeader',
+                        'views/usermenu/UserMenuGroup',
+                        'views/usermenu/UserMenu',
+                        'views/usermenu/UserMenuButton',
+                        'components/ExtBackboneViewWrapper',
+                        'components/appcomponents/AppComponent',
+                        'components/appcomponents/DetailsTip',
+                        'components/appcomponents/AppComponentsList',
+                        'components/appcomponents/AppComponentsCarousel',
+                        'components/appcomponents/AppComponentsView',
+                        'components/appcomponents/IntentsWindow',
                         'components/launchMenu/DDView',
                         'components/launchMenu/Carousel',
                         'components/launchMenu/AdvancedSearchPanel',
@@ -643,10 +736,11 @@ uiperformance.bundles = [
                         'components/pane/PortalPane',
                         'components/pane/TabbedPane',
                         'components/pane/FitPane',
-                        'components/window/SettingsWindow',
                         'components/view/ToolDataView',
                         'components/view/TagCloud',
                         'components/button/ShareButton',
+                        'components/button/NotificationsButtonWrapper',
+                        'components/button/UserMenuButtonWrapper',
                         'components/banner/Banner',
                         'components/widget/WidgetPortlet',
                         'components/widget/WidgetWindow',
@@ -656,13 +750,19 @@ uiperformance.bundles = [
                         'marketplace/MPCategoryRetriever',
                         'marketplace/MPListingsAPI',
                         'marketplace/MPCategoryAPI',
-                        'components/marketplace/MarketplaceWindow',
+                        'marketplace/MarketplaceUserMenuContainer',
                         'components/marketplace/MPWidgetDetailsPanel',
+                        'components/marketplace/MarketplaceLauncher',
                         'chrome/WidgetChromeContainer',
                         'components/widget/DeleteWidgetsPanel',
                         'metrics/BaseMetrics',
-            //this patch file should be at the end
-                        '../js-lib/patches/RemoveListenerCaptureBugOverrides'
+                        '../js/data/stores/AdminWidgetStore',
+                        '../js/data/models/WidgetType',
+                        '../js/data/stores/WidgetTypeStore',
+                        '../js/data/models/Group',
+                        '../js/data/stores/GroupStore',
+                        '../js-lib/patches/RemoveListenerCaptureBugOverrides',
+                        'app'
 
         ]
     ],
@@ -766,7 +866,7 @@ environments {
             //get rid of stdout logging
             rootLogger.removeAllAppenders()
 
-            //disable the creation of stacktrace.log since we 
+            //disable the creation of stacktrace.log since we
             //don't log anything to it
             appenders {
                 'null' name: 'stacktrace'
@@ -780,7 +880,7 @@ environments {
             }
 
             //this configuration is only active
-            //until the bootstrap phase when 
+            //until the bootstrap phase when
             //our log4j.xml gets loaded and overrides
             //these settings
             appenders {
@@ -801,22 +901,22 @@ environments {
     development {
         uiperformance.enabled = false
 
-        perfTest.enabled = false            // Determines whether or not bootstrap is run
-        perfTest.clearCacheEvery = 10
-        perfTest.numDashboards = 5          // The number of dashboards each user will get assigned to them
-        perfTest.numGroupDashboards = 1     // The number of dashboards each group will get assigned to them
-        perfTest.numDashboardsWidgets = 5   // The number of widgets on each dashboard
-        perfTest.numAdmins = 5              // The number of administrators
-        perfTest.numUsers = 1005            // The number of non-admin users
-        perfTest.numGroups = 2             // The number of groups
-        perfTest.numGroupsPerUser = 2       // The number of groups each user is assigned to
-        perfTest.numWidgetsInGroups = 0     // The number of widgets assigned to each group
-        perfTest.numWidgetsPerUser = 5      // The number of widgets assigned to each user
-        perfTest.numPreferences = 50        // The number of preferences per user
-        perfTest.numWidgets = 500           // The number of unique widget definitions
-        perfTest.numStacks = 5              // The number of stacks
-        perfTest.numStacksPerUser = 2       // The number of stacks per user
-        perfTest.numStackDashboards = 2     // The number of dashboards each stack will get assigned to them
+        perfTest.enabled = false                // Determines whether or not bootstrap is run
+        perfTest.assignToOWFUsersGroup = true   // Assign widgets, dashboards and stacks to OWF Users group only
+        perfTest.clearCacheEvery = 1000
+        perfTest.numDashboardsWidgets = 3       // The number of widgets on each dashboard
+        perfTest.numAdmins = 5                  // The number of administrators
+        perfTest.numUsers = 99995                   // The number of non-admin users
+        perfTest.numGroups = 50                 // The number of groups
+        perfTest.numGroupsPerUser = 2           // The number of groups each user is assigned to
+        perfTest.numWidgetsInGroups = 5         // The number of widgets assigned to each group
+        perfTest.numWidgetsPerUser = 5          // The number of widgets assigned to each user
+        perfTest.numPreferences = 2             // The number of preferences per user
+        perfTest.numWidgets = 20               // The number of unique widget definitions
+        perfTest.numStacks = 10                 // The number of stacks
+        perfTest.numStacksPerUser = 3           // The number of stacks per user
+        perfTest.numStackDashboards = 2         // The number of dashboards each stack will get assigned to them
+        // TODO: perfTest.numPersonalStacks variable to assign stacks that haven't been published to each user only
 
         perfTest.createSampleWidgets = false
         perfTest.sampleWidgetBaseUrl = 'https://127.0.0.1:8443/owf/sampleWidgets/'
@@ -824,15 +924,19 @@ environments {
         owf.alternateHostName = System.properties.alternateHostName ?: '127.0.0.1'
 
         log4j = {
-            error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
-             'org.codehaus.groovy.grails.web.pages' //  GSP
-            warn 'org.mortbay.log'
-            debug 'grails.app'
-            info 'grails.plugin.databasemigration'
-            //trace 'org.hibernate'
-            //debug 'org.hibernate.SQL'
-            //trace 'org.hibernate.type'
-            //trace 'org.hibernate.cache'
+            error   'org.codehaus.groovy.grails.web.servlet',  //  controllers
+                    'org.codehaus.groovy.grails.web.pages' //  GSP
+
+            warn    'org.mortbay.log'
+            debug   'grails.app'
+
+            info    'grails.plugin.databasemigration'
+
+            trace   'org.hibernate.type.descriptor.sql.BasicBinder'
+            debug   'org.hibernate.SQL'
+
+            trace  'org.jivesoftware'
+
             appenders {
                 appender new RollingFileAppender(name:"owfStackTraceLog", maxFileSize:8192,
                     file:"logs/owf-stacktrace.log",
@@ -841,17 +945,23 @@ environments {
                     syslogHost:'localhost:8014',
                     facility: 'USER',
                     layout: pattern(conversionPattern: '%d [%t] %-5p %c %x - %m%n'))
+                appender new RollingFileAppender (name:"owfCefAudit", maxFileSize:"10000KB", maxBackupIndex: 10,
+                        file:"logs/owf-cef-audit.log",
+                        layout: pattern(conversionPattern: '%d{yyyy-MM-dd HH:mm:ss,SSS z} [%t] %-5p[%c]: %m%n'))
             }
+
+            info owfCefAudit: 'org.ozoneplatform'
+
             root {
                 debug 'stdout', 'owfStackTraceLog', 'syslogTraceLog'
                 error()
                 additivity = true
             }
-
         }
     }
 
     test {
+
         log4j =
         {
             appenders {
@@ -873,19 +983,6 @@ owf {
       version = server.version
       serverVersion = server.version
 
-//      def server = System.properties['server.host'] ?: 'localhost'
-//      def port = System.properties['server.port'] ?: '8443'
-//      def protocol = port.endsWith('443') ? 'https' : 'http'
-//      def context = grails.app.context
-//
-////        println "server = ${server}"
-////        println "port = ${port}"
-////        println "context = ${context}"
-//
-//      prefsLocation =  "${protocol}://${server}:${port}${context}/prefs"
-
-//        println "prefsLocation = ${prefsLocation}"
-
       // log4j file watch interval in milliseconds
       log4jWatchTime = 180000; // 3 minutes
 
@@ -894,18 +991,8 @@ owf {
       mpPollingInterval = 300000
       mpVersion = "2.5"
 
-      enablePendingApprovalWidgetTagGroup = false
       pendingApprovalTagGroupName='pending approval'
       approvedTagGroupName='approved'
-
-      /*
-          Leave blank for development, unless working on code with officeName
-      */
-//      officeName = "Sample Office"
-//
-//      bannerIcon = "images/blue/header/wfLogo48.gif"
-//      bannerIconHeight = 48       /* DO NOT CHANGE until entire banner is componentized */
-//      bannerIconWidth = 250       /* DO NOT CHANGE until entire banner is componentized */
 
       adminBannerIcon = "images/adminLogo52.png"
       adminBannerIconHeight = 52
@@ -915,12 +1002,9 @@ owf {
       sendWidgetLoadTimesToServer = true
       publishWidgetLoadTimes = true
 
-      showLastLogin = false
-      lastLoginDateFormat = 'n/j/Y G:i'
-
       defaultTheme = "a_default"
 
-      // showAccessAlert = "true"
+      showAccessAlert = "false"
       // accessAlertMsg = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla interdum eleifend sapien dignissim malesuada. Sed imperdiet augue vitae justo feugiat eget porta est blandit. Proin ipsum ipsum, rutrum ac gravida in, ullamcorper a augue. Sed at scelerisque augue. Morbi scelerisque gravida sapien ut feugiat. Donec dictum, nisl commodo dapibus pellentesque, enim quam consectetur quam, at dictum dui augue at risus. Ut id nunc in justo molestie semper. Curabitur magna velit, varius eu porttitor et, tempor pulvinar nulla. Nam at tellus nec felis tincidunt fringilla. Nunc nisi sem, egestas ut consequat eget, luctus et nisi. Nulla et lorem odio, vitae pretium ipsum. Integer tellus libero, molestie a feugiat a, imperdiet sit amet metus. Aenean auctor fringilla eros, sit amet suscipit felis eleifend a."
 
       // Specifies a freeTextEntryMessage to appear on all dialogs which allow text entry
@@ -949,7 +1033,7 @@ owf {
     external {
         themePath = "file:${System.properties['base.dir']}/themes"
         helpPath = "file:${System.properties['base.dir']}/help"
-        jsPluginPath = "file:${System.properties['base.dir']}/js-plugins"
+        //jsPluginPath = "file:${System.properties['base.dir']}/js-plugins"
     }
 
     metric {
@@ -961,33 +1045,23 @@ owf {
       //timeout = 1800000
     }
 
-    // Configuration elements for custom headers/footers.
-    customHeaderFooter {
-        header = ''
-        headerHeight = 0
-        footer = ''
-        footerHeight = 0
-        jsImports = []
-        cssImports = []
-    }
+    dataguard {
+        // Option to restrict messages between widgets based on access levels.
+        // If this option is set to false, all other dataguard options are ignored.
+        restrictMessages = false
 
-  	dataguard {
-	  	// Option to restrict messages between widgets based on access levels.
-	  	// If this option is set to false, all other dataguard options are ignored.
-	  	restrictMessages = false
-	  	
-	  	// Option to audit all messages between widgets, not just failed messages.
-	  	// restrictMessages must be set to true
-	  	auditAllMessages = false
-	  	
-	  	// Option to allow widgets to send messages without specifying their access level.
-	  	// restrictMessages must be set to true
-	  	allowMessagesWithoutAccessLevel = true
-	  	
-	  	// The amount of time (in milliseconds) to cache a widget's access level.
-	  	// restrictMessages must be set to true
-	  	accessLevelCacheTimeout = 3600000
-  	}
+        // Option to audit all messages between widgets, not just failed messages.
+        // restrictMessages must be set to true
+        auditAllMessages = true
+
+        // Option to allow widgets to send messages without specifying their access level.
+        // restrictMessages must be set to true
+        allowMessagesWithoutAccessLevel = true
+
+        // The amount of time (in milliseconds) to cache a widget's access level.
+        // restrictMessages must be set to true
+        accessLevelCacheTimeout = 3600000
+    }
 
     // OZP-476: Marketplace (MP) Synchronization
     mpSync {
@@ -1009,6 +1083,49 @@ owf {
         // deliberate "poisoning" of the widget definitions.
         trustProvidedUrl = false
     }
+
+    //this section stores the defaults for the various settings that are available through
+    //the Application Configuration Service
+    dynamic {
+        enable.cef.logging = true
+        enable.cef.object.access.logging = true
+
+        disable.inactive.accounts = true
+        inactivity.threshold = 90
+
+        session {
+            control {
+                enabled = false
+                max.concurrent = 1
+            }
+        }
+
+        job {
+            disable {
+                accounts {
+                    interval = 1440
+                    start.time = "23:59:59"
+                }
+            }
+        }
+    }
+}
+
+//Custom quartz configuration goes here.
+quartz {
+    props {
+        scheduler.skipUpdateCheck = true
+    }
+}
+
+cef {
+    device {
+        vendor = "OZONE"
+        product = "OWF"
+        version = "500-27_L2::1.3"
+    }
+
+    version = 0
 }
 
 // log4j configuration : see log4j.xml
@@ -1019,4 +1136,17 @@ keystore = 'certs/keystore.jks'
 casSettings.useCas=true
 casSettings.FullServiceURL='https://localhost:8443/cas'
 
+notifications {
+    enabled = false
+    query.interval = 30
 
+    xmpp {
+        username = ''
+        password = ''
+        host = ''
+        room = ''
+        port = 5222
+    }
+}
+
+metrics.servletEnabled = true

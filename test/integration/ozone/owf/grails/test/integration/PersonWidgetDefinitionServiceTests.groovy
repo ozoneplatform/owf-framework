@@ -1,18 +1,21 @@
 package ozone.owf.grails.test.integration
 
+import grails.test.mixin.TestMixin
+import grails.test.mixin.integration.IntegrationTestMixin
+
 import ozone.owf.grails.services.AutoLoginAccountService
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.ERoleAuthority
 import ozone.owf.grails.OwfException
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
-class PersonWidgetDefinitionServiceTests extends GroovyTestCase {
-	
+@TestMixin(IntegrationTestMixin)
+class PersonWidgetDefinitionServiceTests {
+
 	def widgetDefinitionService
 	def personWidgetDefinitionService
-	
-	protected void setUp() {
-        super.setUp()
+
+	void setUp() {
 		def acctService = new AutoLoginAccountService()
 		Person p = new Person(username:'testUserWidgetDefinitionServiceTesting', userRealName: 'foo', enabled:true)
 		p.save()
@@ -20,10 +23,6 @@ class PersonWidgetDefinitionServiceTests extends GroovyTestCase {
 		acctService.autoRoles = [ERoleAuthority.ROLE_ADMIN.strVal]
 		widgetDefinitionService.accountService = acctService
 		personWidgetDefinitionService.accountService = acctService
-    }
-
-    protected void tearDown() {
-        super.tearDown()
     }
 
 	def generatePWDPostParamsA()
@@ -39,7 +38,7 @@ class PersonWidgetDefinitionServiceTests extends GroovyTestCase {
 			"guid":"12345678-1234-1234-1234-1234567890a1"
 		]
 	}
-	
+
 	def widgetNameParams()
 	{
 		def retVal = [
@@ -47,14 +46,14 @@ class PersonWidgetDefinitionServiceTests extends GroovyTestCase {
 		]
         new GrailsParameterMap(retVal,null);
 	}
-	
+
 	def pwdParams(pwd)
 	{
 		def retVal = [
 		  "personWidgetDefinition":pwd
 		]
 	}
-	
+
 	def guidAndPersonIdParams(guid, personId)
 	{
 		def retVal = [
@@ -62,7 +61,7 @@ class PersonWidgetDefinitionServiceTests extends GroovyTestCase {
 		    "personId":personId
 		]
 	}
-	
+
 	def nullPwdParams()
 	{
 		def retVal = [
@@ -74,53 +73,53 @@ class PersonWidgetDefinitionServiceTests extends GroovyTestCase {
 	{
 		widgetDefinitionService.create(WidgetDefinitionPostParams.generatePostParamsA())
 		def resultOfCreate = personWidgetDefinitionService.create(generatePWDPostParamsA())
-		assertTrue resultOfCreate.success
-		assertEquals "12345678-1234-1234-1234-1234567890a0", resultOfCreate.personWidgetDefinition.widgetDefinition.widgetGuid
+		assert resultOfCreate.success
+		assert "12345678-1234-1234-1234-1234567890a0" == resultOfCreate.personWidgetDefinition.widgetDefinition.widgetGuid
 		//This tests show too.
 		def resultOfShow = personWidgetDefinitionService.show(generatePWDPostParamsA())
-		assertEquals resultOfShow.personWidgetDefinition.widgetDefinition.widgetGuid, resultOfCreate.personWidgetDefinition.widgetDefinition.widgetGuid
+		assert resultOfShow.personWidgetDefinition.widgetDefinition.widgetGuid == resultOfCreate.personWidgetDefinition.widgetDefinition.widgetGuid
 	}
 
 	void testUpdateForPersonWidgetDefinitionParameter()
 	{
 		widgetDefinitionService.create(WidgetDefinitionPostParams.generatePostParamsA())
 		def response = personWidgetDefinitionService.create(generatePWDPostParamsA())
-		
-		assertEquals "My Widget", response.personWidgetDefinition.widgetDefinition.displayName
-		
+
+		assert "My Widget" == response.personWidgetDefinition.widgetDefinition.displayName
+
 		def widgetDefinition = response.personWidgetDefinition.widgetDefinition
 		widgetDefinition.displayName = "New Widget Name"
-		
+
 		def personWidgetDefinition = response.personWidgetDefinition
 		personWidgetDefinition.widgetDefinition = widgetDefinition
-		
+
 		response = personWidgetDefinitionService.update(pwdParams(personWidgetDefinition))
-		
-		assertNotSame "My Widget", response.personWidgetDefinition.widgetDefinition.displayName
-		assertEquals "New Widget Name", response.personWidgetDefinition.widgetDefinition.displayName
+
+		assert "My Widget" != response.personWidgetDefinition.widgetDefinition.displayName
+		assert "New Widget Name" == response.personWidgetDefinition.widgetDefinition.displayName
 	}
-	
+
 	void testUpdateForGuidAndPersonIdParameters()
 	{
 		widgetDefinitionService.create(WidgetDefinitionPostParams.generatePostParamsA())
 		def response = personWidgetDefinitionService.create(generatePWDPostParamsA())
-		
-		assertEquals "My Widget", response.personWidgetDefinition.widgetDefinition.displayName
-		
+
+		assert "My Widget" == response.personWidgetDefinition.widgetDefinition.displayName
+
 		Person person = Person.findByUsername('testUserWidgetDefinitionServiceTesting')
-		
+
 		def widgetDefinition = response.personWidgetDefinition.widgetDefinition
 		widgetDefinition.displayName = "New Widget Name"
-		
+
 		def personWidgetDefinition = response.personWidgetDefinition
 		personWidgetDefinition.widgetDefinition = widgetDefinition
-		
+
 		response = personWidgetDefinitionService.update(guidAndPersonIdParams(widgetDefinition.widgetGuid, person.id))
-		
-		assertNotSame "My Widget", response.personWidgetDefinition.widgetDefinition.displayName
-		assertEquals "New Widget Name", response.personWidgetDefinition.widgetDefinition.displayName
+
+		assert "My Widget" != response.personWidgetDefinition.widgetDefinition.displayName
+		assert "New Widget Name" == response.personWidgetDefinition.widgetDefinition.displayName
 	}
-	
+
 	void testUpdateForNonExistentWidgetDefinitionGuid()
 	{
 		Person person = Person.findByUsername('testUserWidgetDefinitionServiceTesting')
@@ -136,8 +135,8 @@ class PersonWidgetDefinitionServiceTests extends GroovyTestCase {
 		widgetDefinitionService.create(WidgetDefinitionPostParams.generatePostParamsC())
 		personWidgetDefinitionService.create(generatePWDPostParamsA())
 		personWidgetDefinitionService.create(generatePWDPostParamsC())
-		
-		assertEquals 2, personWidgetDefinitionService.list(widgetNameParams()).personWidgetDefinitionList.size()
+
+		assert 2 == personWidgetDefinitionService.list(widgetNameParams()).personWidgetDefinitionList.size()
 	}
-	
+
 }

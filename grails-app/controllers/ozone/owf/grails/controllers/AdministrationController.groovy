@@ -1,5 +1,7 @@
 package ozone.owf.grails.controllers
 
+import static javax.servlet.http.HttpServletResponse.*
+
 import grails.converters.JSON
 import org.apache.commons.lang.time.StopWatch
 import org.codehaus.groovy.grails.web.json.JSONArray
@@ -8,22 +10,23 @@ import ozone.owf.grails.domain.Person
 import ozone.owf.grails.OwfExceptionTypes
 
 class AdministrationController extends BaseOwfRestController {
-	
+
     def accountService
 	def widgetDefinitionService
 	def administrationService
 	def preferenceService
 	def dashboardService
 	def personWidgetDefinitionService
+    def appMigrationService
 
 	def admin= {
 		render(view:'admin',model:[accountService:accountService])
 	}
-	
+
 	/*
 	 *	    Widget Definitions
 	 */
-	
+
 	def listWidgetDefinitions = {
 		def statusCode
 		def jsonResult
@@ -36,7 +39,7 @@ class AdministrationController extends BaseOwfRestController {
         }
 		try {
 			def result = widgetDefinitionService.list(params)
-			statusCode = 200
+			statusCode = SC_OK
 			def gotFromTargetProperty = result.get('widgetDefinition')
 			def widgetDefinitionList = new JSONArray()
 	    	result.widgetDefinition.collect { widgetDefinitionList.add(serviceModelService.createServiceModel(it)) }
@@ -46,7 +49,7 @@ class AdministrationController extends BaseOwfRestController {
 			}
 			else
 			{
-				jsonResult = widgetDefinitionList as JSON	
+				jsonResult = widgetDefinitionList as JSON
 			}
 		}
 		catch (OwfException owe) {
@@ -54,14 +57,14 @@ class AdministrationController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during list: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed widgetDefinitionService: list in "+stopWatch);
 		}
 	}
-	
+
 	def deleteWidgetDefinitions = {
 		def statusCode
 		def jsonResult
@@ -75,7 +78,7 @@ class AdministrationController extends BaseOwfRestController {
           stopWatch.start();
           log.info("Executing widgetDefinitionService: bulkDelete");
         }
-        
+
 		try {
 			if (params.widgetGuidsToDelete != null && params.widgetGuidsToDelete.length() > 0)
 			{
@@ -87,7 +90,7 @@ class AdministrationController extends BaseOwfRestController {
 				methodName = 'delete'
 				result = widgetDefinitionService.delete(params)
 			}
-			statusCode = 200
+			statusCode = SC_OK
 			def gotFromTargetProperty = result.get(modelName)
 			jsonResult = getJsonResult(result, modelName, params)
 		}
@@ -96,14 +99,14 @@ class AdministrationController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during " + methodName + ": " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed widgetDefinitionService: " + methodName + " in "+stopWatch);
 		}
 	}
-	
+
 	def editWidgetDefinition = {
       def model = administrationService.getWidgetDefinitionEditEntities(params);
       def configMap = [
@@ -116,10 +119,10 @@ class AdministrationController extends BaseOwfRestController {
 
       render configMap as JSON
 	}
-	
+
 	def createOrUpdateWidgetDefinition = {
 		params.adminEnabled = true
-		
+
 		def statusCode
 		def jsonResult
         StopWatch stopWatch = null;
@@ -131,7 +134,7 @@ class AdministrationController extends BaseOwfRestController {
         }
 		try {
 			def result = administrationService.createOrUpdateWidgetDefinition(params)
-			statusCode = 200
+			statusCode = SC_OK
 			def createdList = new JSONArray()
 	    	result.created.collect { createdList.add(Person.get(it.id).username) }
 			def updatedList = new JSONArray()
@@ -154,18 +157,18 @@ class AdministrationController extends BaseOwfRestController {
             jsonResult = "Error during createOrUpdateWidgetDefinition: " + owe.exceptionType.generalMessage + " " + owe.message
            }
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed administrationService: createOrUpdateWidgetDefinition in "+stopWatch);
 		}
 	}
-	
+
 	/*
 	 *	    Preferences
 	 */
-	
+
 	def editPreference = {
       def model = administrationService.getPreferenceEditEntities(params);
       def configMap = [
@@ -181,7 +184,7 @@ class AdministrationController extends BaseOwfRestController {
 
       render configMap as JSON
 	}
-	
+
 	def updatePreference = {
 		def statusCode
 		def jsonResult
@@ -194,7 +197,7 @@ class AdministrationController extends BaseOwfRestController {
         }
 		try {
 			def result = administrationService.updatePreference(params)
-			statusCode = 200
+			statusCode = SC_OK
 			jsonResult = getJsonResult(result, 'preference', params)
 		}
 		catch (OwfException owe) {
@@ -202,14 +205,14 @@ class AdministrationController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during updatePreference: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed administrationService: updatePreference in "+stopWatch);
 		}
 	}
-	
+
 	def addCopyPreference = {
 
       def model = administrationService.getPreferenceAddCopyEntities(params);
@@ -228,7 +231,7 @@ class AdministrationController extends BaseOwfRestController {
 
       render configMap as JSON
 	}
-	
+
 	def addCopyPreferenceSubmit = {
 		def statusCode
 		def jsonResult
@@ -241,7 +244,7 @@ class AdministrationController extends BaseOwfRestController {
         }
 		try {
 			def result = administrationService.clonePreference(params)
-			statusCode = 200
+			statusCode = SC_OK
 			jsonResult = [success:result.success, namespace: result.resultOfClone.preference.namespace, path:result.resultOfClone.preference.path,  assignedCount: result.assignedTo.size() ] as JSON
 		}
 		catch (OwfException owe) {
@@ -249,17 +252,17 @@ class AdministrationController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during clonePreference: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed administrationService: clonePreference in "+stopWatch);
 		}
 	}
-	
+
 	def listPreferences = {
 		params.adminEnabled = true
-		
+
 		def statusCode
 		def jsonResult
         StopWatch stopWatch = null;
@@ -271,7 +274,7 @@ class AdministrationController extends BaseOwfRestController {
         }
 		try {
 			def result = preferenceService.list(params)
-			statusCode = 200
+			statusCode = SC_OK
 			def preferenceList = new JSONArray()
 	    	result.preference.collect { preferenceList.add(serviceModelService.createServiceModel(it)) }
 			if (result.count != null)
@@ -280,7 +283,7 @@ class AdministrationController extends BaseOwfRestController {
 			}
 			else
 			{
-				jsonResult = preferenceList as JSON	
+				jsonResult = preferenceList as JSON
 			}
 		}
 		catch (OwfException owe) {
@@ -288,22 +291,22 @@ class AdministrationController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during list: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed preferenceService: list in "+stopWatch);
 		}
 	}
-	
+
 	def deletePreferences = {
 		params.adminEnabled = true
-		
+
 		def statusCode
 		def jsonResult
         StopWatch stopWatch = null;
 		def result
-		def methodName 
+		def methodName
 
         if (log.isInfoEnabled()) {
           stopWatch = new StopWatch();
@@ -327,8 +330,8 @@ class AdministrationController extends BaseOwfRestController {
 				methodName = "delete"
 				result = preferenceService.delete(params)
 			}
-			
-			statusCode = 200
+
+			statusCode = SC_OK
 			jsonResult = getJsonResult(result, 'preference', params)
 		}
 		catch (OwfException owe) {
@@ -336,19 +339,19 @@ class AdministrationController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during " + methodName + ": " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed preferenceService: " + methodName + " in "+stopWatch);
 		}
 	}
-	
-	
+
+
 	/*
 	 *		Dashboards
 	 */
-	
+
 	def editDashboard = {
 
       def model = administrationService.getDashboardEditEntities(params);
@@ -368,10 +371,10 @@ class AdministrationController extends BaseOwfRestController {
 
       render configMap as JSON
 	}
-	
+
 	def listDashboards = {
 		params.adminEnabled = true
-		
+
 		def statusCode
 		def jsonResult
         StopWatch stopWatch = null;
@@ -383,7 +386,7 @@ class AdministrationController extends BaseOwfRestController {
         }
 		try {
 			def result = dashboardService.list(params)
-			statusCode = 200
+			statusCode = SC_OK
 			def dashboardList = new JSONArray()
 			if (result.count != null)
 			{
@@ -391,7 +394,7 @@ class AdministrationController extends BaseOwfRestController {
 			}
 			else
 			{
-				jsonResult = dashboardList as JSON	
+				jsonResult = dashboardList as JSON
 			}
 		}
 		catch (OwfException owe) {
@@ -399,17 +402,17 @@ class AdministrationController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during list: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed dashboardService: list in "+stopWatch);
 		}
 	}
-	
+
 	def updateDashboard = {
 		params.adminEnabled = true
-		
+
 		def statusCode
 		def jsonResult
         StopWatch stopWatch = null;
@@ -421,7 +424,7 @@ class AdministrationController extends BaseOwfRestController {
         }
 		try {
 			def result = dashboardService.update(params)
-			statusCode = 200
+			statusCode = SC_OK
 			jsonResult = getJsonResult(result, "dashboard", params)
 		}
 		catch (OwfException owe) {
@@ -429,22 +432,22 @@ class AdministrationController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during update: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed dashboardService: update in "+stopWatch);
 		}
 	}
-	
+
 	def deleteDashboards = {
 		params.adminEnabled = true
-		
+
 		def statusCode
 		def jsonResult
         StopWatch stopWatch = null;
 		def result
-		def methodName 
+		def methodName
 
         if (log.isInfoEnabled()) {
           stopWatch = new StopWatch();
@@ -462,8 +465,8 @@ class AdministrationController extends BaseOwfRestController {
 				methodName = "delete"
 				result = dashboardService.delete(params)
 			}
-			
-			statusCode = 200
+
+			statusCode = SC_OK
 			jsonResult = getJsonResult(result, 'dashboard', params)
 		}
 		catch (OwfException owe) {
@@ -471,14 +474,14 @@ class AdministrationController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during " + methodName + ": " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed dashboardService: " + methodName + " in "+stopWatch);
 		}
 	}
-	
+
 	def addCopyDashboard = {
 
       def model = administrationService.getDashboardAddCopyEntities(params);
@@ -495,7 +498,7 @@ class AdministrationController extends BaseOwfRestController {
 
       render configMap as JSON
 	}
-	
+
 	def addCopyDashboardSubmit = {
 		def statusCode
 		def jsonResult
@@ -508,7 +511,7 @@ class AdministrationController extends BaseOwfRestController {
         }
 		try {
 			def result = administrationService.cloneDashboards(params)
-			statusCode = 200
+			statusCode = SC_OK
 			jsonResult = [success:result.success, name: result.name, assignedCount: result.assignedTo.size() ] as JSON
 		}
 		catch (OwfException owe) {
@@ -516,18 +519,18 @@ class AdministrationController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during cloneDashboards: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed administrationService: cloneDashboards in "+stopWatch);
 		}
 	}
-	
+
 	/*
 	 *		Users (Persons)
 	 */
-	 
+
 	def editPerson = {
       def model = administrationService.getPersonEditEntities(params);
       def configMap = [
@@ -545,7 +548,7 @@ class AdministrationController extends BaseOwfRestController {
 
       render configMap as JSON
 	}
-	
+
 	def createOrUpdatePerson = {
 		def statusCode
 		def jsonResult
@@ -558,7 +561,7 @@ class AdministrationController extends BaseOwfRestController {
         }
 		try {
 			def result = administrationService.createOrUpdatePerson(params)
-			statusCode = 200
+			statusCode = SC_OK
 			jsonResult = [success:result.success, person:result.person, errormsg:result.errormsg] as JSON
 		}
 		catch (OwfException owe) {
@@ -566,22 +569,22 @@ class AdministrationController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during createOrUpdatePerson: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed administrationService: createOrUpdatePerson in "+stopWatch);
 		}
 	}
-	
+
 	def deletePersons = {
 		params.adminEnabled = true
-		
+
 		def statusCode
 		def jsonResult
         StopWatch stopWatch = null;
 		def result
-		def methodName 
+		def methodName
 
         if (log.isInfoEnabled()) {
           stopWatch = new StopWatch();
@@ -599,8 +602,8 @@ class AdministrationController extends BaseOwfRestController {
 				methodName = "deleteUser"
 				result = accountService.deleteUser(params)
 			}
-			
-			statusCode = 200
+
+			statusCode = SC_OK
 			jsonResult = getJsonResult(result, 'person', params)
 		}
 		catch (OwfException owe) {
@@ -608,20 +611,20 @@ class AdministrationController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during " + methodName + ": "+ owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed accountService: " + methodName + " in "+stopWatch);
 		}
 	}
-	
+
 	/*
 	 *		User Roles (Person Roles)
 	 */
 	 def listPersonRoles = {
 		params.adminEnabled = true
-		
+
 		def statusCode
 		def jsonResult
         StopWatch stopWatch = null;
@@ -633,21 +636,21 @@ class AdministrationController extends BaseOwfRestController {
         }
 		try {
 			def result = administrationService.listPersonRoles(params)
-			statusCode = 200
+			statusCode = SC_OK
 			def personRoleList = new JSONArray()
 			result.personRoleList.each {
         personRoleList.add(it.authority)
       }
-      
+
 	    	//result.personRoleList.collect { personRoleList.add(it.toServiceModel()) }
-			
+
 			if (result.count != null)
-			{ 
+			{
 				jsonResult = [success:result.success, results: result.count, rows : personRoleList] as JSON
 			}
 			else
 			{
-				jsonResult = personRoleList as JSON	
+				jsonResult = personRoleList as JSON
 			}
 		}
 		catch (OwfException owe) {
@@ -655,18 +658,18 @@ class AdministrationController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during listPersonRoles: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed administrationService: listPersonRoles in "+stopWatch);
 		}
 	}
-	
+
 	/*
 	 *	    Widget Access (Person Widget Definitions)
 	 */
-	
+
 	def applyPersonWidgetDefinitions = {
 
       def model = administrationService.getPersonWidgetDefinitionApplyEntities(params);
@@ -678,10 +681,10 @@ class AdministrationController extends BaseOwfRestController {
 
       render configMap as JSON
 	}
-	
+
 	def applyUsersAndPersonWidgetDefinitions = {
 		params.adminEnabled = true
-		
+
 		def statusCode
 		def jsonResult
         StopWatch stopWatch = null;
@@ -693,7 +696,7 @@ class AdministrationController extends BaseOwfRestController {
         }
 		try {
 			def result = personWidgetDefinitionService.applyUsersAndPersonWidgetDefinitions(params)
-			statusCode = 200
+			statusCode = SC_OK
 			jsonResult = getJsonResult(result, 'personWidgetDefinition', params)
 		}
 		catch (OwfException owe) {
@@ -701,14 +704,14 @@ class AdministrationController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during applyUsersAndPersonWidgetDefinitions: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed personWidgetDefinitionService: applyUsersAndPersonWidgetDefinitions in "+stopWatch);
 		}
 	}
-	
+
 	def listPersonWidgetDefinitions = {
 		def statusCode
 		def jsonResult
@@ -721,7 +724,7 @@ class AdministrationController extends BaseOwfRestController {
         }
 		try {
 			def result = personWidgetDefinitionService.listForAdmin(params)
-			statusCode = 200
+			statusCode = SC_OK
 			def personWidgetDefinitionList = new JSONArray()
 	    	result.personWidgetDefinitionList.collect { personWidgetDefinitionList.add(serviceModelservice.createServiceModel(it)) }
 			if (result.count != null)
@@ -730,7 +733,7 @@ class AdministrationController extends BaseOwfRestController {
 			}
 			else
 			{
-				jsonResult = personWidgetDefinitionList as JSON	
+				jsonResult = personWidgetDefinitionList as JSON
 			}
 		}
 		catch (OwfException owe) {
@@ -738,110 +741,23 @@ class AdministrationController extends BaseOwfRestController {
 			statusCode = owe.exceptionType.normalReturnCode
 			jsonResult = "Error during listForAdmin: " + owe.exceptionType.generalMessage + " " + owe.message
 		}
-		
+
 		renderResult(jsonResult, statusCode)
-		
+
 		if (log.isInfoEnabled()) {
         	log.info("Executed personWidgetDefinitionService: listForAdmin in "+stopWatch);
 		}
 	}
-//
-//    def listPersonWidgetDefinitionsByTags = {
-//      def statusCode
-//      def jsonResult
-//      StopWatch stopWatch = null;
-//
-//      if (log.isInfoEnabled()) {
-//        stopWatch = new StopWatch();
-//        stopWatch.start();
-//        log.info("Executing personWidgetDefinitionService: listPersonWidgetDefinitionsByTags");
-//      }
-//      try {
-//          def result = personWidgetDefinitionService.listForAdminByTags(params)
-//          statusCode = 200
-//          jsonResult = result.tags as JSON
-//      }
-//      catch (OwfException owe) {
-//          handleError(owe)
-//          statusCode = owe.exceptionType.normalReturnCode
-//          jsonResult = "Error during listPersonWidgetDefinitionsByTags: " + owe.exceptionType.generalMessage + " " + owe.message
-//      }
-//
-//      renderResult(jsonResult, statusCode)
-//
-//      if (log.isInfoEnabled()) {
-//          log.info("Executed personWidgetDefinitionService: listPersonWidgetDefinitionsByTags in "+stopWatch);
-//      }
-//    }
-//
-//    def approvePersonWidgetDefinitionsByTags = {
-//      def statusCode
-//      def jsonResult
-//      StopWatch stopWatch = null;
-//
-//      if (log.isInfoEnabled()) {
-//        stopWatch = new StopWatch();
-//        stopWatch.start();
-//        log.info("Executing personWidgetDefinitionService: approvePersonWidgetDefinitionsByTags");
-//      }
-//      try {
-//          def result = personWidgetDefinitionService.approveForAdminByTags(params)
-//          statusCode = 200
-//          jsonResult = result as JSON
-//      }
-//      catch (OwfException owe) {
-//          handleError(owe)
-//          statusCode = owe.exceptionType.normalReturnCode
-//          jsonResult = "Error during approvePersonWidgetDefinitionsByTags: " + owe.exceptionType.generalMessage + " " + owe.message
-//      }
-//
-//      renderResult(jsonResult, statusCode)
-//
-//      if (log.isInfoEnabled()) {
-//          log.info("Executed personWidgetDefinitionService: approvePersonWidgetDefinitionsByTags in "+stopWatch);
-//      }
-//    }
-//
-//	def deletePersonWidgetDefinitions = {
-//		params.adminEnabled = true
-//
-//		def statusCode
-//		def jsonResult
-//        StopWatch stopWatch = null;
-//		def result
-//		def methodName
-//
-//        if (log.isInfoEnabled()) {
-//          stopWatch = new StopWatch();
-//          stopWatch.start();
-//          log.info("Executing personWidgetDefinitionService: deletePersonWidgetDefinitions");
-//        }
-//		try {
-//			if (params.widgetGuidsWithUserIDsToDelete != null && params.widgetGuidsWithUserIDsToDelete.length() > 0)
-//			{
-//				methodName = "bulkAdminDelete"
-//				result = personWidgetDefinitionService.bulkAdminDelete(params)
-//			}
-//			else
-//			{
-//				methodName = "delete"
-//				result = personWidgetDefinitionService.delete(params)
-//			}
-//
-//			statusCode = 200
-//			jsonResult = getJsonResult(result, 'personWidgetDefinition', params)
-//		}
-//		catch (OwfException owe) {
-//			handleError(owe)
-//			statusCode = owe.exceptionType.normalReturnCode
-//			jsonResult = "Error during " + methodName + ": " + owe.exceptionType.generalMessage + " " + owe.message
-//		}
-//
-//		renderResult(jsonResult, statusCode)
-//
-//		if (log.isInfoEnabled()) {
-//        	log.info("Executed personWidgetDefinitionService: " + methodName + " in "+stopWatch);
-//		}
-//	}
-	 
+
+    def migrateToApps = {
+        Map result = appMigrationService.migrate()
+        Closure printDashboardInfo = { "$it.name : $it.guid" }
+        String report = ""
+        report += result.stackDashboards ? "<br/><b>Stack dashboards:</b><br/>${result.stackDashboards.collect(printDashboardInfo).join(',<br/>')} " : ""
+        report += result.groupDashboards ? "<br/><br/><b>Group dashboards:</b><br/>${result.groupDashboards.collect(printDashboardInfo).join(',<br/>')} " : ""
+        report += result.personalDashboards ? "<br/><br/><b>Personal dashboards:</b><br/>${result.personalDashboards.collect(printDashboardInfo).join(',<br/>')} " : ""
+        report = report ? "<h1>Migration Report</h1><br/>$report" : "No dashboards to process"
+        render("<html>$report</html>")
+    }
+
 }

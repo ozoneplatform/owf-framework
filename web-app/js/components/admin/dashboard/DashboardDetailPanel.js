@@ -65,7 +65,7 @@ Ext.define('Ozone.components.admin.dashboard.DashboardDetailPanel', {
                     },
                     renderUserRealName: function(values) {
                         var createdBy = values.createdBy;
-                        return (createdBy.userRealName ? Ext.htmlEncode(createdBy.userRealName) : '')
+                        return (createdBy.userRealName ? Ext.htmlEncode(createdBy.userRealName) : 'System')
                     },
                     renderGroups: function(values) {
                         var groups = values.groups;
@@ -98,7 +98,7 @@ Ext.define('Ozone.components.admin.dashboard.DashboardDetailPanel', {
                     }
                 }
             ),
-			emptyText: 'No dashboard selected',
+			emptyText: 'No page selected',
             itemSelector: 'div.selector',
             autoScroll: 'true'
         });

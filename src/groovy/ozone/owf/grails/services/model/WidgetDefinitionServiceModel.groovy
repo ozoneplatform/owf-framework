@@ -9,16 +9,16 @@ class WidgetDefinitionServiceModel extends AbstractServiceModel {
     String description
     String widgetUrl
     String imageUrlSmall
-    String imageUrlLarge
+    String imageUrlMedium
     Integer width
     Integer height
     Integer totalUsers = 0
     Integer totalGroups = 0
     String widgetVersion
-    List tagLinks = []
     Boolean singleton
     Boolean visible
     Boolean background
+    Boolean mobileReady
     String descriptorUrl
     List directRequired = []
     List allRequired = []
@@ -35,9 +35,9 @@ class WidgetDefinitionServiceModel extends AbstractServiceModel {
                 description: description,
                 url: widgetUrl,
                 headerIcon: imageUrlSmall,
-                image: imageUrlLarge,
+                image: imageUrlMedium,
                 smallIconUrl: imageUrlSmall,
-                largeIconUrl: imageUrlLarge,
+                mediumIconUrl: imageUrlMedium,
                 width: width,
                 height: height,
                 x: 0,
@@ -47,10 +47,10 @@ class WidgetDefinitionServiceModel extends AbstractServiceModel {
                 widgetVersion: widgetVersion,
                 totalUsers: totalUsers,
                 totalGroups: totalGroups,
-                tags: tagLinks*.toDataMap(),
                 singleton: singleton,
                 visible: visible,
                 background: background,
+                mobileReady: mobileReady,
                 descriptorUrl: descriptorUrl,
                 definitionVisible: visible,
                 directRequired: directRequired,

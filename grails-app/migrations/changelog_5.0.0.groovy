@@ -1,20 +1,21 @@
 databaseChangeLog = {
-	
-	changeSet(author: "owf", id: "5.0.0-1", context: "create, upgrade, 5.0.0") {
+
+	changeSet(author: "owf", id: "5.0.0-1", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 5.0.0") {
 		comment("Add display name to group")
 		addColumn(tableName: "owf_group") {
 			column(name: "display_name", type: "varchar(200)")
 		}
 	}
-  
+
 	changeSet(author: "owf", id: "5.0.0-2", context: "create, upgrade, 5.0.0", dbms:"mssql") {
 		comment(text="allow identity inserts")
 	  sql ( text = """
 		SET IDENTITY_INSERT [dbo].[widget_type] ON
 	  """)
 	}
-  
-	changeSet(author: "owf", id: "5.0.0-3", context: "create, upgrade, 5.0.0") {
+
+
+	changeSet(author: "owf", id: "5.0.0-3", dbms:"hsqldb,mysql,oracle,postgresql", context: "create, upgrade, 5.0.0") {
 	  comment(text="Add metric widget types to table")
 	  insert(tableName: "widget_type") {
 		column(name: "id", valueNumeric:"4")
@@ -29,7 +30,7 @@ databaseChangeLog = {
 	  """)
 	}
 
-	changeSet(author: "owf", id: "5.0.0-5", dbms: "mysql,mssql,oracle", context: "upgrade, 5.0.0, sampleData, 5.0.0-sampleData") {
+	changeSet(author: "owf", id: "5.0.0-5", dbms: "h2,mysql,mssql,oracle", context: "upgrade, 5.0.0, sampleData, 5.0.0-sampleData") {
 
 		comment("Rename All Users and OWF Admins groups to OWF Users and OWF Administrators, then set them to automatic.")
 
@@ -62,7 +63,7 @@ databaseChangeLog = {
 			where("name='OWF Admins' AND automatic=false")
 		}
 	}
-	
+
 	changeSet(author: "owf", id: "5.0.0-6", context: "upgrade, 5.0.0, sampleData, 5.0.0-sampleData") {
 		comment(text = "Set default value for display_name")
 		sql(text = """
@@ -102,26 +103,28 @@ databaseChangeLog = {
         SET IDENTITY_INSERT [dbo].[owf_group] ON
       """)
     }
-    changeSet(author: "owf", id: "5.0.0-9", context: "sampleData, 5.0.0-sampleData") {
-        comment(text="Add admin group")
+    // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
+    // As of 7.4, this group is created in the database create scripts.
+    // changeSet(author: "owf", id: "5.0.0-9", context: "sampleData, 5.0.0-sampleData") {
+    //     comment(text="Add admin group")
 
-        //insert admin group
-        insert(tableName: "owf_group") {
-            column(name: "id", valueNumeric: "191")
+    //     //insert admin group
+    //     insert(tableName: "owf_group") {
+    //         column(name: "id", valueNumeric: "191")
 
-            column(name: "version", valueNumeric: "0")
+    //         column(name: "version", valueNumeric: "0")
 
-            column(name: "status", value: "active")
+    //         column(name: "status", value: "active")
 
-            column(name: "description", value: "OWF Administrators")
+    //         column(name: "description", value: "OWF Administrators")
 
-            column(name: "name", value: "OWF Administrators")
+    //         column(name: "name", value: "OWF Administrators")
 
-            column(name: "display_name", value: "OWF Administrators")
+    //         column(name: "display_name", value: "OWF Administrators")
 
-            column(name: "automatic", valueBoolean: "true")
-        }
-    }
+    //         column(name: "automatic", valueBoolean: "true")
+    //     }
+    // }
     changeSet(author: "owf", id: "5.0.0-10", dbms:"mssql", context: "sampleData, 5.0.0-sampleData") {
         comment(text="allow identity inserts")
       sql ( text = """
@@ -175,21 +178,21 @@ databaseChangeLog = {
         SET IDENTITY_INSERT [dbo].[domain_mapping] OFF
       """)
     }
-    
+
     changeSet(author: "owf", id: "5.0.0-14", dbms:"mssql", context: "sampleData, 5.0.0-sampleData") {
         comment(text="allow identity inserts")
         sql ( text = """
             SET IDENTITY_INSERT [dbo].[widget_definition] ON
         """)
     }
-    
+
     changeSet(author: "owf", id: "5.0.0-15", context: "sampleData, 5.0.0-sampleData") {
         comment(text="insert new sample data")
         insert(tableName: "widget_definition") {
             column(name: "id", valueNumeric: "172")
             column(name: "version", valueNumeric: "0")
             column(name: "visible", valueBoolean: "true")
-            column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/channelShouter.gif")
+            column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/channelShouter.gif")
             column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/channelShoutersm.gif")
             column(name: "singleton", valueBoolean: "false")
             column(name: "width", valueNumeric: "300")
@@ -204,7 +207,7 @@ databaseChangeLog = {
             column(name: "id", valueNumeric: "173")
             column(name: "version", valueNumeric: "0")
             column(name: "visible", valueBoolean: "true")
-            column(name: "image_url_large", value: "themes/common/images/blue/icons/widgetIcons/channelListener.gif")
+            column(name: "image_url_medium", value: "themes/common/images/blue/icons/widgetIcons/channelListener.gif")
             column(name: "image_url_small", value: "themes/common/images/blue/icons/widgetContainer/channelListenersm.gif")
             column(name: "singleton", valueBoolean: "false")
             column(name: "width", valueNumeric: "300")
@@ -216,21 +219,21 @@ databaseChangeLog = {
             column(name: "background", valueBoolean: "false")
         }
     }
-    
+
     changeSet(author: "owf", id: "5.0.0-16", dbms:"mssql", context: "sampleData, 5.0.0-sampleData") {
         comment(text="allow identity inserts")
         sql ( text = """
             SET IDENTITY_INSERT [dbo].[widget_definition] OFF
         """)
     }
-    
+
     changeSet(author: "owf", id: "5.0.0-17", dbms:"mssql", context: "sampleData, 5.0.0-sampleData") {
         comment(text="allow identity inserts")
         sql ( text = """
             SET IDENTITY_INSERT [dbo].[person_widget_definition] ON
         """)
     }
-    
+
     changeSet(author: "owf", id: "5.0.0-18", context: "sampleData, 5.0.0-sampleData") {
         comment(text="insert new sample data")
         insert(tableName: "person_widget_definition") {
@@ -298,50 +301,52 @@ databaseChangeLog = {
             column(name: "widget_definition_id", valueNumeric: "172")
         }
     }
-    
+
     changeSet(author: "owf", id: "5.0.0-19", dbms:"mssql", context: "sampleData, 5.0.0-sampleData") {
         comment(text="allow identity inserts")
         sql ( text = """
             SET IDENTITY_INSERT [dbo].[person_widget_definition] OFF
         """)
     }
-    
+
     changeSet(author: "owf", id: "5.0.0-20", dbms:"mssql", context: "sampleData, 5.0.0-sampleData") {
         comment(text="allow identity inserts")
         sql ( text = """
             SET IDENTITY_INSERT [dbo].[domain_mapping] ON
         """)
     }
-    
-    changeSet(author: "owf", id: "5.0.0-21", context: "sampleData, 5.0.0-sampleData") {
-        comment(text="insert new sample data")
-        insert(tableName: "domain_mapping") {
-            column(name: "id", valueNumeric: "200")
-            column(name: "version", valueNumeric: "0")
-            column(name: "src_id", valueNumeric: "191")
-            column(name: "src_type", value: "group")
-            column(name: "relationship_type", value: "owns")
-            column(name: "dest_id", valueNumeric: "170")
-            column(name: "dest_type", value: "widget_definition")
-        }
-        insert(tableName: "domain_mapping") {
-            column(name: "id", valueNumeric: "201")
-            column(name: "version", valueNumeric: "0")
-            column(name: "src_id", valueNumeric: "191")
-            column(name: "src_type", value: "group")
-            column(name: "relationship_type", value: "owns")
-            column(name: "dest_id", valueNumeric: "171")
-            column(name: "dest_type", value: "widget_definition")
-        }
-    }
-    
+
+    // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
+    // As of 7.4, this group is created in the database create scripts.
+    // changeSet(author: "owf", id: "5.0.0-21", context: "sampleData, 5.0.0-sampleData") {
+    //     comment(text="insert new sample data")
+    //     insert(tableName: "domain_mapping") {
+    //         column(name: "id", valueNumeric: "200")
+    //         column(name: "version", valueNumeric: "0")
+    //         column(name: "src_id", valueNumeric: "191")
+    //         column(name: "src_type", value: "group")
+    //         column(name: "relationship_type", value: "owns")
+    //         column(name: "dest_id", valueNumeric: "170")
+    //         column(name: "dest_type", value: "widget_definition")
+    //     }
+    //     insert(tableName: "domain_mapping") {
+    //         column(name: "id", valueNumeric: "201")
+    //         column(name: "version", valueNumeric: "0")
+    //         column(name: "src_id", valueNumeric: "191")
+    //         column(name: "src_type", value: "group")
+    //         column(name: "relationship_type", value: "owns")
+    //         column(name: "dest_id", valueNumeric: "171")
+    //         column(name: "dest_type", value: "widget_definition")
+    //     }
+    // }
+
     changeSet(author: "owf", id: "5.0.0-22", dbms:"mssql", context: "sampleData, 5.0.0-sampleData") {
         comment(text="allow identity inserts")
         sql ( text = """
             SET IDENTITY_INSERT [dbo].[domain_mapping] OFF
         """)
     }
-        
+
     changeSet(author: "owf", id: "5.0.0-23", context: "sampleData, 5.0.0-sampleData") {
         comment(text="insert new sample data")
         insert(tableName: "widget_definition_widget_types") {
@@ -353,5 +358,5 @@ databaseChangeLog = {
             column(name: "widget_type_id", valueNumeric: "1")
         }
     }
-    
+
 }

@@ -1,8 +1,8 @@
 package ozone.owf.grails.services
 
+import org.springframework.security.core.authority.GrantedAuthorityImpl
 import org.springframework.security.core.context.SecurityContextHolder as SCH
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
-
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import grails.converters.JSON
 import ozone.owf.grails.AuditOWFWebRequestsLogger
 import ozone.owf.grails.OwfException
@@ -16,27 +16,41 @@ import ozone.owf.grails.domain.PersonWidgetDefinition
 import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.domain.WidgetDefinition
 import org.hibernate.CacheMode
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.annotation.Propagation
+import ozone.security.authentication.OWFUserDetailsImpl
+
 /**
  * Service for account-related operations.
  */
+
+@Transactional(readOnly=true)
 class AccountService {
 
-    //def authenticateService
     def loggingService = new AuditOWFWebRequestsLogger()
-    //    def domainMappingService
 
     def serviceModelService
+    def stackService
+    def dashboardService
+    def groupService
+    def personWidgetDefinitionService
 
-    private static def addFilter = {name, value, c ->
+    static final ThreadLocal<Boolean> hasTemporaryAdminPrivileges = new ThreadLocal<Boolean>()
+
+    private static def addFilter(name, value, c) {
         c.with {
             switch(name) {
                 case 'lastLogin':
-                    System.out.println("Name: " + name + " Value: " + value)
                     break;
                 default:
                     ilike(name, '%' + value + '%')
             }
         }
+    }
+
+    @Transactional(readOnly=true, propagation=Propagation.REQUIRES_NEW)
+    def getLoggedInUserReadOnly() {
+        return Person.findByUsername(getLoggedInUsername(),[cache:true])
     }
 
     def getLoggedInUser() {
@@ -60,7 +74,31 @@ class AccountService {
         return SCH?.context?.authentication?.principal?.username
     }
 
+    def runAsAdmin(closure) {
+        hasTemporaryAdminPrivileges.set(true)
+        def returnValue
+        try {
+            log.debug("Running with temporary admin privileges")
+            returnValue = closure.call()
+        } finally {
+            log.debug("Releasing temporary admin privileges")
+            hasTemporaryAdminPrivileges.set(false)
+        }
+        return returnValue
+    }
+
+    boolean isTemporaryAdmin() {
+        return (hasTemporaryAdminPrivileges.get())
+    }
+
+    boolean isUserAdmin(Person user) {
+        user.authorities.find { it.authority.equals(ERoleAuthority.ROLE_ADMIN.strVal) } as boolean
+    }
+
     def getLoggedInUserIsAdmin() {
+        if (isTemporaryAdmin()) {
+            return true
+        }
         for (role in getLoggedInUserRoles()) {
 
             if(role.authority.equals(ERoleAuthority.ROLE_ADMIN.strVal)){
@@ -140,13 +178,11 @@ class AccountService {
                 groups{
                     eq("id", Long.parseLong(params.group_id))
                 }
-            if (params.stack_id)
+            if (params.stack_id) {
                 groups {
-                    eq("stackDefault", true)
-                    stacks {
-                        eq("id", Long.parseLong(params.stack_id))
-                    }
+                    idEq(Stack.findById(Long.parseLong(params.stack_id)).defaultGroup.id)
                 }
+            }
             if (params.widget_id)
                 personWidgetDefinitions{
                     widgetDefinition {
@@ -219,6 +255,7 @@ class AccountService {
                 person {
                     eq('id', p.id)
                 }
+                eq('userWidget', true)
                 projections { rowCount() }
             }
             def dashboardCount = Dashboard.withCriteria {
@@ -244,10 +281,12 @@ class AccountService {
         return [success:true, data: processedList, results: personList.totalCount]
     }
 
+    @Transactional(readOnly=false)
     def createOrUpdate(params) {
-        if (!getLoggedInUserIsAdmin())
+        if (!getLoggedInUserIsAdmin()) {
             throw new OwfException(message:'You are not authorized to see a list of users in the system.',
             exceptionType: OwfExceptionTypes.Authorization)
+        }
 
         def returnValue = null
         def isNewUser = false
@@ -263,8 +302,9 @@ class AccountService {
                         params[it.key] = it.value
                 }
                 def user = Person.findByUsername(params.username)
-                if (user && !params.id)
+                if (user && !params.id) {
                     throw new OwfException(message: 'A user with this name already exists.',exceptionType: OwfExceptionTypes.GeneralServerError)
+                }
                 if (!user)
                 {
                     //Create
@@ -277,11 +317,17 @@ class AccountService {
                 }
                 params.lastLogin = params.lastLogin ? new Date(params.lastLogin) : null
                 params.prevLogin = params.prevLogin ? new Date(params.prevLogin) : null
-                user.properties = params
+                params.entrySet().grep {
+                    it.key in ['username', 'userRealName', 'enabled', 'email', 'emailShow',
+                        'description', 'lastLogin', 'prevLogin']
+                }.each { entry ->
+                    user[entry.key] = entry.value
+                }
+
 
                 // Add to OWF Users group
                 if (isNewUser) {
-                    def grp = Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
+                    def grp = groupService.getAllUsersGroup()
                     if (grp) {
                         user.addToGroups(grp)
                     }
@@ -295,7 +341,7 @@ class AccountService {
         else if (params.update_action && (params.id || params.user_id))
         {
             def id = params.id ?: params.user_id
-            def user = Person.findById(id,[cache:true])
+            Person user = Person.findById(id,[cache:true])
             if (user)
             {
                 def updatedWidgets = []
@@ -330,12 +376,8 @@ class AccountService {
 
                                     user.addToPersonWidgetDefinitions(personWidgetDefinition)
                                     widget.addToPersonWidgetDefinitions(personWidgetDefinition)
-                                    personWidgetDefinition.setTags(personWidgetDefinition.widgetDefinition.getTags()?.collect { pwd ->
-                                        ['name':pwd.tag.name,'visible':pwd.visible,'position':pwd.position]
-                                    });
-
-                                } 
-                                // If the user already had this PWD, then set the direct user 
+                                }
+                                // If the user already had this PWD, then set the direct user
                                 // assocation flag.
                                 else if (results[0] != null){
                                     results[0].userWidget = true
@@ -367,29 +409,26 @@ class AccountService {
                         returnValue = updatedWidgets.collect{ serviceModelService.createServiceModel(it) }
                 }
 
-
-                //handle associations
-                //persons
-
-                //if (params.group_ids) {
                 if('groups' == params.tab) {
                     def updatedGroups = []
                     //def group_ids = [params.group_ids].flatten()
                     //group_ids?.each{
                     def groups = JSON.parse(params.data)
                     groups.each {
-                        def group = Group.findById(it.id.toLong(),[cache:true])
-                        if (group)
-                        {
+                        Group group = Group.findById(it.id.toLong(),[cache:true])
+                        if (group) {
                             if (params.update_action == 'add')
                                 group.addToPeople(user)
-                            else if (params.update_action == 'remove')
+                            else if (params.update_action == 'remove') {
                                 group.removeFromPeople(user)
-
+                                dashboardService.purgePersonalDashboards(user, group)
+                            }
                             group.save(flush: true,failOnError: true)
+
                             updatedGroups << group
                         }
                     }
+                    user.sync()
                     if (!updatedGroups.isEmpty()) {
                         returnValue = updatedGroups.collect{ serviceModelService.createServiceModel(it) }
                     }
@@ -403,14 +442,17 @@ class AccountService {
                         def stack = Stack.findById(it.id.toLong(),[cache:true])
                         if(stack) {
                             if(params.update_action == 'add')
-                                stack.findStackDefaultGroup().addToPeople(user)
-                            else if(params.update_action == 'remove')
-                                stack.findStackDefaultGroup().removeFromPeople(user)
+                                stack.defaultGroup.addToPeople(user)
+                            else if(params.update_action == 'remove') {
+                                stackService.deleteUserFromStack(stack, user)
+                            }
 
                             stack.save(flush: true,failOnError: true)
+
                             updatedStacks << stack
                         }
                     }
+                    user.sync()
                     if(!updatedStacks.isEmpty()) {
                         returnValue = updatedStacks.collect{ serviceModelService.createServiceModel(it) }
                     }
@@ -421,6 +463,7 @@ class AccountService {
         return [success:true,data:returnValue]
     }
 
+    @Transactional(readOnly=false)
     def bulkDeleteUsersForAdmin(params){
         if (!getLoggedInUserIsAdmin())
         {
@@ -463,6 +506,7 @@ class AccountService {
         }
     }
 
+    @Transactional(readOnly=false)
     def deleteUser(params){
         def person
         if(params.person){
@@ -517,6 +561,12 @@ class AccountService {
                 it.editedBy = null
             }
 
+            //Set stack owner to null
+            def stacks = Stack.withCriteria { eq('owner', person) }
+            stacks.each {
+                it.owner = null
+            }
+
             //delete person
             person.delete(flush:true)
             return [success: true, person: person]
@@ -545,6 +595,38 @@ class AccountService {
                 log.error("JSON parameter: ${jsonParam} for Domain class Preference has not been mapped in PreferenceService#convertJsonParamToDomainField")
                 throw new OwfException (message: "JSON parameter: ${jsonParam}, Domain class: Preference",
                 exceptionType: OwfExceptionTypes.JsonToDomainColumnMapping)
+        }
+    }
+
+
+    //There are times that OWF might pick up a request when a user is not logged in, for example during sync
+    //This will create a security context with the incoming userName.  The user name could be SYSTEM or it could be a user name from an audit field (editedBy
+    public void createSecurityContext(String userName = "SYSTEM"){
+        //If there is no security context then a user is not logged in so this is a system process or we can use the passed in userName to create the details
+        if(!SCH.context.authentication){
+            log.debug "Creating a PreAuthenticatedAuthenticationToken for ${userName}"
+
+            def auths = [new GrantedAuthorityImpl(ERoleAuthority.ROLE_USER.strVal)]
+
+            def userDetails = new OWFUserDetailsImpl(userName, null, auths, [])
+            userDetails.username = userName
+
+            def token = new PreAuthenticatedAuthenticationToken(userDetails, null, auths)
+
+            SCH.getContext().setAuthentication(token)
+        }
+    }
+
+    @Transactional(readOnly=false)
+    def sync (Person person, Boolean forceSync = false) {
+        if(person.requiresSync || forceSync) {
+            Set<Group> groupsToSync = person.groupsToSync
+            dashboardService.sync(person, groupsToSync)
+            personWidgetDefinitionService.sync(person, groupsToSync)
+
+            if (person.requiresSync) {
+                person.sync(false)
+            }
         }
     }
 }

@@ -7,6 +7,8 @@ class Role implements Serializable {
 
     static final long serialVersionUID = 700L
 
+    static final String ADMIN = 'ROLE_ADMIN'
+
 	static hasMany = [people: Person]
 
 	/** description */
@@ -24,6 +26,7 @@ class Role implements Serializable {
 
       cache true
       people cache:true
+      batchSize: 25
     }
     
 }

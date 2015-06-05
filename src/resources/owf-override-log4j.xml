@@ -20,15 +20,15 @@
 		</layout>
 	</appender>
 
-	<appender name="ozone-rolling-log" class="org.apache.log4j.CompositeRollingAppender">
-		<param name="RollingStyle" value="3" />
-		<param name="StaticLogFileName" value="false" />
+	<appender name="ozone-rolling-log" class="org.apache.log4j.rolling.RollingFileAppender">
 		<param name="File" value="logs/ozone-widgeting-framework.log" />
-		<param name="CountDirection" value="1" />
-		<param name="MaxFileSize" value="100MB" />
-		<param name="MaxSizeRollBackups" value="5" />
-		<param name="DatePattern" value="'.'yyyy-MM-dd" />
-		<param name="Encoding" value="UTF-8" />
+        <param name="Encoding" value="UTF-8" />
+
+		<!--
+			Set to immediate flush so the results are saved before a system
+			crash, slows performance though
+		-->
+        <param name="ImmediateFlush" value="true" />
 		<!--
 			Uncomment these parameters to boost performance but entries won't get
 			written immediately
@@ -36,12 +36,15 @@
 		<param name="BufferedIO" value="false"/>
 		<param name="BufferSize" value="8192"/>
 		-->
-		<!--
-			Set to immediate flush so the results are saved before a system
-			crash, slows performance though
-		-->
-		<param name="ImmediateFlush" value="true" />
-		<param name="Threshold" value="all" />
+
+        <rollingPolicy class="org.apache.log4j.rolling.FixedWindowRollingPolicy">
+            <param name="MaxIndex" value="3"/> <!-- Maximum number of backups to keep -->
+            <param name="FileNamePattern" value="logs/ozone-widgeting-framework.log.%i"/>
+        </rollingPolicy>
+        <triggeringPolicy class="org.apache.log4j.rolling.SizeBasedTriggeringPolicy">
+            <param name="MaxFileSize" value="100000000" /> <!-- 100 MB -->
+        </triggeringPolicy>
+
 		<layout class="org.apache.log4j.EnhancedPatternLayout">
 			<param name="ConversionPattern" value="%d{ISO8601}{UTC} %-5p [%c] %m%n" />
 		</layout>
@@ -65,40 +68,47 @@
         <!-- <appender-ref ref="ozone-stdout" /> -->
 	</appender>
 	
-  	<appender name="ozone-audit-log" class="org.apache.log4j.CompositeRollingAppender">
-      <param name="RollingStyle" value="3" />
-      <param name="StaticLogFileName" value="false" />
-      <param name="File" value="logs/audit.log" />
-      <param name="CountDirection" value="1" />
-      <param name="MaxFileSize" value="100MB" />
-      <param name="MaxSizeRollBackups" value="-1" />
-      <param name="DatePattern" value="'.'yyyy-MM-dd" />
-      <param name="Encoding" value="UTF-8" />
-      <layout class="org.apache.log4j.PatternLayout">
-        <param name="ConversionPattern" value="%d{dd MMM yyyy HH:mm:ss,SSS z} %m%n" />
-      </layout>
-    </appender>
-  
-   	<appender name="ozone-audit-dataGuard-log" class="org.apache.log4j.CompositeRollingAppender">
-      <param name="RollingStyle" value="3" />
-      <param name="StaticLogFileName" value="false" />
-      <param name="File" value="logs/auditDataGuard.log" />
-      <param name="CountDirection" value="1" />
-      <param name="MaxFileSize" value="100MB" />
-      <param name="MaxSizeRollBackups" value="-1" />
-      <param name="DatePattern" value="'.'yyyy-MM-dd" />
-      <param name="Encoding" value="UTF-8" />
-      <layout class="org.apache.log4j.PatternLayout">
-        <param name="ConversionPattern" value="%p %d{dd MMM yyyy HH:mm:ss,SSS z} %m%n" />
-      </layout>
+
+    <appender name="ozone-audit-dataGuard-log" class="org.apache.log4j.rolling.RollingFileAppender">
+        <param name="File" value="logs/auditDataGuard.log" />
+        <param name="Encoding" value="UTF-8" />
+
+        <rollingPolicy class="org.apache.log4j.rolling.FixedWindowRollingPolicy">
+            <param name="MaxIndex" value="3"/> <!-- Maximum number of backups to keep -->
+            <param name="FileNamePattern" value="logs/auditDataGuard.log.%i"/>
+        </rollingPolicy>
+        <triggeringPolicy class="org.apache.log4j.rolling.SizeBasedTriggeringPolicy">
+            <param name="MaxFileSize" value="100000000" /> <!-- 100 MB -->
+        </triggeringPolicy>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%p %d{dd MMM yyyy HH:mm:ss,SSS z} %m%n" />
+        </layout>
     </appender>
 
-    <appender name="ozone-async-audit" class="org.apache.log4j.AsyncAppender">
-      <appender-ref ref="ozone-audit-log" />
+    <appender name="ozone-cef-log" class="org.apache.log4j.rolling.RollingFileAppender">
+        <param name="File" value="logs/owf-cef-audit.log" />
+        <param name="Encoding" value="UTF-8" />
+
+        <!-- CEF logs should never be automatically deleted, so using a rolling policy
+             that doesn't automatically delete backups
+        -->
+        <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+            <param name="FileNamePattern" value="logs/owf-cef-audit.log.%d"/>
+        </rollingPolicy>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{dd MMM yyyy HH:mm:ss,SSS z} %m%n" />
+        </layout>
     </appender>
+
 
     <appender name="ozone-async-dataGuard-audit" class="org.apache.log4j.AsyncAppender">
       <appender-ref ref="ozone-audit-dataGuard-log" />
+    </appender>
+
+    <appender name="ozone-async-cef" class="org.apache.log4j.AsyncAppender">
+        <appender-ref ref="ozone-cef-log" />
     </appender>
 
 	<logger name="AuditOWFWebRequestsLogger" additivity="false">
@@ -111,16 +121,15 @@
     	<appender-ref ref="ozone-async-dataGuard-audit" />
     </logger>
 
-    <!-- For security logging, set this log level to "info". -->
-    <logger name="ozone.securitysample.authentication.audit.SecurityAuditLogger" additivity="false">
-      <level value="info" />
-      <appender-ref ref="ozone-async-audit" />
-    </logger>
     <!-- All other logs from Ozone secuity can be sent to the regular log
 		unless you are worried that the regular logs have too lax of read permissions. -->
     <logger name="ozone.securitysample" additivity="false">
       <level value="error" />
       <appender-ref ref="ozone-async" />
+    </logger>
+    <logger name="org.ozoneplatform.auditing" additivity="false">
+        <level value="info" />
+        <appender-ref ref="ozone-async-cef" />
     </logger>
 
   <logger name="ozone.utils.Utils" additivity="false">
@@ -173,6 +182,6 @@
   <root>
     <level value="error" />
     <appender-ref ref="ozone-async" />
-	</root>
+  </root>
 
 </log4j:configuration>

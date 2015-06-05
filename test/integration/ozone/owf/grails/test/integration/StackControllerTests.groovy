@@ -1,6 +1,9 @@
 package ozone.owf.grails.test.integration
 
 import grails.converters.JSON;
+import grails.test.mixin.TestMixin
+import grails.test.mixin.integration.IntegrationTestMixin
+
 import ozone.owf.grails.controllers.StackController
 import ozone.owf.grails.domain.Dashboard
 import ozone.owf.grails.domain.ERoleAuthority
@@ -9,51 +12,66 @@ import ozone.owf.grails.domain.RelationshipType
 import ozone.owf.grails.domain.Stack
 import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.grails.domain.WidgetType
+import ozone.owf.grails.domain.Person
 
+@TestMixin(IntegrationTestMixin)
 class StackControllerTests extends OWFGroovyTestCase {
-    
+
     def domainMappingService
     def stackService
     def stackController
     def stackIds = []
-    
-    protected void setUp() {
+
+    void setUp() {
         super.setUp()
-        
-        def stack1 = ozone.owf.grails.domain.Stack.build(name: 'Stack One', description: 'Stack One description', stackContext: 'one', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
-        stack1.addToGroups(Group.build(name: 'Group1', automatic: false, status: 'active', stackDefault: true))
-        def stack2 = ozone.owf.grails.domain.Stack.build(name: 'Stack Two', description: 'Stack Two description', stackContext: 'two', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor')
-        stack2.addToGroups(Group.build(name: 'Group2', automatic: false, status: 'active', stackDefault: true))
+        cleanup()
+
+        def owner = Person.findByUsername('testAdmin1')
+        assert owner != null
+        assert owner.id != null
+
+        Stack stack1 = Stack.build(name: 'Stack One', description: 'Stack One description', stackContext: 'one', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor', owner: owner)
+        Group group1 = Group.build(name: 'Group1', automatic: false, status: 'active', stackDefault: true)
+        stack1.defaultGroup = group1
+
+        Stack stack2 = Stack.build(name: 'Stack Two', description: 'Stack Two description', stackContext: 'two', imageUrl: 'http://www.images.com/theimage.png', descriptorUrl: 'http://www.descriptors.com/thedescriptor', owner: owner)
+        Group group2 = Group.build(name: 'Group2', automatic: false, status: 'active', stackDefault: true)
+        stack2.defaultGroup = group2
         stackIds = [stack1.id, stack2.id]
     }
 
-    protected void tearDown() {
+    void tearDown() {
         super.tearDown()
+        cleanup()
+    }
+
+    private void cleanup() {
+        Stack.withTransaction { Stack.list().each { it.delete() } }
     }
 
     void testList() {
-        
+
         loginAsUsernameAndRole('testAdmin', ERoleAuthority.ROLE_ADMIN.strVal)
-        
+
         stackController = new StackController()
         stackController.stackService = stackService
         stackController.request.contentType = "text/json"
         stackController.list()
-        
+
         def resp = JSON.parse(stackController.response.contentAsString)
-        
-        assertEquals 2, resp.results
-        assertEquals 'Stack One', resp.data[0].name
-        assertEquals 'Stack One description', resp.data[0].description
-        assertEquals 'one', resp.data[0].stackContext
-        assertEquals 'http://www.images.com/theimage.png', resp.data[0].imageUrl
-        assertEquals 'http://www.descriptors.com/thedescriptor', resp.data[0].descriptorUrl
+
+        assert 2 == resp.results
+        assert 'Stack One' == resp.data[0].name
+        assert 'Stack One description' == resp.data[0].description
+        assert 'one' == resp.data[0].stackContext
+        assert 'http://www.images.com/theimage.png' == resp.data[0].imageUrl
+        assert 'http://www.descriptors.com/thedescriptor' == resp.data[0].descriptorUrl
     }
-    
+
     void testCreate() {
-        
+
         loginAsUsernameAndRole('testAdmin', ERoleAuthority.ROLE_ADMIN.strVal)
-        
+
         stackController = new StackController()
         stackController.stackService = stackService
         stackController.request.contentType = "text/json"
@@ -65,19 +83,19 @@ class StackControllerTests extends OWFGroovyTestCase {
                 descriptorUrl: 'http://www.descriptors.com/thedescriptor'
             }"""
         stackController.createOrUpdate()
-        
+
         def resp = JSON.parse(stackController.response.contentAsString)
-        assertTrue resp.success
-        assertEquals 'Stack Three', resp.data[0].name
-        assertEquals 'Stack Three description', resp.data[0].description
-        assertEquals 'three', resp.data[0].stackContext
-        assertEquals 'http://www.images.com/theimage.png', resp.data[0].imageUrl
+        assert resp.success
+        assert 'Stack Three' == resp.data[0].name
+        assert 'Stack Three description' == resp.data[0].description
+        assert 'three' == resp.data[0].stackContext
+        assert 'http://www.images.com/theimage.png' == resp.data[0].imageUrl
     }
-    
+
     void testUpdate() {
-        
-        loginAsUsernameAndRole('testAdmin', ERoleAuthority.ROLE_ADMIN.strVal)
-        
+
+        loginAsAdmin()
+
         stackController = new StackController()
         stackController.stackService = stackService
         stackController.request.contentType = "text/json"
@@ -90,16 +108,17 @@ class StackControllerTests extends OWFGroovyTestCase {
                 descriptorUrl: 'http://www.descriptors.com/thedescriptor'
             }"""
         stackController.createOrUpdate()
-        
+
         def resp = JSON.parse(stackController.response.contentAsString)
-        assertTrue resp.success
-        assertEquals 'The Updated Stack', resp.data[0].name
+        assert resp.success
+        assert 'The Updated Stack' == resp.data[0].name
     }
-    
+
     void testDelete() {
-        
+
         loginAsUsernameAndRole('testAdmin', ERoleAuthority.ROLE_ADMIN.strVal)
-        
+
+        int stackCount = Stack.count()
         stackController = new StackController()
         stackController.stackService = stackService
         stackController.request.contentType = "text/json"
@@ -108,20 +127,21 @@ class StackControllerTests extends OWFGroovyTestCase {
             }"""
         stackController.params.adminEnabled = true
         stackController.delete()
-        
+
         def resp = JSON.parse(stackController.response.contentAsString)
-        assertTrue resp.success
+        assert resp.success
+        assert stackCount - 1 == Stack.count()
     }
-    
+
     void testExport() {
-        
+
         loginAsUsernameAndRole('testAdmin', ERoleAuthority.ROLE_ADMIN.strVal)
 
         def standardWidgetType = WidgetType.build(name: 'standard')
 
         def widget1 = WidgetDefinition.build(universalName: java.util.UUID.randomUUID(), widgetGuid: java.util.UUID.randomUUID(), widgetVersion: '1.0', displayName: 'widget1', widgetTypes: [standardWidgetType])
         def widget2 = WidgetDefinition.build(universalName: java.util.UUID.randomUUID(), widgetGuid: java.util.UUID.randomUUID(), widgetVersion: '1.0', displayName: 'widget2', widgetTypes: [standardWidgetType])
-        
+
         def stackDashboard1 = Dashboard.build(alteredByAdmin: false, guid: java.util.UUID.randomUUID(),
             locked: false, isdefault: false, name: 'Stack Dashboard1', layoutConfig: """{
                     "cls": "hbox",
@@ -150,11 +170,11 @@ class StackControllerTests extends OWFGroovyTestCase {
                         }],
                         "defaultSettings": {}
                     }],
-                    "xtype":"container", 
+                    "xtype":"container",
                     "layout":[{
-                        "align":"stretch", 
+                        "align":"stretch",
                         "type":"hbox"
-                    }], 
+                    }],
                     "flex":3
                 }""", description: 'This is a stack dashboard.')
 
@@ -173,11 +193,11 @@ class StackControllerTests extends OWFGroovyTestCase {
 
         def stack1 = Stack.findById(stackIds[0])
 
-        domainMappingService.createMapping(stack1.findStackDefaultGroup(), RelationshipType.owns, stackDashboard1)
-        domainMappingService.createMapping(stack1.findStackDefaultGroup(), RelationshipType.owns, stackDashboard2)
+        domainMappingService.createMapping(stack1.defaultGroup, RelationshipType.owns, stackDashboard1)
+        domainMappingService.createMapping(stack1.defaultGroup, RelationshipType.owns, stackDashboard2)
 
         def filename = 'test'
-        
+
         stackController = new StackController()
         stackController.stackService = stackService
         stackController.request.contentType = "text/json"
@@ -185,16 +205,16 @@ class StackControllerTests extends OWFGroovyTestCase {
         stackController.params.filename = filename
 
         stackController.export()
-        
+
         def resp = stackController.response
-        assertEquals "attachment; filename=" + filename + ".html", resp.getHeader("Content-disposition")
-        assertNotNull resp.getContentAsString()
+        assert "attachment; filename=" + filename + ".html" == resp.getHeader("Content-disposition")
+        assert resp.getContentAsString() != null
     }
-    
+
     void testFailedExportNotAdmin() {
 
         def filename = 'test'
-        
+
         stackController = new StackController()
         stackController.stackService = stackService
         stackController.request.contentType = "text/json"
@@ -202,18 +222,18 @@ class StackControllerTests extends OWFGroovyTestCase {
         stackController.params.filename = filename
 
         stackController.export()
-        
+
         def resp = JSON.parse(stackController.response.contentAsString)
-        assertEquals false, resp.success
-        assertEquals "You are not authorized to access this entity. You must be an admin", resp.errorMsg
+        assert false == resp.success
+        assert "You are not authorized to access this entity. You must be an admin" == resp.errorMsg
     }
-    
+
     void testFailedExport() {
-        
+
         loginAsUsernameAndRole('testAdmin', ERoleAuthority.ROLE_ADMIN.strVal)
 
         def filename = 'test'
-        
+
         stackController = new StackController()
         stackController.stackService = stackService
         stackController.request.contentType = "text/json"
@@ -221,17 +241,17 @@ class StackControllerTests extends OWFGroovyTestCase {
         stackController.params.filename = filename
 
         stackController.export()
-        
+
         println("EXPORT STACK IS " + stackController.response.contentAsString)
-        
+
         def resp = JSON.parse(stackController.response.contentAsString.decodeHTML())
-        assertEquals false, resp.success
+        assert false == resp.success
     }
-	
+
 	void testImport() {
-		
+
 		loginAsUsernameAndRole('testAdmin', ERoleAuthority.ROLE_ADMIN.strVal)
-		
+
 		def widgetGuid = java.util.UUID.randomUUID()
 		def dashboardGuid = java.util.UUID.randomUUID()
 		def fileJson = """{
@@ -239,9 +259,8 @@ class StackControllerTests extends OWFGroovyTestCase {
 	      {
 	         "universalName": null,
 	         "visible": true,
-	         "defaultTags": [],
 	         "imageUrlSmall": "http://www.image.com/theimage.png",
-	         "imageUrlLarge": "http://www.image.com/theimage.png",
+	         "imageUrlMedium": "http://www.image.com/theimage.png",
 	         "singleton": false,
 	         "width": 540,
 	         "widgetVersion": "1.0",
@@ -253,6 +272,7 @@ class StackControllerTests extends OWFGroovyTestCase {
 	         "widgetUrl": "http://www.widget.com/widget1.html",
 	         "description": "This is my widget description",
 	         "background": false,
+	         "mobileReady": false,
 	         "widgetTypes": ["standard"],
 	         "widgetGuid": "$widgetGuid",
 	         "displayName": "widget1",
@@ -286,10 +306,10 @@ class StackControllerTests extends OWFGroovyTestCase {
 		stackController.stackService = stackService
 		stackController.params.data = fileJson
 		stackController.params.descriptorUrl = "http://www.stack.com/descriptor.html"
-		
+
 		stackController.importStack()
-		
+
 		def resp = JSON.parse(stackController.response.contentAsString)
-		assertEquals 'Stack1', resp.name	
+		assert 'Stack1' == resp.name
 	}
 }

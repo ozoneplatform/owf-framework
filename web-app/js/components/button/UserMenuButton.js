@@ -1,448 +1,518 @@
 //TODO reimplement that class as a proper Ext.menu.Menu, the way it is now the menu this button creates uses a hardcoded
 //z-index and does not participate in Ext's ZindexManagement.  This makes it hard to use tooltips on the menu items
-Ext.define('Ozone.components.button.UserMenuButton', {
+/*Ext.define('Ozone.components.button.UserMenuButton', {
     extend: 'Ext.button.Button',
     alias: ['widget.usermenubutton', 'widget.Ozone.components.button.UserMenuButton'],
 
-//    plugins: new Ozone.components.focusable.Focusable(),
-
     iconAlign: 'right',
     iconCls: 'userMenuIcon',
-    
-    scale: 'banner-large',
 
-    user: null,
+    menuAlign: 'tr-br',
 
-    logoutText: "Sign Out",
-
-    menuHidden: true,
-    hideMenu: false,
+    isMenuShown: false,
     hideDelay: 100,
     showDelay: 800,
 
+    scale: 'banner-large',
+
+    hasAdminBtn: false,
+
     initComponent: function() {
         var me = this;
-        
-        me.text = Ext.htmlEncode(me.user.userRealName);
 
-        var toggleAboutWindow = (function() {
-            //save the about window between calls
-            var win;
+        me.buildDisplayText();
+        me.initializeMarketplaceUserMenuContainer();
+        me.buildMenu();
 
-            return function toggleAboutWindow() {
-                if (!win || win.isDestroyed) {
-                    win = Ext.create("Ozone.components.window.ModalWindow", {
-                        id: 'about-window',
-                        ui: 'system-window',
-                        cls: 'system-window',
-                        modalAutoClose: true,
-                        preventHeader: true,
-                        width: 550,
-                        draggable: false,
-                        resizable: false,
-                        shadow: false,
+        me.on('afterrender', me.onAfterRender, me);
+
+        this.callParent(arguments);
+    },
+
+    buildDisplayText: function() {
+        this.text = Ext.htmlEncode(this.user.userRealName);
+    },
+
+    initializeMarketplaceUserMenuContainer: function() {
+        this.marketplaceUserMenuContainer =
+            new Ozone.marketplace.MarketplaceUserMenuContainer(Ozone.eventing.Container, this.dashboardContainer);
+    },
+
+    buildMenu: function() {
+        var me = this;
+
+        me.menu = {
+            xtype: 'menu',
+            id: 'userMenu',
+            shadow: false,
+            shadowOffset: 0,
+            allowOtherMenus: true,
+            items: [{
+                xtype: 'panel',
+                width: 368,
+                layout: 'hbox',
+                frame: false,
+                shadow: false,
+                shadowOffset: 0,
+                items: [{
+                    xtype: 'buttongroup',
+                    columns: 1,
+                    id: 'owfMenu',
+                    width: 193,
+                    items: me.buildOwfMenuItems()
+                }, {
+                    xtype: 'buttongroup',
+                    columns: 1,
+                    id: 'marketplaceMenu',
+                    width: 183,
+                    items: me.buildMarketplaceMenuItems()
+                }]
+            }]
+        };
+    },
+
+    buildOwfMenuItems: function() {
+        var me = this,
+            owfMenuItems = [{
+                text: 'OWF Options',
+                id: 'owfMenuTitle',
+                width: '100%',
+                height: 28
+            }, {
+                text: 'Previous Sign In ' + me.user.prettyPrevLogin,
+                id: 'prevLogin',
+                height: 25
+            }, {
+                text: 'Profile',
+                id: 'profile',
+                height: 25,
+                clickable: true,
+                handler: Ext.bind(function() {
+                    if (me.profileWindow == null || me.profileWindow.isDestroyed) {
+                        me.profileWindow = Ext.widget('profileWindow', {
+                            ownerCt: me.dashboardContainer,
+                            dashboardContainer: me.dashboardContainer,
+                            user: me.user
+                        });
+                    }
+                    me.dashboardContainer.hideAppComponentsView();
+                    me.profileWindow.show();
+                }, me)
+            }, {
+                text: 'Themes',
+                id: 'owfThemes',
+                height: 25,
+                clickable: true,
+                handler: Ext.bind(function() {
+                    me.dashboardContainer.hideAppComponentsView();
+                    Ext.create('Ozone.components.theming.ThemeSwitcherWindow', {
+                        ownerCt: me.dashboardContainer,
+                        dashboardContainer: me.dashboardContainer,
+                        height: 650,
+                        width: 810,
+                        title: Ozone.layout.ThemeSwitcherWindowConstants.title,
+                        constrain: true,
+                        renderTo: !Ext.isIE ? me.dashboardContainer.el : null,
+                        layout: 'border',
+                        border: false,
+                        bodyBorder: false
+                    }).show();
+                }, me)
+            }];
+
+        if (me.user.isAdmin) {
+            me.hasAdminBtn = true;
+            owfMenuItems = me.addOwfAdminMenuItem(owfMenuItems);
+        }
+
+        if (me.dashboardContainer.hasMetricsWidget()) {
+            me.hasMetricBtn = true;
+            owfMenuItems = me.addOwfMetricsMenuItem(owfMenuItems);
+        }
+
+        owfMenuItems.push([{
+            text: 'About',
+            id: 'about',
+            height: 25,
+            clickable: true,
+            handler: (function() {
+                //save the about window between calls
+                var aboutWindow;
+
+                return function toggleAboutWindow() {
+                    if (!aboutWindow || aboutWindow.isDestroyed) {
+                        aboutWindow = me.buildAboutModalContainer();
+
+                        me.loadAboutModalContent(aboutWindow);
+                    }
+
+                    if (!aboutWindow.isVisible()) {
+                        me.dashboardContainer.hideAppComponentsView();
+
+                        aboutWindow.show();
+                        aboutWindow.center();
+                    } else {
+                        aboutWindow.hide();
+                    }
+                }
+            })()
+        }]);
+
+        if (Ozone.config.logoutURL != null) {
+            owfMenuItems = me.addOwfLogoutMenuItem(owfMenuItems);
+        }
+
+        return owfMenuItems;
+    },
+
+    addOwfAdminMenuItem: function(existingMenuItems) {
+        var me = this;
+
+        existingMenuItems.push([{
+            text: 'Administration',
+            id: 'admin',
+            cls: 'admin',
+            clickable: true,
+            height: 25,
+            handler: Ext.bind(function() {
+                if (!me.administrationWindow || me.administrationWindow.isDestroyed)
+                    me.administrationWindow = Ext.widget('admintoolswindow', {
                         dashboardContainer: me.dashboardContainer
                     });
 
-                    Ext.Ajax.request({
-                        url: Ozone.util.contextPath() + "/about.jsp",
-                        success: function(response){
-                            var text = response.responseText;
-                            
-                            function setupWindow() {
-                                Ext.DomHelper.append(win.body, text);
-                                win.setupFocus();
-                                win.center();
-                            }
-
-                            if (win.isVisible())
-                                setupWindow();
-                            else 
-                                win.on('show', function() {
-                                    setupWindow();
-                                });
-
-                        }
-                    });
+                if (me.administrationWindow.isVisible()) {
+                    me.administrationWindow.hide();
+                } else {
+                    me.dashboardContainer.hideAppComponentsView();
+                    me.administrationWindow.show();
                 }
+            }, me)
+        }]);
 
-                if (!win.isVisible()) {
-                    win.show();
-                    win.center();
-                }
-                else
-                    win.hide();
-            }
-        })();
-
-        //create user menu
-      me.items = [
-        {
-          text: 'Previous Sign In ' + me.user.prettyPrevLogin,
-          id: 'prevLogin',
-          clickable: false
-        },
-        {
-          text: 'Profile',
-          id: 'profile',
-          handler: Ext.bind(function() {
-            if (this.profileWindow == null || this.profileWindow.isDestroyed) {
-              this.profileWindow = Ext.widget('profileWindow', {
-                ownerCt: this.dashboardContainer,
-                dashboardContainer: this.dashboardContainer,
-                user: this.user
-              });
-            }
-            this.profileWindow.show();
-          },this)
-        },
-        {
-          text: 'About',
-          id: 'about',
-          handler: toggleAboutWindow
-        }
-      ];
-
-      //check if logout link is active if so add config to owfbanner item
-        if (Ozone.config.logoutURL != null) {
-            me.items.push(
-                {
-                    spacer: true   
-                },
-                {
-                    text: me.logoutText,
-                    id: 'logout',
-                    handler: logout
-                }
-            );
-        }
-
-        //defaults for user menu items
-        for (var i = 0, len = me.items.length; i < len; i++) {
-            var item = me.items[i];
-            Ext.applyIf(item, { spacer: false, clickable: true });
-
-            //spacers are not clickable
-            if (item.spacer) item.clickable = false;
-        }
-
-    	function logout(){
-			window.location.href = Ozone.util.contextPath() + Ozone.config.logoutURL;
-    	}
-
-        Ozone.KeyMap.addBinding([
-            Ext.apply({
-                scope: this,
-                fn: logout
-            }, Ozone.components.keys.HotKeys.LOGOUT)
-        ]);
-
-        // // Resolve WelcomeMessage, possibly using previous login date (OWFPATCHES-5)
-        // var welcomeMsg = Ozone.layout.DesktopWindowManagerString.welcomeMessage + ' ' + Ext.util.Format.htmlEncode(this.user.displayName);
-
-        // if (Ozone.config.showLastLogin == 'true') {
-        //    // First resolve the last login date
-        //    var prevDateStr = Ext.util.Format.date(prevDate.toLocaleString(), Ozone.config.lastLoginDateFormat);
-        //    // Now replace date into string format
-        //    var lastLoginStr = new String(Ozone.config.lastLoginText);
-        //    lastLoginStr = lastLoginStr.replace(/\[lastLoginDate\]/g, prevDateStr);
-        //    welcomeMsg = welcomeMsg + ' ' + lastLoginStr;
-        // }
-        // else {
-        //    welcomeMsg = Ozone.layout.DesktopWindowManagerString.welcomeMessage + ' ' + Ext.util.Format.htmlEncode(this.user.displayName) + ' ';
-        // }
-
-        me.userMenu = new Ext.XTemplate(
-            '<ul id="userMenu">',
-                '<tpl for=".">',
-                    '<tpl if="spacer">',
-                        '<hr/>',
-                    '</tpl>',
-                    '<tpl if="!spacer">',
-                        '<li id="{id}" ',
-                        '<tpl if="clickable">',
-                            'class="clickable"',
-                        '</tpl>',
-                            '><span>',
-                                '{text}',
-                            '</span>',
-                        '</li>',
-                    '</tpl>',
-                '</tpl>',
-            '</ul>'
-        );
-
-
-        me.on('afterrender', me.onAfterRender, this);
-        me.on('click', me.onClick, this);
-
-        me.callParent(arguments);
+        return existingMenuItems;
     },
 
-    //only call this after render
-    getClickables: (function() {
-        var cached;
+    addOwfMetricsMenuItem: function(existingMenuItems) {
+        var me = this;
 
-        return function() {
-            if (!cached) cached = this.userMenu.el.select('.clickable');
-            return cached;
-        }
-    })(),
+        existingMenuItems.push([{
+            text: 'Metrics',
+            id: 'metrics',
+            height: 25,
+            clickable: true,
+            handler: Ext.bind(function() {
+                if (!me.metricWindow || me.metricWindow.isDestroyed) {
+                    me.metricWindow = Ext.widget('metricwindow', {
+                        dashboardContainer: me.dashboardContainer
+                    });
+                }
+                if (me.metricWindow.isVisible()) {
+                    me.metricWindow.close();
+                } else {
+                    me.dashboardContainer.hideAppComponentsView();
+                    me.metricWindow.show();
+                }
+            }, me)
+        }]);
 
-    //automatically transition focus
-    //from the button to the menu and back
-    setupFocusBridge: function() {
-        //using apply to make a copy, since this is the flyweight
-        //object
-        var firstMenuEl = Ext.apply({}, this.getClickables().first()),
-            btnEl = this.getFocusEl();
+        return existingMenuItems;
+    },
 
-        this.mon(btnEl, 'keydown', function (evt) {
-            if (evt.keyCode === Ext.EventObject.TAB && evt.shiftKey === false) {
-                evt.preventDefault();
-                firstMenuEl.focus();
+    addOwfLogoutMenuItem: function(existingMenuItems) {
+        var me = this;
+
+        existingMenuItems.push([{
+            spacer: true,
+            cls: 'spacer',
+            disabled: true,
+            height: 25
+        }, {
+            text: 'Sign Out',
+            id: 'logout',
+            cls: 'logout',
+            clickable: true,
+            height: 25,
+            handler: me.logout
+        }]);
+
+        return existingMenuItems;
+    },
+
+    buildMarketplaceMenuItems: function() {
+        var me = this,
+            marketplaceMenuItems = [{
+                text: 'Store Options',
+                id: 'marketplaceMenuTitle',
+                height: 25
+            }, {
+                text: 'User Profile',
+                id: 'marketplaceUserProfile',
+                height: 28,
+                clickable: true,
+                handler: Ext.bind(function(evt, obj) {
+                    me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceUserProfile');
+                }, me)
+            }, {
+                text: 'Themes',
+                id: 'marketplaceThemes',
+                height: 25,
+                clickable: true,
+                handler: Ext.bind(function(evt, obj) {
+                    me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceThemes');
+                }, me)
+            }, {
+                text: 'Create Listing',
+                id: 'marketplaceCreateListing',
+                height: 25,
+                clickable: true,
+                handler: Ext.bind(function(evt, obj) {
+                    me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceCreateListing');
+                }, me)
+            }];
+
+        // Add the Marketplace Admin items even if the current OWF user
+        // is not an AML admin - eventing is hooked up for admin item toggling
+        // based on the current AML user info passed from Marketplace
+        marketplaceMenuItems = me.addMarketplaceAdminMenuItems(marketplaceMenuItems);
+
+        return marketplaceMenuItems;
+    },
+
+    addMarketplaceAdminMenuItems: function(existingMenuItems) {
+        var me = this;
+
+        existingMenuItems.push([{
+            spacer: true,
+            cls: 'spacer',
+            id: 'marketplaceAdminSpacer',
+            disabled: true
+        }, {
+            text: 'Configuration Pages',
+            id: 'marketplaceConfigurationPages',
+            height: 25,
+            clickable: true,
+            handler: Ext.bind(function(evt, obj) {
+                me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceConfigurationPages');
+            }, me)
+        }, {
+            text: 'Franchise Administration',
+            id: 'marketplaceFranchiseAdministration',
+            height: 25,
+            clickable: true,
+            handler: Ext.bind(function(evt, obj) {
+                me.marketplaceUserMenuContainer.activateMarketplaceMenuAction('marketplaceFranchiseAdministration');
+            }, me)
+        }]);
+
+        return existingMenuItems;
+    },
+
+    buildAboutModalContainer: function() {
+        var me = this;
+
+        return Ext.create("Ozone.components.window.ModalWindow", {
+            id: 'about-window',
+            ui: 'system-window',
+            cls: 'system-window',
+            modalAutoClose: true,
+            preventHeader: false,
+            closable: true,
+            width: 550,
+            draggable: false,
+            resizable: false,
+            shadow: false,
+            dashboardContainer: me.dashboardContainer,
+            listeners: {
+                show: function() {
+                    Ozone.KeyMap.disable();
+                },
+                hide: function() {
+                    Ozone.KeyMap.enable();
+                }
             }
         });
+    },
 
-        this.mon(firstMenuEl, 'keydown', function(evt) {
-            if (evt.keyCode === Ext.EventObject.TAB && evt.shiftKey === true) {
-                evt.preventDefault();
-                btnEl.focus();
+    loadAboutModalContent: function(aboutWindow) {
+        Ext.Ajax.request({
+            url: Ozone.util.contextPath() + "/about.jsp",
+            success: function(response) {
+                var text = response.responseText;
+
+                function setupWindow() {
+                    Ext.DomHelper.append(aboutWindow.body, text);
+                    aboutWindow.setupFocus();
+                    aboutWindow.center();
+                }
+
+                if (aboutWindow.isVisible())
+                    setupWindow();
+                else {
+                    aboutWindow.on('show', function() {
+                        setupWindow();
+                    });
+                }
             }
         });
+    },
+
+    logout: function() {
+        window.location.href = Ozone.util.contextPath() + Ozone.config.logoutURL;
     },
 
     onAfterRender: function(cmp) {
-        var clickables;
-//        var keymap;
-        
-        cmp.userMenu.el = Ext.get(cmp.userMenu.append(Ext.getBody(), cmp.items));
-        cmp.userMenu.el.setVisibilityMode(Ext.Element.DISPLAY);
-        cmp.userMenu.el.setVisible(false);
+        var me = cmp;
 
-        cmp.setupFocusBridge();
+        me.collectAndCacheClickableMenuItems(cmp);
 
-        clickables = cmp.getClickables();
-        
-        cmp.addMenuShowHideHandlers();
-
-        clickables.each(function(it) {
-            it.addClsOnOver('over');
-            it.addClsOnOver(it.id + '-over');
-            it.addClsOnFocus(it.id + '-focus');
-
-            Ozone.components.focusable.Focusable.setupFocus(it.dom, cmp);
-        });
-
-        //handle item clicks
-        for (var i = 0, len = cmp.items.length; i < len; i++) {
-            var item = cmp.items[i];
-            
-            if (item.clickable) {
-                var el = Ext.get(item.id);
-                el.handler = item.handler;
-
-                cmp.mon(el, 'click', el.handler);
-            }
-        }
-
-//        //handle ENTER on userMenuBtn
-//        keymap = new Ext.util.KeyMap(cmp.getEl(), {
-//            key: [Ext.EventObject.ENTER, Ext.EventObject.SPACE, Ext.EventObject.DOWN],
-//            handler: function() {
-//                this.showUserMenu();
-//                this.getClickables().first().focus();
-//            },
-//            scope: cmp
-//        });
-//
-//        //clean up keymap
-//        cmp.on('destroy', function() {
-//            this.destroy();
-//        }, keymap);
-
-        cmp.setupMenuNav();
-
-        Ext.widget('tooltip',{
-          id: 'prevLoginToolTip',
-          target: Ext.get('prevLogin'),
-          html: 'Previous Sign In ' + this.formatLoginDate(this.user.prevLogin),
-          listeners: {
-            show: {
-              fn: function(cmp, opts) {
-                cmp.setZIndex(100000001);
-              }
-            }
-          }
-        });
-    },
-    
-    onClick: function() {
-        if (this.menuHidden) {
-            this.hideMenu = false;
-            this._showMenu();
-        } else {
-            this.hideMenu = true;
-            this._hideMenu();
-        }
-    },
-
-    setupMenuNav: function() {
-        var me = this,
-            nav;
-
-        //given the dom node of one of the clickable menu items,
-        //focus either the next clickable one or the previous, depending
-        //on whether or not backwards is true
-        function focusClickableSibling(dom, backwards) {
-                var newNode = Ext.get(dom),
-                    property = backwards ? 'previousSibling' : 'nextSibling';
-                
-                //look backwards or forwards through the nodes until another 
-                //clickable one is found
-                while ((newNode = Ext.get(newNode.dom[property])) && !newNode.hasCls('clickable'));
-
-                if (newNode) newNode.focus();
-        }
-
-        //keynav for the user menu
-        var nav = new Ext.util.KeyNav(this.userMenu.el, {
-            "up": function(evt) {
-                focusClickableSibling(evt.getTarget(), true)
-            },
-            "down": function(evt) {
-                focusClickableSibling(evt.getTarget())
-            },
-            "esc": Ext.bind(me.hideUserMenu, me),
-            "enter": function(evt) {
-                Ext.get(evt.getTarget()).handler.call()
-            }
-        });
-
-        me.on('destroy', function() {
-            this.destroy();
-        }, nav);
-    },
-
-
-    formatLoginDate: function(unformattedDate) {
-        var prevDate = new Date();
- 
-        if(unformattedDate) {
-             prevDate.setUTCFullYear(unformattedDate.substring(0,4));
-             prevDate.setUTCMonth(unformattedDate.substring(5,7)-1);
-             prevDate.setUTCDate(unformattedDate.substring(8, 10));
-             prevDate.setUTCHours(unformattedDate.substring(11,13),unformattedDate.substring(14,16));
-        }
-
-        return Ext.util.Format.date(prevDate, Ozone.config.lastLoginDateFormat);
-
-    },
-
-    addMenuShowHideHandlers: function() {
-        var me = this,
-            menuEl = me.userMenu.el,
-            clickables = me.getClickables();
-
-        //keep menu shown while mouse is over it
-        me.mon(menuEl, 'mouseover', me.keepMenuOpen, me);
-
-        //hide menu when mouse leaves it
-        me.mon(menuEl, 'mouseout', me.hideUserMenu, me);
-
-        //hide menu when mouse leaves button
-        me.on('mouseout', me.hideUserMenu, me);
-
-        //show menu when button is hovered over
         me.on('mouseover', me.showUserMenu, me);
-        me.mon(me.getFocusEl(), 'focus', me.showUserMenu, me);
+        me.mon(me.menu, 'mouseover', me.showUserMenu, me);
 
-        me.mon(clickables, 'focus', me.keepMenuOpen, me);
-        me.mon(clickables, 'blur', me.hideUserMenu, me);
-        me.mon(me.getFocusEl(), 'blur', me.hideUserMenu, me);
-    },
-    
-    keepMenuOpen: function() {
-        this.hideMenu = false;
+        me.on('mouseout', me.hideUserMenu, me);
+        me.mon(me.menu, 'mouseleave', me.hideUserMenu, me);
+
+        Ext.Array.each(me.clickables, function(c) {
+            me.mon(c, 'click', function() {
+                me.hideUserMenu();
+            }, me);
+        });
     },
 
     showUserMenu: function() {
-        var me = this,
-            menuEl = me.userMenu.el;
+        var me = this;
 
-        me.hideMenu = false;
-        
+        // check if there's an active hide task, and cancel if it is active
+        if (me.hideTask) {
+            me.hideTask.cancel();
+        }
+
         if (!me.showTask) {
             me.showTask = Ext.create('Ext.util.DelayedTask', function() {
-                me._showMenu();
+                me.showMenu();
+                me.isMenuShown = true;
             });
         }
+
         me.showTask.delay(Ext.isNumber(me.showDelay) ? me.showDelay : 800, null);
     },
 
     hideUserMenu: function() {
         var me = this;
 
-
-        me.hideMenu = true;
+        // check if there's an active show task, and cancel if it is active
+        if (me.showTask) {
+            me.showTask.cancel();
+        }
 
         if (!me.hideTask) {
             me.hideTask = Ext.create('Ext.util.DelayedTask', function() {
-                me._hideMenu();
+                me.hideMenu();
+                me.isMenuShown = false;
             });
         }
+
         me.hideTask.delay(Ext.isNumber(me.hideDelay) ? me.hideDelay : 100, null);
     },
-    
-    _showMenu: function() {
-        var me = this,
-            menuEl = me.userMenu.el;
-            
-        if(me.hideTask) {
-            me.hideTask.cancel();
-        }
 
-        me.menuHidden = false;
-        
-        /*
-         * if it is currently fading out, 
-         * stop it so that setVisible(false) 
-         * does not get called out of order
-         */
-        menuEl.stopAnimation(); 
+    collectAndCacheClickableMenuItems: function(cmp) {
+        var me = cmp,
+            owfMenu = me.getOwfMenu(),
+            marketplaceMenu = me.getMarketplaceMenu();
 
-        menuEl.setVisible(true);
-        menuEl.alignTo(me.getEl(), "tr-br");
-        menuEl.fadeIn();
+        me.clickables = [];
+
+        var owfClickables = owfMenu.items.filterBy(function(rec, id) {
+            return rec.clickable && rec.clickable === true;
+        }).items;
+
+        var marketplaceClickables = marketplaceMenu.items.filterBy(function(rec, id) {
+            return rec.clickable && rec.clickable === true;
+        }).items;
+
+        me.clickables = owfClickables.concat(marketplaceClickables);
     },
-    
-    _hideMenu: function() {
-        var me = this;
-        
-        if(me.showTask) {
-            me.showTask.cancel();
+
+    getMetricsBtn: function() {
+        if (!this.metricsBtn) {
+            this.metricsBtn = this.menu.down("#metrics");
         }
-        if (me.menuHidden) return; //already hidden
 
-        if(me.hideMenu === true && me.userMenu && me.userMenu.el) {
-            me.menuHidden = true;
+        return this.metricsBtn;
+    },
 
-            me.userMenu.el.fadeOut({
-                listeners: {
-                    afteranimate: {
-                        fn: function() {
-                            //don't want the hidden menu to have focus
-                            if (me.userMenu.el.contains(document.activeElement))
-                                document.activeElement.blur();
-
-                            //set display: none after fade is finished
-                            this.userMenu.el.setVisible(false);
-                        },
-                        scope: me
-                    }
-                }
-            });
+    getAdminBtn: function() {
+        if (!this.adminBtn) {
+            this.adminBtn = this.menu.down("#admin");
         }
+
+        return this.adminBtn;
+    },
+
+    getOwfMenu: function() {
+        if (!this.owfMenu) {
+            this.owfMenu = this.menu.down("#owfMenu");
+        }
+
+        return this.owfMenu;
+    },
+
+    getMarketplaceMenu: function() {
+        if (!this.marketplaceMenu) {
+            this.marketplaceMenu = this.menu.down("#marketplaceMenu");
+        }
+
+        return this.marketplaceMenu;
+    },
+
+    enableMetricsMenuItem: function() {
+        this.hasMetricBtn && this.getMetricsBtn().enable();
+    },
+
+    disableMetricsMenuItem: function() {
+        this.hasMetricBtn && this.getMetricsBtn().disable();
+    },
+
+    enableAdminMenuItem: function() {
+        this.hasAdminBtn && this.getAdminBtn().enable();
+    },
+
+    disableAdminMenuItem: function() {
+        this.hasAdminBtn && this.getAdminBtn().disable();
+    },
+
+    enableMarketplaceMenu: function() {
+        var element = this.getMarketplaceMenu();
+
+        this.menu.width = 368;
+        element.show();
+    },
+
+    disableMarketplaceMenu: function() {
+        var element = this.getMarketplaceMenu();
+
+        this.menu.width = 188;
+        element.hide();
+    },
+
+    enableMarketplaceAdminSubMenu: function() {
+        var m = this.getMarketplaceMenu(),
+            configurationPagesAdminItem = m.down("#marketplaceConfigurationPages"),
+            franchiseAdminMenuItem = m.down("#marketplaceFranchiseAdministration")
+            spacer = m.down("#marketplaceAdminSpacer");
+
+        configurationPagesAdminItem.show();
+        franchiseAdminMenuItem.show();
+        spacer.show();
+    },
+
+    disableMarketplaceAdminSubMenu: function() {
+        var m = this.getMarketplaceMenu(),
+            configurationPagesAdminItem = m.down("#marketplaceConfigurationPages"),
+            franchiseAdminMenuItem = m.down("#marketplaceFranchiseAdministration");
+        spacer = m.down("#marketplaceAdminSpacer");
+
+        configurationPagesAdminItem.hide();
+        franchiseAdminMenuItem.hide();
+        spacer.hide();
     }
-
-});
+});*/

@@ -10,7 +10,7 @@ Ozone.widgetAccesses = Ozone.widgetAccesses || {};
 
 /**
  * @private
- * 
+ *
  * @description This method is useful if you want to see if a specfic url is the same
  * as the local url.  Can be used to test if AJAX can be used.  If url
  * is not a URL, it's assumed to be a relative filename, so this function
@@ -33,10 +33,10 @@ Ozone.util.isUrlLocal = function(url) {
 
     //this regex matches urls against the configured webcontext path https://<contextPath>/.....
     //only one match is possible since this regex matches from the start of the string
-    var regex = new RegExp("^(https?:)//([^/:]+):?(.*)" + webContextPath);
+    var regex = new RegExp("^(https?:)//([^/:]+):?(.*?)" + webContextPath);
     var server = url.match(regex);
 
-    //check if this might be a relative url 
+    //check if this might be a relative url
     if (!server) {
         if (url.match(new RegExp('^https?:\/\/'))) {
             return false;
@@ -89,7 +89,7 @@ Ozone.util.HTMLEncodeReservedJS = function(str) {
 
 /**
  * @private
- * 
+ *
  * @description Similar to Ext.util.Format.htmlEncode except this method also handles the single quote
  */
 Ozone.util.HTMLEncode = function(str){
@@ -128,7 +128,7 @@ Ozone.util.parseWindowNameData = function() {
  * @description This method returns the current context path by
  * calling a controller at the server (will not
  * make the call if it has already been done).
- * 
+ *
  * @param {Object} o unused
  *
  * @returns context path with leading slash
@@ -140,8 +140,11 @@ Ozone.util.contextPath = (function() {
     var configParams = Ozone.util.parseWindowNameData(),
         contextPath = Ozone.config.webContextPath;
 
-    if (configParams && configParams.webContextPath) {
-        contextPath = Ozone.config.webContextPath = configParams.webContextPath;
+    if (configParams) {
+        if(configParams.webContextPath) {
+            Ozone.config.webContextPath = configParams.webContextPath;
+        }
+        contextPath = configParams.webContextPath;
     }
 
     return function () {
@@ -151,10 +154,10 @@ Ozone.util.contextPath = (function() {
 
 /**
  * @private
- * 
+ *
  * @description Checks whether the url context is local or not,
  * then returns the valid url w/ context.
- * 
+ *
  * @param {String} value the url
  * @param {String} validContext valid context
  *
@@ -186,13 +189,13 @@ Ozone.util.validUrlContext = function(value, validContext){
  * @returns relay file path with context
  */
 Ozone.util.getContainerRelay = function() {
-    return Ozone.util.contextPath() + 
+    return Ozone.util.contextPath() +
     '/js/eventing/rpc_relay.uncompressed.html';
 };
 
 /**
  * @private
- * 
+ *
  * @description This method will convert anything to a string.
  * There is no check for recursion, so don't do that
  *
@@ -221,7 +224,7 @@ Ozone.util.formatWindowNameData = function(data) {
 
 /**
  * @private
- *  
+ *
  * Removes the Leading and Trailing Spaces in any ExtJs Form Field
  */
 Ozone.util.formField.removeLeadingTrailingSpaces = function(thisField){
@@ -249,7 +252,7 @@ if (!Ozone.util.ModalBox) {
         obol.style.MozOpacity = 0.5;
         obol.style.opacity = 0.5;
 
-        
+
         frag.appendChild(obol);
         this.obol = obol;
         var obbx = document.createElement('div');
@@ -273,9 +276,9 @@ if (!Ozone.util.ModalBox) {
         d2.style.textAlign = 'center';
         d2.style.fontSize = '14px';
         d2.appendChild(txt);
-        d2.appendChild(document.createElement('br'));       
+        d2.appendChild(document.createElement('br'));
         var but = document.createElement('button');
-        
+
         but.innerHTML = 'OK';
         var self = this;
         but.onclick= function()
@@ -296,7 +299,7 @@ if (!Ozone.util.ModalBox) {
             self.sizeFix();
         }
     }
-    
+
     Ozone.util.ModalBox.prototype.pageWidth = function () {
         return window.innerWidth != null ? window.innerWidth
         : document.documentElement && document.documentElement.clientWidth ? document.documentElement.clientWidth
@@ -318,7 +321,7 @@ if (!Ozone.util.ModalBox) {
         : document.body.scrollTop ? document.body.scrollTop : 0;
     }
 
-    Ozone.util.ModalBox.prototype.scrollFix = function() 
+    Ozone.util.ModalBox.prototype.scrollFix = function()
     {
         //var obol = $('ol');
         this.obol.style.top = this.posTop() + 'px';
@@ -387,7 +390,7 @@ if (!Ozone.util.ModalBox) {
         return false;
     }
 }
-if (!Ozone.util.ErrorDlg) 
+if (!Ozone.util.ErrorDlg)
 {
     Ozone.util.ErrorDlg = {};
     Ozone.util.ErrorDlg.show=function(msg,width,height)
@@ -421,7 +424,7 @@ Ozone.util.fireBrowserEvent = function(dom, type, bubble, cancelable) {
     @returns Object dashboard cfg object that can be used to create new dashboards.
  */
 Ozone.util.cloneDashboard = function(dashboardCfg, regenerateIds, removeLaunchData) {
-    
+
     var dashboardStr = Ozone.util.toString(dashboardCfg);
 
     if(regenerateIds === true) {
@@ -443,7 +446,7 @@ Ozone.util.cloneDashboard = function(dashboardCfg, regenerateIds, removeLaunchDa
     }
 
     var dashboard = Ozone.util.parseJson(dashboardStr);
-    
+
     if(removeLaunchData === true) {
         var cleanData = function(cfg) {
             if(!cfg || !cfg.items)
@@ -482,30 +485,39 @@ Ozone.util.createRequiredLabel= function(label) {
  * @returns {Boolean} True if the channel name is reserved, false otherwise.
  */
 Ozone.util.isReservedChannel = function(channel) {
-	// This is a horrible way of reserving channel names. Need to make this some sort of calculation
-	// so that widgets can't just pass data on an OWF reserved channel name to skirt security.
-	// I'm thinking generating a random guid at the start of a session to append to all OWF reserved channel
-	// names.
-	if(channel) {
-		if (channel.indexOf('_WIDGET_STATE_CHANNEL_') == 0 || 
-				channel == '_WIDGET_LAUNCHER_CHANNEL' || 
-				channel == '_ADD_WIDGET_CHANNEL' || 
-				channel == '_dragStart' || 
-				channel == '_dragOverWidget' || 
-				channel == '_dragOutName' || 
-				channel == '_dragStopInContainer' || 
-				channel == '_dragStopInWidget' || 
-				channel == '_dragSendData' || 
-				channel == '_dropReceiveData' || 
-				channel == '_intents' || 
-				channel == '_intents_receive' || 
-				channel == 'Ozone._WidgetChromeChannel' || 
-				channel == '_WIDGET_LAUNCHER_CHANNEL' || 
-				channel == '_widgetReady')
-			
-			return true;
-	}
-	return false;
+    // This is a horrible way of reserving channel names. Need to make this some sort of calculation
+    // so that widgets can't just pass data on an OWF reserved channel name to skirt security.
+    // I'm thinking generating a random guid at the start of a session to append to all OWF reserved channel
+    // names.
+    if(channel) {
+        if (channel.indexOf('_WIDGET_STATE_CHANNEL_') == 0 ||
+                channel == '_WIDGET_LAUNCHER_CHANNEL' ||
+                channel == '_ADD_WIDGET_CHANNEL' ||
+                channel == '_ADD_STACK_CHANNEL' ||
+                channel == '_LAUNCH_STACK_CHANNEL' ||
+                channel == '_dragStart' ||
+                channel == '_dragOverWidget' ||
+                channel == '_dragOutName' ||
+                channel == '_dragStopInContainer' ||
+                channel == '_dragStopInWidget' ||
+                channel == '_dragSendData' ||
+                channel == '_dropReceiveData' ||
+                channel == '_intents' ||
+                channel == '_intents_receive' ||
+                channel == 'Ozone._WidgetChromeChannel' ||
+                channel == '_widgetReady' ||
+                channel == '_MARKETPLACE_MENU_ITEM_CLICK' ||
+                channel == '_MARKETPLACE_MENU_ADMIN_TOGGLE' ||
+                channel == 'ozone.marketplace.show' ||
+                channel == 'ozone.marketplace.pageLoaded' ||
+                channel == 'Ozone.eventing.widget.public' ||
+                channel == 'Ozone.eventing.widget.public' ||
+                channel == '_DASHBOARD_GET_PANES' ||
+                channel == '_MARKETPLACE_LISTING_CHECK')
+
+            return true;
+    }
+    return false;
 };
 
 /**
@@ -517,210 +529,267 @@ Returns .
  *
 */
 Ozone.util.hasAccess = function(cfg) {
-	var widgetId, accessLevel, channel, senderId, callback;	
-	
-	// Make sure cfg object was passed in and flag to check access is set to true
-	if (!cfg || !cfg.widgetId || !cfg.callback) {
-		var response = "Insufficient information provided to determine access level.";
+    var widgetId, accessLevel, channel, senderId, callback;
+
+    // Make sure cfg object was passed in and flag to check access is set to true
+    if (!cfg || !cfg.widgetId || !cfg.callback) {
+        var response = "Insufficient information provided to determine access level.";
         if (!Ozone.Msg)
             Ozone.util.ErrorDlg.show(response,200,50);
         else
             Ozone.Msg.alert('Error',response,null,this,{
                 cls: "owfAlert"
             });
-        
+
         if (cfg.callback) {
-			cfg.callback({
-				widgetId: widgetId,
-				accessLevel: accessLevel,
-				hasAccess: false
-			});
+            cfg.callback({
+                widgetId: widgetId,
+                accessLevel: accessLevel,
+                hasAccess: false
+            });
         }
-		return;
-	} else if (!Ozone.config.dataguard.restrictMessages) {
-		cfg.callback({
-			widgetId: widgetId,
-			accessLevel: accessLevel,
-			hasAccess: true
-		});
-		return;
-	} else {
-		widgetId = cfg.widgetId;
-		accessLevel = cfg.accessLevel;
-		channel = cfg.channel;
-		senderId = cfg.senderId;
-		callback = cfg.callback;
-	}
-	
-	// Allow OWF reserved channels to receive all data because those are used for 
-	// OWF-specific things like drag-and-drop
-	if(Ozone.util.isReservedChannel(cfg.channel)) {
-		callback({
-			widgetId: widgetId,
-			accessLevel: accessLevel,
-			hasAccess: true
-		});
-		return;
-	}
-	
-	// Err on the side of caution by defaulting to false
-	var hasAccess = false; 
-	
-	// Must specify either an accessLevel or senderId
-	if (!accessLevel) {
-		if (!senderId || !Ozone.config.dataguard.allowMessagesWithoutAccessLevel) {
-			Ozone.audit.log({
-				message: "Widget with id " + widgetId + " could not receive data because no access level was provided.",
+        return;
+    } else if (!Ozone.config.dataguard.restrictMessages) {
+        cfg.callback({
+            widgetId: widgetId,
+            accessLevel: accessLevel,
+            hasAccess: true
+        });
+        return;
+    } else {
+        widgetId = cfg.widgetId;
+        accessLevel = cfg.accessLevel;
+        channel = cfg.channel;
+        senderId = cfg.senderId;
+        callback = cfg.callback;
+    }
+
+    // Allow OWF reserved channels to receive all data because those are used for
+    // OWF-specific things like drag-and-drop
+    if(Ozone.util.isReservedChannel(cfg.channel)) {
+        callback({
+            widgetId: widgetId,
+            accessLevel: accessLevel,
+            hasAccess: true
+        });
+        return;
+    }
+
+    // Err on the side of caution by defaulting to false
+    var hasAccess = false;
+
+    // Must specify either an accessLevel or senderId
+    if (!accessLevel) {
+        if (!senderId || !Ozone.config.dataguard.allowMessagesWithoutAccessLevel) {
+            Ozone.audit.log({
+                message: "Widget with id " + widgetId + " could not receive data because no access level was provided.",
                 accessOutcomeGood: false,
                 outcomeCategory: Ozone.util.hasAccess.outcomeCategories.noLevelGiven,
                 sendingWidget: senderId,
                 receivingWidget: widgetId
 
-			});
-			callback({
-				widgetId: widgetId,
-				accessLevel: accessLevel,
-				hasAccess: false
-			});
-			return;
-		}
-	}
-	
-	function checkAccess(widgetId, accessLevel, channel, senderId, callback) {
-		// Check cache
-		var accessLevelCacheId = accessLevel ? accessLevel.toUpperCase() : senderId;
+            });
+            callback({
+                widgetId: widgetId,
+                accessLevel: accessLevel,
+                hasAccess: false
+            });
+            return;
+        }
+    }
+
+    function checkAccess(widgetId, accessLevel, channel, senderId, callback) {
+        // Check cache
+        var accessLevelCacheId = accessLevel ? accessLevel.toUpperCase() : senderId;
         var accessLevelFormatted = accessLevel ? accessLevel : "UNSPECIFIED ACCESS LEVEL";
 
-		if (Ozone.widgetAccesses[widgetId] && Ozone.widgetAccesses[widgetId][accessLevelCacheId]) {
-			// Make sure timestamp is less than 1 hour old
-			var accessLevelTimestamp = Ozone.widgetAccesses[widgetId][accessLevelCacheId].timestamp.getTime();
-			var currentTimestamp = (new Date()).getTime();
-			if ((currentTimestamp - accessLevelTimestamp) < Ozone.config.dataguard.accessLevelCacheTimeout) {
-				hasAccess = Ozone.widgetAccesses[widgetId][accessLevelCacheId].hasAccess;
-	        	
-	        	// Log failed access
-	    	    if (!hasAccess) {
-	    			Ozone.audit.log({
-	    				message: "Widget with id " + widgetId + " does not have sufficient privileges to access " + accessLevelFormatted + " data.",    				
+        if (Ozone.widgetAccesses[widgetId] && Ozone.widgetAccesses[widgetId][accessLevelCacheId]) {
+            // Make sure timestamp is less than 1 hour old
+            var accessLevelTimestamp = Ozone.widgetAccesses[widgetId][accessLevelCacheId].timestamp.getTime();
+            var currentTimestamp = (new Date()).getTime();
+            if ((currentTimestamp - accessLevelTimestamp) < Ozone.config.dataguard.accessLevelCacheTimeout) {
+                hasAccess = Ozone.widgetAccesses[widgetId][accessLevelCacheId].hasAccess;
+
+                // Log failed access
+                if (!hasAccess) {
+                    Ozone.audit.log({
+                        message: "Widget with id " + widgetId + " does not have sufficient privileges to access " + accessLevelFormatted + " data.",
                         accessOutcomeGood: false,
                         outcomeCategory: Ozone.util.hasAccess.outcomeCategories.insufficient,
                         accessLevel: accessLevelFormatted,
                         sendingWidget: senderId,
                         receivingWidget: widgetId
-	    			});
-	    	    } else if (Ozone.config.dataguard.auditAllMessages || !accessLevel) {
-	    			Ozone.audit.log({
-	    				message: "Widget with id " + widgetId + " received message with access level " + accessLevelFormatted + " data.",    				
+                    });
+                } else if (Ozone.config.dataguard.auditAllMessages || !accessLevel) {
+                    Ozone.audit.log({
+                        message: "Widget with id " + widgetId + " received message with access level " + accessLevelFormatted + " data.",
                         accessOutcomeGood: true,
                         accessLevel: accessLevelFormatted,
                         sendingWidget: senderId,
-                        receivingWidget: widgetId                        
-	    			});
-	    	    }
-				
-				callback({
-					widgetId: widgetId,
-					accessLevel: accessLevel,
-					hasAccess: hasAccess
-				});
-				return;
-			}
-		}
-		
-		// Evaluate access level
-	    Ozone.util.Transport.send({
-	        url: OWF.getContainerUrl() + '/access',
-	        method: 'POST',
-	        onSuccess: function(response) {
-	        	hasAccess = response.data.hasAccess;
-	        	Ozone.widgetAccesses[widgetId] = Ozone.widgetAccesses[widgetId] || {};
-	        	Ozone.widgetAccesses[widgetId][accessLevelCacheId] = {
-	    			hasAccess: hasAccess,
-	    			timestamp: new Date()
-	        	};
-	        	
-	        	// Log failed access
-	    	    if (!hasAccess) {
-	    			Ozone.audit.log({
-	    				message: "Widget with id " + widgetId + " does not have sufficient privileges to access " + accessLevelFormatted + " data.",    				
+                        receivingWidget: widgetId
+                    });
+                }
+
+                callback({
+                    widgetId: widgetId,
+                    accessLevel: accessLevel,
+                    hasAccess: hasAccess
+                });
+                return;
+            }
+        }
+
+        // Evaluate access level
+        Ozone.util.Transport.send({
+            url: OWF.getContainerUrl() + '/access',
+            method: 'POST',
+            onSuccess: function(response) {
+                hasAccess = response.data.hasAccess;
+                Ozone.widgetAccesses[widgetId] = Ozone.widgetAccesses[widgetId] || {};
+                Ozone.widgetAccesses[widgetId][accessLevelCacheId] = {
+                    hasAccess: hasAccess,
+                    timestamp: new Date()
+                };
+
+                // Log failed access
+                if (!hasAccess) {
+                    Ozone.audit.log({
+                        message: "Widget with id " + widgetId + " does not have sufficient privileges to access " + accessLevelFormatted + " data.",
                         accessOutcomeGood: false,
                         outcomeCategory: Ozone.util.hasAccess.outcomeCategories.insufficient,
                         accessLevel: accessLevelFormatted,
                         sendingWidget: senderId,
-                        receivingWidget: widgetId                        
-	    			});
-	    	    } else if (Ozone.config.dataguard.auditAllMessages || !accessLevel) {
-	    			Ozone.audit.log({
-	    				message: "Widget with id " + widgetId + " received message with access level " + accessLevelFormatted + " data.",
-                        accessOutcomeGood: true,
-                        accessLevel: accessLevelFormatted,                        
-                    	sendingWidget: senderId,
                         receivingWidget: widgetId
-	    			});
-	    	    }
-	    	    
-				callback({
-					widgetId: widgetId,
-					accessLevel: accessLevel,
-					hasAccess: hasAccess
-				});
-	        },
-	        onFailure: function(response) {
-				Ozone.audit.log({
-					message: "Failed to determine whether Widget with id " + widgetId + " has sufficient privileges to access " + accessLevelFormatted + " data.",
+                    });
+                } else if (Ozone.config.dataguard.auditAllMessages || !accessLevel) {
+                    Ozone.audit.log({
+                        message: "Widget with id " + widgetId + " received message with access level " + accessLevelFormatted + " data.",
+                        accessOutcomeGood: true,
+                        accessLevel: accessLevelFormatted,
+                        sendingWidget: senderId,
+                        receivingWidget: widgetId
+                    });
+                }
+
+                callback({
+                    widgetId: widgetId,
+                    accessLevel: accessLevel,
+                    hasAccess: hasAccess
+                });
+            },
+            onFailure: function(response) {
+                Ozone.audit.log({
+                    message: "Failed to determine whether Widget with id " + widgetId + " has sufficient privileges to access " + accessLevelFormatted + " data.",
                     accessOutcomeGood: false,
                     outcomeCategory: Ozone.util.hasAccess.outcomeCategories.noLevelGiven,
                     accessLevel: accessLevelFormatted,
                     sendingWidget: senderId,
-                    receivingWidget: widgetId                        
+                    receivingWidget: widgetId
 
-				});
+                });
 
-		        if (response == undefined || response == null) response = "";
+                if (response == undefined || response == null) response = "";
 
-		        if (!Ozone.Msg)
-		            Ozone.util.ErrorDlg.show(response,200,50);
-		        else
-		            Ozone.Msg.alert('Server Error',response,null,this,{
-		                cls: "owfAlert"
-		            });
-		        
-				callback({
-					widgetId: widgetId,
-					accessLevel: accessLevel,
-					hasAccess: false
-				});
-	        },
-	        autoSendVersion : false,
-	        content : {
-	        	widgetId: widgetId,
-	        	accessLevel: accessLevel ? accessLevel : null,
-				senderId: senderId ? senderId : null
-	        }
-	    });
-	}
-	
-	if (OWF.getOpenedWidgets && OWF.getOpenedWidgets instanceof Function) {
-		OWF.getOpenedWidgets(function(openedWidgets) {
-			for (var i = 0; i < openedWidgets.length; i++) {
-				var w = openedWidgets[i];
-				if (widgetId == w.id) widgetId = w.widgetGuid;
-	  	  		if (senderId == w.id) senderId = w.widgetGuid;
-			}
-			checkAccess(widgetId, accessLevel, channel, senderId, callback);
-		});
-	} else {
-  	  	// Ensure widgetId and senderId point to widget guid, not instance id
-  	  	var openedWidgets = OWF.Container.Eventing.getOpenedWidgets();
-  	  	for (var i = 0; i < openedWidgets.length; i++) {
-  	  		var w = openedWidgets[i];
-  	  		if (widgetId == w.id) widgetId = w.widgetGuid;
-  	  		if (senderId == w.id) senderId = w.widgetGuid;
-  	  	}
-		checkAccess(widgetId, accessLevel, channel, senderId, callback);
-	}
+                if (!Ozone.Msg)
+                    Ozone.util.ErrorDlg.show(response,200,50);
+                else
+                    Ozone.Msg.alert('Server Error',response,null,this,{
+                        cls: "owfAlert"
+                    });
+
+                callback({
+                    widgetId: widgetId,
+                    accessLevel: accessLevel,
+                    hasAccess: false
+                });
+            },
+            autoSendVersion : false,
+            content : {
+                widgetId: widgetId,
+                accessLevel: accessLevel ? accessLevel : null,
+                senderId: senderId ? senderId : null
+            }
+        });
+    }
+
+    if (OWF.getOpenedWidgets && OWF.getOpenedWidgets instanceof Function) {
+        OWF.getOpenedWidgets(function(openedWidgets) {
+            for (var i = 0; i < openedWidgets.length; i++) {
+                var w = openedWidgets[i];
+                if (widgetId == w.id) widgetId = w.widgetGuid;
+                if (senderId == w.id) senderId = w.widgetGuid;
+            }
+            checkAccess(widgetId, accessLevel, channel, senderId, callback);
+        });
+    } else {
+        // Ensure widgetId and senderId point to widget guid, not instance id
+        var openedWidgets = OWF.Container.Eventing.getOpenedWidgets();
+        for (var i = 0; i < openedWidgets.length; i++) {
+            var w = openedWidgets[i];
+            if (widgetId == w.id) widgetId = w.widgetGuid;
+            if (senderId == w.id) senderId = w.widgetGuid;
+        }
+        checkAccess(widgetId, accessLevel, channel, senderId, callback);
+    }
 };
 
 Ozone.util.hasAccess.outcomeCategories = { noLevelGiven: "NOT_SPECIFIED", insufficient: "INSUFFICIENT_ACCESS" };
 
 
+Ozone.util._findByReceiveIntent = function (array, intent) {
+    return _.filter(array, function (state) {
+
+        if(!intent.dataType) {
+            return false;
+        }
+
+        var intents = state.get('intents'),
+            found = false;
+
+        _.each(intents.receive, function (componentIntent) {
+            if(componentIntent.action === intent.action) {
+                _.each(componentIntent.dataTypes, function (dataType) {
+                    if(dataType === intent.dataType) {
+                        found = true;
+                    }
+                })
+            }
+        });
+
+        return found;
+
+    });
+};
+
+/**
+ * Look through all available widget definitions and return the one whose
+ * URL is the longest leading substring of the url passed in
+ * @param url The URL to match on
+ */
+Ozone.util.findWidgetDefinitionByLongestUrlMatch = function(url) {
+    var store = Ext.StoreManager.lookup('widgetStore'),
+        match = null;
+
+    if (!url) return null;
+
+    store.each(function(widget) {
+        var widgetUrl = widget.get('url');
+
+        //if this url is the beginning of the url in question
+        if (url.indexOf(widgetUrl) === 0) {
+            //if this is a better match than the previous best
+            if (!match || match.get('url').length < widgetUrl.length) {
+                match = widget;
+            }
+        }
+    });
+
+    return match;
+};
+
+/**
+ * Given and Ext model, creates a Backbone model holding the same data.
+ */
+Ozone.util.convertExtModelToBackboneModel = function(extModel) {
+    return new Backbone.Model(extModel.data);
+};

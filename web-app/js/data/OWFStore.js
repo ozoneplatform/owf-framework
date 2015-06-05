@@ -41,6 +41,9 @@ Ext.define('Ozone.data.OWFStore', {
       if (config.updateActions) {
         Ext.copyTo(this.proxy, config, 'updateActions');
       }
+      if (config.callback) {
+        Ext.copyTo(this.proxy, config, 'callback');
+      }
 
       //if a proxy was supplied copy its properties in
       if (config.proxy != null) {

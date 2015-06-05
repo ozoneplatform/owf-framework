@@ -30,7 +30,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                     xtype:'tbtext',
                     itemId: 'lblStacksGrid',
                     cls: 'tbStacksGridHdr',
-                    text:'Stacks'
+                    text:'Apps'
                 },'->',{
                     xtype: 'searchbox',
                     listeners: {
@@ -80,9 +80,15 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                     }
                                 });
                                 store.save();
+                                
+                                var widgetStateHandler = Ozone.state.WidgetStateHandler.getInstance();
+                                widgetStateHandler.handleWidgetRequest({
+                                    fn: 'refreshDashboardStore',
+                                    title: this.generateNotificationTitle(records.length)
+                                });
                             }
                             else {
-                                self.editPanel.showAlert("Error", "You must select at least one stack to remove.")
+                                self.editPanel.showAlert("Error", "You must select at least one App to remove.")
                             }
                         }
                     },
@@ -138,7 +144,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                             cmp.guid_EditCopyWidget = result.value;
                         },
                         onFailure: function(err) { /* No op */
-                            self.editPanel.showAlert('Preferences Error', 'Error looking up Stack Editor: ' + err);
+                            self.editPanel.showAlert('Preferences Error', 'Error looking up Application Editor: ' + err);
                         }
                     });
                     
@@ -159,7 +165,7 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
                                         }
                                     }
                                     else {
-                                        self.editPanel.showAlert("Error", "You must select at least one stack to edit.");
+                                        self.editPanel.showAlert("Error", "You must select at least one App to edit.");
                                     }
                                 },
                                 scope: this
@@ -192,27 +198,94 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
 
         this.callParent();
     },
+
+    generateNotificationTitle: function(numRecordsChanged) {
+        return numRecordsChanged === 1 ? 'App Removed' : 'Apps Removed';
+    },
+
     onAddClicked: function (button, e) {
         var record = this.ownerCt.record,
-            itemName = record.get('name') ? record.get('name') : record.get('userRealName');
+            itemName = record.get('name') ? record.get('name') : record.get('userRealName'),
+            tip,
+            self = this;
+
+        Ext.Ajax.request({
+            url: Ozone.util.contextPath() + '/widget/hasMarketplace',
+            success: function(response) {
+                var json = Ext.decode(response.responseText);
+                self.hasMarketplace = json.data;
+            }
+        });
 
         var win = Ext.widget('admineditoraddwindow', {
-            addType: 'Stack',
+            addType: 'App',
             itemName: itemName,
             editor: this.editor,
             focusOnClose: this.down(),
             existingItemsStore: this.getComponent('stacksgrid').getStore(),
-            searchFields: ['displayName'],
+            searchFields: ['name'],
             grid: Ext.widget('stacksgrid', {
                 itemId: 'stacksaddgrid',
                 border: false,
                 preventHeader:true,
                 enableColumnHide: false,
-                sortableColumns: false
+                sortableColumns: false,
+                listeners: {
+                    select: {
+                        fn: function( cmp, record, row, column, eOpts) {
+                            if (record.data) {
+
+                                Ext.QuickTips.init();
+                                var stack = record.data,
+                                    button = win.down('#ok'),
+                                    msg;
+
+                                // disable the ok button if the app is not approved
+                                if (!stack.approved) {
+                                    button.setDisabled(true);
+                                    
+                                    msg = self.hasMarketplace ? 
+                                            Ozone.layout.tooltipString.unapprovedStackEditMessage
+                                            : Ozone.layout.tooltipString.unapprovedStackWithoutMarkpetplaceEditMessage;
+
+                                    // firefox handles tooltips on disabled buttons differently than the other browsers
+                                    if (Ext.isGecko) {
+                                        if (!tip) {
+                                            tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: button.id,
+                                                html: msg
+                                            });
+                                        }
+                                        else {
+                                            tip.setTarget(button.id);
+                                        }
+                                    }
+                                    else {
+                                        button.setTooltip(msg);
+                                    }
+                                }
+                                else {
+                                    button.setDisabled(false);
+
+                                    // firefox handles tooltips on disabled buttons differently than the other browsers
+                                    if (Ext.isGecko) {
+                                        if (tip) {
+                                            tip.setTarget(null);
+                                        }
+                                    }
+                                    else {
+                                        button.setTooltip('');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             })
         });
         win.show();
     },
+
     doEdit: function(id, title) {
         var self = this;
         var dataString = Ozone.util.toString({
@@ -228,10 +301,11 @@ Ext.define('Ozone.components.admin.StacksTabPanel',{
             data: dataString
         }, function(response) {
             if (response && response.error) {
-                self.editPanel.showAlert('Launch Error', 'Stack Editor Launch Failed: ' + response.message);
+                self.editPanel.showAlert('Launch Error', 'Application Editor Launch Failed: ' + response.message);
             }
         });
     },
+
     refreshWidgetLaunchMenu: function() {
         if (this.widgetStateHandler) {
             this.widgetStateHandler.handleWidgetRequest({

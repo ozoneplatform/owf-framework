@@ -2,10 +2,13 @@ Ext.define('Ozone.components.admin.StacksGrid', {
     extend: 'Ext.grid.Panel',
     alias: ['widget.stacksgrid'],
     plugins: new Ozone.components.focusable.FocusableGridPanel(),
+    mixins: {
+        filter: 'Ozone.components.admin.grid.FilterMixin'
+    },
 
     cls: 'grid-stack',
 
-    title: 'Stacks',
+    title: 'Apps',
     columns: [
         {
           itemId: 'id',
@@ -51,14 +54,14 @@ Ext.define('Ozone.components.admin.StacksGrid', {
                 return  Ext.htmlEncode(value);
             }
         }, {
-            header: 'Dashboards',
+            header: 'Pages',
             dataIndex: 'totalDashboards',
             flex: 3,
             sortable: false
         }, {
-            header: 'Widgets',
+            header: 'App Components',
             dataIndex: 'totalWidgets',
-            flex: 3,
+            flex: 4,
             sortable: false
         }, {
             header: 'Groups',
@@ -95,46 +98,6 @@ Ext.define('Ozone.components.admin.StacksGrid', {
         this.relayEvents(this.store, ['datachanged']);
         
         this.callParent(arguments);
-    },
-    
-    applyFilter: function(filterText, fields) {
-        
-        this.store.proxy.extraParams = undefined;
-        
-        if (filterText) {
-            var filters = [];
-            for (var i = 0; i < fields.length; i++) {
-                filters.push({
-                    filterField: fields[i], 
-                    filterValue: filterText
-                });
-            }
-            this.store.proxy.extraParams = {
-                filters: Ext.JSON.encode(filters), 
-                filterOperator: 'OR'
-            };
-        }
-        
-        if (this.baseParams) { this.setBaseParams(this.baseParams); }
-        
-        this.store.loadPage(1,{
-            params: {
-                offset: 0,
-                max: this.pageSize
-            }
-        });
-        
-    },
-    
-    clearFilter: function() {
-        this.store.proxy.extraParams = undefined;
-        if (this.baseParams) { this.setBaseParams(this.baseParams); }
-        this.store.load({
-            params: {
-                start: 0,
-                max: this.pageSize
-            }
-        });
     },
 
     setBaseParams: function (params) {

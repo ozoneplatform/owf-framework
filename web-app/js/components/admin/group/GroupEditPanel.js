@@ -11,7 +11,7 @@ Ext.define('Ozone.components.admin.group.GroupEditPanel', {
 		Ext.applyIf(this,{
 			layout: 'fit',
 			items: [{
-	            xtype: 'editwidgetpanel',
+	            xtype: 'groupeditwidgetpanel',
 	            cls: 'adminEditor',
 	            bodyCls: 'adminEditor-body',
 	            dragAndDrop: false,
@@ -33,11 +33,6 @@ Ext.define('Ozone.components.admin.group.GroupEditPanel', {
                   {
                     xtype: 'groupeditwidgets',
                     itemId: 'groupeditwidgets',
-                    editPanel: self
-                  },
-                  {
-                    xtype: 'groupeditdashboards',
-                    itemId: 'groupeditdashboards',
                     editPanel: self
                   },
                   {

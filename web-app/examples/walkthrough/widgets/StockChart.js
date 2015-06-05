@@ -1,3 +1,18 @@
+// IE7 Date class doesn't support parsing ISO-8601 string date.
+// Ideally, one should use moment.js for date parsing.
+function parseJsonDate(value) {
+    var a;
+
+    if (typeof value === 'string') {
+        a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/.exec(value);
+        if (a) {
+            return new Date(Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4],
+                            +a[5], +a[6]));
+        }
+    }
+    return value;
+};
+
 Ext.define('Stocks', {
     extend: 'Ext.data.Model',
     fields: [
@@ -39,6 +54,8 @@ Ext.define('Ozone.components.StockChart', {
                 };
             Ext.Array.each(data, function(datum, index, dataRef) {
                 if (datum) {
+
+                    datum.date = parseJsonDate(datum.date);
                     
                     // Add to points
                     if (firstPass) {

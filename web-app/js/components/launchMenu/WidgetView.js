@@ -37,6 +37,7 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
             }
         });
 
+        var me = this;
 
         Ext.apply(this, {
             layout:{
@@ -171,6 +172,7 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
                     }
                 },
 
+
                 //widget grid panel
                 {
                     xtype:'grid',
@@ -203,67 +205,50 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
                             }
                         }
                     },
-                    columns:[
-                        {
-                            header:'Icon',
-                            renderer:function (val, metaData, record, rowIndex, colIndex, store, view) {
-                                //todo consolidate references to this image
-                                var defaultIcon = 'themes/common/images/settings/WidgetsIcon.png';
+                    columns:[{
+                        header:'Icon',
+                        renderer:function (val, metaData, record, rowIndex, colIndex, store, view) {
+                            //todo consolidate references to this image
+                            var defaultIcon = 'themes/common/images/settings/WidgetsIcon.png';
 
-                                var icon = null;
-                                if (val != null) {
-                                    icon = encodeURI(val);
-                                }
-                                else {
-                                    //if the val is null then get the image directly from the record
-                                    //if this record is from a statestore it will lookup the right widgetdef
-                                    //and return the image
-                                    icon = encodeURI(record.get('image'));
-                                }
+                            var icon = null;
+                            if (val != null) {
+                                icon = encodeURI(val);
+                            } else {
+                                //if the val is null then get the image directly from the record
+                                //if this record is from a statestore it will lookup the right widgetdef
+                                //and return the image
+                                icon = encodeURI(record.get('image'));
+                            }
 
 
-                                //todo remove this hardcoded style
-                                return '<img onerror="this.src = \''+defaultIcon+'\'" src="' + icon + '" style="width: 24px;height: 24px">';
-                            },
-                            dataIndex:'image',
-                            flex:0,
-                            width:45,
-                            sortable:false
+                            //todo remove this hardcoded style
+                            return '<img onerror="this.src = \''+defaultIcon+'\'" src="' + icon + '" style="width: 24px;height: 24px">';
                         },
-                        {
-                            header:'Name',
-                            dataIndex:'name',
-                            renderer:function (val) {
-                                return Ext.htmlEncode(val);
-                            },
-                            flex:0,
-                            width:200
+                        dataIndex:'image',
+                        menuDisabled: true,
+                        flex:0,
+                        width:45,
+                        sortable:false
+                    },{
+                        header:'Name',
+                        dataIndex:'name',
+                        menuDisabled: true,
+                        renderer:function (val) {
+                            return Ext.htmlEncode(val);
                         },
-                        {
-                            header:'Tags',
-                            sortable: false,
-                            renderer:function (val, metaData, record) {
-                                var tagList = '';
-                                if (val == null) {
-                                     var rec = me.widgetStore.getById(record.get('uniqueId'));
-                                     val = rec.get('tags');
-                                }
-                                for (var i = 0; i < val.length; i++) {
-                                    var tag = (val[i]).name;
-                                    if (i == val.length - 1) {
-                                        tagList += tag;
-                                    }
-                                    else {
-                                        tagList += tag + ",";
-                                    }
-
-                                }
-                                return Ext.htmlEncode(tagList);
-                            },
-                            dataIndex:'tags',
-                            flex:1
+                        flex:0,
+                        width:200
+                    },{
+                        header:'Description',
+                        sortable: false,
+                        menuDisabled: true,
+                        dataIndex:'description',
+                        flex:1,
+                        renderer:function (val, metaData, record) {
+                            return me.getShortDescription(record);
                         }
-                    ],
+                    }],
                     listeners:{
                         render:{
                             fn:function (grid) {
@@ -310,12 +295,7 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
                             scope:this
                         },
                         itemclick:{
-                            fn:function (view, record, elem, index, event, eOpts) {
-                                Ext.apply(record.data,{
-                                  alreadyOpenedWidget: this.alreadyOpenedWidget
-                                });
-                                this.fireEvent('itemclick', view, record, elem, index, event, eOpts);
-                            },
+                            fn: this.handleItemClick,
                             scope:this
                         },
                         itemdblclick:{
@@ -340,7 +320,17 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
                                 }
                             },
                             scope:this
-                        }
+                        },
+                        'itemmouseenter': function(view, record, item, index, e, eOpts ) {
+                			jQuery(item).find(".launch_edit_grid_icon").show();
+                			jQuery(item).find(".launch_delete_grid_icon").show();
+                		},
+
+                		'itemmouseleave': function(view, record, item, index, e, eOpts ) {
+                			jQuery(item).find(".launch_edit_grid_icon").hide();
+                			jQuery(item).find(".launch_delete_grid_icon").hide();
+                		}
+
                     }
                 }
             ]
@@ -350,5 +340,45 @@ Ext.define('Ozone.components.launchMenu.WidgetView', {
 
         this.addEvents(['itemclick', 'itemdblclick', 'itemkeydown', 'selectionchange']);
         this.enableBubble(['itemclick', 'itemdblclick', 'itemkeydown', 'selectionchange']);
+    },
+
+    handleItemClick: function (view, record, elem, index, event, eOpts) {
+        var target = Ext.get(event.target),
+            parent = target.parent(),
+            gridPanel = view.up('gridpanel');
+
+        if(target.is('.show_more')) {
+            parent.addCls('showing_more');
+            parent.update(this.getFullDescription(record));
+            gridPanel.showVerticalScroller();
+        }
+        else if(target.is('.show_less')) {
+            parent.removeCls('showing_more');
+            parent.update(this.getShortDescription(record));
+            gridPanel.hideVerticalScroller();
+            gridPanel.showVerticalScroller();
+        }
+
+        Ext.apply(record.data,{
+          alreadyOpenedWidget: this.alreadyOpenedWidget
+        });
+        this.fireEvent('itemclick', view, record, elem, index, event, eOpts);
+    },
+
+    getShortDescription: function(record) {
+        var description = record.get('description') || '';
+
+        if(description && description.length > 60) {
+            description = '<i class="icon-caret-right show_more"></i>' + '<span class="description">' + Ext.htmlEncode(description.substr(0, 57)) + '<span/>';
+        }
+        else {
+            description = '<span class="icon-caret-gap"></span>' + '<span class="description">' + description+ '<span/>';
+        }
+        return description;
+    },
+
+    getFullDescription: function(record) {
+        return ('<i class="icon-caret-down show_less"></i>  ' + '<span class="description">' + record.get('description')) + '<span/>';
     }
+
 });

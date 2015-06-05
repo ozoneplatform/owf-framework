@@ -19,64 +19,6 @@ Ext.define('Ozone.components.launchMenu.AdvancedSearchPanel', {
         this.intentTreeStore = Ext.create('Ext.data.TreeStore');
         this.loadIntentTreeStore();
 
-        this.tagGridStore = Ext.create("Ext.data.Store", {
-            fields: [
-                {name: 'tag'}
-            ],
-            data: [],
-            proxy: {
-                type: 'memory',
-                reader: {
-                    type: 'array'
-                }
-            },
-            listeners: {
-                add: {
-                    fn: function (s) {
-                        var tagGrid = this.down('#tagGrid');
-//                                            var el = tagGrid.getView().getEl();
-//                                            el.dom.tabIndex = 0;
-                        tagGrid.enable();
-                        tagGrid.show();
-                    },
-                    scope: this
-                },
-                remove: {
-                    fn: function (s) {
-                        if (s.getCount() == 0) {
-                            var tagGrid = this.down('#tagGrid');
-//                                                var el = tagGrid.getView().getEl();
-//                                                el.dom.tabIndex = -1;
-                            tagGrid.disable();
-                            tagGrid.hide();
-                        }
-                    },
-                    scope: this
-                },
-                clear: {
-                    fn: function (s) {
-                        if (s.getCount() == 0) {
-                            var tagGrid = this.down('#tagGrid');
-//                                                var el = tagGrid.getView().getEl();
-//                                                el.dom.tabIndex = -1;
-                            tagGrid.disable();
-                            tagGrid.hide();
-                        }
-                    },
-                    scope: this
-                }
-            }
-        });
-
-        this.tagCloudStore = Ext.create("Ext.data.Store", {
-            fields: [
-                {name: 'tag'},
-                {name: 'uses', type: 'int'}
-            ]
-        });
-        this.loadTagCloudStore();
-
-
         var deleteColumn = {
             xtype: 'actioncolumn',
             width: 25,
@@ -309,130 +251,6 @@ Ext.define('Ozone.components.launchMenu.AdvancedSearchPanel', {
                     xtype: 'nocollapsesplitter',
                     collapsible: false
 
-                },
-                {
-                    xtype: 'panel',
-                    itemId: 'tagPanel',
-                    title: 'Tags',
-                    cls: 'tag-grid',
-                    layout: {
-                      type: 'vbox',
-                      align: 'stretch'
-                    },
-                    collapsible: true,
-                    flex: 1,
-                    autoScroll: true,
-                    items: [
-                        {
-                            xtype: 'grid',
-//                            title: 'Tags',
-                            itemId: 'tagGrid',
-                            cls: 'tag-grid',
-                            flex:.8,
-                            hidden: true,
-                            plugins: [
-                                new Ozone.components.focusable.FocusableGridPanel()
-                            ],
-                            store: this.tagGridStore,
-                            hideHeaders: true,
-//                            collapsible: true,
-                            anchor: '100%',
-                            columns: [
-                                {header: '', dataIndex: 'tag', flex: 1},
-                                {
-                                    xtype: 'actioncolumn',
-                                    width: 25,
-                                    items: [
-                                        {
-                                            icon: 'themes/common/images/delete.png',
-                                            tooltip: 'Delete',
-                                            handler: function (grid, rowIndex, colIndex) {
-                                                var rec = grid.getStore().getAt(rowIndex);
-                                                grid.getStore().remove(rec);
-                                                this.search();
-                                            },
-                                            scope: this
-                                        }
-                                    ]
-                                }
-                            ],
-                            listeners: {
-                                afterrender: {
-                                    fn: function (cmp) {
-                                        var view = cmp.getView();
-                                        var el = view.getEl();
-                                        el.dom.tabIndex = -1;
-                                    },
-                                    scope: this
-                                }
-                            },
-                            viewConfig: {
-                                listeners: {
-                                    itemkeydown: {
-                                        fn: function(view, record, dom, index, evt) {
-                                            switch(evt.getKey()) {
-                                                //allow space, enter, or delete to delete
-                                                case evt.SPACE:
-                                                case evt.ENTER:
-                                                case evt.DELETE:
-                                                    var grid = this.down('#tagGrid');
-                                                    grid.getStore().remove(record);
-                                                    this.search();
-                                                    break;
-                                                default:
-                                                    break;
-                                            }
-                                        },
-                                        scope: this
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            xtype: 'tagcloud',
-                            itemId: 'tagCloud',
-                            cls: 'tagCloud',
-                            itemSelector: '.tag',
-                            selectedItemCls: 'tag-selected',
-                            trackOver: true,
-                            overItemCls: 'tag-over',
-                            flex: 1,
-                            minHeight: 100,
-                            autoScroll: true,
-                            store: this.tagCloudStore,
-                            listeners: {
-                                itemkeydown: {
-                                    fn: function (view, record, dom, index, evt) {
-                                        switch (evt.getKey()) {
-                                            case evt.SPACE:
-                                            case evt.ENTER:
-                                                var grid = this.down("#tagGrid");
-                                                if (!(grid.store.findRecord('tag', Ext.htmlEncode(record.data.tag)))) {
-                                                    grid.store.add({tag: Ext.htmlEncode(record.data.tag)});
-                                                    this.search();
-                                                }
-                                                break;
-                                            default:
-                                                break;
-                                        }
-
-                                    },
-                                    scope: this
-                                },
-                                itemClick: {
-                                    fn: function (view, record, item, index, event, eOpts) {
-                                        var grid = this.down("#tagGrid");
-                                        if (!(grid.store.findRecord('tag', Ext.htmlEncode(record.data.tag)))) {
-                                            grid.store.add({tag: Ext.htmlEncode(record.data.tag)});
-                                            this.search();
-                                        }
-
-                                    },
-                                    scope: this
-                                }
-                            }
-                        }
-                    ]
                 }
             ],
             bbar: {
@@ -539,35 +357,6 @@ Ext.define('Ozone.components.launchMenu.AdvancedSearchPanel', {
 
         var intentsTree = this.down('#intentsTree');
         intentsTree.getSelectionModel().setLocked(false);
-
-        this.loadTagCloudStore();
-    },
-
-    loadTagCloudStore: function () {
-        var map = {};
-        var tagList = [];
-
-        this.tagCloudStore.removeAll();
-        for (var i = 0; i < this.widgetStore.getCount(); i++) {
-            var record = this.widgetStore.getAt(i);
-
-            var tags = record.data.tags;
-            for (var index in tags) {
-                var tagName = tags[index].name;
-
-                if (this.tagGridStore.findExact('tag', tagName) < 0) {
-                    if (map[tagName] == null) {
-                        map[tagName] = {tag: tagName, uses: 1};
-                        tagList.push(map[tagName]);
-                    }
-                    else {
-                        map[tagName].uses++;
-                    }
-                }
-            }
-
-        }
-        this.tagCloudStore.add(tagList);
     },
 
     search: function (overrideFilterCfg) {
@@ -575,7 +364,6 @@ Ext.define('Ozone.components.launchMenu.AdvancedSearchPanel', {
             var isFiltered = false;
 
             var termStore = this.down("#termGrid").getStore();
-            var tagStore = this.down("#tagGrid").getStore();
             var groupGrid = this.down("#groupGrid");
             var groupSelections = groupGrid.getSelectionModel().getSelection();
 
@@ -727,33 +515,6 @@ Ext.define('Ozone.components.launchMenu.AdvancedSearchPanel', {
                     }
                 }
 
-                //check against tags
-                if (keepWidgetFlag) {
-                    //loop through selected tags
-                    var widgetTags = widgetRec.get('tags');
-                    for (var j = 0; j < tagStore.getCount(); j++) {
-                        var tag = Ext.htmlDecode(tagStore.getAt(j).get('tag'));
-
-                        //loop through the tags for the current widget
-                        var foundTag = false;
-                        for (var k = 0; k < widgetTags.length; k++) {
-                            isFiltered = true;
-
-                            var wtag = widgetTags[k].name;
-                            if (tag == wtag) {
-                                foundTag = true;
-                            }
-
-                        }
-
-                        if (!foundTag) {
-                            keepWidgetFlag = false;
-                            break;
-                        }
-
-                    }
-                }
-
                 //add the record
                 if (keepWidgetFlag) {
                     widgetsToAdd.push(widgetRec.copy());
@@ -765,16 +526,10 @@ Ext.define('Ozone.components.launchMenu.AdvancedSearchPanel', {
 
             //save isfiltered state
             this.widgetStore.widgetFiltered = isFiltered;
-
-            //reload the tagcloud store after the search is finished
-            this.loadTagCloudStore();
         }
     },
 
     clearAllFilters: function (suppressEvent) {
-        var tagGrid = this.down("#tagGrid");
-        tagGrid.store.removeAll();
-
         var termGrid = this.down("#termGrid");
         termGrid.store.removeAll();
 

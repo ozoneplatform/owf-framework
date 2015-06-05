@@ -1,0 +1,2053 @@
+# OWF 7.10 REST Documentation
+The following APIs reference OZONE 7.10. They are subject to change [in future versions].
+
+# Group Access
+
+## optional_title [/access]
+
+### [GET]
+Returns success/failure, data being passed between widgets, and hasAccess boolean.
+
+String widgetId = receiving widget's GUID;
+String senderId = sending widget's GUID;
+String accessLevel = access level of message
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"widgetId":"ec5435cf-4021-4f2a-ba69-dde451d12551","senderId":"eb5435cf-4021-4f2a-ba69-dde451d12551"}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":{"widgetId":"ec5435cf-4021-4f2a-ba69-dde451d12551","accessLevel":null,"hasAccess":true}}
+
+
+## optional_title [/access/getConfig]
+
+### [GET]
+Returns dataguard object from OwfConfig.groovy.
+
++ Request
+    + Headers
+
+
+    + Body
+
+
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"restrictMessages":false,"auditAllMessages":true,"allowMessagesWithoutAccessLevel":true,"accessLevelCacheTimeout":3600000}
+
+
+# Group Administration
+
+## optional_title [/administration/listPreferences]
+
+### [GET]
+Return a list of preferences
+
++ Request
+    + Headers
+
+
+    + Body
+
+            { "max": 1,"offset":0,username: "testAdmin1"}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"results":11,"rows":[{"id":144,"namespace":"foo.bar.0","path":"test path entry 0","value":"foovalue","user":{"userId":"testUser1"}}]}
+
+
+## optional_title [/administration/updatePreference]
+
+### [PUT]
+Update a preference
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"tab": "preferences","username":"testUser2","data":[{"id":147,"namespace":"foo.bar.1","path":"test path entry 1","value":"foovalue1","username":"testUser2","originalNamespace":"foo.bar.1","originalPath":"test path entry 1","originalValue":"foovalue","title":"foo.bar.1"}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"id":147,"namespace":"foo.bar.1","path":"test path entry 1","value":"foovalue1","user":{"userId":"testUser2"}}
+
+
+## optional_title [/administration/deletePreferences]
+
+### [DELETE]
+Deletes preferences
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"update_action":"remove","tab": "preferences","username":"testUser2","data":[{"id":147,"namespace":"foo.bar.1","path":"test path entry 1","value":"foovalue1","username":"testUser2","originalNamespace":"foo.bar.1","originalPath":"test path entry 1","originalValue":"foovalue","title":"foo.bar.1"}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true}
+
+
+# Group Audit
+
+## optional_title [/audit]
+
+### [GET]
+Logs a message.
+
+String sendingWidget = sending widget's universal name;
+String receivingWidget = receiving widget's universal name;
+String accessLevel = access level;
+String outcomeCategory = outcome category;
+boolean accessOutcomeGood = whether the outcome was good (either "true" or "false");
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"sendingWidget":"ChannelShouter","receivingWidget":"ChannelListener","accessLevel":"Test Access Level","outcomeGood":true}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":{"message":"Sender: [ChannelShouter], Receiver: [ChannelListener], accessLevel: [Test Access Level], [null]"}}
+
+
+# Group ApplicationConfiguration
+
+## optional_title [/applicationConfiguration/configs]
+
+### [GET]
+Retrieves a list of application configurations.
+
+String groupName = filter by group name;
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"groupName":"auditing"}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            [{"id":0,"code":"owf.enable.cef.logging","value":"true","title":"Common Event Format (CEF) Auditing","mutable":true,"description":"Record when users sign in/out, create, edit, delete, search, import and export.","type":"Boolean","groupName":"AUDITING","subGroupName":null,"subGroupOrder":1,"help":""},{"id":1,"code":"owf.enable.cef.object.access.logging","value":"false","title":"Object Access Auditing","mutable":true,"description":"Record when users read objects (includes components, pages, apps, etc.).","type":"Boolean","groupName":"AUDITING","subGroupName":null,"subGroupOrder":2,"help":""},{"id":2,"code":"owf.enable.cef.log.sweep","value":"true","title":"Relocate CEF Logs","mutable":true,"description":"Allow the system to relocate CEF logs. ","type":"Boolean","groupName":"AUDITING","subGroupName":null,"subGroupOrder":3,"help":""},{"id":3,"code":"owf.cef.log.location","value":"/usr/share/tomcat6","title":"CEF Log Source Location","mutable":true,"description":"Directory location where the CEF logs are generated. ","type":"String","groupName":"AUDITING","subGroupName":null,"subGroupOrder":4,"help":"/mypath1/myapp/logs"},{"id":4,"code":"owf.cef.sweep.log.location","value":"/var/log/cef","title":"CEF Log Destination Location","mutable":true,"description":"Directory location where the CEF logs are relocated.","type":"String","groupName":"AUDITING","subGroupName":null,"subGroupOrder":5,"help":"/mypath2/myapp/logs"},{"id":5,"code":"owf.security.level","value":null,"title":"Application Security Level","mutable":true,"description":"The maximum security level of your application","type":"String","groupName":"AUDITING","subGroupName":null,"subGroupOrder":6,"help":"e.g. High, Medium, Low, etc"}]
+
+
+## optional_title [/applicationConfiguration/configs/$id]
+
+### [PUT]
+Updates an application configuration.
+
+int id = application configuration id (only allowed to appear in the URL without the "?id=" or in the URL query parameters with the "?id=");
+String data = JSON application configuration object (only allowed to appear in the request payload without the "data=");
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"id":12,"data":{"id":12,"code":"owf.custom.background.url","value":"http://upload.wikimedia.org/wikipedia/en/thumb/a/a7/Batman_Lee.png/250px-Batman_Lee.png","title":"Custom Background URL","mutable":true,"description":"Enter the location of the custom background file","type":"String","groupName":"BRANDING","subGroupName":"Custom Background","subGroupOrder":1,"help":"e.g. mypath/mycustombackground.png","errors":null,"saveSuccessful":null,"priorValue":""}}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"class":"org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration","id":12,"id":12,"code":"owf.custom.background.url","description":null,"groupName":"BRANDING","help":null,"mutable":true,"subGroupName":"Custom Background","subGroupOrder":1,"title":"","type":"String","value":"http://upload.wikimedia.org/wikipedia/en/thumb/a/a7/Batman_Lee.png/250px-Batman_Lee.png"}
+
+
+# Group Dashboard
+
+## optional_title [/dashboard/$guid?]
+
+### [GET]
+Returns a DashboardServiceModel object or list of DashboardServiceModel objects.
+
++ Request
+    + Headers
+
+
+    + Body
+
+            { "max": 1,"offset":0}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"results":4,"data":[{"alteredByAdmin":"false","createdDate":"08/14/2013 01:43 PM EDT","isGroupDashboard":false,"prettyCreatedDate":" 27 minutes ago","isdefault":true,"locked":false,"dashboardPosition":0,"name":"Sample","user":{"userId":"testAdmin1"},"type":null,"EDashboardLayoutList":"[accordion, desktop, portal, tabbed]","layoutConfig":"{\"defaultSettings\":{\"widgetStates\":{\"eb5435cf-4021-4f2a-ba69-dde451d12551\":{\"x\":549,\"y\":7,\"height\":250,\"width\":295,\"timestamp\":1376502229877},\"ec5435cf-4021-4f2a-ba69-dde451d12551\":{\"x\":4,\"y\":5,\"height\":383,\"width\":540,\"timestamp\":1376502244981},\"b3b1d04f-97c2-4726-9575-82bb1cf1af6a\":{\"x\":0,\"y\":0,\"height\":440,\"width\":818,\"timestamp\":1376502242353},\"412ec70d-a178-41ae-a8d9-6713a430c87c\":{\"x\":0,\"y\":0,\"height\":440,\"width\":818,\"timestamp\":1376502244991}}},\"widgets\":[{\"universalName\":null,\"widgetGuid\":\"eb5435cf-4021-4f2a-ba69-dde451d12551\",\"uniqueId\":\"bf197d62-6e50-4047-ba1e-2791201ce20f\",\"dashboardGuid\":\"c412611b-1076-46ab-b572-07fbd3d03186\",\"paneGuid\":\"c53c8acd-2fd9-fa04-8443-901f272c33dc\",\"name\":\"Channel Shouter\",\"active\":false,\"x\":549,\"y\":7,\"minimized\":false,\"maximized\":false,\"pinned\":false,\"collapsed\":false,\"columnPos\":0,\"buttonId\":null,\"buttonOpened\":false,\"region\":\"none\",\"statePosition\":2,\"intentConfig\":null,\"launchData\":null,\"singleton\":false,\"floatingWidget\":false,\"background\":false,\"zIndex\":19000,\"height\":250,\"width\":295},{\"universalName\":null,\"widgetGuid\":\"ec5435cf-4021-4f2a-ba69-dde451d12551\",\"uniqueId\":\"6c259200-8264-4f66-b9df-0a8a6ddbbbc2\",\"dashboardGuid\":\"c412611b-1076-46ab-b572-07fbd3d03186\",\"paneGuid\":\"c53c8acd-2fd9-fa04-8443-901f272c33dc\",\"name\":\"Channel Listener\",\"active\":false,\"x\":4,\"y\":5,\"minimized\":false,\"maximized\":false,\"pinned\":false,\"collapsed\":false,\"columnPos\":0,\"buttonId\":null,\"buttonOpened\":false,\"region\":\"none\",\"statePosition\":1,\"intentConfig\":null,\"launchData\":null,\"singleton\":false,\"floatingWidget\":false,\"background\":false,\"zIndex\":19010,\"height\":383,\"width\":540},{\"universalName\":null,\"widgetGuid\":\"412ec70d-a178-41ae-a8d9-6713a430c87c\",\"uniqueId\":\"557aee8a-ee49-350a-80a3-87bb3c481f00\",\"dashboardGuid\":\"c412611b-1076-46ab-b572-07fbd3d03186\",\"paneGuid\":\"c53c8acd-2fd9-fa04-8443-901f272c33dc\",\"name\":\"App Components\",\"active\":true,\"x\":0,\"y\":0,\"minimized\":false,\"maximized\":false,\"pinned\":false,\"collapsed\":false,\"columnPos\":0,\"buttonId\":null,\"buttonOpened\":false,\"region\":\"none\",\"statePosition\":4,\"intentConfig\":null,\"launchData\":null,\"singleton\":false,\"floatingWidget\":false,\"background\":false,\"zIndex\":19020,\"height\":440,\"width\":818}],\"height\":\"100%\",\"items\":[],\"xtype\":\"desktoppane\",\"flex\":1,\"paneType\":\"desktoppane\"}","createdBy":{"userId":null,"userRealName":null},"stack":{"totalUsers":0,"id":1,"totalWidgets":2,"name":"Sample","totalDashboards":0,"imageUrl":null,"owner":null,"totalGroups":0,"stackContext":"908d934d-9d53-406c-8143-90b406fb508f","groups":[{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true},{"stackDefault":true,"totalUsers":0,"id":194,"totalWidgets":0,"name":"df51cb9b-f3d8-412e-af33-d064f81fb6c0","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"descriptorUrl":null,"description":null},"publishedToStore":true,"iconImageUrl":null,"editedDate":"08/14/2013 01:43 PM EDT","groups":[{"stackDefault":true,"totalUsers":0,"id":194,"totalWidgets":0,"name":"df51cb9b-f3d8-412e-af33-d064f81fb6c0","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"prettyEditedDate":" 27 minutes ago","description":null,"guid":"c412611b-1076-46ab-b572-07fbd3d03186","markedForDeletion":false},{"alteredByAdmin":"false","createdDate":"08/14/2013 01:43 PM EDT","isGroupDashboard":false,"prettyCreatedDate":" 27 minutes ago","isdefault":false,"locked":false,"dashboardPosition":1,"name":"Watch List","user":{"userId":"testAdmin1"},"type":null,"EDashboardLayoutList":"[accordion, desktop, portal, tabbed]","layoutConfig":"{\"height\":\"100%\",\"cls\":\"vbox \",\"items\":[{\"cls\":\"hbox top\",\"items\":[{\"defaultSettings\":{},\"widgets\":[{\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"571b073c-a370-41c0-846c-9aa2fe29b391\",\"height\":538,\"pinned\":false,\"name\":\"NYSE Widget\",\"launchData\":null,\"widgetGuid\":\"fe137961-039d-e7a5-7050-d6eed7ac4782\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":798,\"buttonId\":null,\"paneGuid\":\"16ec8b84-a631-4e7c-d9cc-883635abd6ef\",\"dashboardGuid\":\"3f59855b-d93e-dc03-c6ba-f4c33ea0177f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":1,\"background\":false,\"active\":true,\"y\":34,\"x\":0}],\"cls\":\"left\",\"htmlText\":\"50%\",\"items\":[],\"xtype\":\"fitpane\",\"flex\":1,\"paneType\":\"fitpane\"},{\"xtype\":\"dashboardsplitter\"},{\"defaultSettings\":{},\"widgets\":[{\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"b6a90443-649a-4afc-b77e-b2f398c12ed8\",\"height\":538,\"pinned\":false,\"name\":\"HTML Viewer\",\"launchData\":null,\"widgetGuid\":\"cd5e77f8-cb28-8574-0a8a-a535bd2c7de4\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":798,\"buttonId\":null,\"paneGuid\":\"443dfdc0-7165-cb7d-dd9c-f08fbe36bdb1\",\"dashboardGuid\":\"3f59855b-d93e-dc03-c6ba-f4c33ea0177f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":1,\"background\":false,\"active\":false,\"y\":34,\"x\":802}],\"cls\":\"right\",\"htmlText\":\"50%\",\"items\":[],\"xtype\":\"fitpane\",\"flex\":1,\"paneType\":\"fitpane\"}],\"layout\":{\"align\":\"stretch\",\"type\":\"hbox\"},\"xtype\":\"container\",\"flex\":1},{\"xtype\":\"dashboardsplitter\"},{\"defaultSettings\":{},\"widgets\":[{\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"f61e98c4-08ff-4834-ae79-335fa4e28d5b\",\"height\":539,\"pinned\":false,\"name\":\"Stock Chart\",\"launchData\":null,\"widgetGuid\":\"92078ac9-6f21-2f5f-6afc-bdc8c915c66d\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":1600,\"buttonId\":null,\"paneGuid\":\"410cd0ee-cbdd-f225-582e-6aaa92e058f2\",\"dashboardGuid\":\"3f59855b-d93e-dc03-c6ba-f4c33ea0177f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":1,\"background\":false,\"active\":false,\"y\":576,\"x\":0}],\"cls\":\"bottom\",\"htmlText\":\"50%\",\"items\":[],\"xtype\":\"fitpane\",\"flex\":1,\"paneType\":\"fitpane\"}],\"layout\":{\"align\":\"stretch\",\"type\":\"vbox\"},\"xtype\":\"container\"}","createdBy":{"userId":null,"userRealName":null},"stack":{"totalUsers":0,"id":0,"totalWidgets":6,"name":"Investments","totalDashboards":0,"imageUrl":null,"owner":null,"totalGroups":0,"stackContext":"investments","groups":[{"stackDefault":true,"totalUsers":0,"id":193,"totalWidgets":0,"name":"ce86a612-c355-486e-9c9e-5252553cc58f","totalStacks":0,"status":"active","tagLinks":[],"description":null,"email":null,"displayName":null,"automatic":false},{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true}],"descriptorUrl":null,"description":"Sample app containing example investment pages."},"publishedToStore":true,"iconImageUrl":null,"editedDate":"08/14/2013 01:43 PM EDT","groups":[{"stackDefault":true,"totalUsers":0,"id":193,"totalWidgets":0,"name":"ce86a612-c355-486e-9c9e-5252553cc58f","totalStacks":0,"status":"active","tagLinks":[],"description":null,"email":null,"displayName":null,"automatic":false}],"prettyEditedDate":" 27 minutes ago","description":"This page demonstrates how intents work using company stock information.","guid":"bd4bf4ed-7622-4074-ae5b-76442178a29c","markedForDeletion":false},{"alteredByAdmin":"false","createdDate":"08/14/2013 01:43 PM EDT","isGroupDashboard":false,"prettyCreatedDate":" 27 minutes ago","isdefault":false,"locked":false,"dashboardPosition":2,"name":"Contacts","user":{"userId":"testAdmin1"},"type":null,"EDashboardLayoutList":"[accordion, desktop, portal, tabbed]","layoutConfig":"{\"cls\":\"hbox \",\"items\":[{\"defaultSettings\":{\"widgetStates\":{\"92448ba5-7f2b-982a-629e-9d621268b5e9\":{\"timestamp\":1354747263555},\"302c35c9-9ed8-d0b6-251c-ea1ed4d0c86b\":{\"timestamp\":1354747263559},\"d182002b-3de2-eb24-77be-95a7d08aa85b\":{\"timestamp\":1354745224627}}},\"widgets\":[{\"universalName\":\"org.owfgoss.owf.examples.ContactsManager\",\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"f028d4f9-66d1-4ce9-a94e-817fb2ef70d5\",\"height\":448,\"pinned\":false,\"name\":\"Contacts Manager\",\"launchData\":null,\"widgetGuid\":\"92448ba5-7f2b-982a-629e-9d621268b5e9\",\"columnPos\":0,\"singleton\":false,\"width\":419,\"buttonId\":null,\"paneGuid\":\"5c478b1d-ba1f-ef67-087c-c03b8dbc7bff\",\"dashboardGuid\":\"f935e19e-09a1-451e-8b3d-0fb77537da7d\",\"collapsed\":false,\"maximized\":false,\"statePosition\":1,\"active\":false,\"y\":34,\"x\":0},{\"universalName\":\"org.owfgoss.owf.examples.GetDirections\",\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":{},\"uniqueId\":\"1b8deada-4c55-48aa-b8df-3b1405aba980\",\"height\":447,\"pinned\":false,\"name\":\"Directions\",\"launchData\":null,\"widgetGuid\":\"302c35c9-9ed8-d0b6-251c-ea1ed4d0c86b\",\"columnPos\":0,\"singleton\":false,\"width\":419,\"buttonId\":null,\"paneGuid\":\"5c478b1d-ba1f-ef67-087c-c03b8dbc7bff\",\"dashboardGuid\":\"f935e19e-09a1-451e-8b3d-0fb77537da7d\",\"collapsed\":false,\"maximized\":false,\"statePosition\":2,\"active\":false,\"y\":482,\"x\":0}],\"cls\":\"left\",\"htmlText\":\"25%\",\"items\":[],\"xtype\":\"accordionpane\",\"flex\":0.25,\"paneType\":\"accordionpane\"},{\"xtype\":\"dashboardsplitter\"},{\"defaultSettings\":{\"widgetStates\":{\"eb81c029-a5b6-4107-885c-5e04b4770767\":{\"timestamp\":1354747222264},\"b87c4a3e-aa1e-499e-ba10-510f35388bb6\":{\"timestamp\":1354746772856},\"c3f3c8e0-e7aa-41c3-a655-aca3c940f828\":{\"timestamp\":1354746826290},\"eb5435cf-4021-4f2a-ba69-dde451d12551\":{\"timestamp\":1354746684154},\"ec5435cf-4021-4f2a-ba69-dde451d12551\":{\"timestamp\":1354746684155},\"d182002b-3de2-eb24-77be-95a7d08aa85b\":{\"timestamp\":1354747263599},\"d6ce3375-6e89-45ab-a7be-b6cf3abb0e8c\":{\"timestamp\":1354747222261}}},\"widgets\":[{\"universalName\":\"org.owfgoss.owf.examples.GoogleMaps\",\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"124856bb-aa28-4a56-b40c-d44a6eac1026\",\"height\":867,\"pinned\":false,\"name\":\"Google Maps\",\"launchData\":null,\"widgetGuid\":\"d182002b-3de2-eb24-77be-95a7d08aa85b\",\"columnPos\":0,\"singleton\":false,\"width\":1257,\"buttonId\":null,\"paneGuid\":\"a25052e4-cd5d-51c0-a440-81327fc1d955\",\"dashboardGuid\":\"f935e19e-09a1-451e-8b3d-0fb77537da7d\",\"collapsed\":false,\"maximized\":false,\"statePosition\":1,\"active\":true,\"y\":62,\"x\":423}],\"cls\":\"right\",\"htmlText\":\"75%\",\"items\":[],\"xtype\":\"tabbedpane\",\"flex\":0.75,\"paneType\":\"tabbedpane\"}],\"layout\":{\"align\":\"stretch\",\"type\":\"hbox\"},\"xtype\":\"container\",\"flex\":1}","createdBy":{"userId":null,"userRealName":null},"stack":{"totalUsers":0,"id":0,"totalWidgets":6,"name":"Investments","totalDashboards":0,"imageUrl":null,"owner":null,"totalGroups":0,"stackContext":"investments","groups":[{"stackDefault":true,"totalUsers":0,"id":193,"totalWidgets":0,"name":"ce86a612-c355-486e-9c9e-5252553cc58f","totalStacks":0,"status":"active","tagLinks":[],"description":null,"email":null,"displayName":null,"automatic":false},{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true}],"descriptorUrl":null,"description":"Sample app containing example investment pages."},"publishedToStore":true,"iconImageUrl":null,"editedDate":"08/14/2013 01:43 PM EDT","groups":[{"stackDefault":true,"totalUsers":0,"id":193,"totalWidgets":0,"name":"ce86a612-c355-486e-9c9e-5252553cc58f","totalStacks":0,"status":"active","tagLinks":[],"description":null,"email":null,"displayName":null,"automatic":false}],"prettyEditedDate":" 27 minutes ago","description":"This page demonstrates how intents work by sending addresses to a map.","guid":"863fb838-3ce7-47ac-92c7-25a7b27bdce1","markedForDeletion":false},{"alteredByAdmin":"false","createdDate":"08/14/2013 01:43 PM EDT","isGroupDashboard":false,"prettyCreatedDate":" 27 minutes ago","isdefault":false,"locked":false,"dashboardPosition":3,"name":"Administration","user":{"userId":"testAdmin1"},"type":null,"EDashboardLayoutList":"[accordion, desktop, portal, tabbed]","layoutConfig":"{\"cls\":\"hbox \",\"items\":[{\"defaultSettings\":{\"widgetStates\":{\"9b5ebb40-8540-466c-8ccd-66092ec55636\":{\"timestamp\":1354916964296},\"412ec70d-a178-41ae-a8d9-6713a430c87c\":{\"timestamp\":1354917003349},\"9d804b74-b2a6-448a-bd04-fe286905ab8f\":{\"timestamp\":1354917003344},\"fe97f656-862e-4c54-928d-3cdd776daf5b\":{\"timestamp\":1354917003354},\"6cf4f84a-cc89-45ba-9577-15c34f66ee9c\":{\"timestamp\":1354916988848},\"a540f672-a34c-4989-962c-dcbd559c3792\":{\"timestamp\":1354916998451}}},\"widgets\":[{\"universalName\":null,\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"aee1908b-1a54-4388-82e9-1061b89215a9\",\"height\":328,\"pinned\":false,\"name\":\"App Components\",\"launchData\":null,\"widgetGuid\":\"412ec70d-a178-41ae-a8d9-6713a430c87c\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":675,\"buttonId\":null,\"paneGuid\":\"73cf2212-9c0a-5d75-987c-4820faf3cf30\",\"dashboardGuid\":\"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":5,\"background\":false,\"active\":false,\"y\":363,\"x\":0},{\"universalName\":null,\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"bdca6cfb-6e23-4701-aea2-8a919ae147bb\",\"height\":328,\"pinned\":false,\"name\":\"Apps\",\"launchData\":null,\"widgetGuid\":\"fe97f656-862e-4c54-928d-3cdd776daf5b\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":675,\"buttonId\":null,\"paneGuid\":\"73cf2212-9c0a-5d75-987c-4820faf3cf30\",\"dashboardGuid\":\"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":3,\"background\":false,\"active\":true,\"y\":691,\"x\":0}],\"cls\":\"left\",\"htmlText\":\"50%\",\"items\":[],\"xtype\":\"accordionpane\",\"flex\":1,\"paneType\":\"accordionpane\"},{\"xtype\":\"dashboardsplitter\"},{\"cls\":\"vbox right\",\"items\":[{\"defaultSettings\":{\"widgetStates\":{\"b87c4a3e-aa1e-499e-ba10-510f35388bb6\":{\"timestamp\":1354916950506},\"b3b1d04f-97c2-4726-9575-82bb1cf1af6a\":{\"timestamp\":1354916950489}}},\"widgets\":[{\"universalName\":null,\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"aa8b7158-c9d9-42a8-8d7e-2ad91d60d383\",\"height\":462,\"pinned\":false,\"name\":\"Groups\",\"launchData\":null,\"widgetGuid\":\"b87c4a3e-aa1e-499e-ba10-510f35388bb6\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":676,\"buttonId\":null,\"paneGuid\":\"da405d45-8f04-c2d6-f45c-5ba780aa97fc\",\"dashboardGuid\":\"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":3,\"background\":false,\"active\":false,\"y\":62,\"x\":679},{\"universalName\":null,\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"5e8b9145-747e-44ba-a61f-9b564289eb20\",\"height\":462,\"pinned\":false,\"name\":\"Users\",\"launchData\":null,\"widgetGuid\":\"b3b1d04f-97c2-4726-9575-82bb1cf1af6a\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":676,\"buttonId\":null,\"paneGuid\":\"da405d45-8f04-c2d6-f45c-5ba780aa97fc\",\"dashboardGuid\":\"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":2,\"background\":false,\"active\":false,\"y\":62,\"x\":679}],\"cls\":\"top\",\"htmlText\":\"50%\",\"items\":[],\"xtype\":\"tabbedpane\",\"flex\":1,\"paneType\":\"tabbedpane\"},{\"xtype\":\"dashboardsplitter\"},{\"defaultSettings\":{\"widgetStates\":{\"9b5ebb40-8540-466c-8ccd-66092ec55636\":{\"timestamp\":1354917012829},\"6cf4f84a-cc89-45ba-9577-15c34f66ee9c\":{\"timestamp\":1354917003399},\"a540f672-a34c-4989-962c-dcbd559c3792\":{\"timestamp\":1354917012827}}},\"widgets\":[{\"universalName\":null,\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"96394cf8-f562-4cdd-baec-5c26abd9bb0a\",\"height\":463,\"pinned\":false,\"name\":\"App Editor\",\"launchData\":null,\"widgetGuid\":\"9b5ebb40-8540-466c-8ccd-66092ec55636\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":676,\"buttonId\":null,\"paneGuid\":\"1e5dc42c-89c2-6fd4-b887-efaafdceb260\",\"dashboardGuid\":\"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":1,\"background\":false,\"active\":true,\"y\":556,\"x\":679}],\"cls\":\"bottom\",\"htmlText\":\"50%\",\"items\":[],\"xtype\":\"tabbedpane\",\"flex\":1,\"paneType\":\"tabbedpane\"}],\"layout\":{\"align\":\"stretch\",\"type\":\"vbox\"},\"xtype\":\"container\",\"flex\":1}],\"layout\":{\"align\":\"stretch\",\"type\":\"hbox\"},\"xtype\":\"container\",\"flex\":3}","createdBy":{"userId":null,"userRealName":null},"stack":{"totalUsers":0,"id":2,"totalWidgets":5,"name":"Administration","totalDashboards":0,"imageUrl":null,"owner":null,"totalGroups":0,"stackContext":"0092af0b-57ae-4fd9-bd8a-ec0937ac5399","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true},{"stackDefault":true,"totalUsers":0,"id":195,"totalWidgets":0,"name":"3b870e3b-247f-47db-bcd8-8fab6877bbc8","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"descriptorUrl":null,"description":"This app lists administrative pages."},"publishedToStore":true,"iconImageUrl":null,"editedDate":"08/14/2013 01:43 PM EDT","groups":[{"stackDefault":true,"totalUsers":0,"id":195,"totalWidgets":0,"name":"3b870e3b-247f-47db-bcd8-8fab6877bbc8","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"prettyEditedDate":" 27 minutes ago","description":"This page provides the tools needed to administer apps, app component, groups and users.","guid":"c21862f3-fcd2-47f6-99e2-c2e1988d2faa","markedForDeletion":false}]}
+
+
+## optional_title [/dashboard/$guid]
+
+### [POST]
+Create a dashboard and return it.
+
++ Request
+    + Headers
+
+
+    + Body
+
+            [guid] dashboard identifier (optional)
+            {data: [{DashboardModel}]} list of dashboard definitions to create
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+
+
+
+### [PUT]
+Update a dashboard and return it.
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"alteredByAdmin":"false","guid":"56672b31-0df3-44f1-a273-9e6149d5c06b","id":"56672b31-0df3-44f1-a273-9e6149d5c06b","isdefault":true,"dashboardPosition":31,"EDashboardLayoutList":"[accordion, desktop, portal, tabbed]","name":"abc","state":[],"removed":"","groups":[{"stackDefault":true,"totalUsers":0,"id":197,"totalWidgets":0,"name":"1ad03a7d-7db2-426c-b784-74c3c3100ce7","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"isGroupDashboard":false,"description":" ","iconImageUrl":" ","type":null,"createdDate":"08/14/2013 02:23 PM EDT","prettyCreatedDate":"  moments ago","editedDate":"08/14/2013 02:23 PM EDT","prettyEditedDate":"  moments ago","publishedToStore":false,"stack":{"totalUsers":0,"id":4,"totalWidgets":1,"name":"My Dashboarda","totalDashboards":0,"imageUrl":" ","owner":{"id":1,"userRealName":"Test Admin 1","username":"testAdmin1","totalWidgets":0,"totalDashboards":0,"totalStacks":0,"hasPWD":null,"totalGroups":0,"tagLinks":[],"email":"testAdmin1@ozone3.test","lastLogin":1376502218991},"totalGroups":0,"stackContext":"70257b96-5a70-4c73-b287-03df38195cb5","groups":[{"stackDefault":true,"totalUsers":0,"id":197,"totalWidgets":0,"name":"1ad03a7d-7db2-426c-b784-74c3c3100ce7","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"descriptorUrl":null,"description":"This is my dashboard"},"locked":false,"layoutConfig":{"widgets":[],"height":"100%","items":[],"xtype":"dashboarddesignerpane","flex":1,"paneType":"desktoppane","defaultSettings":{}},"createdBy":{"userId":null,"userRealName":null},"user":{"userId":"testAdmin1"}}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+
+
+
+### [DELETE]
+Delete a dashboard and return it
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"data": [{"alteredByAdmin":"false","guid":"56672b31-0df3-44f1-a273-9e6149d5c06b","id":"56672b31-0df3-44f1-a273-9e6149d5c06b","isdefault":true,"dashboardPosition":31,"EDashboardLayoutList":"[accordion, desktop, portal, tabbed]","name":"abc","state":[],"removed":"","groups":[{"stackDefault":true,"totalUsers":0,"id":197,"totalWidgets":0,"name":"1ad03a7d-7db2-426c-b784-74c3c3100ce7","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"isGroupDashboard":false,"description":" ","iconImageUrl":" ","type":null,"createdDate":"08/14/2013 02:23 PM EDT","prettyCreatedDate":" 13 minutes ago","editedDate":"08/14/2013 02:23 PM EDT","prettyEditedDate":" 13 minutes ago","publishedToStore":false,"stack":{"totalUsers":0,"id":4,"totalWidgets":1,"name":"My Dashboarda","totalDashboards":0,"imageUrl":" ","owner":{"id":1,"userRealName":"Test Admin 1","username":"testAdmin1","totalWidgets":0,"totalDashboards":0,"totalStacks":0,"hasPWD":null,"totalGroups":0,"tagLinks":[],"email":"testAdmin1@ozone3.test","lastLogin":1376502218991},"totalGroups":0,"stackContext":"70257b96-5a70-4c73-b287-03df38195cb5","groups":[{"stackDefault":true,"totalUsers":0,"id":197,"totalWidgets":0,"name":"1ad03a7d-7db2-426c-b784-74c3c3100ce7","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"descriptorUrl":null,"description":"This is my dashboard"},"locked":false,"layoutConfig":{"widgets":[],"height":"100%","items":[],"xtype":"desktoppane","flex":1,"paneType":"desktoppane","defaultSettings":{}},"createdBy":{"userId":null,"userRealName":null},"user":{"userId":"testAdmin1"}}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+
+
+
+## optional_title [/dashboard/restore]
+
+### [POST]
+Restore dashboard to original group dashboard definition
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"guid": "bd4bf4ed-7622-4074-ae5b-76442178a29c"}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+
+
+
+## optional_title [/prefs/dashboard/$guid]
+
+### [GET]
+Return a dashboard
+
++ Request
+    + Headers
+
+
+    + Body
+
+
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"id":189,"namespace":"widget","value":{"originalName":"Dashboard Editor","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":1,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Dashboard Editor","description":null,"url":"admin/DashboardEdit.gsp","headerIcon":"themes/common/images/adm-tools/Dashboards24.png","image":"themes/common/images/adm-tools/Dashboards64.png","smallIconUrl":"themes/common/images/adm-tools/Dashboards24.png","largeIconUrl":"themes/common/images/adm-tools/Dashboards64.png","width":581,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true}],"tags":[{"name":"admin","visible":true,"position":-1,"editable":true}],"definitionVisible":false,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"a540f672-a34c-4989-962c-dcbd559c3792"}
+
+
+## optional_title [/prefs/dashboard]
+
+### [GET]
+Return a list of dashboards
+
++ Request
+    + Headers
+
+
+    + Body
+
+            { "max": 1,"offset":0}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"results":4,"data":[{"alteredByAdmin":"false","createdDate":"08/14/2013 01:43 PM EDT","isGroupDashboard":false,"prettyCreatedDate":" 27 minutes ago","isdefault":true,"locked":false,"dashboardPosition":0,"name":"Sample","user":{"userId":"testAdmin1"},"type":null,"EDashboardLayoutList":"[accordion, desktop, portal, tabbed]","layoutConfig":"{\"defaultSettings\":{\"widgetStates\":{\"eb5435cf-4021-4f2a-ba69-dde451d12551\":{\"x\":549,\"y\":7,\"height\":250,\"width\":295,\"timestamp\":1376502229877},\"ec5435cf-4021-4f2a-ba69-dde451d12551\":{\"x\":4,\"y\":5,\"height\":383,\"width\":540,\"timestamp\":1376502244981},\"b3b1d04f-97c2-4726-9575-82bb1cf1af6a\":{\"x\":0,\"y\":0,\"height\":440,\"width\":818,\"timestamp\":1376502242353},\"412ec70d-a178-41ae-a8d9-6713a430c87c\":{\"x\":0,\"y\":0,\"height\":440,\"width\":818,\"timestamp\":1376502244991}}},\"widgets\":[{\"universalName\":null,\"widgetGuid\":\"eb5435cf-4021-4f2a-ba69-dde451d12551\",\"uniqueId\":\"bf197d62-6e50-4047-ba1e-2791201ce20f\",\"dashboardGuid\":\"c412611b-1076-46ab-b572-07fbd3d03186\",\"paneGuid\":\"c53c8acd-2fd9-fa04-8443-901f272c33dc\",\"name\":\"Channel Shouter\",\"active\":false,\"x\":549,\"y\":7,\"minimized\":false,\"maximized\":false,\"pinned\":false,\"collapsed\":false,\"columnPos\":0,\"buttonId\":null,\"buttonOpened\":false,\"region\":\"none\",\"statePosition\":2,\"intentConfig\":null,\"launchData\":null,\"singleton\":false,\"floatingWidget\":false,\"background\":false,\"zIndex\":19000,\"height\":250,\"width\":295},{\"universalName\":null,\"widgetGuid\":\"ec5435cf-4021-4f2a-ba69-dde451d12551\",\"uniqueId\":\"6c259200-8264-4f66-b9df-0a8a6ddbbbc2\",\"dashboardGuid\":\"c412611b-1076-46ab-b572-07fbd3d03186\",\"paneGuid\":\"c53c8acd-2fd9-fa04-8443-901f272c33dc\",\"name\":\"Channel Listener\",\"active\":false,\"x\":4,\"y\":5,\"minimized\":false,\"maximized\":false,\"pinned\":false,\"collapsed\":false,\"columnPos\":0,\"buttonId\":null,\"buttonOpened\":false,\"region\":\"none\",\"statePosition\":1,\"intentConfig\":null,\"launchData\":null,\"singleton\":false,\"floatingWidget\":false,\"background\":false,\"zIndex\":19010,\"height\":383,\"width\":540},{\"universalName\":null,\"widgetGuid\":\"412ec70d-a178-41ae-a8d9-6713a430c87c\",\"uniqueId\":\"557aee8a-ee49-350a-80a3-87bb3c481f00\",\"dashboardGuid\":\"c412611b-1076-46ab-b572-07fbd3d03186\",\"paneGuid\":\"c53c8acd-2fd9-fa04-8443-901f272c33dc\",\"name\":\"App Components\",\"active\":true,\"x\":0,\"y\":0,\"minimized\":false,\"maximized\":false,\"pinned\":false,\"collapsed\":false,\"columnPos\":0,\"buttonId\":null,\"buttonOpened\":false,\"region\":\"none\",\"statePosition\":4,\"intentConfig\":null,\"launchData\":null,\"singleton\":false,\"floatingWidget\":false,\"background\":false,\"zIndex\":19020,\"height\":440,\"width\":818}],\"height\":\"100%\",\"items\":[],\"xtype\":\"desktoppane\",\"flex\":1,\"paneType\":\"desktoppane\"}","createdBy":{"userId":null,"userRealName":null},"stack":{"totalUsers":0,"id":1,"totalWidgets":2,"name":"Sample","totalDashboards":0,"imageUrl":null,"owner":null,"totalGroups":0,"stackContext":"908d934d-9d53-406c-8143-90b406fb508f","groups":[{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true},{"stackDefault":true,"totalUsers":0,"id":194,"totalWidgets":0,"name":"df51cb9b-f3d8-412e-af33-d064f81fb6c0","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"descriptorUrl":null,"description":null},"publishedToStore":true,"iconImageUrl":null,"editedDate":"08/14/2013 01:43 PM EDT","groups":[{"stackDefault":true,"totalUsers":0,"id":194,"totalWidgets":0,"name":"df51cb9b-f3d8-412e-af33-d064f81fb6c0","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"prettyEditedDate":" 27 minutes ago","description":null,"guid":"c412611b-1076-46ab-b572-07fbd3d03186","markedForDeletion":false},{"alteredByAdmin":"false","createdDate":"08/14/2013 01:43 PM EDT","isGroupDashboard":false,"prettyCreatedDate":" 27 minutes ago","isdefault":false,"locked":false,"dashboardPosition":1,"name":"Watch List","user":{"userId":"testAdmin1"},"type":null,"EDashboardLayoutList":"[accordion, desktop, portal, tabbed]","layoutConfig":"{\"height\":\"100%\",\"cls\":\"vbox \",\"items\":[{\"cls\":\"hbox top\",\"items\":[{\"defaultSettings\":{},\"widgets\":[{\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"571b073c-a370-41c0-846c-9aa2fe29b391\",\"height\":538,\"pinned\":false,\"name\":\"NYSE Widget\",\"launchData\":null,\"widgetGuid\":\"fe137961-039d-e7a5-7050-d6eed7ac4782\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":798,\"buttonId\":null,\"paneGuid\":\"16ec8b84-a631-4e7c-d9cc-883635abd6ef\",\"dashboardGuid\":\"3f59855b-d93e-dc03-c6ba-f4c33ea0177f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":1,\"background\":false,\"active\":true,\"y\":34,\"x\":0}],\"cls\":\"left\",\"htmlText\":\"50%\",\"items\":[],\"xtype\":\"fitpane\",\"flex\":1,\"paneType\":\"fitpane\"},{\"xtype\":\"dashboardsplitter\"},{\"defaultSettings\":{},\"widgets\":[{\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"b6a90443-649a-4afc-b77e-b2f398c12ed8\",\"height\":538,\"pinned\":false,\"name\":\"HTML Viewer\",\"launchData\":null,\"widgetGuid\":\"cd5e77f8-cb28-8574-0a8a-a535bd2c7de4\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":798,\"buttonId\":null,\"paneGuid\":\"443dfdc0-7165-cb7d-dd9c-f08fbe36bdb1\",\"dashboardGuid\":\"3f59855b-d93e-dc03-c6ba-f4c33ea0177f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":1,\"background\":false,\"active\":false,\"y\":34,\"x\":802}],\"cls\":\"right\",\"htmlText\":\"50%\",\"items\":[],\"xtype\":\"fitpane\",\"flex\":1,\"paneType\":\"fitpane\"}],\"layout\":{\"align\":\"stretch\",\"type\":\"hbox\"},\"xtype\":\"container\",\"flex\":1},{\"xtype\":\"dashboardsplitter\"},{\"defaultSettings\":{},\"widgets\":[{\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"f61e98c4-08ff-4834-ae79-335fa4e28d5b\",\"height\":539,\"pinned\":false,\"name\":\"Stock Chart\",\"launchData\":null,\"widgetGuid\":\"92078ac9-6f21-2f5f-6afc-bdc8c915c66d\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":1600,\"buttonId\":null,\"paneGuid\":\"410cd0ee-cbdd-f225-582e-6aaa92e058f2\",\"dashboardGuid\":\"3f59855b-d93e-dc03-c6ba-f4c33ea0177f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":1,\"background\":false,\"active\":false,\"y\":576,\"x\":0}],\"cls\":\"bottom\",\"htmlText\":\"50%\",\"items\":[],\"xtype\":\"fitpane\",\"flex\":1,\"paneType\":\"fitpane\"}],\"layout\":{\"align\":\"stretch\",\"type\":\"vbox\"},\"xtype\":\"container\"}","createdBy":{"userId":null,"userRealName":null},"stack":{"totalUsers":0,"id":0,"totalWidgets":6,"name":"Investments","totalDashboards":0,"imageUrl":null,"owner":null,"totalGroups":0,"stackContext":"investments","groups":[{"stackDefault":true,"totalUsers":0,"id":193,"totalWidgets":0,"name":"ce86a612-c355-486e-9c9e-5252553cc58f","totalStacks":0,"status":"active","tagLinks":[],"description":null,"email":null,"displayName":null,"automatic":false},{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true}],"descriptorUrl":null,"description":"Sample app containing example investment pages."},"publishedToStore":true,"iconImageUrl":null,"editedDate":"08/14/2013 01:43 PM EDT","groups":[{"stackDefault":true,"totalUsers":0,"id":193,"totalWidgets":0,"name":"ce86a612-c355-486e-9c9e-5252553cc58f","totalStacks":0,"status":"active","tagLinks":[],"description":null,"email":null,"displayName":null,"automatic":false}],"prettyEditedDate":" 27 minutes ago","description":"This page demonstrates how intents work using company stock information.","guid":"bd4bf4ed-7622-4074-ae5b-76442178a29c","markedForDeletion":false},{"alteredByAdmin":"false","createdDate":"08/14/2013 01:43 PM EDT","isGroupDashboard":false,"prettyCreatedDate":" 27 minutes ago","isdefault":false,"locked":false,"dashboardPosition":2,"name":"Contacts","user":{"userId":"testAdmin1"},"type":null,"EDashboardLayoutList":"[accordion, desktop, portal, tabbed]","layoutConfig":"{\"cls\":\"hbox \",\"items\":[{\"defaultSettings\":{\"widgetStates\":{\"92448ba5-7f2b-982a-629e-9d621268b5e9\":{\"timestamp\":1354747263555},\"302c35c9-9ed8-d0b6-251c-ea1ed4d0c86b\":{\"timestamp\":1354747263559},\"d182002b-3de2-eb24-77be-95a7d08aa85b\":{\"timestamp\":1354745224627}}},\"widgets\":[{\"universalName\":\"org.owfgoss.owf.examples.ContactsManager\",\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"f028d4f9-66d1-4ce9-a94e-817fb2ef70d5\",\"height\":448,\"pinned\":false,\"name\":\"Contacts Manager\",\"launchData\":null,\"widgetGuid\":\"92448ba5-7f2b-982a-629e-9d621268b5e9\",\"columnPos\":0,\"singleton\":false,\"width\":419,\"buttonId\":null,\"paneGuid\":\"5c478b1d-ba1f-ef67-087c-c03b8dbc7bff\",\"dashboardGuid\":\"f935e19e-09a1-451e-8b3d-0fb77537da7d\",\"collapsed\":false,\"maximized\":false,\"statePosition\":1,\"active\":false,\"y\":34,\"x\":0},{\"universalName\":\"org.owfgoss.owf.examples.GetDirections\",\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":{},\"uniqueId\":\"1b8deada-4c55-48aa-b8df-3b1405aba980\",\"height\":447,\"pinned\":false,\"name\":\"Directions\",\"launchData\":null,\"widgetGuid\":\"302c35c9-9ed8-d0b6-251c-ea1ed4d0c86b\",\"columnPos\":0,\"singleton\":false,\"width\":419,\"buttonId\":null,\"paneGuid\":\"5c478b1d-ba1f-ef67-087c-c03b8dbc7bff\",\"dashboardGuid\":\"f935e19e-09a1-451e-8b3d-0fb77537da7d\",\"collapsed\":false,\"maximized\":false,\"statePosition\":2,\"active\":false,\"y\":482,\"x\":0}],\"cls\":\"left\",\"htmlText\":\"25%\",\"items\":[],\"xtype\":\"accordionpane\",\"flex\":0.25,\"paneType\":\"accordionpane\"},{\"xtype\":\"dashboardsplitter\"},{\"defaultSettings\":{\"widgetStates\":{\"eb81c029-a5b6-4107-885c-5e04b4770767\":{\"timestamp\":1354747222264},\"b87c4a3e-aa1e-499e-ba10-510f35388bb6\":{\"timestamp\":1354746772856},\"c3f3c8e0-e7aa-41c3-a655-aca3c940f828\":{\"timestamp\":1354746826290},\"eb5435cf-4021-4f2a-ba69-dde451d12551\":{\"timestamp\":1354746684154},\"ec5435cf-4021-4f2a-ba69-dde451d12551\":{\"timestamp\":1354746684155},\"d182002b-3de2-eb24-77be-95a7d08aa85b\":{\"timestamp\":1354747263599},\"d6ce3375-6e89-45ab-a7be-b6cf3abb0e8c\":{\"timestamp\":1354747222261}}},\"widgets\":[{\"universalName\":\"org.owfgoss.owf.examples.GoogleMaps\",\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"124856bb-aa28-4a56-b40c-d44a6eac1026\",\"height\":867,\"pinned\":false,\"name\":\"Google Maps\",\"launchData\":null,\"widgetGuid\":\"d182002b-3de2-eb24-77be-95a7d08aa85b\",\"columnPos\":0,\"singleton\":false,\"width\":1257,\"buttonId\":null,\"paneGuid\":\"a25052e4-cd5d-51c0-a440-81327fc1d955\",\"dashboardGuid\":\"f935e19e-09a1-451e-8b3d-0fb77537da7d\",\"collapsed\":false,\"maximized\":false,\"statePosition\":1,\"active\":true,\"y\":62,\"x\":423}],\"cls\":\"right\",\"htmlText\":\"75%\",\"items\":[],\"xtype\":\"tabbedpane\",\"flex\":0.75,\"paneType\":\"tabbedpane\"}],\"layout\":{\"align\":\"stretch\",\"type\":\"hbox\"},\"xtype\":\"container\",\"flex\":1}","createdBy":{"userId":null,"userRealName":null},"stack":{"totalUsers":0,"id":0,"totalWidgets":6,"name":"Investments","totalDashboards":0,"imageUrl":null,"owner":null,"totalGroups":0,"stackContext":"investments","groups":[{"stackDefault":true,"totalUsers":0,"id":193,"totalWidgets":0,"name":"ce86a612-c355-486e-9c9e-5252553cc58f","totalStacks":0,"status":"active","tagLinks":[],"description":null,"email":null,"displayName":null,"automatic":false},{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true}],"descriptorUrl":null,"description":"Sample app containing example investment pages."},"publishedToStore":true,"iconImageUrl":null,"editedDate":"08/14/2013 01:43 PM EDT","groups":[{"stackDefault":true,"totalUsers":0,"id":193,"totalWidgets":0,"name":"ce86a612-c355-486e-9c9e-5252553cc58f","totalStacks":0,"status":"active","tagLinks":[],"description":null,"email":null,"displayName":null,"automatic":false}],"prettyEditedDate":" 27 minutes ago","description":"This page demonstrates how intents work by sending addresses to a map.","guid":"863fb838-3ce7-47ac-92c7-25a7b27bdce1","markedForDeletion":false},{"alteredByAdmin":"false","createdDate":"08/14/2013 01:43 PM EDT","isGroupDashboard":false,"prettyCreatedDate":" 27 minutes ago","isdefault":false,"locked":false,"dashboardPosition":3,"name":"Administration","user":{"userId":"testAdmin1"},"type":null,"EDashboardLayoutList":"[accordion, desktop, portal, tabbed]","layoutConfig":"{\"cls\":\"hbox \",\"items\":[{\"defaultSettings\":{\"widgetStates\":{\"9b5ebb40-8540-466c-8ccd-66092ec55636\":{\"timestamp\":1354916964296},\"412ec70d-a178-41ae-a8d9-6713a430c87c\":{\"timestamp\":1354917003349},\"9d804b74-b2a6-448a-bd04-fe286905ab8f\":{\"timestamp\":1354917003344},\"fe97f656-862e-4c54-928d-3cdd776daf5b\":{\"timestamp\":1354917003354},\"6cf4f84a-cc89-45ba-9577-15c34f66ee9c\":{\"timestamp\":1354916988848},\"a540f672-a34c-4989-962c-dcbd559c3792\":{\"timestamp\":1354916998451}}},\"widgets\":[{\"universalName\":null,\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"aee1908b-1a54-4388-82e9-1061b89215a9\",\"height\":328,\"pinned\":false,\"name\":\"App Components\",\"launchData\":null,\"widgetGuid\":\"412ec70d-a178-41ae-a8d9-6713a430c87c\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":675,\"buttonId\":null,\"paneGuid\":\"73cf2212-9c0a-5d75-987c-4820faf3cf30\",\"dashboardGuid\":\"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":5,\"background\":false,\"active\":false,\"y\":363,\"x\":0},{\"universalName\":null,\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"bdca6cfb-6e23-4701-aea2-8a919ae147bb\",\"height\":328,\"pinned\":false,\"name\":\"Apps\",\"launchData\":null,\"widgetGuid\":\"fe97f656-862e-4c54-928d-3cdd776daf5b\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":675,\"buttonId\":null,\"paneGuid\":\"73cf2212-9c0a-5d75-987c-4820faf3cf30\",\"dashboardGuid\":\"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":3,\"background\":false,\"active\":true,\"y\":691,\"x\":0}],\"cls\":\"left\",\"htmlText\":\"50%\",\"items\":[],\"xtype\":\"accordionpane\",\"flex\":1,\"paneType\":\"accordionpane\"},{\"xtype\":\"dashboardsplitter\"},{\"cls\":\"vbox right\",\"items\":[{\"defaultSettings\":{\"widgetStates\":{\"b87c4a3e-aa1e-499e-ba10-510f35388bb6\":{\"timestamp\":1354916950506},\"b3b1d04f-97c2-4726-9575-82bb1cf1af6a\":{\"timestamp\":1354916950489}}},\"widgets\":[{\"universalName\":null,\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"aa8b7158-c9d9-42a8-8d7e-2ad91d60d383\",\"height\":462,\"pinned\":false,\"name\":\"Groups\",\"launchData\":null,\"widgetGuid\":\"b87c4a3e-aa1e-499e-ba10-510f35388bb6\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":676,\"buttonId\":null,\"paneGuid\":\"da405d45-8f04-c2d6-f45c-5ba780aa97fc\",\"dashboardGuid\":\"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":3,\"background\":false,\"active\":false,\"y\":62,\"x\":679},{\"universalName\":null,\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"5e8b9145-747e-44ba-a61f-9b564289eb20\",\"height\":462,\"pinned\":false,\"name\":\"Users\",\"launchData\":null,\"widgetGuid\":\"b3b1d04f-97c2-4726-9575-82bb1cf1af6a\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":676,\"buttonId\":null,\"paneGuid\":\"da405d45-8f04-c2d6-f45c-5ba780aa97fc\",\"dashboardGuid\":\"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":2,\"background\":false,\"active\":false,\"y\":62,\"x\":679}],\"cls\":\"top\",\"htmlText\":\"50%\",\"items\":[],\"xtype\":\"tabbedpane\",\"flex\":1,\"paneType\":\"tabbedpane\"},{\"xtype\":\"dashboardsplitter\"},{\"defaultSettings\":{\"widgetStates\":{\"9b5ebb40-8540-466c-8ccd-66092ec55636\":{\"timestamp\":1354917012829},\"6cf4f84a-cc89-45ba-9577-15c34f66ee9c\":{\"timestamp\":1354917003399},\"a540f672-a34c-4989-962c-dcbd559c3792\":{\"timestamp\":1354917012827}}},\"widgets\":[{\"universalName\":null,\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":0,\"minimized\":false,\"floatingWidget\":false,\"intentConfig\":null,\"uniqueId\":\"96394cf8-f562-4cdd-baec-5c26abd9bb0a\",\"height\":463,\"pinned\":false,\"name\":\"App Editor\",\"launchData\":null,\"widgetGuid\":\"9b5ebb40-8540-466c-8ccd-66092ec55636\",\"columnPos\":0,\"columnOrder\":\"\",\"singleton\":false,\"width\":676,\"buttonId\":null,\"paneGuid\":\"1e5dc42c-89c2-6fd4-b887-efaafdceb260\",\"dashboardGuid\":\"6a0fa5ae-70fa-191a-4998-9c0fa9ad3e9f\",\"collapsed\":false,\"maximized\":false,\"statePosition\":1,\"background\":false,\"active\":true,\"y\":556,\"x\":679}],\"cls\":\"bottom\",\"htmlText\":\"50%\",\"items\":[],\"xtype\":\"tabbedpane\",\"flex\":1,\"paneType\":\"tabbedpane\"}],\"layout\":{\"align\":\"stretch\",\"type\":\"vbox\"},\"xtype\":\"container\",\"flex\":1}],\"layout\":{\"align\":\"stretch\",\"type\":\"hbox\"},\"xtype\":\"container\",\"flex\":3}","createdBy":{"userId":null,"userRealName":null},"stack":{"totalUsers":0,"id":2,"totalWidgets":5,"name":"Administration","totalDashboards":0,"imageUrl":null,"owner":null,"totalGroups":0,"stackContext":"0092af0b-57ae-4fd9-bd8a-ec0937ac5399","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true},{"stackDefault":true,"totalUsers":0,"id":195,"totalWidgets":0,"name":"3b870e3b-247f-47db-bcd8-8fab6877bbc8","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"descriptorUrl":null,"description":"This app lists administrative pages."},"publishedToStore":true,"iconImageUrl":null,"editedDate":"08/14/2013 01:43 PM EDT","groups":[{"stackDefault":true,"totalUsers":0,"id":195,"totalWidgets":0,"name":"3b870e3b-247f-47db-bcd8-8fab6877bbc8","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"prettyEditedDate":" 27 minutes ago","description":"This page provides the tools needed to administer apps, app component, groups and users.","guid":"c21862f3-fcd2-47f6-99e2-c2e1988d2faa","markedForDeletion":false}]}
+
+
+## optional_title [/prefs/dashboard/$guid?]
+
+### [PUT]
+Update a dashboard.
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"alteredByAdmin":"false","guid":"56672b31-0df3-44f1-a273-9e6149d5c06b","id":"56672b31-0df3-44f1-a273-9e6149d5c06b","isdefault":true,"dashboardPosition":31,"EDashboardLayoutList":"[accordion, desktop, portal, tabbed]","name":"abc","state":[],"removed":"","groups":[{"stackDefault":true,"totalUsers":0,"id":197,"totalWidgets":0,"name":"1ad03a7d-7db2-426c-b784-74c3c3100ce7","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"isGroupDashboard":false,"description":" ","iconImageUrl":" ","type":null,"createdDate":"08/14/2013 02:23 PM EDT","prettyCreatedDate":"  moments ago","editedDate":"08/14/2013 02:23 PM EDT","prettyEditedDate":"  moments ago","publishedToStore":false,"stack":{"totalUsers":0,"id":4,"totalWidgets":1,"name":"My Dashboarda","totalDashboards":0,"imageUrl":" ","owner":{"id":1,"userRealName":"Test Admin 1","username":"testAdmin1","totalWidgets":0,"totalDashboards":0,"totalStacks":0,"hasPWD":null,"totalGroups":0,"tagLinks":[],"email":"testAdmin1@ozone3.test","lastLogin":1376502218991},"totalGroups":0,"stackContext":"70257b96-5a70-4c73-b287-03df38195cb5","groups":[{"stackDefault":true,"totalUsers":0,"id":197,"totalWidgets":0,"name":"1ad03a7d-7db2-426c-b784-74c3c3100ce7","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"descriptorUrl":null,"description":"This is my dashboard"},"locked":false,"layoutConfig":{"widgets":[],"height":"100%","items":[],"xtype":"dashboarddesignerpane","flex":1,"paneType":"desktoppane","defaultSettings":{}},"createdBy":{"userId":null,"userRealName":null},"user":{"userId":"testAdmin1"}}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+
+
+
+### [DELETE]
+Delete a dashboard
+
++ Request
+    + Headers
+
+
+    + Body
+
+
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"alteredByAdmin":"false","createdDate":"08/14/2013 04:23 PM EDT","isGroupDashboard":false,"prettyCreatedDate":"  moments ago","isdefault":true,"locked":false,"dashboardPosition":31,"name":"a","user":{"userId":"testAdmin1"},"type":null,"EDashboardLayoutList":"[accordion, desktop, portal, tabbed]","layoutConfig":"{\"widgets\":[],\"height\":\"100%\",\"items\":[],\"xtype\":\"desktoppane\",\"flex\":1,\"paneType\":\"desktoppane\",\"defaultSettings\":{}}","createdBy":{"userId":null,"userRealName":null},"stack":{"totalUsers":0,"id":4,"totalWidgets":1,"name":"My Dashboarda","totalDashboards":0,"imageUrl":" ","owner":{"id":1,"userRealName":"Test Admin 1","username":"testAdmin1","totalWidgets":0,"totalDashboards":0,"totalStacks":0,"hasPWD":null,"totalGroups":0,"tagLinks":[],"email":"testAdmin1@ozone3.test","lastLogin":1376511726456},"totalGroups":0,"stackContext":"70257b96-5a70-4c73-b287-03df38195cb5","groups":[{"stackDefault":true,"totalUsers":0,"id":197,"totalWidgets":0,"name":"1ad03a7d-7db2-426c-b784-74c3c3100ce7","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"descriptorUrl":null,"description":"This is my dashboard"},"publishedToStore":false,"iconImageUrl":" ","editedDate":"08/14/2013 04:23 PM EDT","groups":[],"prettyEditedDate":"  moments ago","description":" ","guid":"833d44bf-85aa-4a26-80e4-58bbcc4dd380","markedForDeletion":false}
+
+
+# Group Group
+
+## optional_title [/group/$id]
+
+### [GET]
+Retrieves a list of groups.
+
+int offset = where to start the list;
+int max = maximum list length;
+String sort = field on which to sort the list (the default is "displayName");
+String order = sort order (either "ASC" or "DESC", the default is "ASC");
+int id = filter by group ID;
+String widget_id = filter by widget GUID;
+String dashboard_id = filter by dashboard GUID;
+boolean automatic = filter by whether the group is automatic (either "true" or "false");
+int user_id = filter by user ID;
+int stack_id = filter by stack ID;
+String filterOperator = whether the advanced filters use conjunction or disjunction (either "AND" or "OR", the default is "AND");
+String filters = the advanced filters (JSON array of objects, each object has a filterField and a filterValue, the search criteria is "filterField LIKE filterValue");
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"offset":0,"max":1,"sort":"displayName","order":"ASC"}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"data":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":10,"name":"OWF Administrators","totalStacks":1,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true}],"results":4}
+
+
+## optional_title [/group]
+
+### [POST]
+Creates groups. Admin only.
+
+String data = groups to create (JSON array of group objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"data":[{"name":"TestGroup3","id":0,"description":"","totalWidgets":0,"totalUsers":0,"totalStacks":0,"automatic":false,"stackDefault":false,"status":"inactive","displayName":"Test Group 3","email":"","title":""}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"stackDefault":false,"totalUsers":0,"id":200,"totalWidgets":0,"name":"TestGroup3","totalStacks":0,"status":"inactive","tagLinks":[],"description":null,"email":null,"displayName":"Test Group 3","automatic":false}]}
+
+
+### [PUT]
+Updates groups. Admin only.
+
+String data = groups to update (JSON array of group objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"data":[{"name":"TestGroup3","id":200,"description":"Description","totalWidgets":0,"totalUsers":0,"totalStacks":0,"automatic":false,"stackDefault":false,"status":"inactive","displayName":"Test Group 3","email":"","title":"Test Group 3"}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"stackDefault":false,"totalUsers":0,"id":200,"totalWidgets":0,"name":"TestGroup3","totalStacks":0,"status":"inactive","tagLinks":[],"description":"Description","email":null,"displayName":"Test Group 3","automatic":false}]}
+
+
+### [DELETE]
+Deletes groups. Admin only.
+
+String data = groups to delete (JSON array of group objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"data":[{"name":"TestGroup3","id":200,"description":"Description","totalWidgets":0,"totalUsers":0,"totalStacks":0,"automatic":false,"stackDefault":false,"status":"inactive","displayName":"Test Group 3","email":"","title":"Test Group 3"}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"id":200,"title":"Test Group 3","email":"","status":"inactive","stackDefault":false,"description":"Description","automatic":false,"name":"TestGroup3","totalStacks":0,"displayName":"Test Group 3","totalUsers":0,"totalWidgets":0}]}
+
+
+## optional_title [/group/$id?tab=stacks]
+
+### [PUT]
+Updates a group's list of stacks. Admin only.
+
+int id = group ID;
+int group_id = group ID (overwitten by id);
+String tab = topic of advanced group update (must be set to "stacks");
+String update_action = whether to add or remove the stacks (either "add" or "remove");
+String data = the stacks (JSON array of stack objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"group_id":5,"tab":"stacks","update_action":"add","data":[{"id":5,"name":"Sample","description":"","stackContext":"908d934d-9d77-406c-8143-90b406fb508f","owner":null,"imageUrl":"","descriptorUrl":"","totalDashboards":1,"totalUsers":1,"totalGroups":0,"totalWidgets":2}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"totalUsers":0,"id":5,"totalWidgets":2,"name":"Sample","totalDashboards":0,"imageUrl":null,"owner":null,"totalGroups":0,"stackContext":"908d934d-9d77-406c-8143-90b406fb508f","groups":[{"stackDefault":false,"totalUsers":0,"id":5,"totalWidgets":0,"name":"TestGroup2","totalStacks":0,"status":"active","tagLinks":[],"description":"TestGroup2","email":"testgroup2@group2.com","displayName":"TestGroup2","automatic":false},{"stackDefault":true,"totalUsers":0,"id":198,"totalWidgets":0,"name":"abef9e4e-bb18-4b45-8f3f-09737c055e60","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"descriptorUrl":null,"description":null}]}
+
+
+## optional_title [/group/$id?tab=users]
+
+### [PUT]
+Updates a group's list of users. Admin only.
+
+int id = group ID;
+int group_id = group ID (overwitten by id);
+String tab = topic of advanced group update (must be set to "users");
+String update_action = whether to add or remove the users (either "add" or "remove");
+String data = the users (JSON array of user objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"group_id":5,"tab":"users","update_action":"add","data":[{"id":3,"username":"testUser2","userRealName":"Test User 2","email":"testUser1@ozone3.test","totalGroups":0,"totalWidgets":3,"totalDashboards":0,"totalStacks":0,"lastLogin":null,"title":"Test User 2"}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"id":3,"userRealName":"Test User 2","username":"testUser2","totalWidgets":0,"totalDashboards":0,"totalStacks":0,"hasPWD":null,"totalGroups":0,"tagLinks":[],"email":"testUser1@ozone3.test","lastLogin":null}]}
+
+
+## optional_title [/group/$id?tab=widgets]
+
+### [PUT]
+Updates a group's list of widgets. Admin only.
+
+int id = group ID;
+int group_id = group ID (overwitten by id);
+String tab = topic of advanced group update (must be set to "widgets");
+String update_action = whether to add or remove the widgets (either "add" or "remove");
+String data = the widgets (JSON array of widget objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"group_id":5,"tab":"widgets","update_action":"add","data":[{"id":"ec5435cf-4021-4f2a-ba69-dde451d12551","name":"Channel Listener","originalName":"","version":"1.0","description":null,"url":"examples/walkthrough/widgets/ChannelListener.gsp","headerIcon":"themes/common/images/widget-icons/ChannelListener.png","image":"themes/common/images/widget-icons/ChannelListener.png","width":540,"height":440,"widgetGuid":"ec5435cf-4021-4f2a-ba69-dde451d12551","universalName":null,"maximized":false,"minimized":false,"x":0,"y":0,"visible":true,"definitionVisible":true,"background":false,"disabled":"","editable":"","tags":[],"singleton":false,"allRequired":[],"directRequired":[],"userId":"","userRealName":"","totalUsers":4,"totalGroups":3,"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}],"descriptorUrl":null,"intents":{"send":[],"receive":[]},"title":"Channel Listener","groups":""}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"id":"ec5435cf-4021-4f2a-ba69-dde451d12551","namespace":"widget","value":{"universalName":null,"namespace":"Channel Listener","description":null,"url":"examples/walkthrough/widgets/ChannelListener.gsp","headerIcon":"themes/common/images/widget-icons/ChannelListener.png","image":"themes/common/images/widget-icons/ChannelListener.png","smallIconUrl":"themes/common/images/widget-icons/ChannelListener.png","largeIconUrl":"themes/common/images/widget-icons/ChannelListener.png","width":540,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":0,"totalGroups":0,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"ec5435cf-4021-4f2a-ba69-dde451d12551"}]}
+
+
+# Group MergedDirectoryResource
+
+## optional_title [/help/$subPath**]
+
+### [GET]
+Returns a help file
+
++ Request
+    + Headers
+
+
+    + Body
+
+
+
++ Response 200
+    + Headers
+
+            Content-Type:
+
+    + Body
+
+
+
+
+## optional_title [/themes/$subPath**]
+
+### [GET]
+Retrieves a theme resource from either the file system or the classpath.
+
+String subPath = the subpath to the theme resource;
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"subPath":"common/images/myappswindow/info_icon_hover.png"}
+
++ Response 200
+    + Headers
+
+            Content-Type:image/png
+
+    + Body
+
+
+
+
+# Group Marketplace
+
+## optional_title [/marketplace/sync/$guid]
+
+### [GET]
+Notify OWF that a publishable "Listing" has been updated on a Marketplace server. Said "Listing" must correspond to a web application that can be used as an OWF widget. This will cause OWF to search known Marketplaces for an updated definition of the corresponding widget. Compatible with Ozone Marketplace 7.0.
+
+String guid = the listing's GUID;
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"guid":"57320d71-c0f8-4154-ade9-6182e608d4a7"}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"updatedGuid":"57320d71-c0f8-4154-ade9-6182e608d4a7"}
+
+
+# Group Metric
+
+## optional_title [/metric]
+
+### [POST]
+Posts analytical information for a widget.
+
+String metricTime = timestamp for the event being logged;
+String userName = user name;
+int userId = user ID;
+String site = identifier, potentially URL, for source of metric (typically OWF instance);
+String userAgent = web browser's user agent;
+String component = widget's name;
+String componentId = widget's GUID;
+String instanceId = widget's GUID;
+String metricTypeId = describing metric (package name construct recommended);
+String widgetData = any additional data for metric of type metricTypeId (JSON object);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"metricTime":"1376677583840","userId":1,"userName":"testAdmin1","site":"https://localhost:9443/metric/metric","userAgent":"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.45 Safari/537.22","component":"NYSE App Component","componentId":"fe137961-039d-e7a5-7050-d6eed7ac4782","instanceId":"4b5ca6cf-6e28-5899-9850-021c08a4ec9a","metricTypeId":"ozone.widget.view","widgetData":[]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":false,"data":"Error creating SSL socket: peer not authenticated"}
+
+
+# Group Preference
+
+## optional_title [/prefs/hasPreference/$namespace/$path]
+
+### [GET]
+Retrieves whether the preference exists for the current user.
+
+String namespace = the preference namespace;
+String path = the preference path;
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"namespace":"owf.admin.DashboardEditCopy","path":"guid_to_launch"}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            { "preferenceExist": true,"statusCode": 200}
+
+
+## optional_title [/prefs/preference/$namespace/$path]
+
+### [GET]
+Retrieves a preference.
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"namespace":"owf.admin.DashboardEditCopy","path":"guid_to_launch"}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"id":153,"namespace":"owf.admin.DashboardEditCopy","path":"guid_to_launch","value":"a540f672-a34c-4989-962c-dcbd559c3792","user":{"userId":"testAdmin1"}}
+
+
+### [POST]
+Create a preference.
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"value": "idk"}
+
++ Response
+    + Headers
+
+            Content-Type:
+
+    + Body
+
+            {"id":157,"namespace":"namespace","path":"name","value":"idk","user":{"userId":"testAdmin1"}}
+
+
+### [PUT]
+Update a preference.
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"value": "idk"}
+
++ Response
+    + Headers
+
+            Content-Type:
+
+    + Body
+
+            {"id":157,"namespace":"namespace","path":"name","value":"idk","user":{"userId":"testAdmin1"}}
+
+
+### [DELETE]
+Delete a preference.
+
++ Request
+    + Headers
+
+
+    + Body
+
+
+
++ Response
+    + Headers
+
+            Content-Type:
+
+    + Body
+
+            {"id":157,"namespace":"namespace","path":"name","value":"idk","user":{"userId":"testAdmin1"}}
+
+
+## optional_title [/prefs/server/resources]
+
+### [GET]
+Retrieves OWF server version.
+
++ Request
+    + Headers
+
+
+    + Body
+
+
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"serverVersion":"7.3"}
+
+
+# Group Person
+
+## optional_title [/prefs/person/whoami]
+
+### [GET]
+Returns the username of the logged in user
+
++ Request
+    + Headers
+
+
+    + Body
+
+
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"currentUserName":"testAdmin1","currentUser":"Test Admin 1","currentUserPrevLogin":"2013-08-14T17:43:38Z","currentId":1}
+
+
+## optional_title [/user/$id?]
+
+### [GET]
+Retrieves a user or list of users. Admin only.
+
+int offset = where to start the list;
+int max = maximum list length;
+String sort = field on which to sort the list;
+String order = sort order (either "ASC" or "DESC", the default is "ASC");
+int id = filter by user ID;
+int group_id = filter by group ID;
+int stack_id = filter by stack ID;
+int widget_id = filter by widget ID;
+String filterOperator = whether the advanced filters use conjunction or disjunction (either "AND" or "OR", the default is "AND");
+String filters = the advanced filters (JSON array of objects, each object has a filterField and a filterValue, the search criteria is "filterField LIKE filterValue");
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"offset":0,"max":1,"sort":"userRealName","order":"ASC"}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"id":28,"userRealName":"DEFAULT_USER","username":"DEFAULT_USER","totalWidgets":3,"totalDashboards":0,"totalStacks":0,"hasPWD":null,"totalGroups":0,"tagLinks":[],"email":"","lastLogin":null}],"results":5}
+
+
+## optional_title [/user]
+
+### [POST]
+Creates users. Admin only.
+
+String data = user objects to create (JSON array of user objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"data":[{"id":"","username":"testUser3","userRealName":"Test User 3","email":"testUser3@ozone3.test","totalGroups":"","totalWidgets":"","totalDashboards":"","totalStacks":"","lastLogin":"","title":""}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"id":31,"userRealName":"Test User 3","username":"testUser3","totalWidgets":0,"totalDashboards":0,"totalStacks":0,"hasPWD":null,"totalGroups":0,"tagLinks":[],"email":"testUser3@ozone3.test","lastLogin":null}]}
+
+
+### [PUT]
+Updates users. Admin only.
+
+String data = user objects to update (JSON array of user objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"data":[{"id":31,"username":"testUser3","userRealName":"Test User 33","email":"testUser3@ozone3.test","totalGroups":1,"totalWidgets":0,"totalDashboards":0,"totalStacks":0,"lastLogin":null,"title":"Test User 3"}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"id":31,"userRealName":"Test User 33","username":"testUser3","totalWidgets":0,"totalDashboards":0,"totalStacks":0,"hasPWD":null,"totalGroups":0,"tagLinks":[],"email":"testUser3@ozone3.test","lastLogin":null}]}
+
+
+### [DELETE]
+Deletes users. Admin only.
+
+String data = user objects to delete (JSON array of user objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"data":[{"id":29,"userRealName":"Test User 2","username":"testUser2","totalWidgets":0,"totalDashboards":0,"totalStacks":0,"hasPWD":null,"totalGroups":1,"tagLinks":[],"email":"testUser2@ozone3.test","lastLogin":null}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"id":29,"tagLinks":[],"lastLogin":null,"username":"testUser2","totalGroups":1,"email":"testUser2@ozone3.test","hasPWD":null,"totalStacks":0,"totalDashboards":0,"userRealName":"Test User 2","totalWidgets":0}]}
+
+
+## optional_title [/user/$id?tab=groups]
+
+### [PUT]
+Updates a user's list of groups.  Admin only.
+
+int id = user ID;
+int user_id = user ID (overwitten by id);
+String tab = topic of advanced user update (must be set to "groups");
+String update_action = whether to add or remove the groups (either "add" or "remove");
+String data = the groups (JSON array of group objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"user_id":2,"tab":"groups","update_action":"remove","data":[{"name":"TestGroup2","id":5,"description":"TestGroup2","totalWidgets":0,"totalUsers":2,"totalStacks":0,"automatic":false,"stackDefault":false,"status":"active","displayName":"TestGroup2","email":"testgroup2@group2.com","title":"TestGroup2"}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"stackDefault":false,"totalUsers":0,"id":5,"totalWidgets":0,"name":"TestGroup2","totalStacks":0,"status":"active","tagLinks":[],"description":"TestGroup2","email":"testgroup2@group2.com","displayName":"TestGroup2","automatic":false}]}
+
+
+## optional_title [/user/$id?tab=stacks]
+
+### [PUT]
+Updates a user's list of stacks. Admin only.
+
+int id = user ID;
+int user_id = user ID (overwitten by id);
+String tab = topic of advanced user update (must be set to "stacks");
+String update_action = whether to add or remove the stacks (either "add" or "remove");
+String data = the stacks (JSON array of stack objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"user_id":2,"tab":stacks","update_action":"add","data":[{"id":1,"name":"Sample","description":"","stackContext":"908d934d-9d53-406c-8143-90b406fb508f","owner":null,"imageUrl":"","descriptorUrl":"","totalDashboards":1,"totalUsers":0,"totalGroups":1,"totalWidgets":2}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"totalUsers":0,"id":1,"totalWidgets":2,"name":"Sample","totalDashboards":0,"imageUrl":null,"owner":null,"totalGroups":0,"stackContext":"908d934d-9d53-406c-8143-90b406fb508f","groups":[{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true},{"stackDefault":true,"totalUsers":0,"id":194,"totalWidgets":0,"name":"df51cb9b-f3d8-412e-af33-d064f81fb6c0","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"descriptorUrl":null,"description":null}]}
+
+
+## optional_title [/user/$id?tab=widgets]
+
+### [PUT]
+Updates a user's list of widgets. Admin only.
+
+int id = user ID;
+int user_id = user ID (overwitten by id);
+String tab = topic of advanced user update (must be set to "widgets");
+String update_action = whether to add or remove the widgets (either "add" or "remove");
+String data = the widgets (JSON array of widget objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"user_id":2,"tab":"widgets","update_action":"add","data":[{"id":"fe137961-039d-e7a5-7050-d6eed7ac4782","name":"NYSE App Component","originalName":"","version":"1.0","description":"This app component displays the end of day report for the New York Stock Exchange.","url":"examples/walkthrough/widgets/NYSE.gsp","headerIcon":"themes/common/images/widget-icons/NYSEStock.png","image":"themes/common/images/widget-icons/NYSEStock.png","width":825,"height":437,"widgetGuid":"fe137961-039d-e7a5-7050-d6eed7ac4782","universalName":"org.owfgoss.owf.examples.NYSE","maximized":false,"minimized":false,"x":0,"y":0,"visible":true,"definitionVisible":true,"background":false,"disabled":"","editable":"","tags":[{"name":"grid","visible":true,"position":-1,"editable":true}],"singleton":false,"allRequired":[],"directRequired":[],"userId":"","userRealName":"","totalUsers":1,"totalGroups":1,"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}],"descriptorUrl":"../examples/walkthrough/descriptors/NYSE_descriptor.html","intents":{"send":[{"action":"View","dataTypes":["text/html"]},{"action":"Graph","dataTypes":["application/vnd.owf.sample.price"]}],"receive":[]},"title":"NYSE App Component","groups":""}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"id":"fe137961-039d-e7a5-7050-d6eed7ac4782","namespace":"widget","value":{"universalName":"org.owfgoss.owf.examples.NYSE","namespace":"NYSE App Component","description":"This app component displays the end of day report for the New York Stock Exchange.","url":"examples/walkthrough/widgets/NYSE.gsp","headerIcon":"themes/common/images/widget-icons/NYSEStock.png","image":"themes/common/images/widget-icons/NYSEStock.png","smallIconUrl":"themes/common/images/widget-icons/NYSEStock.png","largeIconUrl":"themes/common/images/widget-icons/NYSEStock.png","width":825,"height":437,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":0,"totalGroups":0,"tags":[{"name":"grid","visible":true,"position":-1,"editable":true}],"singleton":false,"visible":true,"background":false,"descriptorUrl":"../examples/walkthrough/descriptors/NYSE_descriptor.html","definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[{"action":"View","dataTypes":["text/html"]},{"action":"Graph","dataTypes":["application/vnd.owf.sample.price"]}],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"fe137961-039d-e7a5-7050-d6eed7ac4782"}]}
+
+
+# Group PersonWidgetDefinition
+
+## optional_title [/prefs/personWidgetDefinition/dependents]
+
+### [GET]
+Returns a list of dependent widget defintions
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"id":"b787b976-7721-4955-aba4-f14f45aaad68"}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"id":208,"namespace":"widget","value":{"originalName":"Component with requirements","universalName":"","editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":24,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Component with requirements","description":"","url":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","headerIcon":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","image":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","smallIconUrl":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","largeIconUrl":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","width":1050,"height":650,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1","groups":[],"tags":[],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":"","allRequired":["b787b976-7721-4955-aba4-f14f45aaad68"],"directRequired":["b787b976-7721-4955-aba4-f14f45aaad68"],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"250e0694-0124-4ee6-a66b-349cc919a11f"}]}
+
+
+## optional_title [/prefs/widget?universalName=]
+
+### [GET]
+Retrieves a personal widget by its universal name.
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"universalName":"ChannelListener"}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            [{"id":189,"namespace":"widget","value":{"originalName":"Dashboard Editor","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":1,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Dashboard Editor","description":null,"url":"admin/DashboardEdit.gsp","headerIcon":"themes/common/images/adm-tools/Dashboards24.png","image":"themes/common/images/adm-tools/Dashboards64.png","smallIconUrl":"themes/common/images/adm-tools/Dashboards24.png","largeIconUrl":"themes/common/images/adm-tools/Dashboards64.png","width":581,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true}],"tags":[{"name":"admin","visible":true,"position":-1,"editable":true}],"definitionVisible":false,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"a540f672-a34c-4989-962c-dcbd559c3792"},{"id":185,"namespace":"widget","value":{"originalName":"Group Editor","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":1,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Group Editor","description":null,"url":"admin/GroupEdit.gsp","headerIcon":"themes/common/images/adm-tools/Groups24.png","image":"themes/common/images/adm-tools/Groups64.png","smallIconUrl":"themes/common/images/adm-tools/Groups24.png","largeIconUrl":"themes/common/images/adm-tools/Groups64.png","width":581,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true}],"tags":[{"name":"admin","visible":true,"position":-1,"editable":true}],"definitionVisible":false,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"d6ce3375-6e89-45ab-a7be-b6cf3abb0e8c"},{"id":183,"namespace":"widget","value":{"originalName":"Groups","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":1,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Groups","description":null,"url":"admin/GroupManagement.gsp","headerIcon":"themes/common/images/adm-tools/Groups24.png","image":"themes/common/images/adm-tools/Groups64.png","smallIconUrl":"themes/common/images/adm-tools/Groups24.png","largeIconUrl":"themes/common/images/adm-tools/Groups64.png","width":818,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true}],"tags":[{"name":"admin","visible":true,"position":-1,"editable":true}],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"b87c4a3e-aa1e-499e-ba10-510f35388bb6"},{"id":181,"namespace":"widget","value":{"originalName":"App Component Editor","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":1,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"App Component Editor","description":null,"url":"admin/WidgetEdit.gsp","headerIcon":"themes/common/images/adm-tools/Widgets24.png","image":"themes/common/images/adm-tools/Widgets64.png","smallIconUrl":"themes/common/images/adm-tools/Widgets24.png","largeIconUrl":"themes/common/images/adm-tools/Widgets64.png","width":581,"height":493,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true}],"tags":[{"name":"admin","visible":true,"position":-1,"editable":true}],"definitionVisible":false,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"6cf4f84a-cc89-45ba-9577-15c34f66ee9c"},{"id":179,"namespace":"widget","value":{"originalName":"App Components","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":1,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"App Components","description":null,"url":"admin/WidgetManagement.gsp","headerIcon":"themes/common/images/adm-tools/Widgets24.png","image":"themes/common/images/adm-tools/Widgets64.png","smallIconUrl":"themes/common/images/adm-tools/Widgets24.png","largeIconUrl":"themes/common/images/adm-tools/Widgets64.png","width":818,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true}],"tags":[{"name":"admin","visible":true,"position":-1,"editable":true}],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"412ec70d-a178-41ae-a8d9-6713a430c87c"},{"id":177,"namespace":"widget","value":{"originalName":"User Editor","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":1,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"User Editor","description":null,"url":"admin/UserEdit.gsp","headerIcon":"themes/common/images/adm-tools/Users24.png","image":"themes/common/images/adm-tools/Users64.png","smallIconUrl":"themes/common/images/adm-tools/Users24.png","largeIconUrl":"themes/common/images/adm-tools/Users64.png","width":581,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true}],"tags":[{"name":"admin","visible":true,"position":-1,"editable":true}],"definitionVisible":false,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"101f119e-b56a-4e16-8219-11048c020038"},{"id":174,"namespace":"widget","value":{"originalName":"Users","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":1,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Users","description":null,"url":"admin/UserManagement.gsp","headerIcon":"themes/common/images/adm-tools/Users24.png","image":"themes/common/images/adm-tools/Users64.png","smallIconUrl":"themes/common/images/adm-tools/Users24.png","largeIconUrl":"themes/common/images/adm-tools/Users64.png","width":818,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true}],"tags":[{"name":"admin","visible":true,"position":-1,"editable":true}],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"b3b1d04f-97c2-4726-9575-82bb1cf1af6a"},{"id":39,"namespace":"widget","value":{"originalName":"Channel Shouter","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":10,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Channel Shouter","description":null,"url":"examples/walkthrough/widgets/ChannelShouter.gsp","headerIcon":"themes/common/images/widget-icons/ChannelShouter.png","image":"themes/common/images/widget-icons/ChannelShouter.png","smallIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","largeIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","width":295,"height":250,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true}],"tags":[],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"eb5435cf-4021-4f2a-ba69-dde451d12551"},{"id":40,"namespace":"widget","value":{"originalName":"Channel Listener","universalName":"ChannelListener","editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":11,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Channel Listener","description":null,"url":"examples/walkthrough/widgets/ChannelListener.gsp","headerIcon":"themes/common/images/widget-icons/ChannelListener.png","image":"themes/common/images/widget-icons/ChannelListener.png","smallIconUrl":"themes/common/images/widget-icons/ChannelListener.png","largeIconUrl":"themes/common/images/widget-icons/ChannelListener.png","width":540,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":null,"groups":[{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true}],"tags":[],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"ec5435cf-4021-4f2a-ba69-dde451d12551"},{"id":198,"namespace":"widget","value":{"originalName":"NYSE App Component","universalName":"org.owfgoss.owf.examples.NYSE","editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":true,"position":14,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"NYSE App Component","description":"This app component displays the end of day report for the New York Stock Exchange.","url":"examples/walkthrough/widgets/NYSE.gsp","headerIcon":"themes/common/images/widget-icons/NYSEStock.png","image":"themes/common/images/widget-icons/NYSEStock.png","smallIconUrl":"themes/common/images/widget-icons/NYSEStock.png","largeIconUrl":"themes/common/images/widget-icons/NYSEStock.png","width":825,"height":437,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true},{"stackDefault":true,"totalUsers":0,"id":193,"totalWidgets":0,"name":"ce86a612-c355-486e-9c9e-5252553cc58f","totalStacks":0,"status":"active","tagLinks":[],"description":null,"email":null,"displayName":null,"automatic":false}],"tags":[{"name":"grid","visible":true,"position":-1,"editable":null}],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":"../examples/walkthrough/descriptors/NYSE_descriptor.html","allRequired":[],"directRequired":[],"intents":{"send":[{"action":"Graph","dataTypes":["application/vnd.owf.sample.price"]},{"action":"View","dataTypes":["text/html"]}],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"fe137961-039d-e7a5-7050-d6eed7ac4782"},{"id":43,"namespace":"widget","value":{"originalName":"Load Time Log","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":14,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Load Time Log","description":null,"url":"examples/walkthrough/widgets/WidgetLog.gsp","headerIcon":"themes/common/images/widget-icons/WidgetLog.png","image":"themes/common/images/widget-icons/WidgetLog.png","smallIconUrl":"themes/common/images/widget-icons/WidgetLog.png","largeIconUrl":"themes/common/images/widget-icons/WidgetLog.png","width":540,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true}],"tags":[],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"4854fbd4-395c-442b-95c6-8b60702fd2b4"},{"id":199,"namespace":"widget","value":{"originalName":"HTML Viewer","universalName":"org.owfgoss.owf.examples.HTMLViewer","editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":true,"position":15,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"HTML Viewer","description":"This app component displays HTML.","url":"examples/walkthrough/widgets/HTMLViewer.gsp","headerIcon":"themes/common/images/widget-icons/HTMLViewer.png","image":"themes/common/images/widget-icons/HTMLViewer.png","smallIconUrl":"themes/common/images/widget-icons/HTMLViewer.png","largeIconUrl":"themes/common/images/widget-icons/HTMLViewer.png","width":400,"height":600,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true},{"stackDefault":true,"totalUsers":0,"id":193,"totalWidgets":0,"name":"ce86a612-c355-486e-9c9e-5252553cc58f","totalStacks":0,"status":"active","tagLinks":[],"description":null,"email":null,"displayName":null,"automatic":false}],"tags":[{"name":"html","visible":true,"position":-1,"editable":null},{"name":"document_viewer","visible":true,"position":-1,"editable":null}],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":"../examples/walkthrough/descriptors/HTMLViewer_descriptor.html","allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[{"action":"View","dataTypes":["text/html"]}]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"cd5e77f8-cb28-8574-0a8a-a535bd2c7de4"},{"id":200,"namespace":"widget","value":{"originalName":"Stock Chart","universalName":"org.owfgoss.owf.examples.StockChart","editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":true,"position":16,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Stock Chart","description":"This app component charts stock prices.","url":"examples/walkthrough/widgets/StockChart.gsp","headerIcon":"themes/common/images/widget-icons/PriceChart.png","image":"themes/common/images/widget-icons/PriceChart.png","smallIconUrl":"themes/common/images/widget-icons/PriceChart.png","largeIconUrl":"themes/common/images/widget-icons/PriceChart.png","width":800,"height":600,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true},{"stackDefault":true,"totalUsers":0,"id":193,"totalWidgets":0,"name":"ce86a612-c355-486e-9c9e-5252553cc58f","totalStacks":0,"status":"active","tagLinks":[],"description":null,"email":null,"displayName":null,"automatic":false}],"tags":[{"name":"stock_chart","visible":true,"position":-1,"editable":null}],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":"../examples/walkthrough/descriptors/StockChart_descriptor.html","allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[{"action":"Graph","dataTypes":["application/vnd.owf.sample.price"]}]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"92078ac9-6f21-2f5f-6afc-bdc8c915c66d"},{"id":201,"namespace":"widget","value":{"originalName":"Directions","universalName":"org.owfgoss.owf.examples.GetDirections","editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":true,"position":17,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Directions","description":"This app component maps directions.","url":"examples/walkthrough/widgets/directions","headerIcon":"examples/walkthrough/widgets/directions/img/logo.png","image":"examples/walkthrough/widgets/directions/img/logo.png","smallIconUrl":"examples/walkthrough/widgets/directions/img/logo.png","largeIconUrl":"examples/walkthrough/widgets/directions/img/logo.png","width":400,"height":400,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true},{"stackDefault":true,"totalUsers":0,"id":193,"totalWidgets":0,"name":"ce86a612-c355-486e-9c9e-5252553cc58f","totalStacks":0,"status":"active","tagLinks":[],"description":null,"email":null,"displayName":null,"automatic":false}],"tags":[],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":"../examples/walkthrough/widgets/directions/descriptor/descriptor.html","allRequired":[],"directRequired":[],"intents":{"send":[{"action":"navigate","dataTypes":["application/vnd.owf.sample.addresses"]}],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"302c35c9-9ed8-d0b6-251c-ea1ed4d0c86b"},{"id":202,"namespace":"widget","value":{"originalName":"Google Maps","universalName":"org.owfgoss.owf.examples.GoogleMaps","editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":true,"position":18,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Google Maps","description":"This app component displays markers or directions.","url":"examples/walkthrough/widgets/googlemaps","headerIcon":"examples/walkthrough/widgets/googlemaps/img/logo.png","image":"examples/walkthrough/widgets/googlemaps/img/logo.png","smallIconUrl":"examples/walkthrough/widgets/googlemaps/img/logo.png","largeIconUrl":"examples/walkthrough/widgets/googlemaps/img/logo.png","width":800,"height":600,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true},{"stackDefault":true,"totalUsers":0,"id":193,"totalWidgets":0,"name":"ce86a612-c355-486e-9c9e-5252553cc58f","totalStacks":0,"status":"active","tagLinks":[],"description":null,"email":null,"displayName":null,"automatic":false}],"tags":[],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":"../examples/walkthrough/widgets/googlemaps/descriptor/descriptor.html","allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[{"action":"plot","dataTypes":["application/vnd.owf.sample.address"]},{"action":"navigate","dataTypes":["application/vnd.owf.sample.addresses"]}]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"d182002b-3de2-eb24-77be-95a7d08aa85b"},{"id":204,"namespace":"widget","value":{"originalName":"App Editor","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":true,"position":20,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"App Editor","description":null,"url":"admin/StackEdit.gsp","headerIcon":"themes/common/images/adm-tools/Stacks24.png","image":"themes/common/images/adm-tools/Stacks64.png","smallIconUrl":"themes/common/images/adm-tools/Stacks24.png","largeIconUrl":"themes/common/images/adm-tools/Stacks64.png","width":581,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true}],"tags":[],"definitionVisible":false,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"9b5ebb40-8540-466c-8ccd-66092ec55636"},{"id":205,"namespace":"widget","value":{"originalName":"Apps","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":true,"position":21,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Apps","description":null,"url":"admin/StackManagement.gsp","headerIcon":"themes/common/images/adm-tools/Stacks24.png","image":"themes/common/images/adm-tools/Stacks64.png","smallIconUrl":"themes/common/images/adm-tools/Stacks24.png","largeIconUrl":"themes/common/images/adm-tools/Stacks64.png","width":818,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true}],"tags":[],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"fe97f656-862e-4c54-928d-3cdd776daf5b"},{"id":206,"namespace":"widget","value":{"originalName":"Configuration","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":true,"position":22,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Configuration","description":"","url":"admin/Configuration.gsp","headerIcon":"themes/common/images/adm-tools/Configuration24.png","image":"themes/common/images/adm-tools/Configuration64.png","smallIconUrl":"themes/common/images/adm-tools/Configuration24.png","largeIconUrl":"themes/common/images/adm-tools/Configuration64.png","width":900,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true}],"tags":[{"name":"admin","visible":true,"position":-1,"editable":null}],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"ad0518ac-e78c-4911-b5b2-01cf23f1d198"},{"id":207,"namespace":"widget","value":{"originalName":"Contacts Manager","universalName":"org.owfgoss.owf.examples.ContactsManager","editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":true,"position":22,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Contacts Manager","description":"This app component allows users to manage their contacts.","url":"examples/walkthrough/widgets/contacts","headerIcon":"examples/walkthrough/widgets/contacts/img/logo.png","image":"examples/walkthrough/widgets/contacts/img/logo.png","smallIconUrl":"examples/walkthrough/widgets/contacts/img/logo.png","largeIconUrl":"examples/walkthrough/widgets/contacts/img/logo.png","width":400,"height":400,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true},{"stackDefault":true,"totalUsers":0,"id":193,"totalWidgets":0,"name":"ce86a612-c355-486e-9c9e-5252553cc58f","totalStacks":0,"status":"active","tagLinks":[],"description":null,"email":null,"displayName":null,"automatic":false}],"tags":[],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":"../examples/walkthrough/widgets/contacts/descriptor/descriptor.html","allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"92448ba5-7f2b-982a-629e-9d621268b5e9"}]
+
+
+## optional_title [/prefs/widget]
+
+### [GET]
+Retrieves a list of the user's personal widgets.
+
+int offset = where to start the list;
+int max = maximum list length;
+String sort = field on which to sort the list (the default is "displayName");
+String order = sort order (either "ASC" or "DESC", the default is "ASC");
+String guid = filter by widget GUID;
+String tags = filter by tags (JSON array of tag objects);
+String groupIds = filter by group IDs (JSON array of group ID integers);
+String widgetName = filter by widget name;
+String customWidgetName = filter by widget display name;
+String customWidgetNameOrDesc = filter by widget display name or widget description;
+String widgetVersion = filter by widget version;
+String widgetGuid = filter by widget GUID;
+boolean visible = filter by whether the widget is visible (either "true" or "false");
+boolean disabled = filter by whether the widget is disabled (either "true" or "false");
+String widgetTypes = filter by widget types (comma-separated list);
+String intent = filter by intent (JSON intent object);
+String filterOperator = whether the advanced filters use conjunction or disjunction (either "AND" or "OR", the default is "AND");
+String filters = the advanced filters (JSON array of objects, each object has a filterField and a filterValue, the search criteria is "filterField LIKE filterValue");
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"widgetName": "", "widgetVersion": "", "widgetGuid": "", "universalName": "", "group_id": "", "offset": 0, "max": 1}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            [{"id":189,"namespace":"widget","value":{"originalName":"Dashboard Editor","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":1,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Dashboard Editor","description":null,"url":"admin/DashboardEdit.gsp","headerIcon":"themes/common/images/adm-tools/Dashboards24.png","image":"themes/common/images/adm-tools/Dashboards64.png","smallIconUrl":"themes/common/images/adm-tools/Dashboards24.png","largeIconUrl":"themes/common/images/adm-tools/Dashboards64.png","width":581,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true}],"tags":[{"name":"admin","visible":true,"position":-1,"editable":true}],"definitionVisible":false,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"a540f672-a34c-4989-962c-dcbd559c3792"}]
+
+
+## optional_title [/prefs/widget/listUserAndGroupWidgets]
+
+### [GET]
+Retrieves a list of all system widgets.
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"widgetName": "", "widgetVersion": "", "widgetGuid": "", "universalName": "", "group_id": "", "offset": 0, "max": 1}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            [{"id":"eb5435cf-4021-4f2a-ba69-dde451d12551","namespace":"widget","value":{"universalName":null,"namespace":"Channel Shouter","description":null,"url":"examples/walkthrough/widgets/ChannelShouter.gsp","headerIcon":"themes/common/images/widget-icons/ChannelShouter.png","image":"themes/common/images/widget-icons/ChannelShouter.png","smallIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","largeIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","width":295,"height":250,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":4,"totalGroups":1,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"eb5435cf-4021-4f2a-ba69-dde451d12551"},{"id":"ec5435cf-4021-4f2a-ba69-dde451d12551","namespace":"widget","value":{"universalName":null,"namespace":"Channel Listener","description":null,"url":"examples/walkthrough/widgets/ChannelListener.gsp","headerIcon":"themes/common/images/widget-icons/ChannelListener.png","image":"themes/common/images/widget-icons/ChannelListener.png","smallIconUrl":"themes/common/images/widget-icons/ChannelListener.png","largeIconUrl":"themes/common/images/widget-icons/ChannelListener.png","width":540,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":4,"totalGroups":1,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"ec5435cf-4021-4f2a-ba69-dde451d12551"},{"id":"fe137961-039d-e7a5-7050-d6eed7ac4782","namespace":"widget","value":{"universalName":"org.owfgoss.owf.examples.NYSE","namespace":"NYSE App Component","description":"This app component displays the end of day report for the New York Stock Exchange.","url":"examples/walkthrough/widgets/NYSE.gsp","headerIcon":"themes/common/images/widget-icons/NYSEStock.png","image":"themes/common/images/widget-icons/NYSEStock.png","smallIconUrl":"themes/common/images/widget-icons/NYSEStock.png","largeIconUrl":"themes/common/images/widget-icons/NYSEStock.png","width":825,"height":437,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":1,"totalGroups":2,"tags":[{"name":"grid","visible":true,"position":-1,"editable":true}],"singleton":false,"visible":true,"background":false,"descriptorUrl":"../examples/walkthrough/descriptors/NYSE_descriptor.html","definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[{"action":"View","dataTypes":["text/html"]},{"action":"Graph","dataTypes":["application/vnd.owf.sample.price"]}],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"fe137961-039d-e7a5-7050-d6eed7ac4782"},{"id":"92078ac9-6f21-2f5f-6afc-bdc8c915c66d","namespace":"widget","value":{"universalName":"org.owfgoss.owf.examples.StockChart","namespace":"Stock Chartt","description":"This app component charts stock prices.","url":"examples/walkthrough/widgets/StockChart.gsp","headerIcon":"themes/common/images/widget-icons/PriceChart.png","image":"themes/common/images/widget-icons/PriceChart.png","smallIconUrl":"themes/common/images/widget-icons/PriceChart.png","largeIconUrl":"themes/common/images/widget-icons/PriceChart.png","width":800,"height":600,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":null,"totalUsers":1,"totalGroups":2,"tags":[{"name":"stock_chart","visible":true,"position":-1,"editable":true}],"singleton":false,"visible":true,"background":false,"descriptorUrl":"../examples/walkthrough/descriptors/StockChart_descriptor.html","definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[{"action":"Graph","dataTypes":["application/vnd.owf.sample.price"]}]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"92078ac9-6f21-2f5f-6afc-bdc8c915c66d"},{"id":"302c35c9-9ed8-d0b6-251c-ea1ed4d0c86b","namespace":"widget","value":{"universalName":"org.owfgoss.owf.examples.GetDirections","namespace":"Directions","description":"This app component maps directions.","url":"examples/walkthrough/widgets/directions","headerIcon":"examples/walkthrough/widgets/directions/img/logo.png","image":"examples/walkthrough/widgets/directions/img/logo.png","smallIconUrl":"examples/walkthrough/widgets/directions/img/logo.png","largeIconUrl":"examples/walkthrough/widgets/directions/img/logo.png","width":400,"height":400,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":1,"totalGroups":2,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":"../examples/walkthrough/widgets/directions/descriptor/descriptor.html","definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[{"action":"navigate","dataTypes":["application/vnd.owf.sample.addresses"]}],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"302c35c9-9ed8-d0b6-251c-ea1ed4d0c86b"},{"id":"d182002b-3de2-eb24-77be-95a7d08aa85b","namespace":"widget","value":{"universalName":"org.owfgoss.owf.examples.GoogleMaps","namespace":"Google Maps","description":"This app component displays markers or directions.","url":"examples/walkthrough/widgets/googlemaps","headerIcon":"examples/walkthrough/widgets/googlemaps/img/logo.png","image":"examples/walkthrough/widgets/googlemaps/img/logo.png","smallIconUrl":"examples/walkthrough/widgets/googlemaps/img/logo.png","largeIconUrl":"examples/walkthrough/widgets/googlemaps/img/logo.png","width":800,"height":600,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":1,"totalGroups":2,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":"../examples/walkthrough/widgets/googlemaps/descriptor/descriptor.html","definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[{"action":"navigate","dataTypes":["application/vnd.owf.sample.addresses"]},{"action":"plot","dataTypes":["application/vnd.owf.sample.address"]}]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"d182002b-3de2-eb24-77be-95a7d08aa85b"},{"id":"92448ba5-7f2b-982a-629e-9d621268b5e9","namespace":"widget","value":{"universalName":"org.owfgoss.owf.examples.ContactsManager","namespace":"Contacts Manager","description":"This app component allows users to manage their contacts.","url":"examples/walkthrough/widgets/contacts","headerIcon":"examples/walkthrough/widgets/contacts/img/logo.png","image":"examples/walkthrough/widgets/contacts/img/logo.png","smallIconUrl":"examples/walkthrough/widgets/contacts/img/logo.png","largeIconUrl":"examples/walkthrough/widgets/contacts/img/logo.png","width":400,"height":400,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":1,"totalGroups":2,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":"../examples/walkthrough/widgets/contacts/descriptor/descriptor.html","definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"92448ba5-7f2b-982a-629e-9d621268b5e9"},{"id":"679294b3-ccc3-4ace-a061-e3f27ed86451","namespace":"widget","value":{"universalName":"org.ozoneplatform.owf.admin.appcomponentedit","namespace":"App Component Editor","description":null,"url":"admin/WidgetEdit.gsp","headerIcon":"themes/common/images/adm-tools/Widgets24.png","image":"themes/common/images/adm-tools/Widgets64.png","smallIconUrl":"themes/common/images/adm-tools/Widgets24.png","largeIconUrl":"themes/common/images/adm-tools/Widgets64.png","width":581,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":1,"totalGroups":2,"tags":[],"singleton":false,"visible":false,"background":false,"descriptorUrl":null,"definitionVisible":false,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"679294b3-ccc3-4ace-a061-e3f27ed86451"},{"id":"48edfe94-4291-4991-a648-c19a903a663b","namespace":"widget","value":{"universalName":"org.ozoneplatform.owf.admin.appcomponentmanagement","namespace":"App Components","description":null,"url":"admin/WidgetManagement.gsp","headerIcon":"themes/common/images/adm-tools/Widgets24.png","image":"themes/common/images/adm-tools/Widgets64.png","smallIconUrl":"themes/common/images/adm-tools/Widgets24.png","largeIconUrl":"themes/common/images/adm-tools/Widgets64.png","width":818,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":1,"totalGroups":2,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"48edfe94-4291-4991-a648-c19a903a663b"},{"id":"dc5c2062-aaa8-452b-897f-60b4b55ab564","namespace":"widget","value":{"universalName":"org.ozoneplatform.owf.admin.groupedit","namespace":"Group Editor","description":null,"url":"admin/GroupEdit.gsp","headerIcon":"themes/common/images/adm-tools/Groups24.png","image":"themes/common/images/adm-tools/Groups64.png","smallIconUrl":"themes/common/images/adm-tools/Groups24.png","largeIconUrl":"themes/common/images/adm-tools/Groups64.png","width":581,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":1,"totalGroups":2,"tags":[],"singleton":false,"visible":false,"background":false,"descriptorUrl":null,"definitionVisible":false,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"dc5c2062-aaa8-452b-897f-60b4b55ab564"},{"id":"53a2a879-442c-4012-9215-a17604dedff7","namespace":"widget","value":{"universalName":"org.ozoneplatform.owf.admin.groupmanagement","namespace":"Groups","description":null,"url":"admin/GroupManagement.gsp","headerIcon":"themes/common/images/adm-tools/Groups24.png","image":"themes/common/images/adm-tools/Groups64.png","smallIconUrl":"themes/common/images/adm-tools/Groups24.png","largeIconUrl":"themes/common/images/adm-tools/Groups64.png","width":818,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":1,"totalGroups":2,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"53a2a879-442c-4012-9215-a17604dedff7"},{"id":"a9bf8e71-692d-44e3-a465-5337ce5e725e","namespace":"widget","value":{"universalName":"org.ozoneplatform.owf.admin.useredit","namespace":"User Editor","description":null,"url":"admin/UserEdit.gsp","headerIcon":"themes/common/images/adm-tools/Users24.png","image":"themes/common/images/adm-tools/Users64.png","smallIconUrl":"themes/common/images/adm-tools/Users24.png","largeIconUrl":"themes/common/images/adm-tools/Users64.png","width":581,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":1,"totalGroups":2,"tags":[],"singleton":false,"visible":false,"background":false,"descriptorUrl":null,"definitionVisible":false,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"a9bf8e71-692d-44e3-a465-5337ce5e725e"},{"id":"38070c45-5f6a-4460-810c-6e3496495ec4","namespace":"widget","value":{"universalName":"org.ozoneplatform.owf.admin.usermanagement","namespace":"Users","description":null,"url":"admin/UserManagement.gsp","headerIcon":"themes/common/images/adm-tools/Users24.png","image":"themes/common/images/adm-tools/Users64.png","smallIconUrl":"themes/common/images/adm-tools/Users24.png","largeIconUrl":"themes/common/images/adm-tools/Users64.png","width":818,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":1,"totalGroups":2,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"38070c45-5f6a-4460-810c-6e3496495ec4"},{"id":"af180bfc-3924-4111-93de-ad6e9bfc060e","namespace":"widget","value":{"universalName":"org.ozoneplatform.owf.admin.configuration","namespace":"Configuration","description":null,"url":"admin/Configuration.gsp","headerIcon":"themes/common/images/adm-tools/Configuration24.png","image":"themes/common/images/adm-tools/Configuration64.png","smallIconUrl":"themes/common/images/adm-tools/Configuration24.png","largeIconUrl":"themes/common/images/adm-tools/Configuration64.png","width":900,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":1,"totalGroups":2,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"af180bfc-3924-4111-93de-ad6e9bfc060e"},{"id":"72c382a3-89e7-4abf-94db-18db7779e1df","namespace":"widget","value":{"universalName":"org.ozoneplatform.owf.admin.appedit","namespace":"App Editor","description":null,"url":"admin/StackEdit.gsp","headerIcon":"themes/common/images/adm-tools/Stacks24.png","image":"themes/common/images/adm-tools/Stacks64.png","smallIconUrl":"themes/common/images/adm-tools/Stacks24.png","largeIconUrl":"themes/common/images/adm-tools/Stacks64.png","width":581,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":1,"totalGroups":2,"tags":[],"singleton":false,"visible":false,"background":false,"descriptorUrl":null,"definitionVisible":false,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"72c382a3-89e7-4abf-94db-18db7779e1df"},{"id":"391dd2af-a207-41a3-8e51-2b20ec3e7241","namespace":"widget","value":{"universalName":"org.ozoneplatform.owf.admin.appmanagement","namespace":"Apps","description":null,"url":"admin/StackManagement.gsp","headerIcon":"themes/common/images/adm-tools/Stacks24.png","image":"themes/common/images/adm-tools/Stacks64.png","smallIconUrl":"themes/common/images/adm-tools/Stacks24.png","largeIconUrl":"themes/common/images/adm-tools/Stacks64.png","width":818,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":1,"totalGroups":2,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"391dd2af-a207-41a3-8e51-2b20ec3e7241"},{"id":"2445afb9-eb3f-4b79-acf8-6b12180921c3","namespace":"widget","value":{"universalName":"org.ozoneplatform.owf.admin.pageedit","namespace":"Page Editor","description":null,"url":"admin/DashboardEdit.gsp","headerIcon":"themes/common/images/adm-tools/Dashboards24.png","image":"themes/common/images/adm-tools/Dashboards64.png","smallIconUrl":"themes/common/images/adm-tools/Dashboards24.png","largeIconUrl":"themes/common/images/adm-tools/Dashboards64.png","width":581,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":1,"totalGroups":1,"tags":[],"singleton":false,"visible":false,"background":false,"descriptorUrl":null,"definitionVisible":false,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"2445afb9-eb3f-4b79-acf8-6b12180921c3"},{"id":"62e74c04-7db8-0303-225d-bf3d4a185731","namespace":"widget","value":{"universalName":null,"namespace":"mp","description":null,"url":"https://localhost:9443/marketplace","headerIcon":"https://localhost:9443/marketplace/public/../images/themes/default/market_64x64.png","image":"https://localhost:9443/marketplace/public/../images/themes/default/market_64x64.png","smallIconUrl":"https://localhost:9443/marketplace/public/../images/themes/default/market_64x64.png","largeIconUrl":"https://localhost:9443/marketplace/public/../images/themes/default/market_64x64.png","width":200,"height":200,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":null,"totalUsers":1,"totalGroups":1,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":"https://localhost:9443/marketplace/public/storeDescriptor","definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":3,"name":"marketplace","displayName":"store"}]},"path":"62e74c04-7db8-0303-225d-bf3d4a185731"},{"id":"4af3a2c6-3218-7742-cf10-10c9a272c1ba","namespace":"widget","value":{"universalName":null,"namespace":"abc","description":null,"url":"https://","headerIcon":"https://","image":"https://","smallIconUrl":"https://","largeIconUrl":"https://","width":200,"height":200,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":null,"totalUsers":0,"totalGroups":0,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"4af3a2c6-3218-7742-cf10-10c9a272c1ba"}]
+
+
+### [GET]
+Retrieves a list of widgets. Called by the developer's API only. Basically calls "/widget/$widgetGuid" under the hood and only returns the data property of the resulting JSON.
+
+int offset = where to start the list;
+int max = maximum list length;
+String sort = field on which to sort the list;
+String order = sort order (either "ASC" or "DESC", the default is "ASC");
+String widgetGuid = filter by widget GUID;
+int stack_id = filter by stack ID;
+String tags = filter by tags (JSON array of tag objects);
+int group_id = filter by group ID;
+String groupIds = filter by group IDs (JSON array of integers);
+String universalName = filter by universal name;
+String widgetName = filter by display name;
+String widgetVersion = filter by widget version;
+int user_id = filter by user ID;
+String intent = filter by intent (JSON intent object);
+String filterOperator = whether the advanced filters use conjunction or disjunction (either "AND" or "OR", the default is "AND");
+String filters = the advanced filters (JSON array of objects, each object has a filterField and a filterValue, the search criteria is "filterField LIKE filterValue");
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"offset":0,"max":1}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            [{"id":"eb5435cf-4021-4f2a-ba69-dde451d12551","namespace":"widget","value":{"universalName":null,"namespace":"Channel Shouter","description":null,"url":"examples/walkthrough/widgets/ChannelShouter.gsp","headerIcon":"themes/common/images/widget-icons/ChannelShouter.png","image":"themes/common/images/widget-icons/ChannelShouter.png","smallIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","largeIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","width":295,"height":250,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":3,"totalGroups":1,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"eb5435cf-4021-4f2a-ba69-dde451d12551"}]
+
+
+## optional_title [/prefs/widget/$guid]
+
+### [POST]
+Creates a personal widget for a user. Admin only.
+
+String guid = widget GUID;
+int personId = user ID;
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"guid":"fe137961-039d-e7a5-7050-d6eed7ac4782","personId":1}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"id":210,"namespace":"widget","value":{"originalName":"NYSE App Component","universalName":"org.owfgoss.owf.examples.NYSE","editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":23,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"NYSE App Component","description":"This app component displays the end of day report for the New York Stock Exchange.","url":"examples/walkthrough/widgets/NYSE.gsp","headerIcon":"themes/common/images/widget-icons/NYSEStock.png","image":"themes/common/images/widget-icons/NYSEStock.png","smallIconUrl":"themes/common/images/widget-icons/NYSEStock.png","largeIconUrl":"themes/common/images/widget-icons/NYSEStock.png","width":825,"height":437,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[],"tags":[{"name":"grid","visible":true,"position":-1,"editable":null}],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":"../examples/walkthrough/descriptors/NYSE_descriptor.html","allRequired":[],"directRequired":[],"intents":{"send":[{"action":"View","dataTypes":["text/html"]},{"action":"Graph","dataTypes":["application/vnd.owf.sample.price"]}],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"fe137961-039d-e7a5-7050-d6eed7ac4782"}
+
+
+### [PUT]
+Updates a personal widget definition for a user. Admin or owner only.
+
+String guid = widget GUID;
+int personId = user ID;
+String displayName = new widget display name;
+String name = new widget display name (overwitten by displayName);
+boolean visible = whether the widget is visible now (either "true" or "false");
+int pwdPosition = new personal widget position;
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"guid":"ec5435cf-4021-4f2a-ba69-dde451d12551","personId":1,"displayName":"Test Display Name"}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"id":40,"namespace":"widget","value":{"originalName":"Channel Listener","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":11,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Channel Listener","description":null,"url":"examples/walkthrough/widgets/ChannelListener.gsp","headerIcon":"themes/common/images/widget-icons/ChannelListener.png","image":"themes/common/images/widget-icons/ChannelListener.png","smallIconUrl":"themes/common/images/widget-icons/ChannelListener.png","largeIconUrl":"themes/common/images/widget-icons/ChannelListener.png","width":540,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[],"tags":[],"definitionVisible":true,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"ec5435cf-4021-4f2a-ba69-dde451d12551"}
+
+
+## optional_title [/prefs/widget?widgetsToUpdate=]
+
+### [PUT]
+Bulk updates personal widgets.
+
+String widgetsToUpdate = widgets to update (JSON array of widget objects);
+int personId = user ID;
+boolean updateOrder = whether to update the widget position (either "true" or "false");
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"widgetsToUpdate":["guid": "widget_guid", "name: "new name"], updateOrder: false}
+
++ Response 500
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true}
+
+
+## optional_title [/prefs/widgetList]
+
+### [GET]
+Returns a list of widget based on filters in params
+
++ Request
+    + Headers
+
+
+    + Body
+
+            { "max": 1,"offset":0}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"results":19,"rows":[{"id":189,"namespace":"widget","value":{"originalName":"Dashboard Editor","universalName":null,"editable":true,"disabled":false,"visible":true,"favorite":false,"groupWidget":false,"position":1,"userId":"testAdmin1","userRealName":"Test Admin 1","namespace":"Dashboard Editor","description":null,"url":"admin/DashboardEdit.gsp","headerIcon":"themes/common/images/adm-tools/Dashboards24.png","image":"themes/common/images/adm-tools/Dashboards64.png","smallIconUrl":"themes/common/images/adm-tools/Dashboards24.png","largeIconUrl":"themes/common/images/adm-tools/Dashboards64.png","width":581,"height":440,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true}],"tags":[{"name":"admin","visible":true,"position":-1,"editable":true}],"definitionVisible":false,"singleton":false,"background":false,"descriptorUrl":null,"allRequired":[],"directRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"a540f672-a34c-4989-962c-dcbd559c3792"}]}
+
+
+# Group WidgetDefinition
+
+## optional_title [/prefs/widgetDefinition]
+
+### [DELETE]
+Deletes widget definitions. Admin only.
+
+String data = widgets to delete (JSON array of widget objects);
+String id = widgets to delete (comma-separated array of widget GUIDs, overwitten by data);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"data":[{"id":"eb5435cf-4021-4f2a-ba69-dde451d12551","namespace":"widget","value":{"universalName":null,"namespace":"Channel Shouter","description":null,"url":"examples/walkthrough/widgets/ChannelShouter.gsp","headerIcon":"themes/common/images/widget-icons/ChannelShouter.png","image":"themes/common/images/widget-icons/ChannelShouter.png","smallIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","largeIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","width":295,"height":250,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":4,"totalGroups":3,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"eb5435cf-4021-4f2a-ba69-dde451d12551"}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[]}
+
+
+## optional_title [/prefs/widgetDefinition?widgetGuidsToDelete=]
+
+### [DELETE]
+Bulk deletes widget definitions. Admin only. Duplicates functionality of "/prefs/widgetDefinition".
+
+String widgetGuidsToDelete = widgets to delete (JSON array of widget objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"widgetGuidsToDelete":[{"id":"eb5435cf-4021-4f2a-ba69-dde451d12551","namespace":"widget","value":{"universalName":null,"namespace":"Channel Shouter","description":null,"url":"examples/walkthrough/widgets/ChannelShouter.gsp","headerIcon":"themes/common/images/widget-icons/ChannelShouter.png","image":"themes/common/images/widget-icons/ChannelShouter.png","smallIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","largeIconUrl":"themes/common/images/widget-icons/ChannelShouter.png","width":295,"height":250,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":4,"totalGroups":3,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"eb5435cf-4021-4f2a-ba69-dde451d12551"}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[]}
+
+
+## optional_title [/prefs/widgetDefinition/dependents]
+
+### [GET]
+Returns a list of dependent widget defintions
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"id":"b787b976-7721-4955-aba4-f14f45aaad68"}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"id":"250e0694-0124-4ee6-a66b-349cc919a11f","namespace":"widget","value":{"universalName":"","namespace":"Component with requirements","description":"","url":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","headerIcon":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","image":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","smallIconUrl":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","largeIconUrl":"https://www.owfgoss.org/jira/s/en_US-f3eu57-1988229788/6097/12/_/jira-logo-scaled.png","width":1050,"height":650,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1","totalUsers":1,"totalGroups":0,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":"","definitionVisible":true,"directRequired":["b787b976-7721-4955-aba4-f14f45aaad68"],"allRequired":["b787b976-7721-4955-aba4-f14f45aaad68"],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"250e0694-0124-4ee6-a66b-349cc919a11f"}]}
+
+
+# Group Stack
+
+## optional_title [/stack/$id]
+
+### [GET]
+Retrieves a list of stacks.
+
+int offset = where to start the list;
+int max = maximum list length;
+String sort = field on which to sort the list (the default is "name");
+String order = sort order (either "ASC" or "DESC", the default is "ASC");
+int id = filter by stack ID;
+int group_id = filter by group ID;
+int user_id = filter by user ID;
+String filterOperator = whether the advanced filters use conjunction or disjunction (either "AND" or "OR", the default is "AND");
+String filters = the advanced filters (JSON array of objects, each object has a filterField and a filterValue, the search criteria is "filterField LIKE filterValue");
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"offset":0,"max":1,"sort":"name","order":"ASC"}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"results":1,"data":[{"totalUsers":0,"id":2,"totalWidgets":5,"name":"Administration","totalDashboards":1,"imageUrl":null,"owner":null,"totalGroups":1,"stackContext":"0092af0b-57ae-4fd9-bd8a-ec0937ac5399","groups":[{"stackDefault":false,"totalUsers":0,"id":191,"totalWidgets":0,"name":"OWF Administrators","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Administrators","email":null,"displayName":"OWF Administrators","automatic":true},{"stackDefault":true,"totalUsers":0,"id":195,"totalWidgets":0,"name":"3b870e3b-247f-47db-bcd8-8fab6877bbc8","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"descriptorUrl":null,"description":"This app lists administrative pages."}]}
+
+
+## optional_title [/stack]
+
+### [PUT]
+Updates stacks.
+String data = stacks to update (JSON array of stack objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"data":[{"id":4,"name":"Test Stack","description":"Test","stackContext":"315ff281-2813-471a-b659-8cf2587b3bbc","owner":{"id":1,"userRealName":"Test Admin 1","username":"testAdmin1","totalWidgets":0,"totalDashboards":0,"totalStacks":0,"hasPWD":null,"totalGroups":0,"tagLinks":[],"email":"testAdmin1@ozone3.test","lastLogin":1376662094468},"imageUrl":" ","descriptorUrl":"","totalDashboards":0,"totalUsers":0,"totalGroups":0,"totalWidgets":0}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"totalUsers":1,"id":4,"totalWidgets":0,"name":"Test Stack","totalDashboards":1,"imageUrl":" ","owner":{"id":1,"userRealName":"Test Admin 1","username":"testAdmin1","totalWidgets":0,"totalDashboards":0,"totalStacks":0,"hasPWD":null,"totalGroups":0,"tagLinks":[],"email":"testAdmin1@ozone3.test","lastLogin":1376662094468},"totalGroups":0,"stackContext":"315ff281-2813-471a-b659-8cf2587b3bbc","groups":[{"stackDefault":true,"totalUsers":0,"id":197,"totalWidgets":0,"name":"3e415892-2d96-462e-acee-20ce4a6f7a70","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"descriptorUrl":null,"description":"Test"}]}
+
+
+### [DELETE]
+Deletes stacks. Admin only.
+
+String data = stacks to delete (JSON array of stack objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"data":[{"id":4,"name":"Test Stack","description":" ","stackContext":"1a6a502e-9455-4fa8-90ce-d273743e5e5f","owner":{"id":1,"userRealName":"Test Admin 1","username":"testAdmin1","totalWidgets":0,"totalDashboards":0,"totalStacks":0,"hasPWD":null,"totalGroups":0,"tagLinks":[],"email":"testAdmin1@ozone3.test","lastLogin":1376665353190},"imageUrl":" ","descriptorUrl":"","totalDashboards":1,"totalUsers":1,"totalGroups":0,"totalWidgets":0}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"id":4,"totalGroups":0,"imageUrl":" ","description":" ","name":"Test Stack","owner":{"id":1,"tagLinks":[],"lastLogin":1376665353190,"username":"testAdmin1","totalGroups":0,"email":"testAdmin1@ozone3.test","hasPWD":null,"totalStacks":0,"totalDashboards":0,"userRealName":"Test Admin 1","totalWidgets":0},"totalDashboards":1,"stackContext":"1a6a502e-9455-4fa8-90ce-d273743e5e5f","totalUsers":1,"totalWidgets":0,"descriptorUrl":""}]}
+
+
+### [POST]
+Creates stacks. Admin only. Deprecated.
+
+String data = stacks to create (JSON array of stack objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"data":[{"widgets":[{"universalName":null,"visible":true,"defaultTags":[],"singleton":false,"imageUrlSmall":"themes/common/images/widget-icons/ChannelShouter.png","imageUrlMedium":"themes/common/images/widget-icons/ChannelShouter.png","width":295,"widgetVersion":"1.0","intents":{"send":[],"receive":[]},"height":250,"widgetUrl":"examples/walkthrough/widgets/ChannelShouter.gsp","description":null,"background":false,"widgetTypes":["standard"],"widgetGuid":"eb5435cf-4021-4f2a-ba69-dde451d12551","displayName":"Channel Shouter","descriptorUrl":null},{"universalName":null,"visible":true,"defaultTags":[],"singleton":false,"imageUrlSmall":"themes/common/images/widget-icons/ChannelListener.png","imageUrlMedium":"themes/common/images/widget-icons/ChannelListener.png","width":540,"widgetVersion":"1.0","intents":{"send":[],"receive":[]},"height":440,"widgetUrl":"examples/walkthrough/widgets/ChannelListener.gsp","description":null,"background":false,"widgetTypes":["standard"],"widgetGuid":"ec5435cf-4021-4f2a-ba69-dde451d12551","displayName":"Channel Listener","descriptorUrl":null}],"description":"Description","name":"Sample","stackContext":"908d9377-9d77-406c-8143-90b406fb508f","dashboards":[{"layoutConfig":{"widgets":[{"region":"none","buttonOpened":false,"zIndex":19120,"minimized":false,"floatingWidget":false,"intentConfig":null,"uniqueId":"17580ea1-02fc-8ca7-e794-b5644f7dc21d","height":250,"pinned":false,"name":"Channel Shouter","launchData":null,"widgetGuid":"eb5435cf-4021-4f2a-ba69-dde451d12551","columnPos":0,"singleton":false,"width":295,"buttonId":null,"paneGuid":"f3712dc1-6e90-2469-8cb3-5b499937cac8","dashboardGuid":"905968f7-f94d-1c9b-431c-a05dc7bb68d1","collapsed":false,"maximized":false,"statePosition":2,"background":false,"active":false,"y":7,"x":549},{"region":"none","buttonOpened":false,"zIndex":19130,"minimized":false,"floatingWidget":false,"intentConfig":null,"uniqueId":"9bdc8e96-f311-4a0b-c5b9-23ae5d768297","height":383,"pinned":false,"name":"Channel Listener","launchData":null,"widgetGuid":"ec5435cf-4021-4f2a-ba69-dde451d12551","columnPos":0,"singleton":false,"width":540,"buttonId":null,"paneGuid":"f3712dc1-6e90-2469-8cb3-5b499937cac8","dashboardGuid":"905968f7-f94d-1c9b-431c-a05dc7bb68d1","collapsed":false,"maximized":false,"statePosition":1,"background":false,"active":true,"y":5,"x":4}],"defaultSettings":{"widgetStates":{"eb5435cf-4021-4f2a-ba69-dde451d12551":{"timestamp":1348064183912,"height":250,"width":295,"y":7,"x":549},"ec5435cf-4021-4f2a-ba69-dde451d12551":{"timestamp":1348064185725,"height":383,"width":540,"y":5,"x":4}}},"height":"100%","items":[],"xtype":"desktoppane","flex":1,"paneType":"desktoppane"},"guid":"c62ce95c-d16d-4ffe-afae-c46fa64a689b","isdefault":false,"dashboardPosition":0,"description":"","name":"Sample","locked":false,"type":null}]}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"totalUsers":1,"id":6,"totalWidgets":0,"name":"Sample","totalDashboards":0,"imageUrl":null,"owner":null,"totalGroups":0,"stackContext":"908d9377-9d77-406c-8143-90b406fb508f","groups":[{"stackDefault":true,"totalUsers":0,"id":199,"totalWidgets":0,"name":"a61243ae-181f-4f77-b3f9-a3d471410f0f","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"descriptorUrl":null,"description":"Description"}]}
+
+
+## optional_title [/stack/$id?tab=groups]
+
+### [PUT]
+Updates a stack's list of groups. Admin only.
+
+int id = stack ID;
+int stack_id = stack ID (overwitten by id);
+String tab = topic of advanced stack update (must be set to "groups");
+String update_action = whether to add or remove the groups (either "add" or "remove");
+String data = the groups (JSON array of group objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"stack_id":7,"tab":"groups","update_action":"add","data":[{"name":"TestGroup1","id":4,"description":"TestGroup1","totalWidgets":0,"totalUsers":2,"totalStacks":0,"automatic":false,"stackDefault":false,"status":"active","displayName":"TestGroup1","email":"testgroup1@group1.com","title":"TestGroup1"}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"stackDefault":false,"totalUsers":0,"id":4,"totalWidgets":0,"name":"TestGroup1","totalStacks":0,"status":"active","tagLinks":[],"description":"TestGroup1","email":"testgroup1@group1.com","displayName":"TestGroup1","automatic":false}]}
+
+
+## optional_title [/stack/$id?tab=users]
+
+### [PUT]
+Updates a stack's list of users. Admin only.
+
+int id = stack ID;
+int stack_id = stack ID (overwitten by id);
+String tab = topic of advanced stack update (must be set to "users");
+String update_action = whether to add or remove the users (either "add" or "remove");
+String data = the users (JSON array of user objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"stack_id":7,"tab":"users","update_action":"add","data":[{"id":2,"username":"testUser1","userRealName":"Test User 1","email":"testUser1@ozone3.test","totalGroups":2,"totalWidgets":3,"totalDashboards":0,"totalStacks":0,"lastLogin":null,"title":"Test User 1"}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"id":2,"userRealName":"Test User 1","username":"testUser1","totalWidgets":0,"totalDashboards":0,"totalStacks":0,"hasPWD":null,"totalGroups":0,"tagLinks":[],"email":"testUser1@ozone3.test","lastLogin":null}]}
+
+
+## optional_title [/stack/addPage]
+
+### [POST]
+Adds a page to a stack. If the stack is new, it is automatically created. Admin or owner only.
+
+String stackData = the stack (JSON stack object);
+String dashboardData = the page (JSON page object);
+String owner = if the stack is new, the owner of the stack (JSON user object);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"stackData":{"name":"Page Without Stack","description":" ","imageUrl":" "},"dashboardData":{"name":"Page Without Stack","description":" ","iconImageUrl":" ","type":"","guid":"bf54271d-4e0d-583b-47e5-520021c2444e","isdefault":false,"locked":false,"state":[],"layoutConfig":"{\"paneType\":\"desktoppane\",\"widgets\":[],\"xtype\":\"container\",\"flex\":1,\"height\":\"100%\",\"items\":[]}","stack":null,"publishedToStore":""}}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"alteredByAdmin":"false","createdDate":"08/16/2013 01:51 PM EDT","isGroupDashboard":false,"prettyCreatedDate":"  moments ago","isdefault":false,"locked":false,"dashboardPosition":31,"name":"Page Without Stack","user":{"userId":"testAdmin1"},"type":null,"EDashboardLayoutList":"[accordion, desktop, portal, tabbed]","layoutConfig":"{\"widgets\":[],\"height\":\"100%\",\"items\":[],\"xtype\":\"container\",\"flex\":1,\"paneType\":\"desktoppane\"}","createdBy":{"userId":null,"userRealName":null},"stack":{"totalUsers":0,"id":8,"totalWidgets":0,"name":"Page Without Stack","totalDashboards":0,"imageUrl":" ","owner":{"id":1,"userRealName":"Test Admin 1","username":"testAdmin1","totalWidgets":0,"totalDashboards":0,"totalStacks":0,"hasPWD":null,"totalGroups":0,"tagLinks":[],"email":"testAdmin1@ozone3.test","lastLogin":1376675051866},"totalGroups":0,"stackContext":"218a4f5f-196e-42ec-b479-0f46c47b63ac","groups":[{"stackDefault":true,"totalUsers":0,"id":202,"totalWidgets":0,"name":"36a34f2f-f401-4a13-96b6-cb86008785b9","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"descriptorUrl":null,"description":" "},"publishedToStore":false,"iconImageUrl":" ","editedDate":"08/16/2013 01:51 PM EDT","groups":[],"prettyEditedDate":"  moments ago","description":" ","guid":"7f1dfd36-5995-4575-b7d3-ce7af27dafc8","markedForDeletion":false}
+
+
+## optional_title [/stack/restore/$id]
+
+### [POST]
+Restores a stack to its original state.
+
+int id = stack ID;
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"id":1}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"updatedDashboards":[{"alteredByAdmin":"false","createdDate":"08/16/2013 11:02 AM EDT","isGroupDashboard":false,"prettyCreatedDate":" 51 minutes ago","isdefault":true,"locked":false,"dashboardPosition":0,"name":"Sample","user":{"userId":"testAdmin1"},"type":null,"EDashboardLayoutList":"[accordion, desktop, portal, tabbed]","layoutConfig":"{\"defaultSettings\":{\"widgetStates\":{\"eb5435cf-4021-4f2a-ba69-dde451d12551\":{\"timestamp\":1348064183912,\"height\":250,\"width\":295,\"y\":7,\"x\":549},\"ec5435cf-4021-4f2a-ba69-dde451d12551\":{\"timestamp\":1348064185725,\"height\":383,\"width\":540,\"y\":5,\"x\":4}}},\"widgets\":[{\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":19120,\"minimized\":false,\"floatingWidget\":false,\"singleton\":false,\"width\":295,\"buttonId\":null,\"intentConfig\":null,\"paneGuid\":\"f3712dc1-6e90-2469-8cb3-5b499937cac8\",\"dashboardGuid\":\"905968f7-f94d-1c9b-431c-a05dc7bb68d1\",\"uniqueId\":\"ad101094-b3ff-4792-8f73-4ad0a4fea06f\",\"collapsed\":false,\"maximized\":false,\"height\":250,\"statePosition\":2,\"pinned\":false,\"background\":false,\"name\":\"Channel Shouter\",\"launchData\":null,\"widgetGuid\":\"eb5435cf-4021-4f2a-ba69-dde451d12551\",\"active\":false,\"y\":7,\"columnPos\":0,\"x\":549},{\"region\":\"none\",\"buttonOpened\":false,\"zIndex\":19130,\"minimized\":false,\"floatingWidget\":false,\"singleton\":false,\"width\":540,\"buttonId\":null,\"intentConfig\":null,\"paneGuid\":\"f3712dc1-6e90-2469-8cb3-5b499937cac8\",\"dashboardGuid\":\"905968f7-f94d-1c9b-431c-a05dc7bb68d1\",\"uniqueId\":\"0983c4c3-e595-4cd9-8284-682a66381cd9\",\"collapsed\":false,\"maximized\":false,\"height\":383,\"statePosition\":1,\"pinned\":false,\"background\":false,\"name\":\"Channel Listener\",\"launchData\":null,\"widgetGuid\":\"ec5435cf-4021-4f2a-ba69-dde451d12551\",\"active\":true,\"y\":5,\"columnPos\":0,\"x\":4}],\"height\":\"100%\",\"items\":[],\"xtype\":\"desktoppane\",\"flex\":1,\"paneType\":\"desktoppane\"}","createdBy":{"userId":null,"userRealName":null},"stack":{"totalUsers":0,"id":1,"totalWidgets":2,"name":"Sample","totalDashboards":0,"imageUrl":null,"owner":null,"totalGroups":0,"stackContext":"908d934d-9d53-406c-8143-90b406fb508f","groups":[{"stackDefault":false,"totalUsers":0,"id":192,"totalWidgets":0,"name":"OWF Users","totalStacks":0,"status":"active","tagLinks":[],"description":"OWF Users","email":null,"displayName":"OWF Users","automatic":true},{"stackDefault":true,"totalUsers":0,"id":194,"totalWidgets":0,"name":"df51cb9b-f3d8-412e-af33-d064f81fb6c0","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"descriptorUrl":null,"description":null},"publishedToStore":true,"iconImageUrl":null,"editedDate":"08/16/2013 11:02 AM EDT","groups":[{"stackDefault":true,"totalUsers":0,"id":194,"totalWidgets":0,"name":"df51cb9b-f3d8-412e-af33-d064f81fb6c0","totalStacks":0,"status":"active","tagLinks":[],"description":"","email":null,"displayName":null,"automatic":false}],"prettyEditedDate":" 51 minutes ago","description":"","guid":"42c71bee-d713-4927-9f15-64bcedfbc6ed","markedForDeletion":false}]}
+
+
+## optional_title [/stack/share]
+
+### [POST]
+Generates a stack JSON structure for sharing.  Also performs any internal cleanup needed in order to sync the owner's view of the stack with others. This includes deleting dashboards that are marked for deletion and setting isPublished on all pages (dashboards).  Owner only.
+
+int id = stack ID;
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"id":7}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"name":"Test","stackContext":"7a563cd0-8f51-4a0e-8ef5-af383020c192","description":" ","dashboards":[{"name":"Test","guid":"8de4f3fb-5929-31bf-df8e-885fc981515e","description":" ","type":null,"isdefault":true,"locked":false,"dashboardPosition":15,"layoutConfig":{"defaultSettings":{},"widgets":[],"height":"100%","items":[],"xtype":"desktoppane","flex":1,"paneType":"desktoppane"}}],"widgets":[]}
+
+
+## optional_title [/stack/$id?tab=dashboards]
+
+### [PUT]
+Updates a stack's list of dashboards. Admin only.  Deprecated.
+
+int id = stack ID;
+int stack_id = stack ID (overwitten by id);
+String tab = topic of advanced stack update (must be set to "dashboards");
+String update_action = whether to add or remove the dashboards (either "add" or "remove");
+String data = the dashboard (JSON array of dashboard objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+
+
++ Response
+    + Headers
+
+            Content-Type:
+
+    + Body
+
+
+
+
+## optional_title [/stack/export]
+
+### [GET]
+Exports a stack as an HTML descriptor file. The descriptor file is attached to the response. Admin only.  Deprecated.
+
+String id = stack ID;
+String filename = name of the HTML descriptor file (the default is "stack_descriptor");
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"id":1,"filename":"Sample"}
+
++ Response 200
+    + Headers
+
+            Content-Type:text/json
+
+    + Body
+
+
+
+
+## optional_title [/stack/import]
+
+### [POST]
+Imports a stack. Admin only. Deprecated.
+
+String data = stack to import (JSON stack object);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"data":{"widgets":[{"universalName":null,"visible":true,"defaultTags":[],"singleton":false,"imageUrlSmall":"themes/common/images/widget-icons/ChannelShouter.png","imageUrlMedium":"themes/common/images/widget-icons/ChannelShouter.png","width":295,"widgetVersion":"1.0","intents":{"send":[],"receive":[]},"height":250,"widgetUrl":"examples/walkthrough/widgets/ChannelShouter.gsp","description":null,"background":false,"widgetTypes":["standard"],"widgetGuid":"eb5435cf-4021-4f2a-ba69-dde451d12551","displayName":"Channel Shouter","descriptorUrl":null},{"universalName":null,"visible":true,"defaultTags":[],"singleton":false,"imageUrlSmall":"themes/common/images/widget-icons/ChannelListener.png","imageUrlMedium":"themes/common/images/widget-icons/ChannelListener.png","width":540,"widgetVersion":"1.0","intents":{"send":[],"receive":[]},"height":440,"widgetUrl":"examples/walkthrough/widgets/ChannelListener.gsp","description":null,"background":false,"widgetTypes":["standard"],"widgetGuid":"ec5435cf-4021-4f2a-ba69-dde451d12551","displayName":"Channel Listener","descriptorUrl":null}],"description":null,"name":"Sample","stackContext":"908d934d-9d77-406c-8143-90b406fb508f","dashboards":[{"layoutConfig":{"widgets":[{"region":"none","buttonOpened":false,"zIndex":19120,"minimized":false,"floatingWidget":false,"intentConfig":null,"uniqueId":"17580ea1-02fc-8ca7-e794-b5644f7dc21d","height":250,"pinned":false,"name":"Channel Shouter","launchData":null,"widgetGuid":"eb5435cf-4021-4f2a-ba69-dde451d12551","columnPos":0,"singleton":false,"width":295,"buttonId":null,"paneGuid":"f3712dc1-6e90-2469-8cb3-5b499937cac8","dashboardGuid":"905968f7-f94d-1c9b-431c-a05dc7bb68d1","collapsed":false,"maximized":false,"statePosition":2,"background":false,"active":false,"y":7,"x":549},{"region":"none","buttonOpened":false,"zIndex":19130,"minimized":false,"floatingWidget":false,"intentConfig":null,"uniqueId":"9bdc8e96-f311-4a0b-c5b9-23ae5d768297","height":383,"pinned":false,"name":"Channel Listener","launchData":null,"widgetGuid":"ec5435cf-4021-4f2a-ba69-dde451d12551","columnPos":0,"singleton":false,"width":540,"buttonId":null,"paneGuid":"f3712dc1-6e90-2469-8cb3-5b499937cac8","dashboardGuid":"905968f7-f94d-1c9b-431c-a05dc7bb68d1","collapsed":false,"maximized":false,"statePosition":1,"background":false,"active":true,"y":5,"x":4}],"defaultSettings":{"widgetStates":{"eb5435cf-4021-4f2a-ba69-dde451d12551":{"timestamp":1348064183912,"height":250,"width":295,"y":7,"x":549},"ec5435cf-4021-4f2a-ba69-dde451d12551":{"timestamp":1348064185725,"height":383,"width":540,"y":5,"x":4}}},"height":"100%","items":[],"xtype":"desktoppane","flex":1,"paneType":"desktoppane"},"guid":"c62ce95c-d16d-4ffe-afae-c46fa64a689b","isdefault":false,"dashboardPosition":0,"description":"","name":"Sample","locked":false,"type":null}]}}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"class":"ozone.owf.grails.domain.Stack","id":5,"description":null,"descriptorUrl":null,"groups":[{"class":"Group","id":198}],"imageUrl":null,"name":"Sample","owner":null,"stackContext":"908d934d-9d77-406c-8143-90b406fb508f","uniqueWidgetCount":2}
+
+
+# Group Theme
+
+## optional_title [/themes]
+
+### [GET]
+Retrieves a list of all themes.
+
++ Request
+    + Headers
+
+
+    + Body
+
+
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            [{"created_date":"March 21, 2012","contact_email":"ozone-developers@googlegroups.com","modified_date":"March 21, 2012","owf_font_size":12,"type":"High Contrast white on black","base_url":"themes/accessibility-wob.theme/","contrast":"white-on-black","display_name":"Carbon","author":"OWF Community Support Team","screenshots":[{"description":"App Components","url":"themes/accessibility-wob.theme/images/preview/CARBON_Components.png"},{"description":"App Builder","url":"themes/accessibility-wob.theme/images/preview/CARBON_Builder.png"},{"description":"Split Application","url":"themes/accessibility-wob.theme/images/preview/CARBON_Application.png"}],"description":"This is a high-contrast theme that features white text over a dark background for easier readability in dimly-lit environments.","name":"accessibility-wob","thumb":"themes/accessibility-wob.theme/images/preview/CARBON_Application.png","css":"themes/accessibility-wob.theme/css/accessibility-wob.css"},{"created_date":"January 1, 2012","contact_email":"ozone-developers@googlegroups.com","modified_date":"January 1, 2012","owf_font_size":12,"type":"standard","base_url":"themes/a_default.theme/","contrast":"standard","display_name":"Cobalt","author":"OWF Community Support Team","screenshots":[{"description":"App Components","url":"themes/a_default.theme/images/preview/COBALT_Components.png"},{"description":"App Builder","url":"themes/a_default.theme/images/preview/COBALT_Builder.png"},{"description":"Split Application","url":"themes/a_default.theme/images/preview/COBALT_Application.png"}],"description":"This is the default theme for OWF.","name":"a_default","thumb":"themes/a_default.theme/images/preview/COBALT_Application.png","css":"themes/a_default.theme/css/a_default.css"},{"created_date":"March 21, 2012","contact_email":"ozone-developers@googlegroups.com","modified_date":"March 21, 2012","owf_font_size":12,"type":"Black on White High Contrast","base_url":"themes/accessibility-bow.theme/","contrast":"black-on-white","display_name":"Gold","author":"OWF Community Support Team","screenshots":[{"description":"App Components","url":"themes/accessibility-bow.theme/images/preview/GOLD_Components.png"},{"description":"App Builder","url":"themes/accessibility-bow.theme/images/preview/GOLD_Builder.png"},{"description":"Split Application","url":"themes/accessibility-bow.theme/images/preview/GOLD_Application.png"}],"description":"This is a high-contrast theme that features dark text over a white background for easier readability.","name":"accessibility-bow","thumb":"themes/accessibility-bow.theme/images/preview/GOLD_Application.png","css":"themes/accessibility-bow.theme/css/accessibility-bow.css"}]
+
+
+# Group Widget
+
+## optional_title [/widget/$widgetGuid?]
+
+### [GET]
+Retrieves a list of widgets.
+
+int offset = where to start the list;
+int max = maximum list length;
+String sort = field on which to sort the list;
+String order = sort order (either "ASC" or "DESC", the default is "ASC");
+String widgetGuid = filter by widget GUID;
+int stack_id = filter by stack ID;
+String tags = filter by tags (JSON array of tag objects);
+int group_id = filter by group ID;
+String groupIds = filter by group IDs (JSON array of integers);
+String universalName = filter by universal name;
+String widgetName = filter by display name;
+String widgetVersion = filter by widget version;
+int user_id = filter by user ID;
+String intent = filter by intent (JSON intent object);
+String filterOperator = whether the advanced filters use conjunction or disjunction (either "AND" or "OR", the default is "AND");
+String filters = the advanced filters (JSON array of objects, each object has a filterField and a filterValue, the search criteria is "filterField LIKE filterValue");
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"offset":0,"max":1,"sort":"name","order":"ASC"}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"results":19,"data":[{"id":"6cf4f84a-cc89-45ba-9577-15c34f66ee9c","namespace":"widget","value":{"universalName":null,"namespace":"App Component Editor","description":null,"url":"admin/WidgetEdit.gsp","headerIcon":"themes/common/images/adm-tools/Widgets24.png","image":"themes/common/images/adm-tools/Widgets64.png","smallIconUrl":"themes/common/images/adm-tools/Widgets24.png","largeIconUrl":"themes/common/images/adm-tools/Widgets64.png","width":581,"height":493,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":1,"totalGroups":1,"tags":[{"name":"admin","visible":true,"position":-1,"editable":true}],"singleton":false,"visible":false,"background":false,"descriptorUrl":null,"definitionVisible":false,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":2,"name":"administration","displayName":"administration"}]},"path":"6cf4f84a-cc89-45ba-9577-15c34f66ee9c"}]}
+
+
+## optional_title [/widget]
+
+### [POST]
+Creates widgets. Admin only.
+
+String data = widgets to create (JSON array of widget objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"data":[{"id":"","name":"Test","originalName":"","version":"","description":"","url":"http://","headerIcon":"http://","image":"http://","width":200,"height":200,"widgetGuid":"4c1b6db0-5898-8657-11ea-5837d23e4c1c","universalName":"","maximized":"","minimized":"","x":"","y":"","visible":true,"definitionVisible":"","background":false,"disabled":"","editable":"","tags":[],"singleton":false,"allRequired":"","directRequired":"","userId":"","userRealName":"","totalUsers":"","totalGroups":"","widgetTypes":[{"id":1,"name":"standard"}],"descriptorUrl":"","intents":"","title":"Test","groups":""}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"id":"4c1b6db0-5898-8657-11ea-5837d23e4c1c","namespace":"widget","value":{"universalName":null,"namespace":"Test","description":null,"url":"http://","headerIcon":"http://","image":"http://","smallIconUrl":"http://","largeIconUrl":"http://","width":200,"height":200,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":null,"totalUsers":0,"totalGroups":0,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"4c1b6db0-5898-8657-11ea-5837d23e4c1c"}]}
+
+
+### [PUT]
+Updates widgets. Admin only.
+
+String data = widgets to update (JSON array of widget objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"data":[{"id":"61eb07a6-c3d2-c48e-8e1e-53698f94fead","name":"Test Widget","originalName":"","version":"1.0","description":"Test Widget Description","url":"http://","headerIcon":"http://","image":"http://","width":200,"height":200,"widgetGuid":"61eb07a6-c3d2-c48e-8e1e-53698f94fead","universalName":"owf.TestWidget","maximized":false,"minimized":false,"x":0,"y":0,"visible":true,"definitionVisible":true,"background":false,"disabled":"","editable":"","tags":[],"singleton":false,"allRequired":[],"directRequired":[],"userId":"","userRealName":"","totalUsers":0,"totalGroups":0,"widgetTypes":[{"id":1,"name":"standard"}],"descriptorUrl":null,"intents":"","title":"Test Widget","groups":""}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"id":"61eb07a6-c3d2-c48e-8e1e-53698f94fead","namespace":"widget","value":{"universalName":"owf.TestWidget","namespace":"Test Widget","description":"Test Widget Description","url":"http://","headerIcon":"http://","image":"http://","smallIconUrl":"http://","largeIconUrl":"http://","width":200,"height":200,"x":0,"y":0,"minimized":false,"maximized":false,"widgetVersion":"1.0","totalUsers":0,"totalGroups":0,"tags":[],"singleton":false,"visible":true,"background":false,"descriptorUrl":null,"definitionVisible":true,"directRequired":[],"allRequired":[],"intents":{"send":[],"receive":[]},"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}]},"path":"61eb07a6-c3d2-c48e-8e1e-53698f94fead"}]}
+
+
+### [DELETE]
+Deletes widgets. Admin only.
+
+String data = widgets to delete (JSON array of widget objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"data":[{"id":"61eb07a6-c3d2-c48e-8e1e-53698f94fead","name":"Test Widget","originalName":"","version":"1.0","description":"Test Widget Description","url":"http://","headerIcon":"http://","image":"http://","width":200,"height":200,"widgetGuid":"61eb07a6-c3d2-c48e-8e1e-53698f94fead","universalName":"owf.TestWidget","maximized":false,"minimized":false,"x":0,"y":0,"visible":true,"definitionVisible":true,"background":false,"disabled":"","editable":"","tags":[],"singleton":false,"allRequired":[],"directRequired":[],"userId":"","userRealName":"","totalUsers":0,"totalGroups":0,"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}],"descriptorUrl":null,"intents":{"send":[],"receive":[]},"title":"Test Widget","groups":""}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"universalName":"owf.TestWidget","totalGroups":0,"minimized":false,"visible":true,"originalName":"","totalUsers":0,"userRealName":"","version":"1.0","id":"61eb07a6-c3d2-c48e-8e1e-53698f94fead","title":"Test Widget","height":200,"description":"Test Widget Description","definitionVisible":true,"userId":"","name":"Test Widget","value":{},"widgetGuid":"61eb07a6-c3d2-c48e-8e1e-53698f94fead","groups":"","tags":[],"directRequired":[],"singleton":false,"width":200,"image":"http://","url":"http://","editable":"","maximized":false,"intents":{"send":[],"receive":[]},"background":false,"widgetTypes":[{"id":1,"name":"standard","displayName":"standard"}],"headerIcon":"http://","allRequired":[],"y":0,"disabled":"","descriptorUrl":null,"x":0}]}
+
+
+## optional_title [/widget?addExternalWidgetsToUser=true]
+
+### [POST]
+Adds external widgets from the Marketplace to the user. Admin only.
+
+boolean addExternalWidgetsToUser = whether the widgets to add are external (must be set to "true");
+String marketplaceUrl = URL to the Marketplace;
+String widgets = the external widgets (JSON array of widget objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"addExternalWidgetsToUser":true,"marketplaceUrl":"https://amlqa01.goss.owfgoss.org:443/marketplace","widgets":["{\"displayName\":\"A Widget 4 wanye\",\"description\":\"\",\"imageUrlMedium\":\"http://icons.iconarchive.com/icons/rokey/the-last-order-candy/128/scheduled-tasks-icon.png\",\"imageUrlSmall\":\"http://icons.iconarchive.com/icons/capital18/capital-suite/128/Misc-Globe-icon.png\",\"widgetGuid\":\"f0e9a68b-870d-4d31-aded-d77ef5366537\",\"widgetUrl\":\"http://yahoo.com\",\"widgetVersion\":\"2.5\",\"isSelected\":true,\"isExtAjaxFormat\":true,\"singleton\":false,\"visible\":true,\"background\":false,\"height\":650,\"width\":1050,\"universalName\":\"\",\"descriptorUrl\":\"\",\"widgetTypes\":[\"standard\"],\"listingIntents\":[]}"]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"class":"ozone.owf.grails.domain.WidgetDefinition","id":190,"background":false,"description":"null","descriptorUrl":null,"displayName":"A Widget 4 wanye","height":650,"imageUrlMedium":"http://icons.iconarchive.com/icons/rokey/the-last-order-candy/128/scheduled-tasks-icon.png","imageUrlSmall":"http://icons.iconarchive.com/icons/capital18/capital-suite/128/Misc-Globe-icon.png","personWidgetDefinitions":null,"singleton":false,"universalName":null,"visible":true,"widgetDefinitionIntents":null,"widgetGuid":"f0e9a68b-870d-4d31-aded-d77ef5366537","widgetTypes":[{"class":"WidgetType","id":1}],"widgetUrl":"http://yahoo.com","widgetVersion":"2.5","width":1050}]}
+
+
+## optional_title [/widget/$widgetGuid?tab=users]
+
+### [PUT]
+Updates a widget's list of users. Admin only.
+
+String widgetGuid = widget GUID;
+int id = widget ID;
+int widget_id = widget ID (overwitten by id);
+String tab = topic of advanced widget update (must be set to "users");
+String update_action = whether to add or remove the users (either "add" or "remove");
+String data = the users (JSON array of user objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"widget_id":"ec5435cf-4021-4f2a-ba69-dde451d12551","tab":"users","update_action":"add","data":[{"id":3,"username":"testUser2","userRealName":"Test User 2","email":"testUser1@ozone3.test","totalGroups":1,"totalWidgets":2,"totalDashboards":0,"totalStacks":0,"lastLogin":null,"title":"Test User 2"}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"id":3,"userRealName":"Test User 2","username":"testUser2","totalWidgets":0,"totalDashboards":0,"totalStacks":0,"hasPWD":null,"totalGroups":0,"tagLinks":[],"email":"testUser1@ozone3.test","lastLogin":null}]}
+
+
+## optional_title [/widget/$widgetGuid?tab=groups]
+
+### [PUT]
+Updates a widget's list of groups. Admin only.
+
+String widgetGuid = widget GUID;
+int id = widget ID;
+int widget_id = widget ID (overwitten by id);
+String tab = topic of advanced widget update (must be set to "groups");
+String update_action = whether to add or remove the groups (either "add" or "remove");
+String data = the groups (JSON array of group objects);
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"widget_id":"ec5435cf-4021-4f2a-ba69-dde451d12551","tab":"groups","update_action":"add","data":[{"name":"TestGroup1","id":4,"description":"TestGroup1","totalWidgets":0,"totalUsers":2,"totalStacks":1,"automatic":false,"stackDefault":false,"status":"active","displayName":"TestGroup1","email":"testgroup1@group1.com","title":"TestGroup1"}]}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"data":[{"stackDefault":false,"totalUsers":0,"id":4,"totalWidgets":0,"name":"TestGroup1","totalStacks":0,"status":"active","tagLinks":[],"description":"TestGroup1","email":"testgroup1@group1.com","displayName":"TestGroup1","automatic":false}]}
+
+
+## optional_title [/widget/export]
+
+### [GET]
+Exports a widget as an HTML descriptor file. The descriptor file is attached to the response. Admin only.
+
+String id = widget GUID;
+String filename = name of the HTML descriptor file (the default is "widget_descriptor");
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"id":"fe137961-039d-e7a5-7050-d6eed7ac4782","filename":"NYSE"}
+
++ Response 200
+    + Headers
+
+            Content-Type:text/json
+
+    + Body
+
+
+
+
+## optional_title [/widgetLoadTime]
+
+### [POST]
+Logs widget load time on the OWF server.
+
+String id = widget GUID;
+int loadTime = widget load time in miliseconds;
+
++ Request
+    + Headers
+
+
+    + Body
+
+            {"id":"fa80ef55-bc63-c31a-8589-d166bf80a635","loadTime":45}
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"msg":"Widget fa80ef55-bc63-c31a-8589-d166bf80a635 loaded in 45 (ms)"}
+
+
+## optional_title [/widget/hasMarketplace]
+
+### []
+Returns true if there is 1 or more widget definitions of type ‘marketplace’ in the instance of OWF and returns false if there are 0.
+
++ Request
+    + Headers
+
+
+    + Body
+
+
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"data":true}
+
+
+# Group WidgetType
+
+## optional_title [/widgettype/list]
+
+### [GET]
+Retrieves a list of all widget types sorted by displayName. Admin only.
+
++ Request
+    + Headers
+
+
+    + Body
+
+
+
++ Response 200
+    + Headers
+
+            Content-Type:application/json;charset=UTF-8
+
+    + Body
+
+            {"success":true,"results":5,"data":[{"id":2,"name":"administration","displayName":"administration"},{"id":5,"name":"fullscreen","displayName":"fullscreen"},{"id":4,"name":"metric","displayName":"metric"},{"id":1,"name":"standard","displayName":"standard"},{"id":3,"name":"marketplace","displayName":"store"}]}
+
+

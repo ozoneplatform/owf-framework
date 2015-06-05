@@ -2,25 +2,23 @@ package ozone.owf.grails.controllers
 
 import grails.converters.JSON
 import org.apache.commons.lang.time.StopWatch
-import org.codehaus.groovy.grails.web.json.JSONArray
 import ozone.owf.grails.OwfException
-import ozone.owf.grails.domain.Person
-import ozone.owf.grails.OwfExceptionTypes
 
 class WidgetController extends BaseOwfRestController {
-	
+
     def accountService
     def widgetDefinitionService
     def administrationService
     def personWidgetDefinitionService
+    def marketplaceService
 
     def modelName = 'widgetDefinition'
-	
+
     def show = {
         def statusCode
         def jsonResult
         StopWatch stopWatch = null;
-	
+
         if (log.isInfoEnabled()) {
             stopWatch = new StopWatch();
             stopWatch.start();
@@ -37,9 +35,9 @@ class WidgetController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during show: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-		
+
         renderResult(jsonResult, statusCode)
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed widgetDefinitionService: show in "+stopWatch);
         }
@@ -65,14 +63,14 @@ class WidgetController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during list: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-		
+
         renderResult(jsonResult, statusCode)
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed WidgetController: list in "+stopWatch);
         }
     }
-	
+
     def createOrUpdate =
     {
         def jsonResult
@@ -85,7 +83,12 @@ class WidgetController extends BaseOwfRestController {
         }
         try
         {
-            def result = widgetDefinitionService.createOrUpdate(params)     
+            def result
+            if (params?.addExternalWidgetsToUser) {
+                result = marketplaceService.addExternalWidgetsToUser(params)
+            } else {
+                result = widgetDefinitionService.createOrUpdate(params)
+            }
             jsonResult=[msg: result as JSON, status: 200]
         }
         catch (Exception e) {
@@ -93,12 +96,12 @@ class WidgetController extends BaseOwfRestController {
         }
 
         renderResult(jsonResult)
-        
+
         if (log.isInfoEnabled()) {
             log.info("Executed widgetDefinitionService: createOrUpdate in "+stopWatch);
         }
     }
-	
+
     def delete = {
         def jsonResult
         StopWatch stopWatch = null;
@@ -117,9 +120,9 @@ class WidgetController extends BaseOwfRestController {
             jsonResult = handleError(e)
 
         }
-		
+
         renderResult(jsonResult)
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed widgetDefinitionService: delete in "+stopWatch);
         }
@@ -180,11 +183,11 @@ class WidgetController extends BaseOwfRestController {
           log.info("Executed widgetDefinitionService: saveWidgetLoadTime in "+stopWatch);
       }
     }
-    
+
     def export = {
         def result
         StopWatch stopWatch = null;
-        
+
         if (log.isInfoEnabled()) {
             stopWatch = new StopWatch();
             stopWatch.start();
@@ -193,10 +196,20 @@ class WidgetController extends BaseOwfRestController {
         try {
             def filename = params.filename ? params.filename : "widget_descriptor"
 
+            // Set filename/ID for audit logging
+            request.setAttribute("fileName", filename+".html")
+
+            // Set content type for audit logging
+            response.setContentType("text/json")
+
             //Set content-disposition so browser is expecting a file
             response.setHeader("Content-disposition", "attachment; filename=" + filename + ".html")
 
             def widgetDescriptor = widgetDefinitionService.export(params)
+
+            // Set fileSize for audit logging
+            request.setAttribute("fileSize", (widgetDescriptor.getBytes("UTF-8")).length)
+
             response.outputStream.write(widgetDescriptor.getBytes("UTF-8"))
             response.outputStream.flush()
         }
@@ -207,7 +220,7 @@ class WidgetController extends BaseOwfRestController {
             result = handleError(e)
             renderResult(result)
         }
-        
+
         if (log.isInfoEnabled()) {
             stopWatch.stop();
             log.info("Executed widgetDefinitionService: export in " + stopWatch);

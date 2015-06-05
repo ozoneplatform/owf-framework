@@ -48,8 +48,8 @@ Ext.define('Ozone.components.admin.widget.DeleteWidgetsPanel', {
           layout: 'fit',
           border: false,
           height: 50,
-          renderTpl: ['These widgets are required by other widgets in OWF. ' +
-                  'Deleting these widgets will additionally delete the widgets listed below.']
+          renderTpl: ['These app components are required by other components in OZONE. ' +
+                  'Deleting them will delete the app components listed below:']
         },
         {
           xtype: 'grid',
@@ -181,7 +181,6 @@ Ext.define('Ozone.components.admin.widget.DeleteWidgetsPanel', {
               x: data[i].value.x,
               y: data[i].value.y,
               visible: data[i].value.visible,
-              tags: data[i].value.tags,
               totalUsers: data[i].value.totalUsers,
               totalGroups: data[i].value.totalGroups,
               singleton: data[i].value.singleton

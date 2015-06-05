@@ -1,0 +1,17 @@
+//our variables file
+@import 'theme_base';
+@import 'functions/owf_functions';
+@import 'bootstrap_variables';
+
+//bootstrap's variables file
+@import 'variables';
+@import 'mixins';
+
+//import bootstrap
+.bootstrap-active {
+    font-family: $owf-font-family, FontAwesome;
+    @import 'bootstrap';
+}
+
+@import 'owf_bootstrap';
+

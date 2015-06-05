@@ -56,6 +56,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     xtype:'button',
                     text:'Add',
                     itemId: 'addButton',
+                    id: 'adminGroupsTabAddButton',
                     handler: function() {
                       this.onAddClicked();
                     },
@@ -64,6 +65,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                     xtype:'button',
                     text:'Remove',
                     itemId: 'removeButton',
+                    id: 'adminGroupsTabRemoveButton',
                     handler: function() {
                         var grid = this.down('#groupsgrid');
                         //TODO make sure this is filtered by the passed in id
@@ -80,6 +82,11 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
                                     }
                                 });
                                 store.save();
+                                
+                                var widgetStateHandler = Ozone.state.WidgetStateHandler.getInstance();
+                                widgetStateHandler.handleWidgetRequest({
+                                    fn: 'refreshDashboardStore'
+                                });
                             }
                             else {
                                 self.editPanel.showAlert("Error", "You must select at least one group to remove.")
@@ -203,6 +210,7 @@ Ext.define('Ozone.components.admin.GroupsTabPanel',{
 
         this.callParent();
     },
+
     onAddClicked: function (button, e) {
         var record = this.ownerCt.record,
             itemName = record.get('name') ? record.get('name') : record.get('userRealName');

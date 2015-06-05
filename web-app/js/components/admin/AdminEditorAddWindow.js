@@ -178,6 +178,12 @@ Ext.define('Ozone.components.admin.AdminEditorAddWindow', {
                         me.existingItemsStore.save();
                     }
                 }
+                var widgetStateHandler = Ozone.state.WidgetStateHandler.getInstance();
+                widgetStateHandler.handleWidgetRequest({
+                    fn: 'refreshDashboardStore',
+                    title: me.generateNotificationTitle(records.length)
+                });
+                
                 me.close();
             });
 
@@ -205,10 +211,23 @@ Ext.define('Ozone.components.admin.AdminEditorAddWindow', {
         me.callParent(arguments);
     },
 
+    generateNotificationTitle: function(numRecordsChanged) {
+        var title = this.addType + (numRecordsChanged === 1 ? "" : "s");
+        if(this.itemName) {
+            if(this.editor === "Group" || this.editor === "Stack" || (this.editor === "User" && this.addType === "App Component")) {
+                title += " added to " + this.itemName;
+            } else {
+                title = this.itemName + " added to " + this.addType + (numRecordsChanged === 1 ? "" : "s");
+            }
+        }
+
+        return title;
+    },
+
     generateTitle: function() {
         var title = "Add " + this.addType + "(s)";
         if(this.itemName) {
-            if(this.editor === "Group" || this.editor === "Stack" || (this.editor === "User" && this.addType === "Widget")) {
+            if(this.editor === "Group" || this.editor === "Stack" || (this.editor === "User" && this.addType === "App Component")) {
                 title += " to " + this.itemName;
             } else {
                 title = "Add " + this.itemName + " to " + this.addType + "(s)";

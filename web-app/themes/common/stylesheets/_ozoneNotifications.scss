@@ -1,0 +1,405 @@
+.notifications {
+    position: relative;
+    //give it plenty of room to grow without upsetting Ext
+    width: 3em;
+
+    button.close {
+        margin-top: -5px;
+        float: none;
+
+        color: $owf-notification-timestamp-color;
+        text-shadow: none;
+        @include opacity(100);
+
+        &:hover,&:focus {
+            color: $owf-notification-text-color;
+            @include opacity(100);
+        }
+    }
+
+    .popover {
+        max-width: 375px;
+        min-width: 250px;
+
+        border: 1px solid $owf-notifications-border-color;
+        padding: 0;
+
+        //a little above the popout widget layer
+        z-index: 40000;
+
+        @include border-radius(0);
+
+        .popover-content {
+            padding: 0
+        }
+    }
+
+    //get the popover arrows to appear in the right spot
+    .popover-container {
+        position: absolute;
+        bottom: -7px;
+        left: .5em;
+    }
+
+    .notification-badge {
+        display: none;
+
+        @include border-radius(.9em);
+
+        background-color: $owf-notifications-badge-background-color;
+        color: white;
+
+        position: relative;
+        top: -.5em;
+        left: -.5em;
+
+        padding-left: .15em;
+        padding-right: .15em;
+
+        min-width: 1.2em;
+        height: 1.2em;
+
+        text-align: center;
+        font-size: .8em;
+    }
+
+    &.has-notifications {
+        .notification-badge {
+            display: inline-block;
+        }
+
+        .notifications-button {
+            color: $owf-notifications-button-active-color;
+        }
+    }
+
+    .notifications-button {
+        background: transparent;
+        border-style: none;
+
+        font-weight: bold;
+
+        color: $owf-notifications-button-inactive-color;
+
+        padding: 0;
+
+        padding-left: 10px;
+
+        &:before {
+            font-family: FontAwesome;
+            @extend .icon-bell:before;
+        }
+    }
+
+    a {
+        cursor: pointer;
+    }
+
+    //bootstrap's default font size
+    font-size: $font-size-base;
+}
+
+.notifications-grouped-list {
+    width: 350px;
+
+    font-size: .9em;
+
+    max-height: 650px;
+    overflow-y: auto;
+
+    background-color: $owf-notifications-group-background-color;
+}
+
+.notifications-group {
+    &.collapsed {
+        .collapse-toggle {
+
+            &:before {
+                @extend .icon-chevron-up:before;
+            }
+        }
+
+        ol {
+            display: none;
+        }
+    }
+
+    ol {
+        margin: 0;
+    }
+
+    $padding: 8px;
+    padding-top: $padding;
+
+    .section-header {
+        padding: 0 8px 0 8px;
+    }
+
+    li {
+        padding-left: 5px + $padding;
+        padding-right: 5px + $padding;
+    }
+}
+
+a.more-notifications {
+    display: block;
+    width: 100%;
+    background-color: $owf-notifications-more-background-color;
+
+    border-top: 1px solid $owf-notifications-border-color;
+
+    text-align: center;
+    color: $owf-notifications-more-text-color;
+    text-decoration: none;
+    font-size: 1.2em;
+    line-height: 1.4em;
+
+    &:hover {
+        color: $owf-notifications-more-text-hover-color;
+
+        &:before {
+            //no underline on the bell
+            text-decoration: none;
+        }
+    }
+
+    &:before {
+        @extend .icon-bell:before;
+        margin-right: 5px;
+        color: $owf-notifications-more-icon-color;
+    }
+}
+
+.notifications-header {
+    img {
+        max-height: 20px;
+        max-width: 20px;
+
+        margin-right: 3px;
+        vertical-align: -.1em;
+    }
+
+    font-size: 1.4em;
+    /*font-weight: bold;*/
+    color: $owf-notifications-group-header-color;
+}
+
+.section-header {
+    > .dismiss-all {
+        position: relative;
+        float: right;
+
+        margin-right: 5px;
+
+        line-height: 2.15em;
+        font-size: .9em;
+
+        color: $owf-notifications-dismiss-all-color;
+
+        &:hover {
+            color: $owf-notifications-dismiss-all-hover-color;
+        }
+    }
+
+    > .notifications-header {
+        display: inline;
+    }
+
+    > .collapse-toggle {
+        cursor: pointer;
+
+        font-size: .8em;
+        color: $owf-notifications-collapse-toggle-color;
+
+        margin: 0 3px 0 3px;
+
+        &:before {
+            @extend .icon-chevron-down:before;
+            vertical-align: 15%;
+        }
+    }
+
+    > .count {
+        font-size: 1.15em;
+        color: $owf-notifications-count-color;
+
+        margin-left: 5px;
+    }
+
+    clear: both;
+
+    margin-bottom: 8px;
+}
+
+.notifications-growl {
+
+    .header-container {
+        margin: 0px 7px 5px 7px;
+
+        padding-top: 5px;
+
+        .notifications-header {
+            float: left;
+            position: relative;
+        }
+
+        button.close {
+            float: right;
+            display: block;
+            position: relative;
+
+            height: 20px;
+        }
+
+        clear: both;
+        overflow: hidden;
+    }
+
+    .notification {
+        margin: 5px 5px 0 5px;
+
+        padding-bottom: 5px;
+    }
+
+    background-color: $owf-notifications-growl-background-color;
+}
+
+h3.notification-list-header {
+    background-color: $owf-notifications-header-background-color;
+    border-bottom: 1px solid $owf-notifications-border-color;
+    color: $owf-notifications-header-color;
+
+    margin: 0;
+
+    padding-left: 10px;
+    padding-right: 10px;
+
+    font-weight: normal;
+}
+
+//getting the right popover is a little ugly since it is a
+//sibling of its "container", not a child
+.notifications .menu-container+.popover > .arrow {
+    &:after {
+        //notification menu popover arrow should be same color
+        //as header
+        border-bottom-color: $owf-notifications-header-background-color;
+    }
+}
+
+.notifications .growl-container+.popover {
+    > .arrow:after {
+        //same color as growl
+        border-bottom-color: $owf-notifications-growl-background-color;
+    }
+
+    &:hover {
+        > .arrow:after {
+            border-bottom-color: $owf-notifications-growl-background-hover-color;
+        }
+
+        .notifications-growl {
+            background-color: $owf-notifications-growl-background-hover-color;
+        }
+    }
+}
+
+.notifications .popover > .arrow {
+    //move it down 1 to cover up the border of the popover
+    top: -10px;
+    margin-left: -2px !important;
+}
+
+.notification {
+    font-size: .8em;
+
+    color: $owf-notification-text-color;
+}
+
+li.notification-details {
+    line-height: 1.2;
+    font-size: .9em;
+
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+    > * {
+        vertical-align: middle;
+    }
+
+    &:hover {
+        background-color: $owf-notification-hover-background-color;
+
+        > .close {
+            display: inline-block;
+        }
+    }
+
+    > .message, > .time {
+        display: inline-block;
+
+        color: $owf-notification-text-color;
+    }
+
+    > .message {
+        width: 62.5%;
+    }
+
+    > .time {
+        width: 30%;
+        text-align: right;
+
+        color: $owf-notification-timestamp-color;
+    }
+
+    > .close {
+        width: 7.5%;
+        display: none;
+    }
+}
+
+.x-ie7 {
+    .notifications {
+        .notifications-button {
+            font-family: FontAwesome;
+            @extend .icon-bell;
+        }
+
+        .menu-container+.popover > .arrow:after {
+            border-bottom-color: #BBB;
+        }
+    }
+
+    .section-header {
+        > .collapse-toggle {
+            @extend .icon-chevron-down;
+        }
+    }
+
+    .notifications-group {
+        &.collapsed {
+            .collapse-toggle {
+                @extend .icon-chevron-up;
+            }
+        }
+    }
+
+    a.more-notifications {
+        min-width: 100%;
+        width: auto;
+        /*font-family: FontAwesome;*/
+        /*@extend .icon-bell;*/
+    }
+
+    li.notification-details {
+        > .message {
+            //the sum of widths for IE has to be < 100% to account for
+            //padding
+            width: 60%;
+        }
+    }
+
+    .collapse-toggle {
+        font-family: FontAwesome;
+    }
+}

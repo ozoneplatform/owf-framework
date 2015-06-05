@@ -19,13 +19,13 @@ class WidgetTypeService {
 		widgetTypes = WidgetType.createCriteria().list(opts) {
 			cache(true)
 			cacheMode(CacheMode.GET)
-            order('name', params?.order?.toLowerCase() ?: 'asc')
+            order('displayName', params?.order?.toLowerCase() ?: 'asc')
 		}
 	
 		def processedWidgetTypes = widgetTypes.collect { wt ->
 			serviceModelService.createServiceModel(wt)
-			
 		}
+
 		return [success: true, results: widgetTypes.totalCount, data: processedWidgetTypes]
 	}
 

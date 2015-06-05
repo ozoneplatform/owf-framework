@@ -1,0 +1,2138 @@
+OZONE Widget Framework
+Copyright (c) 2015 Next Century Corporation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+This product bundles the following software, which is available under the
+license listed with the software description below:
+
+-------------------------
+Attribution for Grails
+-------------------------
+Grails
+Grails (https://grails.org/) is available under an Apache Software
+Foundation 2.0 license Version 2, Copyright 2013 GoPivotal Inc.
+The OZONE Marketplace is built using the Grails Framework including design
+patterns, templates and application layout. The use of these files are
+distributed under the Apache Software Foundation 2.0 license Version 2
+http://www.apache.org/licenses/LICENSE-2.0.html 
+
+Audit Trail
+The Audit Trail software (http://grails.org/plugin/audit-trail) is
+available under an Apache License Foundation License Version 2.0,
+Copyright (c) 2013 GoPivotal, Inc.
+The OZONE Marketplace moved and modified one of the component files from
+the Audit Trail plugin:
+It moved
+[plugins/audit-trail-2.0.2/src/java/gorm/AuditStampASTTransformation.java]
+to [src/java/gorm/AuditStampASTTransformation.java] and modified it to
+work properly with the rest of the OZONE Marketplace code.
+The modified versions of these files are distributed under the Apache
+License Foundation License Version 2.0 
+http://www.apache.org/licenses/LICENSE-2.0.html 
+
+
+--------------------------------------------------------------
+Attribution for Dependencies for the Build System Only
+--------------------------------------------------------------
+
+Serializer
+https://xml.apache.org/xalan-j/
+License: Apache Software Foundation License Version 2.0 Software Foundation License Version 2.0
+© serFISH.com, 2008-2010
+
+Grails Bootstrap
+http://grails.github.io/grails-doc/2.3.7
+License: Copies of this document may be made for your own use and for distribution to others, 
+provided that you do not charge any fee for such copies and further provided that each copy 
+contains this Copyright Notice, whether distributed in print or electronically.
+© 2015 Pivotal Software, Inc. All Rights Reserved
+
+JLF4J from Jakarta Commons Logging (JCL)
+http://www.slf4j.org/
+License: MIT License
+© 2004-2015 QOS.ch
+
+Simple Logging Façade for Java (SLF4J) API
+http://www.slf4j.org/
+License: MIT License
+© 2004-2015 QOS.ch
+
+Apache Ant
+http://ant.apache.org/
+License: Apache Software Foundation License Version 2.0
+2015 The Apache Software Foundation
+
+JLine
+https://github.com/jline/jline2/issues
+License: BSD 2-Clause
+JLine © 2002-2007
+
+Apache Ant Launcher
+http://projects.apache.org/projects/ant.html
+License: Apache Software Foundation License Version 2.0
+2015 The Apache Software Foundation
+
+Apache Ant-trax
+http://projects.apache.org/projects/ant.html
+License: Apache Software Foundation License Version 2.0
+2015 The Apache Software Foundation
+
+JNA
+https://github.com/twall/jna
+License: Apache Software Foundation License Version 2.0 (dual-licensed with LGPL 2.1)
+Copyright © 2007-2014 Timothy Wall. All Rights Reserved.
+
+JUnit
+http://projects.apache.org/projects/ant.html
+License: Apache Software Foundation License Version 2.0
+2015 The Apache Software Foundation
+
+Gant
+http://grepcode.com/snapshot/repo1.maven.org/maven2/org.codehaus.gant/gant_groovy1.8/1.9.6
+License: Apache Software Foundation License Version 2.0
+Copyright © 2014–2015 Russel Winder.
+
+Apache Ivy
+http://ant.apache.org/ivy/
+License: Apache Software Foundation License Version 2.0
+2015 The Apache Software Foundation
+
+Jansi
+https://github.com/fusesource/jansi
+License: Apache Software Foundation License Version 2.0
+Copyright © 2015 Red Hat Inc.
+Grails
+http://grails.github.io/grails-doc/2.3.7
+License: Copies of this document may be made for your own use and for distribution to others, 
+provided that you do not charge any fee for such copies and further provided that each copy 
+contains this Copyright Notice, whether distributed in print or electronically.
+© 2015 Pivotal Software, Inc. All Rights Reserved
+
+Spock 
+http://spockframework.github.io/spock/docs/1.0/index.html
+License: Apache Software Foundation License Version 2.0
+Peter Niederwieser -- Version 1
+
+Hamcrest
+https://github.com/hamcrest
+License: BSD 3-Clause
+Copyright 2012- hamcrest.org
+
+JUnit
+http://junit.org/
+License: Eclipse Public License http://junit.org/license.html
+© 2002-2014 Junit. All Rights Reserved
+
+Grails
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project — Grails is Open Source, Apache 2 License
+
+Flying-saucer
+https://xhtmlrenderer.java.net/ redirected to https://code.google.com/p/flying-saucer/ 
+License: GNU Lesser General ublic License (LGPL)
+© 2014 Oracle Corp. and/or its affiliates. All rights reserved. Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+
+Snakeyaml
+https://code.google.com/p/snakeyaml/
+License: Apache Software Foundation License Version 2.0
+Clark C. Evans
+
+Grails-gdoc-engine
+https://github.com/grails/grails-gdoc-engine/blob/master/LICENSE
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project — Grails is Open Source, Apache 2 License
+
+iText
+http://itextpdf.com/
+License: AGPL
+© 2010-2015, iText Group NV, iText Software Corp., iText Software BVBA
+
+Legion of the Bouncy Castle Java Cryptography APIs
+https://www.bouncycastle.org/latest_releases.html
+License: Copyright (c) 2000-2015 The Legion of the Bouncy Castle Inc. (http://www.bouncycastle.org)
+Copyright (c) 2005-2006 IKS Research Group at ETH Zurich
+
+Commons Lang
+https://commons.apache.org
+License: Apache Software Foundation License Version 2.0
+© 2001-2015 The Apache Software Foundation.
+
+Grails Plugin: apache Tomcat plugin
+http://repo.grails.org/grails/repo/org/grails/plugins/tomcat/7.0.52.1/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project — Grails is Open Source, Apache 2 License
+
+Tomcat Catalina Ant
+http://tomcat.apache.org
+License: Apache Software Foundation License Version 2.0
+© 2001-2015 The Apache Software Foundation.
+
+Tomcat Embed Jasper
+http://tomcat.apache.org
+License: Apache Software Foundation License Version 2.0
+© 2001-2015 The Apache Software Foundation.
+
+Tomcat Embed El
+http://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-el 
+License: Apache Software Foundation License Version 2.0
+© 2001-2015 The Apache Software Foundation.
+
+Tomcat Embed Logging Log4j
+http://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-logging-log4j 
+License: Apache Software Foundation License Version 2.0
+© 2001-2015 The Apache Software Foundation.
+
+Tomcat Embed Websocket
+http://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-websocket
+License: Apache Software Foundation License Version 2.0
+© 2001-2015 The Apache Software Foundation.
+
+Eclipse Java development tools (JDT)
+http://www.eclipse.org/jdt/
+License: Eclipse Public License
+Copyright © 2015 The Eclipse Foundation. All Rights Reserved.
+
+Tomcat Embed Core
+http://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-core
+License: Apache Software Foundation License Version 2.0
+© 2001-2015 The Apache Software Foundation.
+
+
+
+
+
+-----------------------------------------------------------------------------------
+Attribution for Dependencies needed at development time, but not during deployment
+-----------------------------------------------------------------------------------
+
+JavaServlet™ Specification
+http://servlet-spec.java.net
+License: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+Copyright © 2014, Oracle Corporation and/or its affiliates.
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------
+Attribution for Dependencies placed on the classpath for compilation
+-----------------------------------------------------------------------
+
+Groovy
+http://www.groovy-lang.org/
+License: Apache Software Foundation License Version 2.0
+2003-2015 the Groovy project
+
+Grails Plugin Rest
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+2005-2015 the Grails project
+
+Simple Logging Façade for Java (SLF4J) API
+http://www.slf4j.org/license.html
+License: MIT license
+Copyright (c) 2004-2013 QOS.ch
+
+Grails-web
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+2005-2015 the Grails project
+
+Spring Context Support
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software, Inc. All Rights Reserved. Terms of Use and Privacy
+
+Commons FileUpload
+https://commons.apache.org/proper/commons-fileupload/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2002-2014 The Apache Software Foundation. All Rights Reserved.
+
+OpenSymphony
+https://github.com/sitemesh/sitemesh2/blob/master/LICENSE.txt
+License: Apache Software Foundation License Version 2.0
+Copyright (c) 2001 The OpenSymphony Group. All rights reserved.
+
+Grails Async
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+2005-2015 the Grails project
+
+Groovy Parallel Systems (GPars)
+http://gpars.codehaus.org/
+License: Apache Software Foundation License Version 2.0
+© 2006 Codehaus Foundation. Original design by Andreas Viklund
+
+Multiverse Core Resources
+http://multiverse.codehaus.org/license.html
+License: Apache Software Foundation License Version 2.0
+Copyright 2009-2012 Peter Veentjer.
+
+JSR166 Mirror
+https://github.com/codehaus/jsr166-mirror/tree/master/src/main
+License: Creative Commons
+2015 The Codehaus. All Rights Reserved.
+
+Spring Web MVC Framework
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software, Inc. All Rights Reserved. Terms of Use and Privacy
+
+Spring Expression
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software, Inc. All Rights Reserved. Terms of Use and Privacy
+
+MXP1: XML Pull Parser (XPP3)
+http://www.slf4j.org/
+License: MIT License
+(c) 2004-2013 QOS.ch
+
+Commons EL
+http://commons.apache.org/proper/commons-el/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2002-2014 The Apache Software Foundation. All Rights Reserved.
+
+Objenesis
+http://objenesis.org/license.html
+License: Apache Software Foundation License Version 2.0
+Copyright (c) 2003-2013, Objenesis Team and all contributors
+
+Commons BeanUtils
+http://commons.apache.org/proper/commons-beanutils/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2002-2014 The Apache Software Foundation. All Rights Reserved.
+
+Grails
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+2005-2015 the Grails project
+
+Grails bindData 
+https://grails.github.io/grails-doc/latest/ref/Controllers/bindData.html
+License: Apache Software Foundation License Version 2.0
+2005-2015 the Grails project
+
+Simple Logging Façade for Java (SLF4J) API
+http://www.slf4j.org/license.html
+License: MIT license
+Copyright (c) 2004-2013 QOS.ch
+
+Grails Datasource Plugin
+https://grails.org/plugin/datasources
+License: Apache Software Foundation License Version 2.0
+2005-2015 the Grails project
+
+Tomcat JDBC Connection Pool
+https://tomcat.apache.org/tomcat-7.0-doc/jdbc-pool.html
+License: Apache Software Foundation License Version 2.0
+Copyright © 1999-2015, The Apache Software Foundation
+
+Apache Juli
+https://tomcat.apache.org/tomcat-7.0-doc/api/org/apache/juli/package-summary.html
+License: Apache Software Foundation License Version 2.0
+Copyright © 1999-2015, The Apache Software Foundation
+
+Spring JDBC
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software, Inc. All Rights Reserved. Terms of Use and Privacy
+
+Spring Context
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software, Inc. All Rights Reserved. Terms of Use and Privacy
+
+Spring AOP (Aspect Oriented Programming)
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software, Inc. All Rights Reserved. Terms of Use and Privacy
+
+Gson
+https://code.google.com/p/google-gson/
+License: Apache Software Foundation License Version 2.0
+Copyright 2008 Google Inc.
+
+Grails Plugin Controllers
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+2005-2015 the Grails project
+
+Grails Plugin Validation 
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+2005-2015 the Grails project
+
+Grails dataBind
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+2005-2015 the Grails project
+
+Grails
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+2005-2015 the Grails project
+
+Grails Bootstrap Plugin
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+2005-2015 the Grails project
+
+Spring Web MVC Framework
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software, Inc. All Rights Reserved. Terms of Use and Privacy
+
+ASM
+http://asm.ow2.org/
+License: Copies of this document may be made for your own use and for distribution to others, 
+provided that you do not charge any fee for such copies and further provided that each copy 
+contains this Copyright Notice, whether distributed in print or electronically.
+(c) 2000-2011 INRIA, France Telecom
+
+Spring Beans
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+JPA (Hibernate Javax Persistence)
+http://hibernate.org/orm/documentation/
+License: LGPL
+Copyright © 2004 Red Hat, Inc.
+
+Spring Core
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+AOP Alliance
+http://aopalliance.sourceforge.net/
+License: all the source code provided by AOP Alliance is Public Domain
+AOP Alliance
+
+Commons Validator
+https://commons.apache.org/proper/commons-validator/
+License: Apache Software Foundation License Version 2.0
+© 2002-2014 The Apache Software Foundation
+
+Grails Locale Configuration Plugin
+https://github.com/stokito/grails-locale-configuration-plugin
+License: Apache Software Foundation License Version 2.0
+Sergey Ponomarev
+
+Commons Lang
+https://commons.apache.org/proper/commons-lang/
+License: Apache Software Foundation License Version 2.0
+© 2002-2014 The Apache Software Foundation
+
+Grails Plugin Filters
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails 2.3.7 Plugin
+https://github.com/mckenfra/gsp-resources
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project — Grails is Open Source, Apache 2 License
+
+Grails Logging 
+http://grails.github.io/grails-doc/2.2.5/ref/Plug-ins/logging.html
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Plugin Codecs
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Log4J Plugin
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Simple Logging Façade for Java Bridging Legacy API (jul-to-slf4j)
+http://www.slf4j.org/
+License: MIT License
+(c) 2004-2013 QOS.ch
+
+Grails Plugin Services 
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Spring Transaction
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Grails Plugin Servlets
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Plugin URL Mapping 
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Common IO
+https://commons.apache.org/proper/commons-io/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2002-2014 The Apache Software Foundation
+
+Concurrentlinkedhashmap
+https://code.google.com/p/concurrentlinkedhashmap/
+License: Apache Software Foundation License Version 2.0
+Ben Manes
+
+Smack
+https://github.com/igniterealtime/Smack
+License: Apache Software Foundation License Version 2.0
+Copyright: Ignite Realtime
+
+HttpComponents
+https://hc.apache.org/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2005-2015 The Apache Software Foundation.
+
+
+The Logging Component
+http://commons.apache.org/proper/commons-logging/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2005-2014 The Apache Software Foundation.
+
+Apache Commons Codec
+https://commons.apache.org/proper/commons-codec/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2005-2014 The Apache Software Foundation.
+
+OZONE Security
+https://github.com/ozoneplatform
+License: Apache Software Foundation License Version 2.0
+Software © 2014 Next Century Corporation
+
+OpenSymphoney Oscache Backup
+https://github.com/cdemoustier/opensymphony-oscache-backup
+License: OpenSymphony Software License (Derived from Apache Software Foundation License Version 2.0)
+(c) 2001 The OpenSymphony Group
+
+Spring Security Core
+https://github.com/spring-projects/spring-security
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+Spring Security CAS Authentication
+https://github.com/spring-projects/spring-security
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+Spring Security Web
+https://github.com/spring-projects/spring-security
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+Spring Security Config
+https://github.com/spring-projects/spring-security
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+CAS 
+http://jasig.github.io/cas/4.0.x/index.html
+License: Apache Software Foundation License Version 2.0
+Apereo Foundation
+
+Spring Security Ldap
+https://github.com/spring-projects/spring-security
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+Spring Security Ldap
+https://github.com/spring-projects/spring-ldap
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+JUnit
+https://github.com/junit-team/junit
+License: Eclipse Public License
+© 2002-2014 Junit
+
+Mockito
+https://github.com/mockito/mockito
+License: MIT License
+(c) 2007 Mockito contributors
+
+Javax Servlet API 
+http://search.maven.org/#artifactdetails%7Cjavax.servlet%7Cservlet-api%7C2.5%7Cjar
+License: Apache Software Foundation License Version 2.0
+Copyright © 2009-2011, Oracle Corporation and/or its affiliates
+
+Grails Database Migration 
+https://github.com/grails-plugins/grails-database-migration
+License: Apache Software Foundation License Version 2.0
+Burt Beckwith
+
+Liquibase
+http://www.liquibase.org/download/
+License: Apache Software Foundation License Version 2.0
+(C) 2006-2015 Nathan Voxland
+
+Grails Hibernate Plugin
+https://github.com/grails-plugins/grails-hibernate-plugin
+License: Apache Software Foundation License Version 2.0
+Copyright 2004-2005 the original author or authors
+
+CGLIB
+https://github.com/cglib/cglib
+License: Apache Software Foundation License Version 2.0
+This product includes software developed by The Apache Software Foundation
+
+Grails GORM
+http://mvnrepository.com/artifact/org.grails/grails-datastore-gorm-hibernate-core/3.0.4.RELEASE
+License: Apache Software Foundation License Version 2.0
+
+dom4j!
+http://dom4j.sourceforge.net/dom4j-1.6.1/
+License: BSD
+Copyright 2001-2005 (C) MetaStuff, Ltd
+
+Spring Object Relational Mapping (ORM)
+http://docs.spring.io/spring/docs/current/spring-framework-reference/html/orm.html
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Apache Commons Collections
+https://commons.apache.org/proper/commons-collections/download_collections.cgi
+License: Apache Software Foundation License Version 2.0
+(c) Apache
+
+Hibernate ORM
+https://github.com/hibernate/hibernate-orm
+License: LGPL
+(c) Red Hat, Inc.
+
+Bean Validation API (javax.validation)
+https://hibernate.atlassian.net/projects/BVAL
+License: Apache Software Foundation License Version 2.0
+(c) Red Hat, Inc.
+
+Hibernate Validator
+https://github.com/hibernate/hibernate-validator
+License: Apache Software Foundation License Version 2.0
+Copyright © 2009 - 2013 Red Hat, Inc. & Gunnar Morling
+
+Hibernate JPA Support
+http://hibernate.org/orm/documentation/
+License: LGPL
+Copyright © 2004 Red Hat, Inc.
+
+Hibernate Commons Annotations
+https://github.com/hibernate/hibernate-commons-annotations
+License: LGPL
+Copyright © 2004 Red Hat, Inc.
+
+OZONE App Config
+https://github.com/ozoneplatform
+License: Apache Software Foundation License Version 2.0
+Copyright 2014 Next Century Corporation
+
+OZONE Auditing
+https://github.com/ozoneplatform
+License: Apache Software Foundation License Version 2.0
+Copyright 2014 Next Century Corporation
+
+OZONE Messaging
+https://github.com/ozoneplatform
+License: Apache Software Foundation License Version 2.0
+Copyright 2014 Next Century Corporation
+
+Grails CodeNarc Plugin
+https://github.com/CodeNarc/CodeNarc
+License: Apache Software Foundation License Version 2.0
+Chris Mair
+
+CodeNarc
+https://github.com/CodeNarc/CodeNarc
+License: Apache Software Foundation License Version 2.0
+Chris Mair
+
+GMetric
+http://mvnrepository.com/artifact/org.gmetrics/GMetrics/0.5
+License: Apache Software Foundation License Version 2.0
+Chris Mair
+
+Grails Pretty-time Plugin
+https://grails.org/plugin/pretty-time
+License: Apache Software Foundation License Version 2.0
+Cazacu Mihai, Janusz Slota
+
+PrettyTime Core
+https://github.com/ocpsoft/prettytime
+License: Apache Software Foundation License Version 2.0
+© 2015 OCPsoft
+
+Grails UiPerformance Plugin
+https://grails.org/plugin/ui-performance
+License: Apache Software Foundation License Version 2.0
+Burt Beckwith
+
+Grails Build-test-data Plugin
+https://github.com/tednaleid/build-test-data
+License: Apache Software Foundation License Version 2.0
+Ted Naleid, Joe Hoover, Matt Sheehan, Aaron Long, Søren Berg Glasius, Gregor Petrin, Michael Cameron, Jaime Garcia
+
+dk.brics.automaton
+http://www.brics.dk/automaton/
+License: BSD
+© Anders Møller
+
+Grails Quartz Plugin
+https://github.com/grails-plugins/grails-quartz
+License: Apache Software Foundation License Version 2.0
+Sergey Nebolsin, Graeme Rocher, Ryan Vanderwerf, Vitalii Samolovskikh
+
+Quartz Scheduler
+http://quartz-scheduler.org/
+License: Apache Software Foundation License Version 2.0
+(c) Terracotta, Inc
+
+c3p0 - JDBC3 Connection and Statement Pooling
+http://www.mchange.com/projects/c3p0/
+License: LGPL or EPL
+© 2015 Machinery For Change, Inc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------
+Attribution for Dependencies needed at runtime but not for compilation
+--------------------------------------------------------------
+
+Groovy
+http://www.groovy-lang.org/
+License: Apache Software Foundation License Version 2.0
+© 2003-2015 the Groovy project
+
+Grails REST Plugin
+https://github.com/berngp/grails-rest
+License: Apache Software Foundation License Version 2.0
+Andres Almiray (aalmiray), Bernardo Gomez Palacio, Marco Vermeulen
+
+SLF4J
+http://www.slf4j.org/
+License: MIT License
+(c) 2004-2013 QOS.ch
+
+Grails
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Apache Taglibs
+http://tomcat.apache.org/
+License: Apache Software Foundation License Version 2.0
+© 1999-2015, The Apache Software Foundation
+
+Spring Context Support
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Eclipse Aspectj
+https://eclipse.org/aspectj/
+License: Eclipse Public License
+(c) 2008 Contributors
+
+Apache Commons FileUpload
+https://commons.apache.org/proper/commons-fileupload/
+License: Apache Software Foundation License Version 2.0
+© 1999-2015, The Apache Software Foundation
+
+Sitemesh
+http://wiki.sitemesh.org/wiki/display/sitemesh/Home
+License: OpenSymphony Software License
+(c) 2001-2004 The OpenSymphony Group
+
+Eclipse Aspectj
+https://eclipse.org/aspectj/
+License: Eclipse Public License
+(c) 2008 Contributors
+
+Grails Async
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+GPars
+http://gpars.codehaus.org/
+License: Apache Software Foundation License Version 2.0
+(c) 2008-2013 Vaclav Pech
+
+Multiverse-Core
+https://github.com/Multiverse/Multiverse-Core
+License: Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer
+(c) 2011, The Multiverse Team
+
+jsr166y
+https://github.com/codehaus/jsr166-mirror/tree/master/src/main
+License: Creative Commons
+2015 The Codehaus. All Rights Reserved.
+
+spring-aop
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+spring-web
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+spring-expression
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+MXP1: Xml Pull Parser (XPP3)
+http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/
+License: Copies of this document may be made for your own use and for distribution to others, 
+provided that you do not charge any fee for such copies and further provided that each copy 
+contains this Copyright Notice, whether distributed in print or electronically.
+2002 Extreme! Lab, Indiana University
+
+Javax Servlet JSTL
+http://search.maven.org/#artifactdetails%7Cjavax.servlet%7Cservlet-api%7C2.5%7Cjar
+License: Apache Software Foundation License Version 2.0
+Copyright © 2009-2011, Oracle Corporation and/or its affiliates
+Commons EL
+http://commons.apache.org/proper/commons-el/
+License: Apache Software Foundation License Version 2.0
+© 1999-2015, The Apache Software Foundation
+
+Objenesis
+http://objenesis.org/
+License: Apache Software Foundation License Version 2.0
+(c) 2003-2013, Objenesis Team and all contributors
+
+Commons BeanUtils
+http://commons.apache.org/proper/commons-beanutils/
+License: Apache Software Foundation License Version 2.0
+© 1999-2015, The Apache Software Foundation
+
+Grails
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails DataBind
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+SLF4J
+http://www.slf4j.org/
+License: MIT License
+(c) 2004-2013 QOS.ch
+
+Grails Datasource Plugin
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Tomcat Embed Core
+http://tomcat.apache.org/
+License: Apache Software Foundation License Version 2.0
+© 1999-2015, The Apache Software Foundation
+
+Tomcat JDBC
+http://tomcat.apache.org/
+License: Apache Software Foundation License Version 2.0
+© 1999-2015, The Apache Software Foundation
+
+Tomcat JULI
+http://tomcat.apache.org/
+License: Apache Software Foundation License Version 2.0
+© 1999-2015, The Apache Software Foundation
+
+Spring JDBC
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Spring Context
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Spring AOP
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Gson
+https://github.com/google/gson
+License: Apache Software Foundation License Version 2.0
+2008 Google Inc.
+
+Grails Plugin Controllers
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Plugin Validation
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Plugin DataBind
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails-core
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails-bootstrap
+https://github.com/groovydev/twitter-bootstrap-grails-plugin
+License: Apache Software Foundation License Version 2.0
+Copyright 2011 Karol Balejko
+
+Apache ORO
+http://projects.apache.org/projects/oro.html
+License: Apache Software Foundation License Version 2.0
+1999-2015, The Apache Software Foundation
+
+Xalan Serializer
+https://xml.apache.org/xalan-j/
+License: Apache Software Foundation License Version 2.0
+© 2002-2014 The Apache Software Foundation
+
+Spring Web
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+ASM
+http://asm.ow2.org/
+License: Copies of this document may be made for your own use and for distribution to others, 
+provided that you do not charge any fee for such copies and further provided that each copy 
+contains this Copyright Notice, whether distributed in print or electronically.
+(c) 2000-2011 INRIA, France Telecom
+
+Spring Beans
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Java Persistence API
+http://hibernate.org/orm/documentation/
+License: LGPL
+Copyright © 2004 Red Hat, Inc.
+
+Spring Core
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+AOP Alliance
+http://aopalliance.sourceforge.net/
+License: all the source code provided by AOP Alliance is Public Domain
+AOP Alliance
+
+Commons Validator
+https://commons.apache.org/proper/commons-validator/
+License: Apache Software Foundation License Version 2.0
+© 2002-2014 The Apache Software Foundation
+
+Grails Plugin i18n
+https://github.com/stokito/grails-locale-configuration-plugin
+License: Apache Software Foundation License Version 2.0
+Sergey Ponomarev
+
+Apache Commons Lang
+https://commons.apache.org/proper/commons-lang/
+License: Apache Software Foundation License Version 2.0
+© 2002-2014 The Apache Software Foundation
+
+Grails Plugin Filters
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Plugin GSP
+https://github.com/mckenfra/gsp-resources
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Logging
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Plugin Codecs
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails log4j Plugin 
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+SLF4J
+http://www.slf4j.org/
+License: MIT License
+(c) 2004-2013 QOS.ch
+
+Grails Services Plugin
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Spring Transaction (Spring-tx)
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Grails Servlets Plugin
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails URL Mappings Plugin
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Commons IO
+https://commons.apache.org/proper/commons-io/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2002-2014 The Apache Software Foundation
+
+Concurrentlinkedhashmap
+https://code.google.com/p/concurrentlinkedhashmap/
+License: Apache Software Foundation License Version 2.0
+Ben Manes
+
+H2 Database Engine
+http://www.h2database.com/html/main.html
+License: Mozilla Public License 2.0 and Eclipse Public License
+H2
+log4j
+http://logging.apache.org/log4j/2.x/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 The Apache Software Foundation.
+
+Grails Resources
+https://github.com/grails-plugins/grails-resources
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+MySQL Java Connector 
+http://dev.mysql.com/downloads/connector/j/
+License: GPL
+© 2015, Oracle Corporation
+
+jTDS
+http://jtds.sourceforge.net/
+License: LGPL
+The jTDS Project
+
+PostgreSQL JDBC 
+http://www.postgresql.org/
+License: PostgreSQL Licence
+© 1996-2015 The PostgreSQL Global Development Group
+
+HyperSQL Database Engine
+http://hsqldb.org/web/hsqlDocsFrame.html
+License: BSD-based license
+(c) 2001-2010, The HSQL Development Group
+
+log4j
+http://logging.apache.org/log4j/2.x/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2005-2015 The Apache Software Foundation.
+
+Ehcache Jgroupreplication
+http://ehcache.org/
+License: Apache Software Foundation License Version 2.0
+(c) Terracotta, Inc
+
+Ehcache-core
+http://ehcache.org/
+License: Apache Software Foundation License Version 2.0
+(c) Terracotta, Inc
+
+jgroups
+http://www.jgroups.org/license.html
+License: LGPL
+© 2002-2015, Red Hat
+
+Smack
+https://github.com/igniterealtime/Smack
+License: Apache Software Foundation License Version 2.0
+Ignite Realtime
+
+
+HttpComponents
+https://hc.apache.org/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2005-2015 The Apache Software Foundation.
+
+HttpComponents
+https://hc.apache.org/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2005-2015 The Apache Software Foundation.
+
+Commons Logging
+http://commons.apache.org/proper/commons-logging/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2005-2014 The Apache Software Foundation.
+
+Commons Codec
+https://commons.apache.org/proper/commons-codec/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2005-2014 The Apache Software Foundation.
+
+OZONE Security
+https://github.com/ozoneplatform
+License: Apache Software Foundation License Version 2.0
+Copyright 2014 Next Century Corporation 
+OpenSymphony Oscache
+https://github.com/cdemoustier/opensymphony-oscache-backup
+License: OpenSymphony Software License (Derived from Apache Software Foundation License Version 2.0)
+(c) 2001 The OpenSymphony Group
+
+Spring Security Core
+https://github.com/spring-projects/spring-security
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+Spring Security CAS Client
+https://github.com/spring-projects/spring-security
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+Spring Security Web
+https://github.com/spring-projects/spring-security
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+Spring Security Config
+https://github.com/spring-projects/spring-security
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+CAS Client Core
+http://jasig.github.io/cas/4.0.x/index.html
+License: Apache Software Foundation License Version 2.0
+Apereo Foundation
+
+Spring Security LDAP
+https://github.com/spring-projects/spring-security
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+Spring LDAP Core
+https://github.com/spring-projects/spring-ldap
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+JUnit
+https://github.com/junit-team/junit
+License: Eclipse Public License
+© 2002-2014 Junit
+
+Mockito-all
+https://github.com/mockito/mockito
+License: MIT License
+(c) 2007 Mockito contributors
+
+Servlet API
+http://search.maven.org/#artifactdetails%7Cjavax.servlet%7Cservlet-api%7C2.5%7Cjar
+License: Apache Software Foundation License Version 2.0
+Copyright © 2009-2011, Oracle Corporation and/or its affiliates
+
+Grails Database Migration Plugin
+https://github.com/grails-plugins/grails-database-migration
+License: Apache Software Foundation License Version 2.0
+Burt Beckwith
+
+Liquibase Core
+http://www.liquibase.org/download/
+License: Apache Software Foundation License Version 2.0
+(C) 2006-2015 Nathan Voxland
+
+Grails Hibernate Plugin 
+https://github.com/grails-plugins/grails-hibernate-plugin
+License: Apache Software Foundation License Version 2.0
+Copyright 2004-2005 the original author or authors
+
+Hibernate Ehcache
+http://ehcache.org/documentation/2.8/index
+License: Apache Software Foundation License Version 2.0
+(c) Terracotta, Inc
+
+CGLIB
+https://github.com/cglib/cglib
+License: Apache Software Foundation License Version 2.0
+This product includes software developed by The Apache Software Foundation
+
+Grails Datastore Gorm Hibernate Core
+http://mvnrepository.com/artifact/org.grails/grails-datastore-gorm-hibernate-core/3.0.4.RELEASE
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+ANTLR
+https://github.com/antlr/antlr4
+License: BSD
+(c) 2015 Terence Parr, Sam Harwell
+
+dom4J
+http://dom4j.sourceforge.net/dom4j-1.6.1/
+License: BSD
+Copyright 2001-2005 (C) MetaStuff, Ltd
+
+Spring ORM
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Grails Database Gorm Plugin
+http://mvnrepository.com/artifact/org.grails/grails-datastore-gorm-plugin-support/3.0.4.RELEASE
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Commons Collections
+https://commons.apache.org/proper/commons-collections/download_collections.cgi
+License: Apache Software Foundation License Version 2.0
+(c) Apache
+
+Core Hibernate O/RM Functionality
+https://github.com/hibernate/hibernate-orm
+License: LGPL
+(c) Red Hat, Inc.
+
+Bean Validation API
+https://hibernate.atlassian.net/projects/BVAL
+License: Apache Software Foundation License Version 2.0
+(c) Red Hat, Inc.
+
+Hibernate Validator Engine
+https://github.com/hibernate/hibernate-validator
+License: Apache Software Foundation License Version 2.0
+Copyright © 2009 - 2013 Red Hat, Inc. & Gunnar Morling
+
+Hibernate JPA Support
+http://hibernate.org/orm/documentation/
+License: LGPL
+Copyright © 2004 Red Hat, Inc.
+
+Hibernate Commons Annotations
+https://github.com/hibernate/hibernate-commons-annotations
+License: LGPL
+Copyright © 2004 Red Hat, Inc.
+
+OZONE App Config
+https://github.com/ozoneplatform
+License: Apache Software Foundation License Version 2.0
+Copyright 2014 Next Century Corporation
+
+OZONE Auditing
+https://github.com/ozoneplatform
+License: Apache Software Foundation License Version 2.0
+Copyright 2014 Next Century Corporation
+
+OZONE Messaging
+https://github.com/ozoneplatform
+License: Apache Software Foundation License Version 2.0
+Copyright 2014 Next Century Corporation
+
+Grails CodeNarc Plugin
+https://github.com/CodeNarc/CodeNarc
+License: Apache Software Foundation License Version 2.0
+Chris Mair
+
+CodeNarc
+https://github.com/CodeNarc/CodeNarc
+License: Apache Software Foundation License Version 2.0
+Chris Mair
+
+GMetric
+http://mvnrepository.com/artifact/org.gmetrics/GMetrics/0.5
+License: Apache Software Foundation License Version 2.0
+Chris Mair
+
+Grails Pretty-time Plugin
+https://grails.org/plugin/pretty-time
+License: Apache Software Foundation License Version 2.0
+Cazacu Mihai, Janusz Slota
+
+PrettyTime Core
+https://github.com/ocpsoft/prettytime
+License: Apache Software Foundation License Version 2.0
+© 2015 OCPsoft
+
+Grails UiPerformance Plugin
+https://grails.org/plugin/ui-performance
+License: Apache Software Foundation License Version 2.0
+Burt Beckwith
+
+Grails Build-test-data Plugin
+https://github.com/tednaleid/build-test-data
+License: Apache Software Foundation License Version 2.0
+Ted Naleid, Joe Hoover, Matt Sheehan, Aaron Long, Søren Berg Glasius, Gregor Petrin, Michael Cameron, Jaime Garcia
+
+dk.brics.automaton
+http://www.brics.dk/automaton/
+License: BSD
+© Anders Møller
+
+Grails Quartz Plugin
+https://github.com/grails-plugins/grails-quartz
+License: Apache Software Foundation License Version 2.0
+Sergey Nebolsin, Graeme Rocher, Ryan Vanderwerf, Vitalii Samolovskikh
+
+Quartz Scheduler
+http://quartz-scheduler.org/
+License: Apache Software Foundation License Version 2.0
+(c) Terracotta, Inc
+
+c3p0 - JDBC3 Connection and Statement Pooling
+http://www.mchange.com/projects/c3p0/
+License: LGPL or EPL
+© 2015 Machinery For Change, Inc.
+
+Grails Cross-Origin Resource Sharing (CORS)
+https://github.com/davidtinker/grails-cors
+License: Apache Software Foundation License Version 2.0
+2013 BrandsEye
+
+WebXMLConfig
+https://github.com/burtbeckwith/grails-webxml
+License: Apache Software Foundation License Version 2.0
+Roger Cass
+
+Grails Yammer Metrics Plugin 
+https://github.com/jeffellis/grails-yammer-metrics
+License: Apache Software Foundation License Version 2.0
+2013 Jeff Ellis
+
+Metrics Utility Servlets
+Removed from her codahale projects but repos incorporated into https://github.com/dropwizard/metrics
+License: MIT License > Apache Software Foundation License Version 2.0
+(c) 2010-2014 Coda Hale, Yammer.com
+
+Metrics Health Checks
+https://github.com/codahale/healthchecks
+License: MIT License
+(c) 2014 Coda Hale
+
+Jackson Integration For Metrics
+Removed from her codahale projects but repos incorporated into https://github.com/dropwizard/metrics
+License: MIT License > Apache Software Foundation License Version 2.0
+(c) 2010-2014 Coda Hale, Yammer.com
+
+JVM Integration For Metrics
+Removed from her codahale projects but repos incorporated into https://github.com/dropwizard/metrics
+License: MIT License > Apache Software Foundation License Version 2.0
+(c) 2010-2014 Coda Hale, Yammer.com
+
+Jackson Databind
+https://github.com/FasterXML/jackson-databind
+License: Apache Software Foundation License Version 2.0
+FasterXML, LLC
+
+Jackson Annotations
+https://github.com/FasterXML/jackson-annotations
+License: Apache Software Foundation License Version 2.0
+FasterXML, LLC
+
+Jackson Core
+https://github.com/FasterXML/jackson-core/wiki
+License: Apache Software Foundation License Version 2.0 (dual-licensed with LGPL 2.1)
+FasterXML, LLC
+
+Metrics Core
+https://github.com/codahale/metrics
+License: MIT License
+(c) 2014 Coda Hale
+
+
+
+
+
+
+--------------------------------------------------------------
+Attribution for Dependencies needed for test compilation and execution but not at runtime
+-------------------------------------------------------------- 
+
+JavaServlet™ Specification
+http://search.maven.org/#artifactdetails%7Cjavax.servlet%7Cservlet-api%7C2.5%7Cjar
+License: Apache Software Foundation License Version 2.0
+Copyright © 2009-2011, Oracle Corporation and/or its affiliates
+Groovy
+http://www.groovy-lang.org/
+License: Apache Software Foundation License Version 2.0
+© 2003-2015 the Groovy project
+
+Grails REST Plugin
+https://github.com/berngp/grails-rest
+License: Apache Software Foundation License Version 2.0
+Andres Almiray (aalmiray), Bernardo Gomez Palacio, Marco Vermeulen
+
+SLF4J
+http://www.slf4j.org/
+License: MIT License
+(c) 2004-2013 QOS.ch
+
+Grails
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Apache Taglibs
+http://tomcat.apache.org/
+License: Apache Software Foundation License Version 2.0
+© 1999-2015, The Apache Software Foundation
+
+Spring Context Support
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Eclipse Aspectj
+https://eclipse.org/aspectj/
+License: Eclipse Public License
+(c) 2008 Contributors
+
+Apache Commons FileUpload
+https://commons.apache.org/proper/commons-fileupload/
+License: Apache Software Foundation License Version 2.0
+© 1999-2015, The Apache Software Foundation
+
+Sitemesh
+http://wiki.sitemesh.org/wiki/display/sitemesh/Home
+License: OpenSymphony Software License
+(c) 2001-2004 The OpenSymphony Group
+
+Eclipse Aspectj
+https://eclipse.org/aspectj/
+License: Eclipse Public License
+(c) 2008 Contributors
+
+Grails Async
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+GPars
+http://gpars.codehaus.org/
+License: Apache Software Foundation License Version 2.0
+(c) 2008-2013 Vaclav Pech
+
+Multiverse-Core
+https://github.com/Multiverse/Multiverse-Core
+License: Redistributions of source code must retain the above copyright notice, 
+this list of conditions and the following disclaimer
+(c) 2011, The Multiverse Team
+
+jsr166y
+https://github.com/codehaus/jsr166-mirror/tree/master/src/main
+License: Creative Commons
+© Doug Lea
+spring-aop
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+spring-web
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+spring-expression
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+MXP1: Xml Pull Parser (XPP3)
+http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/
+License: Copies of this document may be made for your own use and for distribution to others, 
+provided that you do not charge any fee for such copies and further provided that each copy 
+contains this Copyright Notice, whether distributed in print or electronically.
+2002 Extreme! Lab, Indiana University
+
+Javax Servlet JSTL
+http://search.maven.org/#artifactdetails%7Cjavax.servlet%7Cservlet-api%7C2.5%7Cjar
+License: Apache Software Foundation License Version 2.0
+Copyright © 2009-2011, Oracle Corporation and/or its affiliates
+Commons EL
+http://commons.apache.org/proper/commons-el/
+License: Apache Software Foundation License Version 2.0
+© 1999-2015, The Apache Software Foundation
+
+Objenesis
+http://objenesis.org/
+License: Apache Software Foundation License Version 2.0
+(c) 2003-2013, Objenesis Team and all contributors
+
+Commons BeanUtils
+http://commons.apache.org/proper/commons-beanutils/
+License: Apache Software Foundation License Version 2.0
+© 1999-2015, The Apache Software Foundation
+
+Grails
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails DataBind
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+SLF4J
+http://www.slf4j.org/
+License: MIT License
+(c) 2004-2013 QOS.ch
+
+Grails Datasource Plugin
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Tomcat Embed Core
+http://tomcat.apache.org/
+License: Apache Software Foundation License Version 2.0
+© 1999-2015, The Apache Software Foundation
+
+Tomcat JDBC
+http://tomcat.apache.org/
+License: Apache Software Foundation License Version 2.0
+© 1999-2015, The Apache Software Foundation
+
+Tomcat JULI
+http://tomcat.apache.org/
+License: Apache Software Foundation License Version 2.0
+© 1999-2015, The Apache Software Foundation
+
+Spring JDBC
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Spring Context
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Spring AOP
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Gson
+https://github.com/google/gson
+License: Apache Software Foundation License Version 2.0
+2008 Google Inc.
+
+Grails Plugin Controllers
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Plugin Validation
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Plugin DataBind
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails-core
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails-bootstrap
+https://github.com/groovydev/twitter-bootstrap-grails-plugin
+License: Apache Software Foundation License Version 2.0
+Copyright 2011 Karol Balejko
+
+Apache ORO
+http://projects.apache.org/projects/oro.html
+License: Apache Software Foundation License Version 2.0
+1999-2015, The Apache Software Foundation
+
+Xalan Serializer
+https://xml.apache.org/xalan-j/
+License: Apache Software Foundation License Version 2.0
+© 2002-2014 The Apache Software Foundation
+
+Spring Web
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+ASM
+http://asm.ow2.org/
+License: Copies of this document may be made for your own use and for distribution to others, 
+provided that you do not charge any fee for such copies and further provided that each copy 
+contains this Copyright Notice, whether distributed in print or electronically.
+(c) 2000-2011 INRIA, France Telecom
+
+Spring Beans
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Java Persistence API
+http://hibernate.org/orm/documentation/
+License: LGPL
+Copyright © 2004 Red Hat, Inc.
+
+Spring Core
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+AOP Alliance
+http://aopalliance.sourceforge.net/
+License: all the source code provided by AOP Alliance is Public Domain
+AOP Alliance
+
+Commons Validator
+https://commons.apache.org/proper/commons-validator/
+License: Apache Software Foundation License Version 2.0
+© 2002-2014 The Apache Software Foundation
+
+Grails Plugin i18n
+https://github.com/stokito/grails-locale-configuration-plugin
+License: Apache Software Foundation License Version 2.0
+Sergey Ponomarev
+
+Apache Commons Lang
+https://commons.apache.org/proper/commons-lang/
+License: Apache Software Foundation License Version 2.0
+© 2002-2014 The Apache Software Foundation
+
+Grails Plugin Filters
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Plugin GSP
+https://github.com/mckenfra/gsp-resources
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Logging
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Plugin Codecs
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails log4j Plugin 
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+SLF4J
+http://www.slf4j.org/
+License: MIT License
+(c) 2004-2013 QOS.ch
+
+Grails Services Plugin
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Spring Transaction (Spring-tx)
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Grails Servlets Plugin
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails URL Mappings Plugin
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Commons IO
+https://commons.apache.org/proper/commons-io/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2002-2014 The Apache Software Foundation
+
+Concurrentlinkedhashmap
+https://code.google.com/p/concurrentlinkedhashmap/
+License: Apache Software Foundation License Version 2.0
+Ben Manes
+
+Grails Testing Plugin
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Mimetypes Plugin
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Spring Test
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Grails Converters Plugin
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Datastore Gorm 
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Datastore Simple 
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Domain Class Plugin
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Grails Datastore Core
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Javassist
+https://github.com/jboss-javassist/javassist
+License: Mozilla Public License
+(C) 1999- Shigeru Chiba
+
+Javax Transaction API
+http://mvnrepository.com/artifact/javax.transaction/jta
+License: GPL
+© 2015, Oracle Corporation
+
+Spock Framework
+https://github.com/spockframework
+License: Apache Software Foundation License Version 2.0
+The Spock Framework Team
+
+JavaHamcrest
+https://github.com/hamcrest/JavaHamcrest
+License: BSD License
+Joe Walnes, Nat Pryce, Steeve Freeman
+
+Grails Test
+https://grails.org/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Apache Ant
+http://ant.apache.org/
+License: Apache Software Foundation License Version 2.0
+The Apache Software Foundation
+
+Apache Ant Launcher
+http://ant.apache.org/
+License: Apache Software Foundation License Version 2.0
+The Apache Software Foundation
+
+Apache Ant JUnit
+http://ant.apache.org/
+License: Apache Software Foundation License Version 2.0
+The Apache Software Foundation
+
+H2 Database Engine
+http://www.h2database.com/html/main.html
+License: Mozilla Public License 2.0 and Eclipse Public License
+H2
+
+log4j
+http://logging.apache.org/log4j/2.x/
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 The Apache Software Foundation.
+
+Grails Resources
+https://github.com/grails-plugins/grails-resources
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+MySQL Java Connector 
+http://dev.mysql.com/downloads/connector/j/
+License: GPL
+© 2015, Oracle Corporation
+
+jTDS
+http://jtds.sourceforge.net/
+License: LGPL
+The jTDS Project
+PostgreSQL JDBC 
+http://www.postgresql.org/
+License: PostgreSQL Licence
+© 1996-2015 The PostgreSQL Global Development Group
+
+HyperSQL Database Engine
+http://hsqldb.org/web/hsqlDocsFrame.html
+License: BSD-based license
+(c) 2001-2010, The HSQL Development Group
+
+log4j
+http://logging.apache.org/log4j/2.x/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2005-2015 The Apache Software Foundation.
+
+Ehcache Jgroupreplication
+http://ehcache.org/
+License: Apache Software Foundation License Version 2.0
+(c) Terracotta, Inc
+
+Ehcache-core
+http://ehcache.org/
+License: Apache Software Foundation License Version 2.0
+(c) Terracotta, Inc
+
+jgroups
+http://www.jgroups.org/license.html
+License: LGPL
+© 2002-2015, Red Hat
+
+Smack
+https://github.com/igniterealtime/Smack
+License: Apache Software Foundation License Version 2.0
+Ignite Realtime
+
+Smack
+https://github.com/igniterealtime/Smack
+License: Apache Software Foundation License Version 2.0
+Ignite Realtime
+
+HttpComponents
+https://hc.apache.org/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2005-2015 The Apache Software Foundation.
+
+HttpComponents
+https://hc.apache.org/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2005-2015 The Apache Software Foundation.
+
+Commons Logging
+http://commons.apache.org/proper/commons-logging/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2005-2014 The Apache Software Foundation.
+
+Commons Codec
+https://commons.apache.org/proper/commons-codec/
+License: Apache Software Foundation License Version 2.0
+Copyright © 2005-2014 The Apache Software Foundation.
+
+OZONE Security
+https://github.com/ozoneplatform
+License: Apache Software Foundation License Version 2.0
+Copyright 2014 Next Century Corporation
+
+OpenSymphony Oscache
+https://github.com/cdemoustier/opensymphony-oscache-backup
+License: OpenSymphony Software License (Derived from Apache Software Foundation License Version 2.0)
+(c) 2001 The OpenSymphony Group
+
+Spring Security Core
+https://github.com/spring-projects/spring-security
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+Spring Security CAS Client
+https://github.com/spring-projects/spring-security
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+Spring Security Web
+https://github.com/spring-projects/spring-security
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+Spring Security Config
+https://github.com/spring-projects/spring-security
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+CAS Client Core
+http://jasig.github.io/cas/4.0.x/index.html
+License: Apache Software Foundation License Version 2.0
+Apereo Foundation
+
+Spring Security LDAP
+https://github.com/spring-projects/spring-security
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+Spring LDAP Core
+https://github.com/spring-projects/spring-ldap
+License: Apache Software Foundation License Version 2.0
+Copyright 2005-2013 the original authors
+
+JUnit
+https://github.com/junit-team/junit
+License: Eclipse Public License
+© 2002-2014 Junit
+
+Mockito-all
+https://github.com/mockito/mockito
+License: MIT License
+(c) 2007 Mockito contributors
+
+Servlet API
+http://search.maven.org/#artifactdetails%7Cjavax.servlet%7Cservlet-api%7C2.5%7Cjar
+License: Apache Software Foundation License Version 2.0
+Copyright © 2009-2011, Oracle Corporation and/or its affiliates
+
+Grails Database Migration Plugin
+https://github.com/grails-plugins/grails-database-migration
+License: Apache Software Foundation License Version 2.0
+Burt Beckwith
+
+Liquibase Core
+http://www.liquibase.org/download/
+License: Apache Software Foundation License Version 2.0
+(C) 2006-2015 Nathan Voxland
+
+Grails Hibernate Plugin 
+https://github.com/grails-plugins/grails-hibernate-plugin
+License: Apache Software Foundation License Version 2.0
+Copyright 2004-2005 the original author or authors
+
+Hibernate Ehcache
+http://ehcache.org/documentation/2.8/index
+License: Apache Software Foundation License Version 2.0
+(c) Terracotta, Inc
+
+CGLIB
+https://github.com/cglib/cglib
+License: Apache Software Foundation License Version 2.0
+This product includes software developed by The Apache Software Foundation
+
+Grails Datastore Gorm Hibernate Core
+http://mvnrepository.com/artifact/org.grails/grails-datastore-gorm-hibernate-core/3.0.4.RELEASE
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+ANTLR
+https://github.com/antlr/antlr4
+License: BSD
+(c) 2015 Terence Parr, Sam Harwell
+
+dom4J
+http://dom4j.sourceforge.net/dom4j-1.6.1/
+License: BSD
+Copyright 2001-2005 (C) MetaStuff, Ltd
+
+Spring ORM
+https://github.com/spring-projects/spring-framework
+License: Apache Software Foundation License Version 2.0
+© 2015 Pivotal Software
+
+Grails Database Gorm Plugin
+http://mvnrepository.com/artifact/org.grails/grails-datastore-gorm-plugin-support/3.0.4.RELEASE
+License: Apache Software Foundation License Version 2.0
+© 2005-2015 the Grails project
+
+Commons Collections
+https://commons.apache.org/proper/commons-collections/download_collections.cgi
+License: Apache Software Foundation License Version 2.0
+(c) Apache
+
+Core Hibernate O/RM Functionality
+https://github.com/hibernate/hibernate-orm
+License: LGPL
+(c) Red Hat, Inc.
+
+Bean Validation API
+https://hibernate.atlassian.net/projects/BVAL
+License: Apache Software Foundation License Version 2.0
+(c) Red Hat, Inc.
+
+Hibernate Validator Engine
+https://github.com/hibernate/hibernate-validator
+License: Apache Software Foundation License Version 2.0
+Copyright © 2009 - 2013 Red Hat, Inc. & Gunnar Morling
+
+Hibernate JPA Support
+http://hibernate.org/orm/documentation/
+License: LGPL
+Copyright © 2004 Red Hat, Inc.
+
+Hibernate Commons Annotations
+https://github.com/hibernate/hibernate-commons-annotations
+License: LGPL
+Copyright © 2004 Red Hat, Inc.
+
+OZONE App Config
+https://github.com/ozoneplatform
+License: Apache Software Foundation License Version 2.0
+Copyright 2014 Next Century Corporation 
+
+OZONE Auditing
+https://github.com/ozoneplatform
+License: Apache Software Foundation License Version 2.0
+Copyright 2014 Next Century Corporation 
+
+OZONE Messaging
+https://github.com/ozoneplatform
+License: Apache Software Foundation License Version 2.0
+Copyright 2014 Next Century Corporation 
+
+Grails CodeNarc Plugin
+https://github.com/CodeNarc/CodeNarc
+License: Apache Software Foundation License Version 2.0
+Chris Mair
+
+CodeNarc
+https://github.com/CodeNarc/CodeNarc
+License: Apache Software Foundation License Version 2.0
+Chris Mair
+
+GMetric
+http://mvnrepository.com/artifact/org.gmetrics/GMetrics/0.5
+License: Apache Software Foundation License Version 2.0
+Chris Mair
+
+Grails Pretty-time Plugin
+https://grails.org/plugin/pretty-time
+License: Apache Software Foundation License Version 2.0
+Cazacu Mihai, Janusz Slota
+
+PrettyTime Core
+https://github.com/ocpsoft/prettytime
+License: Apache Software Foundation License Version 2.0
+© 2015 OCPsoft
+
+Grails UiPerformance Plugin
+https://grails.org/plugin/ui-performance
+License: Apache Software Foundation License Version 2.0
+Burt Beckwith
+
+Grails Build-test-data Plugin
+https://github.com/tednaleid/build-test-data
+License: Apache Software Foundation License Version 2.0
+Ted Naleid, Joe Hoover, Matt Sheehan, Aaron Long, Søren Berg Glasius, Gregor Petrin, Michael Cameron, Jaime Garcia
+
+dk.brics.automaton
+http://www.brics.dk/automaton/
+License: BSD
+© Anders Møller
+
+Grails Quartz Plugin
+https://github.com/grails-plugins/grails-quartz
+License: Apache Software Foundation License Version 2.0
+Sergey Nebolsin, Graeme Rocher, Ryan Vanderwerf, Vitalii Samolovskikh
+
+Quartz Scheduler
+http://quartz-scheduler.org/
+License: Apache Software Foundation License Version 2.0
+(c) Terracotta, Inc
+
+c3p0 - JDBC3 Connection and Statement Pooling
+http://www.mchange.com/projects/c3p0/
+License: LGPL or EPL
+© 2015 Machinery For Change, Inc.
+
+Grails Cross-Origin Resource Sharing (CORS)
+https://github.com/davidtinker/grails-cors
+License: Apache Software Foundation License Version 2.0
+2013 BrandsEye
+
+WebXMLConfig
+https://github.com/burtbeckwith/grails-webxml
+License: Apache Software Foundation License Version 2.0
+Roger Cass
+
+Grails Yammer Metrics Plugin 
+https://github.com/jeffellis/grails-yammer-metrics
+License: Apache Software Foundation License Version 2.0
+2013 Jeff Ellis
+
+Metrics Utility Servlets
+Removed from her codahale projects but repos incorporated into https://github.com/dropwizard/metrics
+License: MIT License > Apache Software Foundation License Version 2.0
+(c) 2010-2014 Coda Hale, Yammer.com
+
+Metrics Health Checks
+https://github.com/codahale/healthchecks
+License: MIT License
+(c) 2014 Coda Hale
+
+Jackson Integration For Metrics
+Removed from her codahale projects but repos incorporated into https://github.com/dropwizard/metrics
+License: MIT License > Apache Software Foundation License Version 2.0
+(c) 2010-2014 Coda Hale, Yammer.com
+
+JVM Integration For Metrics
+Removed from her codahale projects but repos incorporated into https://github.com/dropwizard/metrics
+License: MIT License > Apache Software Foundation License Version 2.0
+(c) 2010-2014 Coda Hale, Yammer.com
+
+Jackson Databind
+https://github.com/FasterXML/jackson-databind
+License: Apache Software Foundation License Version 2.0
+FasterXML, LLC
+
+Jackson Annotations
+https://github.com/FasterXML/jackson-annotations
+License: Apache Software Foundation License Version 2.0
+FasterXML, LLC
+
+Jackson Core
+https://github.com/FasterXML/jackson-core/wiki
+License: Apache Software Foundation License Version 2.0 (dual-licensed with LGPL 2.1)
+FasterXML, LLC
+
+Metrics Core
+https://github.com/codahale/metrics
+License: MIT License
+(c) 2014 Coda Hale
+

@@ -3,13 +3,13 @@
     <head>
         <title>Channel Shouter</title>
         <g:if test="${params.themeName != null && params.themeName != ''}">
-            <link rel='stylesheet' type='text/css' href='../../../themes/${params.themeName.encodeAsHTML()}.theme/css/${params.themeName.encodeAsHTML()}.css' />
+            <link rel='stylesheet' type='text/css' href='../../../themes/${params.themeName.encodeAsURL().encodeAsHTML()}.theme/css/${params.themeName.encodeAsURL().encodeAsHTML()}.css' />
         </g:if>
         <g:else>
             <link href="../../../js-lib/ext-4.0.7/resources/css/ext-all.css" rel="stylesheet" type="text/css">
             <link href="../../../css/dragAndDrop.css" rel="stylesheet" type="text/css">
         </g:else>
-        
+
         <script type="text/javascript" src="../../../js-lib/ext-4.0.7/ext-all-debug.js"></script>
         <p:javascript src="owf-widget" pathToRoot="../../../" />
         <script type="text/javascript">
@@ -30,7 +30,7 @@
 	                    scope.guid = result[0].id;
 	                },
 	                onFailure:function(err) {
-	                } 
+	                }
 	            });
 
                 //add handler to text field for dragging
@@ -45,7 +45,7 @@
                         });
                     }
                 });
-                
+
             });
 
             shout = owfdojo.hitch(this, function () {
@@ -97,7 +97,7 @@
 	                });
                 }
             });
-            
+
             ShouterStrings = {
                 channel: 'Channel: ',
                 message: 'Message: ',
@@ -115,7 +115,7 @@
             owfdojo.ready(function() {
                 OWF.ready(shoutInit);
             });
-            
+
         </script>
      </head>
     <body class="x-panel-body-default">

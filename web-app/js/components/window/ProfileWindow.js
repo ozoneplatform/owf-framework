@@ -11,10 +11,17 @@ Ext.define('Ozone.components.window.ProfileWindow', {
     modal: true,
     modalAutoClose: true,
     cls: 'profileWindow',
-    
+
+    // destroy on close
+    closeAction: 'destroy',
+
     mixins: {
         escHelper: 'Ozone.components.focusable.EscCloseHelper'
     },
+
+    // cached JQuery objects
+    $showAnimationsRow: null,
+    $userPrefNotification: null,
 
     initComponent: function() {
         var me = this;
@@ -27,15 +34,16 @@ Ext.define('Ozone.components.window.ProfileWindow', {
         me.minHeight = 250;
 
         Ext.apply(this, {
+          layout: {
+            type: 'vbox',
+            align: 'stretch'
+          },
           items:[
             {
               xtype: 'panel',
               cls: 'userInfo',
               title: 'User Information',
-              layout: {
-                type: 'fit'
-              },
-              autoScroll: true,
+              flex: 1,
               items: [
                 {
                   xtype: 'component',
@@ -93,6 +101,74 @@ Ext.define('Ozone.components.window.ProfileWindow', {
                   renderData: this.user
                 }
               ]
+            },
+            {
+              xtype: 'panel',
+              cls: 'userPref',
+              title: 'User Preferences',
+              flex: 1,
+              items: [
+                {
+                  xtype: 'component',
+                  cls: 'userPrefTable',
+                  renderTpl: new Ext.XTemplate(
+                          '<p class="user-pref-notification" style="display: none;">',
+                            "Please refresh your browser to see the changes you've made in User Preferences.",
+                          '</p>',
+                          '<p class="user-pref-notification" style="display: none;">',
+                            "Note: Enabling animations may cause issues with third-party plug-ins like Google Earth.",
+                          '</p>',
+                          '<table>',
+                            '<tr class="show-animations-row">',
+                              '<td>',
+                                '<input name="show-animations" class="show-animations-checkbox" type="checkbox" {animations}/>',
+                              '</td>',
+                              '<td class="fieldLabel">',
+                                'Enable animations',
+                              '</td>',
+                            '</tr>',
+                            '<tr class="show-hints-row">',
+                              '<td>',
+                                '<input name="show-hints" class="show-hints-checkbox" type="checkbox" {hints}/>',
+                              '</td>',
+                              '<td class="fieldLabel">',
+                                'Enable hints',
+                              '</td>',
+                            '</tr>',
+                          '</table>'
+                  ),
+                  renderData: {
+                    animations: ((Ozone.config.showAnimations) ? ('checked="checked"') : ('')),
+                    hints: ((Ozone.config.showHints) ? ('checked="checked"') : (''))
+                  }
+                }
+              ],
+              listeners: {
+                afterrender: function() {
+                  var $el = $(this.el.dom),
+                      $userPrefNotification = $el.find('.user-pref-notification');
+
+                  $el.on('click.save-prefs', 'input[type="checkbox"]', function(evt) {
+                    var $checkbox = $(evt.target),
+                        name = $checkbox.attr('name');
+
+                    Ozone.pref.PrefServer.setUserPreference({
+                      namespace: "owf",
+                      name: name,
+                      value: $checkbox.is(':checked'),
+                      onSuccess: $.noop,
+                      onFailure: $.noop
+                    });
+
+                    // let the user know that refreshing
+                    // the browser would be a good idea
+                    $userPrefNotification.show();
+                  });
+                },
+                destroy: function() {
+                  $(this.el.dom).off('.save-prefs');
+                }
+              }
             }
           ]
         });

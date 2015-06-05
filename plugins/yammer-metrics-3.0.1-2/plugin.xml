@@ -1,0 +1,33 @@
+<plugin name='yammer-metrics' version='3.0.1-2' grailsVersion='2.0.3 &gt; *'>
+  <author>Jeff Ellis</author>
+  <authorEmail>codemonkey@ellises.us</authorEmail>
+  <title>Grails plugin to package Coda Hale's metrics jars</title>
+  <description>\
+This plugin provides an easy way for grails apps to create application health checks and
+metrics (timers, meters, counters, histograms, etc) from Coda Hale's metrics package
+
+Pulls in the following metrics jars :
+   * metrics-core
+   * metrics-healthchecks
+   * metrics-servlets (wired to the /metrics end point for the app).
+
+See the source code documentation on Github for more details.
+</description>
+  <documentation>http://github.com/jeffellis/grails-yammer-metrics</documentation>
+  <type>YammerMetricsGrailsPlugin</type>
+  <resources />
+  <repositories>
+    <repository name='http://grails.org/plugins' url='http://grails.org/plugins' />
+    <repository name='grailsCentral' url='http://grails.org/plugins' />
+    <repository name='mavenCentral' url='http://repo1.maven.org/maven2/' />
+  </repositories>
+  <dependencies>
+    <runtime>
+      <dependency group='com.codahale.metrics' name='metrics-servlets' version='3.0.1' />
+      <dependency group='com.codahale.metrics' name='metrics-core' version='3.0.1' />
+    </runtime>
+  </dependencies>
+  <plugins />
+  <runtimePluginRequirements />
+  <behavior />
+</plugin>

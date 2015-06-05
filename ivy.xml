@@ -7,43 +7,44 @@
         <conf name="jsdoc" />
         <conf name="zip" />
         <conf name="bundle" />
-        <!--conf name="jetty" /-->
         <conf name="tomcat" />
+        <conf name="hsqldb" />
         <conf name="release" />
-        <conf name="cas.server" />
     </configurations>
     <publications>
         <artifact name="${app.name}-bundle" type="zip"
                   ext="zip" />
     </publications>
     <dependencies>
-        <!--<dependency org="${jetty.custom.org}" name="${jetty.custom.module}" rev="${jetty.custom.rev}" conf="jetty->zip" transitive="false" >-->
-            <!--<artifact name="${jetty.custom.module}" type="zip" />-->
-        <!--</dependency>-->
-        <dependency org="${tomcat.custom.org}" name="${tomcat.custom.module}" rev="${tomcat.custom.rev}" transitive="false" >
+        <dependency org="${tomcat.custom.org}" name="${tomcat.custom.module}"
+                rev="${tomcat.custom.rev}" transitive="false" conf="tomcat->*">
             <artifact name="${tomcat.custom.module}" type="zip" />
         </dependency>
-        <dependency org="${cas.server.org}" name="${cas.server.module}" rev="${cas.server.rev}"  changing="true"  transitive="false" >
-            <artifact type="zip" name="cas-server-extras"/>
-            <artifact type="war" name="cas-server-owf"/>
-        </dependency>
-        <dependency org="${owf.security.org}" name="${owf.security.module}" rev="${owf.security.rev}" changing="true" transitive="false" >
-            <artifact type="zip" name="owf-security-project"/>
-            <artifact type="zip" name="owf-security-extras"/>
-            <artifact type="jar" name="owf-security"/>
+
+        <dependency org="${owf.security.org}" conf="bundle->*"
+                name="${owf.security.module}-project" rev="${owf.security.rev}"
+                transitive="false" changing="true">
+            <artifact name="${owf.security.module}-project" type="zip" />
         </dependency>
 
-        <dependency org="ozone-widgeting-framework-legacy" name="OWFAntTasks" rev="1.0.0"  />
-        <dependency org="net.alchim31.3rd.com.yahoo.platform.yui" name="yuicompressor" rev="2.4.2"  />
-
-        <dependency org="org.jsdoctoolkit" name="jsdoc-dist" rev="2.3.2" >
-            <artifact type="zip" name="jsdoc-dist"/>
+        <dependency org="ozone-widgeting-framework-legacy" name="OWFAntTasks" rev="1.0.0"
+            conf="jsdoc->*;compressjs->*;build->*" >
+            <artifact name="OWFAntTasks" type="zip" />
         </dependency>
 
-        <dependency org="org.jsdoctoolkit" name="jsdoctoolkit-ant-task" rev="1.0"  >
+        <dependency org="com.yahoo.platform.yui" name="yuicompressor"
+            conf="compressjs->master" rev="2.4.2"  />
+
+        <dependency org="googlecode.com" name="jsdoc-toolkit" rev="2.3.2"  conf="jsdoc->*">
+            <artifact name="jsdoc_toolkit" type="zip"/>
+        </dependency>
+
+        <dependency org="org.jsdoctoolkit" name="jsdoctoolkit-ant-task" rev="1.0"
+            conf="jsdoc->*;build->*">
             <exclude module="ant-contrib"/>
             <exclude module="jsdoc" />
         </dependency>
 
+        <dependency org="hsqldb" name="hsqldb" rev="1.8.0.10" conf="hsqldb->*" />
     </dependencies>
 </ivy-module>

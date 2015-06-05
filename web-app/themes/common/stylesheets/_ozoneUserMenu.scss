@@ -1,0 +1,125 @@
+#userMenuBtn {
+  margin: 0px;
+}
+
+.user-menu {
+
+  font-size: 1.1em;
+  @include user-select(none);
+
+  .dropdown-menu {
+    z-index: 10000004;
+    left: auto;
+    right: 0px;
+    @include border-radius(0px);
+    border-style: none;
+
+    background-color: $owf-usermenu-background-color;
+    color: $owf-usermenu-color;
+
+    .divider {
+      border-bottom: 1px solid $owf-usermenu-color;
+      margin: 5px 1px;
+    }
+  }
+
+  button {
+    .icon-chevron-sign-down {
+      padding-left: 5px;
+    }
+  }
+
+  .btn {
+    background-color: $owf-usermenu-btn-background-color;
+    color: $owf-usermenu-btn-color;
+    border-style: none;
+    padding: 0px 8px;
+    height: 32px;
+    @include border-radius(0px);
+    font-family: sans-serif;
+
+    &:focus {
+      background-color: $owf-usermenu-btn-background-color;
+      color: $owf-usermenu-btn-color;
+    }
+
+    &:hover {
+      background-color: $owf-usermenu-btn-background-color-hover;
+      color: $owf-usermenu-btn-color;
+    }
+  }
+
+  ul {
+    margin: 0px;
+  }
+
+  .logout-link {
+    cursor: pointer;
+    padding: 0px 5px 0px 8px;
+    line-height: $owf-usermenu-item-line-height;
+    &:hover {
+      background-color: $owf-usermenu-item-background-color-hover;
+      color: $owf-usermenu-item-color-hover;
+    }
+  }
+}
+
+.user-menu-group {
+
+  .user-menu-item {
+    margin: 0px;
+    padding: 0px 5px 0px 16px;
+    cursor: pointer;
+    line-height: $owf-usermenu-item-line-height;
+
+    &:hover {
+      background-color: $owf-usermenu-item-background-color-hover;
+      color: $owf-usermenu-item-color-hover;
+    }
+  }
+
+  &.collapsed {
+    .collapse-toggle {
+      &:before {
+        @extend .icon-angle-down:before;
+      }
+    }
+
+    .user-menu-item {
+      display: none;
+    }
+  }
+}
+
+.group-header {
+  padding: 5px 8px 5px 8px;
+  color: $owf-usermenu-group-header-text-color;
+  cursor: pointer;
+
+  .collapse-toggle {
+    position: relative;
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1.2em;
+    float: right;
+
+    &:before {
+      @extend .icon-angle-up:before;
+    }
+  }
+
+  &:hover {
+    color: $owf-usermenu-group-header-hover-color;
+  }
+}
+
+.x-ie7 {
+  .group-header {
+    .collapse-toggle {
+      @extend .icon-chevron-down;
+      position: absolute;
+      right: 5px;
+    }
+  }
+}

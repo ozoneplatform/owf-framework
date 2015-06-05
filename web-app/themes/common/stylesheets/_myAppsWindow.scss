@@ -1,0 +1,1009 @@
+[class^="icon-"],
+[class*=" icon-"] {
+    color: $my-apps-window-dashboard-text-color;
+}
+
+#my-apps-window {
+    border: 0px;
+    background-color: $my-apps-window-background-color;
+
+    &-body {
+        @include border-radius($my-apps-window-body-radius);
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    @include border-radius($my-apps-window-body-radius);
+
+    .x-window-header {
+        @include border-radius($my-apps-window-body-radius);
+
+        background-color: $my-apps-window-background-color;
+        margin-bottom: 5px;
+        width: 100% !important;
+        *overflow: hidden;
+        *width: 97% !important;
+        *margin-bottom: 0px;
+        border: 0px;
+        zoom: 1;
+        height: $my-apps-window-header-height !important;
+
+        .x-window-header-text {
+            font-size: 24px;
+            font-weight: normal;
+            padding-left: 13px;
+            padding-top: 10px;
+            *line-height: 24px;
+            color: $my-apps-window-title-color;
+        }
+
+        .x-window-header-body {
+            height: $my-apps-window-header-height !important;
+            zoom: 1;
+        }
+    }
+
+    .actions {
+        height: auto;
+        position: absolute;
+        bottom: -15px;
+        right: 0;
+
+        ul {
+            color: $my-apps-window-descriptor-color;
+
+            li {
+                display: inline-block;
+                zoom: 1;
+                cursor: pointer;
+                *display: inline;
+            }
+        }
+
+        // 'Discover More in the Store' button
+        // 'Create New App' button
+        .store-link-btn, .create-link-btn {
+            text-align: left;
+
+            .store-link-btn-text, .create-link-btn-text {
+                display: inline-block;
+                width: 90px;
+                padding: 3px 0 0 7px;
+                font: {
+                    size: 10px;
+                    weight: normal;
+                }
+            }
+
+            .store-link-btn-img, .create-link-btn-img {
+                position: relative;
+                width: 20px;
+                height: 20px;
+                display: inline-block;
+                float: left;
+                background-repeat: no-repeat !important;
+                background-position: center center !important;
+
+                &:hover, &.hover {
+                    background-repeat: no-repeat;
+                }
+            }
+
+            .create-link-btn-text {
+                width: 75px;
+            }
+
+            .store-link-btn-img {
+                background-image: theme-image($theme-name, 'myappswindow/MoreinStore-out.png');
+            }
+
+            .create-link-btn-img {
+                background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-out.png');
+            }
+        }
+
+        .store-link-btn {
+            &:hover, &.hover {
+                & .store-link-btn-img {
+                    background-image: theme-image($theme-name, 'myappswindow/MoreinStore-over.png');
+                }
+            }
+        }
+
+        .create-link-btn {
+            &:hover, &.hover {
+                & .create-link-btn-img {
+                    background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-over.png');
+                }
+            }
+        }
+    }
+
+    .my-apps-window-descriptor {
+        color: $my-apps-window-descriptor-color;
+        bottom: 20px !important;
+        position: relative;
+        text-align: left;
+        padding-top: 10px;
+        *padding-top: 0px;
+    }
+
+    .all-dashboards {
+        height: auto !important;
+        overflow: hidden;
+
+        //necessary for scrolling to work properly in IE7 for some reason
+        position: relative;
+
+        zoom: normal;
+    }
+
+    .x-tool .x-tool-close {
+        background-image: theme-image($theme-name, 'tools/close-out.png') !important;
+    }
+
+    .x-tool-over .x-tool-close {
+         background-image: theme-image($theme-name, 'tools/close-over.png') !important;
+         background-position: 0 !important;
+    }
+
+    .x-tool-pressed .x-tool-close {
+         background-image: theme-image($theme-name, 'tools/close-down.png') !important;
+         background-position: 0 !important;
+    }
+}
+
+/**** BEGIN slider styling ****/
+#my-apps-window
+    > #my-apps-window-body {
+
+    background-color: $my-apps-window-background-color;
+
+    > .bx-wrapper {
+        margin-bottom: 30px !important;
+        min-height: $my-apps-window-slider-height;
+        max-height: $my-apps-window-slider-max-height;
+
+        > .bx-viewport {
+            @include box-shadow(none);
+
+            margin-left: -4px !important;
+
+            background: transparent !important;
+            *background: inherit !important;
+
+            border: 0px;
+
+            width: $my-apps-window-slider-width !important;
+            height: $my-apps-window-slider-height !important;
+            min-height: $my-apps-window-slider-height !important;
+
+            .bx-slide.expanded {
+                height: $my-apps-window-slider-expanded-height;
+            }
+
+            &.expanded {
+                height: $my-apps-window-slider-expanded-height !important;
+            }
+        }
+
+        &.expanded {
+            height: $my-apps-window-slider-expanded-height !important;
+        }
+    }
+
+    > .bx-wrapper .bx-pager, > .bx-wrapper .bx-controls-auto {
+        bottom: -20px;
+        zoom: 1;
+        padding-top: 0px;
+        *text-align: left;
+        *display: inline;
+
+        .bx-pager-item {
+            zoom: 1;
+            *display: inline;
+        }
+    }
+
+    > .bx-wrapper > .bx-controls > .bx-controls-direction {
+        .bx-prev, .bx-next {
+            height: 54px !important;
+            background-position: 0 1px !important;
+            top: 200px !important; // keep arrows in same y-position when My Apps modal is expanded
+        }
+
+        .bx-prev {
+            left: -56px !important;
+            background: theme-image($theme-name, 'myappswindow/my_apps_carousel_left_arrow_out.png') no-repeat !important;
+        }
+        .bx-next {
+            right: -56px !important;
+            background: theme-image($theme-name, 'myappswindow/my_apps_carousel_right_arrow_out.png') no-repeat !important;
+        }
+    }
+}
+
+#my-apps-window
+> #my-apps-window-body
+> .bx-wrapper
+> .bx-viewport
+> .all-dashboards
+> .bx-slide
+> .stack-dashboards-container {
+
+    > .stack-dashboards {
+        width: 740px;
+        margin: 0 auto;
+
+        &.one-slide {
+            height: $dashboard-mini-slider-height-one-slide;
+        }
+
+        @include border-radius($dashboard-mini-slider-body-radius);
+
+        > .bx-wrapper {
+            min-height: $dashboard-mini-slider-height !important;
+            max-height: $dashboard-mini-slider-height !important;
+            width: 610px;
+            margin-bottom: 30px;
+
+            > .bx-viewport {
+                @include box-shadow(none);
+
+                background: transparent !important;
+
+                margin: 0px;
+
+                border: 0px;
+
+                width: $dashboard-mini-slider-width !important;
+
+                height: $dashboard-mini-slider-viewport-height !important;
+                *height: $dashboard-mini-slider-viewport-height-ie7 !important;
+
+                min-height: $dashboard-mini-slider-viewport-height !important;
+                *min-height: $dashboard-mini-slider-viewport-height-ie7 !important;
+
+                .dashboard {
+                    padding-top: $dashboard-padding-top;
+                    margin-bottom: 0px;
+                    margin-top: $dashboard-mini-slider-dashboard-margin-top;
+                    margin-left: $dashboard-mini-slider-dashboard-margin-left;
+                    margin-right: $dashboard-mini-slider-dashboard-margin-right;
+                    width: $dashboard-mini-slider-dashboard-width;
+                }
+            }
+        }
+
+        > .bx-wrapper .bx-pager, > .bx-wrapper .bx-controls-auto {
+            bottom: -20px;
+            display: block;
+            zoom: 1;
+            *text-align: left;
+            *display: inline;
+
+            .bx-pager-item {
+                zoom: 1;
+                *display: inline;
+            }
+        }
+
+        > .bx-wrapper {
+
+            .bx-prev, .bx-prev:hover, .bx-next, .bx-next:hover {
+                top: 60%;
+                background-size: 75% !important;
+                height: 42px !important;
+            }
+
+            .bx-prev {
+                left: -52px !important;
+            }
+
+            .bx-next {
+                right: -59px !important;
+            }
+        }
+    }
+}
+/***** END slider styling  ****/
+
+#my-apps-window .dashboard, #my-apps-window .stack, .stack.drag-proxy, .dashboard.drag-proxy {
+    //For these elements, it is more useful
+    //to compute content width not overall box
+    //width, since we are setting width based on
+    //its contents
+    @include box-sizing(content-box);
+
+    float: left;
+    padding-top: $dashboard-padding-top;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    cursor: pointer;
+    width: $dashboard-width;
+    height: $dashboard-height;
+    margin: $dashboard-margin-top
+            $dashboard-margin-right
+            $dashboard-margin-bottom
+            $dashboard-margin-left;
+
+    .thumb-wrap {
+        text-align: center;
+        white-space: nowrap;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        *overflow: hidden;
+
+        .thumb {
+            height: 64px;
+            width: 64px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .thumb.default {
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 100%;
+        }
+    }
+
+    &-name {
+        color: $my-apps-window-dashboard-text-color;
+        overflow: hidden;
+        height: 36px;
+        width: 100%;
+        margin: 2px 0 auto;
+        padding: 0 4px 0 4px;
+        line-height: 1em;
+    }
+
+    .details-btn {
+            float: right;
+            background-image: theme-image($theme-name, 'myappswindow/info_icon.png');
+            background-repeat: no-repeat;
+            background-position: 4px 4px;
+            width: 18px;
+            height: 18px;
+            margin-right: 7px;
+            margin-top: 3px;
+
+            &:hover, &.hover {
+                background-image: theme-image($theme-name, 'myappswindow/info_icon_hover.png');
+            }
+        }
+
+    &:hover, &.hover, &-selected {
+        @include border-radius($dashboard-item-body-radius);
+    }
+
+    &-selected .dashboard-name {
+        font-weight: bold;
+    }
+}
+
+#my-apps-window .dashboard, .dashboard.drag-proxy {
+    .thumb.default {
+        background-image: $my-apps-window-layout-default-icon;
+    }
+
+    &:hover, &.hover {
+        background-color: $my-apps-window-dashboard-over-background-color;
+    }
+
+    &-selected {
+        background-color: $my-apps-window-dashboard-selected-background-color;
+    }
+}
+
+#my-apps-window .stack, .stack.drag-proxy {
+    .thumb.default {
+        background-image: $my-apps-window-layout-stack-default-icon;
+    }
+
+    &:hover, &.hover {
+        background-color: $my-apps-window-stack-over-background-color;
+    }
+
+    &-selected {
+        @include box-shadow(black 0 0 15px inset);
+        background-color: $my-apps-window-stack-selected-background-color;
+    }
+}
+
+.stack.drag-proxy, .dashboard.drag-proxy {
+    float: none;
+    position: absolute;
+}
+
+.icon-share {
+    &:hover, &.hover {
+        color: $my-apps-window-share-color;
+    }
+}
+
+.icon-refresh {
+    &:hover, &.hover {
+        color: $my-apps-window-restore-color;
+    }
+}
+
+.icon-edit {
+    &:hover, &.hover {
+        color: $my-apps-window-edit-color;
+    }
+}
+
+.icon-remove {
+    &:hover, &.hover {
+        color: $my-apps-window-delete-color;
+    }
+}
+
+.dashboard-actions, .stack-actions {
+    color: #fff;
+    padding: 5px 0px;
+
+        li {
+            display: inline-block;
+            font-size: 1.5em;
+        }
+        -webkit-animation-duration: 0.2s;
+        -moz-animation-duration: 0.2s;
+        -o-animation-duration: 0.2s;
+        animation-duration: 0.2s;
+
+        -webkit-animation-delay: 1s;
+        -moz-animation-delay: 1s;
+        -o-animation-delay: 1s;
+        animation-delay: 1s;
+}
+
+.x-ie7 {
+    #my-apps-window {
+        ul.actions li{
+            display: inline;
+            zoom: 1;
+        }
+    }
+
+    .dashboard-actions, .stack-actions {
+        li {
+            display: inline;
+            font-size: 1.5em;
+        }
+    }
+
+    .stack-dashboards-anchor-tip {
+        visibility: hidden;
+    }
+}
+.dashboard-actions, .stack-actions {
+    li {
+        width: 25%;
+    }
+}
+
+#stacks-or-dashboards {
+    overflow: hidden;
+}
+
+.stack-dashboards-container {
+    clear: both;
+    position: relative;
+    top: -11px;
+
+    .stack-dashboards-anchor-tip {
+        position: relative;
+        border-width: 7px;
+        height: 7px;
+        border-bottom-color: $dashboard-mini-slider-background-color;
+    }
+
+    .stack-dashboards {
+        background-color: $dashboard-mini-slider-background-color;
+        overflow: hidden;
+
+        .my-apps-window-descriptor {
+            display: none;
+        }
+    }
+}
+
+.itemTip {
+    z-index: 69011 !important;
+    @include border-radius($dashboard-item-body-radius);
+
+     .x-tool .x-tool-close {
+        background-image: theme-image($theme-name, 'tools/close-out.png') !important;
+        right: 5px;
+        position:relative;
+    }
+
+    .x-tool-over .x-tool-close {
+         background-image: theme-image($theme-name, 'tools/close-over.png') !important;
+         background-position: 0 !important;
+    }
+
+    .x-tool-pressed .x-tool-close {
+         background-image: theme-image($theme-name, 'tools/close-down.png') !important;
+         background-position: 0 !important;
+    }
+
+    .x-box-inner {
+        top:5px !important;
+        height: 25px !important;
+
+        *overflow:visible;
+    }
+
+}
+
+.ozonequicktip {
+    width: 300px !important;
+    max-width: 300px;
+    max-height: 500px;
+    padding: 0;
+    background-color: $my-apps-tooltip-color;
+
+    .dashboard-tooltip-content {
+        .noIconGivenStack {
+            background-image: $my-apps-window-layout-stack-default-icon;
+        }
+
+        .noIconGivenPage {
+            background-image: $my-apps-window-layout-default-icon;
+        }
+
+        .tipIcon {
+            width:64px;
+            height:64px;
+            margin-right:15px;
+            margin-left: 5%;
+            margin-bottom: 5%;
+            float: left;
+        }
+
+        .name {
+            color: $my-apps-window-dashboard-text-color;
+            margin-bottom: 0;
+            margin-left: 35%;
+            margin-right: 8%;
+            max-width: 200px !important;
+            max-height: 75px !important;
+            overflow: hidden;
+
+            *margin-left: 0;
+            *margin-right: 10%;
+        }
+
+        ul {
+            color: $my-apps-window-dashboard-text-color;
+            background-color: $my-apps-tooltip-color;
+            border-top: 1px solid $my-apps-window-background-color;
+            @include border-bottom-radius(7px);
+            margin-top: 5.5%;
+
+            li {
+                display: inline-block;
+                *zoom:1;
+                *display: inline;
+                margin: 0 1px;
+                width: 55px;
+                height: 55px;
+                padding-top: 10px;
+                font-size: .75em;
+                color: $my-apps-window-dashboard-over-text-color;
+                cursor: pointer;
+
+                .actionText {
+                    text-align:center;
+                    margin-left:auto;
+                    margin-right:auto;
+                    margin-top: 2px;
+                    font-size:.94em;
+                }
+
+                .createImg {
+                    background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-out.png');
+                    display: inline-block;
+                    width:20px;
+                    height:20px;
+                    margin-left: 35%;
+
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/CreateNewApp-over.png');
+                    }
+                }
+
+                .createPageImg {
+                    background-image: theme-image($theme-name, 'myappswindow/CreateNewPage-out.png');
+                    display: inline-block;
+                    width:20px;
+                    height:20px;
+                    margin-left: 35%;
+
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/CreateNewPage-over.png');
+                    }
+                }
+
+                .pushImg {
+                    background-image: theme-image($theme-name, 'myappswindow/PushtoStore-out.png');
+                    display: inline-block;
+                    width:20px;
+                    height:20px;
+                    margin-left: 35%;
+
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/PushtoStore-over.png');
+                    }
+                }
+
+                .restoreImg {
+                    background-image: theme-image($theme-name, 'myappswindow/Restore-out.png');
+                    display: inline-block;
+                    width:20px;
+                    height:20px;
+                    margin-left: 32%;
+
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/Restore-over.png');
+                    }
+                }
+
+                .editImg {
+                    background-image: theme-image($theme-name, 'myappswindow/Edit-out.png');
+                    display: inline-block;
+                    width:20px;
+                    height:20px;
+                    margin-left: 35%;
+
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/Edit-over.png');
+                    }
+                }
+
+                .deleteImg {
+                    background-image: theme-image($theme-name, 'myappswindow/Delete-out.png');
+                    display: inline-block;
+                    width:20px;
+                    height:20px;
+                    margin-left: 32%;
+
+                    &:hover, &.hover {
+                        background-image: theme-image($theme-name, 'myappswindow/Delete-over.png');
+                    }
+                }
+            }
+
+            .liStoreAdjust{
+                font-size: 1em !important;
+            }
+
+            .liPageAdjust{
+                font-size: 1em !important;
+            }
+        }
+    }
+
+    .tip-warning {
+
+        .x-box-inner {
+            height: inherit !important;
+            top: 0 !important;
+        }
+
+        .x-toolbar {
+            background: transparent;
+            border: none;
+
+            .x-box-inner {
+                height: 40px !important;
+                border: none;
+            }
+
+
+        }
+
+        .okbutton{
+            background: #7dc242;
+            text-align: center;
+            width: 100px;
+        }
+
+        .cancelbutton {
+            background: #ababab;
+            text-align: center;
+            width: 100px;
+        }
+
+        .x-btn-default-toolbar-small {
+            span{
+                background-image: none;
+                color: #FFFFFF;
+                font-size: 14px;
+                //font-weight: bold;
+                text-shadow: -2px 2px 2px #000000;
+            }
+            filter: none;
+        }
+
+        .x-panel-body-default {
+            background-color: $my-apps-tooltip-color;
+            border: none;
+            color: getHighContrastColor($widget-launcher-background-color);
+            padding: 10px 8px;
+
+            .x-form-field.x-form-text {
+                border-color: #a0a9ad;
+                color: getHighContrastColor($widget-launcher-background-color);
+            }
+        }
+
+        .x-toolbar {
+            filter: none;
+        }
+
+        border: none;
+    }
+
+    label {
+        color: $my-apps-window-tooltip-label-color;
+    }
+
+    h3 {
+        color: $my-apps-window-tooltip-heading-color;
+        font-size: 1.5em;
+        margin: 0 0 1.25em 0;
+    }
+
+    p {
+        font-size: $owf-font-size;
+        line-height: 1.5em;
+        min-height: 50px;
+        max-width: 265px;
+    }
+
+    .description {
+        width: 285px;
+        max-height: 300px;
+        overflow-y: auto;
+        overflow-x: auto;
+
+        overflow/*\**/: auto\9;
+    }
+
+    .tip-description {
+        line-height: (14/12);
+        padding-left: 5%;
+    }
+
+    .dashboard-metadata {
+        *margin-bottom: 1.5em;
+    }
+}
+
+.alert-window-widget {
+    width: 250px;
+}
+
+.premadeLayoutButton {
+  margin: 3px;
+  *margin: 1px;
+  height: 49px;
+  width: 63px;
+  background-position: center;
+  padding: 2px;
+  *padding: 0px;
+}
+
+.premadeLayoutButton.selected {
+  border-style:solid;
+  border-width:2px;
+  border-color: #7dc242;
+}
+
+.premadeLayoutButton.collapseView {
+    *height: 0px !important;
+}
+
+.premadeViewRow.collapseView {
+    *height: 0px !important;
+}
+
+.premadeDesktop {
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_1-Desktop.png');
+  opacity: 25 !important;
+}
+
+.premadeFit {
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_1-Fit.png');
+}
+
+.premadeTabbed {
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_1-Tabbed.png');
+}
+
+.premade2ColumnFit {
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_2-FitBSB.png');
+}
+
+.premade2RowFit {
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_2-FitStack.png');
+}
+
+.premade4Fit {
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_4-Fit.png');
+}
+
+.premade2ColumnPortal {
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_2-Portal.png');
+}
+
+.premadeAccordionFit {
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_2-Accord-Fit.png');
+}
+
+.premadeTabbedAccordion {
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_2-Tabbed-Accord.png');
+}
+
+.premade2RowFitTabbed {
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_2-Fit-Tab.png');
+}
+
+.premadeAccordion2RowFit {
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_3-Accord-Fit-Fit.png');
+}
+
+.premadeTabbed2Fit {
+  background-image: theme-image($theme-name, 'myappswindow/StockAppLayouts_3-Tab-Fit-Fit.png');
+}
+
+.premadeButtonInactive {
+  opacity: 0.4 !important;
+  filter: alpha(opacity=40) !important; /* for ie7 */
+  cursor: default !important;
+}
+
+[id*="owfCreateDashboardsContainer"], [id*="owfCreateDashboardsContainer"] .x-toolbar, .createAppField input, .createAppField textArea, {
+  color: $my-apps-window-dashboard-text-color;
+  background: $my-apps-window-background-color;
+}
+
+.createAppField input:focus, .createAppField textArea:focus {
+  border-color: #a0a9ad;
+}
+
+[id*="createdashboardwindow"].manageContainer {
+
+  border-width: 0px !important;
+  background-color: $my-apps-window-background-color;
+
+  .x-window-header {
+    border-width: 0px !important;
+    background-color: $my-apps-window-background-color;
+    margin-bottom: 5px;
+    width: 95% !important;
+    *overflow: hidden;
+    *width: 97% !important;
+    *margin-bottom: 0px;
+    zoom: 1;
+    height: $my-apps-window-header-height !important;
+
+    .x-window-header-text {
+      font-size: 24px;
+      padding-left: 33px;
+      *line-height: 24px;
+    }
+
+    .x-window-header-body {
+      height: $my-apps-window-header-height !important;
+      zoom: 1;
+    }
+  }
+
+  .empty-text-field {
+    color: gray;
+    font-style: italic;
+  }
+
+  .okbutton{
+    background: #7dc242;
+    filter: none;
+  }
+
+  .cancelbutton {
+    background: #ababab;
+    filter: none;
+  }
+
+  .x-btn-default-toolbar-small span{
+    background-image: none;
+    color: #FFFFFF;
+    font-size: 14px;
+    //font-weight: bold;
+    text-shadow: -2px 2px 2px #000000;
+  }
+}
+
+div.premadeViewRow {
+  height: 60px !important;
+  *margin-bottom: 3px;
+}
+
+#premadeViewContainer .x-box-inner {
+  height: 120px !important;
+}
+
+div#premadeViewContainer {
+  transition: height .5s;
+  -moz-transition: height .5s; /* Firefox 4 */
+  -webkit-transition: height .5s; /* Safari and Chrome */
+  -o-transition: height .5s; /* Opera */
+
+  &.collapseView {
+    height: 0px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+  }
+
+  &.expandView {
+    height: 120px !important;
+  }
+}
+
+div#existViewCb {
+
+  transition: height .5s;
+  -moz-transition: height .5s; /* Firefox 4 */
+  -webkit-transition: height .5s; /* Safari and Chrome */
+  -o-transition: height .5s; /* Opera */
+
+  &.collapseView {
+    height: 0px !important;
+    padding: 0px !important;
+    overflow: hidden !important;
+  }
+
+  &.expandView {
+    height: 30px !important;
+  }
+
+  input {
+    width: 396px !important;
+  }
+}
+
+.manageContainer {
+
+  .cvc-createNewDashboardContainer {
+
+    label {
+      padding-left: 0px !important;
+      color: $my-apps-window-dashboard-text-color !important;
+      background: $my-apps-window-background-color !important;
+      height: 28px !important;
+    }
+  }
+}
+
+.ui-tooltip {
+    @include border-radius(3px);
+    border: 1px solid $my-apps-window-title-color;
+    z-index: 69012 !important;
+    background-color: $my-apps-tooltip-color;
+    color: $my-apps-window-dashboard-text-color;
+    width: auto !important;
+    max-width: 300px !important;
+    padding: 5px;
+
+    &-content {
+        width: auto !important;
+        max-width: 300px !important;
+    }
+}

@@ -6,26 +6,22 @@ import ozone.owf.grails.services.model.PersonServiceModel
 
 import ozone.owf.grails.services.model.PreferenceServiceModel
 import ozone.owf.grails.services.model.WidgetDefinitionServiceModel
-import org.grails.taggable.TagLink
 import ozone.owf.grails.util.OWFDate
-import ozone.owf.grails.services.model.TagLinkServiceModel
 import ozone.owf.grails.services.model.PersonWidgetDefinitionServiceModel
 import ozone.owf.grails.services.model.GroupServiceModel
 import ozone.owf.grails.services.model.WidgetTypeServiceModel
 import ozone.owf.grails.services.model.StackServiceModel
 
 import ozone.owf.grails.domain.Dashboard
-import ozone.owf.grails.domain.Intent
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.PersonWidgetDefinition
 import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.Preference
 import ozone.owf.grails.domain.WidgetDefinition
-import ozone.owf.grails.domain.WidgetDefinitionIntent
 import ozone.owf.grails.domain.WidgetType
 import ozone.owf.grails.domain.Stack
 
-import com.ocpsoft.pretty.time.PrettyTime
+import org.ocpsoft.prettytime.PrettyTime
 
 /**
  *
@@ -57,13 +53,17 @@ class ServiceModelService {
                         isGroupDashboard: params.isGroupDashboard ?: false,
                         groups: params.groups != null ? params.groups.collect{ createServiceModel(it) } : [],
                         description: domain.description,
+                        iconImageUrl: domain.iconImageUrl,
+                        type: domain.type,
                         createdDate: OWFDate.standardShortDateDisplay(domain.createdDate),
                         prettyCreatedDate: domain.createdDate != null ? prettytime.format(domain.createdDate) : '',
                         editedDate: OWFDate.standardShortDateDisplay(domain.editedDate),
                         prettyEditedDate: domain.editedDate != null ? prettytime.format(domain.editedDate) : '',
                         createdBy: createServiceModel(domain.createdBy),
                         layoutConfig: domain.layoutConfig,
-                        stack: createServiceModel(domain.stack)
+                        stack: createServiceModel(domain.stack),
+                        markedForDeletion: domain.markedForDeletion,
+                        publishedToStore: domain.publishedToStore
                         )
                 break
 
@@ -95,8 +95,7 @@ class ServiceModelService {
                         displayName: domain.displayName,
                         disabled: domain.disabled,
                         groups: params.groups != null ? params.groups.collect{ createServiceModel(it) } : [],
-                        editable: params.editable != null ? params.editable : true,
-                        tagLinks: params.tagLinks ? params.tagLinks.collect { createServiceModel(it) } : domain.getTags().collect { createServiceModel(it) }
+                        editable: params.editable != null ? params.editable : true
                         );
                 break
 
@@ -145,7 +144,7 @@ class ServiceModelService {
                         description: domain.description,
                         widgetUrl: domain.widgetUrl,
                         imageUrlSmall: domain.imageUrlSmall,
-                        imageUrlLarge: domain.imageUrlLarge,
+                        imageUrlMedium: domain.imageUrlMedium,
                         width: domain.width,
                         height: domain.height,
                         totalUsers: params.totalUsers ? params.totalUsers : 0,
@@ -154,29 +153,21 @@ class ServiceModelService {
                         singleton: domain.singleton?true:false,
                         visible: domain.visible,
                         background: domain.background,
+                        mobileReady: domain.mobileReady?true:false,
                         descriptorUrl: domain.descriptorUrl,
                         directRequired: params.directRequired ? params.directRequired : widgetDefinitionServiceBean.getDirectRequiredIds(domain),
                         allRequired:  params.allRequired ? params.allRequired : widgetDefinitionServiceBean.getAllRequiredIds(domain),
-                        tagLinks: params.tagLinks ? params.tagLinks.collect { createServiceModel(it) } : domain.getTags().collect { createServiceModel(it) },
                         intents: domain.widgetDefinitionIntents ?: [],
                         widgetTypes: domain.widgetTypes.collect{ createServiceModel(it) }
                         );
                 break
 
-            case TagLink:
-                TagLink tagLink = (TagLink) obj
-                model = new TagLinkServiceModel(
-                        name: tagLink.tag.name,
-                        visible: tagLink.visible,
-                        position: tagLink.position,
-                        editable: tagLink.editable
-                        );
-                break
             case WidgetType:
                 WidgetType widgetType = (WidgetType) obj
                 model = new WidgetTypeServiceModel(
                         id: widgetType.id,
-                        name: widgetType.name
+                        name: widgetType.name,
+                        displayName: widgetType.displayName
                         )
                 break
             case Stack:
@@ -185,7 +176,7 @@ class ServiceModelService {
                 // add groups to stack so we can decide client side whether to allow
                 // users to delete this stack
                 def groups = []
-                domain.groups?.each { 
+                domain.groups?.each {
                     groups << createServiceModel(it)
                 }
 
@@ -200,7 +191,10 @@ class ServiceModelService {
                         totalDashboards: params.totalDashboards ?: 0,
                         totalUsers: params.totalUsers ?: 0,
                         totalGroups: params.totalGroups ?: 0,
-                        totalWidgets: domain.uniqueWidgetCount ?: 0
+                        totalWidgets: domain.uniqueWidgetCount ?: 0,
+                        owner: createServiceModel(domain.owner),
+                        defaultGroup: createServiceModel(domain.defaultGroup),
+                        approved: domain.approved
                         )
                 break
             default:

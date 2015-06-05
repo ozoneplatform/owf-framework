@@ -1,0 +1,12 @@
+<plugin name='build-test-data' version='2.1.2' grailsVersion='2.0.0 &gt; *'>
+  <title>Build Test Data Plugin</title>
+  <description>Enables the easy creation of test data by automatic inspection of constraints.  Any properties that are required have
+their constraints examined and a value is automatically provided for them.
+</description>
+  <documentation>https://github.com/tednaleid/build-test-data/wiki</documentation>
+  <type>BuildTestDataGrailsPlugin</type>
+  <resources>
+    <resource>TestDataConfigTemplate</resource>
+    <resource>grails.buildtestdata.BuildTestDataService</resource>
+  </resources>
+</plugin>

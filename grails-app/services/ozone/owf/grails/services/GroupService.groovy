@@ -18,7 +18,7 @@ class GroupService {
     def domainMappingService
     def serviceModelService
     def widgetDefinitionService
-    
+
     private static def addFilter(name, value, c) {
         c.with {
             switch (name) {
@@ -74,7 +74,7 @@ class GroupService {
         else {
 
             def results = criteria.list(opts) {
-                
+
                 eq("stackDefault", false)
 
                 if (params.id)
@@ -131,7 +131,7 @@ class GroupService {
                 if (params.user_id) {
                     addFilter('user_id',params.user_id,criteria)
                 }
-                
+
                 if (params.stack_id) {
                     addFilter('stack_id', params.stack_id, criteria)
                 }
@@ -161,7 +161,7 @@ class GroupService {
                     }
                     projections { rowCount() }
                 }
-                
+
                 def stackCount = Stack.withCriteria {
                     cacheMode(CacheMode.GET)
                     groups {
@@ -235,24 +235,26 @@ class GroupService {
 
             //loop through dashboards and create a group dashboard
             JSON.parse(params.dashboards).each {
-                def dash = Dashboard.findByGuid(it.guid)
+                def dash = (it.guid ? Dashboard.findByGuid(it.guid) : it)
+                dash = dash ?: it
                 if (dash != null) {
-                    def dashConfig = [:]
-                    //use a new guid
-                    dashConfig.guid = java.util.UUID.randomUUID().toString()
-
-                    dashConfig.isdefault = dash.isdefault
-                    dashConfig.dashboardPosition = it.dashboardPosition
-                    dashConfig.name = dash.name
-                    dashConfig.description = dash.description
-                    dashConfig.locked = dash.locked
-
-                    dashConfig.layoutConfig = dash.layoutConfig
-                    // If given a stack override, use that.  Otherwise, use the stack already associated
-                    // with the dashboard to copy.
-                    dashConfig.stack = (params.stack != null) ? params.stack : dash.stack
-                    dashConfig.cloned = true
-                    dashConfig.isGroupDashboard = params.isGroupDashboard  ?: false
+                    def dashConfig = [
+                        //use a new guid
+                        'guid': java.util.UUID.randomUUID().toString(),
+                        'isdefault': dash.isdefault,
+                        'dashboardPosition': it.dashboardPosition,
+                        'name': dash.name,
+                        'description': dash.description,
+                        'type': dash.type,
+                        'locked': dash.locked,
+                        'iconImageUrl': dash.iconImageUrl,
+                        'layoutConfig': dash.layoutConfig,
+                        // If given a stack override, use that.  Otherwise, use the stack already associated
+                        // with the dashboard to copy.
+                        'stack': (params.stack != null) ? params.stack : dash.stack,
+                        'cloned': true,
+                        'isGroupDashboard': params.isGroupDashboard  ?: false
+                    ]
 
                     newGroupDashboards << dashboardService.create(dashConfig).dashboard
                 }
@@ -281,7 +283,7 @@ class GroupService {
 
     private def updateGroup(params) {
 
-        def group
+        Group group
         def returnValue = null
 
         //check for id param if exists this is an update
@@ -333,14 +335,16 @@ class GroupService {
             def user_ids = params.user_ids ? [params.user_ids].flatten() : []
 
             user_ids?.each { it ->
-                def person = Person.findById(it.toLong(),[cache:true])
+                Person person = Person.findById(it.toLong(),[cache:true])
                 if (person) {
                     if (params.update_action == 'add') {
                         group.addToPeople(person)
                     }
                     else if (params.update_action == 'remove') {
                         group.removeFromPeople(person)
+                        dashboardService.purgePersonalDashboards(person, group)
                     }
+                    person.sync()
 
                     updatedPeople << person
                 }
@@ -371,6 +375,8 @@ class GroupService {
                     updatedWidgets << widget
                 }
             }
+            group.syncPeople();
+
             if (!updatedWidgets.isEmpty()) {
                 returnValue = updatedWidgets.collect{ serviceModelService.createServiceModel(it) }
             }
@@ -388,7 +394,9 @@ class GroupService {
                     }
                     else if (params.update_action == 'remove') {
                         group.removeFromPeople(person)
+                        dashboardService.purgePersonalDashboards(person, group)
                     }
+                    person.sync()
 
                     updatedUsers << person
                 }
@@ -415,11 +423,12 @@ class GroupService {
                     updatedDashboards << dashboard
                 }
             }
-            
+            group.syncPeople()
+
             if (!updatedDashboards.isEmpty()) {
                 // Reconcile any widgets missing from the group that have been added by a dashboard.
                 widgetDefinitionService.reconcileGroupWidgetsFromDashboards(group)
-                
+
                 returnValue = updatedDashboards.collect{ serviceModelService.createServiceModel(it) }
             }
         }
@@ -429,18 +438,22 @@ class GroupService {
             def stacks = JSON.parse(params.data)
 
             stacks?.each { it ->
-                def stack = ozone.owf.grails.domain.Stack.findById(it.id.toLong(), [cache: true])
+                Stack stack = Stack.findById(it.id.toLong(), [cache: true])
                 if (stack) {
                     if (params.update_action == 'add') {
                         group.addToStacks(stack)
                     }
                     else if (params.update_action == 'remove') {
                         group.removeFromStacks(stack)
+                        dashboardService.purgePersonalDashboards(stack, group)
                     }
 
                     updatedStacks << stack
                 }
             }
+
+            group.syncPeople()
+
             if (!updatedStacks.isEmpty()) {
                 returnValue = updatedStacks.collect{ serviceModelService.createServiceModel(it) }
             }
@@ -454,6 +467,14 @@ class GroupService {
         }
 
         return returnValue
+    }
+
+    def deletePersonalDashboardsForGroup(Person person, Group removedGroup) {
+        person.dashboards?.each { Dashboard dashboard ->
+            if (dashboard.stack?.groups?.find { it.id == removedGroup.id}){
+                dashboardService.deletePersonalDashboard(dashboard)
+            }
+        }
     }
 
     def delete(params) {
@@ -498,6 +519,14 @@ class GroupService {
         }
 
         return [success: true, data: groups]
+    }
+
+    Group getAllUsersGroup() {
+        Group.findByNameAndAutomatic('OWF Users', true, [cache:true])
+    }
+
+    Group getAllAdminsGroup() {
+        Group.findByNameAndAutomatic('OWF Administrators', true, [cache:true])
     }
 
     private def ensureAdmin() {

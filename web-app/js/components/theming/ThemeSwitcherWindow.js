@@ -51,6 +51,7 @@ Ext.define('Ozone.components.theming.ThemeSwitcherWindow', {
             disabled: true,
             scope: this,
             handler: function() {
+            	this.showConfirmation = false;
                 this.close();
                 this.applyTheme();
             }
@@ -63,6 +64,7 @@ Ext.define('Ozone.components.theming.ThemeSwitcherWindow', {
 //            iconCls: 'cancelBtnIcon',
             scope: this,
             handler: function() {
+            	this.showConfirmation = false;
                 this.close();
             }
         });
@@ -86,6 +88,7 @@ Ext.define('Ozone.components.theming.ThemeSwitcherWindow', {
         ];
 
       this.on('afterrender', function(cmp) {
+    	  var me = this;
             var view = cmp.getComponent('theme-browser-view'),
                 store = view.getStore();
 
@@ -94,7 +97,8 @@ Ext.define('Ozone.components.theming.ThemeSwitcherWindow', {
             //after the store loads, automatically select
             //the current theme
             store.on('load', function(store) {
-                record = store.find('name', Ozone.config.currentTheme.themeName);
+                me.previousTheme = store.find('name', Ozone.config.currentTheme.themeName);
+                record = me.previousTheme;
                 this.select(record);
             }, view);
 
@@ -107,6 +111,12 @@ Ext.define('Ozone.components.theming.ThemeSwitcherWindow', {
             this.syncShadow();
         });
         
+        this.on('beforeclose', function() {
+        	if(this.showConfirmation) {
+        		return this.showConfirmationWindow();
+        	}
+        })
+        
         this.callParent(arguments);
 
     },
@@ -118,6 +128,13 @@ Ext.define('Ozone.components.theming.ThemeSwitcherWindow', {
             themeInfoPanel = this.down('themeinfopanel');
         
         if (selected) {
+        	if(this.selectedTheme == null) {
+        		this.showConfirmation = false;
+        	} else if (this.previousTheme == selected.index) {
+        		this.showConfirmation = false;	
+        	}else if(this.previousTheme != selected.index) {
+        		this.showConfirmation = true;
+        	}
             this.selectedTheme = selected;
             this.okBtn.enable();
             
@@ -149,6 +166,33 @@ Ext.define('Ozone.components.theming.ThemeSwitcherWindow', {
 
             themeBrowser.getEl().scroll('b', offsets[1], true);
         }
+    },
+    
+    showConfirmationWindow: function() {
+    	var me = this;
+    	
+    	var confirmation = Ext.Msg.show({
+    	     msg: 'Do you want to apply this theme?',
+    	     cls: 'theme_switch_confirmation',
+    	     buttons: Ext.Msg.OKCANCEL,
+    	     fn: function(buttonText, eOpt) {
+    	    	 if(buttonText === "ok") {
+    	    		 Ext.getCmp('themeSwitcher').applyTheme();
+    	    		 return true;
+    	    	 } else {
+    	    		 var switcher = Ext.getCmp('themeSwitcher')
+    	    		 if(switcher != undefined) {
+    	    			 switcher.showConfirmation = false;
+    	    			 switcher.close();
+    	    		 }
+    	    	 }
+    	     }
+    	});
+    	
+    	me.dashboardContainer.modalWindowManager.register(confirmation);
+    	me.dashboardContainer.modalWindowManager.bringToFront(confirmation);
+    	
+    	return false;
     }
 
 });

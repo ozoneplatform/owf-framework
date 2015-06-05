@@ -1,2 +1,0 @@
-"${params.junk}"--
-"${session.properties}"

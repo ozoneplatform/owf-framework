@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@ page isErrorPage="true"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%
 	boolean isWindowname = "true".equalsIgnoreCase((String) pageContext
 			.getSession().getAttribute("windowname"));
@@ -22,15 +23,15 @@
 		else
 			msg += ".";
 	}
+
+    String jsMsg = StringEscapeUtils.escapeHtml(StringEscapeUtils.escapeJavaScript(msg));
+    msg = StringEscapeUtils.escapeHtml(msg);
+
 	if (isWindowname) {
 %>
 <html>
 <script type="text/javascript">
-  window.name = document.getElementsByTagName("script")[0].innerHTML.match(/temp\s*=([\w\W]*)/)[1];
-  temp= {
-      status: 500,
-      data: '<%= msg %>'
-   }
+window.name = '{ status: 500, data: "<%= jsMsg %>" }';
 </script>
 <body>
 <h3>window.name Transport</h3>
@@ -43,6 +44,6 @@ HTTP Status Code is
 </html>
 <%
 	} else {
-		out.println(msg);
+        out.println(msg);
 	}
 %>

@@ -12,7 +12,7 @@ Ext.define('Ozone.components.admin.group.GroupEditWidgetsTab', {
         Ext.applyIf(this,{
             layout: 'fit',
             itemId: 'tabWidgets',
-            title: 'Widgets',
+            title: 'App<br>Components',
             editor: 'Group',
             iconCls: 'widgets-tab',
             componentId: 'group_id',

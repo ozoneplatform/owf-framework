@@ -5,36 +5,47 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
         'widget.Ozone.components.window.CreateDashboardWindow'
     ],
 
-    title: Ozone.layout.tooltipString.createDashboardTitle,
+    title: null,
+    headerText: null,
 
     constrain: Ext.isIE,
     constrainHeader: true,
-    cls: "manageContainer",
-    draggable: true,
+    cls: "manageContainer x-window-system-window",
+    draggable: false,
+    shadow: false,
     closeAction: 'destroy',
+    resizable: false,
     
     mixins: {
         escHelper: 'Ozone.components.focusable.EscCloseHelper'
     },
 
     dashboardContainer: null,
-    existingDashboardModel: null,
+    existingDashboardRecord: null,
+    existingStackRecord: null,
     ownerCt: null,
+    stackId: null, // id of the parent Stack
     
     initComponent: function() {
         var me = this;
+
+        var themeFontSize = Ozone.config.currentTheme.themeFontSize;
+
+        // Decide between two window sizes, accommodating regular- and large-text themes.
+        var windowWidth = themeFontSize <= 12 ? 500 : 700;
+        var windowHeight =  Ext.isIE7 ? 550 : 530;
 
         var dashPanelHeight = me.ownerCt.getHeight();
         var dashPanelWidth = me.ownerCt.getWidth();
 
         if (me.height == null ) {
-            me.height = (dashPanelHeight > 379) ? 370 : dashPanelHeight - 10;
+            me.height = (dashPanelHeight > 379) ? windowHeight : dashPanelHeight - 10;
         }
         if (me.width == null) {
-            me.width = (dashPanelWidth > 559) ? 550 : dashPanelWidth - 10;
+            me.width = (dashPanelWidth > 559) ? windowWidth : dashPanelWidth - 10;
         }
         if (me.minHeight == null) {
-            me.minHeight = 250;
+            me.minHeight = 220;
         }
 
         me.items = [{
@@ -42,7 +53,11 @@ Ext.define('Ozone.components.window.CreateDashboardWindow', {
             dashboardContainer: me.dashboardContainer,
             hideViewSelectRadio: me.hideViewSelectRadio,
             winId: me.id,
-            existingDashboardRecord: me.existingDashboardRecord
+            existingDashboardRecord: me.existingDashboardRecord,
+            existingStackRecord: me.existingStackRecord,
+            headerText: me.headerText,
+            stackId: me.stackId,
+            parentWindow: me
         }];
 
         me.callParent();

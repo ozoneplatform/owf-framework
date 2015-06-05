@@ -98,6 +98,7 @@ Ozone.config.dataguard = Ozone.config.dataguard ? Ozone.config.dataguard : {};
 
                 //initialize Ozone.eventing.rpc
                 gadgets.rpc.register("LIST_WIDGETS", this.getOpenedWidgets);
+                gadgets.rpc.register("_DASHBOARD_GET_PANES", cfg.getPanes);
                 Ozone.eventing.rpc.init({
                     getIframeId:this.getIframeId
                 });

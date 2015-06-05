@@ -54,14 +54,14 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
                 xtype: 'button',
                 text: 'Add',
                 itemId: 'add',
-                handler: function() {
-                  this.onAddClicked();
-                },
+                id: 'adminUsersTabAddButton',
+                handler: this.onAddClicked,
                 scope: this
             }, {
                 xtype: 'button',
                 text: 'Remove',
                 itemId: 'remove',
+                id: 'adminUsersTabRemoveButton',
                 handler: function() {
                   var grid = this.getComponent("usersgrid");
                   var store = grid.getStore();
@@ -209,6 +209,7 @@ Ext.define('Ozone.components.admin.UsersTabPanel', {
             });
         }
     },
+
     onAddClicked: function(button, e) {
         var itemName = this.ownerCt.record.get('title');
         if(!itemName){

@@ -161,4 +161,8 @@
         $background-gradient: $tip-background-gradient,
         $table: true
     );
+
+    .x-ie7 .#{$prefix}tip {
+        width: 235px;
+    }
 }

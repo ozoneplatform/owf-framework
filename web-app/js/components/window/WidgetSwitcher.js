@@ -6,7 +6,8 @@ Ext.define('Ozone.components.window.WidgetSwitcher', {
     modal: true,
     modalAutoClose: true,
     width: 520,
-    preventHeader: true,
+    preventHeader: false,
+    closeable:true,
     shadow: false,
 //    ui: 'widget-switcher',
     ui: 'system-window',
@@ -201,11 +202,14 @@ Ext.define('Ozone.components.window.WidgetSwitcher', {
             dashboardContainer: me.activeDashboard.dashboardContainer,
             okFn: function() {
                 var paneStore = Ext.getCmp(record.get('paneGuid')).stateStore,
-                    dashboardStore = me.activeDashboard.stateStore;
+                    dashboardStore = me.activeDashboard.stateStore,
+                    uniqueId = record.get('uniqueId');
 
                 // find the record in pane store matching id of widget switcher record
                 // this is needed because stores aren't same
-                paneStore.remove(paneStore.findRecord('uniqueId', record.get('uniqueId')));
+                paneStore.remove(paneStore.findRecord('uniqueId', uniqueId));
+
+                Ext.getCmp(uniqueId).destroy();
             }
         }).show();
     }

@@ -1,11 +1,11 @@
 Ext.define('Ozone.components.pane.Pane', {
     extend: 'Ext.panel.Panel',
     alias: ['widget.pane', 'widget.Ozone.components.pane.Pane'],
-    
+
     plugins: [
         new Ozone.plugins.pane.Pane()
     ],
-    
+
     activeWidget: null,
 
     id: null,
@@ -35,12 +35,28 @@ Ext.define('Ozone.components.pane.Pane', {
     moveWidgetDown: function(widget) {},
 
     moveWidgetLeft: function(widget) {},
-        
+
+    getSiblingLayoutPane: function (pane) {
+        pane = pane || this;
+
+        var siblingPane = pane.next() ? pane.next().next() : pane.prev().prev();
+
+        return siblingPane.xtype === 'container' ? pane.getSiblingLayoutPane(siblingPane) : siblingPane;
+    },
+
+    getPaneUIState: function () {
+        return _.extend({
+            id: this.id,
+            type: this.xtype,
+            widgets: this.getStatesOfAllWidgets()
+        }, this.getBox());
+    },
+
     initComponent: function() {
         var me = this,
             widgetStore = Ext.StoreManager.lookup('widgetStore'),
             widgetStates;
-        
+
         me.id = me.paneGuid = guid.util.guid();
         me.statePositionCount = 0;
         me.widgets = me.widgets || [];
@@ -49,7 +65,7 @@ Ext.define('Ozone.components.pane.Pane', {
 
 
         widgetStates = me.widgets;
-        // clearing widgets array 
+        // clearing widgets array
         // check to see if the user still has access to the widget
         // sync Widget Definition model properties with Widget State model here
         me.widgets = [];
@@ -79,7 +95,7 @@ Ext.define('Ozone.components.pane.Pane', {
                 scope: me
             }
         });
-        
+
         me.addEvents(
             OWF.Events.Widget.BEFORE_LAUNCH,
             OWF.Events.Widget.AFTER_LAUNCH
@@ -88,10 +104,10 @@ Ext.define('Ozone.components.pane.Pane', {
 
         me.on(OWF.Events.Widget.AFTER_LAUNCH, me.afterWidgetLaunch, me);
         me.on('destroy', me.onPaneDestroy, me);
-        
+
         me.callParent(arguments);
     },
-    
+
     afterRender: function() {
         this.el.set({
             tabIndex: -1
@@ -111,7 +127,7 @@ Ext.define('Ozone.components.pane.Pane', {
     // destroy all widgets in the pane
     clearWidgets: function(includeFloatingWidgets) {
         var items = this.stateStore.data.items;
-        
+
         for (var i = items.length - 1; i >=0; i--) {
             var rec = items[i];
             var widget = Ext.getCmp(rec.get('uniqueId'));
@@ -135,7 +151,7 @@ Ext.define('Ozone.components.pane.Pane', {
                 widgets.push(Ext.getCmp(stateStore.getAt(i).data.uniqueId));
             }
         }
-        
+
         return widgets;
     },
 
@@ -172,7 +188,7 @@ Ext.define('Ozone.components.pane.Pane', {
             active: model.get('active') || true,
             floatingWidget: !isDesktop
         });
-        
+
         // apply any pane specific default settings if new instance
         if (!model.data.uniqueId) {
             if (me.defaultSettings && me.defaultSettings.widgetStates && me.defaultSettings.widgetStates[widgetCfg.widgetGuid]) {
@@ -192,7 +208,7 @@ Ext.define('Ozone.components.pane.Pane', {
         }
 
         // must do outside of merge to prevent from getting cloned into Ext.util.Animate object
-        // must render floating windows to pane's body el to be able to shim each pane and get 
+        // must render floating windows to pane's body el to be able to shim each pane and get
         // mousemove events be fired on pane instead of iframe if mouse is moved to fast
         widgetCfg.renderTo = isDesktop ? me.body : me.dashboard.body;
 
@@ -201,7 +217,7 @@ Ext.define('Ozone.components.pane.Pane', {
 
         // register with the floating widget zindexmanager so always on top of other widgets
         !isDesktop && this.dashboard.dashboardContainer.floatingWidgetManager.register(widget);
-                
+
         widget.on("statesave", function(obj, state) {
             this.defaultSettings.widgetStates = this.defaultSettings.widgetStates || {};
             this.defaultSettings.widgetStates[state.widgetGuid] = {
@@ -232,7 +248,7 @@ Ext.define('Ozone.components.pane.Pane', {
             widget.show();
             widget.model.get('minimized') && widget.minimize();
         }
-        
+
         return widget.deferred.promise();
     },
 
@@ -252,10 +268,12 @@ Ext.define('Ozone.components.pane.Pane', {
     // used when a drag and drop is performed from widget launch menu
     launchWidgets: function(models, x, y, launchPosition) {
         var widgetModel,
-            deferreds = [];
+            deferreds = [],
+            widgetStore = Ext.StoreManager.lookup('widgetStore');
+
         if(!models)
             return;
-        
+
         models = [].concat(models);
 
         // null out negative x and y when using keyboard
@@ -264,23 +282,33 @@ Ext.define('Ozone.components.pane.Pane', {
 
         for(var i = 0, len = models.length ; i < len ; i++) {
             widgetModel = models[i];
-            widgetModel = widgetModel.isModel ? widgetModel : Ext.create('Ozone.data.State', widgetModel);
 
-            if(this.fireEvent(OWF.Events.Widget.BEFORE_LAUNCH, this, widgetModel) !== false) {
-                if(widgetModel.get('floatingWidget')) {
-                    deferreds.push(this.launchFloatingWidget(widgetModel, x, y, null, null, launchPosition));
-                }
-                else {
-                    deferreds.push(this.launchWidget(widgetModel, x, y, null, null, launchPosition));
-                }
-                Ext.isNumber(launchPosition) && launchPosition++;
+            if(!(widgetModel instanceof Ozone.data.WidgetDefinition || widgetModel instanceof Ozone.data.State)) {
+                widgetModel = Ext.create('Ozone.data.State', widgetModel.attributes || widgetModel);
             }
+
+            // validate access
+            if(widgetStore.findRecord('widgetGuid', widgetModel.get('widgetGuid'))) {
+                if(this.fireEvent(OWF.Events.Widget.BEFORE_LAUNCH, this, widgetModel) !== false) {
+                    if(widgetModel.get('floatingWidget')) {
+                        deferreds.push(this.launchFloatingWidget(widgetModel, x, y, null, null, launchPosition));
+                    }
+                    else {
+                        deferreds.push(this.launchWidget(widgetModel, x, y, null, null, launchPosition));
+                    }
+                    Ext.isNumber(launchPosition) && launchPosition++;
+                }
+            }
+
         }
 
         return deferreds;
     },
 
     activateWidget: function(widget, showFocusFrame, focusIframe) {
+        if(widget.is('backgroundwidget')) {
+            return false;
+        }
         widget.focus(false, false, showFocusFrame, focusIframe);
         this.dashboard.updateActiveWidget(widget);
 
@@ -290,7 +318,7 @@ Ext.define('Ozone.components.pane.Pane', {
     createWidgetConfig: function(model, instanceId, launchData) {
         var me = this,
             widgetCfg;
-        
+
         instanceId || (instanceId = model.get('uniqueId') || guid.util.guid());
 
         OWF.Container.State.registerHandler(instanceId);
@@ -316,7 +344,7 @@ Ext.define('Ozone.components.pane.Pane', {
             name: model.get('name'),
             title: model.get('name'),
             icon: encodeURI(decodeURI(model.get('headerIcon'))),
-            
+
             singleton: model.get('singleton'),
             background: model.get('background'),
 
@@ -346,14 +374,14 @@ Ext.define('Ozone.components.pane.Pane', {
     },
 
     cloneWidgetDataForTransfer: function (widget) {
-        var data = Ext.clone(widget.model.data),
+        var data = Ext.clone(widget.getState()),
             widgetDefinitionModel = this.dashboard.widgetStore.findRecord('widgetGuid', widget.model.get('widgetGuid'));
 
         data.name = widget.title || widgetDefinitionModel.get('name');
         data.uniqueId = widget.id;
         data.intentConfig = widget.intentConfig;
         data.launchData = widget.launchData || null;
-       
+
        return data;
     },
 
@@ -362,13 +390,13 @@ Ext.define('Ozone.components.pane.Pane', {
             widgetStateModelData = me.cloneWidgetDataForTransfer(widget);
 
         widget.on('destroy', function () {
-        	me._reorderingWidgets = true; 
+        	me._reorderingWidgets = true;
             me.launchWidgets(widgetStateModelData, null, null, newPosition);
             delete me._reorderingWidgets;
         });
         widget.destroy();
     },
-    
+
     onBeforeClose: function(obj) {
 		if(this.dashboard.configRecord.get('locked') && !obj.floatingWidget) {
 			Ozone.Msg.alert(Ozone.layout.DialogMessages.dashboardLockAlertTitle, Ozone.layout.DialogMessages.dashboardLockAlert,
@@ -392,16 +420,16 @@ Ext.define('Ozone.components.pane.Pane', {
                         this.model.get('url'), this.id, this.model.data, this.pane.type, this.launchData, this.dashboard.configRecord.get('locked')
                     )
                 });
-                
+
                 this.deferred.resolve(true);
 
                 // focus iframe if this is a manual launch
                 if( !(this.model instanceof Ozone.data.State) ) {
                     this.focus(false, false, false, true);
                 }
-                
+
         //     }, me);
-        
+
         // task.delay(me.widgetIframeDelay || 1);
     },
 
@@ -420,45 +448,15 @@ Ext.define('Ozone.components.pane.Pane', {
         this.dashboard.stateStore.add(model);
     },
 
-    focus: function() {
-        this.enableDrop();
-        this.callParent(arguments);
-    },
-
-    blur: function() {
-        this.disableDrop();
-    },
-
     shim: function() {
         if(!this.shimEl) {
             this.shimEl = Ext.DomHelper.append(this.el, '<div></div>', true);
         }
-        this.shimEl && this.shimEl.addCls('paneshim');
+        this.shimEl && this.shimEl.addCls('shim');
     },
 
     unshim: function() {
-        this.shimEl && this.shimEl.removeCls('paneshim');
-    },
-
-    enableDrop: function() {
-        this.shimEl && this.shimEl.addCls('highlight-dashboard-designer-drop');
-    },
-
-    disableDrop: function() {
-        this.shimEl && this.shimEl.removeCls('highlight-dashboard-designer-drop');
-    },
-
-    enableWidgetMove: function() {
-        this.shim();
-        this.el.on('mousemove', this.enableDrop, this);
-        this.el.on('mouseout', this.disableDrop, this);
-    },
-
-    disableWidgetMove: function() {
-        this.unshim();
-        this.disableDrop();
-        this.el.un('mousemove', this.enableDrop, this);
-        this.el.un('mouseout', this.disableDrop, this);
+        this.shimEl && this.shimEl.removeCls('shim');
     },
 
     moveFloatingWidgetUp: function(widget) {

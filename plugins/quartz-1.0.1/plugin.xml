@@ -1,0 +1,13 @@
+<plugin name='quartz' version='1.0.1' grailsVersion='2.0 &gt; *'>
+  <author>Sergey Nebolsin, Graeme Rocher, Ryan Vanderwerf, Vitalii Samolovskikh</author>
+  <authorEmail>rvanderwerf@gmail.com</authorEmail>
+  <title>Quartz plugin for Grails</title>
+  <description>Adds Quartz job scheduling features</description>
+  <documentation>http://grails.org/plugin/quartz</documentation>
+  <type>QuartzGrailsPlugin</type>
+  <resources>
+    <resource>DefaultQuartzConfig</resource>
+    <resource>QuartzBootStrap</resource>
+    <resource>grails.plugins.quartz.JobManagerService</resource>
+  </resources>
+</plugin>

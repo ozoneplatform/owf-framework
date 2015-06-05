@@ -16,7 +16,7 @@
     ui: 'system-window',
     iconCls: 'admin-tools-header-icon',
     layout: 'auto',
-    closable: false,
+    closable: true,
     resizable: false,
     draggable: false,
     modal: true,
@@ -25,8 +25,8 @@
     autoScroll: false,
 
     minToolsInRow: 3,
-    maxToolsInRow: 5,
-    
+    maxToolsInRow: 6,
+
 
     dashboardContainer: null,
     activeDashboard: null,
@@ -36,7 +36,7 @@
     initComponent: function() {
         var me = this,
             widgetStore = me.dashboardContainer.widgetStore;
-        
+
         //grab admin widgets to put in window
         me.store = Ext.create('Ext.data.Store', {
             fields: [{name:'name', sortType:Ext.data.SortTypes.asUCString}, 'image', 'guid', 'singleton']
@@ -49,7 +49,7 @@
         });
 
         me.store.sort('name', 'ASC');
-        
+
         this.view = Ext.create('Ozone.components.view.ToolDataView', {
             store: me.store,
             multiSelect: false,
@@ -67,9 +67,9 @@
                 }
             }
         });
-        
+
         this.items = [this.view];
-        
+
         this.on('resize', this.center, this);
         this.callParent(arguments);
     },
@@ -77,25 +77,25 @@
     setupModalFocus: function() {
         var view = this.down('tooldataview');
         this.setupFocus(Ext.get(view.getNode(0)), Ext.get(view.getNode(view.store.getCount()-1)));
-        
+
         Ext.defer(function() {
             Ext.get(view.getNode(0)).focus();
         }, 100);
     },
 
-    callBtnHandler: function(btnText, btn, isKeyPress) {
+    callBtnHandler: function(evt, btnText, btn, isKeyPress) {
         this.close();
-        this.dashboardContainer.launchWidgets(this.store.getAt(this.store.find('name', btnText)), isKeyPress);
+        this.dashboardContainer.launchWidgets(evt, OWF.Collections.AppComponents.findWhere({name: btnText}), isKeyPress, false);
     },
-    
+
     updateWindowSize: function(item) {
         var toolWidth, newWidth, tool;
-        
+
         tool = item.getNode(0);
 
         if(!tool)
             return;
-        
+
         var toolEl = Ext.get(tool),
             margin = toolEl.getMargin('r'),
             totalTools = item.getStore().getCount(),

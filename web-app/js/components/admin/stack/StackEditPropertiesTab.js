@@ -6,7 +6,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
         'widget.Ozone.components.admin.stack.StackEditPropertiesTab'
     ],
     cls: 'stackeditpropertiestab',
-    
+
     initComponent: function () {
         var me = this;
         Ext.applyIf(this, {
@@ -23,10 +23,10 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     name: 'descriptorUrlInfo',
                     cls: 'descriptorUrlInfo',
                     renderTpl: '<div class="descriptorUrlHeader">' +
-                                '<div class="descriptorUrlTitle">{descriptorUrlTitle}</div><button class="descriptorUrlInfoIcon" ></button>' + 
+                                '<div class="descriptorUrlTitle">{descriptorUrlTitle}</div><button class="descriptorUrlInfoIcon" ></button>' +
                                 '</div>',
                     renderData: {
-                        descriptorUrlTitle: 'Import Stack from Descriptor URL'
+                        descriptorUrlTitle: 'Import Applifcation from Descriptor URL'
                     },
                     renderSelectors: {
                         iconEl: '.descriptorUrlInfoIcon',
@@ -43,7 +43,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                                     descriptorUrlInfoMsg.show();
                                 }
                             }, this);
-                              
+
                             Ozone.components.focusable.Focusable.setupFocus(cmp.iconEl, this);
                             //pressing enter on the header toggles collapse
                             new Ext.util.KeyMap(cmp.iconEl, {
@@ -70,7 +70,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     name: 'descriptorUrlInfoMsg',
                     cls: 'descriptorUrlInfoMsg',
                     hidden: true,
-                    html: 'Enter the URL of a Stack Descriptor and click the Load button. Stack data, including dashboard and widget definitions, is automatically retrieved from a Web-accessible location. To create the stack in OWF, click Apply.'
+                    html: 'Enter the URL of a Application Descriptor and click the Load button. Application data, including page and widget definitions, is automatically retrieved from a Web-accessible location. To create the applifcation in OWF, click Apply.'
                 },
                 {
                     xtype: 'urlfield',
@@ -112,8 +112,8 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     ui: 'footer',
                     defaults: {minWidth: 75},
                     items: [
-                        { 
-                            text: '<u>Don\'t have a stack descriptor?</u>',
+                        {
+                            text: '<u>Don\'t have an application descriptor?</u>',
                             itemId: 'manualEntryLinkBtn',
                             cls: 'manualEntryLinkBtn',
                             handler: function(btn) {
@@ -166,7 +166,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     name: 'descriptorUrlErrorMsg',
                     cls: 'descriptorUrlErrorMsg',
                     hidden: true,
-                    html: 'Unable to retrieve stack information. Please check your descriptor and try again.'
+                    html: 'Unable to retrieve application information. Please check your descriptor and try again.'
                 },
                 {
                     xtype: 'component',
@@ -182,7 +182,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                     name: 'manualEntryTitle',
                     cls: 'manualEntryTitle',
                     hidden: true,
-                    html: 'Enter Stack Description'
+                    html: 'Enter Application Description'
                 },
                 {
                     xtype: 'textfield',
@@ -260,21 +260,21 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
           }
         }, this, {
           single: true
-        } 
+        }
       );
     },
-    
+
     initFieldValues: function(record) {
         var data = record ? record.data : record;
         this.record = data;
-        
+
         if (data) {
             var name = this.getComponent('name'),
                 description = this.getComponent('description'),
                 stackContext = this.getComponent('stackContext'),
                 descriptorUrl = this.getComponent('descriptorUrl');
                 // imageUrl = this.getComponent('imageUrl');
-  			
+
             name.setValue(data.name).originalValue = data.name;
             description.setValue(data.description).originalValue = data.description;
             stackContext.setValue(data.stackContext).originalValue = data.stackContext;
@@ -284,8 +284,8 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
             }
 
             //Update the descriptorUrlInfo title and help message for editing an existing widget
-            this.getComponent('descriptorUrlInfo').titleEl.dom.innerHTML = 'Update Stack from Descriptor URL';
-            this.getComponent('descriptorUrlInfoMsg').update('Click Load to update the stack. If the stack descriptor file changed since it was added to your instance of OWF, clicking Load will retrieve the latest stack data. To upload it to your OWF, click Apply.');
+            this.getComponent('descriptorUrlInfo').titleEl.dom.innerHTML = 'Update Application from Descriptor URL';
+            this.getComponent('descriptorUrlInfoMsg').update('Click Load to update the application. If the application descriptor file changed since it was added to your instance of OWF, clicking Load will retrieve the latest application data. To upload it to your OWF, click Apply.');
 
             if(data.descriptorUrl && this.getComponent('descriptorUrlErrorMsg').isHidden()) {
                 this.loadedFromDescriptor = true;
@@ -303,15 +303,13 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
             btn = component.getComponent('descriptorUrlToolbar').getComponent('descriptorUrlBtn'),
             applyBtn = this.getDockedItems('toolbar[dock="bottom"]')[0].getComponent('apply'),
             manualEntryLinkBtn = descriptorUrlToolbar.getComponent('manualEntryLinkBtn');
-        
+
         component.getComponent('descriptorUrlErrorMsg').hide();
         field.disable();
         component.showProperties(false);
         loading.show();
-        component.xhr = Ozone.util.Transport.send({
+        component.xhr = Ozone.util.Transport.getDescriptor({
             url : text,
-            method : "GET",
-            forceXdomain: true,
             onSuccess: Ext.bind(component.updatePropertiesFromDescriptor, component),
             onFailure: function (json){
                 if(component.record) {
@@ -324,8 +322,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
                 field.enable();
                 btn.setText('Load');
                 component.getComponent('descriptorUrlErrorMsg').show();
-            },
-            autoSendVersion : false
+            }
         });
         btn.setText('Cancel');
         //Disable the apply button while descriptor is loading
@@ -345,16 +342,15 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
         this.loadedDecriptorUrl = descriptorUrl.getValue();
         this.descriptorData = data;
         if (data) {
-            var strTags = "";
             var name = component.getComponent('name'),
                 description = component.getComponent('description'),
                 stackContext = component.getComponent('stackContext')
-            
+
             // Set the description values
             name.setValue(Ext.String.trim(data.name));
             description.setValue(Ext.String.trim(data.description || ""));
             stackContext.setValue(Ext.String.trim(data.stackContext));
-            
+
             // Enable the apply button.
             var toolbars = this.getDockedItems('toolbar[dock="bottom"]');
             var applyBtn = toolbars[0].getComponent('apply');
@@ -368,7 +364,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
         var descriptorUrlToolbar = this.getComponent('descriptorUrlToolbar');
         var manualEntryLinkBtn = descriptorUrlToolbar.getComponent('manualEntryLinkBtn');
         manualEntryLinkBtn.hide();
-        
+
         var component = this;
         var horizontalRule = component.getComponent('horizontalRule'),
             manualEntryTitle = component.getComponent('manualEntryTitle'),
@@ -376,7 +372,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
             stackContext = component.getComponent('stackContext'),
             description = component.getComponent('description'),
             stackUrl = component.getComponent('stackUrl')
-        
+
         if (show) {
             // Enable the apply button.
             var toolbars = this.getDockedItems('toolbar[dock="bottom"]');
@@ -420,7 +416,7 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
         if(!this.getForm().hasInvalidField()){
         	//only perform this on creation of new stack from a descriptor
 	        if(this.loadedFromDescriptor && !this.record) {
-	
+
 	            var dashboards = me.descriptorData.dashboards;
 	            var validJson = true;
 	            for (var i in dashboards) {
@@ -429,11 +425,11 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
 	                    validJson = false;
 	                }
 	            }
-	
+
 	            var name = me.getComponent('name'),
                 description = me.getComponent('description'),
                 stackContext = me.getComponent('stackContext');
-	            
+
 	            //overwrite json from editable form fields
 	            me.descriptorData.name = name.getValue();
 	            me.descriptorData.description = description.getValue();
@@ -445,14 +441,14 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
 	                    method : "POST",
 	                    onSuccess: Ext.bind(function (json){
 	                        me.showApplyAlert("Your changes have been saved.");
-	                        
+
 	                        owner.store.load({
 	                        	callback: function(records, operation, success) {
 	                        		owner.record = owner.store.getById(json.id);
 	                        		owner.recordId = owner.record.get('id');
 	    	                        me.initFieldValues(owner.record);
 	    	                        owner.enableTabs();
-	    	                        
+
 	    	                        //need to publish here because there is no store write when importing
 	    	                        OWF.Eventing.publish(owner.channel, {
 	    	                            action: "created",
@@ -470,12 +466,12 @@ Ext.define('Ozone.components.admin.group.StackEditPropertiesTab', {
 	                        descriptorUrl: me.loadedDecriptorUrl
 	                    }
 	                });
-	
+
 	            }
 	            else {
 	            	me.editPanel.showAlert("Error", "Error while " +
-                            "creating stack: " + 
-                            "invalid dashboard json.");
+                            "creating stack: " +
+                            "invalid page json.");
 	            }
 	        }
 	        else {

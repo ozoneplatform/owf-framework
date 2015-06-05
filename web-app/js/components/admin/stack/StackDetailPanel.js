@@ -32,12 +32,16 @@ Ext.define('Ozone.components.admin.stack.StackDetailPanel', {
                                 '</div>',
                             '</div>',
                             '<div class="detail-block">',
-                                '<div><span class="detail-label">Stack URL:</span></div>',
+                                '<div><span class="detail-label">Application URL:</span></div>',
                                 '<div><span class="detail-link">{stackContext:this.renderStackUrl}</span></div>',
                             '</div>',
                             '<div class="detail-block">',
                                 '<div><span class="detail-label">Description:</span></div>',
                                 '<div>{description:htmlEncode}</div>',
+                            '</div>',
+                            '<div class="detail-block">',
+                                '<div><span class="detail-label">Owner:</span></div>',
+                                '<div>{owner:this.ownerName}</div>',
                             '</div>',
                         '</div>',
                     '</div>',
@@ -61,10 +65,14 @@ Ext.define('Ozone.components.admin.stack.StackDetailPanel', {
                         context = Ext.htmlEncode(context);
                         var url = OWF.getContainerUrl() + '/#stack=' + context;
                         return '<a href="' + url + '" target="_top">' + url + '</a>';
+                    },
+
+                    ownerName: function (owner) {
+                        return ((owner && owner.userRealName) || '');
                     }
                 }
             ),
-			emptyText: 'No stack selected',
+			emptyText: 'No application selected',
             itemSelector: 'div.selector',
             autoScroll: 'true'
         });

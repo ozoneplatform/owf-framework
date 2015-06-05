@@ -2,15 +2,14 @@ Ext.define('Ozone.components.admin.grid.WidgetApprovalsGrid', {
   extend: 'Ext.grid.Panel',
   alias: ['widget.widgetapprovalsgrid'],
   plugins: new Ozone.components.focusable.FocusableGridPanel(),
+    mixins: {
+        filter: 'Ozone.components.admin.grid.FilterMixin'
+    },
 
   cls: 'grid-widget',
-  
+
   defaultPageSize: 50,
   //forceFit: true,
-  baseParams: {
-    tags: Ozone.config.carousel.pendingApprovalTagGroupName
-  },
-
   initComponent: function() {
 
     //create new store
@@ -20,7 +19,7 @@ Ext.define('Ozone.components.admin.grid.WidgetApprovalsGrid', {
         pageSize: this.defaultPageSize
       });
     }
-    
+
     if (this.baseParams) { this.setBaseParams(this.baseParams); }
 
     Ext.apply(this, {
@@ -60,12 +59,12 @@ Ext.define('Ozone.components.admin.grid.WidgetApprovalsGrid', {
               else {
                 url = contextPath + '/' + url;
               }
-              
+
               var blueDashboardIconRegX = /admin\/64x64_blue_dashboard.png/g;
               var blueGroupIconRegX = /admin\/64x64_blue_group.png/g;
               var blueUserIconRegX = /admin\/64x64_blue_user.png/g;
               var blueWidgetIconRegX = /admin\/64x64_blue_widget.png/g;
-              
+
               if(url.match(blueDashboardIconRegX)){
               	url = url.replace(blueDashboardIconRegX, "admin/24x24_blue_dashboard.png");
               }else if(url.match(blueGroupIconRegX)){
@@ -76,7 +75,7 @@ Ext.define('Ozone.components.admin.grid.WidgetApprovalsGrid', {
               	url = url.replace(blueWidgetIconRegX, "admin/24x24_blue_widget.png");
               }
             }
-          
+
             var retVal = '<div class="grid-icon-and-text-title-box"><div class="grid-icon-and-text-icon"><img class="grid-icon-and-text-icon-image" src="' + Ext.htmlEncode(url) + '">';
             retVal += '</div>';
             retVal += '<div class="grid-icon-and-text-title">' + Ext.htmlEncode(title) + '</div>';
@@ -232,44 +231,6 @@ Ext.define('Ozone.components.admin.grid.WidgetApprovalsGrid', {
     return this.getDockedItems('toolbar[dock="bottom"]')[0];
   },
 
-  applyFilter: function(filterText, fields) {
-    this.store.proxy.extraParams = undefined;
-
-    if (filterText) {
-      var filters = [];
-      for (var i = 0; i < fields.length; i++) {
-        filters.push({
-          filterField: fields[i],
-          filterValue: filterText
-        });
-      }
-      this.store.proxy.extraParams = {
-        filters: Ext.JSON.encode(filters),
-        filterOperator: 'OR'
-      };
-    }
-    
-    if (this.baseParams) { this.setBaseParams(this.baseParams); }
-
-    this.store.loadPage(1,{
-      params: {
-        offset: 0,
-        max: this.store.pageSize
-      }
-    });
-  },
-
-  clearFilters: function() {
-    this.store.proxy.extraParams = undefined;
-    if (this.baseParams) { this.setBaseParams(this.baseParams); }
-    this.store.load({
-      params: {
-        start: 0,
-        max: this.store.pageSize
-      }
-    });
-  },
-  
   setBaseParams: function(params) {
       this.baseParams = params;
       if (this.store.proxy.extraParams) {
@@ -278,7 +239,7 @@ Ext.define('Ozone.components.admin.grid.WidgetApprovalsGrid', {
           this.store.proxy.extraParams = params;
       }
   },
-  
+
   setStore: function(store, cols) {
       this.reconfigure(store, cols);
       var pgtb = this.getBottomToolbar();

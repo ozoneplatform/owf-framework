@@ -1,0 +1,727 @@
+$dashboard-animation-duration: 1.6s !default;
+$dashboard-shadow: #fff !default;
+
+/*==========  Slide In Left  ==========*/
+
+@-webkit-keyframes dashboardSlideInLeft {
+    0% {
+        -webkit-transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -webkit-transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    80% {
+        -webkit-transform: translateX(0) scale(0.9);
+    }
+    
+    100% {
+        -webkit-transform: scale(1);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+}
+
+@-moz-keyframes dashboardSlideInLeft {
+    0% {
+        -moz-transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -moz-transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    80% {
+        -moz-transform: translateX(0) scale(0.9);
+    }
+    
+    100% {
+        -moz-transform: scale(1);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+}
+
+@-ms-keyframes dashboardSlideInLeft {
+    0% {
+        -ms-transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -ms-transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    80% {
+        -ms-transform: translateX(0) scale(0.9);
+    }
+    
+    100% {
+        -ms-transform: scale(1);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+}
+
+@-o-keyframes dashboardSlideInLeft {
+    0% {
+        -o-transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -o-transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    80% {
+        -o-transform: translateX(0) scale(0.9);
+    }
+    
+    100% {
+        -o-transform: scale(1);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+}
+@keyframes dashboardSlideInLeft {
+    0% {
+        transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        transform: translateX(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    80% {
+        transform: translateX(0) scale(0.9);
+    }
+    
+    100% {
+        transform: scale(1);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+}
+
+.dashboardSlideInLeft {
+    -webkit-animation-name: dashboardSlideInLeft;
+    -moz-animation-name: dashboardSlideInLeft;
+    -o-animation-name: dashboardSlideInLeft;
+    animation-name: dashboardSlideInLeft;
+}
+
+/*==========  Slide In Down  ==========*/
+
+
+@-webkit-keyframes dashboardSlideInDown {
+    0% {
+        -webkit-transform: translateY(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -webkit-transform: translateY(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    80% {
+        -webkit-transform: translateY(0) scale(0.9);
+    }
+    
+    100% {
+        -webkit-transform: scale(1);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+}
+
+@-moz-keyframes dashboardSlideInDown {
+    0% {
+        -moz-transform: translateY(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -moz-transform: translateY(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    80% {
+        -moz-transform: translateY(0) scale(0.9);
+    }
+    
+    100% {
+        -moz-transform: scale(1);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+}
+
+@-ms-keyframes dashboardSlideInDown {
+    0% {
+        -ms-transform: translateY(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -ms-transform: translateY(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    80% {
+        -ms-transform: translateY(0) scale(0.9);
+    }
+    
+    100% {
+        -ms-transform: scale(1);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+}
+
+@-o-keyframes dashboardSlideInDown {
+    0% {
+        -o-transform: translateY(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -o-transform: translateY(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    80% {
+        -o-transform: translateY(0) scale(0.9);
+    }
+    
+    100% {
+        -o-transform: scale(1);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+}
+
+@keyframes dashboardSlideInDown {
+    0% {
+        transform: translateY(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        transform: translateY(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    80% {
+        transform: translateY(0) scale(0.9);
+    }
+    
+    100% {
+        transform: scale(1);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+}
+
+.dashboardSlideInDown {
+    -webkit-animation-name: dashboardSlideInDown;
+    -moz-animation-name: dashboardSlideInDown;
+    -o-animation-name: dashboardSlideInDown;
+    animation-name: dashboardSlideInDown;
+}
+
+/*==========  Slide In Up  ==========*/
+
+
+@-webkit-keyframes dashboardSlideInUp {
+    0% {
+        -webkit-transform: translateY(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -webkit-transform: translateY(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -webkit-transform: translateY(0%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -webkit-transform: scale(1);
+    }
+}
+
+@-moz-keyframes dashboardSlideInUp {
+    0% {
+        -moz-transform: translateY(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -moz-transform: translateY(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -moz-transform: translateY(0%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -moz-transform: scale(1);
+    }
+}
+
+@-ms-keyframes dashboardSlideInUp {
+    0% {
+        -ms-transform: translateY(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -ms-transform: translateY(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -ms-transform: translateY(0%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -ms-transform: scale(1);
+    }
+}
+
+@-o-keyframes dashboardSlideInUp {
+    0% {
+        -o-transform: translateY(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -o-transform: translateY(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -o-transform: translateY(0%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -o-transform: scale(1);
+    }
+}
+
+@keyframes dashboardSlideInUp {
+    0% {
+        transform: translateY(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        transform: translateY(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        transform: translateY(0%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.dashboardSlideInUp {
+    -webkit-animation-name: dashboardSlideInUp;
+    -moz-animation-name: dashboardSlideInUp;
+    -o-animation-name: dashboardSlideInUp;
+    animation-name: dashboardSlideInUp;
+}
+
+/*==========  Slide Out Down  ==========*/
+
+
+@-webkit-keyframes dashboardSlideOutDown {
+    0% {
+        -webkit-transform: translateY(0);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -webkit-transform: translateY(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -webkit-transform: translateY(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -webkit-transform: translateY(100%);
+    }
+}
+
+@-moz-keyframes dashboardSlideOutDown {
+    0% {
+        -moz-transform: translateY(0);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -moz-transform: translateY(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -moz-transform: translateY(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -moz-transform: translateY(100%);
+    }
+}
+
+@-ms-keyframes dashboardSlideOutDown {
+    0% {
+        -ms-transform: translateY(0);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -ms-transform: translateY(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -ms-transform: translateY(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -ms-transform: translateY(100%);
+    }
+}
+
+@-o-keyframes dashboardSlideOutDown {
+    0% {
+        -o-transform: translateY(0);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -o-transform: translateY(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -o-transform: translateY(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -o-transform: translateY(100%);
+    }
+}
+
+@keyframes dashboardSlideOutDown {
+    0% {
+        transform: translateY(0);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        transform: translateY(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        transform: translateY(100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+.dashboardSlideOutDown {
+    -webkit-animation-name: dashboardSlideOutDown;
+    -moz-animation-name: dashboardSlideOutDown;
+    -o-animation-name: dashboardSlideOutDown;
+    animation-name: dashboardSlideOutDown;
+}
+
+/*==========  Slide Out to Left  ==========*/
+
+@-webkit-keyframes dashboardSlideOutLeft {
+    0% {
+        -webkit-transform: translateX(0);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -webkit-transform: translateX(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -webkit-transform: translateX(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -webkit-transform: translateX(-100%);
+    }
+}
+
+@-moz-keyframes dashboardSlideOutLeft {
+    0% {
+        -moz-transform: translateX(0);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -moz-transform: translateX(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -moz-transform: translateX(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -moz-transform: translateX(-100%);
+    }
+}
+
+@-ms-keyframes dashboardSlideOutLeft {
+    0% {
+        -ms-transform: translateX(0);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -ms-transform: translateX(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -ms-transform: translateX(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -ms-transform: translateX(-100%);
+    }
+}
+
+@-o-keyframes dashboardSlideOutLeft {
+    0% {
+        -o-transform: translateX(0);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -o-transform: translateX(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -o-transform: translateX(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -o-transform: translateX(-100%);
+    }
+}
+
+@keyframes dashboardSlideOutLeft {
+    0% {
+        transform: translateX(0);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        transform: translateX(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        transform: translateX(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+.dashboardSlideOutLeft {
+    -webkit-animation-name: dashboardSlideOutLeft;
+    -moz-animation-name: dashboardSlideOutLeft;
+    -o-animation-name: dashboardSlideOutLeft;
+    animation-name: dashboardSlideOutLeft;
+}
+
+/*==========  Slide Out Up  ==========*/
+
+@-webkit-keyframes dashboardSlideOutUp {
+    0% {
+        -webkit-transform: translateY(0);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -webkit-transform: translateY(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -webkit-transform: translateY(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -webkit-transform: translateY(-100%);
+    }
+}
+
+@-moz-keyframes dashboardSlideOutUp {
+    0% {
+        -moz-transform: translateY(0);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -moz-transform: translateY(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -moz-transform: translateY(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -moz-transform: translateY(-100%);
+    }
+}
+
+@-ms-keyframes dashboardSlideOutUp {
+    0% {
+        -ms-transform: translateY(0);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -ms-transform: translateY(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -ms-transform: translateY(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -ms-transform: translateY(-100%);
+    }
+}
+
+@-o-keyframes dashboardSlideOutUp {
+    0% {
+        -o-transform: translateY(0);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        -o-transform: translateY(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        -o-transform: translateY(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        -o-transform: translateY(-100%);
+    }
+}
+
+@keyframes dashboardSlideOutUp {
+    0% {
+        transform: translateY(0);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    20% {
+        transform: translateY(0) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+    
+    80% {
+        transform: translateY(-100%) scale(0.9);
+        box-shadow: 1px 1px 24px 1px $dashboard-shadow;
+    }
+
+    100% {
+        transform: translateY(-100%);
+    }
+}
+.dashboardSlideOutUp {
+    -webkit-animation-name: dashboardSlideOutUp;
+    -moz-animation-name: dashboardSlideOutUp;
+    -o-animation-name: dashboardSlideOutUp;
+    animation-name: dashboardSlideOutUp;
+}
+
+// use hardware acceleration
+.animated {
+    -webkit-transform: translate3d(0,0,0);
+    -moz-transform: translate3d(0,0,0);
+    -o-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+}
+
+.cssanimations #dashboardCardPanel {
+
+    // Prevent flicker in Chrome
+    // http://stackoverflow.com/questions/3461441/prevent-flicker-on-webkit-transition-of-webkit-transform
+    &-body {
+        -webkit-perspective: 1000;
+        -webkit-backface-visibility: hidden;
+    }
+
+    .dashboard {
+        @extends .animated;
+
+        &.inactive {
+            -webkit-transform: translateX(-100%);
+            -moz-transform: translateX(-100%);
+            -o-transform: translateX(-100%);
+            transform: translateX(-100%);
+        }
+
+        -webkit-transform: translateX(0%);
+        -moz-transform: translateX(0%);
+        -o-transform: translateX(0%);
+        transform: translateX(0%);
+
+        &.animate {
+            -webkit-animation-duration: $dashboard-animation-duration;
+            -moz-animation-duration: $dashboard-animation-duration;
+            -o-animation-duration: $dashboard-animation-duration;
+            animation-duration: $dashboard-animation-duration;
+        }
+    }
+}

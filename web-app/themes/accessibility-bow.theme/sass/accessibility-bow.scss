@@ -4,7 +4,7 @@
 @import 'functions/owf_functions';
 @import 'compass'; //pull in base functions and mixins provided by the compass framework
 
-$theme-name: 'accessibility-bow';
+@import 'theme_base';
 
 //In order from darkest to lightest
 $owfblue7: #01687F;
@@ -14,6 +14,8 @@ $owfblue4: #1c6972;
 $owfblue3: #70B0BA;
 $owfblue2: #adf7ff;
 $owfblue1: #e7f8fa;
+
+$owfbluemodal: #07525a;
 
 //In order from darkest to lightest
 $owfgreen6: #3A4547;
@@ -65,21 +67,18 @@ $owf-prev-login-text-color: #01687F;
 $banner-background: (#e0e0e0, #fff);
 $banner-button-background: #fff;
 $banner-button-over-background: #fff;
+$banner-username-color: #1C3035;
 $owf-logout-color: #ff7979;
-$user-menu-button-border-color: $owfgrey13; 
-
-
-
-
-
+$user-menu-button-border-color: $owfgrey13;
+$user-menu-border-color: #D3D3D3;
 
 /*****************************************************************
  * Put yor theme customizations here.  If you have many customizations,
- * you may want to put them in a separate file which you import here. 
+ * you may want to put them in a separate file which you import here.
  * The import statements in this file reference stylesheets from ext-js
- * and from the themes/common folder. You can look at 
+ * and from the themes/common folder. You can look at
  * themes/common/stylesheets/variables/-defaults in order to see what variables
- * may be changed. 
+ * may be changed.
  */
 
 
@@ -90,25 +89,24 @@ body {
     background-color: $owfgrey11;
 }
 
-/*
- * These styles will only be applied to the OWf container, not the admin widgets
- */
 #owf-body {
     height: 100%;
     outline: 0 none;
     cursor: default; // for IE8
+    background-color: #050b13;
     background-attachment:fixed;
     background-position: center center;
-    background-repeat: repeat, no-repeat, no-repeat;
+    background-repeat: no-repeat;
+    /*background-image: theme-image($theme-name, 'wallpapers/owf-bg.png');*/
 }
 
 #owf-body.x-gecko { /* > ensures IE doesn't see this block */
-    background-image: $stripe-img-path, $watermark-img-path,
+    background-image: $watermark-img-path, $stripe-img-path,
         -moz-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
 }
 
 #owf-body.x-webkit {
-    background-image: $stripe-img-path, $watermark-img-path,
+    background-image: $watermark-img-path, $stripe-img-path,
         -webkit-radial-gradient($body-background-gradient-end, $body-background-gradient-start);
 }
 
@@ -116,10 +114,10 @@ body {
  * linear background gradient for IE
  */
 #owf-body.x-ie {
-    background: $owfgrey3 $watermark-img-path no-repeat center center;
+    background: $body-background-gradient-end $stripe-img-path repeat repeat center center;
     background-attachment:fixed;
     #mainPanel {
-        background: $stripe-img-path repeat center center;
+        background: $watermark-img-path no-repeat center;
     }
 }
 
@@ -139,12 +137,12 @@ body {
 /*}*/
 
 // ===============================
-// =============== Theme Variables 
+// =============== Theme Variables
 // ===============================
 
 
 $owf-base-color: $owfblue3;
-$owf-contrast-base: #ffffff; 
+$owf-contrast-base: #ffffff;
 $owf-alt-base-color: $owfblue2;
 $owf-focus-color: #ff6c00;
 
@@ -155,19 +153,29 @@ $required-widgets-color: #454F55;
 
 $owf-tool-width: 17px;
 
-// =================== Dashboard Switcher
+// =================== My Apps Window
 
-$dashboard-switcher-background-color: #fff; 
-$dashboard-switcher-dashboard-over-background-color: $owfgrey0;
-$dashboard-switcher-dashboard-over-border-color: 1px solid $owfgrey6;
+$my-apps-window-background-color: #fff;
+$dashboard-mini-slider-background-color: $owfgrey12;
+$my-apps-window-stack-over-background-color: #E5E5E5;
+$my-apps-window-stack-selected-background-color: #ddd;
+$my-apps-window-dashboard-over-background-color: $my-apps-window-stack-over-background-color;
+$my-apps-window-dashboard-selected-background-color: white;
+$my-apps-window-dashboard-over-border-color: 1px solid $owfgrey6;
 
-$dashboard-switcher-tooltip-heading-color: #134d77;
-$dashboard-switcher-tooltip-label-color: #666;
+$my-apps-window-tooltip-heading-color: #134d77;
+$my-apps-window-tooltip-label-color: #666;
 
-$dashboard-switcher-share-color: #134d77;
-$dashboard-switcher-restore-color: #dd8f08;
-$dashboard-switcher-edit-color: #55921a;
-$dashboard-switcher-delete-color: #b3292d;
+$my-apps-window-share-color: #134d77;
+$my-apps-window-restore-color: #dd8f08;
+$my-apps-window-edit-color: #55921a;
+$my-apps-window-delete-color: #b3292d;
+
+$my-apps-window-title-color: $owfgrey5;
+$my-apps-window-descriptor-color: black;
+$my-apps-window-details-btn-color: black;
+
+$system-window-background-color: #fff;
 
 // =================== Active and Inactive Widgets
 
@@ -250,6 +258,37 @@ $owf-bottom-border-radius: 10px;
 // -- forms---------------------------------------------------------
 $owf-form-field-border-color: #a0a9ad;
 
+// -- store wizard-------------------------------------------------
+$store-wizard-modal-color: #F2F2F2;
+$store-wizard-background-color: #FFFFFF;
+
+$store-wizard-title-color: #2B6797;
+$store-wizard-step-color: #88B8DF;
+
+$store-wizard-input-color: #E5E5E5;
+$store-wizard-input-border-color: #7D7E80;
+
+$store-wizard-button-color: #F2F2F2;
+$store-wizard-button-hover-color: #3989C9;
+$store-wizard-button-press-color: #1d4565;
+
+$store-wizard-button-text-press-color: #FFFFFF;
+$store-wizard-button-next-color: #2B6797;
+$store-wizard-unreached-step-color: #A7A8AB;
+
+$store-wizard-input-text-color: #4D4D4D;
+
+$store-wizard-progress-bar-back-color: #FFFFFF;
+$store-wizard-progress-bar-front-color: #0A5E78;
+
+$store-wizard-title-divide-color: #A7A8AB;
+$store-wizard-current-progress-color:#FFFFFF;
+$store-wizard-current-progress-text-color: #3989C9;
+
+
+// -- user menu
+$user-menu-separator-color: #bbb;
+
 // -- toolbar---------------------------------------------------------
 $toolbar-separator-color: #a0a9ad;
 
@@ -301,11 +340,15 @@ $widget-launcher-widget-selected-background-color: $owfgrey18;
 $widget-launcher-widget-selected-border-color: $owfblue4;    ;
 $widget-launcher-widget-selected-text-color: $owfgrey6;
 
-$widget-launcher-widget-over-background-color: $owfgrey0;
+$widget-launcher-widget-over-background-color: #E5E5E5;
 $widget-launcher-widget-over-border-color: $owfblue5;
-$widget-launcher-widget-over-text-color: $owfblue5;
+$widget-launcher-widget-over-text-color: #3989C9;
 
-$carousel-background-color: $owfgrey0;  
+$my-apps-hover-color: #f2f2f2;
+$my-apps-tooltip-color: #f2f2f2;
+$my-apps-tooltip-bar-color: #ffffff;
+
+$carousel-background-color: $owfgrey0;
 
 
 $carousel-widget-over-background-color: $owfgrey0;
@@ -320,6 +363,8 @@ $carousel-widget-selected-background-color: #c9c9c9;
 $carousel-widget-selected-border-color: #ffffff;
 
 $widget-launcher-button-pressed-background-gradient: (#efefef 0%, #ffffff 100%) ;
+
+$widget-details-color: black;
 
 
 /*$widget-launcher-toolbar-border-color: #444444;
@@ -337,7 +382,7 @@ $widget-launcher-border-color: #444444;*/
 @import 'mixins/owf_mixins';
 
 /*
- * These imports create the owf-specific stylesheets, based on the values of the 
+ * These imports create the owf-specific stylesheets, based on the values of the
  * variables that are defined in variables/defaults (which can be overridden in this
  * file).If extensive changes are required, you can delete some of these imports and
  * reimplement them as necessary
@@ -346,10 +391,10 @@ $widget-launcher-border-color: #444444;*/
 @import 'owf_all';
 
 // ===============================
-// ======================== Banner 
+// ======================== Banner
 // ===============================
 
-.x-gecko .banner, { 
+.x-gecko .banner, {
     //custom background to include stripe image in addition
     //to gradient. This has to be after the imports so it doesn't
     //get overridden
@@ -365,21 +410,21 @@ $widget-launcher-border-color: #444444;*/
 
 
 // ===============================
-// ======================== Button 
+// ======================== Button
 // ===============================
 
 // box shadows
 .owfButton {
-    @include box-shadow(inset 0px 1px 1px #D7DADC, inset 0px -1px 1px #A0A3A7); 
+    @include box-shadow(inset 0px 1px 1px #D7DADC, inset 0px -1px 1px #A0A3A7);
 
     &.x-btn-over {
-        @include box-shadow(inset 0px 1px 1px #868C91, inset 0px -1px 1px #DDDEE0); 
+        @include box-shadow(inset 0px 1px 1px #868C91, inset 0px -1px 1px #DDDEE0);
     }
     &.x-btn-pressed {
-        @include box-shadow(inset 0px 1px 1px #858B90, inset 0px -1px 1px #F6F7F7); 
+        @include box-shadow(inset 0px 1px 1px #858B90, inset 0px -1px 1px #F6F7F7);
     }
     &.x-btn-disabled {
-        @include box-shadow(inset 0px 1px 1px #ADB6BC, inset 0px -1px 1px #F9F9F9); 
+        @include box-shadow(inset 0px 1px 1px #ADB6BC, inset 0px -1px 1px #F9F9F9);
     }
 }
 
@@ -433,7 +478,7 @@ $close-button-width: 19px;
 //override dashboard modal bg color
 // Nish to come back to fix
 .x-mask {
-  background: $owfblue2;
+  background: $owfbluemodal;
 }
 
 //override that editor tab area
@@ -457,8 +502,8 @@ textarea.x-form-focus {
 // overriding tooltip for this theme
 
 .x-tip {
-  background-color: $owfblue1;
-  border-color: $owfblue3;
+  background-color: $my-apps-tooltip-color;
+  border-color: $owfgrey13;
 }
 
 .x-tip-header-text {
@@ -482,22 +527,20 @@ textarea.x-form-focus {
 }
 
 .x-form-invalid-tip-default {
-  background-color: $owfblue1;
-  border-color: $owfblue3;
+    background-color: $owfblue1;
+    border-color: $owfblue3;
 }
 
-
-/* Widget Launcher Code */ 
-
-#widget-launcher {
-
-    .search-panel{
-        background: $search-panel-background-color;
-        border-color: $widget-launcher-border-color;
-        position: absolute;
-        padding: 7px;
+#userMenuBtn {
+    background: transparent;
+    *background: none;
 }
 
+.ozonequicktip .dashboard-tooltip-content ul {
+    background-color: $owfgrey10;
+    border-top: 1px solid $owfgrey13;
 }
 
-
+#appcomponents-view, #intents-window {
+    color: #000;
+}

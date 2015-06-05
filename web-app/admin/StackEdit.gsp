@@ -8,7 +8,7 @@
 		<!-- ** CSS ** -->
         <!-- base library -->
         <g:if test="${params.themeName != null && params.themeName != ''} ">
-        <link rel='stylesheet' type='text/css' href='../themes/${params.themeName.encodeAsHTML()}.theme/css/${params.themeName.encodeAsHTML()}.css' />
+        <link rel='stylesheet' type='text/css' href='../themes/${params.themeName.encodeAsURL().encodeAsHTML()}.theme/css/${params.themeName.encodeAsURL().encodeAsHTML()}.css' />
         </g:if>
         <g:else>
         <p:css name='../${owfCss.defaultCssPath()}' absolute='true'/>
@@ -16,7 +16,7 @@
 
         <!-- initialize ozone configuration from server -->
         <owfImport:jsOwf path="config" resource="config" pathToRoot="../" />
-        
+
         <!-- include our server bundle, in dev mode a full list of js includes will appear -->
         <p:javascript src='owf-admin-widget' pathToRoot="../" />
         <p:javascript src='owf-stack-edit-widget' pathToRoot="../" />
@@ -27,7 +27,7 @@
 				Ext.BLANK_IMAGE_URL = '../themes/common/images/s.gif';
 			}
 			owfdojo.config.dojoBlankHtmlUrl = '../js-lib/dojo-1.5.0-windowname-only/dojo/resources/blank.html';
-			
+
 			Ext.onReady(function() {
 				OWF.ready(function(){
 					var viewport = Ext.create('Ext.container.Viewport', {

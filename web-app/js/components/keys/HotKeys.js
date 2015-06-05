@@ -42,11 +42,11 @@ Ozone.components.keys.MoveHotKeys = Ozone.components.keys.MoveHotKeys || {};
         exclusive: true
     };
 
-    k.LAUNCH_MENU = { key: 'L'.charCodeAt(0) };
+    k.LAUNCH_MENU = { key: 'F'.charCodeAt(0) };
 
     k.HELP = {
         key: 'H'.charCodeAt(0),
-        exclusive: true
+        exclusive: false
     };
 
     k.LOGOUT = { key: 'O'.charCodeAt(0) }; //O for 'out'
@@ -110,14 +110,25 @@ Ozone.components.keys.MoveHotKeys = Ozone.components.keys.MoveHotKeys || {};
 
     // for owf specific hotkeys, prevent default on keydown
     // this is necessary for IE
-    owfdojo.connect(document, 'onkeydown', function(event) {
+    function preventDefaultOnKeyDown(event) {
         var hotKey = keyCodes[event.keyCode];
 
-        if(hotKey && event.altKey === hotKey.alt 
-            && event.shiftKey === hotKey.shift) {
-            event.preventDefault();
+        if(hotKey && event.altKey === hotKey.alt && event.shiftKey === hotKey.shift) {
+            if(event.preventDefault) {
+                event.preventDefault();
+            }
+            else {
+                event.returnValue = false;
+            }
         }
-    });
+    }
+
+    if(document.addEventListener) {
+        document.addEventListener('keydown', preventDefaultOnKeyDown);
+    }
+    else {
+        document.attachEvent('onkeydown', preventDefaultOnKeyDown);
+    }
 
     var moveKeys = Ozone.components.keys.MoveHotKeys;
     moveKeys.MOVE_UP = {

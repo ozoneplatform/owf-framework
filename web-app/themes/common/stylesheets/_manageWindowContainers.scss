@@ -36,13 +36,49 @@ directly overriding the base ExtJS 4.0.1 rules.
           background-image: theme-image($theme-name, 'settings/WidgetWhiteIcon.png');
       }
 
+      .x-window-header {
+
+        padding: 15px 0px 0px 0px !important;
+        width: 475px !important;
+
+          .x-window-header-text {
+            font-size: 18px;
+            font-weight: bold;
+          }
+
+          .x-tool .x-tool-close {
+            background-image: theme-image($theme-name, 'tools/close-out.png') !important;
+          }
+
+          .x-tool-over .x-tool-close {
+            background-image: theme-image($theme-name, 'tools/close-over.png') !important;
+            background-position: 0 !important;
+          }
+
+          .x-tool-pressed .x-tool-close {
+            background-image: theme-image($theme-name, 'tools/close-down.png') !important;
+            background-position: 0 !important;
+          }
+      }
+
+      // in case of a really long free text warning...
+      .freeTextWarning {
+        height: 45px;
+        overflow-y: hidden;
+      }
+
     //Create Dashboard/Views Container
     .cvc-createNewDashboardContainer {
         $label_width: 50%;
 
-        @extend .owf-manage-window; 
+        @extend .owf-manage-window;
 
-        padding-top: 10px;
+        .x-toolbar {
+          background-image: none;
+          background-color: transparent;
+          filter: none;
+        }
+
         .titleBox {
             padding-left: 4px;
             height: 22px;
@@ -62,7 +98,6 @@ directly overriding the base ExtJS 4.0.1 rules.
             }
         }
         .description {
-            padding-left: 4px;
             height: 80px;
             .x-form-item-label {
                 width: $label_width;
@@ -85,16 +120,15 @@ directly overriding the base ExtJS 4.0.1 rules.
         .viewSelect {
             padding-left: 4px;
             height: 155px!important;
-            .x-form-item-body {
-                .x-container {
-                    height: 155px!important;
-                }
-            }
+
             .newViewRadio,
             .existingViewRadio,
             .importedViewRadio {
                 clear:both;
                 .x-form-cb-label {
+                }
+                .x-form-cb-wrap {
+                  padding-top: 0px !important;
                 }
             }
             .x-field {

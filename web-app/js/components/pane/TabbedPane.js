@@ -64,6 +64,9 @@ Ext.define('Ozone.components.pane.TabbedPane', {
     },
 
     activateWidget: function(widget, showFocusFrame, focusIframe) {
+        if(widget.is('backgroundwidget')) { 
+            return false; 
+        }
         this.tabPanel.setActiveTab(widget);
         widget.focus(false, false, showFocusFrame, focusIframe);
         this.dashboard.updateActiveWidget(widget);

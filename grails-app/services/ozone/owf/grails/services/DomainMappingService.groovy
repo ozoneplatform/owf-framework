@@ -177,9 +177,6 @@ class DomainMappingService {
 
         if (mappedClazz) {
 
-            //check for tags
-            def tag = params?.filters?.find { it.name == 'tags' }
-
             def criteria = {
 
                 //filter by ids from mapping table
@@ -189,17 +186,6 @@ class DomainMappingService {
                             eq('id', ids[i])
                     }
                     //inList('id', ids)
-                }
-
-                //filter by specified fields
-                params?.filters?.each {
-
-                    //exclude tags
-                    if (!it.name.equals('tag')) {
-                        //assumes string and auto wild card
-                        ilike(it.name,"%${it.value}%")
-                    }
-
                 }
 
                 if (subCriteria != null) {
@@ -219,16 +205,10 @@ class DomainMappingService {
                 Collections.EMPTY_LIST
             }
             else {
-                if (tag) {
-                    //use taggable criteria
-                    mappedClazz.findAllByTagWithCriteria(tag.name, criteria)
-                }
-                else {
-                    //regular criteria
-                    //mappedClazz.withCriteria(params.opts ?: [:],criteria)
-                    def c = mappedClazz.createCriteria()
-                    c.list(params.opts ?: [:],criteria)
-                }
+                //regular criteria
+                //mappedClazz.withCriteria(params.opts ?: [:],criteria)
+                def c = mappedClazz.createCriteria()
+                c.list(params.opts ?: [:],criteria)
             }
 
         }
@@ -250,9 +230,6 @@ class DomainMappingService {
 
         if (mappedClazz) {
 
-            //check for tags
-            def tag = params?.filters?.find { it.name == 'tags' }
-
             def criteria = {
 
                 //filter by ids from mapping table
@@ -262,17 +239,6 @@ class DomainMappingService {
                             eq('id', ids[i])
                     }
                     //inList('id', ids)
-
-                //filter by specified fields
-                params?.filters?.each {
-
-                    //exclude tags
-                    if (!it.name.equals('tag')) {
-                        //assumes string and auto wild card
-                        ilike(it.name,"%${it.value}%")
-                    }
-
-                }
 
                 //sorting -- only single sort
                 if (params?.sort) {
@@ -288,14 +254,8 @@ class DomainMappingService {
                 Collections.EMPTY_LIST
             }
             else {
-                if (tag) {
-                    //use taggable criteria
-                    mappedClazz.findAllByTagWithCriteria(tag.name, criteria)
-                }
-                else {
-                    //regular criteria
-                    mappedClazz.withCriteria(criteria)
-                }
+                //regular criteria
+                mappedClazz.withCriteria(criteria)
             }
         }
         else {
@@ -371,9 +331,9 @@ class DomainMappingService {
         def results = null;
         if (ids) {
             results = DomainMapping.withCriteria({
+                eq('srcType', WidgetDefinition.TYPE)
                 inList('destId', ids)
                 eq('destType', WidgetDefinition.TYPE)
-                eq('srcType', WidgetDefinition.TYPE)
                 eq('relationshipType', RelationshipType.requires.toString())
             });
         }
@@ -385,11 +345,38 @@ class DomainMappingService {
         if (ids) {
             results = DomainMapping.withCriteria({
                 inList('srcId', ids)
-                eq('destType', WidgetDefinition.TYPE)
                 eq('srcType', WidgetDefinition.TYPE)
                 eq('relationshipType', RelationshipType.requires.toString())
+                eq('destType', WidgetDefinition.TYPE)
             });
         }
         return results;
+    }
+
+    List getClonedDashboardMappings (Person person) {
+        DomainMapping.findAll("\
+            FROM DomainMapping dm, Dashboard d \
+            WHERE \
+                dm.relationshipType = ? AND \
+                dm.srcId = d.id AND \
+                d.user = ?", [RelationshipType.cloneOf.strVal, person])
+    }
+
+    List getGroupDashboardMappings (Collection<Group> groups) {
+        DomainMapping.executeQuery("\
+            FROM DomainMapping dm, Dashboard d \
+            WHERE \
+                dm.srcId in (:groups) AND \
+                dm.srcType = :srcType AND \
+                dm.relationshipType = :relationshipType AND \
+                dm.destId = d.id AND \
+                dm.destType = :destType",
+            [
+                groups: groups.collect { Group g -> g.id },
+                srcType: 'group',
+                relationshipType: RelationshipType.owns.strVal,
+                destType: 'dashboard'
+            ]
+        )
     }
 }

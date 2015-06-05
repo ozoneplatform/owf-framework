@@ -1,7 +1,6 @@
 .profileWindow {
-    .userInfo {
+    .userInfo, .userPref {
         padding: 5px;
-        border: 1px solid $owf-toolbar-base-color;
 
         .x-panel-header-default {
           border: 1px solid $owf-toolbar-base-color;
@@ -31,5 +30,11 @@
 
         /*.fieldValue {*/
         /*}*/
+
+        .user-pref-notification {
+          padding-top: 5px;
+          padding-left: 5px;
+          color: red;
+        }
     }
 }

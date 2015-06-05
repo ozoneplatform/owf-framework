@@ -21,7 +21,7 @@
 	overflow-y: auto;
 }
 
-.paneshim {
+.shim, .hint-text, .inner-shim {
 	background-image: theme-background-image($theme-name, 's.gif');
 	z-index: exponent(10, 7) !important;
 	top: 0px;
@@ -31,14 +31,25 @@
 	position: absolute;
 }
 
-.x-form-invalid-tip {
-	z-index: exponent(10, 7) !important;
+.hint-text {
+	background-image: none;
+	top: 50%;
+	left: 50%;
+	width: 150px;
+	margin-left: -75px;
+	margin-top: -0.5em;
+	height: auto;
+	background-color: $system-window-background-color;
+	color: $my-apps-window-dashboard-text-color;
+	font-size: 18px;
+	border-radius: 6px;
+	padding: 15px;
 }
 
-.highlight-dashboard-designer-drop {
+.inner-shim, .highlight-dashboard-designer-drop {
 	@extend .paneshim; // IE in quirks mode doesn't support chained or multiple classes on an element
 	@include transparent-background-color($dashboard-designer-drop-shim-background-color, $dashboard-designer-drop-shim-opacity, $importance: $owf_css_important);
-		
+
 	-webkit-transition-property: background, opacity;
 	-webkit-transition-duration: 0.5s, 0.5s;
 	-moz-transition-property: background, opacity;
@@ -47,6 +58,18 @@
 	-ms-transition-duration: 0.5s, 0.5s;
 	transition-property: background, opacity;
 	transition-duration: 0.5s, 0.5s;
+}
+
+.inner-shim {
+	@include transparent-background-color($owf-focus-color, $dashboard-designer-drop-shim-opacity/4, $importance: $owf_css_important);
+}
+
+.inner-shim.highlight-dashboard-designer-drop {
+	@include transparent-background-color($dashboard-designer-drop-shim-background-color, $dashboard-designer-drop-shim-opacity, $importance: $owf_css_important);
+}
+
+.x-form-invalid-tip {
+	z-index: exponent(10, 7) !important;
 }
 
 #dashboard-designer {
@@ -118,7 +141,12 @@
 
 // OWF-6185: IE 7 crashes when certain configurations of the dashboard are attempted.
 .x-ie78 {
-	.highlight-dashboard-designer-drop {
+
+	.inner-shim {
+		background-color: transparent!important;
+	}
+
+	.inner-shim.highlight-dashboard-designer-drop {
 		background-color: $dashboard-designer-drop-shim-ie78-background-color !important;
 	}
 
@@ -176,8 +204,8 @@
 	.layout-type, .layout, .dashboard-lock {
 		padding: 0.5em;
 		img {
-			height: 50px; 
-			width: 50px; 
+			height: 30px;
+  			width: 42px;
 			@extend .center;
 		}
 	}
@@ -185,22 +213,22 @@
 	.dashboard-lock {
 		padding: 0.5em;
 		img {
-			height: 30px; 
-			width: 30px; 
+			height: 30px;
+			width: 30px;
 			@extend .center;
 		}
 	}
-	
+
 	.layout-type.x-item-selected, .layout.x-item-selected, .dashboard-lock.x-focus {
         background-color: $dashboard-designer-side-panel-item-background-color;
     }
-    
+
     .dashboard-lock.x-focus {
         border: none !important;
     }
 
 	.layout-type {
-		-webkit-animation: 
+		-webkit-animation:
 			slide-left 0.5s,
 			fade-in 1s;
 	}
@@ -215,7 +243,7 @@
 		margin: 1em auto;
 		text-align: center;
 	}
-	
+
 	@include transition-property(width);
 	@include transition-duration(0.4s);
 }

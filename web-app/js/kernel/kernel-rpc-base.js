@@ -16,6 +16,7 @@ if (typeof JSON === 'undefined') {
         magicFunctionMap = {},
         eventToInterestedClient = {},
         proxyMap = {},
+        localReadyCallbacks = {},  //map for container-side callbacks for when a widget is ready
         widgetReadyMap = {};
 
     function init(cfg) {
@@ -128,18 +129,29 @@ if (typeof JSON === 'undefined') {
 
         //hook widgetReady callbacks
         gadgets.rpc.register(WIDGET_READY_SERVICE_NAME, function (widgetId) {
+            var proxyHolders = proxyMap[widgetId],
+                localCallbacks = localReadyCallbacks[widgetId],
+                i,
+                len;
 
             //mark this widget as ready
             widgetReadyMap[widgetId] = true;
 
-            //loop through any widgets that have reference to widgetId and send messages that widgetId widget is ready
-            var proxyHolders = proxyMap[widgetId];
-            if (proxyHolders != null) {
-                for (var i = 0, len = proxyHolders.length; i < len; i++) {
+            //loop through any widgets that have reference to widgetId and send messages that 
+            //widgetId widget is ready
+            if (proxyHolders) {
+                for (i = 0, len = proxyHolders.length; i < len; i++) {
                     var proxyHolder = proxyHolders[i];
-                    if (proxyHolder != null) {
+                    if (proxyHolder) {
                         gadgets.rpc.call(proxyHolder, WIDGET_READY_SERVICE_NAME, null, widgetId);
                     }
+                }
+            }
+
+            //loop through and call container-side callbacks
+            if (localCallbacks) {
+                while (localCallbacks.length) {
+                    localCallbacks.shift()(); //remove and call the first callback
                 }
             }
         });
@@ -151,7 +163,24 @@ if (typeof JSON === 'undefined') {
         //o.priv.getFunctions = getFunctionsForWidgetHandler;
     }
 
+    /**
+     * Fires the callback when the widget declares that it is ready.
+     * @param instanceId the instance GUID of the widget
+     * @param cb The callback to fire when this widget is ready.  If the widget is already
+     * ready, it fires immediately
+     */
+    function onReady(instanceId, cb) {
+        if (widgetReadyMap[instanceId]) {
+            cb();
+        }
+        else {
+            localReadyCallbacks[instanceId] = 
+                (localReadyCallbacks[instanceId] || []).concat(cb);
+        }
+    }
+
     o.init = init;
+    o.onReady = onReady;
 
 })(Ozone.eventing.rpc);
 

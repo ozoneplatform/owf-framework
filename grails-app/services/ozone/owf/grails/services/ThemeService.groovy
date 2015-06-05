@@ -11,12 +11,12 @@ import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
 
 class ThemeService {
-	
+
     def preferenceService
     def mergedDirectoryResourceService
 
     def grailsApplication
-    
+
     def getImageURL(def params) {
 		def imageName = params.img_name
 
@@ -29,7 +29,7 @@ class ThemeService {
             //fall back to default theme. If this also throws an exception, don't catch it
             theme = getTheme(grailsApplication.config.owf.defaultTheme)
         }
-            
+
 
         //images may be found in two places.  They may be in the images folder under the folder for the curent theme.
         //If not, fall back to the image in the themes/common directory
@@ -40,13 +40,13 @@ class ThemeService {
         return "/themes/common/images/${((params.isImageReqAdmin == true) ? 'admin/':'')}${imageName}"
     }
 
-	
+
     def getAvailableThemes() {
-        //find all files in the webapp (and external themes dir) 
+        //find all files in the webapp (and external themes dir)
         //with a path like 'themes/*.theme/theme.json'
         mergedDirectoryResourceService.getResources(
-            grailsApplication.config.owf.external.themePath, 
-            'themes', 
+            grailsApplication.config.owf.external.themePath,
+            'themes',
             "*.theme/theme.json"
         ).collect {
             try {
@@ -60,11 +60,11 @@ class ThemeService {
 
     def getTheme(def themeName) {
         def resource = mergedDirectoryResourceService.getResource(
-            grailsApplication.config.owf.external.themePath, 
-            'themes', 
+            grailsApplication.config.owf.external.themePath,
+            'themes',
             "${themeName}.theme/theme.json")
 
-        if (!(themeName && resource.exists()))
+        if (!(themeName && resource))
             throw new OwfException(message: "Cannot find the requested CSS theme: ${themeName}",
                 exceptionType: OwfExceptionTypes.GeneralServerError)
 
@@ -89,7 +89,7 @@ class ThemeService {
             }
         }
 
-        if (!found) { 
+        if (!found) {
             //fall back to the default theme
             def defaultThemeName = grailsApplication.config.owf.defaultTheme
             theme = getTheme(defaultThemeName)
@@ -109,7 +109,7 @@ class ThemeService {
                 exceptionType: OwfExceptionTypes.GeneralServerError)
         }
     }
-    
+
 
     def getUserThemePref() {
         preferenceService.show([namespace: 'owf', path: 'selected_theme'])

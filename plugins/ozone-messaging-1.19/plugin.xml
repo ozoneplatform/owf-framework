@@ -1,0 +1,13 @@
+<plugin name='ozone-messaging' version='1.19' grailsVersion='2.3.7 &gt; *'>
+  <author>OZONE Team</author>
+  <authorEmail>goss-support@owfgoss.org</authorEmail>
+  <title>OZONE Messaging plugin</title>
+  <description>\
+        Common messaging components.
+    </description>
+  <type>OzoneMessagingGrailsPlugin</type>
+  <resources>
+    <resource>org.ozoneplatform.messaging.service.impl.XmppConfigurationService</resource>
+    <resource>org.ozoneplatform.messaging.service.impl.XmppMessageService</resource>
+  </resources>
+</plugin>

@@ -7,10 +7,13 @@ OWF.Events = {
 	},
 	Dashboard: {
 		COMPLETE_RENDER: 'dashboardCompleteRender',
-		CHANGED: 'dashboardChanged'
+		CHANGED: 'dashboardChanged',
+        SELECTED: 'dashboardSelected',
+        SHOWN: 'dashboardShown',
+        HIDDEN: 'dashboardHidden'
 	},
-	Banner: {
-		DOCKED: 'docked',
-		UNDOCKED: 'undocked'
-	}
+    Marketplace: {
+        OPENED: 'marketplaceOpened',
+        CLOSED: 'marketplaceClosed'
+    }
 };

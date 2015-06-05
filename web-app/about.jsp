@@ -13,7 +13,6 @@ if (in != null)
 
 String description  = "";
 String notice       = "";
-String image        = "./images/brand-logo.png";
 String version      = "${project.version}";
 String buildNumber  = "${buildNumber}";
 String buildDate    = "${buildDate}";
@@ -25,7 +24,7 @@ if (p != null)
 {
     description     = p.getProperty("projectDescripton",description);
     notice          = p.getProperty("projectNotice",    notice);
-    version         = p.getProperty("projectVersion",   version);   
+    version         = p.getProperty("projectVersion",   version);
     buildNumber     = p.getProperty("buildNumber",      buildNumber);
     buildDate       = p.getProperty("buildDate",        buildDate);
     javaVersion     = p.getProperty("javaVersion",      javaVersion);
@@ -35,7 +34,7 @@ if (p != null)
 
 //-------------------------------------------------------------------------
 %>
-<img src="<%= image %>" class="aboutImage"/>
+<div class="aboutImage"></div>
 <p><%= description %></p>
 <p><%= notice %></p>
 <p id="aboutInfo">Version: <%= version %> Build Date: <%= buildDate %> Build Number: <%= buildNumber %></p>

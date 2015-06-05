@@ -4,11 +4,13 @@ class WidgetTypeServiceModel extends AbstractServiceModel {
 	
 	Long id
 	String name
+    String displayName
 
 	Map toDataMap() {
-		return [
+        return [
 			id: id,
-			name: name
+			name: name,
+            displayName: displayName
 		]
 	}
 

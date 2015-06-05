@@ -9,7 +9,7 @@ Ext.define('Ozone.components.admin.widget.WidgetDetailPanel', {
 
   initComponent: function() {
     var me = this;
-    
+
     OWF.Preferences.getUserPreference({
         namespace: 'owf.admin.WidgetEditCopy',
         name: 'guid_to_launch',
@@ -52,11 +52,11 @@ Ext.define('Ozone.components.admin.widget.WidgetDetailPanel', {
 			'<div class="detail-block">',
 			'<div><span class="detail-label">Description:</span> {description:htmlEncode}</div>',
 			'<div><span class="detail-label">Universal Name:</span> {universalName:htmlEncode}</div>',
-			'<div><span class="detail-label">Default Tags:</span> {tags:this.renderTags}</div>',
 			'<div><span class="detail-label">Single Instance:</span> {singleton}</div>',
 			'<div><span class="detail-label">Visible:</span> {definitionVisible}</div>',
-      '<div><span class="detail-label">Background:</span> {background}</div>',
-			'<div><span class="detail-label">Requires Widgets:</span> {directRequired:this.renderRequiresFlag}</div>',
+            '<div><span class="detail-label">Background:</span> {background}</div>',
+            '<div><span class="detail-label">Mobile Ready:</span> {mobileReady}</div>',
+			'<div><span class="detail-label">Requires App Components:</span> {directRequired:this.renderRequiresFlag}</div>',
 			'<div><span class="detail-label">Width:</span> {width}</div>',
 			'<div><span class="detail-label">Height:</span> {height}</div>',
 			'</div>',
@@ -78,23 +78,6 @@ Ext.define('Ozone.components.admin.widget.WidgetDetailPanel', {
 						}
 					}
 					return encodeURI(decodeURI(url));
-				},
-				renderTags: function(tags) {
-					var strTags = "";
-					if (tags != null) {
-						for (var i = 0; i < tags.length; i++) {
-							strTags += Ext.htmlEncode(tags[i].name);
-							if (i < tags.length - 1) {
-								strTags += ", ";
-							}
-						}
-					}
-
-					if (strTags == "") {
-						strTags = "<i>none</i>";
-					}
-
-					return strTags;
 				},
 				renderRequiresFlag: function(directRequired) {
 					return directRequired != null && directRequired.length > 0 ;
@@ -123,7 +106,7 @@ Ext.define('Ozone.components.admin.widget.WidgetDetailPanel', {
           type: 'adminwidgetstore',
           remoteSort: false
         },
-//        title: 'This Widget Requires:',
+//        title: 'This App Component Requires:',
         dockedItems: [
           {
             xtype: 'toolbar',
@@ -131,7 +114,7 @@ Ext.define('Ozone.components.admin.widget.WidgetDetailPanel', {
             items: [
               {
                 xtype: 'tbtext',
-                text: 'This Widget Requires:'
+                text: 'This App Component Requires:'
               }
             ]
           }
@@ -241,7 +224,6 @@ Ext.define('Ozone.components.admin.widget.WidgetDetailPanel', {
                           x: data[i].value.x,
                           y: data[i].value.y,
                           visible: data[i].value.visible,
-                          tags: data[i].value.tags,
                           totalUsers: data[i].value.totalUsers,
                           totalGroups: data[i].value.totalGroups,
                           singleton: data[i].value.singleton

@@ -28,3 +28,26 @@ Ext.override(Ext.button.Button, {
 Ext.override(Ext.tip.Tip, {
     maxWidth: 500
 });
+
+;(function () {
+
+    var focusColor;
+
+    Ext.button.Button.prototype.blink = function () {
+        var me = this;
+
+        if(!Modernizr.cssanimations) {
+            focusColor = focusColor || Ext.util.CSS.getRule('.x-focus', true).style.borderColor;
+            me.el.frame(focusColor);
+        }
+        else {
+            me.el.on(CSS.Animation.ANIMATION_END, function () {
+                me.el.removeCls('blink');
+            }, null, {
+                single: true
+            });
+            me.el.addCls('blink');
+        }
+    };
+
+})();

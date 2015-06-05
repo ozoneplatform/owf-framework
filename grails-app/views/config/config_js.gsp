@@ -1,12 +1,11 @@
 <%@ page import="grails.converters.JSON" contentType="text/javascript" %>
-<%@ page import="grails.util.Environment" %>
-<%@ page import="ozone.security.SecurityUtils" %>
 
 var Ozone = Ozone || {};
 //externalize any config properties here as javascript properties
 //this should be only place where these config properties are exposed to javascript
 
-Ozone.config = ${conf};
+Ozone.config = ${conf as JSON};
+Ozone.initialData = ${initialData as JSON};
 
 //add in contextPath
 Ozone.config.webContextPath = window.location.pathname;
@@ -24,19 +23,18 @@ Ozone.config.carousel = {
     approvedTagGroupName: Ozone.config.approvedTagGroupName
 };
 
-Ozone.config.user = ${user};
-
-Ozone.config.widgetNames = ${widgetNames};
-
-Ozone.config.banner = ${bannerState};
-
-Ozone.config.currentTheme = ${currentTheme};
-
-Ozone.config.loginCookieName = ${Environment.current == Environment.DEVELOPMENT ? "null" : "'" + ozone.security.SecurityUtils.LOGIN_COOKIE_NAME + "'"};
-
 Ozone.config.prefsLocation = window.location.protocol + "//" + window.location.host + window.location.pathname + "prefs";
 
 Ozone.config.prefsLocation = Ozone.config.prefsLocation.replace(/\;jsessionid=.*/g,'');
+
+//the default layout config for a new blank dashboard
+Ozone.config.defaultLayoutConfig = {
+    xtype: 'container',
+    flex: 1,
+    height: '100%',
+    items: [],
+    paneType: ""
+};
 
 //for consistency add the properties onto the new OWF namespace
 var OWF  = OWF || {};

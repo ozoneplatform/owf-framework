@@ -29,6 +29,8 @@ Ext.define('Ozone.components.form.field.SearchBox', {
     
     componentLayout: 'searchbox',
 
+    cls: 'searchBox',
+
     dynamic: false,
 
     //in ms
@@ -39,6 +41,11 @@ Ext.define('Ozone.components.form.field.SearchBox', {
         this.callParent(arguments);
 
         function initClearEl(cmp) {
+            Ext.onReady( function(){
+                if ( Ext.isWebKit || Ext.isGecko )
+                    Ext.supports.Placeholder = false;
+            });
+
             cmp.mon(cmp.clearEl, 'click', function() {
                 this.onClear();
             }, cmp);
@@ -47,6 +54,9 @@ Ext.define('Ozone.components.form.field.SearchBox', {
                 key: [Ext.EventObject.ENTER, Ext.EventObject.SPACE],
                 handler: function (key, evt) {
                     evt.stopPropagation();
+                    // OP-1457
+                    evt.preventDefault ? evt.preventDefault() : event.returnValue = false;
+
                     this.onClear();
                 },
                 scope: cmp

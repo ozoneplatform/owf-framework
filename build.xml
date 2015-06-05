@@ -2,12 +2,12 @@
 
     <property file="${basedir}/application.properties" />
     <import file="build-base.xml" optional="true"/>
-    
+
     <property name="lib.dir" value="${basedir}/lib" />
     <property name="work.dir" value="${basedir}/work" />
     <property name="jstoolkit.dir" value="${work.dir}/jsdoc/jsdoc_toolkit-2.3.2/jsdoc-toolkit" />
     <property name="staging.dir" value="staging" />
-    <property name="tomcat.dir" value="${staging.dir}/apache-tomcat-${tomcat.ver}" />
+    <property name="tomcat.dir" value="${staging.dir}/apache-tomcat" />
     <property name="build.base.dir" value="${basedir}" />
     <property name="widget.samples.dir" value="${basedir}/sample-widgets" />
     <property name="temp.dir" value="${basedir}/temp" />
@@ -80,7 +80,7 @@
     </target>
 
     <target name="unzip-jstoolkit" unless="jstoolkit.available">
-        <unzip src="${work.dir}/jsdoc/jsdoc-dist-2.3.2.zip" dest="${work.dir}/jsdoc" />
+        <unzip src="${work.dir}/jsdoc/jsdoc_toolkit-2.3.2.zip" dest="${work.dir}/jsdoc" />
     </target>
     <target name="jsdoc" depends="-init,unzip-jstoolkit" unless="no-jsdoc">
         <jsdoctoolkit jsdochome="${jstoolkit.dir}/" template="jsdoc" outputdir="${basedir}/src/assemble/docs/jsdoc" extensions="js" depth="3">
@@ -147,7 +147,7 @@
     <!-- =================================
           target: clean
          ================================= -->
-    <target name="clean" description="--> Cleans a Grails application">
+    <target name="clean" unless="skipWar" description="--> Cleans a Grails application">
         <delete includeemptydirs="true" failonerror="false">
             <fileset dir="${basedir}/web-app/js-min" >
             </fileset>
@@ -221,15 +221,14 @@
 
     <target name="stage-extras" depends="compile-themes">
         <mkdir dir="${tomcat.dir}" />
-        <mkdir dir="${staging.dir}/etc/override" />
-        <mkdir dir="${staging.dir}/owf-security" />
+        <mkdir dir="${staging.dir}/${owf.security.module}" />
         <mkdir dir="${staging.dir}/etc/tools" />
 
         <ant antfile="build.xml" dir="${basedir}/tools/TestDbConversion"/>
         <zip destfile="${basedir}/tools/dbvalidation.zip" >
             <zipfileset dir="${basedir}/tools/TestDbConversion/target" includes="**/*" filemode="744" />
         </zip>
-        
+
         <copy todir="${staging.dir}/etc/tools" includeEmptyDirs="false">
             <fileset dir="tools">
                 <include name="*" />
@@ -240,7 +239,7 @@
         <delete file="${basedir}/tools/dbvalidation.zip" />
 
         <mkdir dir="${staging.dir}/etc/widget" />
-        
+
         <mkdir dir="${staging.dir}/etc/widget/js" />
             <copy todir="${staging.dir}/etc/widget/js">
                 <fileset dir="web-app/js-min">
@@ -272,7 +271,7 @@
                     <include name="dndNoMove.png" />
                 </fileset>
             </copy>
-            
+
         <mkdir dir="${staging.dir}/etc/widget/flash-dragAndDrop" />
             <copy todir="${staging.dir}/etc/widget/flash-dragAndDrop">
                 <fileset dir="flash-dragAndDrop" />
@@ -281,46 +280,19 @@
         <mkdir dir="${staging.dir}/etc/widget/descriptor" />
             <copy todir="${staging.dir}/etc/widget/descriptor">
                 <fileset dir="web-app/examples/walkthrough/widgets">
-                    <include name="descriptor.html" />
+                    <include name="old_descriptor.html" />
+                    <include name="new_descriptor.html" />
                 </fileset>
             </copy>
 
-        <mkdir dir="${staging.dir}/etc/docs" />
-            <copy todir="${staging.dir}/etc/docs">
-                <fileset dir="test/jmeter/performance">
-                    <include name="OWF Performance Metrics.${owf.doc.extension}" />
-                </fileset>
-                <fileset dir="${basedir}/docs-internal">
-                    <include name="OWF Release Notes.${owf.doc.extension}" />
-                </fileset>
-            </copy>
         <mkdir dir="${staging.dir}/dbscripts" />
         <copy todir="${staging.dir}/dbscripts">
             <fileset dir="src/assemble/dbscripts">
             </fileset>
         </copy>
-        <mkdir dir="${staging.dir}/help" />
 
-        <if>
-            <istrue value="${owf.release}"/>
-            <then>
-                <copy todir="${staging.dir}/help">
-                    <fileset dir="${basedir}/docs-internal">
-                        <exclude name="libraries/**" />
-                        <exclude name="*.doc" />
-                    </fileset>
-                </copy>
-            </then>
-            <else>
-                <copy todir="${staging.dir}/help">
-                    <fileset dir="${basedir}/docs-internal">
-                        <exclude name="libraries/**" />
-                    </fileset>
-                </copy>
-            </else>
-        </if>
-
-        <copy todir="${staging.dir}/help/jsdoc" failonerror="false">
+        <mkdir dir="${staging.dir}/etc/docs/jsdoc" />
+        <copy todir="${staging.dir}/etc/docs/jsdoc" failonerror="false">
             <fileset dir="${basedir}/src/assemble/docs/jsdoc" />
         </copy>
         <copy todir="${tomcat.dir}/certs">
@@ -336,19 +308,16 @@
                 <include name="OwfConfig.groovy" />
                 <include name="OzoneConfig.properties" />
                 <include name="owf-override-log4j.xml" />
+                <include name="ehcache.xml" />
             </fileset>
             <fileset dir="${basedir}" includes="themes/**" />
             <fileset dir="${basedir}" includes="help/**" />
-            <fileset dir="${basedir}" includes="js-plugins/**" />
         </copy>
+        <!-- Copy hsql jar into tomcat lib -->
+        <ivy:retrieve pattern="${tomcat.dir}/lib/[artifact]-[revision].[ext]" conf="hsqldb" type="jar"/>
         <copy todir="${tomcat.dir}">
             <fileset dir="${basedir}">
                 <include name="prodDb.script" />
-            </fileset>
-        </copy>
-        <copy todir="${staging.dir}/etc/override">
-            <fileset dir="src/resources">
-                <include name="ehcache.xml" />
             </fileset>
         </copy>
     </target>
@@ -372,15 +341,16 @@
           target: war
          ================================= -->
 
-    <target name="war" depends="test,jsdoc,about,compress_js,compile-themes" description="--> Creates a WAR of a Grails application">
+    <target name="war" depends="clean,-init,test,jsdoc,about,compress_js,compile-themes" unless="skipWar" description="--> Creates a WAR of a Grails application">
         <grails script="war" preargs="${offline.arg}"/>
+        <move file="${basedir}/target/${app.name}-${app.version}.war" tofile="${basedir}/target/owf.war" />
     </target>
 
     <!-- =================================
           target: test
          ================================= -->
     <target name="test" depends="-init" unless="no-test" description="--> Run a Grails applications unit tests">
-        <grails script="test-app unit: integration:" preargs="${offline.arg}" args="-coverage -xml"/>
+        <grails script="test-app unit: integration:" preargs="${offline.arg}" args="-xml"/>
     </target>
 
     <target name="test-selenium-firefox" description="--> Run Grails applications Selenium tests in FF">
@@ -411,14 +381,11 @@
     end - test
    ================================= -->
 
-    <target name="bundle" depends="_init-ivy,-init,clean,war">
+    <target name="bundle" depends="_init-ivy,war">
         <!--<resolve ivyConf="bundle,jetty" />-->
         <resolve ivyConf="bundle,tomcat" />
         <mkdir dir="${staging.dir}" />
         <antcall target="stage-tomcat">
-            <param name="bundle.dir" value="${staging.dir}" />
-        </antcall>
-        <antcall target="stage-cas">
             <param name="bundle.dir" value="${staging.dir}" />
         </antcall>
         <antcall target="stage-owf" />
@@ -429,16 +396,11 @@
 
         <!-- create owf bundle -->
         <zip destfile="${staging.dir}/${app.name}-bundle.zip" >
-        	<zipfileset dir="${staging.dir}" excludes="**/*.sh, help/**" />
+        	<zipfileset dir="${staging.dir}" excludes="**/*.sh" />
         	<zipfileset dir="${staging.dir}" includes="**/*.sh" filemode="744" />
         </zip>
         <!-- copy owf bundle to the released name-->
-        <copy file="${staging.dir}/${app.name}-bundle.zip" tofile="${staging.dir}/${app.base.prefix}-bundle-${app.base.version}-${app.base.sprint}.zip" />
-
-        <!-- create owf help bundle -->
-        <zip destfile="${staging.dir}/${app.base.prefix}-help-${app.base.version}-${app.base.sprint}.zip" >
-            <zipfileset dir="${staging.dir}" includes="help/**" />
-        </zip>
+        <copy file="${staging.dir}/${app.name}-bundle.zip" tofile="${staging.dir}/${app.base.prefix}-bundle-${app.base.version}.zip" />
 
         <!-- create test widget bundle -->
         <antcall target="bundle-test-widgets" />
@@ -449,7 +411,7 @@
     </target>
 
     <target name="bundle-sample-widgets" depends="stage-samples">
-        <zip destfile="${staging.dir}/${app.base.prefix}-sample-widgets-${app.base.version}-${app.base.sprint}.zip" >
+        <zip destfile="${staging.dir}/${app.base.prefix}-sample-widgets-${app.base.version}.zip" >
             <zipfileset dir="${staging.dir}/samples"/>
         </zip>
     </target>
@@ -462,28 +424,46 @@
                 <include name="test-widgets/**/*.war" />
             </fileset>
         </copy>
-        <zip destfile="${staging.dir}/${app.base.prefix}-test-widgets-${app.base.version}-${app.base.sprint}.zip" >
+        <zip destfile="${staging.dir}/${app.base.prefix}-test-widgets-${app.base.version}.zip" >
             <zipfileset dir="${staging.dir}/owf-test-widgets"/>
         </zip>
     </target>
 
     <target name="stage-owf">
-	<!-- <ivy:retrieve pattern="${staging.dir}/[artifact]-[revision].[ext]" type="zip" conf="bundle" />  -->
-
-        <copy file="${basedir}/target/${app.name}-${app.version}.war" tofile="${tomcat.dir}/webapps/owf.war" />
-        <copy file="${staging.dir}/owf-security-project-${owf.security.rev}.zip" tofile="${staging.dir}/owf-security/owf-security-project.zip" />
-        <unzip src="${staging.dir}/owf-security-extras-${owf.security.rev}.zip" dest="${staging.dir}" />
+        <copy file="${basedir}/target/owf.war" tofile="${tomcat.dir}/webapps/owf.war" />
+        <antcall target='stage-security' />
         <antcall target='stage-extras' />
-        <copy file="LICENSE.txt"  tofile="${staging.dir}/LICENSE.txt"/>
+        <copy file="LICENSE.txt" tofile="${staging.dir}/LICENSE.txt" />
         <copy file="COPYRIGHT.txt" tofile="${staging.dir}/COPYRIGHT.txt" />
     </target>
 
-    <target  name="post-bundle-cleanup" >
-        <delete file="${staging.dir}/cas-server-extras-${cas.server.rev}.zip" />
-    	<delete file="${staging.dir}/cas-server-owf-${cas.server.rev}.war" />
-        <delete file="${staging.dir}/owf-security-extras-${owf.security.rev}.zip" />
+    <target name="stage-security">
+        <!-- Rename security project to remove version number for simplicity -->
+        <copy file="${staging.dir}/${owf.security.module}-project-${owf.security.rev}.zip"
+            tofile="${staging.dir}/${owf.security.module}/${owf.security.module}-project.zip" />
+
+        <!-- Unzip sample Spring configuration files -->
+        <unzip src="${staging.dir}/${owf.security.module}/${owf.security.module}-project.zip"
+            dest="${staging.dir}/${owf.security.module}">
+            <patternset>
+                <include name="src/main/resources/spring/**" />
+            </patternset>
+            <filtermapper>
+                <replacestring from="src/main/resources/spring/" to="" />
+            </filtermapper>
+        </unzip>
+
+        <delete dir="${staging.dir}/${owf.security.module}/src" />
+
+        <!-- Add default sample Spring configuration to Tomcat CLASSPATH -->
+        <copy todir="${tomcat.dir}/lib">
+            <fileset dir="${staging.dir}/${owf.security.module}"
+                includes="OWFsecurityContext.xml,MPsecurityContext.xml,MetricSecurityContext.xml,users.properties,ozone-security-beans/**" />
+        </copy>
+    </target>
+
+    <target name="post-bundle-cleanup">
         <delete file="${staging.dir}/owf-security-project-${owf.security.rev}.zip" />
-    	<delete file="${staging.dir}/owf-security-${owf.security.rev}.jar" />
     	<delete>
     	    <fileset dir="${staging.dir}" includes="*.zip"/>
     	</delete>

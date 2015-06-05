@@ -13,7 +13,6 @@ class PersonWidgetDefinitionServiceModel extends AbstractServiceModel implements
     Boolean editable = true
     Boolean disabled = false
     List groups = []
-    List tagLinks = []
 
     Map toDataMap() {
         return [
@@ -34,9 +33,9 @@ class PersonWidgetDefinitionServiceModel extends AbstractServiceModel implements
                 description: this.widgetDefinition?.description,
                 url: this.widgetDefinition?.widgetUrl,
                 headerIcon: this.widgetDefinition?.imageUrlSmall,
-                image: this.widgetDefinition?.imageUrlLarge,
+                image: this.widgetDefinition?.imageUrlMedium,
                 smallIconUrl: this.widgetDefinition?.imageUrlSmall,
-                largeIconUrl: this.widgetDefinition?.imageUrlLarge,
+                largeIconUrl: this.widgetDefinition?.imageUrlMedium,
                 width: this.widgetDefinition?.width,
                 height: this.widgetDefinition?.height,
                 x: 0,
@@ -45,10 +44,10 @@ class PersonWidgetDefinitionServiceModel extends AbstractServiceModel implements
                 maximized: false,
                 widgetVersion: this.widgetDefinition.widgetVersion,
                 groups: groups*.toDataMap(),
-                tags: tagLinks*.toDataMap(),
                 definitionVisible: this.widgetDefinition?.visible,
                 singleton: this.widgetDefinition?.singleton,
                 background: this.widgetDefinition?.background,
+                mobileReady: this.widgetDefinition?.mobileReady,
                 descriptorUrl: this.widgetDefinition?.descriptorUrl,
                 allRequired: this.widgetDefinition?.allRequired,
                 directRequired: this.widgetDefinition?.directRequired,

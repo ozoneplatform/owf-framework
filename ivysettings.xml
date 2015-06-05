@@ -1,35 +1,22 @@
 <ivysettings>
-    <!--<properties file="ivy.properties" />-->
-    <properties environment="env" />
-    <settings defaultResolver="chain"/>
-    <property name="nexus-public"
-              value="https://www.owfgoss.org/nexus/content/groups/public"/>
-    
-    <property name="ivy.local.default.root" value="${ivy.default.ivy.user.dir}/local"
-              override="false" />
-    <property name="ivy.local.release.root" value="${ivy.default.ivy.user.dir}/release/no-namespace/"
-              override="false" />
-    <property name="ivy.local.default.ivy.pattern"
-              value="[organisation]/[module]/[revision]/[type]s/[artifact]-[revision].[ext]"
-              override="false" />
-    <property name="ivy.local.default.artifact.pattern"
-              value="[organisation]/[module]/[revision]/[type]s/[artifact]-[revision].[ext]"
-              override="false" />
-    <property name="ibiblio-maven2-root" value="http://repo1.maven.org/maven2/" override="false" /><!-- FOR REMOTE IVY:INSTALLS INTO REPO -->
-    <namespaces>
-      <namespace name="maven2"></namespace>
-    </namespaces>
-    <cache resolutionDir="resolution" repositoryDir="repository" />
-    <resolvers>
-
-      <chain name="chain" checkmodified="true"> 
-          <filesystem name="local"  alwaysCheckExactRevision="true" >
-              <ivy pattern="${ivy.local.default.root}/[organisation]/[module]/ivy-[revision].xml" />
-              <artifact pattern="${ivy.local.default.root}/[organisation]/[module]/[type]s/[artifact]-[revision].[ext]" />
-          </filesystem>
-          <ibiblio name="nexus" m2compatible="true" root="${nexus-public}"/>
-          <ibiblio name="maven2-library-repo" root="${ibiblio-maven2-root}" m2compatible="true" namespace="maven2"/>
-      </chain> 
-
+    <settings defaultResolver="chain" />
+    <property name="m2-pattern" value="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" override="false" />
+       <resolvers>
+        <chain name="chain">
+            <filesystem name="local-maven2" m2compatible="true" >
+                <artifact pattern="${m2-pattern}"/>
+                <ivy pattern="${m2-pattern}"/>
+            </filesystem>
+            <ibiblio name="nexus" m2compatible="true" root="http://mirrors.ibiblio.org/maven2/"/>
+            <url name="ozone-security">
+                <artifact pattern="https://github.com/ozoneplatform/owf-security/archive/[revision].[ext]" />
+            </url>
+            <url name="ozoneplatform">
+                <artifact pattern="https://github.com/ozoneplatform/[module]/archive/[revision].[ext]" />
+            </url>
+            <url name="googlecode" checksums="sha1">
+              <artifact pattern="http://[module].[organization]/files/[artifact]-[revision].[ext]"/>
+            </url>
+        </chain>
     </resolvers>
 </ivysettings>

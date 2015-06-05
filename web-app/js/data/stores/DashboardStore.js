@@ -12,7 +12,7 @@ Ext.define('Ozone.data.DashboardStore',{
         startParam: undefined,
 
         api: {
-            read: "/dashboard",
+            read: "/person/me/dashboard",
             create: "/dashboard",
             update: "/dashboard",
             destroy: "/dashboard"
