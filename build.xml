@@ -5,7 +5,7 @@
 
     <property name="lib.dir" value="${basedir}/lib" />
     <property name="work.dir" value="${basedir}/work" />
-    <property name="jstoolkit.dir" value="${work.dir}/jsdoc/jsdoc_toolkit-2.3.2/jsdoc-toolkit" />
+    <property name="jstoolkit.dir" value="${work.dir}/jsdoc/jsdoc-toolkit-jsdoc_toolkit-2.3.2/jsdoc-toolkit" />
     <property name="staging.dir" value="staging" />
     <property name="tomcat.dir" value="${staging.dir}/apache-tomcat" />
     <property name="build.base.dir" value="${basedir}" />
@@ -51,14 +51,16 @@
     <target name="buildInfo" unless="build.number" >
         <buildnumber/>
     </target>
+
     <target name="-init" depends="-resolve,buildInfo">
         <mkdir dir="${staging.dir}" />
+
         <path id="compressor.classpath">
             <fileset dir="${lib.dir}/compressjs" includes="*.jar" />
         </path>
 
         <tstamp/>
-        <taskdef name="yuicompress" classname="owf.ant.YUICompressTask" classpathref="compressor.classpath" />
+
         <taskdef name="jsdoctoolkit" classname="uk.co.darrenhurley.ant.tasks.JsDocToolkit">
             <classpath>
                 <pathelement path="${work.dir}/jsdoc/jsdoctoolkit-ant-task-1.0.jar" />
@@ -80,8 +82,9 @@
     </target>
 
     <target name="unzip-jstoolkit" unless="jstoolkit.available">
-        <unzip src="${work.dir}/jsdoc/jsdoc_toolkit-2.3.2.zip" dest="${work.dir}/jsdoc" />
+        <unzip src="${work.dir}/jsdoc/jsdoc_toolkit-2.3.2.jar" dest="${work.dir}/jsdoc" />
     </target>
+
     <target name="jsdoc" depends="-init,unzip-jstoolkit" unless="no-jsdoc">
         <jsdoctoolkit jsdochome="${jstoolkit.dir}/" template="jsdoc" outputdir="${basedir}/src/assemble/docs/jsdoc" extensions="js" depth="3">
             <fileset dir="${basedir}/web-app/js/util">

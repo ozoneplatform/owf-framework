@@ -11,11 +11,12 @@
             <url name="ozone-security">
                 <artifact pattern="https://github.com/ozoneplatform/owf-security/archive/[revision].[ext]" />
             </url>
-            <url name="ozoneplatform">
+<!--             <url name="ozoneplatform">
                 <artifact pattern="https://github.com/ozoneplatform/[module]/archive/[revision].[ext]" />
-            </url>
-            <url name="googlecode" checksums="sha1">
-              <artifact pattern="http://[module].[organization]/files/[artifact]-[revision].[ext]"/>
+            </url> -->
+
+            <url name="ozoneplatform">
+                <artifact pattern="https://github.com/ozoneplatform/[organisation]/archive/[module]-[revision].zip" />
             </url>
         </chain>
     </resolvers>

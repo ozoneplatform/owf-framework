@@ -27,17 +27,11 @@
             <artifact name="${owf.security.module}-project" type="zip" />
         </dependency>
 
-        <dependency org="ozone-widgeting-framework-legacy" name="OWFAntTasks" rev="1.0.0"
-            conf="jsdoc->*;compressjs->*;build->*" >
-            <artifact name="OWFAntTasks" type="zip" />
-        </dependency>
-
         <dependency org="com.yahoo.platform.yui" name="yuicompressor"
             conf="compressjs->master" rev="2.4.2"  />
 
-        <dependency org="googlecode.com" name="jsdoc-toolkit" rev="2.3.2"  conf="jsdoc->*">
-            <artifact name="jsdoc_toolkit" type="zip"/>
-        </dependency>
+        <dependency org="jsdoc-toolkit" name="jsdoc_toolkit" rev="2.3.2"
+            conf="jsdoc->*" />
 
         <dependency org="org.jsdoctoolkit" name="jsdoctoolkit-ant-task" rev="1.0"
             conf="jsdoc->*;build->*">
