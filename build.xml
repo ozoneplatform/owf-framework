@@ -445,8 +445,17 @@
         <copy file="${staging.dir}/${owf.security.module}-project-${owf.security.rev}.zip"
             tofile="${staging.dir}/${owf.security.module}/${owf.security.module}-project.zip" />
 
-        <!-- Unzip sample Spring configuration files -->
         <unzip src="${staging.dir}/${owf.security.module}/${owf.security.module}-project.zip"
+            dest="${staging.dir}/${owf.security.module}" />
+
+        <copy todir="${staging.dir}/${owf.security.module}">
+            <fileset dir="${staging.dir}/${owf.security.module}/owf-security-3.26/src/main/resources/spring/" />
+        </copy>
+
+        <delete dir="${staging.dir}/${owf.security.module}/owf-security-3.26" />
+
+        <!-- Unzip sample Spring configuration files -->
+        <!-- <unzip src="${staging.dir}/${owf.security.module}/${owf.security.module}-project.zip"
             dest="${staging.dir}/${owf.security.module}">
             <patternset>
                 <include name="src/main/resources/spring/**" />
@@ -454,7 +463,7 @@
             <filtermapper>
                 <replacestring from="src/main/resources/spring/" to="" />
             </filtermapper>
-        </unzip>
+        </unzip> -->
 
         <delete dir="${staging.dir}/${owf.security.module}/src" />
 
