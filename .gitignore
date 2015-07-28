@@ -10,10 +10,6 @@
 /web-app/plugins
 /web-app/WEB-INF/classes
 
-# DB scripts that must be rebuilt for every release
-/src/assemble/dbscripts/*InitialCreate.sql
-/src/assemble/dbscripts/*PrefsUpdate*.sql
-
 # "temporary" files
 /staging
 /build-base*
