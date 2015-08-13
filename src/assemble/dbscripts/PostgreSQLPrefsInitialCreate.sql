@@ -2,20 +2,12 @@
 -- Update Database Script
 -- *********************************************************************
 -- Change Log: changelog.groovy
--- Ran at: 10/31/14 1:49 PM
-
+-- Ran at: 8/13/15 2:02 PM
+-- Against: postgres@jdbc:postgresql://localhost:5432/postgres
 -- Liquibase version: 2.0.5
 -- *********************************************************************
 
--- Create Database Lock Table
-CREATE TABLE databasechangeloglock (ID INT NOT NULL, LOCKED BOOLEAN NOT NULL, LOCKGRANTED TIMESTAMP WITH TIME ZONE, LOCKEDBY VARCHAR(255), CONSTRAINT PK_DATABASECHANGELOGLOCK PRIMARY KEY (ID));
-
-INSERT INTO databasechangeloglock (ID, LOCKED) VALUES (1, FALSE);
-
 -- Lock Database
--- Create Database Change Log Table
-CREATE TABLE databasechangelog (ID VARCHAR(63) NOT NULL, AUTHOR VARCHAR(63) NOT NULL, FILENAME VARCHAR(200) NOT NULL, DATEEXECUTED TIMESTAMP WITH TIME ZONE NOT NULL, ORDEREXECUTED INT NOT NULL, EXECTYPE VARCHAR(10) NOT NULL, MD5SUM VARCHAR(35), DESCRIPTION VARCHAR(255), COMMENTS VARCHAR(255), TAG VARCHAR(255), LIQUIBASE VARCHAR(20), CONSTRAINT PK_DATABASECHANGELOG PRIMARY KEY (ID, AUTHOR, FILENAME));
-
 -- Changeset changelog_3.7.0.groovy::3.7.0-1::owf::(Checksum: 3:a12ee34aa1e77bc2ab3176c74c3113b8)
 create table dashboard (id int8 not null, version int8 not null, isdefault bool not null, dashboard_position int4 not null, altered_by_admin bool not null, guid varchar(255) not null unique, column_count int4 not null, layout varchar(9) not null, name varchar(200) not null, user_id int8 not null, primary key (id));
 
@@ -680,25 +672,25 @@ INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXEC
 
 -- Changeset changelog_7.3.0.groovy::7.3.0-24::owf::(Checksum: 3:7ed6d90e4d1899a28fb6d1e1790ae910)
 -- Add new admin components that include universal names.  These will be the primary admin components moving forward.
-INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'App Component Editor', 440, nextval('hibernate_sequence'), 'themes/common/images/adm-tools/Widgets64.png', 'themes/common/images/adm-tools/Widgets24.png', FALSE, 'org.ozoneplatform.owf.admin.appcomponentedit', 0, FALSE, '679294b3-ccc3-4ace-a061-e3f27ed86451', 'admin/WidgetEdit.gsp', '1.0', 581);
+INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'App Component Editor', 440, 186, 'themes/common/images/adm-tools/Widgets64.png', 'themes/common/images/adm-tools/Widgets24.png', FALSE, 'org.ozoneplatform.owf.admin.appcomponentedit', 0, FALSE, '679294b3-ccc3-4ace-a061-e3f27ed86451', 'admin/WidgetEdit.gsp', '1.0', 581);
 
-INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'App Components', 440, nextval('hibernate_sequence'), 'themes/common/images/adm-tools/Widgets64.png', 'themes/common/images/adm-tools/Widgets24.png', FALSE, 'org.ozoneplatform.owf.admin.appcomponentmanagement', 0, TRUE, '48edfe94-4291-4991-a648-c19a903a663b', 'admin/WidgetManagement.gsp', '1.0', 818);
+INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'App Components', 440, 187, 'themes/common/images/adm-tools/Widgets64.png', 'themes/common/images/adm-tools/Widgets24.png', FALSE, 'org.ozoneplatform.owf.admin.appcomponentmanagement', 0, TRUE, '48edfe94-4291-4991-a648-c19a903a663b', 'admin/WidgetManagement.gsp', '1.0', 818);
 
-INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'Group Editor', 440, nextval('hibernate_sequence'), 'themes/common/images/adm-tools/Groups64.png', 'themes/common/images/adm-tools/Groups24.png', FALSE, 'org.ozoneplatform.owf.admin.groupedit', 0, FALSE, 'dc5c2062-aaa8-452b-897f-60b4b55ab564', 'admin/GroupEdit.gsp', '1.0', 581);
+INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'Group Editor', 440, 188, 'themes/common/images/adm-tools/Groups64.png', 'themes/common/images/adm-tools/Groups24.png', FALSE, 'org.ozoneplatform.owf.admin.groupedit', 0, FALSE, 'dc5c2062-aaa8-452b-897f-60b4b55ab564', 'admin/GroupEdit.gsp', '1.0', 581);
 
-INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'Groups', 440, nextval('hibernate_sequence'), 'themes/common/images/adm-tools/Groups64.png', 'themes/common/images/adm-tools/Groups24.png', FALSE, 'org.ozoneplatform.owf.admin.groupmanagement', 0, TRUE, '53a2a879-442c-4012-9215-a17604dedff7', 'admin/GroupManagement.gsp', '1.0', 818);
+INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'Groups', 440, 189, 'themes/common/images/adm-tools/Groups64.png', 'themes/common/images/adm-tools/Groups24.png', FALSE, 'org.ozoneplatform.owf.admin.groupmanagement', 0, TRUE, '53a2a879-442c-4012-9215-a17604dedff7', 'admin/GroupManagement.gsp', '1.0', 818);
 
-INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'User Editor', 440, nextval('hibernate_sequence'), 'themes/common/images/adm-tools/Users64.png', 'themes/common/images/adm-tools/Users24.png', FALSE, 'org.ozoneplatform.owf.admin.useredit', 0, FALSE, 'a9bf8e71-692d-44e3-a465-5337ce5e725e', 'admin/UserEdit.gsp', '1.0', 581);
+INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'User Editor', 440, 190, 'themes/common/images/adm-tools/Users64.png', 'themes/common/images/adm-tools/Users24.png', FALSE, 'org.ozoneplatform.owf.admin.useredit', 0, FALSE, 'a9bf8e71-692d-44e3-a465-5337ce5e725e', 'admin/UserEdit.gsp', '1.0', 581);
 
-INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'Users', 440, nextval('hibernate_sequence'), 'themes/common/images/adm-tools/Users64.png', 'themes/common/images/adm-tools/Users24.png', FALSE, 'org.ozoneplatform.owf.admin.usermanagement', 0, TRUE, '38070c45-5f6a-4460-810c-6e3496495ec4', 'admin/UserManagement.gsp', '1.0', 818);
+INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'Users', 440, 191, 'themes/common/images/adm-tools/Users64.png', 'themes/common/images/adm-tools/Users24.png', FALSE, 'org.ozoneplatform.owf.admin.usermanagement', 0, TRUE, '38070c45-5f6a-4460-810c-6e3496495ec4', 'admin/UserManagement.gsp', '1.0', 818);
 
-INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'Configuration', 440, nextval('hibernate_sequence'), 'themes/common/images/adm-tools/Configuration64.png', 'themes/common/images/adm-tools/Configuration24.png', FALSE, 'org.ozoneplatform.owf.admin.configuration', 0, TRUE, 'af180bfc-3924-4111-93de-ad6e9bfc060e', 'admin/Configuration.gsp', '1.0', 900);
+INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'Configuration', 440, 192, 'themes/common/images/adm-tools/Configuration64.png', 'themes/common/images/adm-tools/Configuration24.png', FALSE, 'org.ozoneplatform.owf.admin.configuration', 0, TRUE, 'af180bfc-3924-4111-93de-ad6e9bfc060e', 'admin/Configuration.gsp', '1.0', 900);
 
-INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'App Editor', 440, nextval('hibernate_sequence'), 'themes/common/images/adm-tools/Stacks64.png', 'themes/common/images/adm-tools/Stacks24.png', FALSE, 'org.ozoneplatform.owf.admin.appedit', 0, FALSE, '72c382a3-89e7-4abf-94db-18db7779e1df', 'admin/StackEdit.gsp', '1.0', 581);
+INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'App Editor', 440, 193, 'themes/common/images/adm-tools/Stacks64.png', 'themes/common/images/adm-tools/Stacks24.png', FALSE, 'org.ozoneplatform.owf.admin.appedit', 0, FALSE, '72c382a3-89e7-4abf-94db-18db7779e1df', 'admin/StackEdit.gsp', '1.0', 581);
 
-INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'Apps', 440, nextval('hibernate_sequence'), 'themes/common/images/adm-tools/Stacks64.png', 'themes/common/images/adm-tools/Stacks24.png', FALSE, 'org.ozoneplatform.owf.admin.appmanagement', 0, TRUE, '391dd2af-a207-41a3-8e51-2b20ec3e7241', 'admin/StackManagement.gsp', '1.0', 818);
+INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'Apps', 440, 194, 'themes/common/images/adm-tools/Stacks64.png', 'themes/common/images/adm-tools/Stacks24.png', FALSE, 'org.ozoneplatform.owf.admin.appmanagement', 0, TRUE, '391dd2af-a207-41a3-8e51-2b20ec3e7241', 'admin/StackManagement.gsp', '1.0', 818);
 
-INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'Page Editor', 440, nextval('hibernate_sequence'), 'themes/common/images/adm-tools/Dashboards64.png', 'themes/common/images/adm-tools/Dashboards24.png', FALSE, 'org.ozoneplatform.owf.admin.pageedit', 0, FALSE, '2445afb9-eb3f-4b79-acf8-6b12180921c3', 'admin/DashboardEdit.gsp', '1.0', 581);
+INSERT INTO widget_definition (background, display_name, height, id, image_url_large, image_url_small, singleton, universal_name, "version", visible, widget_guid, widget_url, widget_version, width) VALUES (FALSE, 'Page Editor', 440, 195, 'themes/common/images/adm-tools/Dashboards64.png', 'themes/common/images/adm-tools/Dashboards24.png', FALSE, 'org.ozoneplatform.owf.admin.pageedit', 0, FALSE, '2445afb9-eb3f-4b79-acf8-6b12180921c3', 'admin/DashboardEdit.gsp', '1.0', 581);
 
 insert into widget_definition_widget_types (widget_definition_id, widget_type_id)
             select id, 2 from widget_definition
@@ -795,7 +787,7 @@ INSERT INTO application_configuration (code, group_name, mutable, sub_group_name
 
 INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', '', NOW(), 'Insert Row (x8)', 'EXECUTED', 'changelog_7.10.0.groovy', '7.10.0-2', '2.0.5', '3:41ac759cfb732888d39c704edd1aa12d', 80);
 
--- Changeset changelog_7.16.0.groovy::7.15.1-1::owf::(Checksum: 3:a253a2a9c7e7571b94e59fc1767c58b3)
+-- Changeset changelog_7.15.1.groovy::7.15.1-1::owf::(Checksum: 3:a253a2a9c7e7571b94e59fc1767c58b3)
 DELETE FROM application_configuration  WHERE code = 'notifications.xmpp.server.hostname';
 
 DELETE FROM application_configuration  WHERE code = 'notifications.xmpp.server.port';
@@ -812,12 +804,12 @@ DELETE FROM application_configuration  WHERE code = 'notifications.query.interva
 
 DELETE FROM application_configuration  WHERE code = 'url.public';
 
-INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', '', NOW(), 'Delete Data (x8)', 'EXECUTED', 'changelog_7.16.0.groovy', '7.15.1-1', '2.0.5', '3:a253a2a9c7e7571b94e59fc1767c58b3', 81);
+INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', '', NOW(), 'Delete Data (x8)', 'EXECUTED', 'changelog_7.15.1.groovy', '7.15.1-1', '2.0.5', '3:a253a2a9c7e7571b94e59fc1767c58b3', 81);
 
--- Changeset changelog_7.16.0.groovy::7.15.1-2::owf::(Checksum: 3:1234ac8c0f21a1d748e17510d1c4373c)
+-- Changeset changelog_7.15.1.groovy::7.15.1-2::owf::(Checksum: 3:1234ac8c0f21a1d748e17510d1c4373c)
 ALTER TABLE widget_definition RENAME COLUMN image_url_large TO image_url_medium;
 
-INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', '', NOW(), 'Rename Column', 'EXECUTED', 'changelog_7.16.0.groovy', '7.15.1-2', '2.0.5', '3:1234ac8c0f21a1d748e17510d1c4373c', 82);
+INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', '', NOW(), 'Rename Column', 'EXECUTED', 'changelog_7.15.1.groovy', '7.15.1-2', '2.0.5', '3:1234ac8c0f21a1d748e17510d1c4373c', 82);
 
 -- Changeset changelog_7.16.0.groovy::7.16.0-1::owf::(Checksum: 3:a5550d64efe7315b58db632c964075f3)
 UPDATE application_configuration SET sub_group_order = '5', type = 'String', value = '/var/log/cef' WHERE code='owf.cef.sweep.log.location' AND type <> 'String';
@@ -849,3 +841,18 @@ INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXEC
 ALTER TABLE widget_definition ADD mobile_ready BOOLEAN NOT NULL DEFAULT FALSE;
 
 INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', '', NOW(), 'Add Column', 'EXECUTED', 'changelog_7.16.0.groovy', '7.16.0-6', '2.0.5', '3:1a84a71cf6605cd2706216801b85e477', 87);
+
+-- Changeset changelog_7.16.1.groovy::7.16.1-1::owf::(Checksum: 3:ae067414a3c058b53045e311d46646cc)
+INSERT INTO role (authority, description, id, "version") VALUES ('ROLE_USER', 'User Role', '26', '2');
+
+INSERT INTO role (authority, description, id, "version") VALUES ('ROLE_ADMIN', 'Admin Role', '27', '1');
+
+INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', '', NOW(), 'Insert Row (x2)', 'EXECUTED', 'changelog_7.16.1.groovy', '7.16.1-1', '2.0.5', '3:ae067414a3c058b53045e311d46646cc', 88);
+
+-- Changeset changelog_7.16.1.groovy::7.16.1-2::owf::(Checksum: 3:8698b56979b6c82e295d3f9aec41b837)
+-- Updating the hibernate_sequence to account for hard coded ids
+SELECT setval('hibernate_sequence', 200);
+
+INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', 'Updating the hibernate_sequence to account for hard coded ids', NOW(), 'Custom SQL', 'EXECUTED', 'changelog_7.16.1.groovy', '7.16.1-2', '2.0.5', '3:8698b56979b6c82e295d3f9aec41b837', 89);
+
+-- Release Database Lock
