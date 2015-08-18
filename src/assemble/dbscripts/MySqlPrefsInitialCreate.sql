@@ -7,6 +7,14 @@
 --  Liquibase version: 2.0.5
 --  *********************************************************************
 
+-- Create Database Lock Table
+CREATE TABLE `DATABASECHANGELOGLOCK` (`ID` INT NOT NULL, `LOCKED` TINYINT(1) NOT NULL, `LOCKGRANTED` DATETIME, `LOCKEDBY` VARCHAR(255), CONSTRAINT `PK_DATABASECHANGELOGLOCK` PRIMARY KEY (`ID`)) ENGINE=InnoDB;
+
+INSERT INTO `DATABASECHANGELOGLOCK` (`ID`, `LOCKED`) VALUES (1, 0);
+
+-- Create Database Change Log Table
+CREATE TABLE `DATABASECHANGELOG` (`ID` VARCHAR(63) NOT NULL, `AUTHOR` VARCHAR(63) NOT NULL, `FILENAME` VARCHAR(200) NOT NULL, `DATEEXECUTED` DATETIME NOT NULL, `ORDEREXECUTED` INT NOT NULL, `EXECTYPE` VARCHAR(10) NOT NULL, `MD5SUM` VARCHAR(35), `DESCRIPTION` VARCHAR(255), `COMMENTS` VARCHAR(255), `TAG` VARCHAR(255), `LIQUIBASE` VARCHAR(20), CONSTRAINT `PK_DATABASECHANGELOG` PRIMARY KEY (`ID`, `AUTHOR`, `FILENAME`)) ENGINE=InnoDB;
+
 --  Lock Database
 --  Changeset changelog_3.7.0.groovy::3.7.0-1::owf::(Checksum: 3:3cf00281bcd7806ea16b7fb7703f84c6)
 create table dashboard (id bigint not null auto_increment, version bigint not null, isdefault bit not null, dashboard_position integer not null, altered_by_admin bit not null, guid varchar(255) not null unique, column_count integer not null, layout varchar(9) not null, name varchar(200) not null, user_id bigint not null, primary key (id)) ENGINE=InnoDB;

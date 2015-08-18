@@ -7,7 +7,15 @@
 -- Liquibase version: 2.0.5
 -- *********************************************************************
 
+-- Create Database Lock Table
+CREATE TABLE databasechangeloglock (ID INT NOT NULL, LOCKED BOOLEAN NOT NULL, LOCKGRANTED TIMESTAMP WITH TIME ZONE, LOCKEDBY VARCHAR(255), CONSTRAINT PK_DATABASECHANGELOGLOCK PRIMARY KEY (ID));
+
+INSERT INTO databasechangeloglock (ID, LOCKED) VALUES (1, FALSE);
+
 -- Lock Database
+-- Create Database Change Log Table
+CREATE TABLE databasechangelog (ID VARCHAR(63) NOT NULL, AUTHOR VARCHAR(63) NOT NULL, FILENAME VARCHAR(200) NOT NULL, DATEEXECUTED TIMESTAMP WITH TIME ZONE NOT NULL, ORDEREXECUTED INT NOT NULL, EXECTYPE VARCHAR(10) NOT NULL, MD5SUM VARCHAR(35), DESCRIPTION VARCHAR(255), COMMENTS VARCHAR(255), TAG VARCHAR(255), LIQUIBASE VARCHAR(20), CONSTRAINT PK_DATABASECHANGELOG PRIMARY KEY (ID, AUTHOR, FILENAME));
+
 -- Changeset changelog_3.7.0.groovy::3.7.0-1::owf::(Checksum: 3:a12ee34aa1e77bc2ab3176c74c3113b8)
 create table dashboard (id int8 not null, version int8 not null, isdefault bool not null, dashboard_position int4 not null, altered_by_admin bool not null, guid varchar(255) not null unique, column_count int4 not null, layout varchar(9) not null, name varchar(200) not null, user_id int8 not null, primary key (id));
 
