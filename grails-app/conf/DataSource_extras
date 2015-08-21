@@ -1,0 +1,29 @@
+dataSource {
+    pooled = true
+    dbCreate = "none"
+    username="postgres"
+    password = "663233"
+    driverClassName = "org.postgresql.Driver"
+    url = "jdbc:postgresql://localhost:5432/postgres"
+    dialect="org.hibernate.dialect.PostgreSQLDialect"
+}
+
+dataSource {
+    pooled = true
+    dbCreate = "none"
+    driverClassName = "com.mysql.jdbc.Driver"
+    url="jdbc:mysql://localhost:3306/owf"
+    username = "owf_admin"
+    password = "password"
+    dialect = "org.hibernate.dialect.MySQL5InnoDBDialect"
+}
+
+dataSource {
+    pooled = true
+    dbCreate = "none"
+    driverClassName = "com.mysql.jdbc.Driver"
+    url="jdbc:mysql://localhost:3306/owf"
+    username = "owf_admin"
+    password = "password"
+    dialect = "org.hibernate.dialect.MySQL5InnoDBDialect"
+}

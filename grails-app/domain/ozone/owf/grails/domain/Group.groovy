@@ -91,10 +91,21 @@ class Group implements Serializable{
             Person.executeUpdate('update Person p set p.requiresSync=:value', [value: true])
         }
         else if(this.name == ADMINS) {
-            Role.findByAuthority(Role.ADMIN).people.each { Person p ->
+            Person.withCriteria {
+                authorities {
+                    'eq' ('authority', ERoleAuthority.ROLE_ADMIN.strVal)
+                }
+            }.each { Person p ->
+                log.info "~~~~~~~~~~~~~~~~~~~~~~ FOUND A DUDE! ~~~~~~~~~~~~~~~~~~~~~~~~~~"
                 p.requiresSync = true
                 p.save()
             }
+
+            // Role.findByAuthority(ERoleAuthority.ROLE_ADMIN.strVal).people.each { Person p ->
+            //     log.info "Person: " + p.username
+            //     p.requiresSync = true
+            //     p.save()
+            // }
         }
         else {
             this.people.each { Person p ->

@@ -32,5 +32,17 @@ databaseChangeLog = {
         """)
     }
 
+    changeSet(author: "owf", id: "7.16.1-3", context: "create, upgrade, 7.16.1", dbms: 'mysql, hsqldb, oracle, mssql, postgresql') {
+        createTable(tableName: "person_role") {
+            column(name: "person_authorities_id", type: "bigint")
+
+            column(name: "role_id", type: "bigint")
+        }
+    }
+
+    changeSet(author: "owf", id: "7.16.1-4", context: "create, upgrade, 7.16.1", dbms: 'mysql, hsqldb, oracle, mssql, postgresql') {
+        dropTable(tableName: "role_people")
+    }
+
 }
 

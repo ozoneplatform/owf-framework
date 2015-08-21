@@ -548,6 +548,7 @@ class BootStrap {
     private createNewUser() {
         Person.withTransaction {
             def user = Person.findByUsername(Person.NEW_USER)
+            def role = Role.findByAuthority(ERoleAuthority.ROLE_USER.strVal)
             if (user == null) {
                 //Create
                 user =  new Person(
@@ -557,19 +558,10 @@ class BootStrap {
                     email        : '',
                     emailShow    : false,
                     description  : '',
-                    enabled      : true
+                    enabled      : true,
+                    authorities  : [role] as Set
                 )
                 saveInstance(user)
-                def userRole = Role.findByAuthority(ERoleAuthority.ROLE_USER.strVal)
-                def users = Person.findAllByUsername(Person.NEW_USER)
-                if (userRole)
-                {
-                    if (!userRole.people)
-                        userRole.people = users
-                    else
-                        userRole.people.add(Person.findByUsername(Person.NEW_USER))
-                    saveInstance(userRole)
-                }
             }
         }
 

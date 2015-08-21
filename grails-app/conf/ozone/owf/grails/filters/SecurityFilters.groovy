@@ -46,6 +46,11 @@ class SecurityFilters {
         def session = WebUtils.retrieveGrailsWebRequest().session
         def username = accountService.getLoggedInUsername()
         def userDisplayName = accountService.getLoggedInUserDisplayName()
+        def adminRole = Role.findByAuthority(ERoleAuthority.ROLE_ADMIN.strVal)
+        def userRole = Role.findByAuthority(ERoleAuthority.ROLE_USER.strVal)
+
+        def isAdmin = accountService.getLoggedInUserIsAdmin()
+        def roles = (isAdmin ? [adminRole, userRole] : [userRole]) as Set
 
         def person = Person.findByUsername(username, [cache:true])
         if (!person) {
@@ -58,8 +63,8 @@ class SecurityFilters {
                     emailShow    : false,
                     description  : '',
                     enabled      : true,
-                    requiresSync : true
-                )
+                    requiresSync : true,
+                    authorities  : roles               )
 
                 person.save(flush:true)
                 setUserDefaults(username)
@@ -83,10 +88,21 @@ class SecurityFilters {
                 if (userDisplayName != username) {
                     person.userRealName = userDisplayName
                 }
+
+                person.authorities = roles
                 person.save(flush:true)
             }
             session["savedLastLogin"] = true
         }
+        log.info "*********************************** " + roles + " *************************************"
+        log.info "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ " + person.authorities + " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+
+
+        def personCheck = Person.findByUsername(username, [cache:false])
+        log.info "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% " + personCheck.authorities + " %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+
+
+
 
         loadAdminData(person)
         person
