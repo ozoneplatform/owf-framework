@@ -1,6 +1,6 @@
 package com.studentsonly.grails.plugins.uiperformance.postprocess
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import grails.util.Holders as CH
 
 import com.studentsonly.grails.plugins.uiperformance.Utils
 

@@ -137,7 +137,6 @@ class OwfApplicationConfigurationService extends ApplicationConfigurationService
         }
     }
 
-	@Override
 	@Transactional(readOnly=false)
 	void createRequired(){
 

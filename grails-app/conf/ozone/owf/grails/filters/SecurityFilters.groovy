@@ -1,7 +1,7 @@
 package ozone.owf.grails.filters
 
 import grails.util.Environment
-import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
+import grails.util.Holders as AH
 import org.codehaus.groovy.grails.web.util.WebUtils
 import org.grails.plugins.metrics.groovy.Timed
 import org.springframework.security.core.context.SecurityContextHolder as SCH
