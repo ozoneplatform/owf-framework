@@ -2,7 +2,7 @@
 -- Update Database Script
 -- *********************************************************************
 -- Change Log: changelog.groovy
--- Ran at: 8/13/15 2:13 PM
+-- Ran at: 8/24/15 9:29 AM
 -- Against: OWF@jdbc:oracle:thin:@localhost:1521:XE
 -- Liquibase version: 2.0.5
 -- *********************************************************************
@@ -889,5 +889,15 @@ SELECT hibernate_sequence.nextval FROM DUAL;
 ALTER SEQUENCE hibernate_sequence INCREMENT BY 1;
 
 INSERT INTO DATABASECHANGELOG (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', 'Updating the hibernate_sequence to account for hard coded ids', SYSTIMESTAMP, 'Custom SQL', 'EXECUTED', 'changelog_7.16.1.groovy', '7.16.1-2', '2.0.5', '3:86ab0cd02919c9a554248579f7c32323', 94);
+
+-- Changeset changelog_7.16.1.groovy::7.16.1-3::owf::(Checksum: 3:8b4c3f03d4786a6263553143cda2bde0)
+CREATE TABLE person_role (person_authorities_id NUMBER(38,0), role_id NUMBER(38,0));
+
+INSERT INTO DATABASECHANGELOG (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', '', SYSTIMESTAMP, 'Create Table', 'EXECUTED', 'changelog_7.16.1.groovy', '7.16.1-3', '2.0.5', '3:8b4c3f03d4786a6263553143cda2bde0', 95);
+
+-- Changeset changelog_7.16.1.groovy::7.16.1-4::owf::(Checksum: 3:86e4f665a39e4de4eea6cf49696b7f32)
+DROP TABLE role_people;
+
+INSERT INTO DATABASECHANGELOG (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', '', SYSTIMESTAMP, 'Drop Table', 'EXECUTED', 'changelog_7.16.1.groovy', '7.16.1-4', '2.0.5', '3:86e4f665a39e4de4eea6cf49696b7f32', 96);
 
 -- Release Database Lock
