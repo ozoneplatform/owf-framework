@@ -2,7 +2,7 @@
 -- Update Database Script
 -- *********************************************************************
 -- Change Log: changelog.groovy
--- Ran at: 8/13/15 2:03 PM
+-- Ran at: 8/24/15 8:59 AM
 -- Against: postgres@jdbc:postgresql://localhost:5432/postgres
 -- Liquibase version: 2.0.5
 -- *********************************************************************

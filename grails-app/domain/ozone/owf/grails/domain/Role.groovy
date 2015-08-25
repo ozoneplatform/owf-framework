@@ -9,8 +9,6 @@ class Role implements Serializable {
 
     static final String ADMIN = 'ROLE_ADMIN'
 
-	// static hasMany = [people: Person]
-
 	/** description */
 	String description
 	/** ROLE String */

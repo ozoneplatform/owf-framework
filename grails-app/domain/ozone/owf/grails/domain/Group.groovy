@@ -96,16 +96,9 @@ class Group implements Serializable{
                     'eq' ('authority', ERoleAuthority.ROLE_ADMIN.strVal)
                 }
             }.each { Person p ->
-                log.info "~~~~~~~~~~~~~~~~~~~~~~ FOUND A DUDE! ~~~~~~~~~~~~~~~~~~~~~~~~~~"
                 p.requiresSync = true
                 p.save()
             }
-
-            // Role.findByAuthority(ERoleAuthority.ROLE_ADMIN.strVal).people.each { Person p ->
-            //     log.info "Person: " + p.username
-            //     p.requiresSync = true
-            //     p.save()
-            // }
         }
         else {
             this.people.each { Person p ->

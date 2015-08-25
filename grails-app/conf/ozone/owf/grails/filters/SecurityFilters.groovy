@@ -94,15 +94,6 @@ class SecurityFilters {
             }
             session["savedLastLogin"] = true
         }
-        log.info "*********************************** " + roles + " *************************************"
-        log.info "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ " + person.authorities + " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-
-
-        def personCheck = Person.findByUsername(username, [cache:false])
-        log.info "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% " + personCheck.authorities + " %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-
-
-
 
         loadAdminData(person)
         person
