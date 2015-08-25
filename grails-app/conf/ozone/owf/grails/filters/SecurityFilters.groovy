@@ -223,6 +223,10 @@ class SecurityFilters {
                         .executeUpdate()
             }
             session["savedUserGroups"] = true
+
+            if (groupsToRemove.size() > 0 || groupsToCreate.size() > 0) {
+            	accountService.sync(personInDB, true)
+            }
         }
         catch (Exception e) {
             // Chew.  We don't want the exception bubbling back.
