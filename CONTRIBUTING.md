@@ -2,7 +2,7 @@
 
 ## General Process
 
-1. Create a branch from the current version
+1. Create a fork from the current version
 2. Add commits for your changes
 3. Open a pull request on Github
 
