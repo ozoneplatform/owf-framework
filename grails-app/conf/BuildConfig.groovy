@@ -170,7 +170,7 @@ grails.project.dependency.resolution = {
         compile 'org.ozoneplatform:ozone-messaging:1.19'
         compile ':codenarc:0.20'
         compile ':pretty-time:2.1.3.Final-1.0.1'
-        build   ':tomcat:7.0.52.1'
+        build   ':tomcat:8.0.22'
         compile ':ui-performance:1.2.2'
         compile ':build-test-data:2.1.2'
         compile ':quartz:1.0.1'
