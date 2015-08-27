@@ -24,7 +24,7 @@ import org.apache.http.params.HttpParams
 import org.apache.http.protocol.BasicHttpContext
 import org.apache.http.protocol.HTTP
 import org.apache.http.util.ByteArrayBuffer
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Holders as ConfigurationHolder
 import org.codehaus.groovy.grails.web.json.JSONObject
 import org.codehaus.groovy.grails.web.context.ServletContextHolder
 import org.springframework.context.ApplicationContextAware

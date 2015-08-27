@@ -79,6 +79,8 @@
 
     <target name="linux_grails">
         <exec executable="grails" failonerror="true">
+            <arg value="--stacktrace" />
+            <arg value="--verbose" />
             <arg value="${gpreargs}" />
             <arg value="${gscript}" />
             <arg value="${gargs}" />

@@ -16,7 +16,7 @@
 
 import com.brandseye.cors.CorsCompatibleBasicAuthenticationEntryPoint
 import com.brandseye.cors.CorsFilter
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import grails.util.Holders as CH
 
 class CorsGrailsPlugin {
     def version = "1.1.4"

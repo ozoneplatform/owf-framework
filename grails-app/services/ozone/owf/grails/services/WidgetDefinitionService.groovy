@@ -1,6 +1,9 @@
 package ozone.owf.grails.services
 
 import grails.converters.JSON
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+import org.codehaus.groovy.grails.web.util.AbstractTypeConvertingMap
+import org.codehaus.groovy.grails.web.util.TypeConvertingMap
 import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.grails.AuditOWFWebRequestsLogger
 import ozone.owf.grails.OwfException
@@ -29,12 +32,16 @@ class WidgetDefinitionService {
 
     //TODO: implement ignoreCase and fetch params
     //@param returnDomainObjects If true, returns domain objects instead of service items
-    def list(params=null, returnDomainObjects=false) {
+    def list(params, returnDomainObjects=false) {
+        return list(params instanceof AbstractTypeConvertingMap ? params : new TypeConvertingMap(params), returnDomainObjects)
+    }
+
+    def list(AbstractTypeConvertingMap params, returnDomainObjects=false) {
         def widgetDefinition = null
         def opts = [:]
-        if (params?.offset) opts.offset = (params.offset instanceof String ? Integer.parseInt(params.offset) : params.offset)
-        if (params?.max) opts.max =(params.max instanceof String ? Integer.parseInt(params.max) : params.max)
-        if (params?.stack_id) params.stack_id = (params.stack_id instanceof String ? Integer.parseInt(params.stack_id) : params.stack_id)
+        if (params?.offset) opts.offset = params.getInt("offset")
+        if (params?.max) opts.max = params.getInt("max")
+        if (params?.stack_id) params.stack_id = params.getInt("stack_id")
 
         def stackFilteredIds = []
         if(params?.stack_id > -1) {
@@ -109,7 +116,7 @@ class WidgetDefinitionService {
         //actually query the widgetdef table
         widgetDefinition = WidgetDefinition.createCriteria().list(opts) {
             if (params?.id)
-              inList("widgetGuid",params.list('id'))
+              inList("widgetGuid", new ArrayList((List)params.list('id')))
             if (params?.sort)
               order(convertJsonParamToDomainField(params.sort), params?.order?.toLowerCase() ?: 'asc')
             if(params?.widgetGuid) like("widgetGuid", params.widgetGuid)

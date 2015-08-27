@@ -7,8 +7,8 @@ import javax.imageio.stream.ImageInputStream
 
 import grails.util.GrailsUtil
 
-import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+//import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
+import grails.util.Holders as CH
 import org.codehaus.groovy.grails.commons.GrailsApplication
 
 import org.springframework.util.AntPathMatcher

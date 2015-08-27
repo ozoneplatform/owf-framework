@@ -3,7 +3,7 @@ import org.hibernate.EmptyInterceptor
 import org.hibernate.SessionFactory
 import org.hibernate.type.Type
 import org.apache.log4j.Logger
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Holders as ConfigurationHolder
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.services.AccountService
 
