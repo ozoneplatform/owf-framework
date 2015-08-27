@@ -7,7 +7,7 @@
 package ozone.owf.grails.controllers
 
 import grails.converters.JSON
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Holders as ConfigurationHolder
 import ozone.owf.grails.domain.*
 import ozone.owf.grails.services.AccountService
 import ozone.owf.grails.OwfException

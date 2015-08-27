@@ -194,7 +194,6 @@ abstract class AbstractAuditingFilters {
 			
 	}
 	
-	@Override
 	protected boolean isLogOnEvent(HttpSession session) {
 		try{
 			if (session.loginWasAudited) {

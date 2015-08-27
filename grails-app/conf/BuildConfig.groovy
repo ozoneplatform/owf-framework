@@ -65,20 +65,21 @@ def warExcludes = [
 
                     'WEB-INF/lib/*-sources.jar',
                     'WEB-INF/lib/*-javadoc.jar',
-                    'WEB-INF/lib/jetty-6.1.21.jar',
-                    'WEB-INF/lib/jetty-naming-6.1.21.jar',
-                    'WEB-INF/lib/jetty-plus-6.1.21.jar',
-                    'WEB-INF/lib/jetty-util-6.1.21.jar',
+                    'WEB-INF/lib/jetty-*.jar',
+                    'WEB-INF/lib/jetty-naming-*.jar',
+                    'WEB-INF/lib/jetty-plus-*.jar',
+                    'WEB-INF/lib/jetty-util-*.jar',
+                    //"WEB-INF/lib/owf-security-extras-${config.owf.security.rev}.zip",
                     "WEB-INF/lib/owf-security-project-${config.owf.security.rev}.zip",
-                    'WEB-INF/lib/servlet-api-2.5-20081211.jar',
-                    'WEB-INF/lib/jasper-compiler-5.5.15.jar',
-                    'WEB-INF/lib/jasper-compiler-jdt-5.5.15.jar',
-                    'WEB-INF/lib/jasper-runtime-5.5.15.jar',
-                    'WEB-INF/lib/jsp-api-2.0-6.1.21.jar',
-                    'WEB-INF/lib/standard-1.1.2.jar',
-                    'WEB-INF/lib/core-3.1.1.jar',
-                    'WEB-INF/lib/log4j-1.2.9.jar',
-                    'WEB-INF/lib/spring-expression-3.0.1.RELEASE.jar',
+                    'WEB-INF/lib/servlet-api-*.jar',
+                    'WEB-INF/lib/jasper-compiler-*.jar',
+                    'WEB-INF/lib/jasper-compiler-jdt-*.jar',
+                    'WEB-INF/lib/jasper-runtime-*.jar',
+                    'WEB-INF/lib/jsp-api-*.jar',
+                    'WEB-INF/lib/standard-*.jar',
+                    'WEB-INF/lib/core-*.jar',
+                    'WEB-INF/lib/log4j-*.jar',
+                    //'WEB-INF/lib/spring-expression-*.jar',
                     'plugins/**',
 
                     '**/.gitignore'
@@ -133,8 +134,8 @@ grails.project.dependency.resolution = {
             excludes 'commons-logging', 'servlet-api', 'spring-security-core'
         }
 
-        compile('org.springframework.security:spring-security-core:3.0.5.RELEASE',
-                'org.springframework.security:spring-security-web:3.0.5.RELEASE') {
+        compile('org.springframework.security:spring-security-core:3.2.4.RELEASE',
+                'org.springframework.security:spring-security-web:3.2.4.RELEASE') {
 
             excludes 'commons-logging', 'commons-lang'
         }

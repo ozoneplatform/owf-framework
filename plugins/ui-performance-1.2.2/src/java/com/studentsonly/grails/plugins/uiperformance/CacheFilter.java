@@ -16,7 +16,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder;
+import grails.util.Holders;
 import org.springframework.util.AntPathMatcher;
 
 /**
@@ -168,7 +168,7 @@ public class CacheFilter implements Filter {
 	}
 
 	private Object getConfigProperty(final String name) {
-		return ConfigurationHolder.getFlatConfig().get("uiperformance." + name);
+		return Holders.getFlatConfig().get("uiperformance." + name);
 	}
 
 	@SuppressWarnings("unchecked")

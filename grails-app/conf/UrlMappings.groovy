@@ -1,6 +1,6 @@
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest
 import org.springframework.web.context.request.RequestContextHolder
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Holders
 
 class UrlMappings {
     static def getAction =
@@ -408,7 +408,7 @@ class UrlMappings {
                  * switched then.  (Also switch in help url)
                  */
                 //grailsApplication.config.owf.external.themePath
-                ConfigurationHolder.config.owf.external.themePath
+                Holders.config.owf.external.themePath
 
             }
             urlRoot="themes"
@@ -420,7 +420,7 @@ class UrlMappings {
             //the file path on the server for where external help is located
             fileRoot={
                 //grailsApplication.config.owf.external.helpPath
-                ConfigurationHolder.config.owf.external.helpPath
+                Holders.config.owf.external.helpPath
             }
             urlRoot="help"
         }
@@ -431,7 +431,7 @@ class UrlMappings {
             //the file path on the server for where external help is located
             fileRoot={
                 //grailsApplication.config.owf.external.jsPluginPath
-                ConfigurationHolder.config.owf.external.jsPluginPath
+                Holders.config.owf.external.jsPluginPath
             }
             urlRoot="js-plugins"
         }
