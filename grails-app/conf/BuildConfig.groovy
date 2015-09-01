@@ -174,7 +174,7 @@ grails.project.dependency.resolution = {
         compile ':ui-performance:1.2.2'
         compile ':build-test-data:2.1.2'
         compile ':quartz:1.0.1'
-        runtime ':cors:1.1.4' // OP-3931
+        runtime ':cors:1.1.8' // OP-3931
         compile ':yammer-metrics:3.0.1-2'
     }
 }
