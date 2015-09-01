@@ -32,7 +32,7 @@ class WidgetDefinitionService {
 
     //TODO: implement ignoreCase and fetch params
     //@param returnDomainObjects If true, returns domain objects instead of service items
-    def list(params, returnDomainObjects=false) {
+    def list(params=null, returnDomainObjects=false) {
         return list(params instanceof AbstractTypeConvertingMap ? params : new TypeConvertingMap(params), returnDomainObjects)
     }
 

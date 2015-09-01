@@ -3,7 +3,7 @@ package ozone.owf.grails.test.integration
 import grails.test.mixin.TestMixin
 import grails.test.mixin.integration.IntegrationTestMixin
 
-import org.codehaus.groovy.grails.commons.ApplicationHolder
+import grails.util.Holders
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy
 import org.springframework.security.core.session.SessionRegistryImpl
 

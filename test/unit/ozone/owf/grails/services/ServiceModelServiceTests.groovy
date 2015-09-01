@@ -3,7 +3,7 @@ package ozone.owf.grails.services
 import ozone.owf.grails.domain.*
 
 import grails.test.*
-import org.codehaus.groovy.grails.commons.ApplicationHolder
+import grails.util.Holders
 
 class ServiceModelServiceTests extends GrailsUnitTestCase {
     def serviceModelService
