@@ -26,8 +26,11 @@ class DashboardServiceTests {
     def stack
     def stackForUpdate
 	def pwdCounter
+  def realAccountService
 
 	void setUp() {
+    realAccountService = accountService
+
 		def acctService = new AutoLoginAccountService()
         person = Person.build(username:'testUserDashboardServiceTesting', userRealName: 'foo', enabled:true)
         person.save()
@@ -49,6 +52,12 @@ class DashboardServiceTests {
         person.delete()
         stack.delete()
         stackForUpdate.delete()
+
+
+        dashboardService.accountService = realAccountService
+        personWidgetDefinitionService.accountService = realAccountService
+        widgetDefinitionService.accountService = realAccountService
+        accountService = realAccountService
 	}
 
     private generatePostParamsTestDBWithStack() {
