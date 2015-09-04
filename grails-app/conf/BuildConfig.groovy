@@ -78,7 +78,7 @@ def warExcludes = [
                     'WEB-INF/lib/jsp-api-*.jar',
                     'WEB-INF/lib/standard-*.jar',
                     'WEB-INF/lib/core-*.jar',
-                    'WEB-INF/lib/log4j-*.jar',
+                    //'WEB-INF/lib/log4j-*.jar',
                     //'WEB-INF/lib/spring-expression-*.jar',
                     'plugins/**',
 
