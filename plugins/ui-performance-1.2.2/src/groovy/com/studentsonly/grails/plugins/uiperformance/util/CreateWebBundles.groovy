@@ -1,7 +1,7 @@
 package com.studentsonly.grails.plugins.uiperformance.util
 
 import grails.util.GrailsUtil
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Holders
 import org.codehaus.groovy.grails.commons.cfg.ConfigurationHelper
 
 class CreateWebBundles {
@@ -82,7 +82,7 @@ class CreateWebBundles {
     def classLoader = Thread.currentThread().contextClassLoader
 //    def config = new ConfigSlurper(GrailsUtil.environment).parse(classLoader.loadClass('Config'))
     ConfigurationHelper.loadConfigFromClasspath()
-    def config = ConfigurationHolder.config
+    def config = Holders.config
 
     //ConfigurationHelper.initConfig(config, null, classLoader)
 

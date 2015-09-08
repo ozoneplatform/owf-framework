@@ -12,7 +12,7 @@ import org.carrot2.labs.smartsprites.message.Message
 import org.carrot2.labs.smartsprites.message.Message.MessageLevel
 import org.carrot2.labs.smartsprites.message.MessageLog
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import grails.util.Holders as CH
 import org.mozilla.javascript.EvaluatorException
 
 import org.springframework.core.io.FileSystemResource

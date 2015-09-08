@@ -82,7 +82,6 @@ class OwfAuditingFilters extends AbstractAuditingFilters {
     	grailsApplication.config.cef.version
     }
 
-	@Override
 	public HttpServletRequest getRequest(){
 		return RequestContextHolder?.getRequestAttributes()?.getRequest()
 	}

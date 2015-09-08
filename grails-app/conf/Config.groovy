@@ -52,6 +52,9 @@ grails.plugin.databasemigration.updateOnStartFileNames  = [
         'changelog.groovy'
 ]
 
+grails.gsp.tldScanPattern='classpath*:/META-INF/*.tld,/WEB-INF/tld/*.tld'
+
+
 stamp{
     audit{
         //the created and edited fields should be present or they won't get added during AST

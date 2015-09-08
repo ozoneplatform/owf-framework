@@ -57,7 +57,14 @@ Thumbs.db
 /*.tmproj
 /ivy*
 /eclipse
+
+
+# Plugins that will no longer be in source
+/plugins/tomcat-*
+/plugins/cors-*
 /.idea
 /*.iml
 /*.iws
 /*.ipr
+
+
