@@ -1,10 +1,10 @@
 language: groovy
 
 jdk:
-- openjdk7
+- openjdk8
 
 env:
-  - GRAILS_VERSION=2.3.7
+  - GRAILS_VERSION=2.4.0
 
 before_install:
 - rm -rf ~/.gvm
