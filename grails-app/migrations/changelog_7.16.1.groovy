@@ -1,4 +1,10 @@
 databaseChangeLog = {
+    changeSet(author: "owf", id: "7.16.1-0", dbms:"mssql", context: "create, upgrade, 7.16.1") {
+        comment(text="allow role inserts")
+        sql ( text = """
+            SET IDENTITY_INSERT [dbo].[role] ON
+        """)
+    }
 
     changeSet(author: 'owf', id: '7.16.1-1', dbms: 'mysql, hsqldb, oracle, mssql, postgresql', context: 'create, upgrade, 7.16.1') {
         insert(tableName: "role") {
@@ -14,6 +20,13 @@ databaseChangeLog = {
             column(name: "id", value: "27")
             column(name: "version", value: "1")
         }
+    }
+
+    changeSet(author: "owf", id: "7.16.1-2", dbms:"mssql", context: "create, upgrade, 7.16.1") {
+        comment(text="allow role inserts")
+        sql ( text = """
+            SET IDENTITY_INSERT [dbo].[role] OFF
+        """)
     }
 
     changeSet(author: 'owf', id: "7.16.1-2", context: "create, 7.16.1", dbms: 'postgresql') {
