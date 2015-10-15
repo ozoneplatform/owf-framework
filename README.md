@@ -2,25 +2,29 @@
  
 ## Description
 
-The OZONE Widget Framework (OWF) is a web application for composing other lightweight web applications called "widgets".  It's basically a glorified web portal engine, with the unusual characteristic that the content within the portal (i.e. the widgets) is decentralized.  It includes a secure, in-browser, pub-sub eventing system, allowing widgets from different domains to share information.  The combination of decentralized content and in-browser messaging makes OWF particularly suited for large distributed enterprises with legacy stovepipes that need to combine capability "at the glass".
+The OZONE Widget Framework (OWF) is a framework that allows data from different servers to communicate inside a browser window without sending information back to the respective servers. This unique capability allows the OWF web portal to offer decentralized data manipulation. It includes a secure, in-browser, pub-sub eventing system which allows widgets from different domains to share information. The combination of decentralized content and in-browser messaging makes OWF particularly suited for large distributed enterprises with legacy stovepipes that need to combine capability. Use it to quickly link applications and make composite tools.
+
  
 ## Screenshots
 
-![Launch Menu](http://i.imgur.com/RuUyn.png)
-
-![Graphing](http://i.imgur.com/8uZs1.png)
-
-![Dashboards](http://i.imgur.com/7FFlu.png)
-
+![My Apps Menu](https://github.com/ozoneplatform/owf-omp-docs/blob/master/Images/MyAppsMenu.png)
+**My Apps Menu**
+All of a user's applications appear on the menu. To use one, drag it to the dashboard.
+![Desktop Layout](https://github.com/ozoneplatform/owf-omp-docs/blob/master/Images/DesktopDashboard.png)
+**Desktop Dashboard**
+This is a desktop dashboard. Users can move widgets to useful locations on the screen. 
+![Tabbed Dashboards](https://github.com/ozoneplatform/owf-omp-docs/blob/master/Images/TabbedLayout.png)
+**Tabbed Dashboards**
+Tabbed dashboards allow widgets to open on separate tabs. 
 ## Technology components
-For Version 7 of OWF, the front-end user interface uses Ext JS, and the back-end uses Grails.  User preferences are stored in a relational database - anything supported by Hibernate.  Authentication of users is a modular function provided by Spring Security.  There is a re-factoring effort planned for 2013 to improve performance, modularity, and maintainability, which is expected to eliminate the dependency on Grails and Ext JS.
+For OWF Version 7.17.0, the front-end user interface uses JavaScript, and the back-end uses Grails.  User preferences are stored in a relational database - anything supported by Hibernate.  Authentication of users is a modular function provided by Spring Security.  
  
  
 ## Browser Support
-Numbered releases are tested on IE7, IE8, IE9, Firefox 3.6 and the latest public version of Firefox.  Some of the developers use Safari or Chrome, so generally it works well with those browsers also.
+Numbered releases are tested on IE7, IE9, Firefox 17 and Chrome 33. 
  
 ## Copyrights
-> Software (c) 2012 [Next Century Corporation](http://www.nextcentury.com/ "Next Century")
+> Software (c) 2015 [Next Century Corporation](http://www.nextcentury.com/ "Next Century")
 
 > Portions (c) 2009 [TexelTek Inc.](http://www.texeltek.com/ "TexelTek")
 
@@ -36,9 +40,9 @@ Released under the [Apache License, Version 2](http://www.apache.org/licenses/LI
 
 [ozoneplatform-users](https://groups.google.com/forum/?fromgroups#!forum/ozoneplatform-users) : This list is for users, for questions about the platform, for feature requests, for discussions about the platform and its roadmap, etc.
 
-[ozoneplatform-dev](https://groups.google.com/forum/?fromgroups#!forum/ozoneplatform-dev) : This list is for the development community interested in extending or contributing to the platform.
+[ozoneplatform-dev](https://groups.google.com/forum/?fromgroups#!forum/ozoneplatform-dev) : This deprecated list provides historical information relating to extending the platform. It is no longer maintained but old posts often serve as resources for developers new to the platform. 
 
-[ozoneplatform-announcements](https://groups.google.com/forum/?fromgroups#!forum/ozoneplatform-announce) : This list is for announcements as new versions are released, technology refreshes are performed, or other relevant information as needed to be released.
+[Support Guidance] (https://github.com/ozoneplatform/owf-framework/wiki/Support-Guidance) : Provides information about resources including related projects.
  
 ### OWF GOSS Board
 OWF started as a project at a single US Government agency, but developed into a collaborative project spanning multiple federal agencies.  Overall project direction is managed by "The OWF Government Open Source Software Board"; i.e. what features should the core team work on next, what patches should get accepted, etc.  Gov't agencies wishing to be represented on the board should check http://owfgoss.org for more details.  Membership on the board is currently limited to Government agencies that are using OWF and have demonstrated willingness to invest their own energy and resources into developing it as a shared resource of the community.  At this time, the board is not considering membership for entities that are not US Government Agencies, but we would be willing to discuss proposals.
@@ -53,37 +57,10 @@ Contributions from government agencies do not need to have a CLA on file, but do
  
 Government agencies are encouraged to submit contributions as pull requests on GitHub.  If your agency cannot use GitHub, contributions can be emailed as patches to goss-support@owfgoss.org.
  
-### Roadmap
- 
-There is work underway to re-factor OWF to use OSGi on the back end, and eliminate the dependency on Ext JS for the front-end.  Multiple alphas have been released, and announced on [ozoneplatform-announce](https://groups.google.com/forum/?fromgroups#!forum/ozoneplatform-announce).  Although we initially intended a release for June 2013, we're revisiting our design to make sure it is fully scalable and enterprise-ready, both for OWF itself and for other capabilities built on top of the services of what we're calling _ozoneplatform_.  Watch [ozoneplatform-announce](https://groups.google.com/forum/?fromgroups#!forum/ozoneplatform-announce), as well as this page, for further information as to specific timelines and availability of alphas.
- 
 ### Related projects
- 
-#### OWF Mobile
-The US Army has done some work on a redesigned interface to OWF - particularly suited to tablet devices.  This is not part of the core project.  Yet.
- 
-#### OWF-Touchscreen
-The Army has also done work on a redesigned interface for touchscreen devices.  This is not part of the core project.  Yet.
- 
+
 #### OZONE Marketplace
 A "sister project" of OWF.  Marketplace is a search engine for "widgets", effectively the "apps store" for OWF.  This project was under heavy re-factoring in the fall of 2012 and is not in a state where it is ready to be released as open source, but should be expected to be released sometime in 2013.  US Government agencies can get Marketplace from OWFGOSS.org.
  
-#### OZONE Synapse
-A "sister project" of OWF.  Synapse provides a data-query/caching layer that is an optional add-on to OWF.  US Government agencies can get Synapse from OWFGOSS.org.
 
-#### Common Map Widget API
-(CMAPI) is a specification that enables the interaction of data search/manipulation widgets from any provider with map widgets from any other provider by providing a standard way for the widgets to be able to communicate over some pre-defined OWF channels.  Visit the CMAPI [home page](http://www.cmwapi.org). 
-
-#### Extensible Map Platform
-An open  technology stack that implements the CMAPI and provides map widget functionality that programs can use as-is, or extend for their particular needs.  The stack includes the following:
-
->A fully functional open source map widget that is designed to be extensible by other programs for their particular needs, and currently provides Google Earth, OpenLayers, Cesium and WorldWind renderers 
-
->A mil-std 2525 symbology renderer widget that can be extended to non mil-std symbols
-
->JavaScript library implementation of the CMAPI that can be used to make both map widgets and data widgets CMAPI conformant 
-
->JavaScript library for GeoJSON to KML conversions
-
->Ecosystem of map drawing tools that work with any CMAPI (v1.2 or later) conformant map widget
 
