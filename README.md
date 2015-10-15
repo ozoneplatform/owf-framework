@@ -69,7 +69,7 @@ Government agencies are encouraged to submit contributions as pull requests on G
 ### Related projects
 
 #### OZONE Marketplace
-A "sister project" of OWF.  Marketplace is a search engine for "widgets", effectively the "apps store" for OWF.  This project was under heavy re-factoring in the fall of 2012 and is not in a state where it is ready to be released as open source, but should be expected to be released sometime in 2013.  US Government agencies can get Marketplace from OWFGOSS.org.
+A "sister project" of OWF, [Marketplace](https://github.com/ozoneplatform/omp-marketplace) is a search engine for "widgets", effectively the "apps store" for OWF.  
  
 
 
