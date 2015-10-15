@@ -8,14 +8,23 @@ The OZONE Widget Framework (OWF) is a framework that allows data from different 
 ## Screenshots
 
 ![My Apps Menu](https://github.com/ozoneplatform/owf-omp-docs/blob/master/Images/MyAppsMenu.png)
+
 **My Apps Menu**
+
 All of a user's applications appear on the menu. To use one, drag it to the dashboard.
+
 ![Desktop Layout](https://github.com/ozoneplatform/owf-omp-docs/blob/master/Images/DesktopDashboard.png)
+
 **Desktop Dashboard**
+
 This is a desktop dashboard. Users can move widgets to useful locations on the screen. 
+
 ![Tabbed Dashboards](https://github.com/ozoneplatform/owf-omp-docs/blob/master/Images/TabbedLayout.png)
+
 **Tabbed Dashboards**
+
 Tabbed dashboards allow widgets to open on separate tabs. 
+
 ## Technology components
 For OWF Version 7.17.0, the front-end user interface uses JavaScript, and the back-end uses Grails.  User preferences are stored in a relational database - anything supported by Hibernate.  Authentication of users is a modular function provided by Spring Security.  
  
