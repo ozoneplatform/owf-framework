@@ -45,14 +45,15 @@ Released under the [Apache License, Version 2](http://www.apache.org/licenses/LI
  
 ## Community
 
+[Support Guidance] (https://github.com/ozoneplatform/owf-framework/wiki/Support-Guidance): Provides information about resources including related projects.
+
 ### Google Groups
 
 [ozoneplatform-users](https://groups.google.com/forum/?fromgroups#!forum/ozoneplatform-users) : This list is for users, for questions about the platform, for feature requests, for discussions about the platform and its roadmap, etc.
 
 [ozoneplatform-dev](https://groups.google.com/forum/?fromgroups#!forum/ozoneplatform-dev) : This deprecated list provides historical information relating to extending the platform. It is no longer maintained but old posts often serve as resources for developers new to the platform. 
 
-[Support Guidance] (https://github.com/ozoneplatform/owf-framework/wiki/Support-Guidance) : Provides information about resources including related projects.
- 
+
 ### OWF GOSS Board
 OWF started as a project at a single US Government agency, but developed into a collaborative project spanning multiple federal agencies.  Overall project direction is managed by "The OWF Government Open Source Software Board"; i.e. what features should the core team work on next, what patches should get accepted, etc.  Gov't agencies wishing to be represented on the board should check http://owfgoss.org for more details.  Membership on the board is currently limited to Government agencies that are using OWF and have demonstrated willingness to invest their own energy and resources into developing it as a shared resource of the community.  At this time, the board is not considering membership for entities that are not US Government Agencies, but we would be willing to discuss proposals.
  
@@ -69,7 +70,7 @@ Government agencies are encouraged to submit contributions as pull requests on G
 ### Related projects
 
 #### OZONE Marketplace
-A "sister project" of OWF, [Marketplace](https://github.com/ozoneplatform/omp-marketplace) is a search engine for "widgets", effectively the "apps store" for OWF.  
+A sister project of OWF, [Marketplace](https://github.com/ozoneplatform/omp-marketplace) is a search engine for "widgets", effectively the "apps store" for OWF.  
  
 
 
