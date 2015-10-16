@@ -11,22 +11,25 @@ The OZONE Widget Framework (OWF) is a framework that allows data from different 
 
 **My Apps Menu**
 
-All of a user's applications appear on the menu. To use one, drag it to the dashboard.
+All of a user's applications appear on this menu. 
 
 ![Desktop Layout](https://github.com/ozoneplatform/owf-omp-docs/blob/master/Images/DesktopDashboard.png)
 
-**Desktop Dashboard**
+**Desktop Layout**
 
-This is a desktop dashboard. Users can move widgets to useful locations on the screen. 
+This is a desktop layout. Users can move widgets to useful locations on the screen. 
 
-![Tabbed Dashboards](https://github.com/ozoneplatform/owf-omp-docs/blob/master/Images/TabbedLayout.png)
+![Tabbed Layout](https://github.com/ozoneplatform/owf-omp-docs/blob/master/Images/TabbedLayout.png)
 
-**Tabbed Dashboards**
+**Tabbed Layout**
 
-Tabbed dashboards allow widgets to open on separate tabs. 
+Tabbed layouts allow widgets to open on separate tabs. 
+
+Using the App Builder, users can design dashboards that incorporate multiple layouts. You see desktop and tabbed layout examples above. You can also incorporate accordion, portal and fit-pane layouts into each dashboard.
+
 
 ## Technology components
-For OWF Version 7.17.0, the front-end user interface uses JavaScript, and the back-end uses Grails.  User preferences are stored in a relational database - anything supported by Hibernate.  Authentication of users is a modular function provided by Spring Security.  
+For OWF Version 7.16.0, the front-end user interface uses JavaScript, and the back-end uses Grails.  User preferences are stored in a relational database - anything supported by Hibernate.  Authentication of users is a modular function provided by Spring Security.  
  
  
 ## Browser Support
@@ -35,7 +38,7 @@ Numbered releases are tested on IE7, IE9, Firefox 17 and Chrome 33.
 ## Copyrights
 > Software (c) 2015 [Next Century Corporation](http://www.nextcentury.com/ "Next Century")
 
-> Portions (c) 2009 [TexelTek Inc.](http://www.texeltek.com/ "TexelTek")
+> Portions (c) 2009 TexelTek Inc.
 
 > The United States Government has unlimited rights in this software, pursuant to the contracts under which it was developed.  
  
@@ -60,7 +63,7 @@ OWF started as a project at a single US Government agency, but developed into a 
 ### Contributions
 
 #### Non-Government
-Contributions to the baseline project from outside the US Federal Government should be submitted as a pull request to the core project on GitHub.  Before patches will be accepted by the core project, contributors have a signed [Contributor License Agreement](https://www.ozoneplatform.org/ContributorLicenseAgreement1-3OZONE.docx) on file with the core team.  If you or your company wish your copyright in your contribution to be annotated in the project documentation (such as this README), then your pull request should include that annotation.
+Contributions to the baseline project from outside the US Federal Government should be submitted as a pull request to the core project on GitHub.  Before patches will be accepted by the core project, contributions are reviewed by the core team, see [Contributor Guidelines](https://github.com/ozoneplatform/owf-framework/blob/master/CONTRIBUTING.md).  If you or your company wish your copyright in your contribution to be annotated in the project documentation (such as this README), then your pull request should include that annotation.
  
 #### Government
 Contributions from government agencies do not need to have a CLA on file, but do require verification that the government has unlimited rights to the contribution.  An email to goss-support@owfgoss.org is sufficient, stating that the contribution was developed by an employee of the United States Government in the course of his or her duties. Alternatively, if the contribution was developed by a contractor, the email should provide the name of the Contractor, Contract number, and an assertion that the contract included the standard "Unlimited rights" clause specified by [DFARS 252.227.7014](http://www.acq.osd.mil/dpap/dars/dfars/html/current/252227.htm#252.227-7014) "Rights in noncommercial computer software and noncommercial computer software documentation".
