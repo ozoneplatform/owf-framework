@@ -11,7 +11,7 @@ before_install:
 - curl -s get.gvmtool.net > ~/install_gvm.sh
 - chmod 775 ~/install_gvm.sh
 - ~/install_gvm.sh
-- echo "gvm_auto_answer=true" > ~/.gvm/etc/config
+- echo "sdkman_auto_answer=true" > ~/.gvm/etc/config
 - source ~/.gvm/bin/gvm-init.sh
 - gvm install grails $GRAILS_VERSION || true
 

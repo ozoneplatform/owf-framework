@@ -199,7 +199,8 @@ databaseChangeLog = {
   changeSet(author: "owf", id: "4.0.0-5", dbms: "postgresql", context: "sampleData, 4.0.0-sampleData") {
       comment(text="deleting old sample data")
 
-      delete(tableName: "role_people")
+      // DEPRECATED delete as of 7.16.1 where role_people table is removed.
+      // delete(tableName: "role_people")
       delete(tableName: "role")
       delete(tableName: "requestmap")
       delete(tableName: "preference")
@@ -220,7 +221,8 @@ databaseChangeLog = {
     changeSet(author: "owf", id: "4.0.0-5", dbms: "h2,mysql,mssql,oracle", context: "sampleData, 4.0.0-sampleData") {
       comment(text="deleting old sample data")
 
-      delete(tableName: "role_people")
+      // DEPRECATED delete as of 7.16.1 where role_people table is removed.
+      // delete(tableName: "role_people")
       delete(tableName: "role")
       delete(tableName: "requestmap")
       delete(tableName: "preference")
@@ -241,7 +243,8 @@ databaseChangeLog = {
   changeSet(author: "owf", id: "4.0.0-5", dbms: "hsqldb", context: "sampleData, 4.0.0-sampleData") {
       comment(text="deleting old sample data")
 
-      delete(tableName: "role_people")
+      // DEPRECATED delete as of 7.16.1 where role_people table is removed.
+      // delete(tableName: "role_people")
       //for some reason hsqldb will fail if the role table is not all caps
       delete(tableName: "ROLE")
       delete(tableName: "requestmap")
@@ -3059,32 +3062,29 @@ databaseChangeLog = {
 //      SET IDENTITY_INSERT [dbo].[role_people] ON
 //    """)
 //  }
-  changeSet(author: "owf", id: "4.0.0-31", context: "sampleData, 4.0.0-sampleData") {
-      comment(text="insert new sample data")
-    insert(tableName: "role_people") {
-        column(name: "role_id", valueNumeric: "26")
 
-        column(name: "person_id", valueNumeric: "2")
-    }
+// DEPRECATED changeset don't use reuse this exact id,contect,dbms combo again
+//  changeSet(author: "owf", id: "4.0.0-31", context: "sampleData, 4.0.0-sampleData") {
+//      comment(text="insert new sample data")
+//    insert(tableName: "role_people") {
+//        column(name: "role_id", valueNumeric: "26")
+//
+//        column(name: "person_id", valueNumeric: "2")
+//    }
+//    insert(tableName: "role_people") {
+//        column(name: "role_id", valueNumeric: "26")
+//        column(name: "person_id", valueNumeric: "3")
+//    }
+//    insert(tableName: "role_people") {
+//        column(name: "role_id", valueNumeric: "26")
+//        column(name: "person_id", valueNumeric: "28")
+//    }
+//    insert(tableName: "role_people") {
+//        column(name: "role_id", valueNumeric: "27")
+//        column(name: "person_id", valueNumeric: "1")
+//    }
+//  }
 
-    insert(tableName: "role_people") {
-        column(name: "role_id", valueNumeric: "26")
-
-        column(name: "person_id", valueNumeric: "3")
-    }
-
-    insert(tableName: "role_people") {
-        column(name: "role_id", valueNumeric: "26")
-
-        column(name: "person_id", valueNumeric: "28")
-    }
-
-    insert(tableName: "role_people") {
-        column(name: "role_id", valueNumeric: "27")
-
-        column(name: "person_id", valueNumeric: "1")
-    }
-  }
 // DEPRECATED changeset don't use reuse this exact id,context,dbms combo again
 // changeSet(author: "owf", id: "4.0.0-32", dbms:"mssql", context: "sampleData, 4.0.0-sampleData") {
 //      comment(text="allow identity inserts")
