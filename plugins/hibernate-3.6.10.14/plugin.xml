@@ -1,4 +1,4 @@
-<plugin name='hibernate' version='3.6.10.12' grailsVersion='2.3.2 &gt; *'>
+<plugin name='hibernate' version='3.6.10.14' grailsVersion='2.3.2 &gt; *'>
   <author>Graeme Rocher</author>
   <title>Hibernate 3 for Grails</title>
   <description>Provides integration between Grails and Hibernate 3 through GORM</description>
