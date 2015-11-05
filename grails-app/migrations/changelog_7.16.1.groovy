@@ -1,4 +1,10 @@
 databaseChangeLog = {
+    changeSet(author: "owf", id: "7.16.1-0", dbms:"mssql", context: "create, upgrade, 7.16.1") {
+        comment(text="allow role inserts")
+        sql ( text = """
+            SET IDENTITY_INSERT [dbo].[role] ON
+        """)
+    }
 
     changeSet(author: 'owf', id: '7.16.1-1', dbms: 'mysql, oracle, mssql, postgresql', context: 'create, upgrade, 7.16.1') {
         insert(tableName: "role") {

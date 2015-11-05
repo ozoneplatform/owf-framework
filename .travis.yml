@@ -1,19 +1,19 @@
 language: groovy
 
 jdk:
-- openjdk8
+  - oraclejdk8
 
 env:
-  - GRAILS_VERSION=2.4.0
+  - GRAILS_VERSION=2.4.2
 
 before_install:
-- rm -rf ~/.gvm
-- curl -s get.gvmtool.net > ~/install_gvm.sh
-- chmod 775 ~/install_gvm.sh
-- ~/install_gvm.sh
-- echo "sdkman_auto_answer=true" > ~/.gvm/etc/config
-- source ~/.gvm/bin/gvm-init.sh
-- gvm install grails $GRAILS_VERSION || true
+- rm -rf ~/.sdkman
+- curl -s http://get.sdkman.io > ~/install_sdk.sh
+- chmod 775 ~/install_sdk.sh
+- ~/install_sdk.sh
+- echo "sdkman_auto_answer=true" > ~/.sdkman/etc/config
+- source "$HOME/.sdkman/bin/sdkman-init.sh"
+- sdk install grails $GRAILS_VERSION || true	
 
 branches:
   only:
