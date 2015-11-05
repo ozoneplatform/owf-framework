@@ -227,10 +227,10 @@
         <mkdir dir="${staging.dir}/${owf.security.module}" />
         <mkdir dir="${staging.dir}/etc/tools" />
 
-        <ant antfile="build.xml" dir="${basedir}/tools/TestDbConversion"/>
+<!--         <ant antfile="build.xml" dir="${basedir}/tools/TestDbConversion"/>
         <zip destfile="${basedir}/tools/dbvalidation.zip" >
             <zipfileset dir="${basedir}/tools/TestDbConversion/target" includes="**/*" filemode="744" />
-        </zip>
+        </zip> -->
 
         <copy todir="${staging.dir}/etc/tools" includeEmptyDirs="false">
             <fileset dir="tools">
