@@ -436,8 +436,14 @@
         <copy file="${basedir}/target/owf.war" tofile="${tomcat.dir}/webapps/owf.war" />
         <antcall target='stage-security' />
         <antcall target='stage-extras' />
-        <copy file="LICENSE.txt" tofile="${staging.dir}/LICENSE.txt" />
-        <copy file="COPYRIGHT.txt" tofile="${staging.dir}/COPYRIGHT.txt" />
+
+        <copy todir="${staging.dir}">
+            <fileset dir="${basedir}" includes="LICENSE.txt,NOTICE.txt,README.txt,COPYRIGHT.txt" />
+        </copy>
+
+        <copy todir="${staging.dir}/3rdPartyLicenses">
+            <fileset dir="${basedir}/3rdPartyLicenses" />
+        </copy>
     </target>
 
     <target name="stage-security">
