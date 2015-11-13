@@ -62,6 +62,7 @@ Thumbs.db
 # Plugins that will no longer be in source
 /plugins/tomcat-*
 /plugins/cors-*
+/plugins/ozone-auditing-*
 /.idea
 /*.iml
 /*.iws

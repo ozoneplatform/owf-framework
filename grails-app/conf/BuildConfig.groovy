@@ -108,10 +108,10 @@ grails.project.dependency.resolution = {
         grailsPlugins()
         grailsHome()
         mavenLocal()
+        mavenCentral()
         mavenRepo 'http://maven.restlet.org'
         mavenRepo 'http://repository.opencastproject.org/nexus/content/repositories/public'
         grailsCentral()
-        mavenCentral()
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
@@ -166,7 +166,7 @@ grails.project.dependency.resolution = {
         compile ':database-migration:1.4.0'
         compile ':hibernate:3.6.10.14'
         compile 'org.ozoneplatform:ozone-appconfig:0.9'
-        compile 'org.ozoneplatform:ozone-auditing:1.2.1'
+        compile 'org.ozoneplatform:ozone-auditing:1.3.1'
         compile 'org.ozoneplatform:ozone-messaging:1.19'
         compile ':codenarc:0.20'
         compile ':pretty-time:2.1.3.Final-1.0.1'
