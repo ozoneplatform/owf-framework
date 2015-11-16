@@ -447,18 +447,24 @@
     </target>
 
     <target name="stage-security">
+        <mkdir dir="${staging.dir}/${owf.security.module}" />
+
         <!-- Unzip sample Spring configuration files -->
         <unzip src="${staging.dir}/${owf.security.module}-project-${owf.security.rev}.zip"
                 dest="${staging.dir}/${owf.security.module}">
             <patternset>
-                <include name="owf-security-${owf.security.rev}/src/main/resources/spring/**" />
+                <include name="src/main/resources/spring/**" />
             </patternset>
             <filtermapper>
-                <replacestring from="owf-security-${owf.security.rev}/src/main/resources/spring/" to="" />
+                <replacestring from="src/main/resources/spring/" to="" />
             </filtermapper>
         </unzip>
 
-        <delete dir="${staging.dir}/${owf.security.module}/owf-security-${owf.security.rev}" />
+        <!-- this will be an empty directory tree due to the filtermapper above -->
+        <delete dir="${staging.dir}/${owf.security.module}/src" />
+
+        <copy file="${staging.dir}/${owf.security.module}-project-${owf.security.rev}.zip"
+            tofile="${staging.dir}/${owf.security.module}/${owf.security.module}-project.zip" />
 
         <!-- Add default sample Spring configuration to Tomcat CLASSPATH -->
         <copy todir="${tomcat.dir}/lib">

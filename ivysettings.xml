@@ -9,9 +9,9 @@
             </filesystem>
             <ibiblio name="nexus" m2compatible="true" root="http://repo1.maven.org/maven2"/>
 
-            <url name="ozone-security">
-                <artifact pattern="https://github.com/ozoneplatform/owf-security/archive/[revision].[ext]" />
-            </url>
+            <!--<url name="ozone-security">-->
+                <!--<artifact pattern="https://github.com/ozoneplatform/owf-security/archive/[revision].[ext]" />-->
+            <!--</url>-->
 <!--             <url name="ozoneplatform">
                 <artifact pattern="https://github.com/ozoneplatform/[module]/archive/[revision].[ext]" />
             </url> -->
