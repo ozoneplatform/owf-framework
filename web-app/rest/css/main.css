@@ -1,0 +1,402 @@
+/*
+ * HTML5 Boilerplate
+ *
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ */
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+/* line 13, sass/main.scss */
+a, a:hover, a:focus {
+  text-decoration: none;
+}
+
+/* ==========================================================================
+   Chrome Frame prompt
+   ========================================================================== */
+/* line 21, sass/main.scss */
+.chromeframe {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+/* ====== colors ====== */
+/* ====== size ====== */
+/* line 74, sass/main.scss */
+body {
+  background-color: #e6e9ed;
+  color: #434a54;
+}
+
+/* line 79, sass/main.scss */
+nav > a {
+  display: block;
+  padding: 1em;
+  color: #aab2bd;
+  border-bottom: 1px solid #656d78;
+}
+/* line 86, sass/main.scss */
+nav > a:hover, nav > a:focus {
+  background-color: #e6e9ed;
+  color: #434a54;
+}
+/* line 91, sass/main.scss */
+nav > a:last-child {
+  border-bottom: 0px;
+}
+
+/* line 96, sass/main.scss */
+.sidebar {
+  position: fixed;
+  width: 22em;
+  height: 100%;
+  background: #434a54;
+  overflow-y: scroll;
+  z-index: 4;
+}
+
+/* line 105, sass/main.scss */
+.doc-content {
+  position: absolute;
+  width: 100%;
+  padding: 1em 3em 2em 2em;
+  padding-left: 25em;
+}
+/* line 111, sass/main.scss */
+.doc-content > h3 {
+  margin-top: 0px;
+}
+
+/* ====== resource styles ====== */
+/* line 117, sass/main.scss */
+.resource {
+  padding: 1em;
+  margin: 3em 0;
+  background: #fff;
+}
+/* line 122, sass/main.scss */
+.resource h3 {
+  margin: 0 0 30px 0;
+}
+
+/* line 127, sass/main.scss */
+.method-verb, .resource-uri, .method-info {
+  padding: 0.75em;
+}
+
+/* line 131, sass/main.scss */
+.resource-uri {
+  font-weight: bold;
+}
+
+/* line 135, sass/main.scss */
+.method-verb {
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 1px #aab2bd;
+  -webkit-transition: -webkit-background-color 0.2s ease-out;
+  -moz-transition: -moz-background-color 0.2s ease-out;
+  -o-transition: -o-background-color 0.2s ease-out;
+  transition: background-color 0.2s ease-out;
+}
+
+/* line 144, sass/main.scss */
+.resource-endpoint {
+  margin: 1em 0;
+  border: 1px solid #e6e9ed;
+  -webkit-transition: -webkit-box-shadow 0.2s ease-out;
+  -moz-transition: -moz-box-shadow 0.2s ease-out;
+  -o-transition: -o-box-shadow 0.2s ease-out;
+  transition: box-shadow 0.2s ease-out;
+}
+/* line 148, sass/main.scss */
+.resource-endpoint .row {
+  border-bottom: 1px solid #e6e9ed;
+}
+/* line 153, sass/main.scss */
+.resource-endpoint:hover {
+  box-shadow: 0px 0px 10px #434a54;
+}
+
+/* line 159, sass/main.scss */
+.resource-endpoint-get .method-verb {
+  background-color: #a0d468;
+}
+/* line 164, sass/main.scss */
+.resource-endpoint-get:hover .method-verb {
+  background-color: #8cc152;
+}
+
+/* line 171, sass/main.scss */
+.resource-endpoint-post .method-verb {
+  background-color: #5d9cec;
+}
+/* line 176, sass/main.scss */
+.resource-endpoint-post:hover .method-verb {
+  background-color: #4a89dc;
+}
+
+/* line 183, sass/main.scss */
+.resource-endpoint-put .method-verb {
+  background-color: #ffce54;
+}
+/* line 188, sass/main.scss */
+.resource-endpoint-put:hover .method-verb {
+  background-color: #f6bb42;
+}
+
+/* line 195, sass/main.scss */
+.resource-endpoint-delete .method-verb {
+  background-color: #fc6e51;
+}
+/* line 200, sass/main.scss */
+.resource-endpoint-delete:hover .method-verb {
+  background-color: #e9573f;
+}
+
+/* line 207, sass/main.scss */
+.resource-endpoint-deprecated .method-verb {
+  background-color: #ccd1d9;
+}
+/* line 212, sass/main.scss */
+.resource-endpoint-deprecated:hover .method-verb {
+  background-color: #ccd1d9;
+}
+
+/* line 218, sass/main.scss */
+.resource-endpoint-details {
+  padding: 0.75em;
+  display: none;
+}
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+/*
+ * Image replacement
+ */
+/* line 231, sass/main.scss */
+.ir {
+  background-color: transparent;
+  border: 0;
+  overflow: hidden;
+  /* IE 6/7 fallback */
+  *text-indent: -9999px;
+}
+
+/* line 239, sass/main.scss */
+.ir:before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 150%;
+}
+
+/*
+ * Hide from both screenreaders and browsers: h5bp.com/u
+ */
+/* line 250, sass/main.scss */
+.hidden {
+  display: none !important;
+  visibility: hidden;
+}
+
+/*
+ * Hide only visually, but have it available for screenreaders: h5bp.com/v
+ */
+/* line 259, sass/main.scss */
+.visuallyhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+/*
+ * Extends the .visuallyhidden class to allow the element to be focusable
+ * when navigated to via the keyboard: h5bp.com/p
+ */
+/* line 276, sass/main.scss */
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+}
+
+/*
+ * Hide visually and from screenreaders, but maintain layout
+ */
+/* line 289, sass/main.scss */
+.invisible {
+  visibility: hidden;
+}
+
+/*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    `contenteditable` attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+/* line 306, sass/main.scss */
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
+}
+
+/* line 311, sass/main.scss */
+.clearfix:after {
+  clear: both;
+}
+
+/*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+/* line 320, sass/main.scss */
+.clearfix {
+  *zoom: 1;
+}
+
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+@media only screen and (min-width: 35em) {
+  /* Style adjustments for viewports that meet the condition */
+}
+@media print,
+(-o-min-device-pixel-ratio: 5/4),
+(-webkit-min-device-pixel-ratio: 1.25),
+(min-resolution: 120dpi) {
+  /* Style adjustments for high resolution devices */
+}
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: h5bp.com/r
+   ========================================================================== */
+@media print {
+  /* line 347, sass/main.scss */
+  * {
+    background: transparent !important;
+    color: #000 !important;
+    /* Black prints faster: h5bp.com/s */
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* line 355, sass/main.scss */
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  /* line 359, sass/main.scss */
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
+  /* line 363, sass/main.scss */
+  abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+
+  /*
+  * Don't show links for images, or javascript/internal links
+  */
+  /* line 373, sass/main.scss */
+  .ir a:after,
+  a[href^="javascript:"]:after,
+  a[href^="#"]:after {
+    content: "";
+  }
+
+  /* line 378, sass/main.scss */
+  pre,
+  blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+
+  /* line 383, sass/main.scss */
+  thead {
+    display: table-header-group;
+    /* h5bp.com/t */
+  }
+
+  /* line 388, sass/main.scss */
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+
+  /* line 392, sass/main.scss */
+  img {
+    max-width: 100% !important;
+  }
+
+  @page {
+    margin: 0.5cm;
+}
+
+  /* line 402, sass/main.scss */
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* line 408, sass/main.scss */
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+
+  /* line 412, sass/main.scss */
+  .sidebar {
+    display: none;
+  }
+
+  /* line 416, sass/main.scss */
+  .doc-content {
+    position: static;
+    width: 100%;
+    padding: 0em;
+  }
+
+  /* line 422, sass/main.scss */
+  .resource {
+    page-break-after: always;
+  }
+
+  /* line 426, sass/main.scss */
+  .resource-endpoint-details {
+    display: block;
+  }
+}
