@@ -110,7 +110,7 @@ grails.project.dependency.resolution = {
         mavenLocal()
         mavenCentral()
         mavenRepo 'http://maven.restlet.org'
-        mavenRepo 'http://repository.opencastproject.org/nexus/content/repositories/public'
+        //mavenRepo 'http://nexus.opencast.org/nexus/content/groups/public'
         grailsCentral()
     }
     dependencies {
@@ -153,9 +153,14 @@ grails.project.dependency.resolution = {
                 'net.sf.ehcache:ehcache-jgroupsreplication:1.4',
                 'net.sourceforge.jtds:jtds:1.2.4'
 
+        //These dependendencies can no longer be found in maven. They are
+        //now included directly in the lib folder
+        /*
         compile 'org.igniterealtime.smack:smack:3.3.1',
-                'org.igniterealtime.smack:smackx:3.3.1',
-                'org.apache.httpcomponents:httpcore:4.1.1',
+                'org.igniterealtime.smack:smackx:3.3.1'
+        */
+
+        compile 'org.apache.httpcomponents:httpcore:4.1.1',
                 'org.apache.httpcomponents:httpclient:4.1.1'
 
         compile("org.ozoneplatform:ozone-security:${config.owf.security.rev}") {
@@ -167,7 +172,6 @@ grails.project.dependency.resolution = {
         compile ':hibernate:3.6.10.14'
         compile 'org.ozoneplatform:ozone-appconfig:0.9'
         compile 'org.ozoneplatform:ozone-auditing:1.3.1'
-        compile 'org.ozoneplatform:ozone-messaging:1.19'
         compile ':codenarc:0.20'
         compile ':pretty-time:2.1.3.Final-1.0.1'
         build   ':tomcat:8.0.22'
@@ -176,5 +180,9 @@ grails.project.dependency.resolution = {
         compile ':quartz:1.0.1'
         runtime ':cors:1.1.8' // OP-3931
         compile ':yammer-metrics:3.0.1-2'
+
+        compile('org.ozoneplatform:ozone-messaging:1.19') {
+            excludes([group: 'org.igniterealtime.smack'])
+        }
     }
 }
