@@ -161,14 +161,18 @@ class SecurityFilters {
         try {
             def personInDB = accountService.getLoggedInUser()
 
-            def groupsToRemove = userGroupNames.size() == 0 ? [] : Group.withCriteria {
+            def groupsToRemove = Group.withCriteria {
                 eq('automatic', true)
                 people {
                     eq('username', username)
                 }
-                not {
-                    'in'('name', userGroupNames)
+
+                if (userGroupNames.size()) {
+                    not {
+                        'in'('name', userGroupNames)
+                    }
                 }
+
                 projections {
                     property('id')
                 }
