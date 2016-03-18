@@ -29,6 +29,9 @@
             <div class="item store">
                 <a href="#/config/store">Store</a>
             </div>
+            <div class="item additional">
+                <a href="#/config/ADDITIONAL_CONFIGURATION">Additional Configurations</a>
+            </div>
         </div>
 
         <!--[if lt IE 8]>

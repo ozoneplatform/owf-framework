@@ -1495,7 +1495,9 @@ Ext.define('Ozone.components.dashboard.DashboardContainer', {
                 },
                 scope: this
             },
-            onRoute: {
+            //filter to widgets in the same dashboard, unless cross-dashboard communication
+            //is enabled
+            onRoute: Ozone.config.crossDashboardCommunication ?  null : {
                 fn: function(sender, subscriber, channel, message) {
                     var returnValue = false;
 

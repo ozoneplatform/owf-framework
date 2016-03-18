@@ -10,7 +10,7 @@ public enum OwfApplicationSetting implements ApplicationSetting{
 	CEF_LOG_SWEEP_LOCATION("owf.cef.sweep.log.location"),
 	CEF_LOG_SWEEP_ENABLED("owf.enable.cef.log.sweep"),
     SECURITY_LEVEL("owf.security.level"),
-	
+
     // OP-727
     DISABLE_INACTIVE_ACCOUNTS("owf.disable.inactive.accounts"),
     INACTIVITY_THRESHOLD("owf.inactivity.threshold"),
@@ -31,19 +31,21 @@ public enum OwfApplicationSetting implements ApplicationSetting{
     //OP-2015
     CUSTOM_BACKGROUND_URL("owf.custom.background.url"),
 
-    FREE_WARNING_CONTENT("free.warning.content")
+    FREE_WARNING_CONTENT("free.warning.content"),
+
+    CROSS_DASHBOARD_COMMUNICATION("owf.widgetcomm.cross.dashboard")
 
 	OwfApplicationSetting(String code) {
 		this.code = code;
 	}
-	
+
 	private final String code
-	
+
 
 	public String getCode() {
 		return code
 	}
-	
+
 
 }
 

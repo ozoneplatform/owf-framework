@@ -93,6 +93,9 @@ class ConfigController {
                 this.grailsApplication.config.notifications.xmpp.query.interval ?: 30
             notificationsEnabled =
                 this.grailsApplication.config.notifications.enabled ?: false
+
+            crossDashboardCommunication =
+                this.owfApplicationConfigurationService.getApplicationConfiguration(CROSS_DASHBOARD_COMMUNICATION)?.value.toBoolean()
         }
 
         // whether the show animations user preference exists
