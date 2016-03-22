@@ -1,7 +1,7 @@
 package ozone.owf.grails.filters
 
 import grails.util.Environment
-import grails.util.Holders as AH
+import grails.util.Holders
 import org.codehaus.groovy.grails.web.util.WebUtils
 import org.grails.plugins.metrics.groovy.Timed
 import org.springframework.security.core.context.SecurityContextHolder as SCH
@@ -161,14 +161,18 @@ class SecurityFilters {
         try {
             def personInDB = accountService.getLoggedInUser()
 
-            def groupsToRemove = userGroupNames.size() == 0 ? [] : Group.withCriteria {
+            def groupsToRemove = Group.withCriteria {
                 eq('automatic', true)
                 people {
                     eq('username', username)
                 }
-                not {
-                    'in'('name', userGroupNames)
+
+                if (userGroupNames.size()) {
+                    not {
+                        'in'('name', userGroupNames)
+                    }
                 }
+
                 projections {
                     property('id')
                 }
@@ -207,7 +211,7 @@ class SecurityFilters {
             // Now, we have a list of ids for groups we should remove and groups
             // we should add. Since the owf_group_people table is not managed
             // we're actually dropping to native SQL for the changes.
-            def hSession = AH.application.mainContext.sessionFactory.getCurrentSession()
+            def hSession = Holders.applicationContext.sessionFactory.getCurrentSession()
             def delQuery = "DELETE FROM owf_group_people WHERE person_id = ? AND group_id = ?"
             def addQuery = "INSERT INTO owf_group_people (person_id, group_id) VALUES (?, ?)"
             groupsToRemove.each {
