@@ -118,8 +118,10 @@ class AccountService {
     }
 
     def getLoggedInUserRoles() {
+        def authentication =
+            SCH?.context?.authentication
 
-        return SCH?.context?.authentication?.principal?.authorities
+        return (authentication?.principal?.authorities ?: []) + (authentication?.authorities ?: [])
     }
 
     /**
