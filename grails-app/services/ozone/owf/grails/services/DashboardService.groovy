@@ -1183,7 +1183,8 @@ class DashboardService extends BaseService {
     private def getUniversalNameToGuidMap(universalNameToGuidMap, layoutConfig) {
         def widgets = layoutConfig.widgets
         for(def i = 0; i < widgets?.size(); i++) {
-            if(widgets[i].universalName instanceof String) {
+            def universalName = widgets[i].universalName
+            if(universalName instanceof String && universalName != '') {
                 universalNameToGuidMap[widgets[i].universalName] = widgets[i].widgetGuid
             }
         }
