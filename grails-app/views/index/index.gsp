@@ -84,8 +84,6 @@
             })(Ozone, Ext, jQuery);
         </script>
 
-        <link rel="stylesheet" type="text/css" href="./js-lib/jquery-ui-1.10.3/themes/base/jquery.ui.resizable.css">
-
         <script language="javascript">
             owfdojo.config.dojoBlankHtmlUrl =  './js-lib/dojo-1.5.0-windowname-only/dojo/resources/blank.html';
         </script>
