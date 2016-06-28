@@ -110,8 +110,7 @@ class ConfigController {
             ]);
 
             showAnimations =
-                showAnimationsPreference && showAnimationsPreference.preference.value == 'true' ?
-                    true : false
+                (showAnimationsPreference?.preference?.value == 'true') ? true : false
 
             showHints =
                 (showHintsPreference?.preference == null || showHintsPreference?.preference.value == 'true') ? (true) : (false)
