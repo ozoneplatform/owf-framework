@@ -239,7 +239,6 @@ window.opener = null;
                     owfdojo.xhrPost({
                         url: Ozone.util.contextPath() + "/servlet/SessionServlet",
                         preventCache: true,
-                        sync: true,
                         handleAs: "text",
                         content: {'key': 'showAccessAlert', 'value': 'false'},
                         load: function(response) {
