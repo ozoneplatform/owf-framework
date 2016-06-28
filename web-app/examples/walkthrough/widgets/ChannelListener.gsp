@@ -14,6 +14,9 @@
 	<script type="text/javascript" src="../../../js-lib/ext-4.0.7/ext-all-debug.js"></script>
 	<p:javascript src="owf-widget" pathToRoot="../../../" />
 
+    <!-- Proper IE11 detection -->
+    <script type="text/javascript" src="../../../js-lib/patches/IEDetection.js"></script>
+
 	<!-- The widget itself  -->
 	<script type="text/javascript" src="ChannelListenerPanel.js"></script>
 	<script type="text/javascript">
