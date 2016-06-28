@@ -36,14 +36,15 @@ class Person implements Serializable {
         groups: Group
     ]
 
-    static belongsTo = [Role, Group]
+    static belongsTo = [Group]
 
     static mappedBy = [dashboards: 'user']
 
     //TODO: I think delete-orphan is supposed to be all-delete-orphan
     static mapping = {
         cache true
-        authorities lazy: true, cascade : "delete-orphan", cache: true
+        authorities cache: true,
+            joinTable: [name: 'role_people', key: 'person_id', column: 'role_id']
         groups cache: true
         dashboards lazy: true, cascade : "delete-orphan", cache: true
         personWidgetDefinitions lazy: true, cascade : "delete-orphan", cache: true
