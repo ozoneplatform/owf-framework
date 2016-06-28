@@ -6,5 +6,12 @@
 ;(function() {
     'use strict';
 
-    Ext.isIE = "ActiveXObject" in window;
+    //http://stackoverflow.com/a/23159778
+    //http://stackoverflow.com/a/22082397
+    Ext.isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+
+    //TODO detect IE10 if necessary.  Right now IE10 has isIE === true but there is no
+    //isIE10 flag
+
+    Ext.isIE = Ext.isIE || Ext.isIE11;
 })();
