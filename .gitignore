@@ -57,6 +57,7 @@ Thumbs.db
 /*.tmproj
 /ivy*
 /eclipse
+.*.swp
 
 
 # Plugins that will no longer be in source

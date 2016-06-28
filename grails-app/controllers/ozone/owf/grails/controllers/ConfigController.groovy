@@ -108,8 +108,9 @@ class ConfigController {
                 namespace: "owf",
                 path: "show-hints"
             ]);
+
             showAnimations =
-                (showAnimationsPreference?.preference) ? (true) : (false)
+                (showAnimationsPreference?.preference?.value == 'true') ? true : false
 
             showHints =
                 (showHintsPreference?.preference == null || showHintsPreference?.preference.value == 'true') ? (true) : (false)

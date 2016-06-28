@@ -29,7 +29,7 @@
         $color1: strip-stop(nth($colors, min($lightest-idx, $darkest-idx)));
         $color2: strip-stop(nth($colors, max($lightest-idx, $darkest-idx)));
 
-        //IE doesn't support multiple color stops, so just use the 
+        //IE doesn't support multiple color stops, so just use the
         //lightest and darkest. make sure that the colors are in
         //the same order however
         @include filter-gradient($color1, $color2);
@@ -37,6 +37,7 @@
         //@include background(nth($colors, 1), nth($colors, 2));
         background-image: -webkit-linear-gradient($colors) #{$importance};
         background-image: -moz-linear-gradient($colors) #{$importance};
+        background-image: -ms-linear-gradient($colors) #{$importance};
     }
     @else {
         background-image: none;
@@ -80,9 +81,9 @@
 }
 
 //Handles Frames/nonFrames for IE and Non-IE
-@mixin owf-background-position($importance: $owf_css_not_important, 
+@mixin owf-background-position($importance: $owf_css_not_important,
                                 $isFrameInIE: $owf_frame_is_not_IE,
-                                $border-radius: 1px, 
+                                $border-radius: 1px,
                                 $table: false,
                                 $background-direction: top) {
     $left: 0;
@@ -117,8 +118,8 @@
 
         $left: unquote($left);
         $top: unquote($top);
-    } 
-    background-position: $left $top #{$importance};										
+    }
+    background-position: $left $top #{$importance};
 }
 
 @mixin owf-transparent-background($importance: $owf_css_not_important) {
@@ -145,7 +146,7 @@
 //}
 
 //GRID PANEL
-@mixin owf-grid-panel($importance: $owf_css_not_important, 
+@mixin owf-grid-panel($importance: $owf_css_not_important,
                         $isFrameInIE: $owf_frame_is_not_IE,
                         $includeBodyBorder: true){
     @include owf-panel($active-widget-theme,
@@ -166,10 +167,10 @@
  */
 //PANEL HEADER
 @mixin owf-panel-header($widget_theme: $active-widget-theme,
-                        $importance: $owf_css_not_important, 
-                        $isFrameInIE: $owf_frame_is_not_IE, 
-                        //BORDER PROPERTIES 
-                        $inclHeaderBorder: $owf_incl_header_border, 
+                        $importance: $owf_css_not_important,
+                        $isFrameInIE: $owf_frame_is_not_IE,
+                        //BORDER PROPERTIES
+                        $inclHeaderBorder: $owf_incl_header_border,
                         $headerFullBorder: $owf_no_full_header_border,
                         $applyGradient: $owf-apply-gradient) {
 
@@ -201,18 +202,18 @@
     }
 }
 
-//PANEL 
+//PANEL
 @mixin owf-panel($widget_theme: $active-widget-theme,
-                    $importance: $owf_css_not_important, 
+                    $importance: $owf_css_not_important,
                     $isFrameInIE: $owf_frame_is_not_IE,
-                    //BORDER PROPERTIES 
+                    //BORDER PROPERTIES
                     $inclNonHeaderBorder: $owf_incl_non_header_border,
-                    $inclHeaderBorder: $owf_incl_header_border, 
+                    $inclHeaderBorder: $owf_incl_header_border,
                     $headerFullBorder: $owf_no_full_header_border,
                     $applyGradient : $owf-apply-gradient,
                     $inclBodyBorder: true) {
 
-    @include owf-background-theme-gradient($widget_theme, $applyGradient, $importance); 
+    @include owf-background-theme-gradient($widget_theme, $applyGradient, $importance);
     @if $inclNonHeaderBorder == $owf_incl_non_header_border {
         border-color: getWidgetOuterBorderColor($widget_theme);
     }
@@ -224,9 +225,9 @@
     //overflow: visible;
     .x-panel-header {
         @include owf-panel-header($widget_theme,
-                                    $importance, 
-                                    $isFrameInIE, 
-                                    $inclHeaderBorder, 
+                                    $importance,
+                                    $isFrameInIE,
+                                    $inclHeaderBorder,
                                     $headerFullBorder);
     }
     @if $inclBodyBorder == true {
@@ -254,13 +255,13 @@
  */
 //WINDOW HEADER
 @mixin owf-window-header($widget_theme: $active-widget-theme,
-                            $importance: $owf_css_not_important, 
-                            $isFrameInIE: $owf_frame_is_not_IE, 
-                            //BORDER PROPERTIES 
-                            $inclHeaderBorder: $owf_incl_header_border, 
+                            $importance: $owf_css_not_important,
+                            $isFrameInIE: $owf_frame_is_not_IE,
+                            //BORDER PROPERTIES
+                            $inclHeaderBorder: $owf_incl_header_border,
                             $headerFullBorder: $owf_no_full_header_border) {
 
-    @include owf-background-theme-gradient($widget_theme); 
+    @include owf-background-theme-gradient($widget_theme);
     @include owf-border-radius(true, false);
 
     @if $inclHeaderBorder == $owf_incl_header_border {
@@ -284,14 +285,14 @@
 
 //WINDOW
 @mixin owf-window($widget_theme: $active-widget-theme,
-                    $importance: $owf_css_not_important, 
-                    $isFrameInIE: $owf_frame_is_not_IE, 
-                    //BORDER PROPERTIES 
-                    $inclNonHeaderBorder: $owf_incl_non_header_border, 
-                    $inclHeaderBorder: $owf_incl_header_border, 
+                    $importance: $owf_css_not_important,
+                    $isFrameInIE: $owf_frame_is_not_IE,
+                    //BORDER PROPERTIES
+                    $inclNonHeaderBorder: $owf_incl_non_header_border,
+                    $inclHeaderBorder: $owf_incl_header_border,
                     $headerFullBorder: $owf_no_full_header_border) {
 
-    @include owf-background-theme-gradient($widget_theme, false); 
+    @include owf-background-theme-gradient($widget_theme, false);
 
     @include owf-border-radius;
 
@@ -307,9 +308,9 @@
 
     .x-window-header {
         @include owf-window-header($widget_theme,
-                                    $importance, 
-                                    $isFrameInIE, 
-                                    $inclHeaderBorder, 
+                                    $importance,
+                                    $isFrameInIE,
+                                    $inclHeaderBorder,
                                     $headerFullBorder);
     }
 
@@ -336,13 +337,13 @@
     // setting a transparent background image for IE7 & 8
     // without mousemove events dont fire on the right components
     background-image: theme-background-image($theme-name, 's.gif');
-    
+
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#{$ie-hex-str},endColorstr=#{$ie-hex-str}) #{$importance};
     -ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#{$ie-hex-str},endColorstr=#{$ie-hex-str}) #{$importance};
 }
 
 // ===============================
-// =================== Widget Tool 
+// =================== Widget Tool
 // ===============================
 //TODO: compare with extjs-tool with EXT upgrade
 @mixin owf-tool {
@@ -409,31 +410,31 @@
     .#{$prefix}tool-close {
         background-position: 0 0;
     }
-    
+
     .#{$prefix}tool-minimize {
         background-position: 0 (-$owf-tool-height);
     }
-    
+
     .#{$prefix}tool-maximize {
         background-position: 0 (-$owf-tool-height * 2);
     }
-    
+
     .#{$prefix}tool-restore {
         background-position: 0 (-$owf-tool-height * 3);
     }
-    
+
     .#{$prefix}tool-gear {
         background-position: 0 (-$owf-tool-height * 6);
     }
-    
+
     .#{$prefix}tool-prev {
         background-position: 0 (-$owf-tool-height * 7);
     }
-    
+
     .#{$prefix}tool-next {
         background-position: 0 (-$owf-tool-height * 8);
     }
-    
+
     .#{$prefix}tool-pin {
         background-position: 0 (-$owf-tool-height * 9);
     }
@@ -449,7 +450,7 @@
     .#{$prefix}tool-left {
         background-position: 0 (-$owf-tool-height * 12);
     }
-    
+
     .#{$prefix}tool-help {
         background-position: 0 (-$owf-tool-height * 20);
     }
@@ -481,7 +482,7 @@
     .#{$prefix}tool-down {
         background-position: 0 (-$owf-tool-height * 13);
     }
-    
+
     .#{$prefix}tool-move {
         background-position: 0 (-$owf-tool-height * 25);
     }
@@ -489,7 +490,7 @@
     .#{$prefix}tool-resize {
         background-position: 0 (-$owf-tool-height * 24);
     }
-    
+
     .#{$prefix}tool-collapse {
         background-position: 0 (-$owf-tool-height * 23);
     }
@@ -530,7 +531,7 @@
         .#{$prefix}tool-minimize {
             background-position: (-$owf-tool-width) (-$owf-tool-height);
         }
-    
+
         .#{$prefix}tool-maximize {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 2);
         }
@@ -538,31 +539,31 @@
         .#{$prefix}tool-restore {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 3);
         }
-    
+
         .#{$prefix}tool-gear {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 6);
         }
-    
+
         .#{$prefix}tool-prev {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 7);
         }
-    
+
         .#{$prefix}tool-next {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 8);
         }
-    
+
         .#{$prefix}tool-pin {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 9);
         }
-    
+
         .#{$prefix}tool-unpin {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 10);
         }
-    
+
         .#{$prefix}tool-right {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 11);
         }
-    
+
         .#{$prefix}tool-left {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 12);
         }
@@ -570,15 +571,15 @@
         .#{$prefix}tool-down {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 13);
         }
-    
+
         .#{$prefix}tool-up {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 14);
         }
-    
+
         .#{$prefix}tool-refresh {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 15);
         }
-    
+
         .#{$prefix}tool-plus {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 16);
         }
@@ -610,30 +611,30 @@
         .#{$prefix}tool-collapse {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 23);
         }
-    
+
         .#{$prefix}tool-resize {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 24);
         }
-    
+
         .#{$prefix}tool-move {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 25);
         }
-        
+
         .#{$prefix}tool-expand-bottom,
         .#{$prefix}tool-collapse-bottom {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 13);
         }
-    
+
         .#{$prefix}tool-expand-top,
         .#{$prefix}tool-collapse-top {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 14);
         }
-    
+
         .#{$prefix}tool-expand-left,
         .#{$prefix}tool-collapse-left {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 12);
         }
-    
+
         .#{$prefix}tool-expand-right,
         .#{$prefix}tool-collapse-right {
             background-position: (-$owf-tool-width) (-$owf-tool-height * 11);

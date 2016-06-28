@@ -44,28 +44,29 @@
         <p:javascript src='owf-server'/>
         <!-- include our server bundle, in dev mode a full list of js includes will appear -->
 
+        <!-- Styles that disable all CSS animations.  This element gets removed if animations
+             are enabled -->
+        <style id="disable-css-animations">
+            * {
+                -webkit-transition:    none !important; /* Chrome, Safari */
+                -moz-transition:       none !important; /* Firefox */
+                -ms-transition:        none !important; /* IE */
+                -o-transition:         none !important; /* Opera */
+                transition:            none !important; /* CSS 3 */
+                -webkit-animation:     none !important; /* Chrome, Safari */
+                -moz-animation:        none !important; /* Firefox */
+                -ms-animation:         none !important; /* IE */
+                -o-animation:          none !important; /* Opera */
+                animation:             none !important; /* CSS 3 */
+            };
+        </style>
+
         <!-- turn off CSS- and jQuery-based animations if needed -->
         <script>
             // limit the scope
             ;(function(Ozone, Ext, jQuery) {
                 // no animations?
                 if (!Ozone.config.showAnimations) {
-                    // turn off CSS-based animations
-                    var turnOffTransitionsAndAnimationsCss =
-                        '* {' +
-                            '-webkit-transition:    none !important;' + // Chrome, Safari
-                            '-moz-transition:       none !important;' + // Firefox
-                            '-ms-transition:        none !important;' + // IE
-                            '-o-transition:         none !important;' + // Opera
-                            'transition:            none !important;' + // CSS 3
-                            '-webkit-animation:     none !important;' + // Chrome, Safari
-                            '-moz-animation:        none !important;' + // Firefox
-                            '-ms-animation:         none !important;' + // IE
-                            '-o-animation:          none !important;' + // Opera
-                            'animation:             none !important;' + // CSS 3
-                        '}';
-                    Ext.util.CSS.createStyleSheet(turnOffTransitionsAndAnimationsCss);
-
                     // turn off jQuery-based animations
                     jQuery.fx.off = true;
                     jQuery.fn.bxSlider.defaults.useCSS = false;
@@ -76,11 +77,12 @@
                     ss.setAttribute('type', 'text/css');
                     ss.setAttribute('href', './themes/a_default.theme/css/animations.css');
                     document.getElementsByTagName('head')[0].appendChild(ss);
+
+                    var disableCssStyles = document.getElementById('disable-css-animations');
+                    disableCssStyles.parentNode.removeChild(disableCssStyles);
                 }
             })(Ozone, Ext, jQuery);
         </script>
-
-        <link rel="stylesheet" type="text/css" href="./js-lib/jquery-ui-1.10.3/themes/base/jquery.ui.resizable.css">
 
         <script language="javascript">
             owfdojo.config.dojoBlankHtmlUrl =  './js-lib/dojo-1.5.0-windowname-only/dojo/resources/blank.html';
