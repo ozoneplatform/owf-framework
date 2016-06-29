@@ -125,10 +125,12 @@ grails.project.dependency.resolution = {
             runtime 'net.sourceforge.jtds:jtds:1.2.4'
             runtime 'postgresql:postgresql:8.4-701.jdbc3'
         }
+*/
 
         //need ant for createWebBundles.jar
-        //runtime 'org.apache.ant:ant:1.7.0'
+        runtime 'org.apache.ant:ant:1.7.1'
 
+/*
         compile('opensymphony:oscache:2.4') {
 
             excludes 'commons-logging', 'servlet-api', 'spring-security-core'
