@@ -932,3 +932,9 @@ UPDATE `person` SET `requires_sync` = 1 WHERE id in (1,2,3);
 INSERT INTO `DATABASECHANGELOG` (`AUTHOR`, `COMMENTS`, `DATEEXECUTED`, `DESCRIPTION`, `EXECTYPE`, `FILENAME`, `ID`, `LIQUIBASE`, `MD5SUM`, `ORDEREXECUTED`) VALUES ('owf', '', NOW(), 'Update Data', 'EXECUTED', 'changelog_7.16.0.groovy', '7.16.0-4', '2.0.5', '3:fa417d61a8ef8029d99656ba7832a8d4', 66);
 
 --  Release Database Lock
+
+-- Manual additions to sample data for 7.17.0
+INSERT INTO `person_role` (`ROLE_ID`, `PERSON_AUTHORITIES_ID`) VALUES (26, 2);
+INSERT INTO `person_role` (`ROLE_ID`, `PERSON_AUTHORITIES_ID`) VALUES (26, 3);
+INSERT INTO `person_role` (`ROLE_ID`, `PERSON_AUTHORITIES_ID`) VALUES (26, 28);
+INSERT INTO `person_role` (`ROLE_ID`, `PERSON_AUTHORITIES_ID`) VALUES (27, 1);

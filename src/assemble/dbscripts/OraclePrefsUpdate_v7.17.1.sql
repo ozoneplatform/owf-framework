@@ -884,39 +884,39 @@ INSERT INTO DATABASECHANGELOG (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXEC
 
 -- Changeset changelog_7.3.0.groovy::app_config-7.3.0-10.1::owf::(Checksum: 3:b00389f3346f7e29270f5e5ebba4c458)
 -- Trigger for Oracle database to handle primary key generation based on a sequence during sample data inserts
-create or replace trigger dashboard_insert before insert on dashboard 
+create or replace trigger dashboard_insert before insert on dashboard
             for each row
             when (new.id is null)
             begin
             select hibernate_sequence.nextval into :new.id from dual;
             end;
             /
-    
-create or replace trigger domain_mapping_insert before insert on domain_mapping 
+
+create or replace trigger domain_mapping_insert before insert on domain_mapping
             for each row
             when (new.id is null)
             begin
             select hibernate_sequence.nextval into :new.id from dual;
             end;
             /
-    
-create or replace trigger stack_insert before insert on stack 
+
+create or replace trigger stack_insert before insert on stack
             for each row
             when (new.id is null)
             begin
             select hibernate_sequence.nextval into :new.id from dual;
             end;
             /
-    
-create or replace trigger owf_group_insert before insert on owf_group 
+
+create or replace trigger owf_group_insert before insert on owf_group
             for each row
             when (new.id is null)
             begin
             select hibernate_sequence.nextval into :new.id from dual;
             end;
             /
-    
-create or replace trigger widget_definition_insert before insert on widget_definition 
+
+create or replace trigger widget_definition_insert before insert on widget_definition
             for each row
             when (new.id is null)
             begin
@@ -1023,3 +1023,9 @@ UPDATE person SET requires_sync = 1 WHERE id in (1,2,3);
 INSERT INTO DATABASECHANGELOG (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', '', SYSTIMESTAMP, 'Update Data', 'EXECUTED', 'changelog_7.16.0.groovy', '7.16.0-4', '2.0.5', '3:fa417d61a8ef8029d99656ba7832a8d4', 71);
 
 -- Release Database Lock
+
+-- Manual additions to sample data for 7.17.0
+INSERT INTO person_role (ROLE_ID, PERSON_AUTHORITIES_ID) VALUES (26, 2);
+INSERT INTO person_role (ROLE_ID, PERSON_AUTHORITIES_ID) VALUES (26, 3);
+INSERT INTO person_role (ROLE_ID, PERSON_AUTHORITIES_ID) VALUES (26, 28);
+INSERT INTO person_role (ROLE_ID, PERSON_AUTHORITIES_ID) VALUES (27, 1);
