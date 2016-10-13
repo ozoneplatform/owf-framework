@@ -10,8 +10,6 @@
 -- Lock Database
 -- Changeset changelog_4.0.0.groovy::4.0.0-5::owf::(Checksum: 3:3b9f19a527785869ce833dfbf6466f01)
 -- deleting old sample data
-DELETE FROM role_people;
-
 DELETE FROM role;
 
 DELETE FROM requestmap;
@@ -236,14 +234,6 @@ INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXEC
 
 -- Changeset changelog_4.0.0.groovy::4.0.0-31::owf::(Checksum: 3:4318d8906f61a4c4429c3af056f06c87)
 -- insert new sample data
-INSERT INTO role_people (person_id, role_id) VALUES (2, 26);
-
-INSERT INTO role_people (person_id, role_id) VALUES (3, 26);
-
-INSERT INTO role_people (person_id, role_id) VALUES (28, 26);
-
-INSERT INTO role_people (person_id, role_id) VALUES (1, 27);
-
 INSERT INTO databasechangelog (AUTHOR, COMMENTS, DATEEXECUTED, DESCRIPTION, EXECTYPE, FILENAME, ID, LIQUIBASE, MD5SUM, ORDEREXECUTED) VALUES ('owf', 'insert new sample data', NOW(), 'Insert Row (x4)', 'EXECUTED', 'changelog_4.0.0.groovy', '4.0.0-31', '2.0.5', '3:4318d8906f61a4c4429c3af056f06c87', 8);
 
 -- Changeset changelog_4.0.0.groovy::4.0.0-34::owf::(Checksum: 3:62011f2458c9d6a9f4884f2c3349dab8)
