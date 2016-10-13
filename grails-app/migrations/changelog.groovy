@@ -5,7 +5,7 @@ import grails.util.Holders as CH
 databaseChangeLog = {
 
     //versions for which there are DB changes
-    def versions = ['3.7.0', '3.8.0', '4.0.0', '5.0.0', '6.0.0', '7.0.0', '7.2.0', '7.3.0', '7.10.0', '7.15.1', '7.16.0', '7.16.1']
+    def versions = ['3.7.0', '3.8.0', '4.0.0', '5.0.0', '6.0.0', '7.0.0', '7.2.0', '7.3.0', '7.10.0', '7.15.1', '7.16.0', '7.16.1', '7.17.0']
 
     // On MS SQL Server, we use numeric(19, 0) for the person id, but we use bigint everywhere else. Use this property like:
     // 	    column(name: "edited_by_id", type: '${owf.personIdType}')
