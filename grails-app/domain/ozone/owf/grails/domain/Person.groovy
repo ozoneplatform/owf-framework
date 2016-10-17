@@ -44,7 +44,7 @@ class Person implements Serializable {
     static mapping = {
         cache true
         authorities cache: true,
-            joinTable: [name: 'role_people', key: 'person_id', column: 'role_id']
+            joinTable: [name: 'person_role', key: 'person_authorities_id', column: 'role_id']
         groups cache: true
         dashboards lazy: true, cascade : "delete-orphan", cache: true
         personWidgetDefinitions lazy: true, cascade : "delete-orphan", cache: true
