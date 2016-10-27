@@ -856,7 +856,9 @@ class DashboardService extends BaseService {
         dashboard.layoutConfig = params.layoutConfig ?: dashboard.layoutConfig
         // If no stack is provided, set the stack to null.
         // dashboard.stack =  params.stack != null ? Stack.get(params.stack.id.toLong()) : null
-        dashboard.locked = params.locked instanceof Boolean ? params.locked : params.locked == "true"
+        dashboard.locked = params.locked instanceof Boolean ? params.locked
+            : params.locked instanceof String ? params.locked == "true"
+            : dashboard.locked
 
         dashboard.publishedToStore = new Boolean(params.get('publishedToStore', dashboard.publishedToStore))
         dashboard.markedForDeletion = new Boolean(params.get('markedForDeletion', dashboard.markedForDeletion))
