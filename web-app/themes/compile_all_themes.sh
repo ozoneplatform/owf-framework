@@ -6,10 +6,10 @@
 for file in `ls -d *.theme/sass`
 do
     cd "$file"
-    
+
     #stop if there is an error
     if ! compass compile $@; then
-        exit $?
+        exit 1
     fi
 
     cd ../.. > /dev/null
