@@ -22,8 +22,8 @@ class SecurityFilters {
         securityAll(controller:'index', action:'index') {
             before = {
                 if (!accountService.getLoggedInUserIsUser()) {
-                    log.debug(accountService.getLoggedInUsername() + " does not have ROLE_USER role, erroring out with 401");
-                    response.sendError(401)
+                    log.debug(accountService.getLoggedInUsername() + " does not have ROLE_USER role, erroring out with 403");
+                    response.sendError(403)
                     return false
                 }
                 try {
