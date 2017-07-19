@@ -29,7 +29,11 @@
             '</div>' +
             '<div class="thumb-text ellipsis"><%- name %></div>'+
             '<% if (details) { %>' +
-                '<a href="#" class="widget-details" style="visibility: hidden;"></a>' +
+                '<% if (style) { %>'+
+                    '<a href="#" class="widget-details"></a>' +
+                '<% } else { %>'+
+                    '<a href="#" class="widget-details" style="visibility: hidden;"></a>' +
+                '<% } %>'+
             '<% } %>',
 
         // boolean flag indicating whether or not to show details link
@@ -42,9 +46,14 @@
             };
         },
 
+        isMobile: function () {
+            return /Mobi/.test(navigator.userAgent);
+        },
+
         render: function () {
             var tpl = _.template(this.tpl, _.extend({
-                details: this.details
+                details: this.details,
+                style: this.isMobile()
             }, this.model.attributes));
 
             this.$el.append(tpl);

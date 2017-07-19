@@ -216,13 +216,21 @@
             tip.shown();
         },
 
+        _isMobile: function () {
+            return /Mobi/.test(navigator.userAgent);
+        },
+
         _showDetailsTipOption: function (evt) {
-            this.$el.find('.widget-details').css('visibility', 'hidden');
-            $(evt.currentTarget).children('.widget-details').css('visibility', '');
+            if(!this._isMobile()) {
+                this.$el.find('.widget-details').css('visibility', 'hidden');
+                $(evt.currentTarget).children('.widget-details').css('visibility', '');
+            }
         },
 
         _hideDetailsOption: function (evt) {
-            $(evt.currentTarget).children('.widget-details').css('visibility', 'hidden');
+            if(!this._isMobile()) {
+                $(evt.currentTarget).children('.widget-details').css('visibility', 'hidden');
+            }
         }
 
     });
