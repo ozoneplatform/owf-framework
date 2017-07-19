@@ -38,6 +38,7 @@
         events: {
             'click .widget': '_onClick',
             'click .widget-details': '_showDetailsTip',
+            'touchend .widget': '_onTouch',
             'mouseenter .widget': '_showDetailsTipOption',
             'mouseleave .widget': '_hideDetailsOption'
         },
@@ -150,6 +151,18 @@
             this.$el.enableSelection()
 
             return SuperClass.prototype.remove.call(this);
+        },
+
+        _onTouch: function (evt) {
+            if(this.selectable && this._isMobile()) {
+                var view = $(evt.currentTarget).data('view');
+
+                if(this.selected) {
+                    this.selected.$el.removeClass(this.selectClass);
+                }
+                this.selected = view;
+                this.selected.$el.addClass(this.selectClass);
+            }
         },
 
         _onClick: function (evt) {
