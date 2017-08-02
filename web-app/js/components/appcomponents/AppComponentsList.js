@@ -38,6 +38,7 @@
         events: {
             'click .widget': '_onClick',
             'click .widget-details': '_showDetailsTip',
+            'touchend .widget': '_onTouch',
             'mouseenter .widget': '_showDetailsTipOption',
             'mouseleave .widget': '_hideDetailsOption'
         },
@@ -152,6 +153,18 @@
             return SuperClass.prototype.remove.call(this);
         },
 
+        _onTouch: function (evt) {
+            if(this.selectable && this._isMobile()) {
+                var view = $(evt.currentTarget).data('view');
+
+                if(this.selected) {
+                    this.selected.$el.removeClass(this.selectClass);
+                }
+                this.selected = view;
+                this.selected.$el.addClass(this.selectClass);
+            }
+        },
+
         _onClick: function (evt) {
             if(this.selectable) {
                 var view = $(evt.currentTarget).data('view');
@@ -216,13 +229,21 @@
             tip.shown();
         },
 
+        _isMobile: function () {
+            return /Mobi/.test(navigator.userAgent);
+        },
+
         _showDetailsTipOption: function (evt) {
-            this.$el.find('.widget-details').css('visibility', 'hidden');
-            $(evt.currentTarget).children('.widget-details').css('visibility', '');
+            if(!this._isMobile()) {
+                this.$el.find('.widget-details').css('visibility', 'hidden');
+                $(evt.currentTarget).children('.widget-details').css('visibility', '');
+            }
         },
 
         _hideDetailsOption: function (evt) {
-            $(evt.currentTarget).children('.widget-details').css('visibility', 'hidden');
+            if(!this._isMobile()) {
+                $(evt.currentTarget).children('.widget-details').css('visibility', 'hidden');
+            }
         }
 
     });

@@ -56,7 +56,7 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     _dragging: false,
 
     initComponent: function() {
-
+        
         var me = this,
             stackOrDashboards = [],
             stacks = {}, dashboards = {},
@@ -143,7 +143,11 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             },
 
             getActions: function (values) {
-                return	'<div class="details-btn hide"></div>';
+                if (/Mobi/.test(navigator.userAgent)) {
+                    return	'<div class="details-btn"></div>';
+                } else {
+                    return	'<div class="details-btn hide"></div>';
+                }
 
             }
         });
@@ -218,7 +222,8 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
             .on('mouseover', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
             .on('mouseout', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
             .on('focus', '.stack, .dashboard', $.proxy(me.onMouseOver, me))
-            .on('blur', '.stack, .dashboard', $.proxy(me.onMouseLeave, me));
+            .on('blur', '.stack, .dashboard', $.proxy(me.onMouseLeave, me))
+            .on('touchend', '.dashboard', $.proxy(me.onDashboardTouch, me));
 
         me.initKeyboardNav();
 
@@ -807,6 +812,15 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
         return $dashboard.hasClass('cls') ? $dashboard : $dashboard.parents('.' + cls);
     },
 
+    onDashboardTouch: function (evt) {
+        if (evt.type !== 'touchend' && evt.which !== Ext.EventObject.ENTER)
+            return;
+
+        var $clickedDashboard = $(evt.currentTarget),
+        dashboard = this.getDashboard( $clickedDashboard );
+        this.launchDashboard(evt, dashboard);
+    },
+
     onDashboardClick: function (evt) {
         if (evt.type !== 'click' && evt.which !== Ext.EventObject.ENTER)
             return;
@@ -1099,15 +1113,17 @@ Ext.define('Ozone.components.window.MyAppsWindow', {
     },
 
     onMouseOver: function (evt) {
-        var el = $(evt.currentTarget);
+        if (!/Mobi/.test(navigator.userAgent)) {
+            var el = $(evt.currentTarget);
 
-        if (this._previouslyHoveredStackOrDashboard != null) {
-            $('.details-btn', this._previouslyHoveredStackOrDashboard).addClass('hide');
+            if (this._previouslyHoveredStackOrDashboard != null) {
+                $('.details-btn', this._previouslyHoveredStackOrDashboard).addClass('hide');
+            }
+
+            $('.details-btn', el).removeClass('hide');
+
+            this._previouslyHoveredStackOrDashboard = el;
         }
-
-        $('.details-btn', el).removeClass('hide');
-
-        this._previouslyHoveredStackOrDashboard = el;
     },
 
     onMouseLeave: function(evt) {
