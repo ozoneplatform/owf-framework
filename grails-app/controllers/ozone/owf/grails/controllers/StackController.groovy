@@ -1,14 +1,22 @@
 package ozone.owf.grails.controllers
 
-import ozone.owf.grails.OwfException
-import grails.converters.JSON
-import org.apache.commons.lang.time.StopWatch
 import javax.servlet.http.HttpServletResponse
+
+import grails.converters.JSON
+
+import org.apache.commons.lang.time.StopWatch
+
+import ozone.owf.grails.OwfException
+import ozone.owf.grails.OwfValidationException
+import ozone.owf.grails.services.MarketplaceService
+import ozone.owf.grails.services.StackService
+
 
 class StackController extends BaseOwfRestController {
     
-    def stackService
-    def marketplaceService
+    StackService stackService
+
+    MarketplaceService marketplaceService
 
     def list = {
         def statusCode
@@ -112,7 +120,6 @@ class StackController extends BaseOwfRestController {
     }
 
     def share = {
-
         def jsonResult
 
         StopWatch stopWatch = null;
@@ -124,13 +131,12 @@ class StackController extends BaseOwfRestController {
         }
 
         try {
+            Long stackId = params.getLong('id')
+            if (!stackId) throw new OwfValidationException("param 'id' required")
 
-            jsonResult =  stackService.share(params)
-
+            jsonResult =  stackService.share(stackId)
         } catch (def e) {
-
             jsonResult = handleError(e)
-
         }
 
         renderResult(jsonResult, HttpServletResponse.SC_OK)
@@ -139,8 +145,6 @@ class StackController extends BaseOwfRestController {
             stopWatch.stop();
             log.info("Executed stackService: share in " + stopWatch);
         }
-
-
     }
     
     def export = {
@@ -153,6 +157,11 @@ class StackController extends BaseOwfRestController {
             log.info("Executing stackService: export");
         }
         try {
+            Long stackId = params.getLong('id')
+            if (!stackId) throw new OwfValidationException("param 'id' required")
+
+            def stackDescriptor = stackService.export(stackId)
+
             def filename = params.filename ? params.filename :"stack_descriptor"
 
             // Set filename/ID for audit logging
@@ -164,8 +173,6 @@ class StackController extends BaseOwfRestController {
             //Set content-disposition so browser is expecting a file
             response.setHeader("Content-disposition", "attachment; filename=" + filename + ".html")
 
-            def stackDescriptor = stackService.export(params)
-
             // Set fileSize for audit logging
             request.setAttribute("fileSize", (stackDescriptor.getBytes("UTF-8")).length)
 
@@ -173,11 +180,8 @@ class StackController extends BaseOwfRestController {
             response.outputStream.flush()
 
         }
-        catch (def e) {
-            //Set content-disposition back to text to relay the error
-            response.setHeader("Content-disposition", "")
-
-            result = handleError(e)
+        catch (OwfException ex) {
+            result = handleError(ex)
             renderResult(result)
         }
         

@@ -1,0 +1,124 @@
+@charset "UTF-8";
+
+/*
+ * This file contains the default values on a variety of parameters that may be overridden by a given theme
+ */
+
+$color: #000000;
+$neutral-color: #eeeeee;
+
+/*
+ * The color that will be used to generate many major parts of
+ * the theme, such as the borders of active widgets and buttons
+ */
+$owf-base-color: #222 !default;
+
+/*
+ * The color that will be used to generate more minor parts of the
+ * theme, such as inactive windows, depressed buttons, and grid-view rows
+ */
+$owf-alt-base-color: #aaa !default;
+
+/*
+ * The font family of most of the interface
+ */
+$owf-font-family: helvetica, arial, sans-serif !default;
+
+/*
+ * The font size.  This should be specified in pixels or another absolute unit.
+ * Because of the way that Ext-js uses this value, relative sizes will be compounded
+ * on nested elements, which is almost definetly not what you want
+ */
+$owf-font-size: 12px !default;
+
+/*
+ * Input text field field height
+ */
+$owf-form-field-height: 22px !default;
+
+
+$owf-panel-body-border-color: black !default;
+
+$owf-window-background-color: #fff !default;
+
+$owf-header-icon-size: 16px !default;
+
+@if $owf-font-size > 16px {
+    $owf-header-icon-size: 24px;
+}
+
+/*
+ * Styles for selectable items, such as Widgets in Launch Menu and Themes in Theme Switcher window
+ */
+$selectable-item-background-color: $owf-window-background-color !default;
+$selectable-item-over-background-color: #efefef !default;
+$selectable-item-selected-background-color: lighten($owf-base-color, 10) !default;
+
+$selectable-item-border-color: $owf-window-background-color !default;
+$selectable-item-over-border-color: #dddddd !default;
+$selectable-item-selected-border-color: lighten($owf-base-color, 5) !default;
+
+$selectable-item-text-color: getHighContrastColor($selectable-item-background-color) !default;
+$selectable-item-over-text-color: getHighContrastColor($selectable-item-over-background-color) !default;
+$selectable-item-selected-text-color: getHighContrastColor($selectable-item-selected-background-color) !default;
+
+/*
+ * Border colors of tabs in the tab layout
+ */
+$owf-active-tab-border-color: #143E9D !default;
+$owf-over-tab-border-color: #A2B1C5 !default;
+
+/*
+ * The text color of the labels in the mange, customize, and create dashboards windows
+ */
+$owf-manage-window-label-color: getHighContrastColor($owf-window-background-color) !default;
+
+/*
+ * Setting this to false will disable the use of gradients in most cases.
+ * Single colors will be used instead
+ */
+$owf-apply-gradient: true !default;
+
+/*
+ * The border radius applied to the top corners, and bottom corners, 
+ * respectively, of windows and things
+ */
+$owf-top-border-radius: 5px !default;
+$owf-bottom-border-radius: 5px !default;
+$warning-color: #ff0000 !default;
+
+$owf_dashboard_default_background_image_small: theme-image($theme-name, 'dashboard-grids/DashboardIcon24.png') !default;
+//LARGE - 48x48
+$owf_dashboard_default_background_image_large: theme-image($theme-name, 'dashboard-grids/DashboardIcon48.png') !default;
+
+$owf-tool-width: 15px !default;
+$owf-tool-height: 15px !default;
+
+//import more default variables from other files in this directory
+@import 'toolbar';
+@import 'progressBar';
+@import 'loadmask';
+@import 'banner';
+@import 'buttons';
+@import 'toolTip';
+@import 'grid';
+@import 'dropDownMenu';
+@import 'widget';
+@import 'form';
+@import 'messageBox';
+@import 'accessAlert';
+@import 'adminWidget';
+@import 'themeSwitcher';
+@import 'widgetSwitcher';
+@import 'focus';
+@import 'myAppsWindow';
+@import 'storeWizard';
+@import 'widgetChrome';
+@import 'widgetLauncher';
+@import 'profileWindow';
+@import 'dashboardDesigner';
+@import 'searchBox';
+@import 'dashboardSplitter';
+@import 'notifications';
+@import 'timingFunctions';
+@import 'applicationConfiguration';

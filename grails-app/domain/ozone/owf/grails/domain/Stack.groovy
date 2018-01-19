@@ -1,6 +1,7 @@
 package ozone.owf.grails.domain
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
+
 
 class Stack implements Serializable {
 
@@ -15,7 +16,8 @@ class Stack implements Serializable {
     Integer uniqueWidgetCount = 0
     Boolean approved = false
 
-    static mappedBy = [groups: 'stacks', defaultGroup: 'stack']
+    static mappedBy = [groups: 'stacks',
+                       defaultGroup: 'none']
 
     static belongsTo = [owner: Person]
     static hasOne = [defaultGroup: Group]
@@ -29,11 +31,11 @@ class Stack implements Serializable {
 
     static constraints = {
         name(nullable: false, blank: false, maxSize: 256)
-        description(nullable: true, blank: true)
+        description(nullable: true, blank: true, maxSize: 2000)
         stackContext(nullable: false, blank: false, maxSize: 200, unique: true)
         imageUrl(nullable: true, blank: true, maxSize: 2083)
         descriptorUrl(nullable: true, blank: true, maxSize: 2083)
-        uniqueWidgetCount(nullable: false, blank: false)
+        uniqueWidgetCount(nullable: false)
         approved(nullable: true)
         owner(nullable:true)
         defaultGroup(nullable: true)

@@ -1,0 +1,11 @@
+$theme-switcher-window-image-border-color: #707070 !default;
+$theme-switcher-window-preview-images-background-color: #e6e6e6 !default;
+
+$theme-browser-infopanel-border-color: #666 !default;
+
+$theme-name-text-color: getHighContrastColor($owf-window-background-color) !default;
+$theme-author-text-color: getHighContrastColor($owf-window-background-color) !default;
+$theme-contact-text-color: adjustColorForBackground(#707070) !default;
+$theme-created-date-text-color: getHighContrastColor($owf-window-background-color) !default;
+$theme-modified-date-text-color: getHighContrastColor($owf-window-background-color) !default;
+$theme-description-text-color: getHighContrastColor($owf-window-background-color) !default;

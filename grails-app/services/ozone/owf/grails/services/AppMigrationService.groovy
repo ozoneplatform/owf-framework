@@ -1,13 +1,17 @@
 package ozone.owf.grails.services
 
+import grails.core.GrailsApplication
+
 import ozone.owf.grails.domain.Dashboard
-import ozone.owf.grails.domain.DomainMapping
+
 
 class AppMigrationService {
 
-    def dashboardService
-    def stackService
-    def grailsApplication
+    GrailsApplication grailsApplication
+
+    DashboardService dashboardService
+
+    StackService stackService
 
     static transactional = true
 

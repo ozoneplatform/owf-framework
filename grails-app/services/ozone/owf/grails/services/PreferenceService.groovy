@@ -1,15 +1,16 @@
 package ozone.owf.grails.services
 
 import grails.converters.JSON
+
 import ozone.owf.grails.OwfException
-import ozone.owf.grails.domain.Preference
 import ozone.owf.grails.OwfExceptionTypes
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.Preference
 
+
 class PreferenceService extends BaseService {
 
-    def list(params){
+    def list(params = [:]) {
     	if (!accountService.getLoggedInUserIsAdmin())
 			params.user = accountService.getLoggedInUser()
     	def preference = findPagedPreferences(params)
@@ -39,8 +40,8 @@ class PreferenceService extends BaseService {
 		}
 	}
 
-	private findPreference(params) {
-		return Preference.createCriteria().get() {
+	Preference findPreference(params) {
+		return (Preference) Preference.createCriteria().get() {
 			if (params?.id != null && params?.id != "") eq("id", Long.parseLong(params.id))
 			else {
 				and {
@@ -98,7 +99,7 @@ class PreferenceService extends BaseService {
 	      	throw new OwfException(	message:'A fatal validation error occurred during the updating of a preference. Params: ' + params.toString() + ' Validation Errors: ' + preference.errors.toString(),
 									exceptionType: OwfExceptionTypes.Validation)
       	}
-		if (!preference.save())
+		if (!preference.save(flush: true, failOnError: true))
 		{
           	throw new OwfException (message: 'A fatal error occurred while trying to save a preference. Params: ' + params.toString(),
 									exceptionType: OwfExceptionTypes.Database)
@@ -139,6 +140,7 @@ class PreferenceService extends BaseService {
 			throw new OwfException(message:'The username is invalid.', exceptionType: OwfExceptionTypes.NotFound)
         }
 		params.user = user
+
 		def preference = findPreference(params)
 
         try
@@ -268,7 +270,7 @@ class PreferenceService extends BaseService {
 			  	throw new OwfException(	message:'A fatal validation error occurred during the updating of a preference. Params: ' + params.toString() + ' Validation Errors: ' + preference.errors.toString(),
 										exceptionType: OwfExceptionTypes.Validation)
 			}
-			if (!preference.save())
+			if (!preference.save(flush: true, failOnError: true))
 			{
 			  	throw new OwfException (message: 'A fatal error occurred while trying to save a preference. Params: ' + params.toString(),
 										exceptionType: OwfExceptionTypes.Database)

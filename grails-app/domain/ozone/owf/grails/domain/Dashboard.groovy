@@ -1,10 +1,11 @@
 package ozone.owf.grails.domain
 
-import org.codehaus.groovy.grails.web.json.JSONObject
-import ozone.owf.grails.util.OWFDate
+import org.grails.web.json.JSONObject
+
+import ozone.owf.gorm.AuditStamp
 
 
-@ozone.owf.gorm.AuditStamp
+@AuditStamp
 class Dashboard implements Serializable, Comparable {
 
     static String TYPE = 'dashboard'
@@ -39,14 +40,15 @@ class Dashboard implements Serializable, Comparable {
         cache true
         stack fetch: 'join'
         user fetch: 'join'
+        layoutConfig type: 'text', sqlType: DbSupport.bigStringType
     }
 
     static constraints = {
         guid nullable: false, blank: false, unique: true, matches: GUID_PATTERN
-        isdefault nullable: false, blank: false
+        isdefault nullable: false
         name nullable: false, blank: false, maxSize: 200
         dashboardPosition nullable: false, display: false
-        alteredByAdmin nullable: false, blank: false
+        alteredByAdmin nullable: false
         iconImageUrl nullable: true, blank: true, maxSize: MAX_URL_SIZE
         description nullable: true, blank: true
         type nullable: true, blank: true

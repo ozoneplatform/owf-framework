@@ -1,0 +1,17 @@
+$owf-loadmask-opacity: 0.4 !default;
+$owf-loadmask-background: #000 !default;
+
+$owf-loadmask-msg-padding: 2px !default;
+$owf-loadmask-msg-border-color: $owf-alt-base-color !default;
+$owf-loadmask-msg-background-color: $owf-base-color !default;
+$owf-loadmask-msg-background-gradient: null !default;
+
+$owf-loadmask-msg-inner-padding: 5px 10px 5px 25px !default;
+$owf-loadmask-msg-inner-icon: 'grid/loading.gif' !default;
+$owf-loadmask-msg-inner-border-color: adjust-color($owf-base-color, $hue: 1.111deg, $saturation: -14.017%, $lightness: -9.608%) !default;
+$owf-loadmask-msg-inner-background-color: adjust-color($owf-base-color, $hue: 1.111deg, $saturation: -14.017%, $lightness: -9.608%) !default;
+$owf-loadmask-msg-inner-color: getHighContrastColor($owf-loadmask-msg-inner-background-color) !default;
+$owf-loadmask-msg-inner-font-size: ceil($owf-font-size * .9) !default;
+$owf-loadmask-msg-inner-font-weight: normal !default;
+$owf-loadmask-msg-inner-font-family: $owf-font-family !default;
+$owf-loadmask-msg-inner-font: $owf-loadmask-msg-inner-font-weight $owf-loadmask-msg-inner-font-size $owf-loadmask-msg-inner-font-family !default;

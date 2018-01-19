@@ -1,29 +1,48 @@
-
 package ozone.owf.grails.services
 
 import grails.converters.JSON
-import org.codehaus.groovy.grails.web.json.JSONObject
+import grails.core.GrailsApplication
+
 import org.hibernate.CacheMode
+
+import org.grails.web.json.JSONObject
+
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
-import ozone.owf.grails.domain.Dashboard
-import ozone.owf.grails.domain.Group
-import ozone.owf.grails.domain.Person
-import ozone.owf.grails.domain.Stack
-import ozone.owf.grails.domain.RelationshipType
-import ozone.owf.grails.domain.WidgetDefinition
-import ozone.owf.grails.domain.WidgetType
+import ozone.owf.grails.domain.*
+
 
 class StackService {
 
-    def accountService
-    def serviceModelService
-    def dashboardService
-    def domainMappingService
-    def groupService
-    def widgetDefinitionService
+    GrailsApplication grailsApplication
 
-    def grailsApplication
+    AccountService accountService
+
+    ServiceModelService serviceModelService
+
+    DashboardService dashboardService
+
+    DomainMappingService domainMappingService
+
+    GroupService groupService
+
+    WidgetDefinitionService widgetDefinitionService
+
+    DescriptorService descriptorService
+
+    SyncService syncService
+
+    Stack findById(long id, boolean failOnError = true) {
+        def stack = Stack.findById(id, [cache: true])
+
+        if (stack == null && failOnError) {
+            throw new OwfException(
+                    message: "Stack not found with id ${id}",
+                    exceptionType: OwfExceptionTypes.NotFound)
+        }
+
+        stack
+    }
 
     private static def addFilter(name, value, c) {
         c.with {
@@ -39,7 +58,7 @@ class StackService {
         }
     }
 
-    def list(params) {
+    def list(params = [:]) {
 
         def criteria = Stack.createCriteria()
         def opts = [:]
@@ -216,10 +235,7 @@ class StackService {
 
         if (params?.id >= 0 || params.stack_id  >= 0) {  // Existing Stack
             params.id = (params?.id >= 0 ? params.id : params.stack_id)
-            stack = Stack.findById(params.id, [cache: true])
-            if (!stack) {
-                throw new OwfException(message: 'Stack ' + params.id + ' not found.', exceptionType: OwfExceptionTypes.NotFound)
-            }
+            stack = findById(params.id)
         } else { // New Stack
             stack = createStack()
         }
@@ -293,7 +309,7 @@ class StackService {
                             stack.removeFromGroups(group)
                             dashboardService.purgePersonalDashboards(stack, group)
                         }
-                        group.syncPeople()
+                        syncService.syncPeopleInGroup(group)
 
                         updatedGroups << group
                     }
@@ -652,9 +668,7 @@ class StackService {
 		}
 	}
 
-    private def createStackData(params) {
-
-        def stack = Stack.findById(params.id, [cache: true])
+    private def createStackData(Stack stack) {
         def owner = stack.owner
         boolean noMarketplaces = !widgetDefinitionService.hasMarketplace().data
 
@@ -739,41 +753,27 @@ class StackService {
      * This includes deleting dashboards that are marked for deletion and setting
      * isPublished on all pages (dashboards)
      */
-    def share(params)  {
-
+    JSON share(Long stackId)  {
         // Only owner of stack can push to store
-        ensureOwner(params.id)
-        def stackData = createStackData(params)
-        stackData =  (stackData as JSON)
-        return stackData
+        ensureOwner(stackId)
+
+        def stack = findById(stackId)
+
+        createStackData(stack) as JSON
     }
 
-    def export(params) {
-
+    String export(long stackId) {
         // Only admins may export Stacks
         ensureAdmin()
 
-        def stackData = createStackData(params)
+        def stack = findById(stackId)
+
+        def stackData = createStackData(stack)
 
         //Pretty print the JSON to be put as part of descriptor
-        stackData = (stackData as JSON).toString(true)
+        def stackJson = (stackData as JSON).toString(true)
 
-        // Get the empty descriptor with appropriate JavaScript
-        def stackDescriptor
-
-        if (grails.util.GrailsUtil.environment != 'production') {
-            stackDescriptor = new File('./src/resources/empty_descriptor.html').text
-        } else {
-            // Search classpath since different servlet containers can store
-            // files in any number of places
-            def resource = grailsApplication.mainContext.getResource('classpath:empty_descriptor.html')
-            stackDescriptor = resource.getFile().text
-        }
-
-        stackDescriptor = stackDescriptor.replaceFirst("var data;", java.util.regex.Matcher.quoteReplacement("var data = ${stackData};"))
-
-        return stackDescriptor
-
+        descriptorService.generateDescriptor(stackJson)
     }
 
     def addPage(params) {
@@ -800,11 +800,7 @@ class StackService {
 
             //If owner param is present (including explicitly null), set it to that,
             //otherwise, on update do not change, and on create set to current user
-            def owner = params.owner ?: (params.id  >= 0 ? stack.owner :
-                accountService.getLoggedInUser())
-            if (owner == JSONObject.NULL) {
-                owner = null
-            }
+            def owner = params.owner ?: (params.id >= 0 ? stack.owner : accountService.getLoggedInUser())
             stack.setOwner(owner)
             if (!stack.stackContext) stack.setStackContext(UUID.randomUUID().toString())
             stack = stack.save(flush: true, failOnError: true)
@@ -837,11 +833,11 @@ class StackService {
      */
     def createAppForGroupDashboard(Dashboard groupDashboard) {
         if (!groupDashboard.stack) {
-            Stack newApp = createStack([name: groupDashboard.name,
-                    description: groupDashboard.description,
-                    stackContext: UUID.randomUUID().toString(),
-                    imageUrl: groupDashboard.iconImageUrl,
-                    owner: null])
+            Stack newApp = createStack([name        : groupDashboard.name,
+                                        description : groupDashboard.description,
+                                        stackContext: UUID.randomUUID().toString(),
+                                        imageUrl    : groupDashboard.iconImageUrl,
+                                        owner       : null])
 
             Group stackDefaultGroup = newApp.groups.asList()[0]
 
@@ -877,11 +873,11 @@ class StackService {
      * @param personalDashboard
      */
     def createAppForPersonalDashboard(Dashboard personalDashboard) {
-        Stack newApp = createStack([name: personalDashboard.name,
-                description: personalDashboard.description,
-                stackContext: UUID.randomUUID().toString(),
-                imageUrl: personalDashboard.iconImageUrl,
-                owner: personalDashboard.user])
+        Stack newApp = createStack([name        : personalDashboard.name,
+                                    description : personalDashboard.description,
+                                    stackContext: UUID.randomUUID().toString(),
+                                    imageUrl    : personalDashboard.iconImageUrl,
+                                    owner       : personalDashboard.user])
         newApp.save()
         personalDashboard.stack = newApp
         personalDashboard.save()
@@ -942,36 +938,33 @@ class StackService {
     }
 
     private def ensureAdminOrOwner(stackId) {
-        if(!stackId && !accountService.getLoggedInUserIsAdmin()) {
-            throw new OwfException(message: "Cannot verify ownership of a stack without the stack ID", exceptionType: OwfExceptionTypes.NotFound)
+        if (!stackId && !accountService.getLoggedInUserIsAdmin()) {
+            throw new OwfException(
+                    message: "Cannot verify ownership of a stack without the stack ID",
+                    exceptionType: OwfExceptionTypes.NotFound)
         }
 
-        def stackInstance = Stack.get(stackId)
+        def stack = findById(stackId)
 
-        if(!stackInstance) {
-            throw new OwfException(message: "Cannot find a stack with id ${stackId}", exceptionType: OwfExceptionTypes.NotFound)
-        } else if((!stackInstance.owner || accountService.getLoggedInUser().id != stackInstance.owner.id) && !accountService.getLoggedInUserIsAdmin()) {
-            throw new OwfException(message: "You must be an administrator or owner of a stack to edit it.",
+        if (!stack.owner || accountService.getLoggedInUser().id != stack.owner.id) {
+            throw new OwfException(
+                    message: "You must be an administrator or owner of a stack to edit it.",
                     exceptionType: OwfExceptionTypes.Authorization)
         }
-
-
     }
 
     private def ensureOwner(stackId) {
-        if(!stackId && !accountService.getLoggedInUserIsAdmin()) {
-            throw new OwfException(message: "Cannot verify ownership of a stack without the stack ID", exceptionType: OwfExceptionTypes.NotFound)
+        if (!stackId && !accountService.getLoggedInUserIsAdmin()) {
+            throw new OwfException(message: "Cannot verify ownership of a stack without the stack ID",
+                    exceptionType: OwfExceptionTypes.NotFound)
         }
 
-        def stackInstance = Stack.get(stackId)
+        def stack = findById(stackId)
 
-        if(!stackInstance) {
-            throw new OwfException(message: "Cannot find a stack with id ${stackId}", exceptionType: OwfExceptionTypes.NotFound)
-        } else if((!stackInstance.owner || accountService.getLoggedInUser().id != stackInstance.owner.id)) {
+        if (!stack.owner || accountService.getLoggedInUser().id != stack.owner.id) {
             throw new OwfException(message: "You must be an owner of a stack to push it to the store.",
                     exceptionType: OwfExceptionTypes.Authorization)
         }
-
     }
 
     // upgrade for 7.16.0

@@ -1,17 +1,13 @@
 package ozone.owf.grails.jobs
 
-import org.quartz.Job
-import org.quartz.JobKey
-import org.quartz.JobBuilder
-import org.quartz.JobExecutionContext
-import org.quartz.SimpleTrigger
-import org.quartz.TriggerBuilder
-import org.quartz.SimpleScheduleBuilder
-import org.codehaus.groovy.grails.web.context.ServletContextHolder
-import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
-
 import java.text.ParseException
 import java.text.SimpleDateFormat
+
+import grails.web.context.ServletContextHolder
+
+import org.grails.web.util.GrailsApplicationAttributes
+import org.quartz.*
+
 
 class DisableInactiveAccountsJob implements Job {
     def name = "deleteInactiveAccounts"

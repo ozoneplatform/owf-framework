@@ -1,0 +1,3 @@
+rootProject.name = 'owf-framework'
+
+include 'owf-example-widgets'

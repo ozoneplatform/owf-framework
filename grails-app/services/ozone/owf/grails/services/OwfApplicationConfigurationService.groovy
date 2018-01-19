@@ -1,29 +1,38 @@
 package ozone.owf.grails.services
 
-import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
-import org.ozoneplatform.appconfig.server.service.impl.ApplicationConfigurationServiceImpl
+import grails.core.GrailsApplication
+import grails.util.GrailsUtil
+
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.transaction.annotation.Transactional
+
+import org.quartz.Scheduler
+
 import ozone.owf.enums.OwfApplicationSetting
-import static ozone.owf.enums.OwfApplicationSetting.*
 import ozone.owf.grails.jobs.DisableInactiveAccountsJob
-import grails.util.GrailsUtil
+import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
+import org.ozoneplatform.appconfig.server.service.impl.ApplicationConfigurationServiceImpl
+
 
 class OwfApplicationConfigurationService extends ApplicationConfigurationServiceImpl {
 
-    def quartzScheduler
+    GrailsApplication grailsApplication
 
-    //the spring security bean that is responsible for handling the max number of session.
+    Scheduler quartzScheduler
+
+    /**
+     * the spring security bean that is responsible for handling the max number of session.
+     *
+     * TODO: What type is being injected here? OzoneConcurrentSessionControlStrategy?
+     */
     def concurrentSessionControlStrategy
-
-    def grailsApplication
 
     @Override
     @Transactional(readOnly=false)
     public ApplicationConfiguration saveApplicationConfiguration(ApplicationConfiguration item){
         item = super.saveApplicationConfiguration(item)
         // OP-727 Disabling inactive user accounts
-        if (item.code == DISABLE_INACTIVE_ACCOUNTS.code) {
+        if (item.code == OwfApplicationSetting.DISABLE_INACTIVE_ACCOUNTS.code) {
             handleDisableInactiveAccountsJobChange(item)
         }
 
@@ -37,7 +46,7 @@ class OwfApplicationConfigurationService extends ApplicationConfigurationService
         if(!applicationConfiguration)
             return
 
-        if(applicationConfiguration.code in [SESSION_CONTROL_MAX_CONCURRENT, INACTIVITY_THRESHOLD]*.code) {
+        if(applicationConfiguration.code in [OwfApplicationSetting.SESSION_CONTROL_MAX_CONCURRENT, OwfApplicationSetting.INACTIVITY_THRESHOLD]*.code) {
             def value = applicationConfiguration.value?.isInteger() ? applicationConfiguration.value.toInteger() : -1
             if(value < 1) {
                 applicationConfiguration.errors.rejectValue('value', "application.configuration.invalid.number.required.gt.zero")
@@ -45,7 +54,7 @@ class OwfApplicationConfigurationService extends ApplicationConfigurationService
             }
         }
 
-        if(applicationConfiguration.code == CUSTOM_HEADER_HEIGHT.code || applicationConfiguration.code == CUSTOM_FOOTER_HEIGHT.code) {
+        if(applicationConfiguration.code == OwfApplicationSetting.CUSTOM_HEADER_HEIGHT.code || applicationConfiguration.code == OwfApplicationSetting.CUSTOM_FOOTER_HEIGHT.code) {
             def value = Integer.valueOf(applicationConfiguration.value)
             if(value > 150) {
                 applicationConfiguration.errors.rejectValue('value', "application.configuration.custom.headerfooter.height.exceeds.max")
@@ -53,7 +62,7 @@ class OwfApplicationConfigurationService extends ApplicationConfigurationService
             return
         }
 
-        if(applicationConfiguration.code == SECURITY_LEVEL.code) {
+        if(applicationConfiguration.code == OwfApplicationSetting.SECURITY_LEVEL.code) {
             def value = applicationConfiguration.value
             def validator
             try {
@@ -94,14 +103,14 @@ class OwfApplicationConfigurationService extends ApplicationConfigurationService
      * @return the currently-stored value of the SESSION_CONTROL_ENABLED configuration
      */
     private boolean getSessionControlEnabled() {
-        getApplicationConfiguration(SESSION_CONTROL_ENABLED).value.toBoolean()
+        getApplicationConfiguration(OwfApplicationSetting.SESSION_CONTROL_ENABLED).value.toBoolean()
     }
 
     /**
      * @return the currently-stored value of the SESSION_CONTROL_MAX_CONCURRENT configuration
      */
     private int getSessionControlMax() {
-        getApplicationConfiguration(SESSION_CONTROL_MAX_CONCURRENT).value.toInteger()
+        getApplicationConfiguration(OwfApplicationSetting.SESSION_CONTROL_MAX_CONCURRENT).value.toInteger()
     }
 
     /**
@@ -121,11 +130,11 @@ class OwfApplicationConfigurationService extends ApplicationConfigurationService
                     DISABLED_SETTING) 
             }
             //check to see if item is a session control configuration and handle appropriately
-            else if (item.code == SESSION_CONTROL_ENABLED.code) {
+            else if (item.code == OwfApplicationSetting.SESSION_CONTROL_ENABLED.code) {
                 updateMaxSessions(item.value.toBoolean() ? getSessionControlMax() : 
                     DISABLED_SETTING)
             }
-            else if (item.code == SESSION_CONTROL_MAX_CONCURRENT.code) {
+            else if (item.code == OwfApplicationSetting.SESSION_CONTROL_MAX_CONCURRENT.code) {
                 if (getSessionControlEnabled()) {
                     updateMaxSessions(item.value.toInteger())
                 }
@@ -151,7 +160,7 @@ class OwfApplicationConfigurationService extends ApplicationConfigurationService
             //this is expected in dev mode, since spring security is not set up
         }
 
-        handleDisableInactiveAccountsJobChange(this.getApplicationConfiguration(DISABLE_INACTIVE_ACCOUNTS))
+        handleDisableInactiveAccountsJobChange(this.getApplicationConfiguration(OwfApplicationSetting.DISABLE_INACTIVE_ACCOUNTS))
 	}
 
     @Transactional(readOnly = true)
@@ -166,10 +175,10 @@ class OwfApplicationConfigurationService extends ApplicationConfigurationService
         }
     }
 
-	private def handleDisableInactiveAccountsJobChange(ApplicationConfiguration configItem) {
+	def handleDisableInactiveAccountsJobChange(ApplicationConfiguration configItem) {
         log.info "Doing disableInactiveAccountsJob change"
-        def job = new DisableInactiveAccountsJob(getApplicationConfiguration(JOB_DISABLE_ACCOUNTS_INTERVAL).value,
-                getApplicationConfiguration(JOB_DISABLE_ACCOUNTS_START).value)
+        def job = new DisableInactiveAccountsJob(getApplicationConfiguration(OwfApplicationSetting.JOB_DISABLE_ACCOUNTS_INTERVAL).value,
+                getApplicationConfiguration(OwfApplicationSetting.JOB_DISABLE_ACCOUNTS_START).value)
 
         // Schedule the disable job if turned on, otherwise cancel the job  
         if (configItem) {
@@ -184,6 +193,6 @@ class OwfApplicationConfigurationService extends ApplicationConfigurationService
 
     @Transactional (readOnly = true)
     public String getApplicationSecurityLevel() {
-        return this.valueOf(SECURITY_LEVEL) ?: ""
+        return this.valueOf(OwfApplicationSetting.SECURITY_LEVEL) ?: ""
     }
 }

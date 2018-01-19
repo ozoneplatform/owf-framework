@@ -1,0 +1,38 @@
+!.gitkeep
+
+.gradle/
+build/
+bin/
+
+### JetBrains (IntelliJ)
+.idea/
+
+### Windows
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+Desktop.ini
+
+### Mac OS
+# General
+*.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+### Eclipse files
+.classpath
+.project
+.settings/
+
+### JGIT CAC files
+RITE_server_public/
+agent.jar
+card.config
+jgit-cli-2.3-20130108.jar
+jgit.cac.sh
+jgit.unix.sh
+jssecacerts
+mscapi-agent-option/
+pkcs11.config

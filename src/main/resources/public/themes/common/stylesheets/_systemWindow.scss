@@ -1,0 +1,41 @@
+$system-window-body-radius: 7px !default;
+$system-window-background-color: #2a2a2a !default;
+$system-window-over-background-color: darken($system-window-background-color, 15) !default;
+
+@include extjs-window-ui(
+    'system-window',
+    
+    $ui-padding: null,
+    $ui-border-radius: $system-window-body-radius,
+    $ui-border-color: $system-window-background-color,
+    $ui-inner-border-color: null,
+    
+    $ui-header-color: $my-apps-window-dashboard-text-color,
+    $ui-header-font-size: $owf-font-size,
+    $ui-header-font-weight: $window-header-font-weight,
+    
+    $ui-body-border-color: $system-window-background-color,
+    $ui-body-background-color: $system-window-background-color,
+    $ui-body-color: $system-window-background-color,
+    
+    $ui-background-color: $system-window-background-color
+);
+
+.x-window-system-window {
+    padding: 24px 24px 24px 24px;
+    
+    .x-window-header {
+        @include border-top-radius($system-window-body-radius);
+        background-image: none;
+        filter: none;
+        border-color: $system-window-background-color;
+        background-color: $system-window-background-color;
+        padding: 9px;
+    }
+
+    .x-window-body {
+        @include border-bottom-radius($system-window-body-radius);
+        //padding: 10px;
+        border: none;
+    }
+}

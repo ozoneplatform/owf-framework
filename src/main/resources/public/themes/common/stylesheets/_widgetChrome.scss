@@ -1,0 +1,237 @@
+.widgetwindow {
+	.widgetheader {	
+		.x-window-header-body {
+			overflow: hidden;
+		}
+	}
+}
+
+.widgetheader {	
+	.x-btn-default-toolbar-small, .x-btn-default-small {
+    	@include owf-background-gradient($widgetheader-button-background);
+		border-color: $widgetheader-button-border;
+		border-radius: 2px 2px 2px 2px;
+	}
+	
+	.x-btn-default-small-icon-text-left button { 
+		height: 14px; 
+	}
+	
+	.x-btn-default-small {
+		.x-btn-inner {
+		    color: $widgetheader-button-text;
+		    font-weight: bold;
+	    }
+	}
+
+    .x-panel-header-text, .x-window-header-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.inactive {
+	.widgetheader {
+		.x-btn-default-toolbar-small, .x-btn-default-small {
+    		@include owf-background-gradient($widgetheader-button-inactive-background);
+		    -moz-border-radius: 2px 2px 2px 2px;
+		    border-color: $widgetheader-button-inactive-border;
+		}
+	
+		.x-btn-default-small {
+			.x-btn-inner {
+			    color: #454F55;
+			    font-weight: bold;
+		    }
+		}
+	}
+
+	.widgetmenubar {
+		background-color: #9DA4A9 !important;
+    	border: none;
+    	
+    	.x-btn {
+    		border-right: $widgetmenubar-button-inactive-border-right;
+    	}
+	}
+}
+
+.widgetmenubar {
+	background: $widgetmenubar-toolbar-background;
+	filter: none;
+	border-color: #242A2C;
+	
+    .x-btn {
+        background: none;
+        border: none;
+        border-right: $widgetmenubar-button-active-border-right;
+	    filter: none;
+    }
+    
+	.x-btn-default-toolbar-small-over, .x-btn-default-small-over {
+		background: $widgetmenubar-menu-active-background;
+	}
+
+    .x-btn-default-toolbar-small .x-btn-inner, .x-btn-default-small .x-btn-inner,
+    .x-btn-default-toolbar-small-over .x-btn-inner, .x-btn-default-small-over .x-btn-inner,
+    .x-btn-default-toolbar-small-focus .x-btn-inner, .x-btn-default-small-focus .x-btn-inner {
+    	color: $widgetmenubar-button-text-color;
+    }
+    
+    .x-btn-default-toolbar-small-focus, .x-btn-default-small-focus,
+    .x-btn-menu-active {
+ 		background: $widgetmenubar-menu-active-background;
+ 		padding: 1px;
+    }
+    
+    .x-btn-menu-active {
+		background: $widgetmenubar-menu-active-background;
+    }
+    
+    .x-btn-over {
+		background: $widgetmenubar-menu-active-background;
+	    filter: none;
+    }
+    
+    .x-btn-arrow {
+	    background-image: $widgetmenubar-button-arrow;
+	}
+
+	.x-toolbar-item {
+		width: auto !important;
+	}
+
+	.x-toolbar-more-icon {
+	    background-image: $widgetmenubar-toolbar-more-icon;
+	}
+
+    // MENUS
+    .x-menu-body {
+		background: $widgetmenubar-menu-background;
+		
+	    .x-menu-icon-separator {
+	    	background: none repeat scroll 0 0 transparent;
+	    	border-left: 0 none;
+	    }
+	    
+		.x-menu-item-separator {
+	    	border-top: $widgetmenubar-menu-item-separator-border-top;
+			background: $widgetmenubar-menu-item-separator-background;
+	    }
+		    
+		.x-menu-item {
+			background: $widgetmenubar-menu-item-background;
+		
+			.x-menu-item-text {
+		    	color: $widgetmenubar-menu-item-text-color;
+		    	font-size: $widgetmenubar-menu-item-text-size;
+		    }
+		}
+		
+		.x-menu-item-link {
+			margin: 0px;
+		}
+		    
+		.x-menu-item-active, .x-menu-item-active .x-menu-item-link {
+			background: $widgetmenubar-menu-item-active-color;
+			border: 0px;
+		}
+		
+		.x-menu-item-arrow {
+    		background: $widgetmenubar-menu-item-arrow;
+    	}
+	}
+}
+	
+.widgetChrome-example {
+    background-color: transparent;
+   	border: 1px solid #A0A9AD;
+   	
+   	.x-panel-header-default-framed {
+    	border: 1px solid #A0A9AD;
+    	@include owf-background-gradient($widgetheader-button-background);
+
+   		.x-panel-header-default-framed-tl, 
+   		.x-panel-header-default-framed-tr, 
+   		.x-panel-header-default-framed-tc,
+   		.x-panel-header-default-framed-ml, 
+   		.x-panel-header-default-framed-mr, 
+   		.x-panel-header-default-framed-mc {
+			background: none;
+		}
+   	}
+
+   	.x-panel-body-default-framed {
+    	background-color: transparent;
+   	}
+
+	.x-panel-default-framed-bl, 
+	.x-panel-default-framed-br, 
+	.x-panel-default-framed-bc,
+	.x-panel-default-framed-ml, 
+	.x-panel-default-framed-mr, 
+	.x-panel-default-framed-mc {
+		background: none;
+	}
+	
+	.x-btn-default-toolbar-small, .x-btn-default-small {	
+    	@include owf-background-gradient($widgetheader-button-inactive-background);
+   		border: 1px solid $widgetchrome-toolbar-border;
+   		
+   		table {
+   			border: 1px solid $widgetchrome-toolbar-border;
+   		}
+		 
+		td {
+			background: none;
+		}
+	}
+	
+	.x-btn-default-toolbar-small-over, .x-btn-default-small-over,
+	.x-btn-default-toolbar-small-pressed, .x-btn-default-small-pressed,
+	.x-btn-default-toolbar-small-focus, .x-btn-default-small-focus {	
+    	@include owf-background-gradient($widgetheader-button-inactive-background);
+   		border: 1px solid $widgetchrome-toolbar-focus-border;
+		
+   		table {
+   			border: 1px solid $widgetchrome-toolbar-focus-border;
+   		}
+	}
+	
+	.x-btn-default-small-over-ml,
+	.x-btn-default-small-over-mr,
+	.x-btn-default-small-over-mc,
+	.x-btn-default-small-pressed-ml,
+	.x-btn-default-small-pressed-mr,
+	.x-btn-default-small-pressed-mc,
+	.x-btn-default-small-focus-ml,
+	.x-btn-default-small-focus-mr,
+	.x-btn-default-small-focus-mc {
+    	@include owf-background-gradient($widgetheader-button-inactive-background);
+	}
+	
+	.x-btn-default-small-over-tl,
+	.x-btn-default-small-over-tr,
+	.x-btn-default-small-over-tc,
+	.x-btn-default-small-pressed-tl,
+	.x-btn-default-small-pressed-tr,
+	.x-btn-default-small-pressed-tc,
+	.x-btn-default-small-focus-tl,
+	.x-btn-default-small-focus-tr,
+	.x-btn-default-small-focus-tc {	
+    	@include owf-background-gradient($widgetheader-button-inactive-background-top);
+	}
+	
+	.x-btn-default-small-over-bl,
+	.x-btn-default-small-over-br,
+	.x-btn-default-small-over-bc,
+	.x-btn-default-small-pressed-bl,
+	.x-btn-default-small-pressed-br,
+	.x-btn-default-small-pressed-bc,
+	.x-btn-default-small-focus-bl,
+	.x-btn-default-small-focus-br,
+	.x-btn-default-small-focus-bc {	
+    	@include owf-background-gradient($widgetheader-button-inactive-background-bottom);
+	}
+}
+

@@ -1,0 +1,99 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath group: 'com.moowork.gradle', name: 'gradle-node-plugin', version: '1.2.0'
+    }
+}
+
+apply plugin: com.moowork.gradle.node.NodePlugin
+apply plugin: com.moowork.gradle.gulp.GulpPlugin
+
+
+import com.moowork.gradle.gulp.GulpTask
+
+
+node {
+    nodeModulesDir = file("${project.projectDir}/javascript")
+}
+
+gulp {
+    workDir = file("${project.projectDir}/javascript")
+}
+
+class GulpIncrementalTask extends GulpTask {
+
+    @Input
+    String taskName
+
+    @InputFiles
+    Iterable<File> nodeModules
+
+    @InputFiles
+    Iterable<File> sources
+
+    @OutputDirectory
+    File output
+
+    @Input
+    File getWorkingDir() {
+        project.file(runner.workingDir)
+    }
+
+    GulpIncrementalTask() {
+        dependsOn 'npmInstall'
+        dependsOn 'installGulp'
+    }
+
+    @Override
+    void exec() {
+        args.add(0, taskName)
+
+        super.exec()
+    }
+
+}
+
+task buildJavascript(group: 'build') {
+    tasks['processResources'].dependsOn('buildJavascript')
+}
+
+task copyVendorLibraries(type: GulpIncrementalTask) {
+    taskName = 'copyVendorLibraries'
+
+    workingDir = file('javascript')
+    nodeModules = fileTree('javascript/node_modules')
+
+    sources = fileTree('javascript/vendor')
+    output = file('src/main/resources/public/vendor')
+
+    tasks['buildJavascript'].dependsOn('copyVendorLibraries')
+}
+
+task copyOwfLibraries(type: GulpIncrementalTask) {
+    taskName = 'copyOwfLibraries'
+
+    workingDir = file('javascript')
+    nodeModules = fileTree('javascript/node_modules')
+
+    sources = fileTree('javascript/src')
+    output = file('src/main/resources/public/js')
+
+    tasks['buildJavascript'].dependsOn('copyOwfLibraries')
+}
+
+task copyOwfPlugins(type: GulpIncrementalTask) {
+    taskName = 'copyOwfPlugins'
+
+    workingDir = file('javascript')
+    nodeModules = fileTree('javascript/node_modules')
+
+    sources = fileTree('javascript/plugins')
+    output = file('src/main/resources/public/js-plugins')
+
+    tasks['buildJavascript'].dependsOn('copyOwfPlugins')
+}
+
+clean.dependsOn gulp_clean

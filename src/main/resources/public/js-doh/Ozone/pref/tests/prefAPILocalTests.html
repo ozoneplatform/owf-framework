@@ -1,0 +1,103 @@
+<html>
+<head>
+    <title>Preference API Local Tests</title>
+    <script type="text/javascript" src="../../../../js-lib/dojo-release-1.5.0/dojo/dojo.js"></script>
+    <script type='text/javascript' src='../../../../js/config/config.js'></script>
+    <script type='text/javascript' src='../../../../js-min/owf-widget-debug.js'></script>
+    <script type="text/javascript">
+    	dojo.registerModulePath("Ozone", "../../../js-doh/Ozone");
+        dojo.provide("Ozone.pref.tests.prefAPILocalTestsHTML");
+        dojo.require("dojo.parser");
+        dojo.require("doh.runner");
+        dojo.require("dojox.io.windowName");
+        dojo.require("dojox.secure.capability");
+
+        dojo.addOnLoad(function() {
+
+            var namespace = 'Ozone.pref.tests.prefAPILocalTests';
+            var name = 'test-preference';
+            var value = 'test-value';
+            var url = Ozone.pref.PrefServer.getUrl();
+
+
+            //register tests
+            doh.register("Ozone.pref.tests.prefAPILocalTests", [
+                {
+                    name: "findWidgetsWithSearchParam",
+                    setUp: function() {
+                        //Setup to do before runTest.
+                    },
+                    runTest: function() {
+                        var deferred = new doh.Deferred();
+
+        				Ozone.pref.PrefServer.findWidgets({
+        					searchParams: {
+        						widgetName: "Nearly"
+        					},
+        					onSuccess:function(result) { 
+                                doh.assertTrue(result.length > 0);
+                                doh.assertTrue(result[0].value.namespace.match(new RegExp(".*Nearly Empty.*")));
+                                dojo.byId('pref').innerHTML+='<b>'+Ozone.util.toString(result)+'</b><br/>';
+								deferred.callback(true);
+        					},
+        					onFailure:function(err) {
+                                deferred.errback(err);
+        		        	}
+        		        });
+        		        
+                        return deferred;
+                    },
+                    tearDown: function() {
+                        //cleanup to do after runTest.
+                    },
+                    timeout: 10000 //10 second timeout.
+                },
+                {
+                    name: "findWidgetExact",
+                    setUp: function() {
+                        //Setup to do before runTest.
+                    },
+                    runTest: function() {
+                        var deferred = new doh.Deferred();
+
+        				Ozone.pref.PrefServer.findWidgets({
+        					searchParams: {
+                                widgetNameExactMatch: true,
+        						widgetName: "Nearly Empty"
+        					},
+        					onSuccess:function(result) {
+                                doh.assertTrue(result.length > 0);
+                                doh.assertEqual(result[0].value.namespace,"Nearly Empty");
+                                dojo.byId('pref1').innerHTML+='<b>'+Ozone.util.toString(result)+'</b><br/>';
+								deferred.callback(true);
+        					},
+        					onFailure:function(err) {
+                                deferred.errback(err);
+        		        	}
+        		        });
+
+                        return deferred;
+                    },
+                    tearDown: function() {
+                        //cleanup to do after runTest.
+                    },
+                    timeout: 10000 //10 second timeout.
+                }
+            ]);
+
+            //Execute D.O.H. in this remote file.
+            doh.run();
+
+        });
+		
+    </script>
+</head>
+<body>
+<h>Preference API Tests</h>
+<div style="border: 2px solid black;">
+    <h>Preference</h>
+    <div id="pref" style="border: 2px solid black;"></div>
+    <div id="pref1" style="border: 2px solid black;"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,175 @@
+﻿@charset "UTF-8";
+
+/* SCSS VARIABLES */
+
+$compile-all: false;
+$include-default: true;
+$relative-image-path-for-uis: false;
+
+//always include images - this is a new variable added in ext-4.0.5
+$include-missing-images: true;
+
+$font-size: $owf-font-size;
+$font-family: $owf-font-family;
+
+// ===============================
+// =========== Panel =============
+// ===============================
+$panel-header-background-color: nth(getWidgetGradientColors($active-widget-theme), 2);
+$panel-body-font-size: $owf-font-size;
+$panel-body-background-color: $owf-window-background-color;
+$panel-frame-background-color: $panel-body-background-color;
+$panel-body-border-color: $owf-panel-body-border-color;
+$panel-body-color: getHighContrastColor($panel-body-background-color);
+
+// ===============================
+// =========== Window ============
+// ===============================
+$window-background-color: nth(getWidgetGradientColors($active-widget-theme), 2);
+$window-body-background-color: $panel-body-background-color;
+$window-frame-background-color: $panel-body-background-color;
+$window-body-border-color: black !default;
+$window-body-color: $panel-body-color;
+
+// ===============================
+// =========== Button ============
+// ===============================
+$button-small-icon-size: $owf-button-small-icon-size;
+$button-medium-icon-size: $owf-button-medium-icon-size;
+$button-large-icon-size: $owf-button-large-icon-size;
+
+// ===============================
+// ============ Form =============
+// ===============================
+$form-field-height: $owf-form-field-height;
+$form-toolbar-field-height: $owf-form-toolbar-field-height;
+$form-field-font-size: $owf-form-field-font-size;
+$form-field-border-width: $owf-form-field-border-width;
+$form-field-border-color: $owf-form-field-border-color;
+$form-field-background-color: $owf-form-field-background-color;
+$form-field-color: $owf-form-field-color;
+$form-checkbox-size: $owf-form-checkbox-size;
+
+$form-field-focus-border-color: $owf-form-field-focus-border-color;
+
+$form-field-invalid-background-color: $owf-form-field-invalid-background-color;
+$form-field-invalid-border-color: $owf-form-field-invalid-border-color;
+
+$form-trigger-width: $owf-form-trigger-width;
+$form-trigger-border-bottom-width: $owf-form-trigger-border-bottom-width;
+$form-trigger-border-bottom-color: $owf-form-trigger-border-bottom-color;
+$form-trigger-border-bottom-color-over: $owf-form-trigger-border-bottom-color-over;
+$form-trigger-border-bottom-color-focus: $owf-form-trigger-border-bottom-color-focus;
+$form-trigger-border-bottom-color-focus-over: $owf-form-trigger-border-bottom-color-focus-over;
+$form-trigger-border-bottom-color-pressed: $owf-form-trigger-border-bottom-color-pressed;
+
+//htmleditor
+$html-editor-border-color: $owf-html-editor-border-color;
+
+
+// ===============================
+// ========== Tool Tip ===========
+// ===============================
+$tip-base-color: $owf-tip-base-color;
+
+//background
+$tip-background-color: $owf-tip-background-color;
+$tip-background-gradient: $owf-tip-background-gradient;
+
+//text
+$tip-body-color: $owf-tip-body-color;
+$tip-body-font-size: $owf-tip-body-font-size;
+$tip-body-font-weight: $owf-tip-body-font-weight;
+$tip-body-padding: $owf-tip-body-padding;
+$tip-body-link-color: $owf-tip-body-link-color;
+
+$tip-header-color: $owf-tip-header-color;
+$tip-header-font-size: $owf-tip-header-font-size;
+$tip-header-font-weight: $owf-tip-header-font-weight;
+$tip-header-padding: $owf-tip-header-padding;
+
+//borders
+$tip-border-color: $owf-tip-border-color;
+$tip-border-width: $owf-tip-border-width;
+$tip-border-radius: $owf-tip-border-radius;
+
+//error tips
+$tip-error-inner-border-color: $owf-tip-error-inner-border-color;
+$tip-error-border-color: $owf-tip-error-border-color;
+$tip-error-border-radius: $owf-tip-error-border-radius;
+$tip-error-border-width: $owf-tip-error-border-width;
+$tip-error-background-color: $owf-tip-error-background-color;
+
+// ===============================
+// =========== Grid =============
+// ===============================
+$grid-header-background-color: $owf-grid-header-background-color;
+$grid-header-over-background-color: $owf-grid-header-over-background-color;
+$grid-header-background-gradient: $owf-grid-header-background-gradient;
+$grid-header-over-background-gradient: $owf-grid-header-over-background-gradient;
+$grid-header-color: $owf-grid-header-color;
+$grid-header-over-border-color: $owf-grid-header-over-border-color;
+
+$grid-row-wrap-border-color: $owf-grid-row-wrap-border-color;
+
+$grid-row-cell-color: $owf-grid-row-cell-color;
+
+$grid-row-cell-background: $owf-grid-row-cell-background;
+$grid-row-cell-alt-background: $owf-grid-row-cell-alt-background;
+$grid-row-cell-over-background-color: $owf-grid-row-cell-over-background-color;
+$grid-row-cell-selected-background-color: $owf-grid-row-cell-selected-background-color;
+$grid-row-cell-focus-background-color: $owf-grid-row-cell-focus-background-color;
+
+// ===============================
+// ======== Drop Down Menu =======
+// ===============================
+//background
+$boundlist-background-color: $owf-boundlist-background-color ;
+
+//borders
+$boundlist-border-color: $owf-boundlist-border-color;
+$boundlist-border-width: $owf-boundlist-border-width;
+$boundlist-border-style: $owf-boundlist-border-style;
+
+$boundlist-item-padding: $owf-boundlist-item-padding;
+$boundlist-item-border-width: $owf-boundlist-item-border-width;
+$boundlist-item-border-style: $owf-boundlist-item-border-style;
+$boundlist-item-border-color: $owf-boundlist-item-border-color;
+
+$boundlist-item-over-border-color: $owf-boundlist-item-over-border-color;
+$boundlist-item-selected-border-color: $owf-boundlist-item-selected-border-color;
+
+$boundlist-item-over-background-color: $owf-boundlist-item-over-background-color;
+$boundlist-item-selected-background-color: $owf-boundlist-item-selected-background-color;
+
+// ===============================
+// ======== Progress bar =========
+// ===============================
+$progress-border-color: $owf-progress-border-color;
+$progress-background-color: $owf-progress-background-color;
+$progress-text-color-back: $owf-progress-text-color-back;
+$progress-bar-background-color: $owf-progress-bar-background-color;
+
+// ===============================
+// ========= Load Mask ===========
+// ===============================
+$loadmask-opacity: $owf-loadmask-opacity;
+$loadmask-backgorund: $owf-loadmask-background;
+
+$loadmask-msg-padding: $owf-loadmask-msg-padding;
+$loadmask-msg-border-color: $owf-loadmask-msg-border-color;
+$loadmask-msg-background-color: $owf-loadmask-msg-background-color;
+$loadmask-msg-background-gradient: $owf-loadmask-msg-background-gradient;
+
+$loadmask-msg-inner-padding: $owf-loadmask-msg-inner-padding;
+$loadmask-msg-inner-icon: $owf-loadmask-msg-inner-icon;
+$loadmask-msg-inner-border-color: $owf-loadmask-msg-inner-border-color;
+$loadmask-msg-inner-background-color: $owf-loadmask-msg-inner-background-color;
+$loadmask-msg-inner-color: $owf-loadmask-msg-inner-color;
+$loadmask-msg-inner-font-size: $owf-loadmask-msg-inner-font-size;
+$loadmask-msg-inner-font-weight: $owf-loadmask-msg-inner-font-weight;
+$loadmask-msg-inner-font-family: $owf-loadmask-msg-inner-font-family;
+$loadmask-msg-inner-font: $owf-loadmask-msg-inner-font;
+
+//Toolbar
+$toolbar-text-color: getHighContrastColor($owf-toolbar-base-color);

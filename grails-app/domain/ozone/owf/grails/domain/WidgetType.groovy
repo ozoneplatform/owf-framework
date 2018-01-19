@@ -1,6 +1,9 @@
 package ozone.owf.grails.domain
 
-//TODO: Does this need to be a domain class?
+import grails.compiler.GrailsCompileStatic
+
+
+@GrailsCompileStatic
 class WidgetType implements Serializable {
 
     static String TYPE = 'widget_type'
@@ -11,7 +14,6 @@ class WidgetType implements Serializable {
 
     static belongsTo = WidgetDefinition
 
-    //TODO: Is this needed
     static hasMany = [widgetDefinitions: WidgetDefinition]
 
     static constraints = {
@@ -25,4 +27,5 @@ class WidgetType implements Serializable {
     static WidgetType getStandard() {
         return findByName('standard')
     }
+
 }

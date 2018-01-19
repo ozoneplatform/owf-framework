@@ -1,16 +1,19 @@
 package ozone.owf.grails.controllers
 
 import grails.converters.JSON
+
 import org.apache.commons.lang.time.StopWatch
-import org.hibernate.FetchMode
+
 import ozone.owf.grails.OwfException
-import org.codehaus.groovy.grails.web.json.JSONObject
-import ozone.owf.grails.domain.Dashboard
+import ozone.owf.grails.services.AccountService
+import ozone.owf.grails.services.DashboardService
+
 
 class DashboardController extends BaseOwfRestController {
 
-    def dashboardService
-    def accountService
+    DashboardService dashboardService
+
+    AccountService accountService
 
     def modelName = 'dashboard'
 

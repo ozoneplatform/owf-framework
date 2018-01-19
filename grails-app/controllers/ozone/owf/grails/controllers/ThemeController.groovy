@@ -1,25 +1,33 @@
 package ozone.owf.grails.controllers
 
 import grails.converters.JSON
-import org.codehaus.groovy.grails.commons.GrailsApplication
+
+import org.springframework.core.io.Resource
+
+import ozone.owf.grails.services.ThemeService
 
 
 class ThemeController extends BaseOwfRestController {
-    
-    def themeService
-    GrailsApplication grailsApplication
+
+    ThemeService themeService
 
     def getImageURL = {
-        def appContext = grailsApplication.mainContext
-        def imageURL = themeService.getImageURL(params)
-        //redirect(uri:imageURL)
+        boolean isAdminImage = params.isImageReqAdmin ?: false
 
-        def image = appContext.getResource(imageURL)
-        response.outputStream << image.inputStream
+        String imageUrl = isAdminImage ? "/images/admin/${params.img_name}"
+                                       : "/images/${params.img_name}"
+
+        Resource resource = themeService.getImageResource(imageUrl)
+
+        if (resource == null || !resource.exists()) {
+            return renderResult([message: "Not Found: ${params.img_name}"] as JSON, 404)
+        }
+
+        response.outputStream << resource.inputStream
         response.outputStream.flush()
     }
 
-    def getAvailableThemes = { 
+    def getAvailableThemes = {
         renderResult((themeService.getAvailableThemes()) as JSON, 200)
     }
 }

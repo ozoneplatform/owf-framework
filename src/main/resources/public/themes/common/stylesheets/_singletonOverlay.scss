@@ -1,0 +1,87 @@
+$large-icon-width: 48px;
+$large-icon-height: 49px;
+$large-overlay-width: 24px;
+$large-overlay-height: 24px;
+$large-overlay-xoffset: -5px;
+$large-overlay-yoffset: 5px;
+$small-icon-width: 24px;
+$small-icon-height: 24px;
+$small-overlay-width: 12px;
+$small-overlay-height: 12px;
+$small-overlay-xoffset: -3px;
+$small-overlay-yoffset: 3px;
+$header-icon-width: 16px;
+$header-icon-height: 16px;
+$header-overlay-width: 8px;
+$header-overlay-height: 8px;
+$header-overlay-xoffset: -4px;
+$header-overlay-yoffset: -3px;
+$customize-icon-width: 16px;
+$customize-icon-height: 20px;
+$customize-overlay-width: 8px;
+$customize-overlay-height: 8px;
+$customize-overlay-xoffset: -2px;
+$customize-overlay-yoffset: 8px;
+$detail-icon-width: 48px;
+$detail-icon-height: 49px;
+$detail-overlay-width: 24px;
+$detail-overlay-height: 24px;
+$detail-overlay-xoffset: -5px;
+$detail-overlay-yoffset: 5px;
+
+
+.x-large-singleton-image {
+    position: relative;
+    height: $large-overlay-height;
+    width: $large-overlay-width;
+    right: ($large-overlay-width / 2) - $large-overlay-xoffset;
+    bottom: $large-icon-height - ($large-overlay-height / 2) - $large-overlay-yoffset;
+}
+.x-small-singleton-image {
+    position: relative;
+    height: $small-overlay-height;
+    width: $small-overlay-width;
+    right: ($small-overlay-width / 2) - $small-overlay-xoffset;
+    bottom: $small-icon-height - ($small-overlay-height / 2) - $small-overlay-yoffset;
+}
+
+.x-header-singleton-image {
+    position: relative;
+    height: $header-overlay-height;
+    width: $header-overlay-width;
+    right: ($header-overlay-width / 2) - $header-overlay-xoffset;
+    bottom: ($header-icon-height / 2) - ($header-overlay-height / 2) - $header-overlay-yoffset;
+
+//    margin-top: auto;
+//    margin-bottom:auto;
+    vertical-align: middle;
+}
+
+//.x-ie .x-header-singleton-image {
+//    position: relative;
+//    height: $header-overlay-height;
+//    width: $header-overlay-width;
+//    right: ($header-overlay-width / 2) - $header-overlay-xoffset;
+//
+//     //IE had it 2 pixels too low for some reason
+//    bottom: ($header-icon-height / 2) - ($header-overlay-height / 2) - $header-overlay-yoffset + 2; 
+//
+//    margin-top: auto;
+//    margin-bottom:auto;
+//}
+
+.x-customize-singleton-image {
+    position: relative;
+    height: $customize-overlay-height;
+    width: $customize-overlay-width;
+    right: ($customize-overlay-width / 2) - $customize-overlay-xoffset;
+    bottom: $customize-icon-height - ($customize-overlay-height / 2) - $customize-overlay-yoffset;
+}
+
+.x-detail-singleton-image {
+    position: relative;
+    height: $detail-overlay-height;
+    width: $detail-overlay-width;
+    right: ($detail-overlay-width / 2) - $detail-overlay-xoffset;
+    bottom: $detail-icon-height - ($detail-overlay-height / 2) - $detail-overlay-yoffset;
+}

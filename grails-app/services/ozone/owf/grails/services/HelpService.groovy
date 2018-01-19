@@ -1,7 +1,7 @@
 package ozone.owf.grails.services
 
-import org.springframework.context.*
 import groovy.io.FileVisitResult
+
 
 class HelpService {
 
@@ -57,12 +57,16 @@ class HelpService {
     def dirMap = ['/' : data]
 
     def internalFile
+    def externalHelpRes
     def externalFile
     
     def internalHelpRes = appContext.getResource('help')
-    def externalHelpRes = appContext.getResource(grailsApplication.config.owf.external.helpPath)
     if (internalHelpRes.exists()) { internalFile = internalHelpRes.file }
-    if (externalHelpRes.exists()) { externalFile = externalHelpRes.file }
+    
+    // protect, external help file path may not be set in application.yml
+    def externalFilePath = grailsApplication.config.owf.external.helpPath
+    if (externalFilePath) { externalHelpRes = appContext.getResource(externalFilePath) }
+    if (externalHelpRes && externalHelpRes.exists()) { externalFile = externalHelpRes.file }
 
     if (externalFile) { recurseFiles(externalFile, dirMap) }
     if (internalFile) { recurseFiles(internalFile, dirMap) }

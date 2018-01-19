@@ -1,34 +1,38 @@
 package ozone.owf.grails.services
 
+import groovy.transform.PackageScope
+
 import grails.converters.JSON
-import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
-import org.codehaus.groovy.grails.web.util.AbstractTypeConvertingMap
-import org.codehaus.groovy.grails.web.util.TypeConvertingMap
-import ozone.owf.grails.domain.WidgetDefinition
+import grails.core.GrailsApplication
+import grails.util.AbstractTypeConvertingMap
+import grails.util.TypeConvertingMap
+
+import org.hibernate.CacheMode
+
 import ozone.owf.grails.AuditOWFWebRequestsLogger
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
-import ozone.owf.grails.domain.PersonWidgetDefinition
-import ozone.owf.grails.domain.Dashboard
-import ozone.owf.grails.domain.Group
-import ozone.owf.grails.domain.Person
-import org.hibernate.CacheMode
-import ozone.owf.grails.domain.RelationshipType
-import ozone.owf.grails.domain.Intent
-import ozone.owf.grails.domain.IntentDataType
-import ozone.owf.grails.domain.Stack
-import ozone.owf.grails.domain.WidgetDefinitionIntent
-import ozone.owf.grails.domain.WidgetType
-import ozone.owf.grails.domain.DomainMapping
+import ozone.owf.grails.domain.*
+
+import static ozone.owf.util.TypeSafety.asList
+import static ozone.owf.util.TypeSafety.asMap
+
 
 class WidgetDefinitionService {
 
-    def loggingService = new AuditOWFWebRequestsLogger()
-    def accountService
-    def domainMappingService
-    def serviceModelService
+    GrailsApplication grailsApplication
 
-    def grailsApplication
+    AccountService accountService
+
+    DomainMappingService domainMappingService
+
+    ServiceModelService serviceModelService
+
+    DescriptorService descriptorService
+
+    WidgetRequiredIdsService widgetRequiredIdsService
+
+    SyncService syncService
 
     //TODO: implement ignoreCase and fetch params
     //@param returnDomainObjects If true, returns domain objects instead of service items
@@ -393,7 +397,7 @@ class WidgetDefinitionService {
                 // delete and the recreate requirements
                 domainMappingService.deleteAllMappings(widgetDefinition, RelationshipType.requires, 'src')
 
-                params?.directRequired.each {
+                params.directRequired.each {
                     def requiredWidget = WidgetDefinition.findByWidgetGuid(it, [cache:true])
                     if (requiredWidget != null) {
                         domainMappingService.createMapping(widgetDefinition, RelationshipType.requires, requiredWidget)
@@ -403,94 +407,7 @@ class WidgetDefinitionService {
 
             //Save the intents
             if(params.intents != null && !(params.intents instanceof String) && (params.intents?.send != null || params.intents?.receive != null)) {
-                //Get all existing widget definition intents to clear them
-                WidgetDefinitionIntent.findAllByWidgetDefinition(widgetDefinition).collect() {
-                    def intent = it.intent
-                    intent.removeFromWidgetDefinitionIntents(it)
-                    widgetDefinition.removeFromWidgetDefinitionIntents(it)
-                    intent.save()
-                    widgetDefinition.save()
-                }
-
-                def allIntents = []
-                if(params.intents.send != null) {
-                    allIntents.addAll(params.intents.send)
-                }
-                if(params.intents.receive != null) {
-                    allIntents.addAll(params.intents.receive)
-                }
-
-                //Save the last send intent to save their flags appropriately
-                def lastSendIntent = params.intents.send ? params.intents.send.size() : 0;
-
-                for(int i = 0; i < allIntents.size(); i++) {
-                    def intent = allIntents[i]
-                    def newIntent = Intent.findByAction(intent.action)
-
-                    def newIntentDataTypes = []
-                    intent.dataTypes.collect {
-                        newIntentDataTypes.push(IntentDataType.findByDataType(it) ?: new IntentDataType(dataType: it))
-                    }
-
-                    if(!newIntent) {
-                        //Intent doesn't exist, create a new intent
-                        newIntent = new Intent(action: intent.action, dataTypes: newIntentDataTypes)
-                    }
-
-                    def existingDataTypes = []
-                    newIntent.dataTypes.each { existingDataTypes.push(it.toString().toLowerCase()) }
-
-                    //Add any data types to the intent that don't already exist
-                    for(newIntentDataType in newIntentDataTypes) {
-                        if(!existingDataTypes.contains(newIntentDataType.toString().toLowerCase())) {
-                            newIntent.addToDataTypes(newIntentDataType)
-                            existingDataTypes.push(newIntentDataType.toString().toLowerCase())
-                        }
-                    }
-
-                    newIntent.save()
-
-                    //Add new widget definition intent
-                    def newWidgetDefinitionIntent
-                    if(i < lastSendIntent) {
-                        //Create a new sending widget definition intent if one doesn't already exist
-                        newWidgetDefinitionIntent = WidgetDefinitionIntent.createCriteria().get {
-                            eq('widgetDefinition', widgetDefinition)
-                            eq('intent', newIntent)
-                            eq('send', true)
-                            eq('receive', false)
-                        }
-                        if(!newWidgetDefinitionIntent) {
-                            newWidgetDefinitionIntent = new WidgetDefinitionIntent(widgetDefinition: widgetDefinition, intent: newIntent,
-                                send: true, receive: false)
-                            widgetDefinition.addToWidgetDefinitionIntents(newWidgetDefinitionIntent)
-                        }
-                    } else {
-                        //Create a new receiving widget definition intent if one doesn't already exist
-                        newWidgetDefinitionIntent = WidgetDefinitionIntent.createCriteria().get {
-                            eq('widgetDefinition', widgetDefinition)
-                            eq('intent', newIntent)
-                            eq('receive', true)
-                            eq('send', false)
-                        }
-                        if(!newWidgetDefinitionIntent) {
-                            newWidgetDefinitionIntent = new WidgetDefinitionIntent(widgetDefinition: widgetDefinition, intent: newIntent,
-                                send: false, receive: true)
-                            widgetDefinition.addToWidgetDefinitionIntents(newWidgetDefinitionIntent)
-                        }
-                    }
-
-                    //Add any data types to the widget definition intent that don't already exist
-                    for(newIntentDataType in newIntentDataTypes) {
-                        if(!newWidgetDefinitionIntent.dataTypes?.contains(newIntentDataType)) {
-                            newWidgetDefinitionIntent.addToDataTypes(newIntentDataType)
-                        }
-                    }
-
-                    newWidgetDefinitionIntent.save()
-                    newIntent.save()
-                    widgetDefinition.save(flush:true)
-                }
+                updateWidgetIntents(widgetDefinition, asMap(params.intents))
             }
         }
         else {
@@ -573,7 +490,7 @@ class WidgetDefinitionService {
                         domainMappingService.deleteMapping(group, RelationshipType.owns, widgetDefinition)
                     }
 
-                    group.syncPeople()
+                    syncService.syncPeopleInGroup(group)
                     updatedGroups << group
                 }
             }
@@ -643,6 +560,82 @@ class WidgetDefinitionService {
         }
 
         return returnValue
+    }
+
+    private static void updateWidgetIntents(WidgetDefinition widgetDefinition, Map intents) {
+        //Get all existing widget definition intents to clear them
+        WidgetDefinitionIntent.findAllByWidgetDefinition(widgetDefinition).collect() {
+            def intent = it.intent
+            widgetDefinition.removeFromWidgetDefinitionIntents(it)
+            intent.removeFromWidgetDefinitionIntents(it)
+            intent.save(flush:true)
+            widgetDefinition.save(flush: true)
+        }
+
+        asList(intents.send).each { updateWidgetIntent(widgetDefinition, asMap(it), true) }
+        asList(intents.receive).each { updateWidgetIntent(widgetDefinition, asMap(it), false) }
+    }
+
+    private static void updateWidgetIntent(WidgetDefinition widgetDefinition, Map params, boolean isSend) {
+        // TODO: Add validation
+        String intentAction = params.action as String
+        List<String> intentDataTypes = params.dataTypes as List<String>
+
+        List<IntentDataType> newIntentDataTypes = intentDataTypes.collect {
+            IntentDataType.findByDataType(it) ?: new IntentDataType(dataType: it)
+        }
+
+        Intent intent = Intent.findByAction(intentAction)
+        if (!intent) {
+            //Intent doesn't exist, create a new intent
+            intent = new Intent(action: intentAction, dataTypes: newIntentDataTypes)
+        }
+
+        List<String> existingDataTypes = intent.dataTypes.collect { it.toString().toLowerCase() }
+
+        //Add any data types to the intent that don't already exist
+        for (IntentDataType newIntentDataType in newIntentDataTypes) {
+            if (!existingDataTypes.contains(newIntentDataType.toString().toLowerCase())) {
+                intent.addToDataTypes(newIntentDataType)
+                existingDataTypes.push(newIntentDataType.toString().toLowerCase())
+            }
+        }
+        intent.save()
+
+        def newWidgetDefinitionIntent = findOrCreateWidgetDefIntent(widgetDefinition, intent, isSend)
+
+        //Add any data types to the widget definition intent that don't already exist
+        for (newIntentDataType in newIntentDataTypes) {
+            if (!newWidgetDefinitionIntent.dataTypes?.contains(newIntentDataType)) {
+                newWidgetDefinitionIntent.addToDataTypes(newIntentDataType)
+            }
+        }
+
+        newWidgetDefinitionIntent.save()
+        intent.save()
+        widgetDefinition.save(flush: true)
+    }
+
+
+    private static WidgetDefinitionIntent findOrCreateWidgetDefIntent(WidgetDefinition widgetDef, Intent intent, boolean isSend) {
+        WidgetDefinitionIntent widgetDefIntent = (WidgetDefinitionIntent) WidgetDefinitionIntent.createCriteria().get {
+            eq('widgetDefinition', widgetDef)
+            eq('intent', intent)
+            eq('send', isSend)
+            eq('receive', !isSend)
+        }
+
+        if (!widgetDefIntent) {
+            widgetDefIntent = new WidgetDefinitionIntent(
+                    widgetDefinition: widgetDef,
+                    intent: intent,
+                    send: isSend,
+                    receive: !isSend)
+
+            widgetDef.addToWidgetDefinitionIntents(widgetDefIntent)
+        }
+
+        widgetDefIntent
     }
 
     def delete(params){
@@ -746,86 +739,38 @@ class WidgetDefinitionService {
         return [success: true, data: processedWidgets]
     }
 
+    def getDirectRequiredIds(widgetDef) {
+        getRequiredWidgetIds(ids: widgetDef.widgetGuid, noRecurse: true).data
+    }
+
+    def getAllRequiredIds(widgetDef) {
+        getRequiredWidgetIds(ids: widgetDef.widgetGuid, noRecurse: false).data
+    }
+
     def getRequiredWidgetIds(params) {
-
-        def srcGuids = params.ids
-        def widgetDefs
-
-        widgetDefs = WidgetDefinition.withCriteria({
-            inList('widgetGuid', srcGuids);
-        });
-
-        def srcIds = widgetDefs.collect{ it.id }
-        def reqIds = null
-        def accRecIds = []
-
-        def recs = domainMappingService.getRequiredWidgets(srcIds)
-
-        if (params.noRecurse) {
-            accRecIds = recs.collect{it.destId}
-        }
-        else while (recs) {
-            reqIds = recs.collect{ it.destId }
-            reqIds = reqIds.minus(accRecIds)
-            if (reqIds && reqIds.size() > 0) {
-                accRecIds.addAll(reqIds)
-                recs = domainMappingService.getRequiredWidgets(reqIds)
-            } else {
-                recs = null
-            }
-        }
-
-      def processedWidgetsIds = [];
-
-      if (accRecIds && accRecIds.size() > 0) {
-          widgetDefs = WidgetDefinition.withCriteria({
-              inList('id', accRecIds);
-          });
-
-          processedWidgetsIds = widgetDefs.collect {
-             it.widgetGuid
-          }
-      }
-
+        def processedWidgetsIds = widgetRequiredIdsService.getRequiredWidgetIds(params.ids, params.noRecurse)
         return [success: true, data: processedWidgetsIds]
     }
 
-    def export(params) {
+    String export(String widgetGuid) {
         // Only admins may export Widgets
         ensureAdmin()
 
-        def widgetDefinition = WidgetDefinition.findByWidgetGuid(params.id)
+        def widgetDefinition = WidgetDefinition.findByWidgetGuid(widgetGuid)
+
+        if (widgetDefinition == null) {
+            throw new OwfException(
+                    message: "Cannot find WidgetDefinition with GUID ${widgetGuid}",
+                    exceptionType: OwfExceptionTypes.NotFound)
+        }
 
         def widgetData = getWidgetDescriptorJson(widgetDefinition)
 
-        // Get the empty descriptor with appropriate JavaScript
-        def widgetDescriptor
-
-        if (grails.util.GrailsUtil.environment != 'production') {
-            widgetDescriptor = new File('./src/resources/empty_descriptor.html').text
-        } else {
-            // Search classpath since different servlet containers can store
-            // files in any number of places
-            def resource = grailsApplication.mainContext.getResource('classpath:empty_descriptor.html')
-            widgetDescriptor = resource.getFile().text
-        }
-
-        widgetDescriptor = widgetDescriptor.replaceFirst("var data;", java.util.regex.Matcher.quoteReplacement("var data = ${widgetData};"))
-
-        return widgetDescriptor
+        descriptorService.generateDescriptor(widgetData)
     }
 
-    public def getDirectRequiredIds(widgetDef) {
-        getRequiredWidgetIds(ids: widgetDef.widgetGuid, noRecurse: true)
-            .data
-    }
-
-    public def getAllRequiredIds(widgetDef) {
-        getRequiredWidgetIds(ids: widgetDef.widgetGuid, noRecurse: false)
-            .data
-    }
-
-    private def canUseUniversalName(widgetDef, name) {
+    @PackageScope
+    def canUseUniversalName(widgetDef, name) {
         if (widgetDef && name && !name.equals("") )  {
             // Search for this universal name.  Trim the name to disallow variations with
             // leading and trailing whitespace.
@@ -855,7 +800,7 @@ class WidgetDefinitionService {
         return widgetGuids
     }
 
-    private def getWidgetDescriptorJson(widgetDefinition) {
+    String getWidgetDescriptorJson(widgetDefinition) {
 
         def widgetData = [:]
         //Get only the values required for a widget descriptor
@@ -902,7 +847,8 @@ class WidgetDefinitionService {
     //TODO: refactor this out when we have time.  I don't like this logic here
     //      potentially a createListCriteriaFromJSONParams or something in the Service
     //      or a static translation of json param to database fields in the domain
-    private def convertJsonParamToDomainField(jsonParam) {
+    @PackageScope
+    def convertJsonParamToDomainField(jsonParam) {
 
         switch(jsonParam) {
             case ['name','displayName','value.namespace']:

@@ -2,9 +2,12 @@ package ozone.owf.grails.controllers
 
 import grails.converters.JSON
 
+import ozone.owf.grails.services.HelpService
+
+
 class HelpController extends BaseOwfRestController {
 	
-	def helpService
+	HelpService helpService
 
     def getFiles = { 
     	def tree = helpService.getHelpTree()

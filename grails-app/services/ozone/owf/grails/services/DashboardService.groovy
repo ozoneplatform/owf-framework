@@ -1,33 +1,24 @@
 package ozone.owf.grails.services
 
 import grails.converters.JSON
-import org.grails.plugins.metrics.groovy.Metrics
-import org.grails.plugins.metrics.groovy.Timed
-import org.codehaus.groovy.grails.web.json.JSONObject
+
+import org.hibernate.CacheMode
+
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
-import ozone.owf.grails.domain.Dashboard
-import ozone.owf.grails.domain.Person
-import ozone.owf.grails.domain.WidgetDefinition
-import ozone.owf.grails.domain.Group
-import ozone.owf.grails.domain.Stack
-import org.hibernate.CacheMode
-import ozone.owf.grails.domain.DomainMapping
-import ozone.owf.grails.domain.RelationshipType
+import ozone.owf.grails.domain.*
 
-import java.util.concurrent.TimeUnit
 
 class DashboardService extends BaseService {
 
     final def uniqueIdRegex = /"uniqueId"\s*:\s*"[A-Fa-f\d]{8}-[A-Fa-f\d]{4}-[A-Fa-f\d]{4}-[A-Fa-f\d]{4}-[A-Fa-f\d]{12}"/ // /"uniqueId"\s*\:\s*"[A-Fa-f\d]{8}-[A-Fa-f\d]{4}-[A-Fa-f\d]{4}-[A-Fa-f\d]{4}-[A-Fa-f\d]{12}"/
     final def guidRegex = /[A-Fa-f\d]{8}-[A-Fa-f\d]{4}-[A-Fa-f\d]{4}-[A-Fa-f\d]{4}-[A-Fa-f\d]{12}/
 
-    def domainMappingService
-    def serviceModelService
-    def widgetDefinitionService
+    DomainMappingService domainMappingService
 
-    private final com.codahale.metrics.Timer groupsToCompare = Metrics.newTimer("groupsToCompare");
-    private final com.codahale.metrics.Timer createDashboards = Metrics.newTimer("createDashboards");
+    ServiceModelService serviceModelService
+
+    WidgetDefinitionService widgetDefinitionService
 
     def addOrRemove (params) {
         def returnValue = [:]
@@ -165,7 +156,6 @@ class DashboardService extends BaseService {
      * @param maxPosition
      * @return
      */
-    @Timed
     def cloneGroupDashboardAndCreateMapping(Dashboard groupDashboard, long userId, int maxPosition) {
         def args = [:]
         args.with {
@@ -198,7 +188,6 @@ class DashboardService extends BaseService {
      * @param user
      * @return
      */
-    @Timed
     boolean shouldCloneGroupDashboard(Dashboard groupDashboard, Person user) {
         boolean userIsTheOwner = groupDashboard?.stack?.owner == user
         boolean noMarketplaces = !widgetDefinitionService.hasMarketplace().data
@@ -571,9 +560,9 @@ class DashboardService extends BaseService {
             guid: (params.cloned)? ((Dashboard.findByGuid(params.guid) != null)? java.util.UUID.randomUUID().toString() : params.guid) : params.guid,
             isdefault: convertStringToBool(params.isdefault),
             dashboardPosition: params.dashboardPosition != null ? params.dashboardPosition : (getMaxDashboardPosition(person) + 1),
-            description: JSONObject.NULL.equals(params.description) ? null : params.description,
-            iconImageUrl: JSONObject.NULL.equals(params.iconImageUrl) ? null : params.iconImageUrl,
-            type: JSONObject.NULL.equals(params.type) ? null : params.type,
+            description: params.description,
+            iconImageUrl: params.iconImageUrl,
+            type: params.type,
             layoutConfig: params.layoutConfig.toString() ?: "",
             stack: stack,
             locked: params.locked != null ? params.locked : false,
@@ -594,17 +583,20 @@ class DashboardService extends BaseService {
 
         dashboard.validate()
         if (dashboard.hasErrors()) {
-            throw new OwfException(	message:'A fatal validation error occurred during the creating of a dashboard. Params: ' + params.toString() + ' Validation Errors: ' + dashboard.errors.toString(),
-            exceptionType: OwfExceptionTypes.Validation)
+            throw new OwfException(message:
+                    "A fatal validation error occurred during the creating of a dashboard. Params: $params " +
+                            "Validation Errors: ${dashboard.errors}",
+                    exceptionType: OwfExceptionTypes.Validation)
         }
 
         //explicit flush here so subsequent calls will see the new dashboard
-        if (!dashboard.save(flush:true)) {
-            throw new OwfException (message: 'A fatal error occurred while trying to save a dashboard. Params: ' + params.toString(),
-            exceptionType: OwfExceptionTypes.Database)
-        } else {
-            return [success: true, dashboard: dashboard]
+        if (!dashboard.save(flush: true)) {
+            throw new OwfException(
+                    message: "A fatal error occurred while trying to save a dashboard. Params: $params",
+                    exceptionType: OwfExceptionTypes.Database)
         }
+
+        return [success: true, dashboard: dashboard]
     }
 
     def deleteForAdmin(params)
@@ -846,11 +838,11 @@ class DashboardService extends BaseService {
         dashboard.name = params.name ? params.name : dashboard.name
         dashboard.isdefault = params.isdefault != null ? convertStringToBool(params.isdefault) : dashboard.isdefault
         dashboard.dashboardPosition = params.dashboardPosition != null ? params.dashboardPosition as Integer : dashboard.dashboardPosition
-        dashboard.description = JSONObject.NULL.equals(params.description) ? null : params.description
-        dashboard.iconImageUrl = JSONObject.NULL.equals(params.iconImageUrl) ? null : params.iconImageUrl
+        dashboard.description = params.description
+        dashboard.iconImageUrl = params.iconImageUrl
 
         if (params.type) {
-            dashboard.type = JSONObject.NULL.equals(params.type) ? null : params.type
+            dashboard.type = params.type
         }
 
         dashboard.layoutConfig = params.layoutConfig ?: dashboard.layoutConfig
@@ -1366,47 +1358,4 @@ class DashboardService extends BaseService {
         Dashboard.findAllByUser(person)
     }
 
-    @Timed
-    void sync (Person person, Set<Group> groupsToSync = null) {
-        Set<Group> groups = groupsToSync ?: person.getGroupsToSync()
-
-        final com.codahale.metrics.Timer.Context groupsToCompareContext = groupsToCompare.time()
-
-        // find max dashboard position
-        def maxPosition = 0
-        if (person != null) {
-            maxPosition = getMaxDashboardPosition(person)
-        }
-        if (maxPosition < 0) maxPosition = 0;
-
-        // get all group dashboard mappings
-        List groupDashboardMappings = domainMappingService.getGroupDashboardMappings(groups)
-
-        // get all group dashboards
-        List groupDashboards = groupDashboardMappings.collect { it[1] }
-
-        // get all dashboards for user that are clones
-        List clonedDashboardMappings = domainMappingService.getClonedDashboardMappings(person)
-
-        // create a map, group dashboard id => user's clone dashboard
-        Map cloneDashboards = [:]
-        clonedDashboardMappings.each {
-            DomainMapping dm = it[0]
-            Dashboard d = it[1]
-            cloneDashboards[dm.destId] = d
-        }
-        groupsToCompareContext.stop();
-
-        final com.codahale.metrics.Timer.Context createDashboardsContext = createDashboards.time()
-        groupDashboards.each { Dashboard groupDash ->
-            //check if this group dashboard already has a private copy for this person
-            def cloneDashboard = cloneDashboards[groupDash.id]
-
-            //create private copy of the group dashboard for the person if they don't have one
-            if (!cloneDashboard && shouldCloneGroupDashboard(groupDash, person)) {
-                cloneGroupDashboardAndCreateMapping(groupDash, person.id, maxPosition)
-             }
-        }
-        createDashboardsContext.stop()
-    }
 }

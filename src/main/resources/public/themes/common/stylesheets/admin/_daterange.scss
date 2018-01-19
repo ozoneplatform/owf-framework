@@ -1,0 +1,24 @@
+@CHARSET "UTF-8";
+body {
+    /*font: normal 12px "Trebuchet MS",Verdana,Sans;*/
+    padding: 20px;
+    margin: 0px;
+}
+h1 {
+    font-size: 20px;
+    padding: 10 0 10 0;
+    font-weight: normal;
+}
+.pad {
+    padding: 5px;
+}
+.table { font-size: 12px; border: 1px solid #91a3d4; border-top: none; }
+.table .cell { padding: 5px; vertical-align: middle; background: #d3daed; border-top: 1px solid #91a3d4; }
+.table .cell.header { padding: 3px; font-size: 0.8em; font-weight: bold;  background: #6382ba; color: white; }
+.table .cell.caption { vertical-align: top; padding-top: 6px; font-size: 0.9em; font-weight: bold; text-align: right; background: white; border-right: 1px solid #91a3d4; }
+.expand-h { width: 100%; }
+.expand-v { height: 100%; }
+.infogroup { padding-bottom: 20px; }
+.left { text-align: left !important; }
+.center { text-align: center !important; }
+.fw-200 { width: 200px; }

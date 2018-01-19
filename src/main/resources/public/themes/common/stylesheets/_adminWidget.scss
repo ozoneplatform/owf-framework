@@ -1,0 +1,541 @@
+.managementpanel {
+    padding: 5px 5px 5px 5px;
+
+    .reqGrid {
+        .x-grid-body {
+            border-top-style: none;
+        }
+
+        .x-toolbar-default {
+          background-color: white;
+          background-image: none;
+        }
+
+        .x-toolbar .x-toolbar-text {
+            color: $admin-widget-detail-title-color !important;
+            font-size: 1.3 * $owf-font-size;
+            font-weight: bold;
+        }
+
+    }
+
+    .widgetDetailsView {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+}
+
+.adminEditor,.dashboardeditpanel,.groupeditpanel, .stackeditpanel, .usereditpanel, .widgeteditpanel {
+  .x-panel-default {
+    background-color: $owf-toolbar-base-color;
+  }
+}
+
+.x-column-header {
+ font-weight: bold;
+}
+
+.deletepanel {
+    text-align: left;
+    .delTitlePanel, .reqTitlePanel {
+        padding: 5px 5px 5px 5px;
+    }
+}
+
+.properties-body {
+    label {
+        width: 8em;
+    }
+
+    .descriptorUrlToolbar {
+        background: transparent;
+        border: none;
+
+        .x-toolbar-footer {
+            margin: 0px;
+            padding: 0px;
+            padding-bottom: 10px;
+
+            .x-box-inner {
+                margin: 0px !important;
+            }
+        }
+
+        .manualEntryLinkBtn {
+            background: transparent;
+            border: none;
+            filter: none;
+
+            .x-btn-center {
+                background: none;
+            }
+
+            .x-btn-inner {
+                padding: 0px;
+            }
+
+            .x-btn,
+            button,
+            .x-btn-tc,
+            .x-btn-tl,
+            .x-btn-tr,
+            .x-btn-mc,
+            .x-btn-ml,
+            .x-btn-mr,
+            .x-btn-bc,
+            .x-btn-bl,
+            .x-btn-br {
+                filter: 0% !important;
+                background: transparent !important;
+                border-width: 0 !important;
+            }
+        }
+    }
+
+    .descriptorUrlField {
+        label {
+            width: 20em;
+        }
+    }
+
+    .descriptorUrlTitle, .manualEntryTitle {
+        color: $admin-widget-detail-title-color;
+        font-size: 1.3 * $owf-font-size;
+        font-weight: bold;
+    }
+
+    .descriptorUrlTitle {
+        float: left;
+    }
+
+    .descriptorUrlInfoIcon {
+        background: theme-image($theme-name, 'icons/sprite-help.png') -20px 50%;
+        border: none;
+        float: right;
+        width: 20px;
+        height: 20px;
+
+        &::-moz-focus-inner {
+            border: none;
+        }
+
+        &:hover {
+            background-position: 0 50%;
+            cursor: pointer;
+        }
+
+        &:active {
+            background-position: 20px 50%;
+        }
+    }
+
+
+    .descriptorUrlHeader {
+        overflow: hidden;
+    }
+
+    .descriptorUrlErrorMsg {
+        color: $warning-color;
+        margin-top: 0px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .descriptorUrlLoading {
+        margin-top: 30px !important;;
+        font-weight: bold;
+        font-size: 1.3 * $owf-font-size;
+        text-align: center;
+    }
+
+    .x-item-readOnly, .x-item-readOnly * {
+        input, textarea {
+            background-color: transparent;
+            border: none;
+            padding-left: 0px;
+        }
+    }
+
+    .x-item-readOnly.x-item-hidden-field {
+        textarea {
+            height: 0px;
+        }
+    }
+}
+
+.widgeteditintentstab,
+.widgeteditgroupstab ,
+.widgeteditstackstab,
+.widgetedituserstab,
+.usereditdashboardstab,
+.usereditgroupstab,
+.usereditpreferencestab,
+.usereditstackstab,
+.usereditwidgetstab,
+.groupedituserstab,
+.groupeditdashboardstab,
+.groupeditstackstab,
+.groupeditwidgetstab,
+.dashboardeditgroupstab,
+.dashboardeditstackstab,
+.stackeditdashboardstab,
+.stackeditwidgetstab,
+.stackeditgroupstab,
+.stackedituserstab,
+.admineditoraddpanel {
+    .tbAdminEditorAddGridHdr,
+    .tbDashboardsGridHdr,
+    .tbGroupsGridHdr,
+    .tbIntentsGridHdr,
+    .tbPreferencesGridHdr,
+    .tbStacksGridHdr,
+    .tbUsersGridHdr,
+    .tbWidgetsGridHdr {
+        font-size: 1.3 * $owf-font-size;
+        font-weight: bold;
+    }
+}
+
+.widgeteditintentstab {
+    .tbIntentsGridHdr {
+        background: none;
+
+        .lblIntentsGrid {
+            .intents-heading {
+                padding-left: 5px;
+                vertical-align: middle;
+            }
+        }
+    }
+
+    .x-grid-group-hd {
+        .x-grid-cell-inner {
+            padding: 10px 4px 4px 4px;
+            background: transparent;
+            border-width: 0 0 1px 0;
+            border-style: solid;
+            border-color: #BABFC3;
+            cursor: pointer;
+        }
+
+        .x-focus {
+            background-color: $owf-grid-row-cell-focus-background-color;
+            border-color: #BABFC3;
+
+            .x-grid-group-title {
+                color: $owf-grid-row-cell-focus-color;
+            }
+        }
+    }
+
+    .x-grid-cell-inner {
+        .intent-text {
+            padding-left: 25px;
+        }
+
+        .x-focus {
+            background-color: $owf-grid-row-cell-focus-background-color !important;
+        }
+    }
+
+    .x-grid-group-hd-collapsed .x-grid-group-title {
+        background-image: url('../../common/images/icons/arrow_right.png');
+    }
+
+    .x-grid-group-title {
+        background: transparent no-repeat 0 2px;
+        background-image: url('../../common/images/icons/arrow_down.png');
+        color: #000000;
+        font: bold $owf-font-size helvetica, arial, sans-serif;
+        padding: 0 0 0 14px;
+    }
+
+    .x-grid-body .x-grid-row .x-grid-cell {
+        border: none;
+    }
+}
+
+span.heading-bold {
+    font-weight: bold;
+}
+
+span.heading-message {
+    color: #999999 !important;
+}
+
+.grid-widget, .grid-stack {
+    .grid-text {
+        margin-top:4px;
+    }
+
+  .grid-icon-and-text-title-box {
+        width:400px;
+        white-space: nowrap;
+        .grid-icon-and-text-icon {
+            float: left;
+            height: 24px;
+            width: 24px;
+            .grid-icon-and-text-icon-image {
+                margin-top: 2px;
+                height: 16px;
+                width: 16px;
+            }
+        }
+        .grid-icon-and-text-title {
+            white-space: nowrap;
+            float: left;
+            margin-left: 8px;
+            margin-top: 4px;
+        }
+        .grid-widget-singleton-title {
+            @extend .grid-icon-and-text-title;
+        }
+  }
+}
+
+.x-ie {
+    .grid-widget {
+        .grid-icon-and-text-title-box {
+            .grid-widget-singleton-title {
+                @extend .grid-icon-and-text-title;
+                    margin-left: -4px;
+            }
+        }
+    }
+}
+
+div.detail-info {
+    padding: 8px 5px 5px 5px;
+    font-size: .9 * $owf-font-size;
+    color: getHighContrastColor($owf-window-background-color);
+
+    .dashboard-icon, .detail-widget{
+        float: left;
+        width: 48px;
+        height: 48px;
+        margin-right: 5px;
+    }
+
+    .detail-widget {
+        .detail-icon {
+            white-space: nowrap;
+           .detail-icon-image {
+                height: 48px;
+                width: 48px;
+           }
+        }
+    }
+    .detail-title {
+        color: $admin-widget-detail-title-color;
+        font-size: 1.3 * $owf-font-size;
+        font-weight: bold;
+    }
+
+    .detail-block {
+        clear: both;
+        padding-bottom: 10px;
+        padding-top: 10px;
+
+        div {
+            line-height: 1.65;
+        }
+    }
+
+    .detail-label {
+        font-weight: bold;
+    }
+
+    .dashboard-detail-icon-block {
+        position: absolute;
+        height: 48px;
+        width: 48px;
+        left: 4px;
+        right: 0px;
+    }
+
+    .dashboard-detail-info-block {
+        position: absolute;
+        left: 60px;
+        right: 0px;
+    }
+
+    .detail-header-block {
+      //width:400px;
+    }
+
+     .dashboard-created-by-label{
+       font-weight:normal;
+       margin-left: 4px;
+     }
+
+    .dashboard-default-icon-layout {
+       background-image: $owf_dashboard_default_background_image_large;
+    }
+}
+
+.x-ie {
+   .adminEditor {
+         .editor-tabs {
+             .x-toolbar-item * {
+                width: 100%;
+           }
+         }
+
+         //for some reason the checkbox needs less opacity to be visually disabled
+         .properties-checkboxfield-disabled .x-form-item-body  {
+             -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+             filter: alpha(opacity=40);
+             opacity: 0.4;
+         }
+   }
+}
+
+.adminEditor {
+    .editor-tabs {
+        //background-color: white;
+        background-image: none !important;
+        filter: none;
+        padding: 0px;
+    }
+
+    .x-box-menu-right {
+        overflow: visible;
+        height: 100%;
+        min-height: 74px;
+
+        .x-btn {
+            height: 100%;
+
+            button {
+                height: 100%;
+            }
+
+            .x-btn-icon {
+                display: inline-block;
+                height: 100%;
+            }
+        }
+    }
+
+    .x-horizontal-box-overflow-body {
+        position: absolute;
+    }
+
+    .x-form-item-label {
+        color: getHighContrastColor($owf-window-background-color);
+    }
+
+    //sets only the field not the label to disabled
+    .properties-field-disabled .x-form-item-body, .properties-checkboxfield-disabled .x-form-item-body  {
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+        filter: alpha(opacity=80);
+        opacity: 0.3;
+    }
+
+    .properties-tab {
+        background-image: theme-image($theme-name, 'admin/properties.png');
+
+    }
+    .x-btn-disabled .properties-tab {
+        background-image: theme-image($theme-name, 'admin/properties_disabled.png');
+    }
+
+    .intents-tab {
+        background-image: theme-image($theme-name, 'admin/intents.png');
+
+    }
+    .x-btn-disabled .intents-tab {
+        background-image: theme-image($theme-name, 'admin/intents_disabled.png');
+    }
+
+    .users-tab {
+        background-image: theme-image($theme-name, 'admin/user.png');
+    }
+
+    .x-btn-disabled .users-tab {
+        background-image: theme-image($theme-name, 'admin/user_disabled.png');
+    }
+
+    .widgets-tab {
+        background-image: theme-image($theme-name, 'admin/widget.png');
+    }
+    .x-btn-disabled .widgets-tab {
+        background-image: theme-image($theme-name, 'admin/widget_disabled.png');
+    }
+
+    .groups-tab {
+        background-image: theme-image($theme-name, 'admin/group.png');
+    }
+    .x-btn-disabled .groups-tab {
+        background-image: theme-image($theme-name, 'admin/group_disabled.png');
+    }
+
+    .dashboard-tab {
+        background-image: theme-image($theme-name, 'admin/dashboard.png');
+    }
+    .x-btn-disabled .dashboard-tab {
+        background-image: theme-image($theme-name, 'admin/dashboard_disabled.png');
+    }
+
+    .dashboard-tab-over {
+      background-image: theme-image($theme-name, 'admin/dashboard_hover.png');
+    }
+
+    .preferences-tab {
+        background-image: theme-image($theme-name, 'admin/preferences.png');
+    }
+    .x-btn-disabled .preferences-tab {
+        background-image: theme-image($theme-name, 'admin/preferences_disabled.png');
+    }
+
+    .preferences-tab-over {
+      background-image: theme-image($theme-name, 'admin/preferences_hover.png');
+    }
+
+    .stacks-tab {
+        background-image: theme-image($theme-name, 'admin/stack.png');
+    }
+    .x-btn-disabled .stacks-tab {
+        background-image: theme-image($theme-name, 'admin/stack_disabled.png');
+    }
+
+    .gridHeader {
+        .x-toolbar-text {
+            font-weight: bold;
+        }
+    }
+}
+
+.x-ie7 .adminEditor .x-box-menu-right {
+    min-height: 78px;
+}
+
+.x-gecko3 .adminEditor .x-box-menu-right .x-btn-icon {
+    position: static;
+}
+
+
+.grid-dashboard {
+    .grid-text {
+        margin-top:4px;
+    }
+
+    .grid-dashboard-title {
+        padding-left: 28px;
+        @if $owf-font-size == 12px {
+            line-height: 18px;
+        }
+        @if $owf-font-size > 12px {
+            line-height: 24px;
+        }
+        @extend .x-grid-cell-inner;
+    }
+
+    .grid-dashboard-default-icon-layout {
+        background-repeat: no-repeat;
+    }
+
+    .grid-dashboard-default-icon-layout {
+        background-image: $owf_dashboard_default_background_image_small;
+    }
+}
+

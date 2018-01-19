@@ -1,22 +1,28 @@
 package ozone.owf.grails.controllers
 
 import grails.converters.JSON
-import org.grails.plugins.metrics.groovy.Timed
-import ozone.owf.grails.domain.Person
-import ozone.owf.grails.domain.Role;
-import org.codehaus.groovy.grails.web.json.JSONArray
-import ozone.owf.grails.OwfException
-import ozone.owf.grails.OwfExceptionTypes
+
+import org.springframework.http.HttpStatus
+
 import org.apache.commons.lang.time.StopWatch
-/**
- * User controller.
- */
+
+import ozone.owf.grails.OwfException
+import ozone.owf.grails.domain.Person
+import ozone.owf.grails.services.AccountService
+import ozone.owf.grails.services.DashboardService
+import ozone.owf.grails.services.PersonWidgetDefinitionService
+import ozone.owf.grails.services.SyncService
+
+
 class PersonController extends BaseOwfRestController {
 
-    def accountService
-    def authenticateService
-    def dashboardService
-    def personWidgetDefinitionService
+    AccountService accountService
+
+    DashboardService dashboardService
+
+    PersonWidgetDefinitionService personWidgetDefinitionService
+
+    SyncService syncService
 
     def index = {
         redirect action: list, params: params
@@ -59,7 +65,10 @@ class PersonController extends BaseOwfRestController {
         roleNames.sort { n1, n2 ->
             n1 <=> n2
         }
-        [person: person, roleNames: roleNames]
+
+        def jsonResult = [person: person, roleNames: roleNames] as JSON
+
+        renderResult(jsonResult, HttpStatus.OK)
     }
 
     /**
@@ -138,12 +147,11 @@ class PersonController extends BaseOwfRestController {
         renderResult(jsonResult, 200)
     }
 
-    @Timed()
     def myData () {
         def user = accountService.getLoggedInUser()
         def json
         try {
-            accountService.sync(user)
+            syncService.syncPerson(user)
             json = [
                 dashboards: dashboardService.myDashboards(user)*.asJSON(),
                 widgets: personWidgetDefinitionService.myWidgets(user)*.asJSON()

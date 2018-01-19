@@ -1,6 +1,7 @@
 package ozone.owf.grails.domain
 
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
+
 
 class PersonWidgetDefinition implements Serializable, Comparable {
 

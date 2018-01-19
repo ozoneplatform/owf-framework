@@ -1,0 +1,44 @@
+<ivy-module version="2.0">
+    <info organisation="${app.org}" module="${app.name}" revision="${app.version}"/>
+
+    <configurations >
+        <conf name="build" />
+        <conf name="compressjs" />
+        <conf name="jsdoc" />
+        <conf name="zip" />
+        <conf name="bundle" />
+        <conf name="tomcat" />
+        <conf name="hsqldb" />
+        <conf name="release" />
+    </configurations>
+    <publications>
+        <artifact name="${app.name}-bundle" type="zip"
+                  ext="zip" />
+    </publications>
+    <dependencies>
+        <dependency org="${tomcat.custom.org}" name="${tomcat.custom.module}"
+                rev="${tomcat.custom.rev}" transitive="false" conf="tomcat->*">
+            <artifact name="${tomcat.custom.module}" type="zip" />
+        </dependency>
+
+        <dependency org="${owf.security.org}" conf="bundle->*"
+                name="${owf.security.module}-project" rev="${owf.security.rev}"
+                transitive="false" changing="true">
+            <artifact name="${owf.security.module}-project" type="zip" />
+        </dependency>
+
+        <dependency org="com.yahoo.platform.yui" name="yuicompressor"
+            conf="compressjs->master" rev="2.4.2"  />
+
+        <dependency org="jsdoc-toolkit" name="jsdoc_toolkit" rev="2.3.2"
+            conf="jsdoc->*" />
+
+        <dependency org="org.jsdoctoolkit" name="jsdoctoolkit-ant-task" rev="1.0"
+            conf="jsdoc->*;build->*">
+            <exclude module="ant-contrib"/>
+            <exclude module="jsdoc" />
+        </dependency>
+
+        <dependency org="hsqldb" name="hsqldb" rev="1.8.0.10" conf="hsqldb->*" />
+    </dependencies>
+</ivy-module>

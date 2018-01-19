@@ -8,17 +8,20 @@ package ozone.owf.grails.controllers
 
 import grails.converters.JSON
 import grails.util.Holders as ConfigurationHolder
-import ozone.owf.grails.domain.*
+
+import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.grails.services.AccountService
-import ozone.owf.grails.OwfException
-import ozone.owf.grails.OwfExceptionTypes
+import ozone.owf.grails.services.MarketplaceService
+
 
 class MarketplaceController extends BaseOwfRestController {
 
+    MarketplaceService marketplaceService
+
+    AccountService accountService
+
     def config = ConfigurationHolder.config
-    def marketplaceService
-	AccountService accountService
-	
+
     def retrieveFromMarketplace = {
         // Initial setup to include testing that there's a meaningful GUID supplied.
         def stMarketplaceJson = new HashSet()

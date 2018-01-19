@@ -1,14 +1,13 @@
 package ozone.owf.grails.services
 
-import grails.converters.JSON
-import ozone.owf.grails.OwfException
-import ozone.owf.grails.OwfExceptionTypes
-import org.hibernate.CacheMode
+import grails.core.GrailsApplication
+
 
 class MetricService {
 
-  def grailsApplication
-  def httpService
+  GrailsApplication grailsApplication
+
+  HttpService httpService
 
   def create(params) {
     def httpConfig = grailsApplication.config.owf.metric

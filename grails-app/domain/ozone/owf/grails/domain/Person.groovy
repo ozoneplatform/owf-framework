@@ -1,14 +1,12 @@
 package ozone.owf.grails.domain
 
-import org.codehaus.groovy.grails.web.json.JSONObject
-import org.grails.plugins.metrics.groovy.Timed
-import org.hibernate.CacheMode
-import org.hibernate.FetchMode
 import org.hibernate.proxy.HibernateProxy
+
+import org.grails.web.json.JSONObject
+
 /**
  * User domain class.
  */
-
 class Person implements Serializable {
 
     static String TYPE = 'person'
@@ -29,11 +27,11 @@ class Person implements Serializable {
     Boolean requiresSync = false
 
     static hasMany = [
-        authorities: Role,
-        dashboards: Dashboard,
-        personWidgetDefinitions: PersonWidgetDefinition,
-        preferences:Preference,
-        groups: Group
+            authorities            : Role,
+            dashboards             : Dashboard,
+            personWidgetDefinitions: PersonWidgetDefinition,
+            preferences            : Preference,
+            groups                 : Group
     ]
 
     static belongsTo = [Group]
@@ -44,11 +42,11 @@ class Person implements Serializable {
     static mapping = {
         cache true
         authorities cache: true,
-            joinTable: [name: 'person_role', key: 'person_authorities_id', column: 'role_id']
+                joinTable: [name: 'person_role', key: 'person_authorities_id', column: 'role_id']
         groups cache: true
-        dashboards lazy: true, cascade : "delete-orphan", cache: true
-        personWidgetDefinitions lazy: true, cascade : "delete-orphan", cache: true
-        preferences lazy: true, cascade : "delete-orphan", cache: true
+        dashboards lazy: true, cascade: "delete-orphan", cache: true
+        personWidgetDefinitions lazy: true, cascade: "delete-orphan", cache: true
+        preferences lazy: true, cascade: "delete-orphan", cache: true
     }
 
     static constraints = {
@@ -78,65 +76,25 @@ class Person implements Serializable {
         username ? username.hashCode() : 0
     }
 
-    public Set<Group> getStackDefaultGroups() {
-        Group.withCriteria(uniqueResult: true) {
-            eq('stackDefault', true)
-            people {
-                eq('id', this.id)
-            }
-        } as Set
-    }
-
-    public Set<Group> getNonStackDefaultGroups() {
-        Group.withCriteria {
-            people {
-                eq('id', this.id)
-            }
-            eq('status','active')
-            eq('stackDefault', false)
-            cache(true)
-
-            //turn cache mode to GET which means don't use instances from this query for the 2nd level cache
-            //seems to be a bug where the people collection is cached with only one person due to the people association filter above
-            cacheMode(CacheMode.GET)
-        } as Set ?: new HashSet<Group>()
-    }
-
-    public Set<Stack> getStacks() {
-        def stacks = Stack.findAllByOwner(this)
-        stacks as Set ?: new HashSet<Group>()
-    }
-
-    @Timed
-    public Set<Group> getGroupsToSync() {
-        Set<Group> groups = this.groups as Set
-        groups.addAll(this.groups*.stacks*.defaultGroup?.flatten())
-        groups.addAll(Group.findSystemGroups())
-        groups.addAll(Group.findSystemStackDefaultGroups())
-
-        groups = groups - null
-
-        return groups ?: new HashSet<Group>()
-    }
-
-    public Date getLastNotification(){
-        if(!lastNotification)
+    Date getLastNotification() {
+        if (!lastNotification)
             return null
         return new Date(this.lastNotification.time)
     }
 
-    public Person sync (Boolean sync = true) {
+    Person sync(Boolean sync = true) {
         this.requiresSync = sync
         this.save()
     }
 
     JSONObject asJSON() {
         new JSONObject(
-            id: id,
-            username: username,
-            userRealName: userRealName,
-            email: email ?: '',
-            lastLogin: lastLogin ? lastLogin.getTime() : null
+                id: id,
+                username: username,
+                userRealName: userRealName,
+                email: email ?: '',
+                lastLogin: lastLogin ? lastLogin.getTime() : null
         )
     }
+
 }

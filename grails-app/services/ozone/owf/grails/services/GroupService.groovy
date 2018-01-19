@@ -1,23 +1,27 @@
 package ozone.owf.grails.services
 
-import ozone.owf.grails.OwfExceptionTypes
-import ozone.owf.grails.OwfException
-import ozone.owf.grails.domain.Group
-import ozone.owf.grails.domain.Person
-import ozone.owf.grails.domain.Stack
 import grails.converters.JSON
-import ozone.owf.grails.domain.WidgetDefinition
+
 import org.hibernate.CacheMode
-import ozone.owf.grails.domain.RelationshipType
-import ozone.owf.grails.domain.Dashboard
+
+import ozone.owf.grails.OwfException
+import ozone.owf.grails.OwfExceptionTypes
+import ozone.owf.grails.domain.*
+
 
 class GroupService {
 
-    def accountService
-    def dashboardService
-    def domainMappingService
-    def serviceModelService
-    def widgetDefinitionService
+    AccountService accountService
+
+    DashboardService dashboardService
+
+    DomainMappingService domainMappingService
+
+    ServiceModelService serviceModelService
+
+    WidgetDefinitionService widgetDefinitionService
+
+    SyncService syncService
 
     private static def addFilter(name, value, c) {
         c.with {
@@ -375,7 +379,7 @@ class GroupService {
                     updatedWidgets << widget
                 }
             }
-            group.syncPeople();
+            syncService.syncPeopleInGroup(group)
 
             if (!updatedWidgets.isEmpty()) {
                 returnValue = updatedWidgets.collect{ serviceModelService.createServiceModel(it) }
@@ -423,7 +427,7 @@ class GroupService {
                     updatedDashboards << dashboard
                 }
             }
-            group.syncPeople()
+            syncService.syncPeopleInGroup(group)
 
             if (!updatedDashboards.isEmpty()) {
                 // Reconcile any widgets missing from the group that have been added by a dashboard.
@@ -452,7 +456,7 @@ class GroupService {
                 }
             }
 
-            group.syncPeople()
+            syncService.syncPeopleInGroup(group)
 
             if (!updatedStacks.isEmpty()) {
                 returnValue = updatedStacks.collect{ serviceModelService.createServiceModel(it) }

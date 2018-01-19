@@ -8,7 +8,16 @@
 // also apply to the controller class.
 package ozone.owf.grails.services
 
+import java.security.KeyStore
+import java.security.cert.CertificateException
+import java.security.cert.X509Certificate
+
+import grails.config.Config
 import grails.converters.JSON
+import grails.core.GrailsApplication
+import grails.util.Environment
+import grails.util.Holders as ConfigurationHolder
+
 import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.HttpResponseException
 import org.apache.http.client.methods.HttpGet
@@ -18,24 +27,26 @@ import org.apache.http.conn.ssl.SSLSocketFactory
 import org.apache.http.conn.ssl.TrustStrategy
 import org.apache.http.impl.client.BasicResponseHandler
 import org.apache.http.impl.client.DefaultHttpClient
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
+
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
-import grails.util.Holders as ConfigurationHolder
-
 import ozone.owf.grails.domain.*
-import java.security.cert.CertificateException
-import java.security.KeyStore
-import java.security.cert.X509Certificate
-import grails.util.Environment
+
+
 class MarketplaceService extends BaseService {
 
-    def config = ConfigurationHolder.config
-    def domainMappingService
-    def grailsApplication
-    def accountService
-    def stackService
-    def widgetDefinitionService
+    GrailsApplication grailsApplication
+
+    DomainMappingService domainMappingService
+
+    AccountService accountService
+
+    StackService stackService
+
+    WidgetDefinitionService widgetDefinitionService
+
+    Config config = ConfigurationHolder.config
 
     // Performs some of the function of addExternalWidgetsToUser, found in the
     // WidgetDefinitionService.
@@ -93,8 +104,7 @@ class MarketplaceService extends BaseService {
         def widgetDefinition = WidgetDefinition.findByWidgetGuid(obj.widgetGuid, [cache: true])
 
         if (widgetDefinition == null) {
-            if (grails.util.GrailsUtil.environment != 'test')
-                log.info "Creating new widget definition for ${obj.widgetGuid}"
+            log.info "Creating new widget definition for ${obj.widgetGuid}"
 
             widgetDefinition = new WidgetDefinition()
         }
@@ -133,7 +143,7 @@ class MarketplaceService extends BaseService {
             widgetDefinition.widgetTypes = []
 
             obj.widgetTypes.each { widgetType ->
-                def widgetTypeFromMP = JSONObject.NULL.equals(widgetType) ? WidgetType.standard.name : widgetType;
+                def widgetTypeFromMP = widgetType == null ? WidgetType.standard.name : widgetType;
                 def typeFound = WidgetType.findByName(widgetTypeFromMP)
                 if (typeFound) {
                     widgetDefinition.widgetTypes << typeFound
@@ -150,7 +160,7 @@ class MarketplaceService extends BaseService {
         // Marketplace may not be configured to provide intents. In such
         // a case the send and receive lists are empty. DO NOT overwrite
         // intents that are already in OWF if MP is not providing them.
-        if (obj.intents && !JSONObject.NULL.equals(obj.intents) &&
+        if (obj.intents && obj.intents != null &&
                 ((obj.intents.send && obj.intents.send.size() > 0) ||
                         (obj.intents.receive && obj.intents.receive.size() > 0))) {
             // Structure of the intents field (forgive the bastardized BNF/schema mix)
@@ -225,7 +235,8 @@ class MarketplaceService extends BaseService {
             obj.intents.send?.each { addIntent(it, true, false) }
         }
         //OP-31: Intents as part of a listing. These are the intents directly from the ServiceItem
-        else if (obj.listingIntents && !JSONObject.NULL.equals(obj.intents) && obj.listingIntents.size() > 0) {
+        else if (obj.listingIntents && obj.intents != null && obj.listingIntents.size() > 0) {
+            System.out.println("Adding listingIntents")
             //Convert the AppsMall listing's intents to OWF's intents and add them to the widget definition
             obj.listingIntents.each {
                 def dataType
@@ -346,7 +357,7 @@ class MarketplaceService extends BaseService {
                         userWidget: true
                 )
 
-                if (mapping.hasErrors()) {
+                if (!mapping.validate()) {
                     throw new OwfException(message: 'A fatal validation error occurred during the creation of the person widget definition. Params: ' + params.toString() + ' Validation Errors: ' + mapping.errors.toString(),
                             exceptionType: OwfExceptionTypes.Validation)
                 }
@@ -470,18 +481,15 @@ class MarketplaceService extends BaseService {
 
 
     private SSLSocketFactory createSocketFactory() {
-
-
 		//In dev bypass all the keystore stuff
-		if (Environment.current == Environment.DEVELOPMENT){
-			return new SSLSocketFactory(new TrustStrategy(){
-				@Override
-				public boolean isTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-					return true;
-				}
-			})
-		}
-
+        if (Environment.current == Environment.DEVELOPMENT || Environment.current == Environment.TEST) {
+            return new SSLSocketFactory(new TrustStrategy() {
+                @Override
+                public boolean isTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                    return true;
+                }
+            })
+        }
 
         // Some initial setup pertaining to getting certs ready for
         // use (presuming SSL mutual handshake between servers).

@@ -1,0 +1,133 @@
+<settings>
+
+  <pluginGroups>
+    <pluginGroup>com.atlassian.maven.plugins</pluginGroup>
+    <pluginGroup>com.totsp.gwt</pluginGroup>	
+    <pluginGroup>com.octo.mtg</pluginGroup>	
+  </pluginGroups>
+
+  <mirrors>
+    <mirror>
+      <!--This is used to direct the public snapshots repo in the 
+          profile below over to a different nexus group -->
+      <id>nexus-public-snapshots</id>
+      <mirrorOf>public-snapshots</mirrorOf>
+      <url>http://cube.dev.texeltek.com:8080/nexus/content/groups/public-snapshots</url>
+    </mirror>
+    <mirror>
+      <!--This sends everything else to /public -->
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://cube.dev.texeltek.com:8080/nexus/content/groups/public</url>
+    </mirror>
+  </mirrors>
+  <profiles>
+    <profile>
+      <id>development</id>
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+      </repositories>
+     <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+      
+      
+      <properties>
+		<oracle.server>hindenburg.dev</oracle.server>
+		<oracle.port>1521</oracle.port>
+		<oracle.sid>XE</oracle.sid>
+		<oracle.user>drake</oracle.user>
+		<oracle.password>drake</oracle.password>
+		<oracle.testuser>test</oracle.testuser>
+		<oracle.testpassword>test</oracle.testpassword>
+		<oracle.dbauser>sys</oracle.dbauser>
+		<oracle.dbapassword>password</oracle.dbapassword>
+		<!-- hibernate.cfg.xml -->
+		<jdbc.username>root</jdbc.username>
+		<jdbc.password></jdbc.password> 
+		<jdbc.catalog>ozone</jdbc.catalog> 
+		<jdbc.url>jdbc:mysql://localhost/ozone?autoReconnect=true</jdbc.url>
+	</properties>
+	
+    </profile>
+    <profile>
+      <!--this profile will allow snapshots to be searched when activated-->
+      <id>public-snapshots</id>
+      <repositories>
+        <repository>
+          <id>public-snapshots</id>
+          <url>http://public-snapshot</url>
+          <releases><enabled>false</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+      </repositories>
+     <pluginRepositories>
+        <pluginRepository>
+          <id>public-snapshots</id>
+          <url>http://public-snapshots</url>
+          <releases><enabled>false</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+    <profile>
+      <repositories>
+        <repository>
+          <id>codehausSnapshots</id>
+          <name>Codehaus Snapshots</name>
+          <releases>
+            <enabled>false</enabled>
+            <updatePolicy>always</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+            <checksumPolicy>fail</checksumPolicy>
+          </snapshots>
+          <url>http://snapshots.maven.codehaus.org/maven2</url>
+          <layout>default</layout>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+   
+  <activeProfiles>
+    <activeProfile>development</activeProfile>
+  </activeProfiles>
+
+ <!-- add ability to do remote deployments -->
+  <servers>
+    <server>
+      <id>releases</id>
+      <username>deployment</username>
+      <password>deployment123</password>
+    </server>  
+    <server>
+      <id>snapshots</id>
+      <username>deployment</username>
+      <password>deployment123</password>
+    </server>  
+    <server>
+      <id>thirdparty</id>
+      <username>deployment</username>
+      <password>deployment123</password>
+    </server> 
+  </servers>
+  
+</settings>
+
+
+
+
+

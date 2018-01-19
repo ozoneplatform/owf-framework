@@ -1,0 +1,58 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    dependencies {
+        classpath group: 'com.github.jruby-gradle', name: 'jruby-gradle-plugin', version: '1.5.0'
+    }
+}
+
+apply plugin: com.github.jrubygradle.JRubyPlugin
+
+
+import com.github.jrubygradle.JRubyExec
+
+jruby {
+    defaultRepositories false
+}
+
+repositories {
+    rubygems('https://rubygems.org')
+}
+
+configurations {
+    themeCompileGem
+}
+
+task buildThemes(group: "build") {
+    tasks['processResources'].dependsOn('buildThemes')
+}
+
+List<String> THEMES =
+    files { file('./src/main/resources/public/themes').listFiles() }
+            .filter { it.isDirectory() & it.name.endsWith('.theme') }
+            .collect { it.name } as List<String>
+
+THEMES.forEach { themeDir ->
+    String themeName = themeDir[0..-7]
+    String themePath = "./src/main/resources/public/themes/$themeDir/sass"
+    String taskName = "buildTheme_$themeName"
+
+    task(taskName, type: JRubyExec, group: "themes") {
+        dependsOn('copyVendorLibraries')
+
+        inputs.files(fileTree(themePath))
+        outputs.files(fileTree("./src/main/resources/public/themes/$themeDir/css"))
+
+        configuration project.configurations.themeCompileGem
+
+        workingDir "$themePath"
+
+        jrubyVersion '1.7.27'
+        jrubyArgs '-S'
+        script 'compass'
+        scriptArgs 'compile'
+    }
+    buildThemes.dependsOn << taskName
+}

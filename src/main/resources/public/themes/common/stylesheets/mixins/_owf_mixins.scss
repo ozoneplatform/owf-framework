@@ -1,0 +1,643 @@
+@charset "UTF-8";
+
+@mixin clear-box-shadow() {
+    -webkit-box-shadow: none; /* Saf3.0+, Chrome */
+    -moz-box-shadow: none; /* FF3.5 - 3.6 */
+    box-shadow: none; /* Opera 10.5, IE9, FF4+, Chrome 10+ */
+}
+
+//takes a color that might have an alpha channel and
+//outputs an opaque fallback background-color for IE as
+//well as the actual color as background-color for newer
+//browsers
+@mixin owf-background-color($color, $importance: $owf_css_not_important, $include_opacity: true) {
+    $color: strip-stop($color);
+
+    @if $include_opacity == false {
+        background-color: opacify($color, 1) #{$importance};
+    }
+    @else {
+        background-color: $color #{$importance};
+    }
+}
+
+@mixin owf-background-gradient($colors, $importance: $owf_css_not_important) {
+    @if (length($colors) > 1) {
+        $lightest-idx: lightest($colors);
+        $darkest-idx: darkest($colors);
+
+        $color1: strip-stop(nth($colors, min($lightest-idx, $darkest-idx)));
+        $color2: strip-stop(nth($colors, max($lightest-idx, $darkest-idx)));
+
+        //IE doesn't support multiple color stops, so just use the
+        //lightest and darkest. make sure that the colors are in
+        //the same order however
+        @include filter-gradient($color1, $color2);
+
+        //@include background(nth($colors, 1), nth($colors, 2));
+        background-image: -webkit-linear-gradient($colors) #{$importance};
+        background-image: -moz-linear-gradient($colors) #{$importance};
+        background-image: -ms-linear-gradient($colors) #{$importance};
+    }
+    @else {
+        background-image: none;
+        filter: none;
+    }
+
+    @include owf-background-color(getBaseFromGradient($colors), $importance);
+}
+
+@mixin owf-background-theme-gradient($widget_theme, $applyGradient : $owf-apply-gradient,
+                                        $importance: $owf_css_not_important) {
+
+    @if $applyGradient == true {
+        $colors: getWidgetGradientColors($widget_theme);
+        @include owf-background-gradient($colors, $importance);
+    }
+    @else {
+        overflow: #{importance};
+        background: getWidgetBaseColor($widget_theme) #{$importance};
+    }
+}
+
+@mixin owf-manage-window($importance: $owf_css_not_important){
+    .x-panel-body {
+        border: none #{$importance};
+    }
+    label {
+        padding-left: 4px #{$importance};
+        color: $owf-manage-window-label-color #{$importance};
+    }
+    .x-toolbar{
+        @include owf-background-gradient($toolbar-theme);
+        border: none;
+    }
+}
+
+@mixin owf-button-background($button_theme) {
+    $buttonColors: getButtonGradient($button_theme);
+    @include owf-background-gradient($buttonColors);
+    border-color: getButtonBorderColor($button_theme);
+}
+
+//Handles Frames/nonFrames for IE and Non-IE
+@mixin owf-background-position($importance: $owf_css_not_important,
+                                $isFrameInIE: $owf_frame_is_not_IE,
+                                $border-radius: 1px,
+                                $table: false,
+                                $background-direction: top) {
+    $left: 0;
+    $top: 0;
+    @if $isFrameInIE == $owf_frame_is_IE {
+        $vertical: false;
+        @if $background-direction == left or $background-direction == right {
+            $vertical: true;
+        }
+
+        @function pad($radius) {
+            $radius: boxmax($radius);
+            $radius: parseint($radius);
+            @if $radius > 10 {
+                @return $radius;
+            }
+            @else {
+                @return "0" + $radius;
+            }
+        }
+        $type: '100';
+        @if $table == true {
+            $type: '110';
+        }
+        $direction: '100';
+        @if $vertical == true {
+            $direction: '110';
+        }
+
+        $left: $type + pad(top($border-radius)) + pad(right($border-radius)) + 'px';
+        $top: $direction + pad(bottom($border-radius)) + pad(left($border-radius)) + 'px';
+
+        $left: unquote($left);
+        $top: unquote($top);
+    }
+    background-position: $left $top #{$importance};
+}
+
+@mixin owf-transparent-background($importance: $owf_css_not_important) {
+    background-color: transparent #{$importance};
+    background-image: none #{$importance};
+    background-repeat: no-repeat #{$importance};
+    filter: none;
+}
+
+//@mixin owf-grid-theme($grid_theme) {
+
+//    .x-grid-cell {
+//        @if getGridBackgroundGradient($grid_theme) == null {
+//            background: getGridBackgroundColor($grid_theme);
+//        }
+//        @else {
+//            @include owf-background-gradient(getGridBackgroundGradient($grid_theme));
+//        }
+//
+//        .x-grid-cell-inner {
+//            color: getGridTextColor($grid_theme);
+//        }
+//    }
+//}
+
+//GRID PANEL
+@mixin owf-grid-panel($importance: $owf_css_not_important,
+                        $isFrameInIE: $owf_frame_is_not_IE,
+                        $includeBodyBorder: true){
+    @include owf-panel($active-widget-theme,
+					    $importance,
+					    $isFrameInIE,
+					    $owf_incl_non_header_border,
+					    getWidgetBaseColor($active-widget-theme),
+					    $owf_incl_header_border,
+					    $owf_full_header_border,
+                        $inclBodyBorder: $includeBodyBorder);
+    //@include owf-transparent-background($importance);
+    @extend .owf-grid;
+}
+
+
+/***
+ * PANEL SECTION
+ */
+//PANEL HEADER
+@mixin owf-panel-header($widget_theme: $active-widget-theme,
+                        $importance: $owf_css_not_important,
+                        $isFrameInIE: $owf_frame_is_not_IE,
+                        //BORDER PROPERTIES
+                        $inclHeaderBorder: $owf_incl_header_border,
+                        $headerFullBorder: $owf_no_full_header_border,
+                        $applyGradient: $owf-apply-gradient) {
+
+    @include owf-background-theme-gradient($widget_theme, $applyGradient, $importance);
+
+    @if $inclHeaderBorder == $owf_incl_header_border {
+        border-color: getWidgetOuterBorderColor($widget_theme);
+        border-style: solid solid none solid;
+        &.x-collapsed {
+            border-style: solid;
+    }
+        border-width: 1px;
+    }
+    @else {
+        border: none #{$importance};
+    }
+
+    @include clear-box-shadow();
+    .x-panel-header-text {
+        color: getWidgetTextColor($widget_theme) #{$importance};
+        display: block;
+        line-height: 1.46;  //required for panel headers to stretch
+    }
+
+    .x-panel-header-icon {
+        height: $owf-header-icon-size;
+        width: $owf-header-icon-size;
+        background-position: center center;
+    }
+}
+
+//PANEL
+@mixin owf-panel($widget_theme: $active-widget-theme,
+                    $importance: $owf_css_not_important,
+                    $isFrameInIE: $owf_frame_is_not_IE,
+                    //BORDER PROPERTIES
+                    $inclNonHeaderBorder: $owf_incl_non_header_border,
+                    $inclHeaderBorder: $owf_incl_header_border,
+                    $headerFullBorder: $owf_no_full_header_border,
+                    $applyGradient : $owf-apply-gradient,
+                    $inclBodyBorder: true) {
+
+    @include owf-background-theme-gradient($widget_theme, $applyGradient, $importance);
+    @if $inclNonHeaderBorder == $owf_incl_non_header_border {
+        border-color: getWidgetOuterBorderColor($widget_theme);
+    }
+    @else {
+        border: none #{$importance};
+    }
+
+    @include clear-box-shadow();
+    //overflow: visible;
+    .x-panel-header {
+        @include owf-panel-header($widget_theme,
+                                    $importance,
+                                    $isFrameInIE,
+                                    $inclHeaderBorder,
+                                    $headerFullBorder);
+    }
+    @if $inclBodyBorder == true {
+        .x-panel-body {
+            border: 1px solid getWidgetOuterBorderColor($widget_theme);
+        }
+    }
+}
+
+@mixin owf-border-radius($top: true, $bottom: true) {
+
+    @if ($top == true) {
+        @include border-top-left-radius($owf-top-border-radius);
+        @include border-top-right-radius($owf-top-border-radius);
+    }
+
+    @if ($bottom == true) {
+        @include border-bottom-left-radius($owf-bottom-border-radius);
+        @include border-bottom-right-radius($owf-bottom-border-radius);
+    }
+}
+
+/***
+ * WINDOW SECTION
+ */
+//WINDOW HEADER
+@mixin owf-window-header($widget_theme: $active-widget-theme,
+                            $importance: $owf_css_not_important,
+                            $isFrameInIE: $owf_frame_is_not_IE,
+                            //BORDER PROPERTIES
+                            $inclHeaderBorder: $owf_incl_header_border,
+                            $headerFullBorder: $owf_no_full_header_border) {
+
+    @include owf-background-theme-gradient($widget_theme);
+    @include owf-border-radius(true, false);
+
+    @if $inclHeaderBorder == $owf_incl_header_border {
+        border-color: getWidgetOuterBorderColor($widget_theme);
+    }
+    @else {
+        border: none #{$importance};
+    }
+
+    @include clear-box-shadow();
+    .x-window-header-text {
+        color: getWidgetTextColor($widget_theme) #{$importance};
+    }
+
+    .x-window-header-icon {
+        height: $owf-header-icon-size;
+        width: $owf-header-icon-size;
+        background-position: center center;
+    }
+}
+
+//WINDOW
+@mixin owf-window($widget_theme: $active-widget-theme,
+                    $importance: $owf_css_not_important,
+                    $isFrameInIE: $owf_frame_is_not_IE,
+                    //BORDER PROPERTIES
+                    $inclNonHeaderBorder: $owf_incl_non_header_border,
+                    $inclHeaderBorder: $owf_incl_header_border,
+                    $headerFullBorder: $owf_no_full_header_border) {
+
+    @include owf-background-theme-gradient($widget_theme, false);
+
+    @include owf-border-radius;
+
+    @if $inclNonHeaderBorder == $owf_incl_non_header_border {
+        border-color: getWidgetOuterBorderColor($widget_theme);
+    }
+    @else {
+        border-color: none;
+    }
+
+    overflow: visible;
+    @include clear-box-shadow();
+
+    .x-window-header {
+        @include owf-window-header($widget_theme,
+                                    $importance,
+                                    $isFrameInIE,
+                                    $inclHeaderBorder,
+                                    $headerFullBorder);
+    }
+
+    .x-window-body {
+        border-color: getWidgetBodyBorderColor($widget_theme);
+    //    @include owf-border-radius;
+    }
+}
+
+@mixin transparent-background-color($color, $opacity, $importance: $owf_css_not_important) {
+    $rgba: rgba($color, $opacity);
+    $ie-hex-str: ie-hex-str($rgba);
+
+    background-color: $color #{$importance};
+    background-color: $rgba #{$importance};
+
+    //@include ie-transparent-background-color($color, $opacity, $importance);
+}
+
+@mixin ie-transparent-background-color($color, $opacity, $importance: $owf_css_not_important) {
+    $rgba: rgba($color, $opacity);
+    $ie-hex-str: ie-hex-str($rgba);
+
+    // setting a transparent background image for IE7 & 8
+    // without mousemove events dont fire on the right components
+    background-image: theme-background-image($theme-name, 's.gif');
+
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#{$ie-hex-str},endColorstr=#{$ie-hex-str}) #{$importance};
+    -ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#{$ie-hex-str},endColorstr=#{$ie-hex-str}) #{$importance};
+}
+
+// ===============================
+// =================== Widget Tool
+// ===============================
+//TODO: compare with extjs-tool with EXT upgrade
+@mixin owf-tool {
+    .#{$prefix}tool {
+        height: $owf-tool-height;
+
+        img {
+            overflow: hidden;
+
+            width: $owf-tool-width;
+            height: $owf-tool-height;
+
+            cursor: pointer;
+
+            background-color: transparent;
+            background-repeat: no-repeat;
+            background-image: theme-image($theme-name, 'tools/tool-sprites.gif');
+
+            margin: 0;
+        }
+    }
+
+    .#{$prefix}panel-header-horizontal,
+    .#{$prefix}window-header-horizontal {
+        .#{$prefix}tool {
+                margin-left: 2px;
+        }
+    }
+
+    .#{$prefix}panel-header-vertical,
+    .#{$prefix}window-header-vertical {
+        .#{$prefix}tool {
+                margin-bottom: 2px;
+        }
+    }
+
+.#{$prefix}tool-placeholder {
+        visibility: hidden;
+    }
+
+    .#{$prefix}tool-toggle {
+        background-position: 0 (-$owf-tool-height * 4);
+    }
+
+    .#{$prefix}tool-over {
+        .#{$prefix}tool-toggle {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 4);
+        }
+    }
+
+    .#{$prefix}panel-collapsed,
+    .#{$prefix}fieldset-collapsed {
+        .#{$prefix}tool-toggle {
+            background-position: 0 (-$owf-tool-height * 5);
+        }
+
+        .#{$prefix}tool-over {
+            .#{$prefix}tool-toggle {
+                background-position: (-$owf-tool-height) (-$owf-tool-height * 5);
+            }
+        }
+    }
+
+    .#{$prefix}tool-close {
+        background-position: 0 0;
+    }
+
+    .#{$prefix}tool-minimize {
+        background-position: 0 (-$owf-tool-height);
+    }
+
+    .#{$prefix}tool-maximize {
+        background-position: 0 (-$owf-tool-height * 2);
+    }
+
+    .#{$prefix}tool-restore {
+        background-position: 0 (-$owf-tool-height * 3);
+    }
+
+    .#{$prefix}tool-gear {
+        background-position: 0 (-$owf-tool-height * 6);
+    }
+
+    .#{$prefix}tool-prev {
+        background-position: 0 (-$owf-tool-height * 7);
+    }
+
+    .#{$prefix}tool-next {
+        background-position: 0 (-$owf-tool-height * 8);
+    }
+
+    .#{$prefix}tool-pin {
+        background-position: 0 (-$owf-tool-height * 9);
+    }
+
+    .#{$prefix}tool-unpin {
+        background-position: 0 (-$owf-tool-height * 10);
+    }
+
+    .#{$prefix}tool-right {
+        background-position: 0 (-$owf-tool-height * 11);
+    }
+
+    .#{$prefix}tool-left {
+        background-position: 0 (-$owf-tool-height * 12);
+    }
+
+    .#{$prefix}tool-help {
+        background-position: 0 (-$owf-tool-height * 20);
+    }
+
+    .#{$prefix}tool-save {
+        background-position: (-$owf-tool-height * 19);
+    }
+
+    .#{$prefix}tool-search {
+        background-position: (-$owf-tool-height * 18);
+    }
+
+    .#{$prefix}tool-minus {
+        background-position: (-$owf-tool-height * 17);
+    }
+
+    .#{$prefix}tool-plus {
+        background-position: 0 (-$owf-tool-height * 16);
+    }
+
+    .#{$prefix}tool-refresh {
+        background-position: 0 (-$owf-tool-height * 15);
+    }
+
+    .#{$prefix}tool-up {
+        background-position: 0 (-$owf-tool-height * 14);
+    }
+
+    .#{$prefix}tool-down {
+        background-position: 0 (-$owf-tool-height * 13);
+    }
+
+    .#{$prefix}tool-move {
+        background-position: 0 (-$owf-tool-height * 25);
+    }
+
+    .#{$prefix}tool-resize {
+        background-position: 0 (-$owf-tool-height * 24);
+    }
+
+    .#{$prefix}tool-collapse {
+        background-position: 0 (-$owf-tool-height * 23);
+    }
+
+    .#{$prefix}tool-expand {
+        background-position: 0 (-$owf-tool-height * 22);
+    }
+
+    .#{$prefix}tool-print {
+        background-position: 0 (-$owf-tool-height * 21);
+    }
+
+    .#{$prefix}tool-expand-bottom,
+    .#{$prefix}tool-collapse-bottom {
+        background-position: 0 (-$owf-tool-height * 13);
+    }
+
+    .#{$prefix}tool-expand-top,
+    .#{$prefix}tool-collapse-top {
+        background-position: 0 (-$owf-tool-height * 14);
+    }
+
+    .#{$prefix}tool-expand-left,
+    .#{$prefix}tool-collapse-left {
+        background-position: 0 (-$owf-tool-height * 12);
+    }
+
+    .#{$prefix}tool-expand-right,
+    .#{$prefix}tool-collapse-right {
+        background-position: 0 (-$owf-tool-height * 11);
+    }
+
+    .#{$prefix}tool-over {
+        .#{$prefix}tool-close {
+            background-position: (-$owf-tool-width) 0;
+        }
+
+        .#{$prefix}tool-minimize {
+            background-position: (-$owf-tool-width) (-$owf-tool-height);
+        }
+
+        .#{$prefix}tool-maximize {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 2);
+        }
+
+        .#{$prefix}tool-restore {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 3);
+        }
+
+        .#{$prefix}tool-gear {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 6);
+        }
+
+        .#{$prefix}tool-prev {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 7);
+        }
+
+        .#{$prefix}tool-next {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 8);
+        }
+
+        .#{$prefix}tool-pin {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 9);
+        }
+
+        .#{$prefix}tool-unpin {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 10);
+        }
+
+        .#{$prefix}tool-right {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 11);
+        }
+
+        .#{$prefix}tool-left {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 12);
+        }
+
+        .#{$prefix}tool-down {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 13);
+        }
+
+        .#{$prefix}tool-up {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 14);
+        }
+
+        .#{$prefix}tool-refresh {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 15);
+        }
+
+        .#{$prefix}tool-plus {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 16);
+        }
+
+        .#{$prefix}tool-minus {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 17);
+        }
+
+        .#{$prefix}tool-search {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 18);
+        }
+
+        .#{$prefix}tool-save {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 19);
+        }
+
+        .#{$prefix}tool-help {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 20);
+        }
+
+        .#{$prefix}tool-print {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 21);
+        }
+
+        .#{$prefix}tool-expand {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 22);
+        }
+
+        .#{$prefix}tool-collapse {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 23);
+        }
+
+        .#{$prefix}tool-resize {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 24);
+        }
+
+        .#{$prefix}tool-move {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 25);
+        }
+
+        .#{$prefix}tool-expand-bottom,
+        .#{$prefix}tool-collapse-bottom {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 13);
+        }
+
+        .#{$prefix}tool-expand-top,
+        .#{$prefix}tool-collapse-top {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 14);
+        }
+
+        .#{$prefix}tool-expand-left,
+        .#{$prefix}tool-collapse-left {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 12);
+        }
+
+        .#{$prefix}tool-expand-right,
+        .#{$prefix}tool-collapse-right {
+            background-position: (-$owf-tool-width) (-$owf-tool-height * 11);
+        }
+    }
+}

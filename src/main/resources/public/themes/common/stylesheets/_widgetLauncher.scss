@@ -1,0 +1,777 @@
+@include extjs-window-ui(
+    'widget-launcher',
+    
+    $ui-padding: null,
+    $ui-border-radius: $widget-launcher-body-radius,
+    $ui-border-color: null,
+    $ui-inner-border-color: null,
+    
+    $ui-header-color: null,
+    $ui-header-font-size: $window-header-font-size,
+    $ui-header-font-weight: $window-header-font-weight,
+    
+    $ui-body-border-color: $widget-launcher-background-color,
+    $ui-body-background-color: $widget-launcher-background-color,
+    $ui-body-color: $widget-launcher-background-color,
+    
+    $ui-background-color: $widget-launcher-background-color
+);
+
+.widget-tip{
+    background-color: #243135;
+    border-color: #234552;
+    .x-tip-anchor-right {
+        border-left-color: #234552;
+    }
+    .x-tip-anchor-top {
+        border-bottom-color: #234552;
+    }
+}
+
+.node-name-widget-launcher {
+	color: #50b0ff;
+	font-weight: bold;
+}
+
+#widget-launcher {
+    
+    padding: 10px;
+//    border-color: $widget-launcher-border-color;
+    border-style: none;
+
+    background-color: $widget-launcher-background-color;
+    
+    .x-tool .x-tool-close {
+	    background-image: theme-image($theme-name, 'tools/close-out.png') !important;
+	}
+	
+	.x-tool-over .x-tool-close {
+	     background-image: theme-image($theme-name, 'tools/close-over.png') !important;
+	     background-position: 0 !important;
+	}
+	
+	.x-tool-pressed .x-tool-close {
+	     background-image: theme-image($theme-name, 'tools/close-down.png') !important;
+	     background-position: 0 !important;
+	}
+
+    .x-toolbar-default {
+      filter:none;
+    }
+    .x-splitter {
+      filter:none;
+    }
+
+    &-body {
+        //@include border-bottom-radius($widget-launcher-body-radius);
+		border:none;
+    }
+    .search-panel{
+        background: $search-panel-background-color;
+        border-color: $widget-launcher-border-color;
+        position: absolute;
+        padding: 7px;
+
+
+        .x-panel-body {
+            background: $search-panel-background-color;
+            border: none; 
+        }
+
+        .x-container {
+            background: $search-panel-background-color;
+            color: $widget-launcher-grid-row-cell-color;
+        }
+
+        .x-splitter {
+            @include background-gradient($search-panel-slider-background-color, $search-panel-slider-background-gradient);
+            background-color: $search-panel-slider-background-color;
+        }
+
+        .x-toolbar {
+            background-image: none;
+            background-color: $widget-launcher-toolbar-background-color;
+            border-color: $widget-launcher-toolbar-border-color;
+
+            /*.resetBtn {
+                background-image: none;
+                background-color: red; 
+
+            }*/
+        }
+
+        .tag-grid,
+        .term-grid,
+        .group-grid{
+            .x-panel-header {
+                background-image: none;
+                border: none;
+                background-color: $search-panel-background-color;
+                box-shadow: none;
+                //margin-top: 10px;
+                //margin-bottom: 5px;
+            }
+            .x-panel-header-text-container {
+                left: 20px;
+            }
+            .x-panel-header-text{
+                color: $search-panel-header-text-color;
+                //font-size: 20px;
+                //font-weight: normal;
+            }
+            .x-tool {
+                left: 0 ;
+                .x-tool-collapse-top {
+                    background-image: theme-image($theme-name, 'launch-menu/launch_arrow_down-up.png') ;
+                    background-position: 0 0;
+                }
+                .x-tool-expand-bottom {
+                    background-image: theme-image($theme-name, 'launch-menu/launch_arrow_right-up.png') ;
+                    background-position: 0 0;
+                }
+            }
+            .x-tool-over {
+                .x-tool-collapse-top {
+                    background-image: theme-image($theme-name, 'launch-menu/launch_arrow_down-over.png') ;
+                    background-position: 0 0;
+                }
+                .x-tool-expand-bottom {
+                    background-image: theme-image($theme-name, 'launch-menu/launch_arrow_right-over.png') ;
+                    background-position: 0 0;
+                }
+            }
+        }
+
+        .tagCloud {
+            padding-left: 10px;
+
+          .tag-over {
+              span{
+                  color: $widget-launcher-special-color;
+              }
+          }
+
+          .tag-selected {
+            span{
+                color: $widget-launcher-special-color;
+            }
+          }
+
+        }
+
+      .tag {
+          float: left;
+          //position: relative;
+          //overflow: hidden;
+          cursor: pointer;
+          //display: table;
+          //height: 40px;
+          padding: 2px;
+
+          span {
+              //display: table-cell;
+              vertical-align: bottom;
+              color: $widget-launcher-widget-text-color;
+          }
+      }
+
+    }
+
+    .toolbar-panel {
+      width: 200px;
+    }
+
+    .search {
+        border-color: $widget-launcher-search-border-color;
+        background: $widget-launcher-search-background-color;
+        @include border-radius(15px);
+        width: 300px;
+        padding-top: 2px;
+        input{
+            color: $widget-launcher-widget-text-color;
+        }
+    }
+
+    .viewSwitch,
+    .searchBar{
+        background: transparent;
+        filter: none;
+        border-style: none;
+        padding: 2px 5px 5px 5px;
+        .x-box-inner{
+            background: transparent;
+            filter: none;
+            border-style: none;
+        }
+    }
+	
+	.x-window-header {
+		@include border-top-radius($widget-launcher-body-radius);
+		background-image: none;
+        filter: none;
+		background-color: $widget-launcher-background-color;
+		border-color: $widget-launcher-background-color;
+		padding: 2px 9px;
+	}
+
+    .x-window-header-text {
+        font-weight: normal;
+        font-size: $widget-launcher-view-title-font-size;
+        //color: $widget-launcher-widget-title-color;
+        padding: 10px;
+    }
+    
+    span, .thumb-text {
+        //color: #ccc;
+    }
+
+    span {
+        //font-size: 1em;
+        //padding-left: 10px;
+    }
+    .widget-launcher-header-icon {
+        background-image: theme-image($theme-name, 'launch-menu/favorite_icon.png');
+        background-position: center center;
+        background-repeat: no-repeat;
+        border-style: none;
+        height: 20px;
+        width: 20px;
+	}
+
+    .widgetLauncherView {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .widgetviewcontainer {
+        .title {
+            font-weight: normal;
+            font-size: $widget-launcher-view-title-font-size;
+            color: $widget-launcher-widget-title-color;
+            padding: 10px;
+        }
+
+      	.launch_delete_grid_icon {
+			display: none;
+			padding: 0 5px 0 5px;
+			cursor: pointer;
+    	}
+    }
+
+    .gridViewBtn,
+    .iconViewBtn {
+        //background: transparent;
+        filter: none;
+        border: none;
+        float: right;
+        margin: 0px;
+
+        &.x-focus {
+            padding: 2px;
+        }
+
+    }
+
+    .gridViewBtn {
+        .gridViewBtnIcon-up {
+            background-image: theme-image($theme-name, 'launch-menu/view_list_out.png') ;
+        }
+        .gridViewBtnIcon-down {
+            background-image: theme-image($theme-name, 'launch-menu/view_list_active.png') ;
+        }
+        &.x-btn-over {
+            border: none;
+            .gridViewBtnIcon-up {
+                background-image: theme-image($theme-name, 'launch-menu/view_list_over.png') ;
+            }
+        }
+    }
+
+    .iconViewBtn {
+        .iconViewBtnIcon-up {
+            background-image: theme-image($theme-name, 'launch-menu/view_grid_out.png') ;
+        }
+        .iconViewBtnIcon-down {
+            background-image: theme-image($theme-name, 'launch-menu/view_grid_active.png') ;
+        }
+        &.x-btn-over {
+            border: none;
+            .iconViewBtnIcon-up {
+                background-image: theme-image($theme-name, 'launch-menu/view_grid_over.png') ;
+            }
+        }
+    }
+
+    .info-panel {
+        background: transparent;
+
+        .x-panel-body {
+            background: transparent;
+            color: $widget-launcher-info-panel-color;
+            border-style: none;
+            padding-bottom: 3px; //IE 7 hack so bottom button's border isn't cut off
+        }
+    }
+
+    .start-remove-panel {
+        display: block;
+        background: transparent;
+        margin-top: 15px;
+        text-align: center;
+
+        .x-panel-body {
+            background: transparent;
+            color: $widget-launcher-info-panel-color;
+            border-style: none;
+        }
+
+        .start-remove-btn {
+            position: static !important;
+            display: inline-block;
+            width: 145px;
+            height: 30px;
+            margin-left: 5px;
+            margin-right: 5px;
+            *margin-bottom: 1px; // OP-1462
+            text-align: center;
+            background-image: none;
+            @include border-radius(5px);
+            .x-btn-center {
+                width: 141px;
+                height: 26px;
+                @include border-radius(5px);
+
+            }
+            .x-btn-inner {
+                font-size: 16px;
+                display: block;
+                width: 141px !important;
+                height: 26px;
+                padding: 5px 0;
+            }
+        }
+
+        .start-btn.x-btn-default-toolbar-small, .start-btn.x-btn-default-small {
+            @include background-image(linear-gradient($start-btn-top-color, $start-btn-bottom-color));
+            border-color: $start-btn-border-color;
+            .x-btn-inner {
+                background-color: $start-btn-color;
+            }
+        }
+
+        .start-btn.x-btn-default-toolbar-small-over, .start-btn.x-btn-default-small-over {
+            @include background-image(linear-gradient($start-btn-top-color-over, $start-btn-bottom-color-over));
+            border-color: $start-btn-border-color-over;
+            .x-btn-inner {
+                background-color: $start-btn-color-over;
+            }
+        }
+
+        .start-btn.x-btn-default-toolbar-small-pressed, .start-btn.x-btn-default-small-pressed {
+            @include background-image(linear-gradient($start-btn-top-color-down, $start-btn-bottom-color-down));
+            border-color: $start-btn-border-color-down;
+            .x-btn-inner {
+                background-color: $start-btn-color-down;
+            }
+        }
+
+        .start-btn {
+            .x-btn-inner {
+                color: $start-btn-text-color;
+            }
+        }
+        .remove-btn.x-btn-default-toolbar-small, .remove-btn.x-btn-default-small {
+            @include background-image(linear-gradient($remove-btn-top-color, $remove-btn-bottom-color));
+            border-color: $remove-btn-border-color;
+            .x-btn-inner {
+                background-color: $remove-btn-color;
+            }
+        }
+
+        .remove-btn.x-btn-default-toolbar-small-over, .remove-btn.x-btn-default-small-over {
+            @include background-image(linear-gradient($remove-btn-top-color-over, $remove-btn-bottom-color-over));
+            border-color: $remove-btn-border-color-over;
+            .x-btn-inner {
+                background-color: $remove-btn-color-over;
+            }
+        }
+
+        .remove-btn.x-btn-default-toolbar-small-pressed, .remove-btn.x-btn-default-small-pressed {
+            @include background-image(linear-gradient($remove-btn-top-color-down, $remove-btn-bottom-color-down));
+            border-color: $remove-btn-border-color-down;
+            .x-btn-inner {
+                background-color: $remove-btn-color-down;
+            }
+        }
+
+        .remove-btn {
+            .x-btn-inner {
+                color: $remove-btn-text-color;
+            }
+        }
+
+        .start-remove-btn.x-btn-disabled {
+            background-image: none;
+            background-color: $widget-launcher-disabled-btn-color;
+            border-color: none;
+            .x-btn-inner {
+                color: $widget-launcher-disabled-btn-text-color;
+                background-color: $widget-launcher-disabled-btn-color;
+            }
+        }
+    }
+    .carousel {
+        background-color: $carousel-background-color;
+        border: none;
+
+        .x-panel-body {
+            background-color: $carousel-background-color;
+            border: none;
+
+        }
+
+        .x-resizable-handle{
+            @include background-gradient($carousel-resizer-background-color, $carousel-resizer-background-gradient);
+            background-color: $carousel-resizer-background-color;
+        }
+
+        .leftCarouselBtn,
+        .rightCarouselBtn {
+            border: none;
+            width: 15px;
+            height: 100%;
+
+            .x-btn-icon {
+                height: 100%;
+
+            }
+
+            background-color: $carousel-button-background-color;
+            background-image: none;
+            filter: none;
+            &.x-btn-over, &.x-btn-pressed {
+                background-color: $carousel-button-over-background-color;
+            }
+        }
+
+        .rightCarouselBtnIcon {
+            background-image: theme-image($theme-name, 'launch-menu/launch_scoll_right-up.png');
+        }
+        .leftCarouselBtnIcon {
+            background-image: theme-image($theme-name, 'launch-menu/launch_scoll_left-up.png');
+        }
+
+        .x-btn-over {
+            .rightCarouselBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_scoll_right-over.png');
+            }
+            .leftCarouselBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_scoll_left-over.png');
+            }
+        }
+        .x-btn-pressed {
+            .rightCarouselBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_scoll_right-down.png');
+            }   
+            .leftCarouselBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_scoll_left-down.png');
+            }   
+        }
+
+    }
+
+    .carousel-view {
+        //extra 6px on top to make room for
+        //resizer bar
+        padding: 11px 5px 5px 5px;
+    }
+
+    .widget {
+
+        background-color: $widget-launcher-background-color;
+        border-color: $widget-launcher-background-color;
+        float: left;
+        cursor: pointer;
+        
+
+        .thumb-text {
+            color: $widget-launcher-widget-text-color;
+        }
+    }
+    .widget-selected {
+        background-color: $widget-launcher-widget-selected-background-color;
+        border-color: $widget-launcher-widget-selected-border-color;
+        .thumb-text {
+            color: $widget-launcher-widget-selected-text-color;
+        }
+    }
+    .widget-over {
+        background-color: $widget-launcher-widget-over-background-color;
+        border-color: $widget-launcher-widget-over-border-color;
+
+        .thumb-text {
+            color: $widget-launcher-widget-over-text-color;
+        }
+    }
+    .widget-disabled {
+        /*-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";*/
+        /*filter: alpha(opacity=40);*/
+        /*opacity: 0.4;  */
+        @include opacity(.4);
+    }
+    .carousel-widget {
+        background-color: $carousel-background-color;
+        border: 1px solid $carousel-background-color;
+        margin-right: 5px;
+        height: 100%;
+        overflow: hidden;
+        cursor: pointer;
+        //border-radius: 10px;
+        padding: 4px;
+        display: block;
+        float: left;
+    }
+    .carousel-widget-selected {
+        background-color: $carousel-widget-selected-background-color;
+        border-color: $carousel-widget-selected-border-color;
+    }
+    .carousel-widget-over {
+        background-color: $carousel-widget-over-background-color;
+        border-color: $carousel-widget-over-border-color;
+    }
+    .drag-cls {
+        background-color: #cbc;
+    }
+    .x-view-drop-indicator-left {
+        background-color: none;
+        background-image: theme-image($theme-name, 'launch-menu/drop-indicator-left.PNG');
+        background-repeat: no-repeat;
+        background-position: left center;
+    }
+    .x-view-drop-indicator-right {
+        background-color: none;
+        background-image: theme-image($theme-name, 'launch-menu/drop-indicator-right.PNG');
+        background-repeat: no-repeat;
+        background-position: right center;
+    }
+
+    .x-btn-over {
+        @include owf-background-gradient($widget-launcher-button-over-background-gradient);
+        border-color: $widget-launcher-button-over-border-color;
+    }
+
+     .advSearchBtnToolbar {
+       background: $widget-launcher-advanced-search-toolbar-color;
+       border-left-color: $widget-launcher-advanced-search-toolbar-border-left-color;
+       border-right-color: $widget-launcher-border-color;
+       border-width:0px 1px 0px 1px !important;
+
+       .x-btn-over {
+           @include owf-background-gradient($widget-launcher-button-over-background-gradient);
+           border-color: $widget-launcher-button-over-border-color;
+       }
+     }  
+
+    //this section needs to be below the .x-btn section above
+    .advSearchBtn {
+        //background: none ;
+        //border: none;
+        //width: 32px !important;
+        //margin-top: 5px;
+
+        .advSearchBtnIcon {
+            background-image: theme-image($theme-name, 'launch-menu/launch_expand-up.png') ;
+        }
+        .x-btn-over {
+            .advSearchBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_expand-over.png') ;
+            }
+        }
+        .x-btn-pressed {
+            .advSearchBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_expand-down.png') ;
+            }
+        }
+    }
+    .advSearchBtn-clicked {
+        //background: none ;
+        //border: none;
+        //width: 32px ;
+        //margin-top: 5px;
+
+        .advSearchBtnIcon {
+            background-image: theme-image($theme-name, 'launch-menu/launch_collapse-up.png') ;
+        }
+        .x-btn-over {
+            .advSearchBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_collapse-over.png') ;
+            }
+        }
+        .x-btn-pressed {
+            .advSearchBtnIcon {
+                background-image: theme-image($theme-name, 'launch-menu/launch_collapse-down.png') ;
+            }   
+        }
+    }   
+
+    //used for all grids in the launch menu
+    .x-panel{
+        .x-grid-body {
+            background: $widget-launcher-grid-background;
+            border-color: $widget-launcher-grid-body-border-color ;
+            .x-grid-row {
+                //ext does not provide customizable variables for the style of
+                //the first "special" column, so we need to override it here
+                .x-grid-cell-special {
+                    background: $widget-launcher-grid-row-cell-background;
+                }
+                .x-grid-cell {
+                    background: $widget-launcher-grid-row-cell-background;
+                    color: $widget-launcher-grid-row-cell-color;
+                    border-color: $widget-launcher-grid-body-border-color;
+                    border-style: $panel-body-border-style;
+                    border-width: 0 1px 0 0;
+
+                    .x-grid-cell-inner {
+                        padding: 3px;
+                        //padding-left: 10px;
+                    }
+                }
+                
+                i {
+                    color: $widget-launcher-grid-row-cell-color;
+                }
+            }
+            .x-grid-row-alt {
+                .x-grid-cell-special {
+                    background: $widget-launcher-grid-row-cell-alt-background;
+                }
+                .x-grid-cell {
+                    background: $widget-launcher-grid-row-cell-alt-background;
+                }
+            }
+            .x-grid-row-selected {
+                .x-grid-cell-special {
+                    background: $widget-launcher-grid-row-cell-selected-background-color;
+                    
+                }
+
+                .x-grid-cell {
+                    background: $widget-launcher-grid-row-cell-selected-background-color;
+                }
+
+            }
+            .x-grid-row-over {
+                .x-grid-cell-special {
+                    background: $widget-launcher-grid-row-cell-over-background-color;
+                    
+                }
+
+                .x-grid-cell {
+                    background: $widget-launcher-grid-row-cell-over-background-color;
+                }
+            }
+        }
+        .x-grid-header-ct {
+            border: none;
+            background: $widget-launcher-grid-header-background-color;
+            @include background-gradient($widget-launcher-grid-header-background-color,$widget-launcher-grid-header-background-gradient);
+            .x-column-header {
+                @include background-gradient($widget-launcher-grid-header-background-color,$widget-launcher-grid-header-background-gradient);
+                border-color: $widget-launcher-grid-body-border-color;
+                color: $widget-launcher-grid-header-color;
+            }
+
+            .x-column-header-over, .x-column-header-sort-asc, .x-column-header-sort-desc {
+                @include background-gradient($widget-launcher-grid-header-over-background-color,$widget-launcher-grid-header-over-background-gradient);
+            }
+        }
+
+        .x-grid-row-focused .x-grid-cell {
+            font-weight: normal;
+            background-color: $widget-launcher-grid-row-cell-focus-background-color ;
+            .x-grid-cell-inner {
+                color: $widget-launcher-grid-row-cell-focus-color;
+            }
+            i {
+                color: $widget-launcher-grid-row-cell-focus-color;
+            }
+        }
+
+        i {
+            font-size: 1.167em;
+        }
+
+        .description {
+            padding-left: 5px;
+        }
+
+        .icon-caret-gap {
+            display: inline-block;
+            width: $owf-font-size/2.4;
+        }
+    }
+
+    //override ext tree
+  .#{$prefix}tree-panel .#{$prefix}grid-row .#{$prefix}grid-cell-inner {
+
+      //this makes the tree panel line height scale with text size
+      height: auto;
+      line-height:normal;
+  }
+
+.x-tree-panel {
+    
+
+    .x-grid-body .x-grid-row .x-grid-cell {
+        /*border: 1px solid pink;*/
+    }
+
+    .x-grid-body .x-grid-row-over .x-grid-cell {
+        /*border: 1px solid blue;*/
+
+    }
+
+    .x-tree-elbow, .x-tree-elbow-end, .x-tree-elbow-plus, .x-tree-elbow-end-plus, .x-tree-elbow-empty, .x-tree-elbow-line {
+        /*border: 1px solid green;*/
+        width: .6em;
+        height: 1px;
+    }
+}
+
+  //remove the pointer on header names
+  .x-window-header-text, .x-panel-header-text {
+    cursor: default !important;
+  }
+
+}
+
+.x-ie7 #widget-launcher-body .start-remove-panel .start-remove-btn {
+    display: inline;
+
+    .x-btn-center {
+        width: 145px !important;
+        height: 30px;
+    }
+
+    .x-btn-inner {
+        width: 145px !important;
+        height: 30px;
+    }
+}
+
+//#widget-launcher-body .x-box-inner > :last-child {
+//    @include border-bottom-radius($widget-launcher-body-radius);
+//}
+
+.show_more, .show_less {
+    cursor: pointer;
+}
+
+.showing_more {
+    overflow: visible !important;
+    -o-text-overflow: clip !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+}
+

@@ -1,0 +1,22 @@
+$widget-launcher-body-radius: 0px !default;
+$widget-launcher-background-color: $banner-button-over-background !default;
+$widget-launcher-opacity: 0.90 !default;
+$widget-launcher-border-color: #272727 !default;
+
+$widget-launcher-widget-background-color: $widget-launcher-background-color !default;
+$widget-launcher-widget-over-background-color: #323232 !default;
+$widget-launcher-widget-selected-background-color: darken($widget-launcher-widget-background-color, 15) !default;
+
+$widget-launcher-widget-border-color: $widget-launcher-background-color !default;
+$widget-launcher-widget-over-border-color: black !default;
+$widget-launcher-widget-selected-border-color: black !default;
+
+$widget-launcher-widget-text-color: getHighContrastColor($widget-launcher-widget-background-color) !default;
+$widget-launcher-widget-over-text-color: getHighContrastColor($widget-launcher-widget-over-background-color) !default;
+$widget-launcher-widget-selected-text-color: getHighContrastColor($widget-launcher-widget-selected-background-color) !default;
+
+
+$widget-launcher-search-border-color: #000000 !default;
+$widget-launcher-search-background-color: #1a1a1a !default;
+
+$widget-details-color: #eee !default;

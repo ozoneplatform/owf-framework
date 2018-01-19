@@ -1,9 +1,9 @@
 package ozone.owf.grails.jobs
 
-import static ozone.owf.enums.OwfApplicationSetting.*
-import org.ozoneplatform.auditing.quartz.jobs.AbstractFileMovementJob
 import ozone.owf.grails.services.OwfApplicationConfigurationService
+import org.ozoneplatform.auditing.quartz.jobs.AbstractFileMovementJob
 
+import static ozone.owf.enums.OwfApplicationSetting.*
 
 
 class OwfMoveCefLogsJob extends  AbstractFileMovementJob{
@@ -21,17 +21,17 @@ class OwfMoveCefLogsJob extends  AbstractFileMovementJob{
 	
 	@Override
 	public String getFromLocation(){
-		owfApplicationConfigurationService.valueOf(CEF_LOG_LOCATION)
+		owfApplicationConfigurationService.valueOf(ozone.owf.enums.OwfApplicationSetting.CEF_LOG_LOCATION)
 	}
 	
 	@Override
 	public String getToLocation(){
-		owfApplicationConfigurationService.valueOf(CEF_LOG_SWEEP_LOCATION)
+		owfApplicationConfigurationService.valueOf(ozone.owf.enums.OwfApplicationSetting.CEF_LOG_SWEEP_LOCATION)
 	}
 	
 	@Override
 	public boolean isJobEnabled(){
-		owfApplicationConfigurationService.is(CEF_LOG_SWEEP_ENABLED)
+		owfApplicationConfigurationService.is(ozone.owf.enums.OwfApplicationSetting.CEF_LOG_SWEEP_ENABLED)
 	}
 	
 }

@@ -1,0 +1,37 @@
+/**
+    Styles for OWF about window
+ */
+
+#about-window {
+
+    height: auto !important;
+
+    p {
+        margin-top: 20px;
+    }
+
+    img {
+        @extend .center;
+    }
+
+    #aboutInfo {
+        font-size: ceil($owf-font-size * .9);
+        font-weight: bold;
+    }
+    
+    .x-window-body {
+        @include border-top-radius($my-apps-window-body-radius);
+        padding: 20px 40px;
+        line-height: 1.75;
+        color: $my-apps-window-dashboard-text-color;
+        top: 0 !important;
+    }
+    
+    .x-tool {
+		*left: 47% !important;    
+    }
+
+    .x-window-header {
+        padding: 9px 9px 0px 9px;
+    }
+}

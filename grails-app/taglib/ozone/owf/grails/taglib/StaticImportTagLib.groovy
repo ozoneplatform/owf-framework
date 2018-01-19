@@ -61,6 +61,7 @@ class StaticImportTagLib {
         }
         if (attrs['resource'] == null) 
             throw new UnsupportedOperationException("You must have a resource attribute to use this tag")
+
         def path = (attrs['path']  == null) ? '' : "/" + attrs['path']
         def link = g.createLinkTo(dir: "js${path}", file: attrs['resource']+".js", base: pathToRoot)
         out << "<script type='text/javascript' src='${link}'></script>"
