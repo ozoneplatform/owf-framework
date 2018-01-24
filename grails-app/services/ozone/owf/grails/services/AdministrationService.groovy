@@ -1,23 +1,25 @@
 package ozone.owf.grails.services
 
 import grails.converters.JSON
+
 import ozone.owf.grails.OwfException
-import ozone.owf.grails.domain.Preference
-import ozone.owf.grails.domain.WidgetDefinition
-import ozone.owf.grails.domain.Person
 import ozone.owf.grails.OwfExceptionTypes
-import ozone.owf.grails.domain.Dashboard
-import ozone.owf.grails.domain.Role
-import ozone.owf.grails.domain.PersonWidgetDefinition
+import ozone.owf.grails.domain.*
+
 
 class AdministrationService {
 
-	def accountService
-	def widgetDefinitionService
-	def personWidgetDefinitionService
-	def preferenceService
-	def dashboardService
-    def serviceModelService
+	AccountService accountService
+
+	WidgetDefinitionService widgetDefinitionService
+
+	PersonWidgetDefinitionService personWidgetDefinitionService
+
+	PreferenceService preferenceService
+
+	DashboardService dashboardService
+
+    ServiceModelService serviceModelService
 
 	def getPreferenceEditEntities(params)
 	{

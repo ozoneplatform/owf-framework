@@ -1,72 +1,64 @@
-# .gitignore for owf
+!.gitkeep
+
+.gradle/
+build/
+bin/
+
+/src/main/resources/public/js/*
+/src/main/resources/public/js-plugins/*
+/src/main/resources/public/vendor/*
 
 # logs
 /stacktrace.log
 /test/reports
 /logs
 
-# older plugin install locations
-# /plugins
-/web-app/plugins
-/web-app/WEB-INF/classes
-
 # "temporary" files
 /staging
 /build-base*
-#/src
 target
 /build.number
 /cobertura.ser
-/lib
 /work
-js-min
-/js-plugins/*.gz.js
 /bin
 /target-eclipse
 /prodDb.properties
 /prodDb.log
 /prodDb.bak
-*.sass-cache
-*.css
-web-app/WEB-INF/grails-app
 test-widgets/html-widgets/src/main/webapp/images/dragAndDrop/
 test-widgets/html-widgets/src/main/webapp/js-lib/
 test-widgets/html-widgets/src/main/webapp/js/
 /src/assemble/docs/jsdoc/
-*.zip
-owf-widget-debug.js
-owf-widget-min.js
-owf-widget-min.gz.js
 
-# OS generated files #
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-Icon?
-ehthumbs.db
+### JetBrains (IntelliJ)
+.idea/
+
+### Windows
 Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+Desktop.ini
 
-# IDE support files
-/.classpath
-/.launch
-/.project
-/.settings
-/*.launch
-/*.tmproj
-/ivy*
-/eclipse
-.*.swp
+### Mac OS
+# General
+*.DS_Store
+.AppleDouble
+.LSOverride
+._*
 
+### Eclipse files
+.classpath
+.project
+.settings/
 
-# Plugins that will no longer be in source
-/plugins/tomcat-*
-/plugins/cors-*
-/plugins/ozone-auditing-*
-/.idea
-/*.iml
-/*.iws
-/*.ipr
-
-
+### JGIT CAC files
+RITE_server_public/
+agent.jar
+card.config
+jgit-cli-2.3-20130108.jar
+jgit.cac.sh
+jgit.unix.sh
+jssecacerts
+mscapi-agent-option/
+pkcs11.config

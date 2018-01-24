@@ -1,0 +1,72 @@
+$banner-background: (#55656D, #2A2A2A) !default;
+$banner-button-background: #1f3256 !default;
+
+$banner-button-icon-size: 32px !default;
+
+$banner-button-over-background: #414141 !default;
+$banner-button-text-color: #B4D681 !default;
+
+$banner-username-color: white !default;
+
+$gripper-logo: theme-image($theme-name, 'banner/gripper.png') !default;
+$gripper-logo-width: 15px !default;
+$gripper-logo-height: 32px !default;
+
+$banner-logo: theme-image($theme-name, 'banner/logo.png') !default;
+$banner-over-logo: theme-image($theme-name, 'banner/logo.png') !default;
+$banner-pressed-logo: theme-image($theme-name, 'banner/logo.png') !default;
+
+$mp-icon: theme-image($theme-name, 'banner/marketplace.png') !default;
+$mp-over-icon: theme-image($theme-name, 'banner/marketplace.png') !default;
+$mp-pressed-icon: theme-image($theme-name, 'banner/marketplace.png') !default;
+
+$metric-icon: theme-image($theme-name, 'banner/32x32_metrics.png') !default;
+$metric-over-icon: theme-image($theme-name, 'banner/32x32_metrics.png') !default;
+$metric-pressed-icon: theme-image($theme-name, 'banner/32x32_metrics.png') !default;
+
+$admin-icon: theme-image($theme-name, 'banner/admin.png') !default;
+$admin-over-icon: theme-image($theme-name, 'banner/admin.png') !default;
+$admin-pressed-icon: theme-image($theme-name, 'banner/admin.png') !default;
+
+$help-icon: theme-image($theme-name, 'banner/help.png') !default;
+$help-over-icon: theme-image($theme-name, 'banner/help.png') !default;
+$help-pressed-icon: theme-image($theme-name, 'banner/help.png') !default;
+
+$profile-icon: theme-image($theme-name, 'banner/profile.png') !default;
+$profile-over-icon: theme-image($theme-name, 'banner/profile.png') !default;
+$profile-pressed-icon: theme-image($theme-name, 'banner/profile.png') !default;
+
+$settings-icon: theme-image($theme-name, 'banner/settings.png') !default;
+$settings-over-icon: theme-image($theme-name, 'banner/settings.png') !default;
+$settings-pressed-icon: theme-image($theme-name, 'banner/settings.png') !default;
+
+$launch-menu-icon: theme-image($theme-name, 'banner/launch_menu.png') !default;
+$launch-menu-icon-width: 32px !default;
+$launch-menu-over-icon: theme-image($theme-name, 'banner/launch_menu.png') !default;
+$launch-menu-pressed-icon: theme-image($theme-name, 'banner/launch_menu.png') !default;
+
+$launch-menu-button-background-colors: (#8ebf44, #c3db9d 49%, #71943a 50%, #8ebf44) !default;
+$launch-menu-button-over-background-colors: (#8dc63f, #c3df9c 49%, #527a1b 50%, #8ec640) !default;
+$launch-menu-button-pressed-background-colors: (#527a1b, #c2de99 49%, #98cb52) !default;
+
+$dashboard-icon: theme-image($theme-name, 'banner/dashboards.png') !default;
+$dashboard-over-icon: theme-image($theme-name, 'banner/dashboards.png') !default;
+$dashboard-pressed-icon: theme-image($theme-name, 'banner/dashboards.png') !default;
+
+$divider-icon: theme-image($theme-name, 'banner/divider.png') !default;
+$divider-icon-width: 2px !default;
+$divider-icon-height: 32px  !default;
+
+$user-menu-icon: theme-image($theme-name, 'banner/user_menu.png') !default;
+$user-menu-over-icon: theme-image($theme-name, 'banner/user_menu_over.png') !default;
+$user-menu-pressed-icon: theme-image($theme-name, 'banner/user_menu.png') !default;
+
+$user-menu-button-border-color: black !default;
+
+$user-menu-background-color: rgba(#222222, 1) !default; //Set to opaque to fix OWF-7260
+//$user-menu-item-over-background-color: #15191c !default;
+$user-menu-item-over-background-color: black !default;
+$user-menu-text-color: #eeeeee !default;
+
+$owf-logout-color: #9D0E11 !default; //color of the background of the logout link
+$owf-prev-login-text-color: #D3CCA7 !default; //text color of the prev-login section

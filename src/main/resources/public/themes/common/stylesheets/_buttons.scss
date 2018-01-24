@@ -1,0 +1,138 @@
+// ===============================
+// ================== Small Button
+// ===============================
+
+.x-btn-text-color {
+    color: getButtonTextColor($default_button_theme) !important;
+}
+
+.x-btn-default-toolbar-small, .x-btn-default-small {
+    @include owf-button-background($default_button_theme);
+    .x-btn-inner {
+        font-weight: bold;
+        color: getButtonTextColor($default_button_theme);
+    }
+    @include border-radius($owf-button-border-radius);
+}
+.x-btn-default-toolbar-small-over, .x-btn-default-small-over {
+    @include owf-button-background($over_button_theme);
+    .x-btn-inner {
+        color: getButtonTextColor($over_button_theme);
+    }
+}
+.x-btn-default-toolbar-small-pressed, .x-btn-default-small-pressed {
+    @include owf-button-background($pressed_button_theme);
+    .x-btn-inner {
+        color: getButtonTextColor($pressed_button_theme);
+    }
+}
+.x-btn-default-toolbar-small-disabled, .x-btn-default-small-disabled {
+    @include owf-button-background($disabled_button_theme);
+    .x-btn-inner {
+        color: getButtonTextColor($disabled_button_theme) !important; //overrides a property that ext marks important, so this needs to be important
+    }
+}
+.x-btn-default-toolbar-small-focus, .x-btn-default-small-focus {
+    @include owf-button-background($focused_button_theme);
+    .x-btn-inner {
+        color: getButtonTextColor($focused_button_theme) !important;
+    }
+}
+
+// ===============================
+// ================= XLarge Button
+// ===============================
+/* Admin widget tabs */
+
+$button-xlarge-border-radius: 0px !default;
+$button-xlarge-border-width: 1px !default;
+$button-xlarge-padding: 3px !default;
+$button-xlarge-text-padding: 3px;
+$button-xlarge-font-size: ceil($font-size * .9) !default; //11px
+$button-xlarge-font-size-over: $button-xlarge-font-size !default;
+$button-xlarge-font-size-focus: $button-xlarge-font-size-over;
+$button-xlarge-font-size-pressed: $button-xlarge-font-size !default;
+$button-xlarge-font-size-disabled: $button-xlarge-font-size !default;
+$button-xlarge-font-weight: normal !default;
+$button-xlarge-font-weight-over: $button-xlarge-font-weight !default;
+$button-xlarge-font-weight-focus: $button-xlarge-font-weight-over;
+$button-xlarge-font-weight-pressed: $button-xlarge-font-weight !default;
+$button-xlarge-font-weight-disabled: $button-xlarge-font-weight !default;
+$button-xlarge-font-family: $font-family !default;
+$button-xlarge-font-family-over: $button-xlarge-font-family !default;
+$button-xlarge-font-family-focus: $button-xlarge-font-family-over;
+$button-xlarge-font-family-pressed: $button-xlarge-font-family !default;
+$button-xlarge-font-family-disabled: $button-xlarge-font-family !default;
+$button-xlarge-icon-size: 48px !default;
+
+@include extjs-button-ui(
+    'default-toolbar-xlarge',
+    
+    $button-xlarge-border-radius,
+    $button-xlarge-border-width,    
+    
+    transparent, //no border or background on non-selected ones
+    getButtonBorderColor($over_button_theme),
+    getButtonBorderColor($focused_button_theme),
+    getButtonBorderColor($pressed_button_theme),
+    transparent,
+    
+    $button-xlarge-padding,
+    $button-xlarge-text-padding,
+
+    //background colors
+    null,
+    getBaseFromGradient(getButtonGradient($over_button_theme)),
+    getBaseFromGradient(getButtonGradient($focused_button_theme)),
+    getBaseFromGradient(getButtonGradient($pressed_button_theme)),
+    null,
+    
+    //background gradients
+    null, 
+    getButtonGradient($over_button_theme),
+    getButtonGradient($focused_button_theme),
+    getButtonGradient($pressed_button_theme),
+    null, 
+
+    getButtonTextColor($default_button_theme),
+    getButtonTextColor($over_button_theme),
+    getButtonTextColor($focused_button_theme),
+    getButtonTextColor($pressed_button_theme),
+    getButtonTextColor($disabled_button_theme),
+            
+    $button-xlarge-font-size,
+    $button-xlarge-font-size-over,
+    $button-xlarge-font-size-focus,
+    $button-xlarge-font-size-pressed,
+    $button-xlarge-font-size-disabled,
+    
+    $button-xlarge-font-weight,
+    $button-xlarge-font-weight-over,
+    $button-xlarge-font-weight-focus,
+    $button-xlarge-font-weight-pressed,
+    $button-xlarge-font-weight-disabled,
+    
+    $button-xlarge-font-family,
+    $button-xlarge-font-family-over,
+    $button-xlarge-font-family-focus,
+    $button-xlarge-font-family-pressed,
+    $button-xlarge-font-family-disabled,
+    
+    $button-xlarge-icon-size
+);
+
+.x-btn-default-toolbar-xlarge {
+    width: 6.45em !important;
+    button {
+        width: 100% !important;
+        .x-btn-inner, .x-btn-icon {
+            width: 100% !important;
+            overflow-x: hidden;
+        }
+    }
+}
+
+.x-btn-default-toolbar-xlarge-disabled .x-btn-icon {
+    filter: none !important;
+    opacity: 1;
+}

@@ -1,0 +1,664 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Carousel Test</title>
+
+<link rel='stylesheet' type='text/css' href='../../../../js-lib/ext-3.2.1/resources/css/ext-all.css'/>
+
+<link rel='stylesheet' type='text/css' href='../../../../css/blueExt.css'/>
+<link rel='stylesheet' type='text/css' href='../../../../css/CarouselPanel.css'/>
+	<script type="text/javascript" src="../../../../js-lib/ext-3.2.1/adapter/ext/ext-base-debug.js"></script>
+	<script type="text/javascript" src="../../../../js-lib/ext-3.2.1/ext-all-debug.js"></script>
+
+<script type="text/javascript" src="../../../../js/config/config.js"></script>
+<script type="text/javascript" src="../../../../js-min/owf-server-debug.js"></script>
+
+<script type="text/javascript">
+Ext.BLANK_IMAGE_URL = '../../../../js-lib/ext-3.2.1/resources/images/default/s.gif';
+Ext.onReady(function() {
+    //init quicktips
+    Ext.QuickTips.init();
+
+//    var widgetGroupData = {
+//        rows: [
+//            {
+//                groupId: '_ungrouped-ea5435cf-4021-4f2a-ba69-dde451d12551',
+//                group: '_ungrouped',
+//                groupShowHeader: false,
+//                groupCollapsed: false,
+//                groupVisible: true,
+//                groupPosition: 0,
+//
+//                widgetGuid: "ea5435cf-4021-4f2a-ba69-dde451d12551",
+//                visible:true,
+//                position:0,
+//                userId:"testAdmin1",
+//                userRealName:"Test Admin 1",
+//                name:"ungrouped A1",
+//                url:"examples/fake-widgets/widget-a.html",
+//                headerIcon:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                image:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                smallIconUrl:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                largeIconUrl:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                width:615,
+//                height:565,
+//                x:0,
+//                y:0,
+//                minimized:false,
+//                maximized:false,
+//                tags:[
+//                    {
+//                        name:"ungrouped",
+//                        visible:true,
+//                        position:0
+//                    }
+//                ]
+//            },
+//            {
+//                groupId: '_ungrouped-ea5435cf-4021-4f2a-ba69-dde451d12552',
+//                group: '_ungrouped',
+//                groupShowHeader: false,
+//                groupCollapsed: false,
+//                groupVisible: true,
+//                groupPosition: 0,
+//
+//                widgetGuid: "ea5435cf-4021-4f2a-ba69-dde451d12552",
+//                visible:true,
+//                position:0,
+//                userId:"testAdmin1",
+//                userRealName:"Test Admin 1",
+//                name:"ungrouped A2",
+//                url:"examples/fake-widgets/widget-a.html",
+//                headerIcon:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                image:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                smallIconUrl:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                largeIconUrl:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                width:615,
+//                height:565,
+//                x:0,
+//                y:0,
+//                minimized:false,
+//                maximized:false,
+//                tags:[
+//                    {
+//                        name:"ungrouped",
+//                        visible:true,
+//                        position:0
+//                    }
+//                ]
+//            },
+//            {
+//                groupId: '_ungrouped-ea543x5cf-4021-4f2a-ba69-dde451d12552',
+//                group: '_ungrouped',
+//                groupShowHeader: false,
+//                groupCollapsed: false,
+//                groupVisible: true,
+//                groupPosition: 0,
+//
+//                widgetGuid: "ea5435cf-4021-4f2a-ba69-dde451d12552",
+//                visible:true,
+//                position:0,
+//                userId:"testAdmin1",
+//                userRealName:"Test Admin 1",
+//                name:"ungrouped A3",
+//                url:"examples/fake-widgets/widget-a.html",
+//                headerIcon:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                image:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                smallIconUrl:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                largeIconUrl:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                width:615,
+//                height:565,
+//                x:0,
+//                y:0,
+//                minimized:false,
+//                maximized:false,
+//                tags:[
+//                    {
+//                        name:"ungrouped",
+//                        visible:true,
+//                        position:0
+//                    }
+//                ]
+//            },
+//            {
+//                groupId: 'invisible-ea5435cf-4021-4f2a-ba69-dde451d12553',
+//                group: 'invisible',
+//                groupShowHeader: true,
+//                groupVisible: false,
+//                groupPosition: 0,
+//
+//                widgetGuid: "ea5435cf-4021-4f2a-ba69-dde451d12553",
+//                visible:true,
+//                position:0,
+//                userId:"testAdmin1",
+//                userRealName:"Test Admin 1",
+//                name:"invisible A1",
+//                url:"examples/fake-widgets/widget-a.html",
+//                headerIcon:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                image:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                smallIconUrl:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                largeIconUrl:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                width:615,
+//                height:565,
+//                x:0,
+//                y:0,
+//                minimized:false,
+//                maximized:false,
+//                tags:[
+//                    {
+//                        name:"ungrouped",
+//                        visible:true,
+//                        position:0
+//                    }
+//                ]
+//            },
+//            {
+//                groupId: 'invisible-ea5435cf-4021-4f2a-ba69-dde451d12554',
+//                group: 'invisible',
+//                groupShowHeader: true,
+//                groupVisible: false,
+//                groupPosition: 0,
+//
+//                widgetGuid: "ea5435cf-4021-4f2a-ba69-dde451d12554",
+//                visible:true,
+//                position:0,
+//                userId:"testAdmin1",
+//                userRealName:"Test Admin 1",
+//                name:"invisible A2",
+//                url:"examples/fake-widgets/widget-a.html",
+//                headerIcon:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                image:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                smallIconUrl:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                largeIconUrl:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                width:615,
+//                height:565,
+//                x:0,
+//                y:0,
+//                minimized:false,
+//                maximized:false,
+//                tags:[
+//                    {
+//                        name:"ungrouped",
+//                        visible:true,
+//                        position:0
+//                    }
+//                ]
+//            },
+//            {
+//                groupId: 'foo-ea5435cf-4021-4f2a-ba69-dde451d12555',
+//                group: 'foo',
+//                groupVisible: true,
+//                groupPosition: 0,
+//                widgetGuid: "ea5435cf-4021-4f2a-ba69-dde451d12555",
+//                visible:true,
+//                position:0,
+//                userId:"testAdmin1",
+//                userRealName:"Test Admin 1",
+//                name:"foo A1",
+//                url:"examples/fake-widgets/widget-a.html",
+//                headerIcon:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                image:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                smallIconUrl:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                largeIconUrl:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                width:615,
+//                height:565,
+//                x:0,
+//                y:0,
+//                minimized:false,
+//                maximized:false,
+//                tags:[
+//                    {
+//                        name:"ungrouped",
+//                        visible:true,
+//                        position:0
+//                    }
+//                ]
+//            },
+//            {
+//                groupId: 'foo-ea5435cf-4021-4f2a-ba69-dde451d12556',
+//                group: 'foo',
+//                groupVisible: true,
+//                groupPosition: 0,
+//                widgetGuid: "ea5435cf-4021-4f2a-ba69-dde451d12556",
+//                visible:true,
+//                position:0,
+//                userId:"testAdmin1",
+//                userRealName:"Test Admin 1",
+//                name:"foo A2",
+//                url:"examples/fake-widgets/widget-a.html",
+//                headerIcon:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                image:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                smallIconUrl:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                largeIconUrl:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                width:615,
+//                height:565,
+//                x:0,
+//                y:0,
+//                minimized:false,
+//                maximized:false,
+//                tags:[
+//                    {
+//                        name:"ungrouped",
+//                        visible:true,
+//                        position:0
+//                    }
+//                ]
+//            },
+//            {
+//                groupId: 'foo-ea5435cf-1021-4f2a-ba69-dde451d12556',
+//                group: 'foo',
+//                groupVisible: true,
+//                groupPosition: 0,
+//                widgetGuid: "ea5435cf-4021-4f2a-ba69-dde451d12556",
+//                visible:true,
+//                position:0,
+//                userId:"testAdmin1",
+//                userRealName:"Test Admin 1",
+//                name:"foo A3",
+//                url:"examples/fake-widgets/widget-a.html",
+//                headerIcon:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                image:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                smallIconUrl:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                largeIconUrl:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                width:615,
+//                height:565,
+//                x:0,
+//                y:0,
+//                minimized:false,
+//                maximized:false,
+//                tags:[
+//                    {
+//                        name:"ungrouped",
+//                        visible:true,
+//                        position:0
+//                    }
+//                ]
+//            },
+//            {
+//                groupId: 'foo-ea5435cf-2021-4f2a-ba69-dde451d12556',
+//                group: 'foo',
+//                groupVisible: true,
+//                groupPosition: 0,
+//                widgetGuid: "ea5435cf-4021-4f2a-ba69-dde451d12556",
+//                visible:true,
+//                position:0,
+//                userId:"testAdmin1",
+//                userRealName:"Test Admin 1",
+//                name:"foo A4",
+//                url:"examples/fake-widgets/widget-a.html",
+//                headerIcon:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                image:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                smallIconUrl:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                largeIconUrl:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                width:615,
+//                height:565,
+//                x:0,
+//                y:0,
+//                minimized:false,
+//                maximized:false,
+//                tags:[
+//                    {
+//                        name:"ungrouped",
+//                        visible:true,
+//                        position:0
+//                    }
+//                ]
+//            },
+//            {
+//                groupId: 'foo-ea5435cf-3021-4f2a-ba69-dde451d12556',
+//                group: 'foo',
+//                groupVisible: true,
+//                groupPosition: 0,
+//                widgetGuid: "ea5435cf-4021-4f2a-ba69-dde451d12556",
+//                visible:true,
+//                position:0,
+//                userId:"testAdmin1",
+//                userRealName:"Test Admin 1",
+//                name:"foo A5",
+//                url:"examples/fake-widgets/widget-a.html",
+//                headerIcon:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                image:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                smallIconUrl:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                largeIconUrl:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                width:615,
+//                height:565,
+//                x:0,
+//                y:0,
+//                minimized:false,
+//                maximized:false,
+//                tags:[
+//                    {
+//                        name:"ungrouped",
+//                        visible:true,
+//                        position:0
+//                    }
+//                ]
+//            },
+//            {
+//                groupId: 'bar1-ea5435cf-4021-4f2a-ba69-dde451d12557',
+//                group: 'bar1',
+//                groupVisible: true,
+//                groupPosition: 0,
+//                widgetGuid: "ea5435cf-4021-4f2a-ba69-dde451d12557",
+//                visible:true,
+//                position:0,
+//                userId:"testAdmin1",
+//                userRealName:"Test Admin 1",
+//                name:"bA2",
+//                url:"examples/fake-widgets/widget-a.html",
+//                headerIcon:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                image:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                smallIconUrl:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                largeIconUrl:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                width:615,
+//                height:565,
+//                x:0,
+//                y:0,
+//                minimized:false,
+//                maximized:false,
+//                tags:[
+//                    {
+//                        name:"ungrouped",
+//                        visible:true,
+//                        position:0
+//                    }
+//                ]
+//            },
+//            {
+//                groupId: 'bar1-ea5435cf-4021-4f2a-ba69-dde451d12558',
+//                group: 'bar1',
+//                groupVisible: true,
+//                groupPosition: 0,
+//                widgetGuid: "ea5435cf-4021-4f2a-ba69-dde451d12558",
+//                visible:true,
+//                position:0,
+//                userId:"testAdmin1",
+//                userRealName:"Test Admin 1",
+//                name:"bA1",
+//                url:"examples/fake-widgets/widget-a.html",
+//                headerIcon:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                image:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                smallIconUrl:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                largeIconUrl:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                width:615,
+//                height:565,
+//                x:0,
+//                y:0,
+//                minimized:false,
+//                maximized:false,
+//                tags:[
+//                    {
+//                        name:"ungrouped",
+//                        visible:true,
+//                        position:0
+//                    }
+//                ]
+//            },
+//            {
+//                groupId: 'collapsed-ea5435cf-4021-4f2a-ba69-dde451d12559',
+//                group: 'collapsed',
+//                groupCollapsed: true,
+//                groupVisible: true,
+//                groupPosition: 0,
+//                widgetGuid: "ea5435cf-4021-4f2a-ba69-dde451d12559",
+//                visible:true,
+//                position:0,
+//                userId:"testAdmin1",
+//                userRealName:"Test Admin 1",
+//                name:"collapsed A1",
+//                url:"examples/fake-widgets/widget-a.html",
+//                headerIcon:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                image:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                smallIconUrl:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                largeIconUrl:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                width:615,
+//                height:565,
+//                x:0,
+//                y:0,
+//                minimized:false,
+//                maximized:false,
+//                tags:[
+//                    {
+//                        name:"ungrouped",
+//                        visible:true,
+//                        position:0
+//                    }
+//                ]
+//            },
+//            {
+//                groupId: 'collapsed-ea5435cf-4021-4f2a-ba69-dde451d12550',
+//                group: 'collapsed',
+//                groupCollapsed: true,
+//                groupVisible: true,
+//                groupPosition: 0,
+//                widgetGuid: "ea5435cf-4021-4f2a-ba69-dde451d12552",
+//                visible:true,
+//                position:0,
+//                userId:"testAdmin1",
+//                userRealName:"Test Admin 1",
+//                name:"collapsed A2",
+//                url:"examples/fake-widgets/widget-a.html",
+//                headerIcon:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                image:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                smallIconUrl:"../../../../images/blue/icons/widgetContainer/widgetAsm.gif",
+//                largeIconUrl:"../../../../images/blue/icons/widgetIcons/widgetA.gif",
+//                width:615,
+//                height:565,
+//                x:0,
+//                y:0,
+//                minimized:false,
+//                maximized:false,
+//                tags:[
+//                    {
+//                        name:"ungrouped",
+//                        visible:true,
+//                        position:0
+//                    }
+//                ]
+//            }
+//
+//        ]
+//    };
+
+    var widgetGroupReader = new Ext.data.JsonReader({
+        root:'rows',
+        idProperty: 'groupId',
+        fields:[
+            //group fields
+            'groupId', //should be a unique id for every record
+            'group',
+            'groupTitle',
+            'groupShowHeader',
+            'groupCollapsed',
+            'groupVisible',
+            'groupPosition',
+            'groupEditable',
+            '_lastInGroup',
+            '_shortName',
+            '_itemPos',
+            '_groupCount',
+
+            //widget fields
+            'name',
+            'url',
+            'headerIcon',
+            'image',
+            'width',
+            'height',
+            'widgetGuid',
+            'maximized',
+            'minimized',
+            'x',
+            'y',
+            'visible'
+        ]
+    });
+
+    var widgetGroupStore = new Ext.data.GroupingStore({
+        reader: widgetGroupReader,
+        sortInfo: {
+          field: 'name',
+          direction: 'ASC' // or 'DESC' (case sensitive for local sorting)
+        },
+        groupField:'group'
+    });
+
+    var widgetStore = new Ext.data.JsonStore({
+        url:'/owf/prefs/widgetList',
+        root:'rows',
+        totalProperty:'results',
+        idProperty: 'path',
+        fields:[
+            {name:'name', mapping:'value.namespace'},
+            {name:'url', mapping:'value.url'},
+            {name:'headerIcon', mapping:'value.headerIcon'},
+            {name:'image', mapping:'value.image'},
+            {name:'width', mapping:'value.width'},
+            {name:'height', mapping:'value.height'},
+            {name:'widgetGuid', mapping:'path'},
+            {name:'maximized', mapping:'value.maximized'},
+            {name:'minimized', mapping:'value.minimized'},
+            {name:'x', mapping:'value.x'},
+            {name:'y', mapping:'value.y'},
+            {name:'visible', mapping:'value.visible'},
+            {name:'tags', mapping:'value.tags'}
+        ],
+        listeners : {
+            load: {
+                fn: function(store, recs, options) {
+                    //flatten records and load into groupstore
+                    var flatData = {
+                        rows: []
+                    }
+                    for (var i = 0; i < recs.length; i++) {
+                        var recData = recs[i].data;
+
+                        var groups = recData.tags;
+                        if (groups != null && groups.length > 0) {
+                            for (var j=0 ; j < groups.length ; j++) {
+                                var group = groups[j];
+                                //put widget data in as ungrouped
+                                var data = Ext.apply({}, recData);
+                                data.image = "../../../../" + data.image;
+                                data = Ext.apply(data, {
+                                    groupId: group.name + '-' + recData.widgetGuid,
+                                    group: group.name,
+                                    groupShowHeader: true,
+                                    groupCollapsed: false,
+                                    groupVisible: group.visible !== false,
+                                    groupPosition: group.position != null ? group.position : 0
+                                });
+                                flatData.rows.push(data);
+                            }
+                        }
+                        else {
+                            //put widget data in as ungrouped
+                            var data = Ext.apply({}, recData);
+                            data = Ext.apply(data, {
+                                groupId: '_ungrouped-' + recData.widgetGuid,
+                                group: '_ungrouped',
+                                groupShowHeader: false,
+                                groupCollapsed: false,
+                                groupVisible: true,
+                                groupPosition: 0
+                            });
+                            flatData.rows.push(data);
+                        }
+
+                    widgetGroupStore.loadData(flatData);
+                    }
+                },
+                scope: this
+            }
+        }
+    });
+    widgetStore.on('datachanged', function() {
+      //load data
+      loadWidgetGroupStore(widgetStore,widgetStore.getRange());
+    },this);
+
+    var loadWidgetGroupStore = function(store, recs, options) {
+        //flatten records and load into groupstore
+        var flatData = {
+            rows: []
+        }
+        for (var i = 0; i < recs.length; i++) {
+            var recData = recs[i].data;
+
+            var groups = recData.tags;
+            if (groups != null && groups.length > 0) {
+                for (var j=0 ; j < groups.length ; j++) {
+                    var group = groups[j];
+                    //put widget data in as ungrouped
+                    var data = Ext.apply({}, recData);
+                    data = Ext.apply(data, {
+                        groupId: group.name + '-' + recData.widgetGuid,
+                        group: group.name,
+                        groupTitle: group.name,
+                        groupShowHeader: true,
+                        groupCollapsed: false,
+                        groupVisible: group.visible !== false,
+                        groupPosition: group.position != null ? group.position : 0,
+                        groupEditable: group.editable != null ? group.editable : true
+                    });
+
+                    if (group.name == Ozone.config.carousel.pendingApprovalTagGroupName) {
+                      data.group = '__' + Ozone.config.carousel.pendingApprovalTagGroupName;
+                    }
+
+                    flatData.rows.push(data);
+                }
+            }
+            else {
+                //put widget data in as ungrouped
+                var data = Ext.apply({}, recData);
+                data = Ext.apply(data, {
+                    groupId: 'zzzz_ungrouped-' + recData.widgetGuid,
+                    group: 'zzzz_ungrouped',
+                    groupTitle: 'ungrouped',
+                    groupShowHeader: true,
+                    groupCollapsed: false,
+                    groupVisible: true,
+                    groupPosition: 0,
+                    groupEditable: true
+                });
+                flatData.rows.push(data);
+            }
+
+        widgetGroupStore.loadData(flatData);
+        }
+    };
+
+
+    var win = new Ext.Window({
+        layout:'fit',
+        width:300,
+        height:500,
+        title: 'Carousel',
+        items: [
+            {
+                xtype: 'carouselpanel',
+                buttonAlign: 'center',
+                store: widgetGroupStore,
+                listeners : {
+                    afterlayout: {
+                        fn : function(cmp) {
+//                            widgetGroupStore.loadData(widgetGroupData)
+                            widgetStore.load();
+                        },
+                        single:true
+                    }
+                }
+            }
+        ]
+    });
+    win.show();
+
+});
+</script>
+
+</head>
+<body>
+</body>
+</html>
+

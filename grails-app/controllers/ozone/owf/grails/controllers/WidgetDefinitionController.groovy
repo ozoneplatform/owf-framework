@@ -1,16 +1,24 @@
 package ozone.owf.grails.controllers
 
-import grails.converters.JSON
-import org.apache.commons.lang.time.StopWatch
-import ozone.owf.grails.OwfException
-
 import javax.servlet.http.HttpServletResponse
+
+import grails.converters.JSON
+
+import org.apache.commons.lang.time.StopWatch
+
+import ozone.owf.grails.OwfException
+import ozone.owf.grails.services.AccountService
+import ozone.owf.grails.services.MarketplaceService
+import ozone.owf.grails.services.WidgetDefinitionService
+
 
 class WidgetDefinitionController extends BaseOwfRestController {
 	
-    def accountService
-    def widgetDefinitionService
-    def marketplaceService
+    AccountService accountService
+
+    WidgetDefinitionService widgetDefinitionService
+
+    MarketplaceService marketplaceService
 	
     def modelName = 'widgetDefinition'
 	

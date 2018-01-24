@@ -4,8 +4,8 @@ var Ozone = Ozone || {};
 //externalize any config properties here as javascript properties
 //this should be only place where these config properties are exposed to javascript
 
-Ozone.config = ${conf as JSON};
-Ozone.initialData = ${initialData as JSON};
+Ozone.config = ${raw((conf as JSON).toString())};
+Ozone.initialData = ${raw((initialData as JSON).toString())};
 
 //add in contextPath
 Ozone.config.webContextPath = window.location.pathname;

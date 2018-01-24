@@ -1,7 +1,4 @@
 package ozone.owf.grails.domain
-
-import org.codehaus.groovy.grails.web.json.JSONObject
-
 /**
  * WidgetDefinitionIntent domain class. Represents the many-to-many relationship
  * between a WidgetDefinition and an Intent.
@@ -12,13 +9,15 @@ class WidgetDefinitionIntent implements Serializable {
 
     Boolean send
     Boolean receive
+    Set<IntentDataType> dataTypes
+    Intent intent
 
     static belongsTo = [widgetDefinition: WidgetDefinition, intent: Intent]
     static hasMany = [dataTypes: IntentDataType]
 
     static constraints = {
-        send nullable: false, blank: false
-        receive nullable: false, blank: false
+        send nullable: false
+        receive nullable: false
     }
 
     static mapping = {

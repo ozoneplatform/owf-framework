@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+                           http://www.springframework.org/schema/security
+                           http://www.springframework.org/schema/security/spring-security-4.2.xsd">
+
+
+    <bean id="propConfig" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="location" value="classpath:ozone/framework/application.properties"/>
+    </bean>
+
+
+    <import resource="security/method-security.xml"/>
+
+    <import resource="security/ldap.xml" />
+    <import resource="security/authentication-providers.xml" />
+
+
+    <bean id="authenticationEventPublisher"
+          primary="true"
+          class="org.springframework.security.authentication.DefaultAuthenticationEventPublisher"/>
+
+    <bean id="x509Filter" class="org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+    </bean>
+
+    <bean id="ozoneCookieFilter" class="ozone.security.filters.OzoneCookieFilter"/>
+
+
+    <sec:http realm="OZONE">
+
+        <sec:port-mappings>
+            <sec:port-mapping http="${ozone.unsecurePort}" https="${ozone.port}"/>
+        </sec:port-mappings>
+
+        <!-- CSRF protection must be disabled (enabled by default) to allow POST (& PATCH, PUT, DELETE) requests,
+                as the client does not currently support CSRF tokens. -->
+        <sec:csrf disabled="true"/>
+
+        <!-- Set the 'X-Frame-Options' header (defaults to DENY) to allow widgets to run in iframes -->
+        <sec:headers>
+            <sec:frame-options policy="SAMEORIGIN"/>
+        </sec:headers>
+
+        <sec:intercept-url pattern="/static/**"
+                           access="permitAll()" />
+
+        <sec:intercept-url pattern="/login*"
+                           access="permitAll()"
+                           requires-channel="https" />
+
+        <sec:intercept-url pattern="/perform_login*"
+                           access="permitAll()"
+                           requires-channel="https" />
+
+        <sec:intercept-url pattern="/**"
+                           access="hasAnyRole('ADMIN', 'USER', 'ORG_STEWARD')"
+                           requires-channel="https" />
+
+        <sec:form-login login-page="/login"
+                        login-processing-url="/perform_login"
+                        default-target-url="/"
+                        always-use-default-target="true"
+                        username-parameter="username"
+                        password-parameter="password" />
+
+        <sec:logout logout-url="/logout"
+                    logout-success-url="/login?out=1"
+                    delete-cookies="JSESSIONID"
+                    invalidate-session="true" />
+
+        <sec:session-management invalid-session-url="/login?invalid=1">
+            <sec:concurrency-control max-sessions="1" expired-url="/login?time=1" />
+        </sec:session-management>
+
+        <!-- Cannot use <sec:x509> element since it adds an extra authenticationprovider that bypasses the caching provider -->
+        <sec:custom-filter ref="x509Filter" position="X509_FILTER"/>
+
+        <sec:custom-filter ref="ozoneCookieFilter" before="ANONYMOUS_FILTER"/>
+
+    </sec:http>
+
+
+    <sec:authentication-manager alias="authenticationManager" >
+
+        <!-- Certificate Authentication -->
+        <sec:authentication-provider ref="cachingPreauthProvider"/>
+
+        <!-- LDAP Authentication -->
+        <sec:authentication-provider ref="ldapAuthProvider"/>
+
+    </sec:authentication-manager>
+
+
+</beans>

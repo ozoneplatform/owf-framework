@@ -1,0 +1,12 @@
+//icons
+$notification-success-icon: theme-image($theme-name, 'icons/16x16/remote.png') !default;
+$notification-close-icon: theme-image($theme-name, 'clear.png') !default;
+$notification-pin-icon: theme-image($theme-name, 'icons/16x16/remote.png') !default;
+$notification-unpin-icon: theme-image($theme-name, 'icons/16x16/nunchuk.png') !default;
+
+$notification-container-background-color: #404040 !default;
+$notification-history-background-color: #F5F5F5 !default;
+
+$notification-success-background-color: #DFF0D8 !default;
+$notification-success-border-color: #D6E9C6 !default;
+$notification-success-text-color: #468847 !default;

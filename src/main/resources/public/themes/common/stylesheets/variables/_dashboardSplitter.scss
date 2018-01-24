@@ -1,0 +1,6 @@
+$owf-splitter-base-color: lighten($owf-base-color, 5%) !default;
+
+$splitter-theme: (
+    lighten($owf-splitter-base-color, 5%),
+    $owf-splitter-base-color
+) !default;

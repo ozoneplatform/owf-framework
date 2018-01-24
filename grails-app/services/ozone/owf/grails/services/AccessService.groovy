@@ -1,16 +1,17 @@
 package ozone.owf.grails.services
 
-import grails.converters.JSON
 import custom.access.AccessLevel
 import custom.access.CustomAccessChecker
+
 import ozone.owf.grails.domain.WidgetDefinition
 
-class AccessService {
-	
-    def accountService
-    def customAccessChecker
 
-    
+class AccessService {
+
+    AccountService accountService
+
+    CustomAccessChecker customAccessChecker
+
     def checkAccess(def params) {
     	def username = accountService.getLoggedInUsername()
         def widgetId = params.widgetId
@@ -38,11 +39,11 @@ class AccessService {
     		def accessLevel = new AccessLevel(params.accessLevel)
     		formalAccesses.push(accessLevel)
 		}
-    	
+
     	def userHasAccess = customAccessChecker.checkAccess(username, formalAccesses)
 		def widgetHasAccess = customAccessChecker.checkAccess(receivingWidget.widgetUrl, formalAccesses)
 		def hasAccess = (userHasAccess && widgetHasAccess)
-			
+
         return [success:true, data:[widgetId: params.widgetId, accessLevel: params.accessLevel?.toUpperCase(), hasAccess: hasAccess]]
     }
 

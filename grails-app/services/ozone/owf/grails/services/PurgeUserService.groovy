@@ -1,12 +1,14 @@
 package ozone.owf.grails.services
 
-import ozone.owf.grails.domain.Person
-import ozone.owf.grails.domain.Dashboard
-import ozone.owf.grails.domain.Stack
 import ozone.owf.enums.OwfApplicationSetting
+import ozone.owf.grails.domain.Dashboard
+import ozone.owf.grails.domain.Person
+import ozone.owf.grails.domain.Stack
+
 
 class PurgeUserService {
-    def owfApplicationConfigurationService
+
+    OwfApplicationConfigurationService owfApplicationConfigurationService
 
     void purgeInactiveAccounts() {
         def thresholdInDays = owfApplicationConfigurationService.valueOf(OwfApplicationSetting.INACTIVITY_THRESHOLD)
@@ -14,7 +16,7 @@ class PurgeUserService {
             return
         }
 
-        List<Person> inactiveAccounts = getInactiveAccounts(thresholdInDays)
+        List<Person> inactiveAccounts = getInactiveAccounts(thresholdInDays.toInteger())
         inactiveAccounts.each { account ->
             Person person = Person.findByUsername(account.username)
             if (person) {
@@ -23,8 +25,8 @@ class PurgeUserService {
         }
     }
 
-    List<Person> getInactiveAccounts(def thresholdInDays) {
-        Date cutOffDate = new Date().minus(thresholdInDays.toInteger())
+    List<Person> getInactiveAccounts(int thresholdInDays) {
+        Date cutOffDate = new Date() - thresholdInDays
         List<Person> inactiveAccounts = Person.findAllByLastLoginLessThan(cutOffDate)
         return inactiveAccounts
     }

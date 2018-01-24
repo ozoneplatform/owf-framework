@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:ivy="antlib:org.apache.ivy.ant" basedir="." name="build-base">
+
+    <property environment="env" />
+
+    <dirname property="build.base.dir" file="${ant.file.build-base}" />
+    <property file="defaultBuildProps.properties" />
+
+    <property name="ivy.install.version" value="2.1.0" />
+    <property name="ant.lib.dir" value="${user.home}/.ant/lib" />
+    <property name="ivy.jar.file" value="${ant.lib.dir}/ivy-${ivy.install.version}.jar" />
+    <property name='release.dir' value="${user.home}/.ivy2/release/" />
+    <dirname property="imported.basedir" file="${ant.file.build-base}" />
+
+    <condition property="ivysettings.file" value="ivysettings_offline.xml" else="ivysettings.xml">
+        <isset property="disconnected" />
+    </condition>
+    <!--ivy:settings file="${build.base.dir}/${ivysettings.file}" id='ivy.settings' /-->
+    <condition property="offline.repo" value="${env.OFFLINE_REPO}" else="">
+        <isset property="env.OFFLINE_REPO" />
+    </condition>
+    <available property="release.dir.svn.available" file="${release.dir}/no-namespace/.svn" />
+    <condition property="ant.initialized">
+        <and>
+            <available file="${ivy.jar.file}" />
+            <available file="${ant.lib.dir}/ganymed.jar" />
+            <!--available file="${ant.lib.dir}/svnant.jar" />
+            <available file="${ant.lib.dir}/svnClientAdapter.jar" />
+            <available file="${ant.lib.dir}/svnjavahl.jar" />
+            <available file="${ant.lib.dir}/svnkit.jar" /-->
+            <available file="${ant.lib.dir}/ant-contrib-1.0b3.jar" />
+        </and>
+    </condition>
+
+    <target name="setup-ant" unless="ant.initialized">
+        <copy todir="${ant.lib.dir}" >
+            <fileset dir="${build.base.dir}/build-libs" />
+        </copy>
+    </target>
+
+    <target name="init-ivy" depends='setup-ant'>
+        <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant"
+                 classpath="${ant.lib.dir}/ivy-${ivy.install.version}.jar" />
+        <taskdef resource="net/sf/antcontrib/antlib.xml"
+                 classpath="${ant.lib.dir}/ant-contrib-1.0b3.jar" />
+        <ivy:settings file="${build.base.dir}/${ivysettings.file}" id='ivy.settings' />
+        <typedef resource="org/tigris/subversion/svnant/svnantlib.xml" >
+            <classpath>
+                <fileset dir="${ant.lib.dir}" >
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </typedef>
+    </target>
+
+    <!--target name="create-release-repo" unless="release.dir.svn.available" depends="init-ivy,init-svn">
+        <mkdir dir="${release.dir}" />
+        <svn username="${svn.user}" password="${svn.password}">
+            <checkout url="${ivy.repo}" destPath="${release.dir}" recurse="false" />
+        </svn>
+    </target-->
+
+    <condition property="grailstask" value="win_grails" else="linux_grails">
+        <contains string="${os.name}" substring="windows" casesensitive="false" />
+    </condition>
+
+    <condition property="linux" >
+        <not>
+            <contains string="${os.name}" substring="windows" casesensitive="false" />
+        </not>
+    </condition>
+
+    <target name="win_grails">
+        <exec executable="cmd" failonerror="true">
+            <arg value="/c" />
+            <arg value="grails ${gpreargs} ${gscript} ${gargs}" />
+        </exec>
+    </target>
+
+    <target name="linux_grails">
+        <exec executable="grails" failonerror="true">
+            <arg value="--stacktrace" />
+            <arg value="--verbose" />
+            <arg value="${gpreargs}" />
+            <arg value="${gscript}" />
+            <arg value="${gargs}" />
+        </exec>
+    </target>
+
+    <macrodef name="grails">
+        <attribute name="script" />
+        <attribute name="args" default="" />
+        <attribute name="preargs" default="" />
+        <sequential>
+            <antcall target="${grailstask}">
+                <param name="gscript" value="@{script}" />
+                <param name="gargs" value="@{args}" />
+                <param name="gpreargs" value="@{preargs}" />
+            </antcall>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="remove-from-cache" >
+        <attribute name="org" />
+        <attribute name="module" />
+        <sequential>
+            <delete dir="${user.home}\.ivy2\cache\@{org}\@{module}"  failonerror="true"/>
+        </sequential>
+    </macrodef>
+
+    <target name="setpermissions" if="linux">
+        <exec executable="chmod" failonerror="false">
+            <arg value="775" />
+            <arg value="${shellFile}" />
+        </exec>
+    </target>
+
+    <!-- The following targets and macros are to support releasing a project -->
+    <target name="delete_ivys" depends="init-ivy,init-svn" unless="ivys.not.available" >
+        <svn failonerror="false" username="${svn.user}" password="${svn.password}">
+            <delete force="true" >
+                <fileset dir="${release.dir}/no-namespace/${org}/${module}/ivys" >
+                    <include name="ivy-${version}.*" />
+                </fileset>
+            </delete>
+            <commit dir="${release.dir}/no-namespace/${org}/${module}/ivys" message="Prerelease cleanup" />
+        </svn>
+    </target>
+
+    <target name="delete_extension_files" depends="init-ivy,init-svn" unless="extensions.not.available">
+        <svn failonerror="false" username="${svn.user}" password="${svn.password}">
+            <delete force="true" >
+                <fileset dir="${release.dir}/no-namespace/${org}/${module}/${ext}s" >
+                    <include name="${module}-${version}.{ext}*" />
+                </fileset>
+            </delete>
+            <commit dir="${release.dir}/no-namespace/${org}/${module}/${ext}s" message="Prerelease cleanup" />
+        </svn>
+    </target>
+
+    <target name="_prepare_release" depends="init-ivy,init-svn">
+        <svn failonerror="false" username="${svn.user}" password="${svn.password}">
+            <checkout url="${svnant.this.url}/${org}" destPath="${release.dir}/no-namespace/${org}" recurse="true"/>
+        </svn>
+        <condition property="ivys.not.available" >
+            <or>
+                <not>
+                    <available file="${release.dir}/no-namespace/${org}/${module}/ivys/ivy-${version}.xml" type="file"/>
+                </not>
+                <not>
+                    <available file="${release.dir}/no-namespace/${org}/${module}/ivys/.svn" type="dir"/>
+                </not>  
+            </or>
+        </condition>
+        <antcall target="delete_ivys" />
+        <condition property="extensions.not.available" >
+            <or>
+                <not>
+                    <available file="${release.dir}/no-namespace/${org}/${module}/${ext}s/${module}-${version}.{ext}" type="file"/>
+                </not>
+                <not>
+                    <available file="${release.dir}/no-namespace/${org}/${module}/${ext}s/.svn" type="dir"/>
+                </not>
+            </or>
+        </condition>
+        <antcall target="delete_extension_files" />
+    </target>
+
+    <target name="_commit_release" depends="init-ivy,init-svn" >
+        <if>
+            <available file="${release.dir}/no-namespace/${org}/${module}/.svn" type="dir" />
+            <then>
+                <property name="add.path" value="${release.dir}/no-namespace/${org}/${module}" />
+                <echo message="1: Add Path set to: '${add.path}'..." />
+            </then>
+            <elseif>
+                <available file="${release.dir}/no-namespace/.svn" type="dir" />
+                <then>
+                    <property name="add.path" value="${release.dir}/no-namespace/${org}" />
+                    <echo message="2: Add Path set to: '${add.path}'..." />
+                </then>
+            </elseif>
+        </if>
+        <echo message="3: Add Path set to: '${add.path}'..." />
+        <svn username="${svn.user}" password="${svn.password}" >
+            <add dir="${add.path}" force="true" />
+            <commit dir="${add.path}" message="OWF release" />
+        </svn>
+    </target>
+
+    <macrodef name="resolve" >
+        <attribute name="ivyConf" />
+        <sequential>
+            <ivy:resolve conf="@{ivyConf}" refresh="true" settingsRef='ivy.settings'/>
+            <ivy:retrieve pattern="${staging.dir}/[artifact]-[revision].[ext]" conf="@{ivyConf}" />
+        </sequential>
+    </macrodef>
+
+    <target name="publish_release_build" depends="init-ivy">
+        <ivy:resolve settingsRef='ivy.settings' conf="${conf}" />
+        <ivy:publish artifactspattern="${build.dir}/[artifact]-[revision].[ext]" resolver="pre-release" update="true" forcedeliver="true"
+                         overwrite="true" settingsRef='ivy.settings'/>
+    </target>
+
+    <target name='init-svn' unless='svn.user'>
+        <input message="Please enter your SVN username" addproperty="svn.user" />
+        <input message="Please enter your SVN password" addproperty="svn.password" >
+          <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
+        </input>
+    </target>
+
+    <macrodef name="_release" >
+        <attribute name="rel.org" />
+        <attribute name="rel.module" />
+        <attribute name="rel.version" />
+        <attribute name="build.dir" />
+        <attribute name="rel.ext" />
+        <attribute name="conf" default="*" />
+        <sequential>
+            <antcall >
+                <param name="org" value="@{rel.org}" />
+                <param name="module" value="@{rel.module}" />
+                <param name="version" value="@{rel.version}" />
+                <param name="ext" value="@{rel.ext}" />
+                <param name="build.dir" value="@{build.dir}" />
+                <param name="conf" value="@{conf}" />
+                <target name="check-if-modified" />
+                <target name="create-release-repo" />
+                <target name="_prepare_release" />
+                <target name="publish_release_build" />
+                <target name="_commit_release" />
+            </antcall>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="branchOrTag" >
+        <attribute name='type' default='branche' />
+        <sequential>
+            <input message='Specify a version for this @{type}' addproperty='version' />
+            <dirname property="this.dir" file="${ant.file}" />
+            <svn username="${svn.user}" password="${svn.password}" >
+                <info target="${this.dir}"  />
+            </svn>
+            <input message='Overwrite existing @{type}? (Y or N)' addproperty='overwrite' />
+            <if>
+                <equals arg1='${overwrite}' arg2='Y' casesensitive='false' />
+                <then>
+                    <svn username="${svn.user}" password="${svn.password}" failonerror="false">
+                        <delete url="${svn.ozone.baseline}/@{type}s/${ant.project.name}-${version}" message="Updating Branch" />
+                    </svn>
+                </then>
+            </if>
+            <svn username="${svn.user}" password="${svn.password}" >
+                <copy srcUrl="${svn.info.url}" destUrl="${svn.ozone.baseline}/@{type}s/${ant.project.name}-${version}" message="Branch"/>
+            </svn>
+        </sequential>
+    </macrodef>
+
+
+    <target name='branch' depends='init-ivy, init-svn, check-if-modified' >
+        <branchOrTag type='branche' />
+    </target>
+
+    <target name="tag" depends="init-ivy, init-svn,check-if-modified" >
+        <branchOrTag type='tag' />
+    </target>
+
+    <target name="build-offline-repo" >
+        <ivy:resolve settingsRef='ivy.settings' conf="*" />
+        <ivy:retrieve pattern="${env.OFFLINE_REPO}/[organisation]/[module]/[type]s/[artifact]-[revision].[ext]"
+            ivypattern="${env.OFFLINE_REPO}/[organisation]/[module]/ivys/ivy-[revision].xml" conf="*" />
+    </target>
+
+    <target name="check-if-modified" depends="init-ivy" >
+<!--        <svn>
+            <wcVersion path="${basedir}" />
+        </svn>
+        <condition property="uncommitted" >
+            <and>
+                <istrue value="${modified}" />
+            </and>
+        </condition>
+        <fail message="You have uncommitted changes, please commit before doing a release." if="uncommitted" /> -->
+    </target>
+
+    <!-- =================================
+          target: maven2-library-repo
+          maven 2 no namespace with dependencies
+         ================================= -->
+    <!--target name="get-new-dependencies" depends="init-ivy"
+            description="->  install and commit module from maven 2 repository with dependencies into IvyREPO">
+        <if>
+            <not>
+                <isset property='org' />
+            </not>
+            <then>
+                <input message='Enter organisation/group:' addproperty='org' />
+            </then>
+        </if>
+        <if>
+            <not>
+                <isset property='module' />
+            </not>
+            <then>
+                <input message='Enter module/artifact id:' addproperty='module' />
+            </then>
+        </if>
+        <if>
+            <not>
+                <isset property='rev' />
+            </not>
+            <then>
+                <input message='Enter revison/version:' addproperty='rev' />
+            </then>
+        </if>
+        
+        <sequential>
+            <antcall >
+                <param name="org" value="${org}" />
+                <param name="module" value="${module}" />
+                <param name="version" value="${rev}" />
+                <target name="create-release-repo" />
+                <target name="_prepare_release" />
+                <target name="_retrieve-from-remote-to-local-repo-release" />
+                <target name="_check_to_commit_release_dependencies" />
+            </antcall>
+        </sequential>
+    </target-->
+    
+    <!--target name="_check_to_commit_release_dependencies" depends="init-ivy" 
+        description="-> checks to see if any release depencies need committed as well">
+        <input message='Do you want to commit "${org}:${module}:${version}" to "${ivy.repo}"? (Y or N)' addproperty='perform.commit' />
+        <if>
+            <equals arg1='${perform.commit}' arg2='Y' casesensitive='false' />
+            <then>
+                <echo message="Committing '${org}:${module}:${version}'..." />
+                <antcall target="_commit_release" />
+                <echo message='You might have uncommitted DEPENDENCIES for "${org}:${module}:${version}", verify that you need to add them to "${ivy.repo}".' />
+                <echo message='Go to "${release.dir}/no-namespace/" to verify.' />
+            </then>
+        </if>
+    </target-->
+
+    <target name="_retrieve-from-remote-to-local-repo-release" depends="init-ivy"
+        description="--> install module locally from maven 2 repository with dependencies">
+        <ivy:install settingsRef="ivy.settings" overwrite='true'
+                     organisation="${org}" module="${module}" revision="${version}"
+                     from="maven2-library-repo" to="pre-release"  transitive="true"/>
+    </target>
+
+    <target name="build-repo" depends="init-ivy">
+        <antcall target="get-new-dependencies" >
+            <param name="org" value="com.oracle" />
+            <param name="module" value="ojdbc14" />
+            <param name="rev" value="10.2.0.1.0" />
+        </antcall>
+    </target>
+
+    <target name="stage-cas">
+        <echo message="${ant.file.build-base}" />
+        <ivy:retrieve pattern="${tomcat.dir}/webapps/cas.[ext]" type="war" conf="cas.server" />
+        <ivy:retrieve pattern="${staging.dir}/[artifact]-[revision].[ext]" type="zip" conf="cas.server" />
+        <unzip src="${staging.dir}/cas-server-extras-${cas.server.rev}.zip" dest="${bundle.dir}" />
+    </target>
+
+    <target name="stage-tomcat">
+        <ivy:retrieve pattern="${bundle.dir}/[artifact]-[revision].[ext]" conf="tomcat" />
+        <unzip src="${bundle.dir}/${tomcat.custom.module}-${tomcat.custom.rev}.zip" dest="${bundle.dir}" />
+        <delete file="${bundle.dir}/${tomcat.custom.module}-${tomcat.custom.rev}.zip" />
+    </target>
+
+</project>

@@ -1,0 +1,76 @@
+/*
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dijit._editor.plugins.NewPage"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit._editor.plugins.NewPage"] = true;
+dojo.provide("dijit._editor.plugins.NewPage");
+
+dojo.require("dijit._editor._Plugin");
+dojo.require("dijit.form.Button");
+dojo.require("dojo.i18n");
+
+dojo.requireLocalization("dijit._editor", "commands", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+
+dojo.declare("dijit._editor.plugins.NewPage",dijit._editor._Plugin,{
+	// summary:
+	//		This plugin provides a simple 'new page' calability.  In other
+	//		words, set content to some default user defined string.
+
+	// content: [public] String
+	//		The default content to insert into the editor as the new page.
+	//		The default is the <br> tag, a single blank line.
+	content: "<br>",
+
+	_initButton: function(){
+		// summary:
+		//		Over-ride for creation of the Print button.
+		var strings = dojo.i18n.getLocalization("dijit._editor", "commands"),
+			editor = this.editor;
+		this.button = new dijit.form.Button({
+			label: strings["newPage"],
+			dir: editor.dir,
+			lang: editor.lang,
+			showLabel: false,
+			iconClass: this.iconClassPrefix + " " + this.iconClassPrefix + "NewPage",
+			tabIndex: "-1",
+			onClick: dojo.hitch(this, "_newPage")
+		});
+	},
+
+	setEditor: function(/*dijit.Editor*/ editor){
+		// summary:
+		//		Tell the plugin which Editor it is associated with.
+		// editor: Object
+		//		The editor object to attach the newPage capability to.
+		this.editor = editor;
+		this._initButton();
+	},
+
+	_newPage: function(){
+		// summary:
+		//		Function to set the content to blank.
+		// tags:
+		//		private
+		this.editor.beginEditing();
+		this.editor.set("value", this.content);
+		this.editor.endEditing();
+		this.editor.focus();
+	}
+});
+
+// Register this plugin.
+dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
+	if(o.plugin){ return; }
+	var name = o.args.name.toLowerCase();
+	if(name === "newpage"){
+		o.plugin = new dijit._editor.plugins.NewPage({
+			content: ("content" in o.args)?o.args.content:"<br>"
+		});
+	}
+});
+
+}

@@ -2,13 +2,8 @@ package ozone.owf.grails.services
 
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
-import ozone.owf.grails.domain.Dashboard
-import ozone.owf.grails.domain.DomainMapping
-import ozone.owf.grails.domain.Group
-import ozone.owf.grails.domain.Person
-import ozone.owf.grails.domain.Preference
-import ozone.owf.grails.domain.WidgetDefinition
-import ozone.owf.grails.domain.RelationshipType
+import ozone.owf.grails.domain.*
+
 
 class DomainMappingService {
 

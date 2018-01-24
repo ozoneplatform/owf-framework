@@ -1,0 +1,97 @@
+@charset "UTF-8";;
+
+.settings-window {
+    .x-component {
+        .settings-header-icon, .admin-tools-header-icon, .marketplace-header-icon, .metric-header-icon {
+            height: 26px;
+            width: 26px;
+        }
+    }
+    
+    .x-tool .x-tool-close {
+	    background-image: theme-image($theme-name, 'tools/close-out.png') !important;
+	}
+	
+	.x-tool-over .x-tool-close {
+	     background-image: theme-image($theme-name, 'tools/close-over.png') !important;
+	     background-position: 0 !important;
+	}
+	
+	.x-tool-pressed .x-tool-close {
+	     background-image: theme-image($theme-name, 'tools/close-down.png') !important;
+	     background-position: 0 !important;
+	}
+
+    .settings-header-icon {
+        background-image: theme-image($theme-name, 'settings/settings_icon.png');
+    }
+	.admin-tools-header-icon {
+        background-image: theme-image($theme-name, 'adm-tools/AdminIcon24x24.png');
+    }
+    .marketplace-header-icon {
+        background-image: theme-image($theme-name, 'marketplace/marketplace_icon.png');
+    }
+    .metric-header-icon {
+        background-image: theme-image($theme-name, 'metric/24x24_metrics.png');
+    }
+
+    .tool {
+        $thumb-width: 64px;
+
+        //For these elements, it is more useful
+        //to compute content width not overall box 
+        //width, since we are setting width based on
+        //its contents
+        @include box-sizing(content-box);
+
+        @include border-radius($my-apps-window-body-radius);
+        background-color: $system-window-background-color;
+        border-color: $my-apps-window-dashboard-border-color;
+        align: center;
+        float: left;
+        margin: 0px 7px 0px 0px;
+        padding: 15px;
+        position: relative;
+        text-align: center;
+        min-width: $thumb-width;
+//        overflow: hidden;
+        max-width: 6em;
+        cursor: pointer;
+
+        .thumb-wrap {
+            text-align: center;
+            margin-left:auto;
+            margin-right:auto;
+            width: $thumb-width;
+
+            .thumb {
+                width: $thumb-width;
+                height: $thumb-width;
+                text-align:center;
+                margin-left:auto;
+                margin-right:auto;
+                display: block;
+            }
+        }
+        .thumb-text {
+            margin-top: 5px;
+            color: $my-apps-window-dashboard-text-color;
+            height: 2.5em;
+            width: 6em;
+
+            //doing this centers the element
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+    }
+
+    .setting-over {
+        background-color: $system-window-over-background-color;
+        border-color: $system-window-over-background-color;
+        .thumb-text {
+            color: $my-apps-window-dashboard-over-text-color;
+        }
+    }
+
+}

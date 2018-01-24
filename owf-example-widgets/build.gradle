@@ -1,0 +1,101 @@
+buildscript {
+    ext {
+        grailsVersion = '3.3.2'
+        gormVersion = '6.1.8.RELEASE'
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url 'https://repo.grails.org/grails/core' }
+        jcenter()
+    }
+    dependencies {
+        classpath group: 'io.spring.gradle', name: 'dependency-management-plugin', version: '1.0.4.RELEASE'
+
+        classpath group: 'org.grails', name: 'grails-gradle-plugin', version: grailsVersion
+    }
+}
+
+
+group 'org.ozoneplatform'
+version '7.17.2-0-RC1'
+
+
+apply plugin: 'io.spring.dependency-management'
+
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'java'
+
+apply plugin: 'org.grails.grails-plugin'
+apply plugin: 'org.grails.grails-plugin-publish'
+apply plugin: "org.grails.grails-gsp"
+
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://repo.grails.org/grails/core' }
+    maven { url 'http://repository.springsource.com/maven/bundles/release' }
+    maven { url 'http://repository.springsource.com/maven/bundles/external' }
+    maven { url 'https://packages.atlassian.com/maven-3rdparty-legacy' }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.grails:grails-bom:' + grailsVersion
+        mavenBom 'org.ozoneplatform:ozone-classic-bom:7.17.2-0-SNAPSHOT'
+    }
+
+    applyMavenExclusions false
+}
+
+dependencies {
+    // Spring Boot
+    provided group: 'org.springframework.boot', name: 'spring-boot-starter-logging'
+    provided group: 'org.springframework.boot', name: 'spring-boot-autoconfigure'
+    provided group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat'
+
+    // Grails
+    compile group: 'org.grails', name: 'grails-core'
+    compile group: 'org.grails', name: 'grails-logging'
+
+    compile group: 'org.grails', name: 'grails-plugin-rest'
+    compile group: 'org.grails', name: 'grails-plugin-databinding'
+    compile group: 'org.grails', name: 'grails-plugin-i18n'
+    compile group: 'org.grails', name: 'grails-plugin-services'
+    compile group: 'org.grails', name: 'grails-plugin-url-mappings'
+    compile group: 'org.grails', name: 'grails-plugin-interceptors'
+
+    compile group: 'org.grails.plugins', name: 'cache'
+    compile group: 'org.grails.plugins', name: 'async'
+    compile group: 'org.grails.plugins', name: 'scaffolding'
+    compile group: 'org.grails.plugins', name: 'gsp'
+
+    console group: 'org.grails', name: 'grails-console'
+
+    profile group: 'org.grails.profiles', name: 'web-plugin'
+
+    provided group: 'org.grails', name: 'grails-web-boot'
+    provided group: 'org.grails', name: 'grails-plugin-services'
+    provided group: 'org.grails', name: 'grails-plugin-domain-class'
+
+    testCompile group: 'org.grails', name: 'grails-plugin-testing'
+    testCompile group: 'org.grails', name: 'grails-gorm-testing-support'
+    testCompile group: 'org.grails', name: 'grails-web-testing-support'
+}
+
+
+bootRun {
+    jvmArgs('-Dspring.output.ansi.enabled=always')
+    addResources = true
+}
+
+// enable if you wish to package this plugin as a standalone application
+bootRepackage.enabled = false
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.2.1'
+}

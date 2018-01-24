@@ -1,14 +1,17 @@
 package ozone.owf.grails.controllers
 
 import grails.converters.JSON
+
 import org.apache.commons.lang.time.StopWatch
-import org.codehaus.groovy.grails.web.json.JSONArray
+
 import ozone.owf.grails.OwfException
-import ozone.owf.grails.domain.Dashboard
+import ozone.owf.grails.services.DashboardService
+
 
 class PrefsDashboardController extends BaseOwfRestController {
 
-  	def dashboardService
+  	DashboardService dashboardService
+
 	def modelName = 'dashboard'
 
 	def show = {

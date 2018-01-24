@@ -1,0 +1,69 @@
+<html>
+<head>
+    <title>ApproveWidgetsPanelTest</title>
+    <link rel='stylesheet' type='text/css' href='../../../../js-lib/ext-3.2.1/resources/css/ext-all.css'/>
+
+    <link rel='stylesheet' type='text/css' href='../../../../css/blueExt.css'/>
+    <link rel='stylesheet' type='text/css' href='../../../../css/ApproveWidgetsPanel.css'/>
+
+	<script type="text/javascript" src="../../../../js-lib/ext-4.0.6/ext-all-debug.js"></script>
+    <script type="text/javascript" src="../../../../js/config/config.js"></script>
+    <script type="text/javascript" src="../../../../js-min/owf-server-debug.js"></script>
+    <script type="text/javascript" src="../../../../js/components/WidgetTagTreePanel.js"></script>
+    <script type="text/javascript" src="../../../../js/components/admin/ApproveWidgetsPanel.js"></script>
+    <script type="text/javascript" src="../../../../js/components/admin/tree/ApproveDisapproveTreeNodeUI.js"></script>
+
+    <script type="text/javascript">
+        Ext.BLANK_IMAGE_URL = '../../../../js-lib/ext-3.2.1/resources/images/default/s.gif';
+        Ext.onReady(function() {
+            //init quicktips
+            Ext.QuickTips.init();
+
+
+            var win = new Ext.Window({
+                layout:'fit',
+                width:300,
+                height:400,
+                title: 'Approve Widgets for Users',
+                items: [
+                    {
+                        itemId : 'approveWidgetsPanel',
+                        //                        dataUrl: 'sample_widget_tags.js',
+                        dataUrl: '../../../../prefs/administration/listPersonWidgetDefinitionsByTags',
+                        xtype:'approvewidgetspanel'
+                    }
+                ],
+                buttonAlign: 'center',
+                buttons: [
+                    {
+                        text:'Ok',
+                        handler: function() {
+                            var tree = win.getComponent('approveWidgetsPanel');
+                            tree.saveToServer({
+                                success:function() {
+                                    win.close();
+                                },
+                                failure: function() {
+                                }
+                            });
+                        }
+
+                    },
+                    {
+                        text:'Cancel',
+                        handler: function() {
+                            win.close();
+                        }
+                    }
+                ]
+            });
+            win.show();
+
+        });
+    </script>
+
+</head>
+<body>
+
+</body>
+</html>

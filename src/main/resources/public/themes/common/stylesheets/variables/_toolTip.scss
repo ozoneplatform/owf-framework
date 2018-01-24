@@ -1,0 +1,29 @@
+$owf-tip-base-color: adjust-color($owf-base-color, $hue: 2.121deg, $saturation: 44.444%, $lightness: 11.569%) !default;
+
+//background
+$owf-tip-background-color: $owf-tip-base-color !default;
+$owf-tip-background-gradient: null !default;
+
+//text
+$owf-tip-body-color      : getHighContrastColor($owf-tip-background-color) !default;
+$owf-tip-body-font-size  : ceil($owf-font-size * .9) !default;
+$owf-tip-body-font-weight: normal !default;
+$owf-tip-body-padding: 3px !default;
+$owf-tip-body-link-color: darken($owf-tip-body-color, 10%) !default;
+
+$owf-tip-header-color      : $owf-tip-body-color !default;
+$owf-tip-header-font-size  : $owf-tip-body-font-size !default;
+$owf-tip-header-font-weight: bold !default;
+$owf-tip-header-padding    : 3px 3px 0 !default;  
+
+//borders
+$owf-tip-border-color: adjust-color($owf-tip-base-color, $hue: -1.705deg, $saturation: -60.494%, $lightness: -27.451%) !default;
+$owf-tip-border-width: 1px !default;
+$owf-tip-border-radius: 3px !default;
+
+//error tips
+$owf-tip-error-inner-border-color: #d87166 !default;
+$owf-tip-error-border-color: #a1311f !default;
+$owf-tip-error-border-radius: 5px !default;
+$owf-tip-error-border-width: 1px !default;
+$owf-tip-error-background-color: $owf-tip-background-color !default;

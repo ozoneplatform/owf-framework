@@ -1,13 +1,18 @@
 package ozone.owf.grails.services
 
-import grails.converters.JSON
-import ozone.owf.grails.util.OWFDate
+import grails.core.GrailsApplication
+
 import org.apache.log4j.Logger
+
+import ozone.owf.grails.util.OWFDate
+
 
 class AuditService {
 	
-    def grailsApplication
-    def accountService
+    GrailsApplication grailsApplication
+
+    AccountService accountService
+
     static Logger logger = Logger.getLogger('ozone.owf.grails.services.AuditService')
         
     def logMessage(def params) {

@@ -1,0 +1,25 @@
+//forms
+$owf-form-field-height: 22px !default;
+$owf-form-toolbar-field-height: 20px !default;
+$owf-form-field-font-size: $owf-font-size !default;
+$owf-form-field-border-width: 1px !default;
+$owf-form-field-border-color: #B5B8C8 !default;
+$owf-form-field-background-color: #fff !default;
+$owf-form-field-color: #000 !default;
+$owf-form-checkbox-size: 13px !default;
+
+$owf-form-field-focus-border-color: adjust-color($owf-base-color, $hue: -4.322deg, $saturation: -1.065%, $lightness: -16.863%) !default;
+
+$owf-form-field-invalid-background-color: #fff !default;
+$owf-form-field-invalid-border-color: #C30 !default;
+
+$owf-form-trigger-width: 17px !default;
+$owf-form-trigger-border-bottom-width: 1px !default;
+$owf-form-trigger-border-bottom-color: $owf-form-field-border-color !default;
+$owf-form-trigger-border-bottom-color-over: $owf-form-field-focus-border-color !default;
+$owf-form-trigger-border-bottom-color-focus: $owf-form-field-border-color !default;
+$owf-form-trigger-border-bottom-color-focus-over: $owf-form-field-focus-border-color !default;
+$owf-form-trigger-border-bottom-color-pressed: null !default;
+
+//htmleditor
+$owf-html-editor-border-color: #737b8c !default;

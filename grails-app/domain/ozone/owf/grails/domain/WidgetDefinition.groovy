@@ -1,8 +1,8 @@
 package ozone.owf.grails.domain
 
-import grails.converters.JSON
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
+
 
 class WidgetDefinition implements Serializable {
 
@@ -46,8 +46,8 @@ class WidgetDefinition implements Serializable {
         imageUrlSmall maxSize: 2083
         height min: 200
         width min: 200
-        visible nullable: false, blank: false
-        singleton nullable: false, blank: false
+        visible nullable: false
+        singleton nullable: false
         descriptorUrl nullable: true, blank: true, maxSize: 2083
         mobileReady(nullable:false)
     }

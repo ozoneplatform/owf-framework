@@ -1,10 +1,15 @@
 package ozone.owf.grails.controllers
 
 import grails.converters.JSON
+
 import ozone.owf.grails.OwfException
+import ozone.owf.grails.services.MetricService
+
 
 class MetricController extends BaseOwfRestController{
-	def metricService
+
+	MetricService metricService
+
 	def modelName = 'metric'
 
 	def create = {

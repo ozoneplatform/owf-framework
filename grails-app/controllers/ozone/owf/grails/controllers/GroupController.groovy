@@ -1,12 +1,16 @@
 package ozone.owf.grails.controllers
 
-import ozone.owf.grails.OwfException
 import grails.converters.JSON
+
 import org.apache.commons.lang.time.StopWatch
+
+import ozone.owf.grails.OwfException
+import ozone.owf.grails.services.GroupService
+
 
 class GroupController extends BaseOwfRestController {
 
-  def groupService
+  GroupService groupService
 
   def show = {
     def statusCode

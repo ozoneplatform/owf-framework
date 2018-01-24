@@ -1,0 +1,730 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="owf-server" default="bundle" basedir=".">
+
+    <property file="${basedir}/application.properties" />
+    <import file="build-base.xml" optional="true"/>
+
+    <property name="lib.dir" value="${basedir}/lib" />
+    <property name="work.dir" value="${basedir}/work" />
+    <property name="jstoolkit.dir" value="${work.dir}/jsdoc/jsdoc-toolkit-jsdoc_toolkit-2.3.2/jsdoc-toolkit" />
+    <property name="staging.dir" value="staging" />
+    <property name="tomcat.dir" value="${staging.dir}/apache-tomcat" />
+    <property name="build.base.dir" value="${basedir}" />
+    <property name="widget.samples.dir" value="${basedir}/sample-widgets" />
+    <property name="temp.dir" value="${basedir}/temp" />
+
+    <condition property="offline.arg" value="-DOFFLINE_REPO=${offline_repo}"  else="" >
+        <isset property="offline_repo" />
+    </condition>
+
+    <condition property="no-test" value="true" >
+        <isset property="disconnected" />
+    </condition>
+
+    <condition property="owf.doc.extension" value="pdf"  else="*" >
+        <istrue value="${owf.release}" />
+    </condition>
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${ant.lib.dir}/ant-contrib-1.0b3.jar" />
+
+    <target name="_init-ivy" >
+        <antcall target="init-ivy" />
+    </target>
+
+    <condition property="isWindows">
+        <os family="windows" />
+    </condition>
+
+    <!--available file="${owf.build.module}-${owf.build.rev}/build-base.xml" property="build-base.available" /-->
+    <target name="init-build" >
+        <ant dir="." target="init-ivy" inheritall="false" />
+    </target>
+    <!-- =================================
+          target: resolve
+         ================================= -->
+    <target name="-resolve" description="--> Retrieve dependencies with ivy" depends="_init-ivy">
+        <ivy:settings file="${build.base.dir}/${ivysettings.file}" id='ivy.settings' />
+        <ivy:resolve settingsRef='ivy.settings'/>
+        <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact]-[revision].[ext]" conf="compressjs" settingsRef='ivy.settings'/>
+        <mkdir dir="${work.dir}" />
+        <ivy:retrieve pattern="${work.dir}/[conf]/[artifact]-[revision].[ext]" conf="jsdoc" settingsRef='ivy.settings'/>
+    </target>
+    <target name="buildInfo" unless="build.number" >
+        <buildnumber/>
+    </target>
+
+    <target name="-init" depends="-resolve,buildInfo">
+        <mkdir dir="${staging.dir}" />
+
+        <path id="compressor.classpath">
+            <fileset dir="${lib.dir}/compressjs" includes="*.jar" />
+        </path>
+
+        <tstamp/>
+
+        <taskdef name="jsdoctoolkit" classname="uk.co.darrenhurley.ant.tasks.JsDocToolkit">
+            <classpath>
+                <pathelement path="${work.dir}/jsdoc/jsdoctoolkit-ant-task-1.0.jar" />
+                <pathelement path="${work.dir}/jsdoc/js-1.7R1.jar" />
+                <pathelement path="${jstoolkit.dir}/java/classes/js.jar" />
+                <pathelement path="${jstoolkit.dir}/jsrun.jar" />
+            </classpath>
+        </taskdef>
+        <available file="${work.dir}/jsdoc/jsdoc-dist-2.3.2" property="jstoolkit.available" />
+        <ivy:info file="ivy.xml" />
+    </target>
+
+    <target name="zip-widgets">
+        <ant antfile="build.xml" dir="sample-widgets/" target="zip-widgets"/>
+    </target>
+
+    <target name="war-widgets">
+        <ant antfile="build.xml" dir="sample-widgets/" target="war"/>
+    </target>
+
+    <target name="unzip-jstoolkit" unless="jstoolkit.available">
+        <unzip src="${work.dir}/jsdoc/jsdoc_toolkit-2.3.2.jar" dest="${work.dir}/jsdoc" />
+    </target>
+
+    <target name="jsdoc" depends="-init,unzip-jstoolkit" unless="no-jsdoc">
+        <jsdoctoolkit jsdochome="${jstoolkit.dir}/" template="jsdoc" outputdir="${basedir}/src/assemble/docs/jsdoc" extensions="js" depth="3">
+            <fileset dir="${basedir}/web-app/js/util">
+                <include  name="*.js" />
+            </fileset>
+            <fileset dir="${basedir}/web-app/js/lang">
+                <include  name="*.js" />
+            </fileset>
+            <fileset dir="${basedir}/web-app/js/eventing">
+                <include  name="*.js" />
+            </fileset>
+            <fileset dir="${basedir}/web-app/js/pref">
+                <include  name="*.js" />
+            </fileset>
+            <fileset dir="${basedir}/web-app/js/layout">
+                <include  name="*.js" />
+            </fileset>
+            <fileset dir="${basedir}/web-app/js/launcher">
+                <include  name="*.js" />
+            </fileset>
+            <fileset dir="${basedir}/web-app/js/dd">
+                <include  name="*.js" />
+            </fileset>
+            <fileset dir="${basedir}/web-app/js/components">
+                <include  name="AdminBanner.js" />
+                <include  name="Banner.js" />
+            </fileset>
+            <fileset dir="${basedir}/web-app/js/chrome">
+                <include  name="WidgetChrome.js" />
+            </fileset>
+            <fileset dir="${basedir}/web-app/js/state">
+                <include  name="WidgetState.js" />
+                <include  name="WidgetStateHandler.js" />
+            </fileset>
+            <fileset dir="${basedir}/web-app/js/metrics">
+                <include name="BaseMetrics.js" />
+            </fileset>
+            <fileset dir="${basedir}/web-app/js/widget">
+                <include  name="*.js" />
+            </fileset>
+            <fileset dir="${basedir}/web-app/js/intents">
+                <include  name="WidgetIntents.js" />
+            </fileset>
+        </jsdoctoolkit>
+    </target>
+
+    <target name="about" depends="-init">
+        <copy file="src/resources/about.properties" todir="web-app/WEB-INF/classes">
+            <filterchain>
+                <expandproperties />
+            </filterchain>
+        </copy>
+    </target>
+
+    <target name="compress_js" description="--> yui compression of owf javascript files">
+       <grails script="createBundles" />
+    </target>
+
+    <target name="deps-report" depends="-resolve" description="--> Generate report of module dependencies.">
+        <ivy:report conf="*" />
+    </target>
+
+    <!-- =================================
+          target: clean
+         ================================= -->
+    <target name="clean" unless="skipWar" description="--> Cleans a Grails application">
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${basedir}/web-app/js-min" >
+            </fileset>
+        </delete>
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${staging.dir}" >
+            </fileset>
+        </delete>
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${basedir}/target" >
+            </fileset>
+        </delete>
+        <grails script="clean" preargs="${offline.arg}" />
+    </target>
+
+    <target name="compile-themes">
+
+        <!-- Note that this only compiles themes that are in the war. It does not
+             compile themes that are in the external themes directory.  That will
+             need to be done manually.  (By default there are no external themes) -->
+
+        <uptodate property="compile-themes-in-war.uptodate" >
+            <srcfiles dir="${basedir}/web-app/themes" excludes="**/images/**,**/css/**,**/.sass-cache/**" />
+
+            <!-- Look for any source file that is newer than any css file. TODO: make this
+                 so that we do not need to hard-code the theme names -->
+            <compositemapper>
+                <mergemapper to="${basedir}/web-app/themes/a_default.theme/css/a_default.css" />
+                <mergemapper to="${basedir}/web-app/themes/accessibility-bow.theme/css/accessibility-bow.css" />
+                <mergemapper to="${basedir}/web-app/themes/accessibility-wob.theme/css/accessibility-wob.css" />
+                <mergemapper to="${basedir}/web-app/themes/large-text.theme/css/large-text.css" />
+            </compositemapper>
+        </uptodate>
+
+        <antcall target="_compile-themes-in-war" />
+
+        <!-- make sure sass-cache folders are deleted -->
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${basedir}/web-app/themes" >
+                <include name="**/.sass-cache/**"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <!-- Only recompile if compile-themes.uptodate is not set.
+         This prevents compilation from happening mulitple times
+         per build -->
+    <target name="_compile-themes-in-war" unless="compile-themes-in-war.uptodate">
+        <exec executable="cmd" dir="${basedir}/web-app/themes" failonerror="true" osfamily="windows">
+            <arg value="/c" />
+            <arg value="compile_all_themes.bat" />
+            <arg value="--force" />
+        </exec>
+        <exec executable="sh" dir="${basedir}/web-app/themes" failonerror="true" osfamily="unix">
+            <arg value="compile_all_themes.sh" />
+            <arg value="--force" />
+        </exec>
+    </target>
+
+    <target name="stage-samples" depends="zip-widgets" >
+        <mkdir dir="${staging.dir}/samples" />
+        <copy  file="${widget.samples.dir}/dotnet-widget/dotnet-widget.zip" todir="${staging.dir}/samples" />
+        <copy  file="${widget.samples.dir}/flex-widget/flex-widget.zip" todir="${staging.dir}/samples" />
+        <copy  file="${widget.samples.dir}/flex-channel-listener/flex-channel-listener.zip" todir="${staging.dir}/samples" />
+        <copy  file="${widget.samples.dir}/flex-channel-shouter/flex-channel-shouter.zip" todir="${staging.dir}/samples" />
+        <copy  file="${widget.samples.dir}/gwt-widget/gwt-widget.zip" todir="${staging.dir}/samples" />
+        <copy  file="${widget.samples.dir}/html-widgets/html-widget.zip" todir="${staging.dir}/samples" />
+        <copy  file="${widget.samples.dir}/java-applet-widget/java-applet-widget.zip" todir="${staging.dir}/samples" />
+        <copy  file="${widget.samples.dir}/silverlight-widget/silverlight-widget.zip" todir="${staging.dir}/samples" />
+    </target>
+
+    <target name="stage-extras" depends="compile-themes">
+        <mkdir dir="${tomcat.dir}" />
+        <mkdir dir="${staging.dir}/${owf.security.module}" />
+        <mkdir dir="${staging.dir}/etc/tools" />
+
+<!--         <ant antfile="build.xml" dir="${basedir}/tools/TestDbConversion"/>
+        <zip destfile="${basedir}/tools/dbvalidation.zip" >
+            <zipfileset dir="${basedir}/tools/TestDbConversion/target" includes="**/*" filemode="744" />
+        </zip> -->
+
+        <copy todir="${staging.dir}/etc/tools" includeEmptyDirs="false">
+            <fileset dir="tools">
+                <include name="*" />
+            </fileset>
+        </copy>
+
+        <delete dir="${basedir}/tools/TestDbConversion/target" />
+        <delete file="${basedir}/tools/dbvalidation.zip" />
+
+        <mkdir dir="${staging.dir}/etc/widget" />
+
+        <mkdir dir="${staging.dir}/etc/widget/js" />
+            <copy todir="${staging.dir}/etc/widget/js">
+                <fileset dir="web-app/js-min">
+                    <include name="owf-widget-debug.js" />
+                    <include name="owf-widget-min.js" />
+                </fileset>
+            </copy>
+            <copy todir="${staging.dir}/etc/widget/js/dojo-1.5.0-windowname-only">
+                <fileset dir="web-app/js-lib/dojo-1.5.0-windowname-only" />
+            </copy>
+        <mkdir dir="${staging.dir}/etc/widget/js/eventing" />
+            <copy todir="${staging.dir}/etc/widget/js/eventing" flatten="true">
+                <fileset dir="web-app/js/eventing">
+                    <include name="rpc_relay.uncompressed.html" />
+                </fileset>
+            </copy>
+
+        <mkdir dir="${staging.dir}/etc/widget/css" />
+            <copy todir="${staging.dir}/etc/widget/css">
+                <fileset dir="web-app/css">
+                    <include name="dragAndDrop.css" />
+                </fileset>
+            </copy>
+
+        <mkdir dir="${staging.dir}/etc/widget/images/dragAndDrop" />
+            <copy todir="${staging.dir}/etc/widget/images/dragAndDrop">
+                <fileset dir="web-app/themes/common/images/dragAndDrop">
+                    <include name="dndMove.png" />
+                    <include name="dndNoMove.png" />
+                </fileset>
+            </copy>
+
+        <mkdir dir="${staging.dir}/etc/widget/flash-dragAndDrop" />
+            <copy todir="${staging.dir}/etc/widget/flash-dragAndDrop">
+                <fileset dir="flash-dragAndDrop" />
+            </copy>
+
+        <mkdir dir="${staging.dir}/etc/widget/descriptor" />
+            <copy todir="${staging.dir}/etc/widget/descriptor">
+                <fileset dir="web-app/examples/walkthrough/widgets">
+                    <include name="old_descriptor.html" />
+                    <include name="new_descriptor.html" />
+                </fileset>
+            </copy>
+
+        <mkdir dir="${staging.dir}/dbscripts" />
+        <copy todir="${staging.dir}/dbscripts">
+            <fileset dir="src/assemble/dbscripts">
+            </fileset>
+        </copy>
+
+        <mkdir dir="${staging.dir}/etc/docs/jsdoc" />
+        <copy todir="${staging.dir}/etc/docs/jsdoc" failonerror="false">
+            <fileset dir="${basedir}/src/assemble/docs/jsdoc" />
+        </copy>
+        <copy todir="${tomcat.dir}/certs">
+            <fileset dir="certs">
+                <include name="keystore.jks" />
+                <include name="testUser1.p12" />
+                <include name="testAdmin1.p12" />
+                <include name="ca.crt" />
+            </fileset>
+        </copy>
+        <copy todir="${tomcat.dir}/lib">
+            <fileset dir="src/resources">
+                <include name="OwfConfig.groovy" />
+                <include name="OzoneConfig.properties" />
+                <include name="owf-override-log4j.xml" />
+                <include name="ehcache.xml" />
+            </fileset>
+            <fileset dir="${basedir}" includes="themes/**" />
+            <fileset dir="${basedir}" includes="help/**" />
+        </copy>
+        <!-- Copy hsql jar into tomcat lib -->
+        <ivy:retrieve pattern="${tomcat.dir}/lib/[artifact]-[revision].[ext]" conf="hsqldb" type="jar"/>
+        <copy todir="${tomcat.dir}">
+            <fileset dir="${basedir}">
+                <include name="prodDb.script" />
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- =================================
+          target: compile
+         ================================= -->
+    <target name="compile" depends="-init" description="--> Compiles a Grails application">
+        <grails script="Compile" preargs="${offline.arg}"/>
+    </target>
+
+    <target name="compileAccess" description="--->Compile data guard access capability">
+        <delete dir="${temp.dir}"/>
+        <mkdir dir="${temp.dir}"/>
+        <javac srcdir="${basedir}/src/java/custom/access" destdir="${temp.dir}"/>
+        <jar jarfile="${lib.dir}/access-1.0.jar" basedir="${temp.dir}"/>
+        <delete dir="${temp.dir}"/>
+    </target>
+
+    <!-- =================================
+          target: war
+         ================================= -->
+
+    <target name="war" depends="clean,-init,test,jsdoc,about,compress_js,compile-themes" unless="skipWar" description="--> Creates a WAR of a Grails application">
+        <grails script="war" preargs="${offline.arg}"/>
+        <move file="${basedir}/target/${app.name}-${app.version}.war" tofile="${basedir}/target/owf.war" />
+    </target>
+
+    <!-- =================================
+          target: test
+         ================================= -->
+    <target name="test" depends="-init" unless="no-test" description="--> Run a Grails applications unit tests">
+        <grails script="test-app unit: integration:" preargs="${offline.arg}" args="-xml"/>
+    </target>
+
+    <target name="test-selenium-firefox" description="--> Run Grails applications Selenium tests in FF">
+        <grails script="-Dserver.port=8181 -Dwebdriver.browser=firefox -Duser=testAdmin1 test-app functional: marketplace.tests.* -http" />
+    </target>
+
+    <target name="test-selenium-ie" if="isWindows" description="--> Run Grails applications Selenium tests in IE">
+        <grails script="-Dserver.port=8181 -Dwebdriver.browser=ie -Duser=testAdmin1 test-app functional: marketplace.tests.* -http" />
+    </target>
+
+    <target name="test-selenium-chrome" description="--> Run Grails applications Selenium tests in Chrome">
+        <echo message="ant.lib.dir: ${ant.lib.dir}"></echo>
+        <taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${ant.lib.dir}/ant-contrib-1.0b3.jar" />
+        <if>
+            <os family="windows" />
+            <then>
+                <grails script="-Duser=testAdmin1 -Dserver.port=8181 -Dwebdriver.browser=chrome -Dwebdriver.chrome.driver=c:\chrome\chromedriver.exe test-app functional: marketplace.tests.* -http" />
+            </then>
+            <else>
+                <grails script="-Duser=testAdmin1 -Dserver.port=8181 -Dwebdriver.browser=chrome -Dwebdriver.chrome.driver=/usr/bin/chromedriver test-app functional: marketplace.tests.* -http" />
+            </else>
+        </if>
+    </target>
+
+    <target name="test-selenium" depends="test-selenium-firefox" description="--> Run Grails applications Selenium tests" />
+
+    <!-- =================================
+    end - test
+   ================================= -->
+
+    <target name="bundle" depends="_init-ivy,war">
+        <!--<resolve ivyConf="bundle,jetty" />-->
+        <resolve ivyConf="bundle,tomcat" />
+        <mkdir dir="${staging.dir}" />
+        <antcall target="stage-tomcat">
+            <param name="bundle.dir" value="${staging.dir}" />
+        </antcall>
+        <antcall target="stage-owf" />
+        <antcall target="post-bundle-cleanup" />
+
+        <!-- Ensure shell scripts are executable (for local dev testing) -->
+        <chmod dir="${staging.dir}" perm="+x" includes="**/*.sh"/>
+
+        <!-- create owf bundle -->
+        <zip destfile="${staging.dir}/${app.name}-bundle.zip" >
+        	<zipfileset dir="${staging.dir}" excludes="**/*.sh" />
+        	<zipfileset dir="${staging.dir}" includes="**/*.sh" filemode="744" />
+        </zip>
+        <!-- copy owf bundle to the released name-->
+        <copy file="${staging.dir}/${app.name}-bundle.zip" tofile="${staging.dir}/${app.base.prefix}-bundle-${app.base.version}.zip" />
+
+        <!-- create test widget bundle -->
+        <antcall target="bundle-test-widgets" />
+
+        <!-- create sample widget bundle -->
+        <antcall target="bundle-sample-widgets" />
+
+    </target>
+
+    <target name="bundle-sample-widgets" depends="stage-samples">
+        <zip destfile="${staging.dir}/${app.base.prefix}-sample-widgets-${app.base.version}.zip" >
+            <zipfileset dir="${staging.dir}/samples"/>
+        </zip>
+    </target>
+
+    <target name="bundle-test-widgets">
+        <ant antfile="build.xml" dir="test-widgets"/>
+        <copy todir="${staging.dir}/owf-test-widgets" includeEmptyDirs="false">
+            <flattenmapper/>
+            <fileset dir="${basedir}">
+                <include name="test-widgets/**/*.war" />
+            </fileset>
+        </copy>
+        <zip destfile="${staging.dir}/${app.base.prefix}-test-widgets-${app.base.version}.zip" >
+            <zipfileset dir="${staging.dir}/owf-test-widgets"/>
+        </zip>
+    </target>
+
+    <target name="stage-owf">
+        <copy file="${basedir}/target/owf.war" tofile="${tomcat.dir}/webapps/owf.war" />
+        <antcall target='stage-security' />
+        <antcall target='stage-extras' />
+
+        <copy todir="${staging.dir}">
+            <fileset dir="${basedir}" includes="LICENSE.txt,NOTICE.txt,README.txt,COPYRIGHT.txt" />
+        </copy>
+
+        <copy todir="${staging.dir}/3rdPartyLicenses">
+            <fileset dir="${basedir}/3rdPartyLicenses" />
+        </copy>
+    </target>
+
+    <target name="stage-security">
+        <mkdir dir="${staging.dir}/${owf.security.module}" />
+
+        <!-- Unzip sample Spring configuration files -->
+        <unzip src="${staging.dir}/${owf.security.module}-project-${owf.security.rev}.zip"
+                dest="${staging.dir}/${owf.security.module}">
+            <patternset>
+                <include name="src/main/resources/spring/**" />
+            </patternset>
+            <filtermapper>
+                <replacestring from="src/main/resources/spring/" to="" />
+            </filtermapper>
+        </unzip>
+
+        <!-- this will be an empty directory tree due to the filtermapper above -->
+        <delete dir="${staging.dir}/${owf.security.module}/src" />
+
+        <copy file="${staging.dir}/${owf.security.module}-project-${owf.security.rev}.zip"
+            tofile="${staging.dir}/${owf.security.module}/${owf.security.module}-project.zip" />
+
+        <!-- Add default sample Spring configuration to Tomcat CLASSPATH -->
+        <copy todir="${tomcat.dir}/lib">
+            <fileset dir="${staging.dir}/${owf.security.module}"
+                includes="OWFsecurityContext.xml,MPsecurityContext.xml,MetricSecurityContext.xml,users.properties,ozone-security-beans/**" />
+        </copy>
+    </target>
+
+    <target name="post-bundle-cleanup">
+        <delete file="${staging.dir}/owf-security-project-${owf.security.rev}.zip" />
+    	<delete>
+    	    <fileset dir="${staging.dir}" includes="*.zip"/>
+    	</delete>
+    	<delete>
+            <fileset dir="${staging.dir}" includes="*.jar"/>
+        </delete>
+    </target>
+
+    <target name="release" depends="_init-ivy,bundle">
+        <_release rel.org="${app.org}" rel.module="${app.name}" rel.version="${app.version}" rel.ext="zip" build.dir="${staging.dir}" conf="release"/>
+    </target>
+
+    <!-- Database Migration targets -->
+    <target name="initDBMigration">
+        <taskdef resource="net/sf/antcontrib/antlib.xml"
+                 classpath="${ant.lib.dir}/ant-contrib-1.0b3.jar" />
+        <outofdate property="databaseScripts.outOfDate">
+          <sourcefiles>
+            <fileset dir="${basedir}/grails-app/migrations" includes="*.groovy"/>
+            <fileset dir="${basedir}/grails-app/migrations/dbscripts" includes="*.sql"/>
+          </sourcefiles>
+          <targetfiles>
+            <fileset dir="${basedir}/src/assemble/dbscripts" includes="*InitialCreate.sql"/>
+            <fileset dir="${basedir}/src/assemble/dbscripts" includes="*Upgrade_v${app.base.prevVersion}*_v${app.base.version}*.sql"/>
+            <fileset dir="${basedir}/src/assemble/dbscripts" includes="*Update_v${app.base.version}*.sql"/>
+          </targetfiles>
+        </outofdate>
+
+        <for param="dbScript">
+          <path>
+              <fileset dir="${basedir}/src/assemble/dbscripts" includes="*InitialCreate.sql"/>
+              <fileset dir="${basedir}/src/assemble/dbscripts" includes="*Upgrade_v${app.base.prevVersion}*_v${app.base.version}*.sql"/>
+              <fileset dir="${basedir}/src/assemble/dbscripts" includes="*Update_v${app.base.version}*.sql"/>
+          </path>
+          <sequential>
+              <condition property="databaseScripts.outOfDate">
+                  <not>
+                    <available file="@{dbScript}"></available>
+                  </not>
+              </condition>
+          </sequential>
+        </for>
+
+
+        <echo message="databaseScripts.outOfDate: ${databaseScripts.outOfDate}"/>
+    </target>
+
+    <target name="generateAllDatabaseCreationScripts" description="--> Generates schema creation SQL scripts for the current version" depends="initDBMigration">
+        <antcall target="doCreateUpdateForAllDatabases"><param name="targetName" value="generateDatabaseCreationScript"/></antcall>
+    </target>
+
+    <target name="generateAllDatabaseUpdateScripts" description="--> Generates database upgrade SQL scripts from the previous to the current version" depends="initDBMigration">
+        <antcall target="doCreateUpdateForAllDatabases"><param name="targetName" value="generateDatabaseUpdateScript"/></antcall>
+    </target>
+
+    <target name="generateAllDatabaseUpgradeScripts" description="--> Generates database upgrade SQL scripts from the previous to the current version" depends="initDBMigration">
+        <antcall target="doUpgradeForAllDatabases"><param name="targetName" value="generateDatabaseUpgradeScript"/></antcall>
+    </target>
+
+    <target name="generateMySQLDatabaseScripts" description="--> Generates database internal/creation/upgrade SQL scripts for MYSQL">
+        <antcall target="generateSingleDatabaseScripts"><param name="db.type" value="mysql"/><param name="db.name" value="MySqlPrefs"/></antcall>
+    </target>
+
+    <target name="generateOracleDatabaseScripts" description="--> Generates database internal/creation/upgrade SQL scripts for Oracle">
+        <antcall target="generateSingleDatabaseScripts"><param name="db.type" value="oracle"/><param name="db.name" value="OraclePrefs"/></antcall>
+    </target>
+
+    <target name="generatePostgresqlDatabaseScripts" description="--> Generates database internal/creation/upgrade SQL scripts for PostgreSQL">
+        <antcall target="generateSingleDatabaseScripts"><param name="db.type" value="postgres"/><param name="db.name" value="PostgreSQLPrefs"/></antcall>
+    </target>
+
+    <target name="generateSQLServerDatabaseScripts" description="--> Generates database internal/creation/upgrade SQL scripts for SQLServer">
+        <antcall target="generateSingleDatabaseScripts"><param name="db.type" value="sql_server"/><param name="db.name" value="SQLServerPrefs"/></antcall>
+    </target>
+
+    <target name="generateSingleDatabaseScripts" description="--> Generates database internal/creation/upgrade SQL scripts">
+        <antcall target="generateDatabaseCreationScript"><param name="db.type" value="${db.type}"/><param name="db.name" value="${db.name}"/></antcall>
+        <antcall target="generateDatabaseUpdateScript"><param name="db.type" value="${db.type}"/><param name="db.name" value="${db.name}"/></antcall>
+        <antcall target="generateDatabaseUpgradeScript"><param name="db.type" value="${db.type}"/><param name="db.name" value="${db.name}"/></antcall>
+    </target>
+
+    <target name="generateDatabaseCreationScript" depends="initDBMigration" if="databaseScripts.outOfDate">
+        <property name="sql.create.file.suffix" value="InitialCreate.sql" />
+
+        <delete failonerror="false" file="${basedir}/src/assemble/dbscripts/${db.name}${sql.create.file.suffix}" />
+
+        <!-- Generate SQL for the 'create' context -->
+        <if>
+            <os family="windows"/>
+            <then>
+                <grails script="-Dgrails.env=with_${db.type}_empty dbm-update-sql" args="${basedir}/src/assemble/dbscripts/${db.name}${sql.create.file.suffix} &quot;--contexts=create&quot;" />
+            </then>
+            <else>
+                <grails script="-Dgrails.env=with_${db.type}_empty dbm-update-sql" args="${basedir}/src/assemble/dbscripts/${db.name}${sql.create.file.suffix} --contexts=create" />
+            </else>
+        </if>
+
+        <!-- Test 'create' -->
+        <if>
+            <isset property="dbmTestMigration"/>
+            <then>
+                <grails script="-Dgrails.env=with_${db.type} dbm-drop-all"/>
+                <if>
+                    <os family="windows"/>
+                    <then>
+                        <grails script="-Dgrails.env=with_${db.type} dbm-update" args="&quot;--contexts=create&quot;" />
+                    </then>
+                    <else>
+                        <grails script="-Dgrails.env=with_${db.type} dbm-update" args="--contexts=create" />
+                    </else>
+                </if>
+                <!--also run integration tests against this empty db-->
+                <grails script="-Dgrails.env=with_${db.type} test-app" args="integration:" />
+            </then>
+        </if>
+
+    </target>
+
+    <target name="generateDatabaseUpdateScript" depends="initDBMigration" if="databaseScripts.outOfDate">
+        <property name="sql.update.file.suffix" value="Update_v${app.base.version}.sql" />
+
+        <delete failonerror="false" file="${basedir}/src/assemble/dbscripts/${db.name}${sql.update.file.suffix}" />
+
+        <!-- make sure db is empty-->
+        <grails script="-Dgrails.env=with_${db.type} dbm-drop-all"/>
+
+        <!-- Generate SQL for the last version upgrade changesets-->
+        <if>
+            <os family="windows"/>
+            <then>
+                <grails script="-Dgrails.env=with_${db.type} dbm-update-sql" args="${basedir}/src/assemble/dbscripts/${db.name}${sql.update.file.suffix} &quot;--contexts=sampleData&quot;" />
+            </then>
+            <else>
+                <grails script="-Dgrails.env=with_${db.type} dbm-update-sql" args="${basedir}/src/assemble/dbscripts/${db.name}${sql.update.file.suffix} --contexts=sampleData" />
+            </else>
+        </if>
+
+        <!-- Test 'update' -->
+        <if>
+            <isset property="dbmTestMigration"/>
+            <then>
+                <if>
+                    <os family="windows"/>
+                    <then>
+                        <grails script="-Dgrails.env=with_${db.type} dbm-update" args="&quot;--contexts=create&quot;" />
+                    </then>
+                    <else>
+                        <grails script="-Dgrails.env=with_${db.type} dbm-update" args="--contexts=create" />
+                    </else>
+                </if>
+                <if>
+                    <os family="windows"/>
+                    <then>
+                        <grails script="-Dgrails.env=with_${db.type} dbm-update" args="&quot;--contexts=sampleData&quot;" />
+                    </then>
+                    <else>
+                        <grails script="-Dgrails.env=with_${db.type} dbm-update" args="--contexts=sampleData" />
+                    </else>
+                </if>
+            </then>
+        </if>
+    </target>
+
+    <target name="generateDatabaseUpgradeScript" depends="initDBMigration"  if="databaseScripts.outOfDate">
+        <property name="sql.upgrade.file.suffix" value="Upgrade_v${app.base.prevVersion}_v${app.base.version}.sql" />
+
+        <delete failonerror="false" file="${basedir}/src/assemble/dbscripts/${db.name}${sql.upgrade.file.suffix}" />
+
+        <!-- make sure db is empty-->
+        <grails script="-Dgrails.env=with_${db.type} dbm-drop-all"/>
+
+        <!-- Generate SQL for the last version upgrade changesets-->
+        <if>
+            <os family="windows"/>
+            <then>
+                <grails script="-Dgrails.env=with_${db.type} dbm-update-sql" args="${basedir}/src/assemble/dbscripts/${db.name}${sql.upgrade.file.suffix} &quot;--contexts=${app.base.version}&quot;" />
+            </then>
+            <else>
+                <grails script="-Dgrails.env=with_${db.type} dbm-update-sql" args="${basedir}/src/assemble/dbscripts/${db.name}${sql.upgrade.file.suffix} --contexts=${app.base.version}" />
+            </else>
+        </if>
+
+        <!-- Test 'upgrade' -->
+        <if>
+            <isset property="dbmTestMigration"/>
+            <then>
+                <grails script="-Dgrails.env=with_${db.type} dbm-drop-all"/>
+                <if>
+                    <os family="windows"/>
+                    <then>
+                        <grails script="-Dgrails.env=with_${db.type} -DdbmBuildPreviousVersion=true dbm-update" args="&quot;--contexts=create&quot;" />
+                    </then>
+                    <else>
+                        <grails script="-Dgrails.env=with_${db.type} -DdbmBuildPreviousVersion=true dbm-update" args="--contexts=create" />
+                    </else>
+                </if>
+                <if>
+                    <os family="windows"/>
+                    <then>
+                        <grails script="-Dgrails.env=with_${db.type} dbm-update" args="&quot;--contexts=${app.base.version}&quot;" />
+                    </then>
+                    <else>
+                        <grails script="-Dgrails.env=with_${db.type} dbm-update" args="--contexts=${app.base.version}" />
+                    </else>
+                </if>
+            </then>
+        </if>
+    </target>
+
+    <target name="doUpgradeForAllDatabases">
+        <antcall target="${targetName}"><param name="db.type" value="mysql"/><param name="db.name" value="MySqlPrefs"/></antcall>
+        <antcall target="${targetName}"><param name="db.type" value="postgres"/><param name="db.name" value="PostgreSQLPrefs"/></antcall>
+        <antcall target="${targetName}"><param name="db.type" value="sql_server"/><param name="db.name" value="SQLServerPrefs"/></antcall>
+        <antcall target="${targetName}"><param name="db.type" value="oracle"/><param name="db.name" value="OraclePrefs"/></antcall>
+    </target>
+
+    <target name="doCreateUpdateForAllDatabases">
+        <antcall target="${targetName}"><param name="db.type" value="mysql"/><param name="db.name" value="MySqlPrefs"/></antcall>
+        <antcall target="${targetName}"><param name="db.type" value="postgres"/><param name="db.name" value="PostgreSQLPrefs"/></antcall>
+        <antcall target="${targetName}"><param name="db.type" value="sql_server"/><param name="db.name" value="SQLServerPrefs"/></antcall>
+        <antcall target="${targetName}"><param name="db.type" value="oracle"/><param name="db.name" value="OraclePrefs"/></antcall>
+    </target>
+
+    <target name="generateDatabaseScripts"
+        depends="generateAllDatabaseCreationScripts, generateAllDatabaseUpdateScripts, generateAllDatabaseUpgradeScripts">
+        <replaceregexp byline="true" flags="g">
+          <regexp pattern="^-- Against:.*$"/>
+          <substitution expression=""/>
+            <fileset dir="${basedir}/src/assemble/dbscripts" includes="*.sql"/>
+        </replaceregexp>
+    </target>
+
+    <target name="start-js-test-driver-server">
+       <java jar="JsTestDriver-1.3.4.b.jar"
+           fork="true"
+           failonerror="true"
+           maxmemory="128m"
+           >
+         <arg line='--port 9876 --preloadFiles'/>
+       </java>
+    </target>
+
+    <target name="start-js-test-driver-tests">
+       <java jar="JsTestDriver-1.3.4.b.jar"
+           fork="true"
+           failonerror="true"
+           maxmemory="128m"
+           >
+         <arg line='--tests "all" --testOutput test/js-test-driver/test-reports'/>
+       </java>
+    </target>
+
+</project>

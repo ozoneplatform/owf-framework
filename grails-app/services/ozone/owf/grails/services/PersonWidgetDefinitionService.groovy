@@ -1,26 +1,37 @@
 package ozone.owf.grails.services
 
-import grails.converters.*;
-import org.grails.plugins.metrics.groovy.Timed
-import org.hibernate.transform.DistinctRootEntityResultTransformer;
+import grails.converters.JSON
+import grails.core.GrailsApplication
+
+import org.hibernate.CacheMode
+import org.hibernate.SessionFactory
+import org.hibernate.transform.DistinctRootEntityResultTransformer
 
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
+import ozone.owf.grails.domain.Group
+import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.PersonWidgetDefinition
 import ozone.owf.grails.domain.WidgetDefinition
-import ozone.owf.grails.domain.Person
-import ozone.owf.grails.domain.Group
-import org.hibernate.CacheMode
-import ozone.owf.grails.domain.RelationshipType
+
 
 class PersonWidgetDefinitionService {
 
-    def accountService
-    def domainMappingService
-    def widgetDefinitionService
-    def sessionFactory
-    def serviceModelService
-    def grailsApplication
+    GrailsApplication grailsApplication
+
+    SessionFactory sessionFactory
+
+    AccountService accountService
+
+    DomainMappingService domainMappingService
+
+    WidgetDefinitionService widgetDefinitionService
+
+    ServiceModelService serviceModelService
+
+    SyncService syncService
+
+    PersonService personService
 
     def listForAdminPendingWidgets(params){
         if (!accountService.getLoggedInUserIsAdmin()) {
@@ -137,7 +148,7 @@ class PersonWidgetDefinitionService {
         if (params?.max != null) opts.max =(params.max instanceof String ? Integer.parseInt(params.max) : params.max)
 
         def person = accountService.getLoggedInUser()
-        Set<Group> stackDefaultGroups = person.stackDefaultGroups
+        Set<Group> stackDefaultGroups = personService.findStackDefaultGroupsFor(person)
 
         // Get non stack default groups that contain this user.
         def groups = Group.withCriteria {
@@ -982,88 +993,4 @@ class PersonWidgetDefinitionService {
         !queryReturn.isEmpty() ? queryReturn.get(0)?: -1 : -1
     }
 
-    @Timed
-    void sync (Person person, Set<Group> groupsToSync = null) {
-        Set<Group> groups = groupsToSync ?: person.groupsToSync
-
-        List<WidgetDefinition> groupWidgets = domainMappingService.getBulkMappedObjects(groups, RelationshipType.owns, WidgetDefinition.TYPE)
-
-        List<PersonWidgetDefinition> personWidgetDefinitions = myWidgets(person)
-
-        List<PersonWidgetDefinition> groupPersonWidgetDefinitions = personWidgetDefinitions.findAll { PersonWidgetDefinition pw ->
-            pw.groupWidget == true
-        }
-
-        List<PersonWidgetDefinition> directAssignedPersonWidgetDefinitions = personWidgetDefinitions.findAll { PersonWidgetDefinition pw ->
-            pw.groupWidget == false
-        }
-
-        // diff group widgets and group person widgets
-        groupPersonWidgetDefinitions.each { PersonWidgetDefinition pwd ->
-            // copy is already created, remove so it isn't processed later.
-            if (groupWidgets.indexOf(pwd.widgetDefinition) > -1) {
-                groupWidgets.remove(pwd.widgetDefinition)
-            }
-            // user has a copy of a group widget but it is not in that group any more.
-            else {
-                // delete pwd if a group widget is no longer in a group and user is not directly associated to it.
-                if (!pwd.userWidget) {
-                    delete([
-                        personWidgetDefinition: pwd,
-                        guid: pwd.widgetDefinition.widgetGuid
-                    ])
-                    personWidgetDefinitions.remove(pwd)
-                }
-                else {
-                    // Just remove the group association from the pwd
-                    pwd.groupWidget = false
-                    pwd.save(flush:true)
-                }
-            }
-        }
-
-        // create person widget definitions for new group widgets that person doesn't have access to
-        if(groupWidgets.size() > 0) {
-            Integer maxPosition
-
-            //loop through the group widgets that are to be processed, new group widgets
-            groupWidgets.each { WidgetDefinition widgetDefinition ->
-
-                //lookup pwd this may have been previously created
-                boolean copyNotFound = directAssignedPersonWidgetDefinitions.findAll { it.widgetDefinition == widgetDefinition }.isEmpty()
-                PersonWidgetDefinition personWidgetDefinition
-
-                //if the pwd does not exist create it
-                if (copyNotFound == true) {
-                    if (maxPosition == null) {
-                        maxPosition = getMaxPosition(person)
-                    }
-                    personWidgetDefinition = new PersonWidgetDefinition(
-                        person: person,
-                        widgetDefinition: widgetDefinition,
-                        pwdPosition: maxPosition++,
-                        visible: true,
-                        favorite: false,
-                        userWidget: false,
-                        //only this method will ever set this groupWidget flag to true
-                        groupWidget: true
-                    )
-
-                    personWidgetDefinition.validate()
-
-                    if (personWidgetDefinition.hasErrors()) {
-                        throw new OwfException(message: 'A fatal validation error occurred during the creation of a widget.' + personWidgetDefinition.errors.toString(),
-                                exceptionType: OwfExceptionTypes.Validation)
-                    }
-                    else if (!personWidgetDefinition.save()) {
-                        throw new OwfException(message: 'A fatal error occurred while trying to save a widget. Params: ' + params.toString(),
-                                exceptionType: OwfExceptionTypes.Database)
-                    }
-
-                    // add to our internal list so we don't have to fetch all person widget definitions again
-                    personWidgetDefinitions.add(personWidgetDefinition)
-                }
-            }
-        }
-    }
 }

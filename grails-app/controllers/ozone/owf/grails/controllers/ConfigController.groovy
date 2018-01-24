@@ -1,30 +1,34 @@
 package ozone.owf.grails.controllers
 
+import grails.core.GrailsApplication
 import grails.util.Environment
-import org.hibernate.FetchMode
-import ozone.owf.grails.domain.Dashboard
-import ozone.owf.grails.domain.Person
-import ozone.owf.grails.domain.PersonWidgetDefinition
 
-import static ozone.owf.enums.OwfApplicationSetting.*
+import ozone.owf.enums.OwfApplicationSetting
 import ozone.owf.grails.OwfException
-
+import ozone.owf.grails.domain.Person
+import ozone.owf.grails.services.*
 import ozone.security.SecurityUtils
 
-/**
- * User controller.
- */
+
 class ConfigController {
 
-    def accountService
-    def grailsApplication
-    def preferenceService
-    def themeService
-    def serviceModelService
-    def customHeaderFooterService
-    def owfApplicationConfigurationService
-    def dashboardService
-    def personWidgetDefinitionService
+    GrailsApplication grailsApplication
+
+    AccountService accountService
+
+    PreferenceService preferenceService
+
+    ThemeService themeService
+
+    ServiceModelService serviceModelService
+
+    CustomHeaderFooterService customHeaderFooterService
+
+    OwfApplicationConfigurationService owfApplicationConfigurationService
+
+    DashboardService dashboardService
+
+    PersonWidgetDefinitionService personWidgetDefinitionService
 
     def config = {
         def curUser = accountService.getLoggedInUser()
@@ -65,12 +69,12 @@ class ConfigController {
         theme["themeFontSize"] =  themeResults["owf_font_size"]
 
         //copy owf section of grails config, removing sensitive properties
-        def conf = grailsApplication.config.owf.clone()
+        Map conf = grailsApplication.config.owf.clone() as Map
         conf.metric = conf.metric.findAll {
             ! (it.key in ['keystorePass', 'truststorePass', 'keystorePath', 'truststorePath'])
         }
 
-        String showAccessAlert = grailsApplication.config.owf.showAccessAlert
+        String showAccessAlert = grailsApplication.config.getProperty('owf.showAccessAlert', Boolean, false)
         String sessionShowAccessAlert = session.getAttribute('showAccessAlert')
         //not null or empty
         if (sessionShowAccessAlert) {
@@ -81,39 +85,29 @@ class ConfigController {
 
         conf.with {
             customHeaderFooter = this.customHeaderFooterService.configAsMap
-            showAccessAlert = this.grailsApplication.config.owf.showAccessAlert
-            loginCookieName = Environment.current == Environment.DEVELOPMENT ?
-                null : SecurityUtils.LOGIN_COOKIE_NAME
+
+            loginCookieName = (Environment.current == Environment.DEVELOPMENT) ? null : SecurityUtils.LOGIN_COOKIE_NAME
 
             backgroundURL =
-                this.owfApplicationConfigurationService.getApplicationConfiguration(CUSTOM_BACKGROUND_URL)?.value
+                this.owfApplicationConfigurationService.getApplicationConfiguration(OwfApplicationSetting.CUSTOM_BACKGROUND_URL)?.value
             freeTextEntryWarningMessage =
-                this.owfApplicationConfigurationService.getApplicationConfiguration(FREE_WARNING_CONTENT)?.value ?: ""
+                this.owfApplicationConfigurationService.getApplicationConfiguration(OwfApplicationSetting.FREE_WARNING_CONTENT)?.value ?: ""
             notificationsPollingInterval =
-                this.grailsApplication.config.notifications.xmpp.query.interval ?: 30
+                this.grailsApplication.config.getProperty('notifications.xmpp.query.interval', Integer, 30)
             notificationsEnabled =
-                this.grailsApplication.config.notifications.enabled ?: false
+                this.grailsApplication.config.getProperty('notifications.enabled', Boolean, false)
         }
 
         // whether the show animations user preference exists
-        def showAnimations = false,
-            showHints = false
+        boolean showAnimations = false
+        boolean showHints = false
 
         try {
-            def showAnimationsPreference = preferenceService.showForUser([
-                namespace: "owf",
-                path: "show-animations"
-            ]);
-            def showHintsPreference = preferenceService.showForUser([
-                namespace: "owf",
-                path: "show-hints"
-            ]);
+            def showAnimationsPreference = preferenceService.showForUser([namespace: "owf", path: "show-animations"])
+            showAnimations = showAnimationsPreference?.preference?.value == 'true' ?: false
 
-            showAnimations =
-                (showAnimationsPreference?.preference?.value == 'true') ? true : false
-
-            showHints =
-                (showHintsPreference?.preference == null || showHintsPreference?.preference.value == 'true') ? (true) : (false)
+            def showHintsPreference = preferenceService.showForUser([namespace: "owf", path: "show-hints"])
+            showHints = showHintsPreference?.preference?.value == 'true' ?: true
         }
         catch(OwfException owe) {
             handleError(owe)
@@ -135,14 +129,10 @@ class ConfigController {
     }
 
     private getInitialData(Person user){
-
         def appComponentsViewState
 
         try {
-            appComponentsViewState = preferenceService.showForUser([
-                namespace: "owf",
-                path: "appcomponent-view"
-            ])
+            appComponentsViewState = preferenceService.showForUser([namespace: "owf", path: "appcomponent-view"])
             appComponentsViewState?.preference = appComponentsViewState?.preference?.value
         }
         catch (OwfException owe) {

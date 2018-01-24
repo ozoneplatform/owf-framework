@@ -1,9 +1,10 @@
 package ozone.owf.grails.controllers
+
 import grails.converters.JSON
-import org.ozoneplatform.appconfig.client.controller.AbstractApplicationConfigurationController
-import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration;
 
 import ozone.owf.grails.services.OwfApplicationConfigurationService
+import org.ozoneplatform.appconfig.client.controller.AbstractApplicationConfigurationController
+import org.ozoneplatform.appconfig.server.domain.model.ApplicationConfiguration
 
 
 class ApplicationConfigurationController extends AbstractApplicationConfigurationController{

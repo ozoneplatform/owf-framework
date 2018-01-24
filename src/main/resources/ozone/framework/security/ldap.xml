@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+
+    <bean id="contextSource" class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+        <!-- The URL of the ldap server, along with the base path that all other ldap path will be relative to -->
+        <constructor-arg value="ldap://localhost:10389/o=Ozone,l=Columbia,st=Maryland,c=US"/>
+    </bean>
+
+    <bean id="ldapAuthProvider" class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
+        <constructor-arg>
+            <bean class="org.springframework.security.ldap.authentication.PasswordComparisonAuthenticator">
+                <constructor-arg ref="contextSource"/>
+                <property name="userSearch" ref="ldapUserSearch"/>
+                <property name="passwordEncoder">
+                    <!-- Probably want to use a more secure PasswordEncoder in a real installation -->
+                    <bean class="org.springframework.security.authentication.encoding.PlaintextPasswordEncoder"/>
+                </property>
+            </bean>
+        </constructor-arg>
+
+        <!-- Populates authorities in the UserDetails object -->
+        <constructor-arg ref="authoritiesPopulator"/>
+
+        <!-- Adds OWF groups to the UserDetails object -->
+        <property name="userDetailsContextMapper"
+                  ref="userDetailsMapper"/>
+    </bean>
+
+    <bean id="authoritiesPopulator"
+          class="org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator">
+        <constructor-arg ref="contextSource"/>
+
+        <!-- search base for determining what roles a user has -->
+        <constructor-arg value="ou=owfRoles"/>
+    </bean>
+
+    <bean id="ldapUserSearch" class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+        <!-- search base for finding User records -->
+        <constructor-arg value="ou=Ozone"/>
+
+        <!-- filter applied to entities under the search base in order to find a given user.
+             this default searches for an entity with a matching uid -->
+        <constructor-arg value="(uid={0})"/>
+        <constructor-arg ref="contextSource"/>
+    </bean>
+
+    <!-- Custom class that goes back to the ldap database to search for OWF group records and also adds
+         extra attributes from the user's ldap record to the UserDetails object.
+         The class implementation of this will likely need to be changed out for differnt setups -->
+    <bean id="userDetailsMapper" class="ozone.securitysample.authentication.ldap.OWFUserDetailsContextMapper">
+        <constructor-arg ref="contextSource"/>
+
+        <!-- search base for finding OWF group membership -->
+        <constructor-arg value="ou=owfGroups"/>
+
+        <!-- filter that matches only groups that have the given username listed as a "member" attribute -->
+        <constructor-arg value="(member={0})"/>
+    </bean>
+
+    <bean id="ldapUserService" class="org.springframework.security.ldap.userdetails.LdapUserDetailsService">
+        <constructor-arg ref="ldapUserSearch"/>
+        <constructor-arg ref="authoritiesPopulator"/>
+        <property name="userDetailsMapper" ref="userDetailsMapper"/>
+    </bean>
+
+
+</beans>

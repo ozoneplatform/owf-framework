@@ -1,16 +1,23 @@
 package ozone.owf.grails.controllers
 
-import grails.converters.JSON
-import org.apache.commons.lang.time.StopWatch
-import org.codehaus.groovy.grails.web.json.JSONArray
-import ozone.owf.grails.OwfException
+import groovy.transform.CompileStatic
 
+import grails.converters.JSON
+
+import org.apache.commons.lang.time.StopWatch
+
+import ozone.owf.grails.OwfException
+import ozone.owf.grails.services.WidgetTypeService
+
+
+@CompileStatic
 class WidgetTypeController extends BaseOwfRestController {
-	def modelName = 'widgetType'
-	def widgetTypeService
-	def list = {
-		def statusCode
-        def jsonResult
+
+    WidgetTypeService widgetTypeService
+
+    def modelName = 'widgetType'
+
+    def list() {
         StopWatch stopWatch = null;
 
         if (log.isInfoEnabled()) {
@@ -18,21 +25,25 @@ class WidgetTypeController extends BaseOwfRestController {
             stopWatch.start();
             log.info("Executing widgetTypeService: list");
         }
+
+        int statusCode
+        Object jsonResult
+
         try {
-          def result = widgetTypeService.list(params)
-          statusCode = 200
-          jsonResult = result as JSON
-        }
-        catch (OwfException owe) {
+            def result = widgetTypeService.list(params)
+            statusCode = 200
+            jsonResult = result as JSON
+        } catch (OwfException owe) {
             handleError(owe)
             statusCode = owe.exceptionType.normalReturnCode
-            jsonResult = "Error during list: " + owe.exceptionType.generalMessage + " " + owe.message
+            jsonResult = "Error during list: $owe.exceptionType.generalMessage $owe.message"
         }
-		
+
         renderResult(jsonResult, statusCode)
-		
+
         if (log.isInfoEnabled()) {
-            log.info("Executed widgetTypeService: list in "+stopWatch);
+            log.info("Executed widgetTypeService: list in " + stopWatch);
         }
-	}
+    }
+
 }

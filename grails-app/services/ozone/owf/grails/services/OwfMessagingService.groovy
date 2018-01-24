@@ -1,15 +1,17 @@
 package ozone.owf.grails.services
 
-import org.apache.log4j.Logger
-import org.codehaus.groovy.grails.commons.GrailsApplication
+import grails.core.GrailsApplication
 
-import org.ozoneplatform.messaging.payload.OzoneMessage
-import org.ozoneplatform.messaging.service.api.MessageService
-import org.ozoneplatform.messaging.exception.MessagingException
 import ozone.owf.cache.OwfMessageCache
 import ozone.owf.grails.domain.Person
+import org.ozoneplatform.messaging.exception.MessagingException
+import org.ozoneplatform.messaging.payload.OzoneMessage
+import org.ozoneplatform.messaging.service.api.MessageService
+
 
 class OwfMessagingService {
+
+    GrailsApplication grailsApplication
 
     MessageService messageService
 
@@ -19,11 +21,7 @@ class OwfMessagingService {
 
     PersonService personService
 
-    GrailsApplication grailsApplication
-
     static transactional = false
-
-    private static final Logger log = Logger.getLogger(OwfMessagingService)
 
     public void startListening(){
         try {

@@ -1,12 +1,15 @@
 package ozone.owf.grails.services
 
-import java.security.KeyStore
-import java.text.SimpleDateFormat
-
 import javax.net.ssl.KeyManagerFactory
-
 import javax.net.ssl.SSLSocket
-import org.apache.commons.lang.WordUtils
+import java.security.KeyStore
+import java.util.regex.Pattern
+
+import grails.core.GrailsApplication
+
+import org.springframework.core.io.ClassPathResource
+import org.springframework.core.io.Resource
+
 import org.apache.http.HttpEntity
 import org.apache.http.HttpResponse
 import org.apache.http.NameValuePair
@@ -18,27 +21,12 @@ import org.apache.http.conn.ssl.SSLSocketFactory
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy
 import org.apache.http.impl.client.DefaultHttpClient
 import org.apache.http.message.BasicNameValuePair
-import org.apache.http.params.BasicHttpParams
 import org.apache.http.params.HttpConnectionParams
 import org.apache.http.params.HttpParams
 import org.apache.http.protocol.BasicHttpContext
 import org.apache.http.protocol.HTTP
 import org.apache.http.util.ByteArrayBuffer
-import grails.util.Holders as ConfigurationHolder
-import org.codehaus.groovy.grails.web.json.JSONObject
-import org.codehaus.groovy.grails.web.context.ServletContextHolder
-import org.springframework.context.ApplicationContextAware
-import org.springframework.core.io.ClassPathResource
-import org.springframework.core.io.Resource
-import org.springframework.orm.hibernate3.SessionFactoryUtils
-import org.springframework.orm.hibernate3.SessionHolder
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.GrantedAuthorityImpl
-import org.springframework.security.core.context.SecurityContextHolder as SCH
-import org.springframework.transaction.support.TransactionSynchronizationManager
-import java.util.regex.Pattern
+
 
 class HttpService {
 
@@ -47,7 +35,7 @@ class HttpService {
   private static final Long MAX_IMAGE_SIZE_BYTES = 1024000L;
   private static final Integer DEFAULT_CONNECTION_TIMEOUT = 1800000;
 
-  def grailsApplication
+  GrailsApplication grailsApplication
 
   def post(def httpConfig, def params) {
     def returnValue = [success: false, data:""]

@@ -1,96 +1,70 @@
-import grails.util.GrailsUtil
+import grails.util.Environment
 
 import org.springframework.security.web.FilterChainProxy
 
+import custom.access.CustomAccessChecker
+
+import ozone.owf.cache.OwfMessageCache
+import ozone.owf.devel.DefaultDataLoader
+import ozone.owf.devel.DevelopmentDataLoader
 import ozone.owf.grails.OwfExceptionResolver
-import ozone.owf.grails.services.AutoLoginAccountService
-import ozone.owf.grails.domain.ERoleAuthority
-import ozone.owf.grails.services.AccountService
+import ozone.owf.security.AutoUserSessionProvider
+import ozone.owf.security.UserSessionProvider
+import org.ozoneplatform.auditing.AuditLogListener
 
 beans = {
 
     xmlns context: 'http://www.springframework.org/schema/context'
     context.'component-scan'('base-package': 'ozone.owf.util')
 
-    auditLogListener(org.ozoneplatform.auditing.AuditLogListener) {
+    if (Environment.current == Environment.PRODUCTION) {
+        importBeans('classpath:ozone/framework/application.xml')
+    }
+
+    auditLogListener(AuditLogListener) {
         sessionFactory = ref('sessionFactory')
         accountService = ref('accountService')
         owfApplicationConfigurationService = ref('owfApplicationConfigurationService')
         grailsApplication = ref('grailsApplication')
     }
 
-    owfMessageCache(ozone.owf.cache.OwfMessageCache){}
+    owfMessageCache(OwfMessageCache) {}
+
+    defaultDataLoader(DefaultDataLoader) { it.autowire = 'byType' }
+
+    developmentDataLoader(DevelopmentDataLoader) { it.autowire = 'byType' }
 
     // wire up a different account service if -Duser=something and environment is development
-    if (GrailsUtil.environment == "development") {
-        //empty sprint security bean
+    if (isDevelopment() || isTest()) {
         springSecurityFilterChain(FilterChainProxy, [])
 
-        switch (System.properties.user) {
-            case "testUser1":
-                println("Using AutoLoginAccountService - you will be logged in as testUser1")
-                accountService(AutoLoginAccountService) {
-                    autoAccountName = "testUser1"
-					autoAccountDisplayName = "Test User 1"
-                    autoRoles = [ERoleAuthority.ROLE_USER.strVal]
-                    serviceModelService = ref('serviceModelService')
-                    stackService = ref('stackService')
-                    dashboardService = ref('dashboardService')
-                    groupService = ref('groupService')
-                    personWidgetDefinitionService = ref('personWidgetDefinitionService')
-                }
-                break
-            case "testAdmin1":
-                println("Using AutoLoginAccountService - you will be logged in as testAdmin1")
-                accountService(AutoLoginAccountService) {
-                    autoAccountName = "testAdmin1"
-					autoAccountDisplayName = "Test Admin 1"
-                    autoRoles = [ERoleAuthority.ROLE_USER.strVal, ERoleAuthority.ROLE_ADMIN.strVal]
-                    serviceModelService = ref('serviceModelService')
-                    stackService = ref('stackService')
-                    dashboardService = ref('dashboardService')
-                    groupService = ref('groupService')
-                    personWidgetDefinitionService = ref('personWidgetDefinitionService')
-                }
-                break
-            case "testAdmin2":
-                println("Using AutoLoginAccountService - you will be logged in as testAdmin2")
-                accountService(AutoLoginAccountService) {
-                    autoAccountName = "testAdmin2"
-                    autoAccountDisplayName = "Test Admin 2"
-                    autoRoles = [ERoleAuthority.ROLE_USER.strVal, ERoleAuthority.ROLE_ADMIN.strVal]
-                    serviceModelService = ref('serviceModelService')
-                    stackService = ref('stackService')
-                    dashboardService = ref('dashboardService')
-                    groupService = ref('groupService')
-                    personWidgetDefinitionService = ref('personWidgetDefinitionService')
-                }
-                break
-            default :
-                println("You are not using the AutoLoginAccountService. If you want to, add -Duser=[testUser1|testAdmin1|testAdmin2] to your environment.")
-                accountService(AccountService) {
-                    serviceModelService = ref('serviceModelService')
-                    stackService = ref('stackService')
-                    dashboardService = ref('dashboardService')
-                    groupService = ref('groupService')
-                    personWidgetDefinitionService = ref('personWidgetDefinitionService')
-                }
-               break
-        }
-    } else {
-        accountService(AccountService) {
-            serviceModelService = ref('serviceModelService')
-            stackService = ref('stackService')
-            dashboardService = ref('dashboardService')
-            groupService = ref('groupService')
-            personWidgetDefinitionService = ref('personWidgetDefinitionService')
+        def userName = System.properties.getProperty('user', 'testUser1')
+        println("Using AutoUserSessionProvider - you will be logged in as '$userName'")
+
+        userSessionProvider(AutoUserSessionProvider) {
+            autoUserName = userName
         }
     }
+    else {
+        userSessionProvider(UserSessionProvider)
+    }
 
-	exceptionHandler(OwfExceptionResolver)
-	{
-		exceptionMappings = [
-				'java.lang.Exception': '/error'
-				]
-	}
+    customAccessChecker(CustomAccessChecker) {}
+
+    exceptionHandler(OwfExceptionResolver) {
+        exceptionMappings = ['java.lang.Exception': '/error']
+    }
+
+}
+
+static boolean isProduction() {
+    Environment.current == Environment.PRODUCTION
+}
+
+static boolean isDevelopment() {
+    Environment.current == Environment.DEVELOPMENT
+}
+
+static boolean isTest() {
+    Environment.current == Environment.TEST
 }

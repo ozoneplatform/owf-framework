@@ -1,0 +1,14 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.7.9"
+}
+
+jacocoTestReport {
+    executionData test, integrationTest
+    dependsOn test, integrationTest
+
+    reports {
+        html.enabled = true
+    }
+}

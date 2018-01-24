@@ -1,16 +1,23 @@
 package ozone.owf.grails.controllers
 
 import grails.converters.JSON
+
 import org.apache.commons.lang.time.StopWatch
+
 import ozone.owf.grails.OwfException
+import ozone.owf.grails.OwfValidationException
+import ozone.owf.grails.services.*
+
 
 class WidgetController extends BaseOwfRestController {
 
-    def accountService
-    def widgetDefinitionService
-    def administrationService
-    def personWidgetDefinitionService
-    def marketplaceService
+    AccountService accountService
+
+    WidgetDefinitionService widgetDefinitionService
+
+    PersonWidgetDefinitionService personWidgetDefinitionService
+
+    MarketplaceService marketplaceService
 
     def modelName = 'widgetDefinition'
 
@@ -196,6 +203,11 @@ class WidgetController extends BaseOwfRestController {
         try {
             def filename = params.filename ? params.filename : "widget_descriptor"
 
+            String widgetGuid = params.id as String
+            if (!widgetGuid) throw new OwfValidationException("param 'id' required")
+
+            def widgetDescriptor = widgetDefinitionService.export(widgetGuid)
+
             // Set filename/ID for audit logging
             request.setAttribute("fileName", filename+".html")
 
@@ -204,8 +216,6 @@ class WidgetController extends BaseOwfRestController {
 
             //Set content-disposition so browser is expecting a file
             response.setHeader("Content-disposition", "attachment; filename=" + filename + ".html")
-
-            def widgetDescriptor = widgetDefinitionService.export(params)
 
             // Set fileSize for audit logging
             request.setAttribute("fileSize", (widgetDescriptor.getBytes("UTF-8")).length)
@@ -226,4 +236,18 @@ class WidgetController extends BaseOwfRestController {
             log.info("Executed widgetDefinitionService: export in " + stopWatch);
         }
     }
+
+    def descriptor = {
+        try {
+            String guid = params.guid as String
+            String descriptor = widgetDefinitionService.export(guid)
+
+            render descriptor
+        }
+        catch (Exception e) {
+            def result = handleError(e)
+            renderResult(result)
+        }
+    }
+
 }

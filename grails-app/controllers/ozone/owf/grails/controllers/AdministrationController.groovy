@@ -1,23 +1,33 @@
 package ozone.owf.grails.controllers
 
-import static javax.servlet.http.HttpServletResponse.*
-
 import grails.converters.JSON
+
 import org.apache.commons.lang.time.StopWatch
-import org.codehaus.groovy.grails.web.json.JSONArray
+import org.grails.web.json.JSONArray
+
 import ozone.owf.grails.OwfException
-import ozone.owf.grails.domain.Person
 import ozone.owf.grails.OwfExceptionTypes
+import ozone.owf.grails.domain.Person
+import ozone.owf.grails.services.*
+
+import static javax.servlet.http.HttpServletResponse.SC_OK
+
 
 class AdministrationController extends BaseOwfRestController {
 
-    def accountService
-	def widgetDefinitionService
-	def administrationService
-	def preferenceService
-	def dashboardService
-	def personWidgetDefinitionService
-    def appMigrationService
+	AdministrationService administrationService
+
+    AccountService accountService
+
+	WidgetDefinitionService widgetDefinitionService
+
+	PreferenceService preferenceService
+
+	DashboardService dashboardService
+
+	PersonWidgetDefinitionService personWidgetDefinitionService
+
+	AppMigrationService appMigrationService
 
 	def admin= {
 		render(view:'admin',model:[accountService:accountService])
